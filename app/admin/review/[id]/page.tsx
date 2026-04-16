@@ -239,71 +239,83 @@ export default function ReviewDocumentPage({
                           현지상황 및 검토의견
                         </th>
                       </tr>
+                    </thead>
+                    <tbody>
                       <tr>
-                        <th
+                        <td
                           rowSpan={2}
                           className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
                         >
                           소재지
                           <br />
                           (소유자)
-                        </th>
-                        <th
+                        </td>
+                        <td
                           colSpan={3}
                           className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
                         >
                           원지번 / 지목 / 면적(m&sup2;)
-                        </th>
-                        <th
+                        </td>
+                        <td
                           colSpan={2}
                           className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
                         >
                           편입토지
-                        </th>
-                        <th
+                        </td>
+                        <td
                           colSpan={4}
                           className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
                         >
                           잔여토지
-                        </th>
-                        <th
-                          rowSpan={2}
+                        </td>
+                        <td
+                          rowSpan={9}
                           className="border border-foreground p-0 align-top"
                           style={{ minWidth: "220px" }}
                         >
-                        </th>
+                          {isEditing ? (
+                            <Textarea
+                              value={fieldConditionReview}
+                              onChange={(e) => setFieldConditionReview(e.target.value)}
+                              className="h-full min-h-[300px] resize-none rounded-none border-0 text-xs leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
+                              placeholder="현지상황 및 검토의견을 입력하세요"
+                            />
+                          ) : (
+                            <div className="whitespace-pre-wrap p-2 text-xs leading-relaxed text-foreground">
+                              {fieldConditionReview}
+                            </div>
+                          )}
+                        </td>
                       </tr>
                       <tr>
-                        <th className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
                           원지번
-                        </th>
-                        <th className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        </td>
+                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
                           지목
-                        </th>
-                        <th className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        </td>
+                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
                           면적(m&sup2;)
-                        </th>
-                        <th className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        </td>
+                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
                           지번
-                        </th>
-                        <th className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        </td>
+                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
                           면적(m&sup2;)
-                        </th>
-                        <th className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        </td>
+                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
                           지번
-                        </th>
-                        <th className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        </td>
+                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
                           면적(m&sup2;)
-                        </th>
-                        <th className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        </td>
+                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
                           잔여비율
-                        </th>
-                        <th className="border border-foreground bg-primary/10 px-2 py-1 text-center text-xs font-semibold text-primary">
+                        </td>
+                        <td className="border border-foreground bg-primary/10 px-2 py-1 text-center text-xs font-semibold text-primary">
                           매수여부
-                        </th>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
                       {landParcels.map((parcel, index) => (
                         <tr key={index}>
                           {index === 0 && (
@@ -353,26 +365,6 @@ export default function ReviewDocumentPage({
                               {parcel.purchaseDecision}
                             </span>
                           </td>
-                          {index === 0 && (
-                            <td
-                              rowSpan={landParcels.length + 4}
-                              className="border border-foreground p-0 align-top"
-                              style={{ minWidth: "220px" }}
-                            >
-                              {isEditing ? (
-                                <Textarea
-                                  value={fieldConditionReview}
-                                  onChange={(e) => setFieldConditionReview(e.target.value)}
-                                  className="h-full min-h-[300px] resize-none rounded-none border-0 text-xs leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                  placeholder="현지상황 및 검토의견을 입력하세요"
-                                />
-                              ) : (
-                                <div className="whitespace-pre-wrap p-2 text-xs leading-relaxed text-foreground">
-                                  {fieldConditionReview}
-                                </div>
-                              )}
-                            </td>
-                          )}
                         </tr>
                       ))}
                       {/* 소유자 의견 + 심의위원회결정 */}
