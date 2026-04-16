@@ -245,6 +245,7 @@ export default function ReviewDocumentPage({
                         <td
                           rowSpan={2}
                           className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
+                          style={{ minWidth: "140px" }}
                         >
                           소재지
                           <br />
@@ -252,7 +253,8 @@ export default function ReviewDocumentPage({
                         </td>
                         <td
                           rowSpan={2}
-                          className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground"
+                          className="border border-foreground bg-muted px-1 py-1 text-center text-xs font-medium text-foreground"
+                          style={{ width: "50px" }}
                         >
                           원지번
                         </td>
@@ -300,13 +302,13 @@ export default function ReviewDocumentPage({
                         </td>
                       </tr>
                       <tr>
-                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        <td className="border border-foreground bg-muted px-1 py-1 text-center text-xs font-medium text-foreground" style={{ width: "50px" }}>
                           지번
                         </td>
                         <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
                           면적(m&sup2;)
                         </td>
-                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        <td className="border border-foreground bg-muted px-1 py-1 text-center text-xs font-medium text-foreground" style={{ width: "50px" }}>
                           지번
                         </td>
                         <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
