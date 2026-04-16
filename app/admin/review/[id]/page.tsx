@@ -262,7 +262,7 @@ export default function ReviewDocumentPage({
                           편입토지
                         </th>
                         <th
-                          colSpan={10}
+                          colSpan={11}
                           className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
                         >
                           대상 토지
@@ -294,12 +294,6 @@ export default function ReviewDocumentPage({
                           className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
                         >
                           잔여토지
-                        </th>
-                        <th
-                          rowSpan={2}
-                          className="border border-foreground bg-primary/10 px-2 py-2 text-center font-semibold text-primary"
-                        >
-                          현지상황 및 검토의견
                         </th>
                       </tr>
                       <tr>
@@ -382,25 +376,7 @@ export default function ReviewDocumentPage({
                               {parcel.purchaseDecision}
                             </span>
                           </td>
-                          {index === 0 && (
-                            <td
-                              rowSpan={landParcels.length}
-                              className="border border-foreground p-0 align-top"
-                            >
-                              {isEditing ? (
-                                <Textarea
-                                  value={fieldConditionReview}
-                                  onChange={(e) => setFieldConditionReview(e.target.value)}
-                                  className="h-full min-h-[180px] resize-none rounded-none border-0 text-xs leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                  placeholder="현지상황 및 검토의견을 입력하세요"
-                                />
-                              ) : (
-                                <div className="whitespace-pre-wrap p-2 text-xs leading-relaxed text-foreground">
-                                  {fieldConditionReview}
-                                </div>
-                              )}
-                            </td>
-                          )}
+
                         </tr>
                       ))}
                     </tbody>
