@@ -388,7 +388,7 @@ export default function ReviewDocumentPage({
                         >
                           소유자의견
                         </td>
-                        <td rowSpan={3} className="border border-foreground p-0" style={{ minWidth: "200px" }}>
+                        <td rowSpan={4} className="border border-foreground p-0" style={{ minWidth: "200px" }}>
                           {isEditing ? (
                             <Textarea
                               value={ownerOpinion}
@@ -430,22 +430,19 @@ export default function ReviewDocumentPage({
                         {committeeDecisions.map((_, idx) => (
                           <td
                             key={idx}
-                            className="border border-foreground px-2 py-4 text-center"
+                            className="border border-foreground px-2 py-3 text-center"
                           >
                             {/* 인쇄 후 수기 기입 */}
                           </td>
                         ))}
                       </tr>
                       <tr>
-                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
-                          서명
-                        </td>
                         {committeeDecisions.map((_, idx) => (
                           <td
                             key={idx}
-                            className="border border-foreground px-2 py-4 text-center"
+                            className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground"
                           >
-                            {/* 서명란 - 출력 후 수기 */}
+                            서명
                           </td>
                         ))}
                       </tr>
