@@ -233,7 +233,6 @@ export default function ReviewDocumentPage({
                           대상 토지
                         </th>
                         <th
-                          rowSpan={3}
                           className="border border-foreground bg-primary/10 px-2 py-2 text-center font-semibold text-primary"
                           style={{ minWidth: "220px" }}
                         >
