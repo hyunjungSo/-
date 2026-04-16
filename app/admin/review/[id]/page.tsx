@@ -227,6 +227,21 @@ export default function ReviewDocumentPage({
                     <thead>
                       <tr>
                         <th
+                          colSpan={10}
+                          className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
+                        >
+                          대상 토지
+                        </th>
+                        <th
+                          rowSpan={3}
+                          className="border border-foreground bg-primary/10 px-2 py-2 text-center font-semibold text-primary"
+                          style={{ minWidth: "220px" }}
+                        >
+                          현지상황 및 검토의견
+                        </th>
+                      </tr>
+                      <tr>
+                        <th
                           rowSpan={2}
                           className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
                         >
@@ -251,13 +266,6 @@ export default function ReviewDocumentPage({
                           className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
                         >
                           잔여토지
-                        </th>
-                        <th
-                          rowSpan={2}
-                          className="border border-foreground bg-primary/10 px-2 py-2 text-center font-semibold text-primary"
-                          style={{ minWidth: "220px" }}
-                        >
-                          현지상황 및 검토의견
                         </th>
                       </tr>
                       <tr>
@@ -342,7 +350,7 @@ export default function ReviewDocumentPage({
                           </td>
                           {index === 0 && (
                             <td
-                              rowSpan={landParcels.length + 4}
+                              rowSpan={9}
                               className="border border-foreground p-0 align-top"
                               style={{ minWidth: "220px" }}
                             >
