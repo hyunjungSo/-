@@ -385,14 +385,15 @@ export default function ReviewDocumentPage({
                           </td>
                           {index === 0 && (
                             <td
-                              rowSpan={landParcels.length}
+                              rowSpan={landParcels.length + 4}
                               className="border border-foreground p-0 align-top"
+                              style={{ minWidth: "220px" }}
                             >
                               {isEditing ? (
                                 <Textarea
                                   value={fieldConditionReview}
                                   onChange={(e) => setFieldConditionReview(e.target.value)}
-                                  className="h-full min-h-[150px] resize-none rounded-none border-0 text-xs leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                  className="h-full min-h-[250px] resize-none rounded-none border-0 text-xs leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
                                   placeholder="현지상황 및 검토의견을 입력하세요"
                                 />
                               ) : (
@@ -404,23 +405,16 @@ export default function ReviewDocumentPage({
                           )}
                         </tr>
                       ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* 소유자 의견 + 심의위원회결정 */}
-                <div className="mt-4 overflow-x-auto">
-                  <table className="w-full border-collapse border border-foreground text-sm">
-                    <tbody>
+                      {/* 소유자 의견 + 심의위원회결정 */}
                       <tr>
                         <td
                           rowSpan={4}
-                          className="w-12 border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
+                          className="w-8 border border-foreground bg-muted px-1 py-2 text-center text-xs font-medium text-foreground"
                           style={{ writingMode: "vertical-rl", textOrientation: "mixed" }}
                         >
                           소유자의견
                         </td>
-                        <td rowSpan={4} className="border border-foreground p-0" style={{ minWidth: "200px" }}>
+                        <td rowSpan={4} colSpan={2} className="border border-foreground p-0 align-top">
                           {isEditing ? (
                             <Textarea
                               value={ownerOpinion}
