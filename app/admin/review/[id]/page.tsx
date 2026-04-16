@@ -251,10 +251,22 @@ export default function ReviewDocumentPage({
                           (소유자)
                         </td>
                         <td
-                          colSpan={3}
-                          className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
+                          rowSpan={2}
+                          className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground"
                         >
-                          원지번 / 지목 / 면적(m&sup2;)
+                          원지번
+                        </td>
+                        <td
+                          rowSpan={2}
+                          className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground"
+                        >
+                          지목
+                        </td>
+                        <td
+                          rowSpan={2}
+                          className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground"
+                        >
+                          면적(m&sup2;)
                         </td>
                         <td
                           colSpan={2}
@@ -288,15 +300,6 @@ export default function ReviewDocumentPage({
                         </td>
                       </tr>
                       <tr>
-                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
-                          원지번
-                        </td>
-                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
-                          지목
-                        </td>
-                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
-                          면적(m&sup2;)
-                        </td>
                         <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
                           지번
                         </td>
