@@ -262,10 +262,44 @@ export default function ReviewDocumentPage({
                           편입토지
                         </th>
                         <th
+                          colSpan={10}
+                          className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
+                        >
+                          대상 토지
+                        </th>
+                      </tr>
+                      <tr>
+                        <th
+                          rowSpan={2}
+                          className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
+                        >
+                          소재지
+                          <br />
+                          (소유자)
+                        </th>
+                        <th
+                          colSpan={3}
+                          className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
+                        >
+                          원지번 / 지목 / 면적(m&sup2;)
+                        </th>
+                        <th
+                          colSpan={2}
+                          className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
+                        >
+                          편입토지
+                        </th>
+                        <th
                           colSpan={3}
                           className="border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
                         >
                           잔여토지
+                        </th>
+                        <th
+                          rowSpan={2}
+                          className="border border-foreground bg-primary/10 px-2 py-2 text-center font-semibold text-primary"
+                        >
+                          현지상황 및 검토의견
                         </th>
                       </tr>
                       <tr>
@@ -295,9 +329,6 @@ export default function ReviewDocumentPage({
                         </th>
                         <th className="border border-foreground bg-primary/10 px-2 py-1 text-center text-xs font-semibold text-primary">
                           매수여부
-                        </th>
-                        <th className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
-                          {/* 현지상황 헤더 공간 */}
                         </th>
                       </tr>
                     </thead>
