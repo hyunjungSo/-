@@ -376,7 +376,26 @@ export default function ReviewDocumentPage({
                               {parcel.purchaseDecision}
                             </span>
                           </td>
-
+                          {index === 0 && (
+                            <td
+                              rowSpan={landParcels.length + 4}
+                              className="border border-foreground p-0 align-top"
+                              style={{ minWidth: "220px" }}
+                            >
+                              {isEditing ? (
+                                <Textarea
+                                  value={fieldConditionReview}
+                                  onChange={(e) => setFieldConditionReview(e.target.value)}
+                                  className="h-full min-h-[250px] resize-none rounded-none border-0 text-xs leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                  placeholder="현지상황 및 검토의견을 입력하세요"
+                                />
+                              ) : (
+                                <div className="whitespace-pre-wrap p-2 text-xs leading-relaxed text-foreground">
+                                  {fieldConditionReview}
+                                </div>
+                              )}
+                            </td>
+                          )}
                         </tr>
                       ))}
                       {/* 소유자 의견 + 심의위원회결정 */}
