@@ -1,0 +1,55 @@
+"use client";
+
+import { useState } from "react";
+import { ApplicationList } from "@/components/admin/application-list";
+import { ApplicationDetail } from "@/components/admin/application-detail";
+import type { Application } from "@/lib/types";
+import { dummyApplications } from "@/lib/dummy-data";
+
+export default function AdminPage() {
+  const [applications, setApplications] = useState<Application[]>(dummyApplications);
+  const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
+
+  const handleApplicationSelect = (application: Application) => {
+    setSelectedApplication(application);
+  };
+
+  const handleBack = () => {
+    setSelectedApplication(null);
+  };
+
+  const handleSave = (updatedApplication: Application) => {
+    setApplications((prev) =>
+      prev.map((app) =>
+        app.id === updatedApplication.id ? updatedApplication : app
+      )
+    );
+    setSelectedApplication(updatedApplication);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
+          담당자 서비스
+        </h1>
+        <p className="mt-1 text-muted-foreground">
+          민원 목록 관리 및 AI 분석 결과 검토
+        </p>
+      </div>
+
+      {selectedApplication ? (
+        <ApplicationDetail
+          application={selectedApplication}
+          onBack={handleBack}
+          onSave={handleSave}
+        />
+      ) : (
+        <ApplicationList
+          applications={applications}
+          onSelect={handleApplicationSelect}
+        />
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,181 @@
+"use client";
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import type { Application } from "@/lib/types";
+import { CheckCircle2, Clock, FileText, Home, Printer } from "lucide-react";
+import Link from "next/link";
+
+interface ApplicationResultSectionProps {
+  application: Application;
+}
+
+const statusConfig = {
+  접수됨: { label: "접수됨", variant: "secondary" as const, icon: Clock },
+  AI분석완료: { label: "AI 분석 완료", variant: "secondary" as const, icon: Clock },
+  검토중: { label: "검토 중", variant: "secondary" as const, icon: Clock },
+  처리완료: { label: "처리 완료", variant: "default" as const, icon: CheckCircle2 },
+};
+
+const judgmentConfig = {
+  매수: { label: "매수 결정", color: "bg-accent text-accent-foreground" },
+  기각: { label: "기각", color: "bg-destructive text-destructive-foreground" },
+  심의위원회이관: { label: "심의위원회 이관", color: "bg-chart-3 text-card" },
+};
+
+export function ApplicationResultSection({ application }: ApplicationResultSectionProps) {
+  const status = statusConfig[application.status];
+  const StatusIcon = status.icon;
+
+  return (
+    <div className="mx-auto max-w-2xl space-y-6">
+      {/* 접수 완료 알림 */}
+      <Card className="border-accent/50 bg-accent/5">
+        <CardContent className="flex flex-col items-center py-8 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent">
+            <CheckCircle2 className="h-8 w-8 text-accent-foreground" />
+          </div>
+          <h2 className="mt-4 text-xl font-bold text-foreground">
+            신청이 접수되었습니다
+          </h2>
+          <p className="mt-2 text-muted-foreground">
+            접수번호를 기록해 두시면 처리 현황을 조회할 수 있습니다.
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* 접수 정보 */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            접수 정보
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <dl className="space-y-4">
+            <div className="flex items-center justify-between border-b border-border pb-4">
+              <dt className="text-muted-foreground">접수번호</dt>
+              <dd className="text-lg font-bold text-primary">
+                {application.applicationNumber}
+              </dd>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <dt className="text-muted-foreground">신청인</dt>
+              <dd className="font-medium text-foreground">{application.applicantName}</dd>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <dt className="text-muted-foreground">연락처</dt>
+              <dd className="font-medium text-foreground">{application.applicantContact}</dd>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <dt className="text-muted-foreground">신청일</dt>
+              <dd className="font-medium text-foreground">{application.appliedAt}</dd>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <dt className="text-muted-foreground">대상 토지</dt>
+              <dd className="text-right font-medium text-foreground">
+                {application.landInfo.address}
+              </dd>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <dt className="text-muted-foreground">처리 상태</dt>
+              <dd>
+                <Badge variant={status.variant} className="flex w-fit items-center gap-1">
+                  <StatusIcon className="h-3 w-3" />
+                  {status.label}
+                </Badge>
+              </dd>
+            </div>
+
+            {application.finalJudgment && (
+              <div className="flex items-center justify-between border-t border-border pt-4">
+                <dt className="text-muted-foreground">최종 판정</dt>
+                <dd>
+                  <span
+                    className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${judgmentConfig[application.finalJudgment].color}`}
+                  >
+                    {judgmentConfig[application.finalJudgment].label}
+                  </span>
+                </dd>
+              </div>
+            )}
+          </dl>
+        </CardContent>
+      </Card>
+
+      {/* 안내 사항 */}
+      <Card>
+        <CardHeader>
+          <CardTitle>안내 사항</CardTitle>
+          <CardDescription>
+            신청 처리 절차에 대한 안내입니다.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ol className="space-y-3 text-sm text-muted-foreground">
+            <li className="flex gap-3">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+                1
+              </span>
+              <span>
+                접수된 신청서는 AI 분석을 통해 매수 기준 충족 여부가 자동으로 검토됩니다.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+                2
+              </span>
+              <span>
+                담당자가 AI 분석 결과를 확인하고 최종 판정을 진행합니다.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+                3
+              </span>
+              <span>
+                처리가 완료되면 문자 또는 우편으로 결과를 안내드립니다.
+              </span>
+            </li>
+          </ol>
+
+          <div className="mt-6 rounded-lg bg-muted p-4">
+            <h4 className="font-medium text-foreground">판정 결과 안내</h4>
+            <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
+              <li>
+                <strong className="text-accent">매수:</strong> 매수 기준 충족. 보상 절차가 진행됩니다.
+              </li>
+              <li>
+                <strong className="text-destructive">기각:</strong> 매수 기준 미충족. 사유가 안내됩니다.
+              </li>
+              <li>
+                <strong className="text-chart-3">심의위원회 이관:</strong> 추가 심의가 필요한 경우입니다.
+              </li>
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 버튼 */}
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <Button variant="outline" className="flex-1">
+          <Printer className="mr-2 h-4 w-4" />
+          접수증 출력
+        </Button>
+        <Button asChild className="flex-1">
+          <Link href="/">
+            <Home className="mr-2 h-4 w-4" />
+            홈으로 돌아가기
+          </Link>
+        </Button>
+      </div>
+    </div>
+  );
+}
