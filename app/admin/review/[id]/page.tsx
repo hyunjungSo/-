@@ -9,13 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { LandMap } from "@/components/land-map";
 import { dummyApplications, landShapes, landCategories } from "@/lib/dummy-data";
 import type { Application, LandShape, LandCategory } from "@/lib/types";
@@ -433,41 +427,12 @@ export default function ReviewDocumentPage({
                         <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
                           O, X
                         </td>
-                        {committeeDecisions.map((item, idx) => (
+                        {committeeDecisions.map((_, idx) => (
                           <td
                             key={idx}
-                            className="border border-foreground px-2 py-2 text-center"
+                            className="border border-foreground px-2 py-4 text-center"
                           >
-                            {isEditing ? (
-                              <Select
-                                value={item.decision}
-                                onValueChange={(value) => {
-                                  const newDecisions = [...committeeDecisions];
-                                  newDecisions[idx].decision = value as "O" | "X" | "";
-                                  setCommitteeDecisions(newDecisions);
-                                }}
-                              >
-                                <SelectTrigger className="h-7 w-12 text-xs">
-                                  <SelectValue placeholder="-" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="O">O</SelectItem>
-                                  <SelectItem value="X">X</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            ) : (
-                              <span
-                                className={
-                                  item.decision === "O"
-                                    ? "font-bold text-primary"
-                                    : item.decision === "X"
-                                    ? "font-bold text-destructive"
-                                    : "text-muted-foreground"
-                                }
-                              >
-                                {item.decision || "-"}
-                              </span>
-                            )}
+                            {/* 인쇄 후 수기 기입 */}
                           </td>
                         ))}
                       </tr>
@@ -494,8 +459,10 @@ export default function ReviewDocumentPage({
                     <div className="border-b border-foreground bg-muted px-2 py-1 text-center text-sm font-medium text-foreground">
                       지적도
                     </div>
-                    <div className="h-[300px] p-2">
-                      <LandMap landInfo={application.landInfo} showOverlay />
+                    <div className="h-[300px] overflow-hidden">
+                      <div className="h-full w-full [&>*]:h-full [&>*]:w-full [&_canvas]:!h-full [&_canvas]:!w-full [&_canvas]:object-contain">
+                        <LandMap landInfo={application.landInfo} showOverlay />
+                      </div>
                     </div>
                   </div>
                   <div className="border border-l-0 border-foreground">
