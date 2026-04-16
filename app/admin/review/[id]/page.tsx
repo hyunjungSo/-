@@ -382,7 +382,7 @@ export default function ReviewDocumentPage({
                     <tbody>
                       <tr>
                         <td
-                          rowSpan={3}
+                          rowSpan={4}
                           className="w-12 border border-foreground bg-muted px-2 py-2 text-center font-medium text-foreground"
                           style={{ writingMode: "vertical-rl", textOrientation: "mixed" }}
                         >
@@ -437,12 +437,15 @@ export default function ReviewDocumentPage({
                         ))}
                       </tr>
                       <tr>
+                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                          서명
+                        </td>
                         {committeeDecisions.map((_, idx) => (
                           <td
                             key={idx}
-                            className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground"
+                            className="border border-foreground px-2 py-3 text-center"
                           >
-                            서명
+                            {/* 인쇄 후 수기 서명 */}
                           </td>
                         ))}
                       </tr>
