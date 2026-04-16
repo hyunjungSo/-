@@ -227,13 +227,13 @@ export default function ReviewDocumentPage({
                     <thead>
                       <tr>
                         <th
-                          colSpan={9}
+                          colSpan={10}
                           className="border border-foreground bg-primary/10 px-2 py-2 text-center font-semibold text-foreground"
                         >
                           대 상 토 지
                         </th>
                         <th
-                          rowSpan={2}
+                          rowSpan={3}
                           className="border border-foreground bg-primary/10 px-2 py-2 text-center font-semibold text-foreground"
                           style={{ minWidth: "280px" }}
                         >
