@@ -267,7 +267,7 @@ export default function ReviewDocumentPage({
                           잔여토지
                         </th>
                         <td
-                          rowSpan={2}
+                          rowSpan={9}
                           className="border border-foreground p-0 align-top"
                           style={{ minWidth: "220px" }}
                         >
