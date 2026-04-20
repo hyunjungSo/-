@@ -40,7 +40,7 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
             신청이 접수되었습니다
           </h2>
           <p className="mt-2 text-muted-foreground">
-            접수번호를 기록해 두시면 처리 현황을 조회할 수 있습니다.
+            신청하신 내용은 담당자 검토 후 처리될 예정입니다.
           </p>
         </CardContent>
       </Card>
