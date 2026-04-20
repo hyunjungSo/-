@@ -7,7 +7,7 @@ import { ApplicationResultSection } from "@/components/citizen/application-resul
 import { ApplicationStatusSection } from "@/components/citizen/application-status-section";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { FilePlus, ClipboardList } from "lucide-react";
+import { FilePlus, ClipboardList, Check } from "lucide-react";
 import type { LandInfo, Application, AIAnalysisResult } from "@/lib/types";
 
 // 신청 프로세스 단계
@@ -115,43 +115,72 @@ export default function CitizenPage() {
           id="tabpanel-new"
           aria-labelledby="tab-new"
         >
-          {/* 진행 단계 표시 - 디지털 정부서비스 가이드라인 Step indicator */}
+          {/* KRDS 단계 표시기 (Step Indicator) */}
           <Card>
-            <CardContent className="py-4">
-              <nav aria-label="신청 진행 단계">
-                <ol className="flex items-center justify-between">
-                  {steps.map((step, index) => (
-                    <li key={step.id} className="flex items-center">
-                      <div className="flex items-center gap-2">
-                        <div 
-                          className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
-                            index < currentStepIndex 
-                              ? "bg-primary text-white" 
-                              : index === currentStepIndex 
+            <CardContent className="py-6">
+              <nav aria-label="신청 진행 단계" className="krds-step-wrap">
+                <ol className="flex items-center">
+                  {steps.map((step, index) => {
+                    const isCompleted = index < currentStepIndex;
+                    const isCurrent = index === currentStepIndex;
+                    const isPending = index > currentStepIndex;
+
+                    return (
+                      <li 
+                        key={step.id} 
+                        className={`relative flex flex-1 items-center ${
+                          isCompleted ? "done" : isCurrent ? "active" : ""
+                        }`}
+                      >
+                        {/* 연결선 - 첫 번째 단계 제외 */}
+                        {index > 0 && (
+                          <div 
+                            className={`absolute left-0 top-4 h-0.5 w-full -translate-x-1/2 ${
+                              isCompleted ? "bg-primary" : "bg-gray-200"
+                            }`}
+                            aria-hidden="true"
+                          />
+                        )}
+                        
+                        {/* 단계 내용 */}
+                        <div className="relative flex flex-col items-center">
+                          {/* 단계 식별자 */}
+                          <div 
+                            className={`z-10 flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
+                              isCompleted 
                                 ? "bg-primary text-white" 
-                                : "border-2 border-muted-foreground/30 bg-background text-muted-foreground"
-                          }`}
-                          aria-current={index === currentStepIndex ? "step" : undefined}
-                        >
-                          {step.number}
+                                : isCurrent 
+                                  ? "border-2 border-primary bg-white text-primary" 
+                                  : "border-2 border-gray-300 bg-white text-gray-400"
+                            }`}
+                            aria-current={isCurrent ? "step" : undefined}
+                          >
+                            {isCompleted ? (
+                              <Check className="h-4 w-4" aria-hidden="true" />
+                            ) : (
+                              step.number
+                            )}
+                          </div>
+                          
+                          {/* 단계 레이블 */}
+                          <span 
+                            className={`step-tit mt-2 text-center text-sm font-medium ${
+                              isCompleted || isCurrent ? "text-foreground" : "text-gray-400"
+                            }`}
+                          >
+                            {step.label}
+                            {/* 스크린리더용 현재 단계 표시 */}
+                            {isCurrent && (
+                              <span className="sr-only">(현재 단계)</span>
+                            )}
+                            {isCompleted && (
+                              <span className="sr-only">(완료)</span>
+                            )}
+                          </span>
                         </div>
-                        <span 
-                          className={`text-sm font-medium hidden sm:block ${
-                            index <= currentStepIndex ? "text-foreground" : "text-muted-foreground"
-                          }`}
-                        >
-                          {step.label}
-                        </span>
-                      </div>
-                      {index < steps.length - 1 && (
-                        <div 
-                          className={`mx-2 h-0.5 w-8 sm:mx-4 sm:w-16 ${
-                            index < currentStepIndex ? "bg-primary" : "bg-muted"
-                          }`} 
-                        />
-                      )}
-                    </li>
-                  ))}
+                      </li>
+                    );
+                  })}
                 </ol>
               </nav>
             </CardContent>
