@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useAuth } from "@/lib/auth-context";
 
 const navigation = [
   { name: "민원인 서비스", href: "/citizen" },
@@ -15,7 +16,14 @@ const navigation = [
 
 export function Header() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
@@ -35,23 +43,44 @@ export function Header() {
           </Link>
 
           {/* 데스크톱 네비게이션 */}
-          <nav className="hidden items-center gap-1 md:flex" role="navigation" aria-label="메인 메뉴">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "cursor-pointer rounded-md px-4 py-2 text-sm font-medium transition-colors",
-                  pathname.startsWith(item.href)
-                    ? "bg-primary text-white"
-                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                )}
-                aria-current={pathname.startsWith(item.href) ? "page" : undefined}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </nav>
+          <div className="hidden items-center gap-4 md:flex">
+            <nav className="flex items-center gap-1" role="navigation" aria-label="메인 메뉴">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    "cursor-pointer rounded-md px-4 py-2 text-sm font-medium transition-colors",
+                    pathname.startsWith(item.href)
+                      ? "bg-primary text-white"
+                      : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                  )}
+                  aria-current={pathname.startsWith(item.href) ? "page" : undefined}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </nav>
+
+            {/* 사용자 정보 및 로그아웃 */}
+            {user && (
+              <div className="flex items-center gap-3 border-l pl-4">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <User className="h-4 w-4" />
+                  <span>{user.name}</span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="gap-1"
+                >
+                  <LogOut className="h-4 w-4" />
+                  로그아웃
+                </Button>
+              </div>
+            )}
+          </div>
 
           {/* 모바일 메뉴 버튼 */}
           <Button
@@ -90,6 +119,25 @@ export function Header() {
                 {item.name}
               </Link>
             ))}
+            {user && (
+              <>
+                <div className="my-2 border-t" />
+                <div className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600">
+                  <User className="h-4 w-4" />
+                  <span>{user.name}</span>
+                </div>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleLogout();
+                  }}
+                  className="flex items-center gap-2 rounded-md px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                >
+                  <LogOut className="h-4 w-4" />
+                  로그아웃
+                </button>
+              </>
+            )}
           </nav>
         </div>
       )}
