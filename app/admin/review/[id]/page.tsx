@@ -291,7 +291,7 @@ export default function ReviewDocumentPage({
                             <Textarea
                               value={fieldConditionReview}
                               onChange={(e) => setFieldConditionReview(e.target.value)}
-                              className="h-full min-h-[300px] resize-none rounded-none border-0 text-xs leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
+                              className="h-full min-h-[300px] cursor-text resize-none rounded-none border-0 text-xs leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
                               placeholder="현지상황 및 검토의견을 입력하세요"
                             />
                           ) : (
@@ -386,7 +386,7 @@ export default function ReviewDocumentPage({
                             <Textarea
                               value={ownerOpinion}
                               onChange={(e) => setOwnerOpinion(e.target.value)}
-                              className="h-full min-h-[100px] resize-none rounded-none border-0 text-xs leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
+                              className="h-full min-h-[100px] cursor-text resize-none rounded-none border-0 text-xs leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
                               placeholder="소유자 의견을 입력하세요"
                             />
                           ) : (
