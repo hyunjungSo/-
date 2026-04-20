@@ -63,6 +63,7 @@ export function ApplicationFormSection({
       reason: formData.reason,
       attachments: formData.attachments,
       status: "접수됨",
+      adminStatus: "대기",
       appliedAt: new Date().toISOString().split("T")[0],
       aiResult: aiResult,
     };

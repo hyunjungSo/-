@@ -36,6 +36,9 @@ export type LandCategory =
 // 처리 상태
 export type ProcessStatus = "접수됨" | "AI분석완료" | "검토중" | "처리완료";
 
+// 담당자 진행상황
+export type AdminStatus = "대기" | "진행중" | "완료";
+
 // 판정 결과
 export type JudgmentResult = "매수" | "기각" | "심의위원회이관";
 
@@ -71,10 +74,13 @@ export interface Application {
   reason: string; // 신청 사유
   attachments: string[]; // 첨부 서류
   status: ProcessStatus;
+  adminStatus: AdminStatus; // 담당자 진행상황
   appliedAt: string; // 신청일
   aiResult?: AIAnalysisResult; // AI 분석 결과
   finalJudgment?: JudgmentResult; // 최종 판정
   reviewerComment?: string; // 담당자 검토 의견
+  adminName?: string; // 담당자명
+  statusUpdatedAt?: string; // 상태 변경일
 }
 
 // AI 분석 결과

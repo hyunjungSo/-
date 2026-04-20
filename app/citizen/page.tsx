@@ -4,8 +4,9 @@ import { useState } from "react";
 import { LandSearchSection } from "@/components/citizen/land-search-section";
 import { ApplicationFormSection } from "@/components/citizen/application-form-section";
 import { ApplicationResultSection } from "@/components/citizen/application-result-section";
+import { ApplicationStatusSection } from "@/components/citizen/application-status-section";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, FileEdit, FileCheck } from "lucide-react";
+import { Search, FileEdit, FileCheck, ClipboardList } from "lucide-react";
 import type { LandInfo, Application, AIAnalysisResult } from "@/lib/types";
 
 export default function CitizenPage() {
@@ -37,14 +38,14 @@ export default function CitizenPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="search" className="flex items-center gap-2">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="search" className="cursor-pointer flex items-center gap-2">
             <Search className="h-4 w-4" />
             <span className="hidden sm:inline">토지 조회</span>
           </TabsTrigger>
           <TabsTrigger 
             value="apply" 
-            className="flex items-center gap-2"
+            className="cursor-pointer flex items-center gap-2"
             disabled={!selectedLand}
           >
             <FileEdit className="h-4 w-4" />
@@ -52,11 +53,15 @@ export default function CitizenPage() {
           </TabsTrigger>
           <TabsTrigger 
             value="result" 
-            className="flex items-center gap-2"
+            className="cursor-pointer flex items-center gap-2"
             disabled={!submittedApplication}
           >
             <FileCheck className="h-4 w-4" />
             <span className="hidden sm:inline">결과 확인</span>
+          </TabsTrigger>
+          <TabsTrigger value="status" className="cursor-pointer flex items-center gap-2">
+            <ClipboardList className="h-4 w-4" />
+            <span className="hidden sm:inline">신청 현황</span>
           </TabsTrigger>
         </TabsList>
 
@@ -79,6 +84,10 @@ export default function CitizenPage() {
           {submittedApplication && (
             <ApplicationResultSection application={submittedApplication} />
           )}
+        </TabsContent>
+
+        <TabsContent value="status" className="mt-6">
+          <ApplicationStatusSection />
         </TabsContent>
       </Tabs>
     </div>

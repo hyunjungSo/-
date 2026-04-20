@@ -20,8 +20,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { Application, ProcessStatus } from "@/lib/types";
-import { Search, Filter, ChevronRight, Users } from "lucide-react";
+import type { Application, ProcessStatus, AdminStatus } from "@/lib/types";
+import { Search, Filter, ChevronRight, Users, Clock, Loader2, CheckCircle2 } from "lucide-react";
 
 interface ApplicationListProps {
   applications: Application[];
@@ -33,6 +33,12 @@ const statusConfig: Record<ProcessStatus, { label: string; variant: "default" | 
   AI분석완료: { label: "AI 분석 완료", variant: "secondary" },
   검토중: { label: "검토 중", variant: "default" },
   처리완료: { label: "처리 완료", variant: "secondary" },
+};
+
+const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
+  대기: { label: "대기", icon: Clock, color: "text-muted-foreground" },
+  진행중: { label: "진행중", icon: Loader2, color: "text-primary" },
+  완료: { label: "완료", icon: CheckCircle2, color: "text-accent" },
 };
 
 export function ApplicationList({ applications, onSelect }: ApplicationListProps) {
@@ -173,7 +179,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <TableHead>대상 지번</TableHead>
                   <TableHead>토지 유형</TableHead>
                   <TableHead>면적</TableHead>
-                  <TableHead>상태</TableHead>
+                  <TableHead>처리상태</TableHead>
+                  <TableHead>진행상황</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -196,6 +203,18 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       <Badge variant={statusConfig[app.status].variant}>
                         {statusConfig[app.status].label}
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {(() => {
+                        const config = adminStatusConfig[app.adminStatus];
+                        const Icon = config.icon;
+                        return (
+                          <div className={`flex items-center gap-1 ${config.color}`}>
+                            <Icon className={`h-4 w-4 ${app.adminStatus === "진행중" ? "animate-spin" : ""}`} />
+                            <span className="text-sm font-medium">{config.label}</span>
+                          </div>
+                        );
+                      })()}
                     </TableCell>
                     <TableCell>
                       <ChevronRight className="h-4 w-4 text-muted-foreground" />

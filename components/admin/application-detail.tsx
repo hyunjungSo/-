@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { LandMap } from "@/components/land-map";
 import { landShapes, landCategories } from "@/lib/dummy-data";
-import type { Application, JudgmentResult, LandShape, LandCategory } from "@/lib/types";
+import type { Application, JudgmentResult, LandShape, LandCategory, AdminStatus } from "@/lib/types";
 import {
   ArrowLeft,
   Bot,
@@ -27,6 +27,8 @@ import {
   XCircle,
   AlertTriangle,
   Save,
+  Clock,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -42,6 +44,12 @@ const judgmentConfig = {
   심의위원회이관: { label: "심의위원회 이관", icon: AlertTriangle, color: "text-chart-3" },
 };
 
+const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
+  대기: { label: "대기", icon: Clock, color: "text-muted-foreground" },
+  진행중: { label: "진행중", icon: Loader2, color: "text-primary" },
+  완료: { label: "완료", icon: CheckCircle2, color: "text-accent" },
+};
+
 export function ApplicationDetail({ application, onBack, onSave }: ApplicationDetailProps) {
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
@@ -51,6 +59,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
     finalJudgment: application.finalJudgment || application.aiResult?.provisionalJudgment || ("매수" as JudgmentResult),
+    adminStatus: application.adminStatus || ("대기" as AdminStatus),
   });
 
   const [isSaving, setIsSaving] = useState(false);
@@ -65,7 +74,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       farmMachineDifficulty: reviewData.farmMachineDifficulty === "해당",
       reviewerComment: reviewData.reviewerComment,
       finalJudgment: reviewData.finalJudgment,
-      status: "처리완료",
+      adminStatus: reviewData.adminStatus,
+      status: reviewData.adminStatus === "완료" ? "처리완료" : application.status,
+      adminName: "홍길동", // 실제로는 로그인한 담당자 정보
+      statusUpdatedAt: new Date().toISOString().split("T")[0],
     };
 
     setTimeout(() => {
@@ -101,7 +113,19 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <CardTitle>민원 정보</CardTitle>
               <CardDescription>접수번호: {application.applicationNumber}</CardDescription>
             </div>
-            <Badge variant="secondary">{application.status}</Badge>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary">{application.status}</Badge>
+              {(() => {
+                const config = adminStatusConfig[application.adminStatus];
+                const Icon = config.icon;
+                return (
+                  <Badge variant="outline" className={config.color}>
+                    <Icon className={`mr-1 h-3 w-3 ${application.adminStatus === "진행중" ? "animate-spin" : ""}`} />
+                    {config.label}
+                  </Badge>
+                );
+              })()}
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -420,6 +444,35 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             />
           </div>
 
+          {/* 진행상황 설정 */}
+          <div className="space-y-2">
+            <Label>진행상황 설정</Label>
+            <div className="flex flex-wrap gap-2">
+              {(["대기", "진행중", "완료"] as AdminStatus[]).map((status) => {
+                const config = adminStatusConfig[status];
+                const Icon = config.icon;
+                const isSelected = reviewData.adminStatus === status;
+                return (
+                  <Button
+                    key={status}
+                    type="button"
+                    variant={isSelected ? "default" : "outline"}
+                    onClick={() =>
+                      setReviewData((prev) => ({ ...prev, adminStatus: status }))
+                    }
+                    className={`cursor-pointer ${isSelected ? "" : config.color}`}
+                  >
+                    <Icon className={`mr-2 h-4 w-4 ${status === "진행중" && isSelected ? "animate-spin" : ""}`} />
+                    {config.label}
+                  </Button>
+                );
+              })}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다.
+            </p>
+          </div>
+
           {/* 최종 판정 */}
           <div className="space-y-2">
             <Label>최종 판정</Label>
@@ -436,7 +489,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     onClick={() =>
                       setReviewData((prev) => ({ ...prev, finalJudgment: judgment }))
                     }
-                    className={isSelected ? "" : config.color}
+                    className={`cursor-pointer ${isSelected ? "" : config.color}`}
                   >
                     <Icon className="mr-2 h-4 w-4" />
                     {config.label}
