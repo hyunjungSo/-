@@ -2,7 +2,6 @@
 
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
-import { Header } from "@/components/header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -165,7 +164,6 @@ export default function ReviewDocumentPage({
   if (!application) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <p className="text-muted-foreground">민원을 찾을 수 없습니다.</p>
         </main>
@@ -175,7 +173,6 @@ export default function ReviewDocumentPage({
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="space-y-6">
           {/* 상단 네비게이션 */}
