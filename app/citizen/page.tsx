@@ -6,8 +6,7 @@ import { ApplicationFormSection } from "@/components/citizen/application-form-se
 import { ApplicationResultSection } from "@/components/citizen/application-result-section";
 import { ApplicationStatusSection } from "@/components/citizen/application-status-section";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
-import { FilePlus, ClipboardList, Check } from "lucide-react";
+import { FilePlus, ClipboardList } from "lucide-react";
 import type { LandInfo, Application, AIAnalysisResult } from "@/lib/types";
 
 // 신청 프로세스 단계
@@ -116,75 +115,49 @@ export default function CitizenPage() {
           aria-labelledby="tab-new"
         >
           {/* KRDS 단계 표시기 (Step Indicator) */}
-          <Card>
-            <CardContent className="py-6">
-              <nav aria-label="신청 진행 단계" className="krds-step-wrap">
-                <ol className="flex items-center">
-                  {steps.map((step, index) => {
-                    const isCompleted = index < currentStepIndex;
-                    const isCurrent = index === currentStepIndex;
-                    const isPending = index > currentStepIndex;
+          <nav aria-label="신청 진행 단계" className="krds-step-wrap">
+            <ol className="flex items-center border-b border-gray-200">
+              {steps.map((step, index) => {
+                const isCompleted = index < currentStepIndex;
+                const isCurrent = index === currentStepIndex;
 
-                    return (
-                      <li 
-                        key={step.id} 
-                        className={`relative flex flex-1 items-center ${
-                          isCompleted ? "done" : isCurrent ? "active" : ""
-                        }`}
-                      >
-                        {/* 연결선 - 첫 번째 단계 제외 */}
-                        {index > 0 && (
-                          <div 
-                            className={`absolute left-0 top-4 h-0.5 w-full -translate-x-1/2 ${
-                              isCompleted ? "bg-primary" : "bg-gray-200"
-                            }`}
-                            aria-hidden="true"
-                          />
-                        )}
-                        
-                        {/* 단계 내용 */}
-                        <div className="relative flex flex-col items-center">
-                          {/* 단계 식별자 */}
-                          <div 
-                            className={`z-10 flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
-                              isCompleted 
-                                ? "bg-primary text-white" 
-                                : isCurrent 
-                                  ? "border-2 border-primary bg-white text-primary" 
-                                  : "border-2 border-gray-300 bg-white text-gray-400"
-                            }`}
-                            aria-current={isCurrent ? "step" : undefined}
-                          >
-                            {isCompleted ? (
-                              <Check className="h-4 w-4" aria-hidden="true" />
-                            ) : (
-                              step.number
-                            )}
-                          </div>
-                          
-                          {/* 단계 레이블 */}
-                          <span 
-                            className={`step-tit mt-2 text-center text-sm font-medium ${
-                              isCompleted || isCurrent ? "text-foreground" : "text-gray-400"
-                            }`}
-                          >
-                            {step.label}
-                            {/* 스크린리더용 현재 단계 표시 */}
-                            {isCurrent && (
-                              <span className="sr-only">(현재 단계)</span>
-                            )}
-                            {isCompleted && (
-                              <span className="sr-only">(완료)</span>
-                            )}
-                          </span>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ol>
-              </nav>
-            </CardContent>
-          </Card>
+                return (
+                  <li 
+                    key={step.id} 
+                    className={`relative flex-1 ${isCompleted ? "done" : ""} ${isCurrent ? "active" : ""}`}
+                  >
+                    <div 
+                      className={`flex items-center justify-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
+                        isCurrent 
+                          ? "border-primary text-primary" 
+                          : isCompleted 
+                            ? "border-primary/50 text-primary/70"
+                            : "border-transparent text-gray-400"
+                      }`}
+                      aria-current={isCurrent ? "step" : undefined}
+                    >
+                      {/* 단계 숫자 */}
+                      <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
+                        isCurrent 
+                          ? "bg-primary text-white" 
+                          : isCompleted 
+                            ? "bg-primary/70 text-white"
+                            : "bg-gray-200 text-gray-500"
+                      }`}>
+                        {step.number}
+                      </span>
+                      {/* 단계 레이블 */}
+                      <span className="step-tit hidden sm:inline">
+                        {step.label}
+                        {isCurrent && <span className="sr-only">(현재 단계)</span>}
+                        {isCompleted && <span className="sr-only">(완료)</span>}
+                      </span>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </nav>
 
           {/* 단계별 콘텐츠 */}
           {applicationStep === "search" && (
