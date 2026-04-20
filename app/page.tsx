@@ -24,10 +24,11 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
           <div className="text-center">
             <h1 className="text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
-              잔여지 매수 판독 솔루션
+              잔여지 매수 판독 서비스
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg">
               AI 기반 자동 분석으로 잔여지 매수 판정을 신속하고 일관되게 처리합니다.
+              <br />
               민원인은 간편하게 신청하고, 담당자는 효율적으로 검토할 수 있습니다.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
