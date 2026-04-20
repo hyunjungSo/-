@@ -4,11 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Application } from "@/lib/types";
-import { CheckCircle2, Clock, FileText, Home, Printer } from "lucide-react";
-import Link from "next/link";
+import { CheckCircle2, Clock, FileText, FilePlus, Printer } from "lucide-react";
 
 interface ApplicationResultSectionProps {
   application: Application;
+  onNewApplication?: () => void;
 }
 
 const statusConfig = {
@@ -24,7 +24,7 @@ const judgmentConfig = {
   심의위원회이관: { label: "심의위원회 이관", color: "bg-chart-3 text-card" },
 };
 
-export function ApplicationResultSection({ application }: ApplicationResultSectionProps) {
+export function ApplicationResultSection({ application, onNewApplication }: ApplicationResultSectionProps) {
   const status = statusConfig[application.status];
   const StatusIcon = status.icon;
 
@@ -165,16 +165,16 @@ export function ApplicationResultSection({ application }: ApplicationResultSecti
 
       {/* 버튼 */}
       <div className="flex flex-col gap-3 sm:flex-row">
-        <Button variant="outline" className="flex-1">
+        <Button variant="outline" className="flex-1 cursor-pointer">
           <Printer className="mr-2 h-4 w-4" />
           접수증 출력
         </Button>
-        <Button asChild className="flex-1">
-          <Link href="/">
-            <Home className="mr-2 h-4 w-4" />
-            홈으로 돌아가기
-          </Link>
-        </Button>
+        {onNewApplication && (
+          <Button onClick={onNewApplication} className="flex-1 cursor-pointer">
+            <FilePlus className="mr-2 h-4 w-4" />
+            새 신청하기
+          </Button>
+        )}
       </div>
     </div>
   );
