@@ -36,7 +36,7 @@ const statusConfig: Record<ProcessStatus, { label: string; className: string }> 
 };
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
-  대기: { label: "대기", icon: Clock, color: "text-gray-500" },
+  대기중: { label: "대기중", icon: Clock, color: "text-gray-500" },
   진행중: { label: "진행중", icon: Loader2, color: "text-blue-600" },
   완료: { label: "완료", icon: CheckCircle2, color: "text-green-600" },
 };

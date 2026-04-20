@@ -29,7 +29,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import type { JudgmentRationale } from "@/lib/types";
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string; bgColor: string }> = {
-  대기: { label: "대기", icon: Clock, color: "text-gray-600", bgColor: "bg-gray-100" },
+  대기중: { label: "대기중", icon: Clock, color: "text-gray-600", bgColor: "bg-gray-100" },
   진행중: { label: "진행중", icon: Loader2, color: "text-blue-600", bgColor: "bg-blue-100" },
   완료: { label: "완료", icon: CheckCircle2, color: "text-green-600", bgColor: "bg-green-100" },
 };
@@ -159,7 +159,7 @@ export function ApplicationStatusSection() {
 
   const getStatusStep = (status: AdminStatus) => {
     switch (status) {
-      case "대기": return 1;
+      case "대기중": return 1;
       case "진행중": return 2;
       case "완료": return 3;
       default: return 1;
@@ -237,7 +237,7 @@ export function ApplicationStatusSection() {
               <div className="rounded-lg border border-border bg-muted/30 p-4">
                 <h4 className="mb-4 text-sm font-semibold text-foreground">진행 상황</h4>
                 <div className="flex items-center justify-between">
-                  {(["대기", "진행중", "완료"] as AdminStatus[]).map((status, idx) => {
+                  {(["대기중", "진행중", "완료"] as AdminStatus[]).map((status, idx) => {
                     const config = adminStatusConfig[status];
                     const Icon = config.icon;
                     const currentStep = getStatusStep(searchResult.adminStatus);

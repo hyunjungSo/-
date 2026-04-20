@@ -47,7 +47,7 @@ const judgmentConfig = {
 };
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
-  대기: { label: "대기", icon: Clock, color: "text-gray-500" },
+  대기중: { label: "대기중", icon: Clock, color: "text-gray-500" },
   진행중: { label: "진행중", icon: Loader2, color: "text-blue-600" },
   완료: { label: "완료", icon: CheckCircle2, color: "text-green-600" },
 };
@@ -61,7 +61,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
     finalJudgment: application.finalJudgment || application.aiResult?.provisionalJudgment || ("매수" as JudgmentResult),
-    adminStatus: application.adminStatus || ("대기" as AdminStatus),
+    adminStatus: application.adminStatus || ("대기중" as AdminStatus),
   });
 
   const [isSaving, setIsSaving] = useState(false);
@@ -562,7 +562,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <div className="space-y-2">
             <Label>진행상황 설정</Label>
             <div className="flex flex-wrap gap-2">
-              {(["대기", "진행중", "완료"] as AdminStatus[]).map((status) => {
+              {(["대기중", "진행중", "완료"] as AdminStatus[]).map((status) => {
                 const config = adminStatusConfig[status];
                 const Icon = config.icon;
                 const isSelected = reviewData.adminStatus === status;
