@@ -8,7 +8,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="mt-auto border-t bg-white">
+    <footer className="mt-auto border-t bg-[#f6f6f6]">
       {/* 상단 정보 영역 */}
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
