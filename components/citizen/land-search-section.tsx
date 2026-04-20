@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { LandMap } from "@/components/land-map";
 import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult } from "@/lib/types";
-import { Search, MapPin, ChevronRight, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info } from "lucide-react";
+import { Search, MapPin, ChevronRight, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban } from "lucide-react";
 
 interface LandSearchSectionProps {
   onLandSelect: (land: LandInfo, aiResult: AIAnalysisResult) => void;
@@ -68,12 +68,14 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
   const [aiResult, setAiResult] = useState<AIAnalysisResult | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [searchNotFound, setSearchNotFound] = useState(false);
+  const [noIncludedLand, setNoIncludedLand] = useState(false);
 
   const handleSearch = () => {
     if (!searchQuery.trim()) return;
     
     setIsSearching(true);
     setSearchNotFound(false);
+    setNoIncludedLand(false);
     setAiResult(null);
     
     // 검색 시뮬레이션 (0.5초 딜레이)
@@ -85,13 +87,19 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
       );
       setSearchResult(found || null);
       setSearchNotFound(!found);
+      
+      // 편입토지 없는 경우 체크
+      if (found && !found.hasIncludedLand) {
+        setNoIncludedLand(true);
+      }
+      
       setIsSearching(false);
     }, 500);
   };
 
-  // 토지 조회 성공 시 자동으로 AI 분석 실행
+  // 토지 조회 성공 시 자동으로 AI 분석 실행 (편입토지가 있는 경우에만)
   useEffect(() => {
-    if (searchResult && !aiResult && !aiAnalyzing) {
+    if (searchResult && !aiResult && !aiAnalyzing && searchResult.hasIncludedLand) {
       setAiAnalyzing(true);
       setTimeout(() => {
         const result = simulateAIAnalysis(searchResult);
@@ -106,6 +114,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
     setSearchResult(null);
     setAiResult(null);
     setSearchNotFound(false);
+    setNoIncludedLand(false);
   };
 
   return (
@@ -214,7 +223,12 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                     <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                     <div className="text-xs text-muted-foreground">
                       <p className="font-medium text-foreground">검색 가능 지번 (테스트용)</p>
-                      <p className="mt-1">마성리, 신리, 봉남리, 진사리</p>
+                      <p className="mt-1">
+                        <span className="text-primary">편입토지 있음:</span> 마성리, 신리, 봉남리, 진사리
+                      </p>
+                      <p className="mt-0.5">
+                        <span className="text-destructive">편입토지 없음:</span> 금곡동, 가장리
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -236,7 +250,9 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         }`}>
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2">
-              {aiAnalyzing ? (
+              {noIncludedLand ? (
+                <Ban className="h-5 w-5 text-destructive" />
+              ) : aiAnalyzing ? (
                 <Loader2 className="h-5 w-5 animate-spin text-primary" />
               ) : aiResult ? (
                 aiResult.provisionalJudgment === "매수" ? (
@@ -247,14 +263,22 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               ) : (
                 <Bot className="h-5 w-5 text-muted-foreground" />
               )}
-              {aiAnalyzing ? "AI 분석 중..." : aiResult ? "AI 판독 완료" : "조회 결과"}
+              {noIncludedLand 
+                ? "신청 불가" 
+                : aiAnalyzing 
+                  ? "AI 분석 중..." 
+                  : aiResult 
+                    ? "AI 판독 완료" 
+                    : "조회 결과"}
             </CardTitle>
             <CardDescription>
-              {aiAnalyzing 
-                ? "잠시만 기다려 주세요. AI가 토지 정보를 분석하고 있습니다."
-                : aiResult 
-                  ? "AI 분석이 완료되었습니다. 결과를 확인하고 신청을 진행하세요."
-                  : "토지를 조회하면 AI가 자동으로 매수 가능 여부를 분석합니다."
+              {noIncludedLand
+                ? "편입토지가 없는 토지는 잔여지 매수 신청이 불가합니다."
+                : aiAnalyzing 
+                  ? "잠시만 기다려 주세요. AI가 토지 정보를 분석하고 있습니다."
+                  : aiResult 
+                    ? "AI 분석이 완료되었습니다. 결과를 확인하고 신청을 진행하세요."
+                    : "토지를 조회하면 AI가 자동으로 매수 가능 여부를 분석합니다."
               }
             </CardDescription>
           </CardHeader>
@@ -294,8 +318,49 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                   </div>
                 </div>
 
+                {/* 편입토지 없음 경고 */}
+                {noIncludedLand && (
+                  <div className="rounded-lg border-2 border-destructive bg-destructive/5 p-6">
+                    <div className="flex flex-col items-center text-center">
+                      <div className="rounded-full bg-destructive/10 p-3">
+                        <Ban className="h-8 w-8 text-destructive" />
+                      </div>
+                      <h4 className="mt-4 text-lg font-bold text-destructive">편입토지 없음</h4>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        해당 토지는 도로 등에 편입된 토지가 없습니다.
+                      </p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        잔여지 매수 신청은 <span className="font-medium text-foreground">편입토지가 있는 경우에만</span> 가능합니다.
+                      </p>
+                    </div>
+                    
+                    <div className="mt-4 rounded-lg bg-muted/50 p-3">
+                      <p className="text-xs font-medium text-foreground">잔여지 매수 신청 조건</p>
+                      <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
+                        <li className="flex items-center gap-1.5">
+                          <XCircle className="h-3 w-3 text-destructive" />
+                          <span>편입토지 존재 여부: <span className="font-medium text-destructive">미충족</span></span>
+                        </li>
+                        <li className="flex items-start gap-1.5">
+                          <Info className="mt-0.5 h-3 w-3 text-muted-foreground" />
+                          <span>공익사업(도로, 철도 등)에 토지가 편입되어 잔여지가 발생한 경우에만 매수 신청이 가능합니다.</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <Button 
+                      variant="outline"
+                      className="mt-4 w-full cursor-pointer" 
+                      onClick={handleReset}
+                    >
+                      <RotateCcw className="mr-2 h-4 w-4" />
+                      다른 토지 검색하기
+                    </Button>
+                  </div>
+                )}
+
                 {/* AI 분석 중 */}
-                {aiAnalyzing && (
+                {aiAnalyzing && !noIncludedLand && (
                   <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/30 bg-primary/5 py-8">
                     <Loader2 className="h-10 w-10 animate-spin text-primary" />
                     <p className="mt-3 font-medium text-primary">AI 자동 판독 진행 중</p>
@@ -304,7 +369,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 )}
 
                 {/* AI 결과 */}
-                {aiResult && (
+                {aiResult && !noIncludedLand && (
                   <div className="space-y-3">
                     <div className={`rounded-lg border-2 p-4 ${
                       aiResult.provisionalJudgment === "매수" 

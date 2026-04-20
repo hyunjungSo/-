@@ -58,6 +58,7 @@ export interface LandInfo {
   remainingShapeIndex: number; // 잔여지 형상지수
   ownerName: string; // 소유자명
   ownerContact?: string; // 소유자 연락처
+  hasIncludedLand: boolean; // 편입토지 존재 여부
 }
 
 // 민원 신청
