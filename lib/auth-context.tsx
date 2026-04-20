@@ -15,16 +15,16 @@ export interface User {
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (userId: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // 테스트용 더미 사용자
-const dummyUsers: { email: string; password: string; user: User }[] = [
+const dummyUsers: { userId: string; password: string; user: User }[] = [
   {
-    email: "citizen@test.com",
+    userId: "citizen",
     password: "1234",
     user: {
       id: "citizen-1",
@@ -35,7 +35,7 @@ const dummyUsers: { email: string; password: string; user: User }[] = [
     },
   },
   {
-    email: "admin@test.com",
+    userId: "admin",
     password: "1234",
     user: {
       id: "admin-1",
@@ -59,10 +59,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (userId: string, password: string): Promise<boolean> => {
     // 간단한 인증 시뮬레이션
     const found = dummyUsers.find(
-      (u) => u.email === email && u.password === password
+      (u) => u.userId === userId && u.password === password
     );
 
     if (found) {
