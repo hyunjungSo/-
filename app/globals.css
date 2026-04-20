@@ -163,7 +163,7 @@
     @apply border-border outline-ring/50;
   }
   
-  /* 최소 폰트 사이즈 14px 설정 */
+  /* 최소 폰트 사이즈 13px 설정 */
   html {
     font-size: 100%;
   }
@@ -177,9 +177,9 @@
     -moz-osx-font-smoothing: grayscale;
   }
   
-  /* Tailwind text-xs를 14px로 오버라이드 */
+  /* Tailwind text-xs를 13px로 오버라이드 (최소 폰트 사이즈) */
   .text-xs {
-    font-size: 0.875rem !important; /* 14px */
+    font-size: 0.8125rem !important; /* 13px */
     line-height: 1.5;
   }
   
