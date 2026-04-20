@@ -77,8 +77,8 @@ export default function HomePage() {
 
             <Card className="border-border">
               <CardHeader>
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10">
-                  <ClipboardList className="h-6 w-6 text-accent" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+                  <ClipboardList className="h-6 w-6 text-blue-600" />
                 </div>
                 <CardTitle className="mt-4 text-lg">AI 자동 분석</CardTitle>
               </CardHeader>
