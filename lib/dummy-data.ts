@@ -159,6 +159,42 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerContact: "010-8888-9999",
     hasIncludedLand: true,
   },
+  // 매수 불가 케이스 1: 잔여비율이 너무 높고 형상 변화 없음
+  {
+    id: "land-010",
+    address: "경기도 이천시 마장면 덕평리 333-1",
+    originalArea: 2000,
+    includedArea: 200,
+    remainingArea: 1800,
+    remainingRatio: 90.0,
+    landType: "농지",
+    landCategory: "전",
+    originalShape: "가로장방형",
+    remainingShape: "가로장방형",
+    originalShapeIndex: 4.1,
+    remainingShapeIndex: 4.2,
+    ownerName: "조현우",
+    ownerContact: "010-1111-2222",
+    hasIncludedLand: true,
+  },
+  // 매수 불가 케이스 2: 면적/형상 기준 모두 미충족
+  {
+    id: "land-011",
+    address: "경기도 여주시 대신면 천남리 777-5",
+    originalArea: 3000,
+    includedArea: 500,
+    remainingArea: 2500,
+    remainingRatio: 83.3,
+    landType: "대지",
+    landCategory: "대",
+    originalShape: "정방형",
+    remainingShape: "세로장방형",
+    originalShapeIndex: 4.0,
+    remainingShapeIndex: 4.3,
+    ownerName: "송지훈",
+    ownerContact: "010-3333-4444",
+    hasIncludedLand: true,
+  },
 ];
 
 // AI 분석 결과 생성 함수
@@ -380,6 +416,48 @@ export const dummyApplications: Application[] = [
     appliedAt: "2026-04-06",
     aiResult: generateAIResult(dummyLandInfoList[8], true), // 경계 사례로 생성
     isBorderlineCase: true,
+  },
+  // 매수 불가 케이스 - 기각 처리됨
+  {
+    id: "app-007",
+    applicationNumber: "2026-0407-001",
+    applicantName: "조현우",
+    applicantContact: "010-1111-2222",
+    applicantAddress: "경기도 이천시 마장면 덕평리 300",
+    landInfo: dummyLandInfoList[9], // land-010 (매수 불가 케이스)
+    actualUsage: "전",
+    reportedShape: "가로장방형",
+    farmMachineDifficulty: false,
+    reason: "도로 편입으로 일부 토지가 편입되었으나 잔여지가 충분히 넓어 매수를 요청합니다.",
+    attachments: ["토지대장.pdf"],
+    status: "처리완료",
+    adminStatus: "완료",
+    appliedAt: "2026-04-07",
+    aiResult: generateAIResult(dummyLandInfoList[9]),
+    finalJudgment: "기각",
+    reviewerComment: "잔여비율 90%로 매수 기준(30% 이하)을 크게 초과하며, 형상지수 변화도 0.1로 미미하여 종래 용도 사용에 지장이 없음. 매수 기준 미충족으로 기각 처리.",
+    adminName: "박담당",
+    statusUpdatedAt: "2026-04-18",
+  },
+  // 매수 불가 케이스 - 검토 중 (곧 기각 예정)
+  {
+    id: "app-008",
+    applicationNumber: "2026-0408-001",
+    applicantName: "송지훈",
+    applicantContact: "010-3333-4444",
+    applicantAddress: "경기도 여주시 대신면 천남리 700",
+    landInfo: dummyLandInfoList[10], // land-011 (매수 불가 케이스)
+    actualUsage: "대",
+    reportedShape: "세로장방형",
+    farmMachineDifficulty: false,
+    reason: "토지 일부가 도로에 편입되어 잔여지 매수를 신청합니다.",
+    attachments: ["토지대장.pdf", "등기부등본.pdf"],
+    status: "검토중",
+    adminStatus: "진행중",
+    appliedAt: "2026-04-08",
+    aiResult: generateAIResult(dummyLandInfoList[10]),
+    adminName: "김담당",
+    statusUpdatedAt: "2026-04-19",
   },
 ];
 

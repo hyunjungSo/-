@@ -261,10 +261,16 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                     <div className="text-xs text-muted-foreground">
                       <p className="font-medium text-foreground">검색 가능 지번 (테스트용)</p>
                       <p className="mt-1">
-                        <span className="text-primary">편입토지 있음:</span> 마성리, 신리, 봉남리, 진사리
+                        <span className="text-primary">매수 가능:</span> 마성리, 신리, 봉남리, 진사리
                       </p>
                       <p className="mt-0.5">
-                        <span className="text-destructive">편입토지 없음:</span> 금곡동, 가장리
+                        <span className="text-warning">경계 사례:</span> 능평리, 야탑동
+                      </p>
+                      <p className="mt-0.5">
+                        <span className="text-destructive">매수 불가:</span> 덕평리, 천남리
+                      </p>
+                      <p className="mt-0.5">
+                        <span className="text-muted-foreground">편입토지 없음:</span> 금곡동, 가장리
                       </p>
                     </div>
                   </div>
