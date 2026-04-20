@@ -5,7 +5,7 @@ import { LandSearchSection } from "@/components/citizen/land-search-section";
 import { ApplicationFormSection } from "@/components/citizen/application-form-section";
 import { ApplicationResultSection } from "@/components/citizen/application-result-section";
 import { ApplicationStatusSection } from "@/components/citizen/application-status-section";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { FilePlus, ClipboardList } from "lucide-react";
 import type { LandInfo, Application, AIAnalysisResult } from "@/lib/types";
@@ -60,16 +60,30 @@ export default function CitizenPage() {
 
       {/* 상위 메뉴: 신규 신청 / 신청 현황 조회 */}
       <Tabs value={mainTab} onValueChange={(v) => setMainTab(v as "new" | "status")} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 max-w-md">
-          <TabsTrigger value="new" className="cursor-pointer flex items-center gap-2">
+        <div className="flex gap-0 rounded-lg bg-gray-50 p-1">
+          <button
+            onClick={() => setMainTab("new")}
+            className={`flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-medium transition-all ${
+              mainTab === "new"
+                ? "border-2 border-green-600 bg-white text-green-600"
+                : "border-2 border-transparent bg-transparent text-gray-600 hover:text-gray-900"
+            }`}
+          >
             <FilePlus className="h-5 w-5" />
             <span>신규 신청</span>
-          </TabsTrigger>
-          <TabsTrigger value="status" className="cursor-pointer flex items-center gap-2">
+          </button>
+          <button
+            onClick={() => setMainTab("status")}
+            className={`flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-medium transition-all ${
+              mainTab === "status"
+                ? "border-2 border-green-600 bg-white text-green-600"
+                : "border-2 border-transparent bg-transparent text-gray-600 hover:text-gray-900"
+            }`}
+          >
             <ClipboardList className="h-5 w-5" />
             <span>신청 현황 조회</span>
-          </TabsTrigger>
-        </TabsList>
+          </button>
+        </div>
 
         {/* 신규 신청 */}
         <TabsContent value="new" className="mt-6 space-y-6">
