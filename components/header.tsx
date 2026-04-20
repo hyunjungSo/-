@@ -17,67 +17,74 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-card shadow-sm">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-              <Building2 className="h-6 w-6 text-primary-foreground" />
-            </div>
-            <div className="hidden sm:block">
-              <p className="text-lg font-semibold text-foreground">
-                잔여지 매수 판독 솔루션
-              </p>
-              <p className="text-xs text-muted-foreground">한국도로공사</p>
-            </div>
-          </Link>
+    <header className="sticky top-0 z-50 w-full shadow-md">
+      {/* Top bar */}
+      <div className="bg-primary">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-14 items-center justify-between">
+            {/* Logo */}
+            <Link href="/" className="flex cursor-pointer items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded bg-white/20">
+                <Building2 className="h-5 w-5 text-primary-foreground" />
+              </div>
+              <div>
+                <p className="text-base font-bold text-primary-foreground">
+                  한국도로공사
+                </p>
+                <p className="text-xs text-primary-foreground/80">용지정보시스템</p>
+              </div>
+            </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex md:items-center md:gap-1">
+            {/* Mobile menu button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="cursor-pointer text-primary-foreground hover:bg-white/20 md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </Button>
+          </div>
+        </div>
+      </div>
+      
+      {/* Navigation bar */}
+      <div className="border-b border-border bg-card">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <nav className="hidden h-12 items-center gap-0 md:flex">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "rounded-md px-4 py-2 text-sm font-medium transition-colors",
+                  "flex h-full cursor-pointer items-center border-b-2 px-5 text-sm font-medium transition-colors",
                   pathname.startsWith(item.href)
-                    ? "bg-primary text-primary-foreground"
-                    : "text-foreground hover:bg-muted"
+                    ? "border-primary bg-primary/5 text-primary"
+                    : "border-transparent text-foreground hover:border-primary/50 hover:bg-muted"
                 )}
               >
                 {item.name}
               </Link>
             ))}
           </nav>
-
-          {/* Mobile menu button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </Button>
         </div>
       </div>
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="border-t border-border bg-card md:hidden">
-          <nav className="flex flex-col p-4">
+        <div className="border-b border-border bg-card md:hidden">
+          <nav className="flex flex-col p-2">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
                 onClick={() => setMobileMenuOpen(false)}
                 className={cn(
-                  "rounded-md px-4 py-3 text-sm font-medium transition-colors",
+                  "cursor-pointer rounded px-4 py-3 text-sm font-medium transition-colors",
                   pathname.startsWith(item.href)
                     ? "bg-primary text-primary-foreground"
                     : "text-foreground hover:bg-muted"
