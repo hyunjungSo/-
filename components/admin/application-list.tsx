@@ -43,7 +43,7 @@ const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock
 
 export function ApplicationList({ applications, onSelect }: ApplicationListProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<ProcessStatus | "all">("all");
+  const [statusFilter, setStatusFilter] = useState<AdminStatus | "all">("all");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const filteredApplications = useMemo(() => {
@@ -53,7 +53,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           app.applicationNumber.includes(searchQuery) ||
           app.applicantName.includes(searchQuery) ||
           app.landInfo.address.includes(searchQuery);
-        const matchesStatus = statusFilter === "all" || app.status === statusFilter;
+        const matchesStatus = statusFilter === "all" || app.adminStatus === statusFilter;
         return matchesSearch && matchesStatus;
       })
       .sort((a, b) => {
@@ -67,17 +67,16 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   const stats = useMemo(() => {
     return {
       total: applications.length,
-      접수됨: applications.filter((a) => a.status === "접수됨").length,
-      AI분석완료: applications.filter((a) => a.status === "AI분석완료").length,
-      검토중: applications.filter((a) => a.status === "검토중").length,
-      처리완료: applications.filter((a) => a.status === "처리완료").length,
+      대기중: applications.filter((a) => a.adminStatus === "대기중").length,
+      진행중: applications.filter((a) => a.adminStatus === "진행중").length,
+      완료: applications.filter((a) => a.adminStatus === "완료").length,
     };
   }, [applications]);
 
   return (
     <div className="space-y-6">
       {/* 통계 카드 */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
@@ -93,33 +92,40 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">{stats.접수됨}</p>
-              <p className="text-xs text-muted-foreground">접수됨</p>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100">
+                <Clock className="h-5 w-5 text-gray-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-gray-600">{stats.대기중}</p>
+                <p className="text-xs text-muted-foreground">대기중</p>
+              </div>
             </div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">{stats.AI분석완료}</p>
-              <p className="text-xs text-muted-foreground">AI 분석 완료</p>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
+                <Loader2 className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-blue-600">{stats.진행중}</p>
+                <p className="text-xs text-muted-foreground">진행중</p>
+              </div>
             </div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-amber-600">{stats.검토중}</p>
-              <p className="text-xs text-muted-foreground">검토 중</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-green-600">{stats.처리완료}</p>
-              <p className="text-xs text-muted-foreground">처리 완료</p>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
+                <CheckCircle2 className="h-5 w-5 text-green-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-green-600">{stats.완료}</p>
+                <p className="text-xs text-muted-foreground">완료</p>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -146,17 +152,16 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               />
             </div>
             <div className="flex items-center gap-2">
-              <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as ProcessStatus | "all")}>
+              <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as AdminStatus | "all")}>
                 <SelectTrigger className="h-10 w-[150px] gap-2">
                   <Filter className="h-4 w-4 text-muted-foreground" />
                   <SelectValue placeholder="처리상태" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">전체 상태</SelectItem>
-                  <SelectItem value="접수됨">접수됨</SelectItem>
-                  <SelectItem value="AI분석완료">AI 분석 완료</SelectItem>
-                  <SelectItem value="검토중">검토 중</SelectItem>
-                  <SelectItem value="처리완료">처리 완료</SelectItem>
+                  <SelectItem value="all">전체 민원</SelectItem>
+                  <SelectItem value="대기중">대기중</SelectItem>
+                  <SelectItem value="진행중">진행중</SelectItem>
+                  <SelectItem value="완료">완료</SelectItem>
                 </SelectContent>
               </Select>
               <Button
