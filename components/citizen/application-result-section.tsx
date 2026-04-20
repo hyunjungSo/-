@@ -125,7 +125,7 @@ export function ApplicationResultSection({ application }: ApplicationResultSecti
                 1
               </span>
               <span>
-                접수된 신청서는 AI 분석을 통해 매수 기준 충족 여부가 자동으로 검토됩니다.
+                접수된 신청서는 담당자가 직접 검토하여 매수 기준 충족 여부를 판정합니다.
               </span>
             </li>
             <li className="flex gap-3">
@@ -133,7 +133,7 @@ export function ApplicationResultSection({ application }: ApplicationResultSecti
                 2
               </span>
               <span>
-                담당자가 AI 분석 결과를 확인하고 최종 판정을 진행합니다.
+                필요시 현장 확인 및 추가 서류 요청이 있을 수 있으며, 수동 확인 항목(접면도로 상실, 농기계 회전 곤란, 수로 상실 등)을 검토합니다.
               </span>
             </li>
             <li className="flex gap-3">
