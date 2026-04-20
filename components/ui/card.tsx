@@ -32,8 +32,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-title"
-      // 적절한 제목 크기
-      className={cn('text-lg leading-snug font-bold text-foreground', className)}
+      className={cn('font-semibold leading-none tracking-tight', className)}
       {...props}
     />
   )
@@ -43,8 +42,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-description"
-      // 적절한 설명 텍스트 크기
-      className={cn('text-muted-foreground text-sm leading-relaxed', className)}
+      className={cn('text-muted-foreground text-sm', className)}
       {...props}
     />
   )
