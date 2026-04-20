@@ -109,6 +109,16 @@ export interface AIAnalysisResult {
   farmMachineDifficulty: boolean; // 농기계 진입/회전 곤란 (수동확인)
   isBorderlineCase: boolean; // AI 판정 경계 사례
   borderlineReason?: string; // 경계 사례 사유
+  judgmentRationale: JudgmentRationale; // 판단 근거 설명
+}
+
+// 판단 근거 설명
+export interface JudgmentRationale {
+  summary: string; // 판단 요약
+  legalBasis: string; // 법적 근거
+  appliedCriteria: string[]; // 적용된 기준
+  detailedExplanation: string; // 상세 설명
+  manualCheckItems?: string[]; // 수동 확인 필요 항목
 }
 
 // 기준 충족 여부

@@ -17,14 +17,121 @@ import {
   MapPin,
   User,
   Calendar,
-  ChevronRight
+  ChevronRight,
+  Scale,
+  ChevronDown,
+  ChevronUp,
+  AlertTriangle,
+  Info
 } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+
+import type { JudgmentRationale } from "@/lib/types";
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string; bgColor: string }> = {
   대기: { label: "대기", icon: Clock, color: "text-muted-foreground", bgColor: "bg-muted" },
   진행중: { label: "진행중", icon: Loader2, color: "text-primary", bgColor: "bg-primary/10" },
   완료: { label: "완료", icon: CheckCircle2, color: "text-accent", bgColor: "bg-accent/10" },
 };
+
+// 신청 현황용 판단 근거 컴포넌트
+function StatusRationaleSection({ rationale }: { rationale: JudgmentRationale }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <CollapsibleTrigger asChild>
+        <Button 
+          variant="outline" 
+          className="w-full cursor-pointer justify-between"
+          size="sm"
+        >
+          <div className="flex items-center gap-2">
+            <Scale className="h-4 w-4 text-primary" />
+            <span>AI 판단 근거 보기</span>
+          </div>
+          {isOpen ? (
+            <ChevronUp className="h-4 w-4" />
+          ) : (
+            <ChevronDown className="h-4 w-4" />
+          )}
+        </Button>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="mt-3 space-y-3">
+        {/* 판단 요약 */}
+        <div className="rounded-lg border border-border bg-card p-3">
+          <div className="flex items-start gap-2">
+            <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+            <div>
+              <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
+              <p className="mt-1 text-xs text-muted-foreground">{rationale.summary}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 법적 근거 */}
+        <div className="rounded-lg border border-border bg-muted/30 p-3">
+          <div className="flex items-start gap-2">
+            <Scale className="mt-0.5 h-4 w-4 shrink-0 text-chart-3" />
+            <div>
+              <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
+              <p className="mt-1 text-xs text-muted-foreground">{rationale.legalBasis}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 적용 기준 */}
+        <div className="rounded-lg border border-border bg-card p-3">
+          <h4 className="mb-2 text-sm font-semibold text-foreground">적용 기준</h4>
+          <ul className="space-y-1">
+            {rationale.appliedCriteria.map((criteria, idx) => (
+              <li key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
+                <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-primary" />
+                <span>{criteria}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* 수동 확인 필요 항목 */}
+        {rationale.manualCheckItems && rationale.manualCheckItems.length > 0 && (
+          <div className="rounded-lg border border-warning/50 bg-warning/5 p-3">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
+              <div>
+                <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
+                <ul className="mt-1 space-y-0.5">
+                  {rationale.manualCheckItems.map((item, idx) => (
+                    <li key={idx} className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <Info className="h-3 w-3 text-warning" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 상세 설명 */}
+        <div className="rounded-lg border border-border bg-card p-3">
+          <h4 className="mb-2 text-sm font-semibold text-foreground">상세 분석</h4>
+          <pre className="whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
+            {rationale.detailedExplanation}
+          </pre>
+        </div>
+
+        {/* 안내 문구 */}
+        <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-2">
+          <Info className="mt-0.5 h-3 w-3 shrink-0 text-primary" />
+          <p className="text-xs text-muted-foreground">
+            AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+          </p>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+}
 
 export function ApplicationStatusSection() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -239,6 +346,11 @@ export function ApplicationStatusSection() {
                     </p>
                   )}
                 </div>
+              )}
+
+              {/* AI 판단 근거 표시 */}
+              {searchResult.aiResult?.judgmentRationale && (
+                <StatusRationaleSection rationale={searchResult.aiResult.judgmentRationale} />
               )}
 
               {/* 토지 정보 요약 */}

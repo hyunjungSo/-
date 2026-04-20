@@ -8,11 +8,115 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { LandMap } from "@/components/land-map";
 import { dummyLandInfoList } from "@/lib/dummy-data";
-import type { LandInfo, AIAnalysisResult } from "@/lib/types";
-import { Search, MapPin, ChevronRight, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban } from "lucide-react";
+import type { LandInfo, AIAnalysisResult, JudgmentRationale } from "@/lib/types";
+import { Search, MapPin, ChevronRight, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface LandSearchSectionProps {
   onLandSelect: (land: LandInfo, aiResult: AIAnalysisResult) => void;
+}
+
+// 판단 근거 설명 컴포넌트
+function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <CollapsibleTrigger asChild>
+        <Button 
+          variant="outline" 
+          className="w-full cursor-pointer justify-between"
+          size="sm"
+        >
+          <div className="flex items-center gap-2">
+            <Scale className="h-4 w-4 text-primary" />
+            <span>판단 근거 상세 보기</span>
+          </div>
+          {isOpen ? (
+            <ChevronUp className="h-4 w-4" />
+          ) : (
+            <ChevronDown className="h-4 w-4" />
+          )}
+        </Button>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="mt-3 space-y-3">
+        {/* 판단 요약 */}
+        <div className="rounded-lg border border-border bg-card p-4">
+          <div className="flex items-start gap-2">
+            <FileText className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+            <div>
+              <h4 className="font-semibold text-foreground">판단 요약</h4>
+              <p className="mt-1 text-sm text-muted-foreground">{rationale.summary}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 법적 근거 */}
+        <div className="rounded-lg border border-border bg-muted/30 p-4">
+          <div className="flex items-start gap-2">
+            <Scale className="mt-0.5 h-5 w-5 shrink-0 text-chart-3" />
+            <div>
+              <h4 className="font-semibold text-foreground">법적 근거</h4>
+              <p className="mt-1 text-sm text-muted-foreground">{rationale.legalBasis}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 적용 기준 */}
+        <div className="rounded-lg border border-border bg-card p-4">
+          <h4 className="mb-2 font-semibold text-foreground">적용 기준</h4>
+          <ul className="space-y-1.5">
+            {rationale.appliedCriteria.map((criteria, idx) => (
+              <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                <span>{criteria}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* 수동 확인 필요 항목 */}
+        {rationale.manualCheckItems && rationale.manualCheckItems.length > 0 && (
+          <div className="rounded-lg border border-warning/50 bg-warning/5 p-4">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
+              <div>
+                <h4 className="font-semibold text-foreground">수동 확인 필요 항목</h4>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  다음 항목은 AI 자동 판독이 불가하여 담당자가 현장 확인 후 판단합니다.
+                </p>
+                <ul className="mt-2 space-y-1">
+                  {rationale.manualCheckItems.map((item, idx) => (
+                    <li key={idx} className="flex items-center gap-2 text-sm">
+                      <Info className="h-3 w-3 text-warning" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 상세 설명 */}
+        <div className="rounded-lg border border-border bg-card p-4">
+          <h4 className="mb-2 font-semibold text-foreground">상세 분석 내용</h4>
+          <pre className="whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
+            {rationale.detailedExplanation}
+          </pre>
+        </div>
+
+        {/* 안내 문구 */}
+        <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+          <p className="text-xs text-muted-foreground">
+            본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
+            판단 근거에 이의가 있으시면 신청서 제출 시 의견을 기재해 주시기 바랍니다.
+          </p>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
 }
 
 // AI 분석 결과 시뮬레이션
@@ -65,6 +169,8 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
   // 자동 판독 기준 충족 개수
   const metAutoCriteria = criteriaChecks.filter(c => c.isMet && c.autoDetected).length;
   const hasManualCheckNeeded = criteriaChecks.some(c => !c.autoDetected);
+  const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
+  const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
   // 경계 사례 판정: 자동 판독 기준 1개만 충족하고 수동 확인 항목이 있는 경우
   const isBorderlineCase = metAutoCriteria === 1 && hasManualCheckNeeded;
@@ -80,6 +186,16 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
   } else {
     provisionalJudgment = "기각";
   }
+
+  // 판단 근거 생성
+  const judgmentRationale: JudgmentRationale = generateJudgmentRationale(
+    land,
+    provisionalJudgment,
+    metAutoCriteria,
+    metCriteriaNames,
+    manualCheckItems,
+    shapeIndexChange
+  );
   
   return {
     landTypePath: land.landType,
@@ -94,6 +210,129 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     farmMachineDifficulty: false,
     isBorderlineCase,
     borderlineReason,
+    judgmentRationale,
+  };
+}
+
+// 판단 근거 설명 생성 함수
+function generateJudgmentRationale(
+  land: LandInfo,
+  judgment: "매수" | "기각" | "심의위원회이관",
+  metCriteriaCount: number,
+  metCriteriaNames: string[],
+  manualCheckItems: string[],
+  shapeIndexChange: number
+): JudgmentRationale {
+  const legalBasis = "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조(잔여지의 매수청구 등) 및 동법 시행규칙 제34조(잔여지 등의 매수청구)";
+  
+  let summary: string;
+  let detailedExplanation: string;
+  const appliedCriteria: string[] = [];
+
+  // 토지 유형별 기준 설명
+  if (land.landType === "대지") {
+    appliedCriteria.push(`대지 면적 기준: 주거지역 90㎡, 상업지역 150㎡, 공업지역 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)`);
+  } else if (land.landType === "농지") {
+    appliedCriteria.push(`농지 면적 기준: 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)`);
+  } else if (land.landType === "산지") {
+    appliedCriteria.push(`산지 면적 기준: 990㎡ 이하`);
+  } else {
+    appliedCriteria.push(`그 밖의 토지 면적 기준: 330㎡ 이하`);
+  }
+  
+  appliedCriteria.push(`형상지수 변화 기준: 편입 전 대비 1.0 이상 상승 시 형상 불량으로 판단`);
+  appliedCriteria.push(`토지 형상 기준: 삼각형, 역삼각형, 자루형, 부정형 등 불규칙 형상`);
+  appliedCriteria.push(`잔여비율 기준: 30% 이하일 경우 종래 목적 사용 곤란으로 판단`);
+
+  if (judgment === "매수") {
+    summary = `본 토지는 잔여지 매수 기준 ${metCriteriaCount}개 항목을 충족하여 「매수 가능」으로 판정되었습니다.`;
+    
+    detailedExplanation = `1. 분석 대상 토지
+- 소재지: ${land.address}
+- 토지 유형: ${land.landType}
+- 지목: ${land.landCategory}
+
+2. 편입 현황
+- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡
+- 편입 면적: ${land.includedArea.toLocaleString()}㎡
+- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡
+- 잔여 비율: ${land.remainingRatio}%
+
+3. 형상 분석
+- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
+- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
+- 형상지수 변화: +${shapeIndexChange.toFixed(1)}
+
+4. 충족 기준
+${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
+
+5. 판정 결과
+위 분석 결과, 본 토지는 공익사업 편입으로 인해 잔여지의 종래 목적대로 사용이 현저히 곤란하게 되었으므로, 잔여지 매수 청구 대상에 해당합니다.`;
+
+  } else if (judgment === "기각") {
+    summary = `본 토지는 잔여지 매수 기준을 충족하지 않아 「기각」으로 판정되었습니다.`;
+    
+    detailedExplanation = `1. 분석 대상 토지
+- 소재지: ${land.address}
+- 토지 유형: ${land.landType}
+- 지목: ${land.landCategory}
+
+2. 편입 현황
+- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡
+- 편입 면적: ${land.includedArea.toLocaleString()}㎡
+- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡
+- 잔여 비율: ${land.remainingRatio}%
+
+3. 형상 분석
+- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
+- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
+- 형상지수 변화: +${shapeIndexChange.toFixed(1)}
+
+4. 미충족 사유
+- 잔여 비율 ${land.remainingRatio}%로 기준(30% 이하) 초과
+- 형상지수 변화 ${shapeIndexChange.toFixed(1)}로 기준(1.0 이상) 미달
+- 잔여지 형상이 정상 범위 내로 종래 용도 사용 가능
+
+5. 판정 결과
+위 분석 결과, 본 토지는 공익사업 편입 후에도 잔여지의 종래 목적대로 사용이 가능한 것으로 판단되어, 잔여지 매수 청구 대상에 해당하지 않습니다.
+
+※ 단, 현장 상황에 따라 실제 사용 가능 여부가 다를 수 있으며, 이 경우 담당자 검토를 통해 재판정될 수 있습니다.`;
+
+  } else {
+    summary = `본 토지는 자동 판독 기준만으로 명확한 판정이 어려워 「심의위원회 이관」이 필요합니다.`;
+    
+    detailedExplanation = `1. 분석 대상 토지
+- 소재지: ${land.address}
+- 토지 유형: ${land.landType}
+- 지목: ${land.landCategory}
+
+2. 편입 현황
+- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡
+- 편입 면적: ${land.includedArea.toLocaleString()}㎡
+- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡
+- 잔여 비율: ${land.remainingRatio}%
+
+3. 형상 분석
+- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
+- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
+- 형상지수 변화: +${shapeIndexChange.toFixed(1)}
+
+4. 경계 사례 판정 사유
+- 자동 판독 가능 기준 중 일부만 충족
+- 수동 확인이 필요한 항목 존재: ${manualCheckItems.join(", ")}
+
+5. 판정 결과
+본 토지는 자동 판독 기준만으로는 명확한 판정이 어려운 경계 사례입니다. 담당자가 현장 확인 및 추가 검토를 진행한 후, 필요시 토지보상심의위원회에서 최종 판정합니다.
+
+※ 수동 확인 항목(접면도로 상실, 농기계 진입 곤란, 수로 상실 등)의 충족 여부에 따라 최종 판정이 달라질 수 있습니다.`;
+  }
+
+  return {
+    summary,
+    legalBasis,
+    appliedCriteria,
+    detailedExplanation,
+    manualCheckItems: manualCheckItems.length > 0 ? manualCheckItems : undefined,
   };
 }
 
@@ -483,6 +722,9 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                         </p>
                       </div>
                     )}
+
+                    {/* 판단 근거 설명 */}
+                    <JudgmentRationaleSection rationale={aiResult.judgmentRationale} />
 
                     <Button 
                       className="w-full cursor-pointer" 

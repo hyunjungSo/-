@@ -1,4 +1,4 @@
-import type { LandInfo, Application, AIAnalysisResult } from "./types";
+import type { LandInfo, Application, AIAnalysisResult, JudgmentRationale } from "./types";
 
 // 더미 토지 정보
 export const dummyLandInfoList: LandInfo[] = [
@@ -260,6 +260,8 @@ function generateAIResult(landInfo: LandInfo, isBorderline: boolean = false): AI
   // 최종 판정 결정
   const metAutoCriteria = criteriaChecks.filter(c => c.isMet && c.autoDetected).length;
   const hasManualCheckNeeded = criteriaChecks.some(c => !c.autoDetected);
+  const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
+  const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
   // 경계 사례 판정: 자동 판독 기준 1개만 충족하거나, 수동 확인 항목이 많은 경우
   const isBorderlineResult = isBorderline || (metAutoCriteria === 1 && hasManualCheckNeeded);
@@ -279,6 +281,9 @@ function generateAIResult(landInfo: LandInfo, isBorderline: boolean = false): AI
     provisionalJudgment = "기각";
   }
 
+  // 판단 근거 생성
+  const judgmentRationale = generateRationale(landInfo, provisionalJudgment, metAutoCriteria, metCriteriaNames, manualCheckItems, shapeIndexChange);
+
   return {
     landTypePath: landInfo.landType,
     criteriaChecks,
@@ -292,6 +297,48 @@ function generateAIResult(landInfo: LandInfo, isBorderline: boolean = false): AI
     farmMachineDifficulty: false,
     isBorderlineCase: isBorderlineResult,
     borderlineReason,
+    judgmentRationale,
+  };
+}
+
+// 판단 근거 생성 헬퍼 함수
+function generateRationale(
+  land: LandInfo,
+  judgment: "매수" | "기각" | "심의위원회이관",
+  metCriteriaCount: number,
+  metCriteriaNames: string[],
+  manualCheckItems: string[],
+  shapeIndexChange: number
+): JudgmentRationale {
+  const legalBasis = "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조";
+  
+  const appliedCriteria = [
+    `${land.landType} 면적 기준 적용`,
+    `형상지수 변화 기준: 1.0 이상 상승`,
+    `토지 형상 기준: 불규칙 형상 여부`,
+    `잔여비율 기준: 30% 이하`,
+  ];
+
+  let summary: string;
+  let detailedExplanation: string;
+
+  if (judgment === "매수") {
+    summary = `잔여지 매수 기준 ${metCriteriaCount}개 항목 충족으로 「매수 가능」 판정`;
+    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (지수 +${shapeIndexChange.toFixed(1)})\n충족기준: ${metCriteriaNames.join(", ")}`;
+  } else if (judgment === "기각") {
+    summary = `잔여지 매수 기준 미충족으로 「기각」 판정`;
+    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (지수 +${shapeIndexChange.toFixed(1)})\n미충족사유: 잔여비율 ${land.remainingRatio}% > 30%, 형상 정상 범위`;
+  } else {
+    summary = `자동 판독 기준 애매하여 「심의위원회 이관」 필요`;
+    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (${land.remainingRatio}%)\n수동확인필요: ${manualCheckItems.join(", ")}`;
+  }
+
+  return {
+    summary,
+    legalBasis,
+    appliedCriteria,
+    detailedExplanation,
+    manualCheckItems: manualCheckItems.length > 0 ? manualCheckItems : undefined,
   };
 }
 
