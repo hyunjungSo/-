@@ -163,11 +163,24 @@
     @apply border-border outline-ring/50;
   }
   
+  /* 최소 폰트 사이즈 14px 설정 */
+  html {
+    font-size: 100%;
+  }
+  
   body {
     @apply bg-background text-foreground;
+    font-size: 1rem; /* 16px */
+    line-height: 1.6;
     font-feature-settings: "kern" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Tailwind text-xs를 14px로 오버라이드 */
+  .text-xs {
+    font-size: 0.875rem !important; /* 14px */
+    line-height: 1.5;
   }
   
   /* 디지털 정부서비스 가이드라인: 포커스 표시 강화 */
