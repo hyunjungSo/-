@@ -32,7 +32,8 @@ function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-title"
-      className={cn('leading-none font-semibold', className)}
+      // WCAG: 제목은 충분히 크고 굵게
+      className={cn('text-lg leading-snug font-bold', className)}
       {...props}
     />
   )
@@ -42,7 +43,8 @@ function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-description"
-      className={cn('text-muted-foreground text-sm', className)}
+      // WCAG: 설명 텍스트도 충분한 크기와 대비
+      className={cn('text-muted-foreground text-base leading-relaxed', className)}
       {...props}
     />
   )

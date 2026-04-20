@@ -4,42 +4,43 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* WCAG AA 준수: 최소 대비율 4.5:1 (일반 텍스트), 3:1 (대형 텍스트/UI) */
   --background: oklch(0.98 0.005 145);
-  --foreground: oklch(0.2 0.02 145);
+  --foreground: oklch(0.15 0.02 145); /* 대비율 향상: 0.2 -> 0.15 */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.02 145);
+  --card-foreground: oklch(0.15 0.02 145);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.02 145);
-  --primary: oklch(0.45 0.14 145);
+  --popover-foreground: oklch(0.15 0.02 145);
+  --primary: oklch(0.35 0.12 145); /* 대비율 향상: 0.45 -> 0.35 */
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.96 0.01 145);
-  --secondary-foreground: oklch(0.2 0.02 145);
-  --muted: oklch(0.95 0.008 145);
-  --muted-foreground: oklch(0.45 0.02 145);
-  --accent: oklch(0.5 0.12 250);
+  --secondary: oklch(0.94 0.01 145);
+  --secondary-foreground: oklch(0.15 0.02 145);
+  --muted: oklch(0.93 0.008 145);
+  --muted-foreground: oklch(0.35 0.02 145); /* 대비율 향상: 0.45 -> 0.35 */
+  --accent: oklch(0.40 0.12 250); /* 대비율 향상: 0.5 -> 0.40 */
   --accent-foreground: oklch(1 0 0);
-  --destructive: oklch(0.55 0.22 27);
+  --destructive: oklch(0.45 0.22 27); /* 대비율 향상: 0.55 -> 0.45 */
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.85 0.02 145);
-  --input: oklch(0.95 0.005 145);
-  --ring: oklch(0.45 0.14 145);
-  --chart-1: oklch(0.45 0.14 145);
-  --chart-2: oklch(0.5 0.12 250);
-  --chart-3: oklch(0.6 0.15 50);
-  --chart-4: oklch(0.65 0.12 300);
-  --chart-5: oklch(0.5 0.1 200);
-  --radius: 0.375rem;
-  --sidebar: oklch(0.35 0.1 145);
+  --border: oklch(0.80 0.02 145); /* 테두리 대비 향상 */
+  --input: oklch(0.93 0.005 145);
+  --ring: oklch(0.35 0.14 145);
+  --chart-1: oklch(0.35 0.14 145);
+  --chart-2: oklch(0.40 0.12 250);
+  --chart-3: oklch(0.50 0.15 50);
+  --chart-4: oklch(0.55 0.12 300);
+  --chart-5: oklch(0.40 0.1 200);
+  --radius: 0.5rem; /* 더 큰 라운딩 */
+  --sidebar: oklch(0.25 0.1 145); /* 대비율 향상 */
   --sidebar-foreground: oklch(0.98 0.01 145);
   --sidebar-primary: oklch(1 0 0);
-  --sidebar-primary-foreground: oklch(0.35 0.1 145);
-  --sidebar-accent: oklch(0.4 0.08 145);
+  --sidebar-primary-foreground: oklch(0.25 0.1 145);
+  --sidebar-accent: oklch(0.35 0.08 145);
   --sidebar-accent-foreground: oklch(1 0 0);
-  --sidebar-border: oklch(0.38 0.08 145);
-  --sidebar-ring: oklch(0.5 0.1 145);
-  --warning: oklch(0.75 0.15 85);
-  --warning-foreground: oklch(0.35 0.1 85);
-  --success: oklch(0.55 0.14 145);
+  --sidebar-border: oklch(0.35 0.08 145);
+  --sidebar-ring: oklch(0.45 0.1 145);
+  --warning: oklch(0.55 0.15 85); /* 대비율 향상: 0.75 -> 0.55 */
+  --warning-foreground: oklch(1 0 0); /* 흰색으로 변경 */
+  --success: oklch(0.40 0.14 145); /* 대비율 향상 */
   --success-foreground: oklch(1 0 0);
 }
 
@@ -127,7 +128,78 @@
   * {
     @apply border-border outline-ring/50;
   }
+  
+  /* WCAG 2.1 AA 준수 기본 스타일 */
+  html {
+    font-size: 100%; /* 16px 기본 */
+    scroll-behavior: smooth;
+  }
+  
   body {
     @apply bg-background text-foreground;
+    font-size: 1rem; /* 16px */
+    line-height: 1.6; /* WCAG 권장 1.5 이상 */
+    letter-spacing: 0.01em;
+  }
+  
+  /* 최소 터치 타겟 44x44px (WCAG 2.5.5) */
+  button,
+  [role="button"],
+  input[type="checkbox"],
+  input[type="radio"],
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* 인라인 링크는 예외 */
+  p a,
+  li a,
+  span a {
+    min-height: auto;
+    min-width: auto;
+  }
+  
+  /* 포커스 표시 강화 (WCAG 2.4.7) */
+  :focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 2px;
+  }
+  
+  /* 텍스트 크기 및 가독성 */
+  h1 {
+    @apply text-3xl font-bold leading-tight;
+    letter-spacing: -0.02em;
+  }
+  
+  h2 {
+    @apply text-2xl font-semibold leading-snug;
+    letter-spacing: -0.01em;
+  }
+  
+  h3 {
+    @apply text-xl font-semibold leading-snug;
+  }
+  
+  h4 {
+    @apply text-lg font-medium leading-normal;
+  }
+  
+  p {
+    @apply text-base leading-relaxed;
+  }
+  
+  /* 작은 텍스트도 최소 12px 유지 */
+  small,
+  .text-xs {
+    font-size: 0.8125rem; /* 13px */
+    line-height: 1.5;
+  }
+  
+  /* 비활성화 상태도 대비 유지 */
+  :disabled,
+  [aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 }
