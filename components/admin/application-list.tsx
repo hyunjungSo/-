@@ -135,24 +135,24 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         </CardHeader>
         <CardContent>
           {/* 필터 및 검색 */}
-          <div className="mb-4 flex flex-col gap-4 sm:flex-row">
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="접수번호, 신청인명, 지번으로 검색"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="h-10 pl-10"
               />
             </div>
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
               <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as ProcessStatus | "all")}>
-                <SelectTrigger className="w-[140px]">
-                  <Filter className="mr-2 h-4 w-4" />
-                  <SelectValue placeholder="상태 필터" />
+                <SelectTrigger className="h-10 w-[150px] gap-2">
+                  <Filter className="h-4 w-4 text-muted-foreground" />
+                  <SelectValue placeholder="처리상태" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">전체</SelectItem>
+                  <SelectItem value="all">전체 상태</SelectItem>
                   <SelectItem value="접수됨">접수됨</SelectItem>
                   <SelectItem value="AI분석완료">AI 분석 완료</SelectItem>
                   <SelectItem value="검토중">검토 중</SelectItem>
@@ -161,8 +161,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </Select>
               <Button
                 variant="outline"
+                size="default"
+                className="h-10 gap-2 px-4"
                 onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
               >
+                <span className="text-muted-foreground">{sortOrder === "desc" ? "↓" : "↑"}</span>
                 {sortOrder === "desc" ? "최신순" : "오래된순"}
               </Button>
             </div>
