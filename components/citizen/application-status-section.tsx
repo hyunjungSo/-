@@ -29,9 +29,9 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import type { JudgmentRationale } from "@/lib/types";
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string; bgColor: string }> = {
-  대기: { label: "대기", icon: Clock, color: "text-muted-foreground", bgColor: "bg-muted" },
-  진행중: { label: "진행중", icon: Loader2, color: "text-primary", bgColor: "bg-primary/10" },
-  완료: { label: "완료", icon: CheckCircle2, color: "text-accent", bgColor: "bg-accent/10" },
+  대기: { label: "대기", icon: Clock, color: "text-gray-600", bgColor: "bg-gray-100" },
+  진행중: { label: "진행중", icon: Loader2, color: "text-blue-600", bgColor: "bg-blue-100" },
+  완료: { label: "완료", icon: CheckCircle2, color: "text-green-600", bgColor: "bg-green-100" },
 };
 
 // 신청 현황용 판단 근거 컴포넌트

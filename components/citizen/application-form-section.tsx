@@ -88,7 +88,7 @@ export function ApplicationFormSection({
 
   return (
     <div className="space-y-6">
-      <Button variant="ghost" onClick={onBack} className="mb-4">
+      <Button variant="outline" onClick={onBack} className="mb-4">
         <ArrowLeft className="mr-2 h-4 w-4" />
         토지 조회로 돌아가기
       </Button>

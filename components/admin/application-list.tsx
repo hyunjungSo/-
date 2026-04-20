@@ -28,17 +28,17 @@ interface ApplicationListProps {
   onSelect: (application: Application) => void;
 }
 
-const statusConfig: Record<ProcessStatus, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-  접수됨: { label: "접수됨", variant: "outline" },
-  AI분석완료: { label: "AI 분석 완료", variant: "secondary" },
-  검토중: { label: "검토 중", variant: "default" },
-  처리완료: { label: "처리 완료", variant: "secondary" },
+const statusConfig: Record<ProcessStatus, { label: string; className: string }> = {
+  접수됨: { label: "접수됨", className: "bg-gray-100 text-gray-700 border-gray-300" },
+  AI분석완료: { label: "AI 분석 완료", className: "bg-blue-100 text-blue-700 border-blue-300" },
+  검토중: { label: "검토 중", className: "bg-amber-100 text-amber-700 border-amber-300" },
+  처리완료: { label: "처리 완료", className: "bg-green-100 text-green-700 border-green-300" },
 };
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
-  대기: { label: "대기", icon: Clock, color: "text-muted-foreground" },
-  진행중: { label: "진행중", icon: Loader2, color: "text-primary" },
-  완료: { label: "완료", icon: CheckCircle2, color: "text-accent" },
+  대기: { label: "대기", icon: Clock, color: "text-gray-500" },
+  진행중: { label: "진행중", icon: Loader2, color: "text-blue-600" },
+  완료: { label: "완료", icon: CheckCircle2, color: "text-green-600" },
 };
 
 export function ApplicationList({ applications, onSelect }: ApplicationListProps) {
@@ -110,7 +110,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         <Card>
           <CardContent className="p-4">
             <div className="text-center">
-              <p className="text-2xl font-bold text-primary">{stats.검토중}</p>
+              <p className="text-2xl font-bold text-amber-600">{stats.검토중}</p>
               <p className="text-xs text-muted-foreground">검토 중</p>
             </div>
           </CardContent>
@@ -118,7 +118,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         <Card>
           <CardContent className="p-4">
             <div className="text-center">
-              <p className="text-2xl font-bold text-accent">{stats.처리완료}</p>
+              <p className="text-2xl font-bold text-green-600">{stats.처리완료}</p>
               <p className="text-xs text-muted-foreground">처리 완료</p>
             </div>
           </CardContent>
@@ -215,7 +215,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     <TableCell>{app.landInfo.landType}</TableCell>
                     <TableCell>{app.landInfo.remainingArea.toLocaleString()}㎡</TableCell>
                     <TableCell>
-                      <Badge variant={statusConfig[app.status].variant}>
+                      <Badge className={statusConfig[app.status].className}>
                         {statusConfig[app.status].label}
                       </Badge>
                     </TableCell>
@@ -253,7 +253,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     <span className="font-medium text-foreground">
                       {app.applicationNumber}
                     </span>
-                    <Badge variant={statusConfig[app.status].variant} className="text-xs">
+                    <Badge className={`text-xs ${statusConfig[app.status].className}`}>
                       {statusConfig[app.status].label}
                     </Badge>
                     {app.additionalLands && app.additionalLands.length > 0 && (

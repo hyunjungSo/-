@@ -41,15 +41,15 @@ interface ApplicationDetailProps {
 }
 
 const judgmentConfig = {
-  매수: { label: "매수", icon: CheckCircle2, color: "text-accent" },
-  기각: { label: "기각", icon: XCircle, color: "text-destructive" },
-  심의위원회이관: { label: "심의위원회 이관", icon: AlertTriangle, color: "text-chart-3" },
+  매수: { label: "매수", icon: CheckCircle2, color: "text-green-600" },
+  기각: { label: "기각", icon: XCircle, color: "text-red-600" },
+  심의위원회이관: { label: "심의위원회 이관", icon: AlertTriangle, color: "text-amber-600" },
 };
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
-  대기: { label: "대기", icon: Clock, color: "text-muted-foreground" },
-  진행중: { label: "진행중", icon: Loader2, color: "text-primary" },
-  완료: { label: "완료", icon: CheckCircle2, color: "text-accent" },
+  대기: { label: "대기", icon: Clock, color: "text-gray-500" },
+  진행중: { label: "진행중", icon: Loader2, color: "text-blue-600" },
+  완료: { label: "완료", icon: CheckCircle2, color: "text-green-600" },
 };
 
 export function ApplicationDetail({ application, onBack, onSave }: ApplicationDetailProps) {
@@ -93,12 +93,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <Button variant="ghost" onClick={onBack}>
+        <Button variant="outline" onClick={onBack}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           목록으로 돌아가기
         </Button>
         <div className="flex gap-2">
-          <Button variant="outline" asChild>
+          <Button variant="secondary" asChild>
             <Link href={`/admin/review/${application.id}`}>
               <FileText className="mr-2 h-4 w-4" />
               심의서 생성
@@ -364,9 +364,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   className="flex items-start gap-3 rounded-lg border border-border p-3"
                 >
                   {check.isMet ? (
-                    <CheckCircle2 className="h-5 w-5 shrink-0 text-accent" />
+                    <CheckCircle2 className="h-5 w-5 shrink-0 text-green-600" />
                   ) : (
-                    <XCircle className="h-5 w-5 shrink-0 text-muted-foreground" />
+                    <XCircle className="h-5 w-5 shrink-0 text-gray-400" />
                   )}
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
