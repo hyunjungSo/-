@@ -31,13 +31,13 @@ export function Header() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* 로고 */}
-          <Link href="/" className="flex cursor-pointer items-center">
+          <Link href="/" className="flex cursor-pointer items-center py-2">
             <Image
               src="/images/logo-lc.png"
               alt="한국도로공사 토지정보 토지보상"
-              width={200}
-              height={40}
-              className="h-10 w-auto object-contain"
+              width={180}
+              height={36}
+              className="h-8 w-auto object-contain"
               priority
             />
           </Link>
