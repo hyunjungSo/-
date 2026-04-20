@@ -8,7 +8,7 @@ import { dummyApplications } from "@/lib/dummy-data";
 import type { Application, AdminStatus } from "@/lib/types";
 import { 
   Clock, 
-  Loader2, 
+  PlayCircle, 
   CheckCircle2, 
   FileText, 
   MapPin,
@@ -25,7 +25,7 @@ import type { JudgmentRationale } from "@/lib/types";
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string; bgColor: string }> = {
   대기중: { label: "대기중", icon: Clock, color: "text-gray-600", bgColor: "bg-gray-100" },
-  진행중: { label: "진행중", icon: Loader2, color: "text-blue-600", bgColor: "bg-blue-100" },
+  진행중: { label: "진행중", icon: PlayCircle, color: "text-blue-600", bgColor: "bg-blue-100" },
   완료: { label: "완료", icon: CheckCircle2, color: "text-green-600", bgColor: "bg-green-100" },
 };
 
@@ -178,7 +178,7 @@ function ApplicationDetailCard({ application, onClose }: { application: Applicat
                           ? "border-primary/50 bg-primary/10 text-primary"
                           : "border-muted-foreground/30 bg-muted text-muted-foreground"
                     }`}>
-                      <Icon className={`h-5 w-5 ${status === "진행중" && isCurrent ? "animate-spin" : ""}`} />
+                      <Icon className="h-5 w-5" />
                     </div>
                     <span className={`mt-2 text-xs font-medium ${
                       isCurrent ? "text-primary" : isActive ? "text-foreground" : "text-muted-foreground"
@@ -311,7 +311,7 @@ export function ApplicationStatusSection() {
                           {app.applicationNumber}
                         </span>
                         <Badge className={`${statusConfig.bgColor} ${statusConfig.color}`}>
-                          <StatusIcon className={`mr-1 h-3 w-3 ${app.adminStatus === "진행중" ? "animate-spin" : ""}`} />
+                          <StatusIcon className="mr-1 h-3 w-3" />
                           {statusConfig.label}
                         </Badge>
                         {app.adminStatus === "완료" && app.finalJudgment && (

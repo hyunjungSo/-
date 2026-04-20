@@ -28,7 +28,7 @@ import {
   AlertTriangle,
   Save,
   Clock,
-  Loader2,
+  PlayCircle,
   Layers,
   Info,
 } from "lucide-react";
@@ -48,7 +48,7 @@ const judgmentConfig = {
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
   대기중: { label: "대기중", icon: Clock, color: "text-gray-500" },
-  진행중: { label: "진행중", icon: Loader2, color: "text-blue-600" },
+  진행중: { label: "진행중", icon: PlayCircle, color: "text-blue-600" },
   완료: { label: "완료", icon: CheckCircle2, color: "text-green-600" },
 };
 
@@ -122,7 +122,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 const Icon = config.icon;
                 return (
                   <Badge variant="outline" className={config.color}>
-                    <Icon className={`mr-1 h-3 w-3 ${application.adminStatus === "진행중" ? "animate-spin" : ""}`} />
+                    <Icon className="mr-1 h-3 w-3" />
                     {config.label}
                   </Badge>
                 );

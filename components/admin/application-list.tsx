@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Application, ProcessStatus, AdminStatus } from "@/lib/types";
-import { Search, Filter, ChevronRight, Users, Clock, Loader2, CheckCircle2, Layers, AlertTriangle } from "lucide-react";
+import { Search, Filter, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, Layers, AlertTriangle } from "lucide-react";
 
 interface ApplicationListProps {
   applications: Application[];
@@ -37,7 +37,7 @@ const statusConfig: Record<ProcessStatus, { label: string; className: string }> 
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
   대기중: { label: "대기중", icon: Clock, color: "text-gray-500" },
-  진행중: { label: "진행중", icon: Loader2, color: "text-blue-600" },
+  진행중: { label: "진행중", icon: PlayCircle, color: "text-blue-600" },
   완료: { label: "완료", icon: CheckCircle2, color: "text-green-600" },
 };
 
@@ -107,7 +107,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                <Loader2 className="h-5 w-5 text-blue-600" />
+                <PlayCircle className="h-5 w-5 text-blue-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-blue-600">{stats.진행중}</p>
@@ -176,7 +176,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             </div>
           </div>
 
-          {/* 테이블 (데스크톱) */}
+          {/* 테이블 (데스��톱) */}
           <div className="hidden rounded-lg border border-border md:block">
             <Table>
               <TableHeader>
@@ -233,7 +233,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                         const Icon = config.icon;
                         return (
                           <div className={`flex items-center gap-1 ${config.color}`}>
-                            <Icon className={`h-4 w-4 ${app.adminStatus === "진행중" ? "animate-spin" : ""}`} />
+                            <Icon className="h-4 w-4" />
                             <span className="text-sm font-medium">{config.label}</span>
                           </div>
                         );
