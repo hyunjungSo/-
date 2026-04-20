@@ -32,8 +32,8 @@ function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-title"
-      // 고령 사용자: 제목 22px, 굵은 폰트
-      className={cn('text-[1.375rem] leading-snug font-bold text-foreground', className)}
+      // 적절한 제목 크기
+      className={cn('text-lg leading-snug font-bold text-foreground', className)}
       {...props}
     />
   )
@@ -43,8 +43,8 @@ function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-description"
-      // 고령 사용자: 설명 텍스트 18px, 진한 회색 (#404040)
-      className={cn('text-[#404040] text-[1.125rem] leading-relaxed', className)}
+      // 적절한 설명 텍스트 크기
+      className={cn('text-muted-foreground text-sm leading-relaxed', className)}
       {...props}
     />
   )

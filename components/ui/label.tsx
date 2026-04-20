@@ -13,8 +13,8 @@ function Label({
     <LabelPrimitive.Root
       data-slot="label"
       className={cn(
-        // 고령 사용자: 18px 라벨, 굵은 폰트, 충분한 대비
-        'flex items-center gap-2 text-[1.125rem] leading-normal font-bold text-foreground select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-70 peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+        // WCAG 준수: 적절한 라벨 크기
+        'flex items-center gap-2 text-sm leading-normal font-semibold text-foreground select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-70 peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
         className,
       )}
       {...props}

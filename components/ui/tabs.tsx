@@ -26,8 +26,8 @@ function TabsList({
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
-        // 고령 사용자: 최소 56px 높이
-        'bg-muted text-foreground inline-flex h-16 w-fit items-center justify-center rounded-xl p-1.5',
+        // WCAG 준수: 적절한 높이
+        'bg-muted text-foreground inline-flex h-12 w-fit items-center justify-center rounded-lg p-1',
         className,
       )}
       {...props}
@@ -43,8 +43,8 @@ function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        // 고령 사용자: 최소 48px 높이, 18px 텍스트, 굵은 폰트
-        "data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[52px] min-w-[48px] flex-1 items-center justify-center gap-3 rounded-lg border border-transparent px-5 py-3 text-[1.125rem] font-bold whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-4 focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-70 data-[state=active]:shadow-md [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-6",
+        // WCAG 준수: 44px 높이, 16px 텍스트
+        "data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-10 min-w-[44px] flex-1 items-center justify-center gap-2 rounded-md border border-transparent px-4 py-2 text-base font-semibold whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-70 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-5",
         className,
       )}
       {...props}
