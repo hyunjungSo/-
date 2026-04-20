@@ -41,9 +41,9 @@ interface ApplicationDetailProps {
 }
 
 const judgmentConfig = {
-  매수: { label: "매수", icon: CheckCircle2, color: "text-green-600" },
+  매수: { label: "매수", icon: CheckCircle2, color: "text-blue-600" },
   기각: { label: "기각", icon: XCircle, color: "text-red-600" },
-  심의위원회이관: { label: "심의위원회 이관", icon: AlertTriangle, color: "text-amber-600" },
+  심의위원회이관: { label: "심의위원회 이관", icon: AlertTriangle, color: "text-orange-600" },
 };
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
