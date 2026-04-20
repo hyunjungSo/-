@@ -29,6 +29,8 @@ import {
   Save,
   Clock,
   Loader2,
+  Layers,
+  Info,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -149,6 +151,118 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
         </CardContent>
       </Card>
+
+      {/* 일단지 판정 (복수 필지가 있는 경우) */}
+      {application.additionalLands && application.additionalLands.length > 0 && (
+        <Card className="border-2 border-primary/30 bg-primary/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-primary">
+              <Layers className="h-5 w-5" />
+              동일 소유자 복수 필지 (일단지 판정)
+            </CardTitle>
+            <CardDescription>
+              동일 소유자의 인접 필지가 {application.additionalLands.length + 1}개 있습니다. 일단지 조건 충족 시 병합 처리가 가능합니다.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* 일단지 판정 조건 */}
+            <div className="rounded-lg border border-border bg-card p-4">
+              <h4 className="mb-3 font-medium text-foreground">일단지 판정 조건</h4>
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div className="flex items-center gap-2">
+                  {application.unifiedParcelCondition?.sameOwner ? (
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                  ) : (
+                    <XCircle className="h-5 w-5 text-muted-foreground" />
+                  )}
+                  <span className="text-sm">소유자 동일성</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {application.unifiedParcelCondition?.continuous ? (
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                  ) : (
+                    <XCircle className="h-5 w-5 text-muted-foreground" />
+                  )}
+                  <span className="text-sm">지반 연속성</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {application.unifiedParcelCondition?.sameUsage ? (
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                  ) : (
+                    <XCircle className="h-5 w-5 text-muted-foreground" />
+                  )}
+                  <span className="text-sm">용도 일체성</span>
+                </div>
+              </div>
+              {application.unifiedParcelCondition?.isUnifiedParcel && (
+                <div className="mt-3 flex items-center gap-2 rounded bg-primary/10 px-3 py-2">
+                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium text-primary">일단지 조건 충족 - 병합 처리 가능</span>
+                </div>
+              )}
+            </div>
+
+            {/* 필지 목록 */}
+            <div className="space-y-2">
+              <h4 className="font-medium text-foreground">포함 필지 목록</h4>
+              <div className="divide-y divide-border rounded-lg border border-border">
+                <div className="flex items-center justify-between p-3 bg-muted/30">
+                  <div>
+                    <p className="font-medium text-foreground">{application.landInfo.address}</p>
+                    <p className="text-sm text-muted-foreground">
+                      잔여면적: {application.landInfo.remainingArea.toLocaleString()}m² ({application.landInfo.remainingRatio}%)
+                    </p>
+                  </div>
+                  <Badge variant="default">주 필지</Badge>
+                </div>
+                {application.additionalLands.map((land, idx) => (
+                  <div key={land.id} className="flex items-center justify-between p-3">
+                    <div>
+                      <p className="font-medium text-foreground">{land.address}</p>
+                      <p className="text-sm text-muted-foreground">
+                        잔여면적: {land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)
+                      </p>
+                    </div>
+                    <Badge variant="outline">인접 필지 {idx + 1}</Badge>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center justify-between rounded-lg bg-muted p-3">
+                <span className="font-medium">합산 잔여 면적</span>
+                <span className="text-lg font-bold text-primary">
+                  {(application.landInfo.remainingArea + application.additionalLands.reduce((sum, l) => sum + l.remainingArea, 0)).toLocaleString()}m²
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* AI 판정 경계 사례 경고 */}
+      {(application.isBorderlineCase || application.aiResult?.isBorderlineCase) && (
+        <Card className="border-2 border-warning/50 bg-warning/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-warning">
+              <AlertTriangle className="h-5 w-5" />
+              AI 판정 경계 사례
+            </CardTitle>
+            <CardDescription>
+              이 신청건은 AI 자동 판정 기준 충족이 애매하여 담당자의 세심한 검토가 필요합니다.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-start gap-3 rounded-lg border border-warning/30 bg-card p-4">
+              <Info className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
+              <div>
+                <p className="font-medium text-foreground">토지보상심의위원회 이관 권장</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {application.aiResult?.borderlineReason || "자동 판독 기준만으로는 명확한 판정이 어렵습니다. 수동 확인 항목을 검토하고, 필요시 심의위원회에 이관해 주세요."}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* 지도 및 토지 정보 */}

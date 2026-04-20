@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Application, ProcessStatus, AdminStatus } from "@/lib/types";
-import { Search, Filter, ChevronRight, Users, Clock, Loader2, CheckCircle2 } from "lucide-react";
+import { Search, Filter, ChevronRight, Users, Clock, Loader2, CheckCircle2, Layers, AlertTriangle } from "lucide-react";
 
 interface ApplicationListProps {
   applications: Application[];
@@ -191,7 +191,22 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     className="cursor-pointer hover:bg-muted/50"
                     onClick={() => onSelect(app)}
                   >
-                    <TableCell className="font-medium">{app.applicationNumber}</TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        {app.applicationNumber}
+                        {app.additionalLands && app.additionalLands.length > 0 && (
+                          <span className="flex items-center gap-0.5 rounded bg-primary/10 px-1.5 py-0.5 text-xs text-primary" title="복수 필지">
+                            <Layers className="h-3 w-3" />
+                            {app.additionalLands.length + 1}
+                          </span>
+                        )}
+                        {(app.isBorderlineCase || app.aiResult?.isBorderlineCase) && (
+                          <span className="flex items-center rounded bg-warning/10 px-1.5 py-0.5 text-xs text-warning" title="AI 판정 경계 사례">
+                            <AlertTriangle className="h-3 w-3" />
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
                     <TableCell>{app.applicantName}</TableCell>
                     <TableCell>{app.appliedAt}</TableCell>
                     <TableCell className="max-w-[200px] truncate">
@@ -234,13 +249,25 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 className="flex w-full items-center justify-between rounded-lg border border-border bg-card p-4 text-left transition-colors hover:bg-muted"
               >
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="font-medium text-foreground">
                       {app.applicationNumber}
                     </span>
                     <Badge variant={statusConfig[app.status].variant} className="text-xs">
                       {statusConfig[app.status].label}
                     </Badge>
+                    {app.additionalLands && app.additionalLands.length > 0 && (
+                      <span className="flex items-center gap-0.5 rounded bg-primary/10 px-1.5 py-0.5 text-xs text-primary">
+                        <Layers className="h-3 w-3" />
+                        복수필지
+                      </span>
+                    )}
+                    {(app.isBorderlineCase || app.aiResult?.isBorderlineCase) && (
+                      <span className="flex items-center gap-0.5 rounded bg-warning/10 px-1.5 py-0.5 text-xs text-warning">
+                        <AlertTriangle className="h-3 w-3" />
+                        경계사례
+                      </span>
+                    )}
                   </div>
                   <p className="text-sm text-muted-foreground">
                     {app.applicantName} | {app.appliedAt}

@@ -17,46 +17,83 @@ interface LandSearchSectionProps {
 
 // AI 분석 결과 시뮬레이션
 function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
-  const shapeIndexChange = land.originalShapeIndex - land.remainingShapeIndex;
+  const shapeIndexChange = land.remainingShapeIndex - land.originalShapeIndex;
   
-  // 잔여지 비율 30% 이하이거나 형상지수 변화가 크면 매수 권장
-  const shouldPurchase = land.remainingRatio <= 30 || shapeIndexChange >= 0.15;
+  const criteriaChecks = [
+    {
+      criteriaName: "잔여지 비율",
+      criteriaDescription: `잔여 비율 ${land.remainingRatio}% (기준: 30% 이하)`,
+      isMet: land.remainingRatio <= 30,
+      autoDetected: true,
+    },
+    {
+      criteriaName: "형상지수 변화",
+      criteriaDescription: `형상지수 변화 +${shapeIndexChange.toFixed(1)} (기준: 1.0 이상)`,
+      isMet: shapeIndexChange >= 1.0,
+      autoDetected: true,
+    },
+    {
+      criteriaName: "토지 형상",
+      criteriaDescription: `잔여지 형상: ${land.remainingShape}`,
+      isMet: ["부정형", "삼각형", "역삼각형", "자루형"].includes(land.remainingShape),
+      autoDetected: true,
+    },
+    {
+      criteriaName: "접면도로 상실",
+      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목적 사용 곤란",
+      isMet: false,
+      autoDetected: false, // 수동 확인 필요
+    },
+  ];
+
+  // 농지의 경우 추가 수동 확인 항목
+  if (land.landType === "농지") {
+    criteriaChecks.push({
+      criteriaName: "농기계 진입/회전 곤란",
+      criteriaDescription: "농기계 진입 및 회전이 곤란하여 영농이 불가능한 경우",
+      isMet: false,
+      autoDetected: false,
+    });
+    criteriaChecks.push({
+      criteriaName: "수로 상실",
+      criteriaDescription: "관개수로 상실로 농업용수 공급이 불가능한 경우",
+      isMet: false,
+      autoDetected: false,
+    });
+  }
+
+  // 자동 판독 기준 충족 개수
+  const metAutoCriteria = criteriaChecks.filter(c => c.isMet && c.autoDetected).length;
+  const hasManualCheckNeeded = criteriaChecks.some(c => !c.autoDetected);
+  
+  // 경계 사례 판정: 자동 판독 기준 1개만 충족하고 수동 확인 항목이 있는 경우
+  const isBorderlineCase = metAutoCriteria === 1 && hasManualCheckNeeded;
+  
+  let provisionalJudgment: "매수" | "기각" | "심의위원회이관";
+  let borderlineReason: string | undefined;
+  
+  if (isBorderlineCase) {
+    provisionalJudgment = "심의위원회이관";
+    borderlineReason = "자동 판독 기준 충족이 애매합니다. 담당자 검토 후 최종 결정됩니다.";
+  } else if (metAutoCriteria >= 2) {
+    provisionalJudgment = "매수";
+  } else {
+    provisionalJudgment = "기각";
+  }
   
   return {
     landTypePath: land.landType,
-    criteriaChecks: [
-      {
-        criteriaName: "잔여지 비율",
-        criteriaDescription: `잔여 비율 ${land.remainingRatio}% (기준: 30% 이하)`,
-        isMet: land.remainingRatio <= 30,
-        autoDetected: true,
-      },
-      {
-        criteriaName: "형상지수 변화",
-        criteriaDescription: `형상지수 변화 ${shapeIndexChange.toFixed(2)} (기준: 0.15 이상)`,
-        isMet: shapeIndexChange >= 0.15,
-        autoDetected: true,
-      },
-      {
-        criteriaName: "토지 형상",
-        criteriaDescription: `잔여지 형상: ${land.remainingShape}`,
-        isMet: ["부정형", "삼각형", "역삼각형", "자루형"].includes(land.remainingShape),
-        autoDetected: true,
-      },
-      {
-        criteriaName: "맹지 여부",
-        criteriaDescription: "접면도로 상실로 인한 맹지화",
-        isMet: land.remainingRatio <= 20,
-        autoDetected: false,
-      },
-    ],
-    provisionalJudgment: shouldPurchase ? "매수" : "기각",
+    criteriaChecks,
+    provisionalJudgment,
     originalShapeIndex: land.originalShapeIndex,
     remainingShapeIndex: land.remainingShapeIndex,
     shapeIndexChange,
     isBlindLand: land.remainingRatio <= 20,
     accessRoadLost: false,
     waterChannelLost: false,
+    farmMachineDifficulty: false,
+    isBorderlineCase,
+    borderlineReason,
   };
 }
 
@@ -374,7 +411,9 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                     <div className={`rounded-lg border-2 p-4 ${
                       aiResult.provisionalJudgment === "매수" 
                         ? "border-primary bg-primary/5" 
-                        : "border-destructive bg-destructive/5"
+                        : aiResult.provisionalJudgment === "심의위원회이관"
+                          ? "border-warning bg-warning/5"
+                          : "border-destructive bg-destructive/5"
                     }`}>
                       <div className="mb-3 flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -384,9 +423,15 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                         <div className={`rounded-full px-3 py-1 text-sm font-bold ${
                           aiResult.provisionalJudgment === "매수"
                             ? "bg-primary text-primary-foreground"
-                            : "bg-destructive text-destructive-foreground"
+                            : aiResult.provisionalJudgment === "심의위원회이관"
+                              ? "bg-warning text-warning-foreground"
+                              : "bg-destructive text-destructive-foreground"
                         }`}>
-                          {aiResult.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
+                          {aiResult.provisionalJudgment === "매수" 
+                            ? "매수 가능" 
+                            : aiResult.provisionalJudgment === "심의위원회이관"
+                              ? "경계 사례"
+                              : "기준 미충족"}
                         </div>
                       </div>
 
@@ -411,9 +456,22 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                       </div>
                     </div>
 
-                    {aiResult.provisionalJudgment !== "매수" && (
+                    {/* 경계 사례 안내 */}
+                    {aiResult.isBorderlineCase && (
                       <div className="flex items-start gap-2 rounded-lg border border-warning/50 bg-warning/10 p-3">
                         <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
+                        <div className="text-xs">
+                          <p className="font-medium text-foreground">AI 판정 경계 사례</p>
+                          <p className="mt-0.5 text-muted-foreground">
+                            {aiResult.borderlineReason || "자동 판독 기준만으로는 명확한 판정이 어렵습니다. 담당자가 수동 확인 항목을 검토한 후 최종 결정합니다."}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {aiResult.provisionalJudgment === "기각" && !aiResult.isBorderlineCase && (
+                      <div className="flex items-start gap-2 rounded-lg border border-destructive/50 bg-destructive/10 p-3">
+                        <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
                         <p className="text-xs text-foreground">
                           AI 분석 결과 기준 미충족이지만, 현장 상황에 따라 다를 수 있습니다.
                         </p>
@@ -425,7 +483,11 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                       size="lg"
                       onClick={() => onLandSelect(searchResult, aiResult)}
                     >
-                      {aiResult.provisionalJudgment === "매수" ? "매수 신청 진행하기" : "그래도 신청하기"}
+                      {aiResult.provisionalJudgment === "매수" 
+                        ? "매수 신청 진행하기" 
+                        : aiResult.provisionalJudgment === "심의위원회이관"
+                          ? "검토 요청 신청하기"
+                          : "그래도 신청하기"}
                       <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
                   </div>

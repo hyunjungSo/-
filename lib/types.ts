@@ -61,6 +61,14 @@ export interface LandInfo {
   hasIncludedLand: boolean; // 편입토지 존재 여부
 }
 
+// 일단지 판정 조건
+export interface UnifiedParcelCondition {
+  sameOwner: boolean; // 소유자 동일성
+  continuous: boolean; // 지반 연속성
+  sameUsage: boolean; // 용도 일체성
+  isUnifiedParcel: boolean; // 일단지 여부
+}
+
 // 민원 신청
 export interface Application {
   id: string;
@@ -69,6 +77,8 @@ export interface Application {
   applicantContact: string; // 연락처
   applicantAddress: string; // 주소
   landInfo: LandInfo;
+  additionalLands?: LandInfo[]; // 동일 소유자 복수 필지
+  unifiedParcelCondition?: UnifiedParcelCondition; // 일단지 판정 조건
   actualUsage: LandCategory; // 실제 이용 상황
   reportedShape: LandShape; // 신청인 입력 토지 모양
   farmMachineDifficulty?: boolean; // 농기계 진입·회전 곤란
@@ -82,6 +92,7 @@ export interface Application {
   reviewerComment?: string; // 담당자 검토 의견
   adminName?: string; // 담당자명
   statusUpdatedAt?: string; // 상태 변경일
+  isBorderlineCase?: boolean; // AI 판정 경계 사례 여부
 }
 
 // AI 분석 결과
@@ -93,8 +104,11 @@ export interface AIAnalysisResult {
   remainingShapeIndex: number;
   shapeIndexChange: number;
   isBlindLand: boolean; // 맹지 여부
-  accessRoadLost: boolean; // 접면도로 상실
-  waterChannelLost: boolean; // 수로 상실
+  accessRoadLost: boolean; // 접면도로 상실 (수동확인)
+  waterChannelLost: boolean; // 수로 상실 (수동확인)
+  farmMachineDifficulty: boolean; // 농기계 진입/회전 곤란 (수동확인)
+  isBorderlineCase: boolean; // AI 판정 경계 사례
+  borderlineReason?: string; // 경계 사례 사유
 }
 
 // 기준 충족 여부

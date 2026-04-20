@@ -105,10 +105,64 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerContact: "010-4444-5555",
     hasIncludedLand: false,
   },
+  // 동일 소유자 복수 필지 (일단지 판정 케이스) - 주 필지
+  {
+    id: "land-007",
+    address: "경기도 성남시 분당구 야탑동 100-1",
+    originalArea: 400,
+    includedArea: 280,
+    remainingArea: 120,
+    remainingRatio: 30.0,
+    landType: "대지",
+    landCategory: "대",
+    originalShape: "가로장방형",
+    remainingShape: "삼각형",
+    originalShapeIndex: 4.2,
+    remainingShapeIndex: 5.9,
+    ownerName: "강동원",
+    ownerContact: "010-6666-7777",
+    hasIncludedLand: true,
+  },
+  // 동일 소유자 복수 필지 - 인접 필지 1
+  {
+    id: "land-008",
+    address: "경기도 성남시 분당구 야탑동 100-2",
+    originalArea: 350,
+    includedArea: 200,
+    remainingArea: 150,
+    remainingRatio: 42.9,
+    landType: "대지",
+    landCategory: "대",
+    originalShape: "세로장방형",
+    remainingShape: "부정형",
+    originalShapeIndex: 4.3,
+    remainingShapeIndex: 5.7,
+    ownerName: "강동원",
+    ownerContact: "010-6666-7777",
+    hasIncludedLand: true,
+  },
+  // AI 판정 경계 사례 (기준 충족 애매한 케이스)
+  {
+    id: "land-009",
+    address: "경기도 광주시 오포읍 능평리 555-3",
+    originalArea: 1000,
+    includedArea: 650,
+    remainingArea: 350,
+    remainingRatio: 35.0,
+    landType: "농지",
+    landCategory: "답",
+    originalShape: "정방형",
+    remainingShape: "사다리형",
+    originalShapeIndex: 4.0,
+    remainingShapeIndex: 4.8,
+    ownerName: "윤서연",
+    ownerContact: "010-8888-9999",
+    hasIncludedLand: true,
+  },
 ];
 
 // AI 분석 결과 생성 함수
-function generateAIResult(landInfo: LandInfo): AIAnalysisResult {
+function generateAIResult(landInfo: LandInfo, isBorderline: boolean = false): AIAnalysisResult {
   const criteriaChecks = [];
   
   // 면적 기준 체크
@@ -147,15 +201,44 @@ function generateAIResult(landInfo: LandInfo): AIAnalysisResult {
     autoDetected: false,
   });
 
+  // 농기계 진입/회전 곤란 (농지의 경우 수동 확인 필요)
+  if (landInfo.landType === "농지") {
+    criteriaChecks.push({
+      criteriaName: "농기계 진입/회전 곤란",
+      criteriaDescription: "농기계 진입 및 회전이 곤란하여 영농이 불가능한 경우",
+      isMet: false,
+      autoDetected: false,
+    });
+  }
+
+  // 수로 상실 (농지의 경우 수동 확인 필요)
+  if (landInfo.landType === "농지") {
+    criteriaChecks.push({
+      criteriaName: "수로 상실",
+      criteriaDescription: "관개수로 상실로 농업용수 공급이 불가능한 경우",
+      isMet: false,
+      autoDetected: false,
+    });
+  }
+
   // 최종 판정 결정
-  const metCriteria = criteriaChecks.filter(c => c.isMet).length;
-  const hasManualCheck = criteriaChecks.some(c => !c.autoDetected && !c.isMet);
+  const metAutoCriteria = criteriaChecks.filter(c => c.isMet && c.autoDetected).length;
+  const hasManualCheckNeeded = criteriaChecks.some(c => !c.autoDetected);
+  
+  // 경계 사례 판정: 자동 판독 기준 1개만 충족하거나, 수동 확인 항목이 많은 경우
+  const isBorderlineResult = isBorderline || (metAutoCriteria === 1 && hasManualCheckNeeded);
   
   let provisionalJudgment: "매수" | "기각" | "심의위원회이관";
-  if (hasManualCheck) {
+  let borderlineReason: string | undefined;
+  
+  if (isBorderlineResult) {
     provisionalJudgment = "심의위원회이관";
-  } else if (metCriteria >= 2) {
+    borderlineReason = "자동 판독 기준 충족이 애매하여 담당자 검토 및 심의위원회 판단이 필요합니다.";
+  } else if (metAutoCriteria >= 2) {
     provisionalJudgment = "매수";
+  } else if (hasManualCheckNeeded && metAutoCriteria >= 1) {
+    provisionalJudgment = "심의위원회이관";
+    borderlineReason = "수동 확인 항목이 존재하여 담당자 검토가 필요합니다.";
   } else {
     provisionalJudgment = "기각";
   }
@@ -170,6 +253,9 @@ function generateAIResult(landInfo: LandInfo): AIAnalysisResult {
     isBlindLand: false,
     accessRoadLost: false,
     waterChannelLost: false,
+    farmMachineDifficulty: false,
+    isBorderlineCase: isBorderlineResult,
+    borderlineReason,
   };
 }
 
@@ -248,6 +334,52 @@ export const dummyApplications: Application[] = [
     reviewerComment: "잔여지 형상 및 면적 기준 충족으로 매수 결정",
     adminName: "김담당",
     statusUpdatedAt: "2026-04-15",
+  },
+  // 동일 소유자 복수 필지 신청 (일단지 판정 케이스)
+  {
+    id: "app-005",
+    applicationNumber: "2026-0405-001",
+    applicantName: "강동원",
+    applicantContact: "010-6666-7777",
+    applicantAddress: "경기도 성남시 분당구 야탑동 50",
+    landInfo: dummyLandInfoList[6], // land-007
+    additionalLands: [dummyLandInfoList[7]], // land-008 (인접 필지)
+    unifiedParcelCondition: {
+      sameOwner: true,
+      continuous: true,
+      sameUsage: true,
+      isUnifiedParcel: true,
+    },
+    actualUsage: "대",
+    reportedShape: "삼각형",
+    farmMachineDifficulty: false,
+    reason: "도로 편입으로 인접한 2개 필지가 모두 불규칙한 형태로 남아 건축이 불가능합니다. 일단지로 판정하여 병합 처리를 요청드립니다.",
+    attachments: ["토지대장_100-1.pdf", "토지대장_100-2.pdf", "등기부등본.pdf"],
+    status: "검토중",
+    adminStatus: "진행중",
+    appliedAt: "2026-04-05",
+    aiResult: generateAIResult(dummyLandInfoList[6]),
+    adminName: "홍길동",
+    statusUpdatedAt: "2026-04-12",
+  },
+  // AI 판정 경계 사례 (심의위원회 이관 필요)
+  {
+    id: "app-006",
+    applicationNumber: "2026-0406-001",
+    applicantName: "윤서연",
+    applicantContact: "010-8888-9999",
+    applicantAddress: "경기도 광주시 오포읍 능평리 500",
+    landInfo: dummyLandInfoList[8], // land-009
+    actualUsage: "답",
+    reportedShape: "사다리형",
+    farmMachineDifficulty: true,
+    reason: "도로 편입 후 농지 형태가 사다리형으로 변경되어 농기계 작업이 매우 곤란합니다. 수로도 일부 단절되어 관개가 어렵습니다.",
+    attachments: ["토지대장.pdf", "농지원부.pdf"],
+    status: "AI분석완료",
+    adminStatus: "대기",
+    appliedAt: "2026-04-06",
+    aiResult: generateAIResult(dummyLandInfoList[8], true), // 경계 사례로 생성
+    isBorderlineCase: true,
   },
 ];
 
