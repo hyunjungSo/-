@@ -13,6 +13,13 @@ import { Input } from "@/components/ui/input";
 import { LandMap } from "@/components/land-map";
 import { dummyApplications, landShapes, landCategories } from "@/lib/dummy-data";
 import type { Application, LandShape, LandCategory } from "@/lib/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ArrowLeft, Download, Printer, FileText, CheckCircle2, Edit3 } from "lucide-react";
 
 // 대상 토지 필지 데이터 (샘플과 동일하게)
@@ -144,6 +151,15 @@ export default function ReviewDocumentPage({
 
   const handleEdit = () => {
     setIsEditing(true);
+  };
+
+  // 필지별 매수여부 변경 핸들러
+  const handlePurchaseDecisionChange = (index: number, decision: "O" | "X" | "-") => {
+    setLandParcels((prev) =>
+      prev.map((parcel, i) =>
+        i === index ? { ...parcel, purchaseDecision: decision } : parcel
+      )
+    );
   };
 
   if (!application) {
@@ -357,18 +373,42 @@ export default function ReviewDocumentPage({
                           <td className="border border-foreground px-2 py-1 text-center text-foreground">
                             {parcel.remainingRatio.toFixed(1)}%
                           </td>
-                          <td className="border border-foreground px-2 py-1 text-center font-bold">
-                            <span
-                              className={
-                                parcel.purchaseDecision === "O"
-                                  ? "text-primary"
-                                  : parcel.purchaseDecision === "X"
-                                  ? "text-destructive"
-                                  : "text-muted-foreground"
-                              }
-                            >
-                              {parcel.purchaseDecision}
-                            </span>
+                          <td className="border border-foreground px-1 py-1 text-center font-bold">
+                            {isEditing ? (
+                              <Select
+                                value={parcel.purchaseDecision}
+                                onValueChange={(value) =>
+                                  handlePurchaseDecisionChange(index, value as "O" | "X" | "-")
+                                }
+                              >
+                                <SelectTrigger className="h-10 min-h-0 w-full min-w-0 border-primary/50 text-center font-bold">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="O" className="font-bold text-primary">
+                                    O (매수)
+                                  </SelectItem>
+                                  <SelectItem value="X" className="font-bold text-destructive">
+                                    X (매수불가)
+                                  </SelectItem>
+                                  <SelectItem value="-" className="text-muted-foreground">
+                                    - (미정)
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            ) : (
+                              <span
+                                className={
+                                  parcel.purchaseDecision === "O"
+                                    ? "text-primary"
+                                    : parcel.purchaseDecision === "X"
+                                    ? "text-destructive"
+                                    : "text-muted-foreground"
+                                }
+                              >
+                                {parcel.purchaseDecision}
+                              </span>
+                            )}
                           </td>
                         </tr>
                       ))}
