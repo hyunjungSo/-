@@ -77,23 +77,6 @@ export function Footer() {
         </div>
       </div>
 
-      {/* 하단 안내 바 */}
-      <div className="border-t bg-gray-50">
-        <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <Image
-              src="/images/logo-lc.png"
-              alt="한국도로공사"
-              width={120}
-              height={24}
-              className="h-6 w-auto"
-            />
-            <p className="text-sm text-gray-600">
-              이 누리집은 한국도로공사 토지정보 누리집입니다.
-            </p>
-          </div>
-        </div>
-      </div>
     </footer>
   );
 }
