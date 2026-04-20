@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Building2, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -24,8 +25,14 @@ export function Header() {
           <div className="flex h-14 items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex cursor-pointer items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded bg-white/20">
-                <Building2 className="h-5 w-5 text-primary-foreground" />
+              <div className="flex h-10 items-center justify-center rounded bg-white px-2 py-1">
+                <Image
+                  src="/images/ex-logo.jpg"
+                  alt="한국도로공사 로고"
+                  width={80}
+                  height={32}
+                  className="h-8 w-auto object-contain"
+                />
               </div>
               <div>
                 <p className="text-base font-bold text-primary-foreground">
