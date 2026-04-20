@@ -58,35 +58,63 @@ export default function CitizenPage() {
         </p>
       </div>
 
-      {/* 상위 메뉴: 신규 신청 / 신청 현황 조회 */}
+      {/* 상위 메뉴: 신규 신청 / 신청 현황 조회 - KRDS 라인형 탭 */}
       <Tabs value={mainTab} onValueChange={(v) => setMainTab(v as "new" | "status")} className="w-full">
-        <div className="flex gap-0 rounded-lg bg-gray-50 p-1">
-          <button
-            onClick={() => setMainTab("new")}
-            className={`flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-medium transition-all ${
-              mainTab === "new"
-                ? "border-2 border-green-600 bg-white text-green-600"
-                : "border-2 border-transparent bg-transparent text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            <FilePlus className="h-5 w-5" />
-            <span>신규 신청</span>
-          </button>
-          <button
-            onClick={() => setMainTab("status")}
-            className={`flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-medium transition-all ${
-              mainTab === "status"
-                ? "border-2 border-green-600 bg-white text-green-600"
-                : "border-2 border-transparent bg-transparent text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            <ClipboardList className="h-5 w-5" />
-            <span>신청 현황 조회</span>
-          </button>
+        <div 
+          className="krds-tab-area border-b border-gray-200"
+          role="tablist"
+          aria-label="서비스 메뉴"
+        >
+          <div className="flex">
+            <button
+              role="tab"
+              id="tab-new"
+              aria-selected={mainTab === "new"}
+              aria-controls="tabpanel-new"
+              onClick={() => setMainTab("new")}
+              className={`relative flex cursor-pointer items-center justify-center gap-2 px-6 py-4 text-sm font-medium transition-colors ${
+                mainTab === "new"
+                  ? "text-primary"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              <FilePlus className="h-5 w-5" />
+              <span>신규 신청</span>
+              {/* KRDS 인디케이터 - 선택된 탭 하단 표시 */}
+              {mainTab === "new" && (
+                <span className="absolute bottom-0 left-0 h-0.5 w-full bg-primary" aria-hidden="true" />
+              )}
+            </button>
+            <button
+              role="tab"
+              id="tab-status"
+              aria-selected={mainTab === "status"}
+              aria-controls="tabpanel-status"
+              onClick={() => setMainTab("status")}
+              className={`relative flex cursor-pointer items-center justify-center gap-2 px-6 py-4 text-sm font-medium transition-colors ${
+                mainTab === "status"
+                  ? "text-primary"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              <ClipboardList className="h-5 w-5" />
+              <span>신청 현황 조회</span>
+              {/* KRDS 인디케이터 - 선택된 탭 하단 표시 */}
+              {mainTab === "status" && (
+                <span className="absolute bottom-0 left-0 h-0.5 w-full bg-primary" aria-hidden="true" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* 신규 신청 */}
-        <TabsContent value="new" className="mt-6 space-y-6">
+        <TabsContent 
+          value="new" 
+          className="mt-6 space-y-6"
+          role="tabpanel"
+          id="tabpanel-new"
+          aria-labelledby="tab-new"
+        >
           {/* 진행 단계 표시 - 디지털 정부서비스 가이드라인 Step indicator */}
           <Card>
             <CardContent className="py-4">
@@ -152,7 +180,13 @@ export default function CitizenPage() {
         </TabsContent>
 
         {/* 신청 현황 조회 */}
-        <TabsContent value="status" className="mt-6">
+        <TabsContent 
+          value="status" 
+          className="mt-6"
+          role="tabpanel"
+          id="tabpanel-status"
+          aria-labelledby="tab-status"
+        >
           <ApplicationStatusSection />
         </TabsContent>
       </Tabs>
