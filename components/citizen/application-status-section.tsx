@@ -228,21 +228,21 @@ function ApplicationDetailCard({ application, onClose }: { application: Applicat
 
         {/* 토지 정보 요약 */}
         <div className="rounded-lg border border-border bg-muted/30 p-3">
-          <h4 className="mb-2 text-sm font-semibold text-foreground">토지 정보</h4>
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            <div className="flex justify-between">
+          <h4 className="mb-3 text-sm font-semibold text-foreground">토지 정보</h4>
+          <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2 text-sm">
+            <div className="flex items-center gap-2">
               <span className="text-muted-foreground">토지 유형</span>
               <span className="font-medium">{application.landInfo.landType}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex items-center gap-2">
               <span className="text-muted-foreground">잔여 면적</span>
               <span className="font-medium text-primary">{application.landInfo.remainingArea.toLocaleString()}m²</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex items-center gap-2">
               <span className="text-muted-foreground">잔여 비율</span>
               <span className="font-medium">{application.landInfo.remainingRatio}%</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex items-center gap-2">
               <span className="text-muted-foreground">AI 판정</span>
               <span className={`font-medium ${
                 application.aiResult?.provisionalJudgment === "매수" ? "text-green-600" : "text-muted-foreground"
@@ -333,6 +333,7 @@ export function ApplicationStatusSection() {
                         </span>
                         <span className="flex items-center gap-1">
                           <Calendar className="h-3.5 w-3.5" />
+                          <span className="text-muted-foreground">신청일</span>
                           {app.appliedAt}
                         </span>
                       </div>
