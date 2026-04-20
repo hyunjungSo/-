@@ -5,72 +5,72 @@
 
 :root {
   /* 
-   * WCAG 2.1 AA 준수 색상 시스템
+   * 디지털 정부서비스 UI/UX 가이드라인 (KRDS) 준수
+   * WCAG 2.1 AA 기준 충족
    * - 일반 텍스트: 최소 4.5:1 대비율
    * - 대형 텍스트(18px+)/UI 컴포넌트: 최소 3:1 대비율
-   * - 한국도로공사 메인 컬러: #006B3F (녹색)
    */
   
-  /* 배경/전경 - 흰 배경에 거의 검정 텍스트 (대비율 약 16:1) */
+  /* 배경/전경 */
   --background: #FFFFFF;
-  --foreground: #1A1A1A;
+  --foreground: #171717;
   
   /* 카드/팝오버 */
   --card: #FFFFFF;
-  --card-foreground: #1A1A1A;
+  --card-foreground: #171717;
   --popover: #FFFFFF;
-  --popover-foreground: #1A1A1A;
+  --popover-foreground: #171717;
   
-  /* Primary - 한국도로공사 녹색 (#006B3F) */
+  /* Primary - 한국도로공사 녹색 */
   --primary: #006B3F;
   --primary-foreground: #FFFFFF;
   
-  /* Secondary - 연한 녹색 배경 */
-  --secondary: #E8F5EE;
-  --secondary-foreground: #1A1A1A;
+  /* Secondary */
+  --secondary: #F4F4F5;
+  --secondary-foreground: #171717;
   
-  /* Muted - 회색 배경, 더 진한 회색 텍스트 (대비율 약 10:1) */
-  --muted: #F5F5F5;
-  --muted-foreground: #333333;
+  /* Muted */
+  --muted: #F4F4F5;
+  --muted-foreground: #525252;
   
-  /* Accent - 파란색 계열 */
-  --accent: #0056B3;
-  --accent-foreground: #FFFFFF;
+  /* Accent */
+  --accent: #F4F4F5;
+  --accent-foreground: #171717;
   
-  /* Destructive - 빨간색 (대비율 약 5.5:1) */
-  --destructive: #C41E3A;
+  /* Destructive */
+  --destructive: #DC2626;
   --destructive-foreground: #FFFFFF;
   
-  /* Border/Input - 충분히 진한 테두리 (대비율 약 3:1) */
-  --border: #BDBDBD;
-  --input: #F5F5F5;
+  /* Border/Input */
+  --border: #E5E5E5;
+  --input: #E5E5E5;
   --ring: #006B3F;
   
   /* Charts */
   --chart-1: #006B3F;
-  --chart-2: #0056B3;
+  --chart-2: #2563EB;
   --chart-3: #D97706;
   --chart-4: #7C3AED;
   --chart-5: #0891B2;
   
-  --radius: 0.5rem;
+  --radius: 0.375rem;
   
-  /* Sidebar - 진한 녹색 */
-  --sidebar: #004D2C;
-  --sidebar-foreground: #FFFFFF;
-  --sidebar-primary: #FFFFFF;
-  --sidebar-primary-foreground: #004D2C;
-  --sidebar-accent: #006B3F;
-  --sidebar-accent-foreground: #FFFFFF;
-  --sidebar-border: #005C35;
-  --sidebar-ring: #008C52;
+  /* Sidebar */
+  --sidebar: #FAFAFA;
+  --sidebar-foreground: #171717;
+  --sidebar-primary: #006B3F;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F4F4F5;
+  --sidebar-accent-foreground: #171717;
+  --sidebar-border: #E5E5E5;
+  --sidebar-ring: #006B3F;
   
-  /* Warning - 진한 주황 (대비율 약 4.5:1 on white) */
-  --warning: #B45309;
-  --warning-foreground: #FFFFFF;
+  /* Warning */
+  --warning: #F59E0B;
+  --warning-foreground: #171717;
   
-  /* Success - 진한 녹색 */
-  --success: #006B3F;
+  /* Success */
+  --success: #16A34A;
   --success-foreground: #FFFFFF;
 }
 
@@ -165,5 +165,14 @@
   
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "kern" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* 디지털 정부서비스 가이드라인: 포커스 표시 강화 */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
 }
