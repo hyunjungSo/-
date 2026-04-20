@@ -16,17 +16,19 @@ import {
 } from "@/components/ui/select";
 import { LandMap } from "@/components/land-map";
 import { landCategories, landShapes } from "@/lib/dummy-data";
-import type { LandInfo, Application, LandCategory, LandShape } from "@/lib/types";
-import { ArrowLeft, Upload, Send } from "lucide-react";
+import type { LandInfo, Application, LandCategory, LandShape, AIAnalysisResult } from "@/lib/types";
+import { ArrowLeft, Upload, Send, Bot, CheckCircle2, XCircle } from "lucide-react";
 
 interface ApplicationFormSectionProps {
   landInfo: LandInfo;
+  aiResult: AIAnalysisResult;
   onSubmit: (application: Application) => void;
   onBack: () => void;
 }
 
 export function ApplicationFormSection({
   landInfo,
+  aiResult,
   onSubmit,
   onBack,
 }: ApplicationFormSectionProps) {
@@ -62,6 +64,7 @@ export function ApplicationFormSection({
       attachments: formData.attachments,
       status: "접수됨",
       appliedAt: new Date().toISOString().split("T")[0],
+      aiResult: aiResult,
     };
 
     // 시뮬레이션을 위한 딜레이
@@ -115,6 +118,34 @@ export function ApplicationFormSection({
                 <span className="text-muted-foreground">토지 유형</span>
                 <span className="font-medium text-foreground">{landInfo.landType}</span>
               </div>
+            </div>
+
+            {/* AI 판독 결과 요약 */}
+            <div className={`mt-4 rounded-lg border p-3 ${
+              aiResult.provisionalJudgment === "매수" 
+                ? "border-primary bg-primary/5" 
+                : "border-destructive bg-destructive/5"
+            }`}>
+              <div className="mb-2 flex items-center gap-2">
+                <Bot className="h-4 w-4 text-primary" />
+                <span className="text-xs font-semibold text-foreground">AI 판독 결과</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                {aiResult.provisionalJudgment === "매수" ? (
+                  <>
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-bold text-primary">매수 가능성 높음</span>
+                  </>
+                ) : (
+                  <>
+                    <XCircle className="h-4 w-4 text-destructive" />
+                    <span className="text-sm font-bold text-destructive">기준 미충족</span>
+                  </>
+                )}
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {aiResult.criteriaChecks.filter(c => c.isMet).length}/{aiResult.criteriaChecks.length}개 기준 충족
+              </p>
             </div>
           </CardContent>
         </Card>

@@ -6,15 +6,17 @@ import { ApplicationFormSection } from "@/components/citizen/application-form-se
 import { ApplicationResultSection } from "@/components/citizen/application-result-section";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, FileEdit, FileCheck } from "lucide-react";
-import type { LandInfo, Application } from "@/lib/types";
+import type { LandInfo, Application, AIAnalysisResult } from "@/lib/types";
 
 export default function CitizenPage() {
   const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
+  const [aiResult, setAiResult] = useState<AIAnalysisResult | null>(null);
   const [submittedApplication, setSubmittedApplication] = useState<Application | null>(null);
   const [activeTab, setActiveTab] = useState("search");
 
-  const handleLandSelect = (land: LandInfo) => {
+  const handleLandSelect = (land: LandInfo, result: AIAnalysisResult) => {
     setSelectedLand(land);
+    setAiResult(result);
     setActiveTab("apply");
   };
 
@@ -63,9 +65,10 @@ export default function CitizenPage() {
         </TabsContent>
 
         <TabsContent value="apply" className="mt-6">
-          {selectedLand && (
+          {selectedLand && aiResult && (
             <ApplicationFormSection
               landInfo={selectedLand}
+              aiResult={aiResult}
               onSubmit={handleApplicationSubmit}
               onBack={() => setActiveTab("search")}
             />
