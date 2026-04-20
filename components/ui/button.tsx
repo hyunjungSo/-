@@ -22,12 +22,12 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline focus-visible:underline min-h-0 min-w-0 p-0',
       },
       size: {
-        // WCAG 2.5.5: 최소 44px 높이 보장
+        // WCAG 2.5.5: 최소 44px 높이 보장, 텍스트 최소 14px
         default: 'h-11 px-5 py-2.5 has-[>svg]:px-4',
-        sm: 'h-10 rounded-lg gap-1.5 px-4 text-sm has-[>svg]:px-3',
+        sm: 'h-11 rounded-lg gap-1.5 px-4 text-[0.9375rem] has-[>svg]:px-3', /* 15px */
         lg: 'h-12 rounded-lg px-8 text-lg has-[>svg]:px-5',
         icon: 'size-11',
-        'icon-sm': 'size-10',
+        'icon-sm': 'size-11',
         'icon-lg': 'size-12',
       },
     },
