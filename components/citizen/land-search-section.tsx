@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { LandMap } from "@/components/land-map";
+import { LeafletMap } from "@/components/leaflet-map";
 import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult, JudgmentRationale } from "@/lib/types";
 import { Search, MapPin, ChevronRight, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp } from "lucide-react";
@@ -64,7 +64,7 @@ const regionData = {
     "천안시 서북구": ["성환읍", "성거읍", "직산읍", "입장면"],
     // 충청남도 - 아산시
     "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악면", "신창면", "염치읍", "영인면", "인주면"],
-    // ���본값 (선택되지 않은 시군구용)
+    // 기본값 (선택되지 않은 시군구용)
     "강남구": ["논현동", "삼성동", "역삼동", "청담동"],
     "해운대구": ["우동", "중동", "좌동", "송정동"],
     "세종시": ["조치원읍", "금남면", "부강면", "소정면", "연기면", "연동면", "연서면", "장군면", "전동면", "전의면"],
@@ -222,7 +222,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
       autoDetected: true,
     },
     {
-      criteriaName: "토지 형상",
+      criteriaName: "��지 형상",
       criteriaDescription: `잔여지 ��상: ${land.remainingShape}`,
       isMet: ["부정형", "삼각형", "역삼각형", "자루형"].includes(land.remainingShape),
       autoDetected: true,
@@ -661,15 +661,15 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         {/* 우측: 지도 및 결과 영역 */}
         <div className="space-y-4">
           {/* 지도 */}
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="flex items-center gap-2 text-sm">
-                <MapPin className="h-4 w-4 text-primary" />
-                토지 위치
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <LandMap landInfo={selectedLand || undefined} showOverlay={!!selectedLand} />
+          <Card className="overflow-hidden">
+            <CardContent className="h-[400px] p-0">
+              <LeafletMap 
+                selectedRegion={selectedRi || selectedEupmyeondong || selectedSigungu || selectedSido}
+                onParcelClick={(id) => {
+                  const land = searchResults.find(l => l.id === id);
+                  if (land) handleLandSelect(land);
+                }}
+              />
             </CardContent>
           </Card>
 

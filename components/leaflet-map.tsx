@@ -1,0 +1,353 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { Layers, Map as MapIcon, Plus, Minus, Info, Locate } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+// 레이어 가시화 최소 줌 레벨
+const LAYER_MIN_ZOOM = 17;
+
+// 지역별 좌표 데이터
+const regionCoordinates: Record<string, { lat: number; lng: number; zoom: number }> = {
+  // 시도
+  "서울특별시": { lat: 37.5665, lng: 126.9780, zoom: 11 },
+  "부산광역시": { lat: 35.1796, lng: 129.0756, zoom: 11 },
+  "대구광역시": { lat: 35.8714, lng: 128.6014, zoom: 11 },
+  "인천광역시": { lat: 37.4563, lng: 126.7052, zoom: 11 },
+  "광주광역시": { lat: 35.1595, lng: 126.8526, zoom: 11 },
+  "대전광역시": { lat: 36.3504, lng: 127.3845, zoom: 11 },
+  "울산광역시": { lat: 35.5384, lng: 129.3114, zoom: 11 },
+  "세종특별자치시": { lat: 36.4800, lng: 127.2890, zoom: 11 },
+  "경기도": { lat: 37.4138, lng: 127.5183, zoom: 9 },
+  "강원특별자치도": { lat: 37.8228, lng: 128.1555, zoom: 9 },
+  "충청북도": { lat: 36.6357, lng: 127.4917, zoom: 9 },
+  "충청남도": { lat: 36.5184, lng: 126.8000, zoom: 9 },
+  "전북특별자치도": { lat: 35.8203, lng: 127.1088, zoom: 9 },
+  "전라남도": { lat: 34.8679, lng: 126.9910, zoom: 9 },
+  "경상북도": { lat: 36.4919, lng: 128.8889, zoom: 9 },
+  "경상남도": { lat: 35.4606, lng: 128.2132, zoom: 9 },
+  "제주특별자치도": { lat: 33.4890, lng: 126.4983, zoom: 10 },
+  // 시군구 (일부 예시)
+  "용인시 처인구": { lat: 37.2343, lng: 127.2010, zoom: 13 },
+  "이천시": { lat: 37.2720, lng: 127.4350, zoom: 12 },
+  "광주시": { lat: 37.4095, lng: 127.2550, zoom: 12 },
+  "음성군": { lat: 36.9400, lng: 127.6900, zoom: 12 },
+  "진천군": { lat: 36.8550, lng: 127.4350, zoom: 12 },
+  "천안시 동남구": { lat: 36.7850, lng: 127.1550, zoom: 12 },
+  "천안시 서북구": { lat: 36.8650, lng: 127.1350, zoom: 12 },
+  "아산시": { lat: 36.7900, lng: 127.0020, zoom: 12 },
+  // 읍면동 (일부 예시)
+  "양지면": { lat: 37.2350, lng: 127.2850, zoom: 14 },
+  "백암면": { lat: 37.1550, lng: 127.3550, zoom: 14 },
+  "마장면": { lat: 37.3050, lng: 127.4250, zoom: 14 },
+  "곤지암읍": { lat: 37.3550, lng: 127.3250, zoom: 14 },
+  "삼성면": { lat: 36.9650, lng: 127.5850, zoom: 14 },
+  "금왕읍": { lat: 36.9950, lng: 127.6150, zoom: 14 },
+  // 리 (일부 예시)
+  "마성리": { lat: 37.2180, lng: 127.2950, zoom: 17 },
+  "송문리": { lat: 37.2280, lng: 127.2780, zoom: 17 },
+  "봉남리": { lat: 37.1450, lng: 127.3650, zoom: 17 },
+  "덕평리": { lat: 37.3150, lng: 127.4150, zoom: 17 },
+  "신리": { lat: 37.3620, lng: 127.3180, zoom: 17 },
+};
+
+interface LeafletMapProps {
+  center?: { lat: number; lng: number };
+  zoom?: number;
+  selectedRegion?: string;
+  onParcelClick?: (parcelId: string) => void;
+  parcels?: Array<{
+    id: string;
+    coordinates: Array<{ lat: number; lng: number }>;
+    address: string;
+    isIncluded: boolean;
+  }>;
+}
+
+type BaseMapType = "normal" | "satellite";
+
+export function LeafletMap({
+  center = { lat: 37.2350, lng: 127.2850 },
+  zoom = 14,
+  selectedRegion,
+  onParcelClick,
+  parcels = [],
+}: LeafletMapProps) {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
+  const [isMapReady, setIsMapReady] = useState(false);
+  const [currentZoom, setCurrentZoom] = useState(zoom);
+  const [baseMap, setBaseMap] = useState<BaseMapType>("normal");
+  const [layers, setLayers] = useState({
+    landSupplyDemand: false,
+    roadArea: true,
+  });
+
+  const isLayerVisible = currentZoom >= LAYER_MIN_ZOOM;
+
+  // Leaflet 초기화
+  useEffect(() => {
+    if (typeof window === "undefined" || !mapRef.current) return;
+
+    // Leaflet CSS 동적 로드
+    const linkEl = document.createElement("link");
+    linkEl.rel = "stylesheet";
+    linkEl.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+    document.head.appendChild(linkEl);
+
+    // Leaflet JS 동적 로드
+    const script = document.createElement("script");
+    script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+    script.async = true;
+    script.onload = () => {
+      if (!mapRef.current || mapInstanceRef.current) return;
+
+      const L = (window as typeof window & { L: typeof import("leaflet") }).L;
+
+      // 지도 생성
+      const map = L.map(mapRef.current, {
+        center: [center.lat, center.lng],
+        zoom: zoom,
+        zoomControl: false,
+      });
+
+      // 타일 레이어 추가 (VWorld 또는 OpenStreetMap)
+      const normalTile = L.tileLayer(
+        "https://api.vworld.kr/req/wmts/1.0.0/{key}/{layer}/{z}/{y}/{x}.png",
+        {
+          key: "3E5CB67C-4F9F-31CD-9988-C95C83BD486D", // VWorld 공개 테스트 키
+          layer: "Base",
+          attribution: "© VWorld",
+        }
+      );
+
+      const satelliteTile = L.tileLayer(
+        "https://api.vworld.kr/req/wmts/1.0.0/{key}/{layer}/{z}/{y}/{x}.jpeg",
+        {
+          key: "3E5CB67C-4F9F-31CD-9988-C95C83BD486D",
+          layer: "Satellite",
+          attribution: "© VWorld",
+        }
+      );
+
+      // OpenStreetMap 폴백
+      const osmTile = L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          attribution: "© OpenStreetMap contributors",
+        }
+      );
+
+      // 기본 타일 추가
+      osmTile.addTo(map);
+
+      // 줌 변경 이벤트
+      map.on("zoomend", () => {
+        setCurrentZoom(map.getZoom());
+      });
+
+      mapInstanceRef.current = map;
+      setIsMapReady(true);
+    };
+
+    document.body.appendChild(script);
+
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, []);
+
+  // 지역 변경 시 지도 이동
+  useEffect(() => {
+    if (!mapInstanceRef.current || !selectedRegion) return;
+
+    const coords = regionCoordinates[selectedRegion];
+    if (coords) {
+      mapInstanceRef.current.setView([coords.lat, coords.lng], coords.zoom, {
+        animate: true,
+      });
+    }
+  }, [selectedRegion]);
+
+  // 줌 컨트롤
+  const handleZoomIn = () => {
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.zoomIn();
+    }
+  };
+
+  const handleZoomOut = () => {
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.zoomOut();
+    }
+  };
+
+  // 현재 위치로 이동
+  const handleLocate = () => {
+    if (mapInstanceRef.current && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          mapInstanceRef.current?.setView(
+            [position.coords.latitude, position.coords.longitude],
+            17
+          );
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+        }
+      );
+    }
+  };
+
+  return (
+    <div className="relative h-full w-full overflow-hidden rounded-lg border border-border">
+      {/* 지도 컨테이너 */}
+      <div ref={mapRef} className="h-full w-full" />
+
+      {/* 로딩 상태 */}
+      {!isMapReady && (
+        <div className="absolute inset-0 flex items-center justify-center bg-muted">
+          <div className="text-center">
+            <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            <p className="mt-2 text-sm text-muted-foreground">지도 로딩중...</p>
+          </div>
+        </div>
+      )}
+
+      {/* 지도 컨트롤 */}
+      <div className="absolute left-3 top-3 z-[1000] flex flex-col gap-2">
+        {/* 배경지도 선택 */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="secondary" size="sm" className="h-8 gap-1.5 bg-white shadow-md hover:bg-gray-50">
+              <MapIcon className="h-4 w-4" />
+              <span className="text-xs">배경지도</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-36 p-2" align="start">
+            <div className="space-y-1">
+              <button
+                onClick={() => setBaseMap("normal")}
+                className={`w-full rounded px-3 py-2 text-left text-sm ${
+                  baseMap === "normal" ? "bg-primary text-white" : "hover:bg-muted"
+                }`}
+              >
+                일반
+              </button>
+              <button
+                onClick={() => setBaseMap("satellite")}
+                className={`w-full rounded px-3 py-2 text-left text-sm ${
+                  baseMap === "satellite" ? "bg-primary text-white" : "hover:bg-muted"
+                }`}
+              >
+                위성
+              </button>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* 레이어 선택 */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="secondary" size="sm" className="h-8 gap-1.5 bg-white shadow-md hover:bg-gray-50">
+              <Layers className="h-4 w-4" />
+              <span className="text-xs">레이어</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-52 p-3" align="start">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="layer-land"
+                  checked={layers.landSupplyDemand}
+                  onCheckedChange={(checked) =>
+                    setLayers((prev) => ({ ...prev, landSupplyDemand: checked === true }))
+                  }
+                />
+                <Label htmlFor="layer-land" className="text-sm font-normal">
+                  국토수급
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="layer-road"
+                  checked={layers.roadArea}
+                  onCheckedChange={(checked) =>
+                    setLayers((prev) => ({ ...prev, roadArea: checked === true }))
+                  }
+                />
+                <Label htmlFor="layer-road" className="text-sm font-normal">
+                  도로구역
+                </Label>
+              </div>
+
+              {/* 레이어 가시화 안내 */}
+              <div className="flex items-start gap-1.5 rounded bg-amber-50 p-2">
+                <Info className="mt-0.5 h-3 w-3 shrink-0 text-amber-600" />
+                <p className="text-xs leading-relaxed text-amber-700">
+                  국토수급, 도로구역 레이어는 {LAYER_MIN_ZOOM}Level 부터 가시화됩니다.
+                  현재 Zoom Level은 <strong>{currentZoom}Level</strong> 입니다.
+                </p>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      {/* 줌 컨트롤 */}
+      <div className="absolute right-3 top-3 z-[1000] flex flex-col gap-1">
+        <div className="flex flex-col overflow-hidden rounded-md bg-white shadow-md">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 rounded-none p-0 hover:bg-gray-100"
+            onClick={handleZoomIn}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+          <div className="border-t border-gray-200 px-1 py-1 text-center text-xs font-medium text-gray-700">
+            {currentZoom}
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 rounded-none border-t border-gray-200 p-0 hover:bg-gray-100"
+            onClick={handleZoomOut}
+          >
+            <Minus className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        {/* 현재 위치 버튼 */}
+        <Button
+          variant="secondary"
+          size="sm"
+          className="h-8 w-8 bg-white p-0 shadow-md hover:bg-gray-50"
+          onClick={handleLocate}
+        >
+          <Locate className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* 축척 표시 */}
+      <div className="absolute bottom-3 left-3 z-[1000] rounded bg-white/90 px-2 py-1 text-xs text-gray-600 shadow">
+        축척: 1:{Math.round(591657550.5 / Math.pow(2, currentZoom))}
+      </div>
+
+      {/* 저작권 표시 */}
+      <div className="absolute bottom-3 right-3 z-[1000] rounded bg-white/90 px-2 py-1 text-xs text-gray-500">
+        © VWorld, OpenStreetMap
+      </div>
+    </div>
+  );
+}
