@@ -63,7 +63,7 @@ const regionData = {
     // 충청남도 - 천안시 서북구
     "천안시 서북구": ["성환읍", "성거읍", "직산읍", "입장면"],
     // 충청남도 - 아산시
-    "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악��", "신창면", "염치읍", "영인면", "인주면"],
+    "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악���", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
     "강남구": ["논현동", "삼성동", "역삼동", "청담동"],
     "해운대구": ["우동", "중동", "좌동", "송정동"],
@@ -352,7 +352,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
   const [selectedRi, setSelectedRi] = useState<string>("");
   const [jibun, setJibun] = useState<string>("");
   
-  // 검색 결과 상태
+  // 검색 결과 상��
   const [searchResults, setSearchResults] = useState<LandInfo[]>([]);
   const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -365,7 +365,11 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
   const [noIncludedLand, setNoIncludedLand] = useState(false);
 
   // 현재 단계 계산
-  const currentStep = aiResult ? 4 : aiAnalyzing ? 3 : selectedLand ? 3 : searchResults.length > 0 ? 2 : 1;
+  // 1. 지번조회 = 필지 선택 전까지
+  // 2. 필지 선택 = AI 판독 시작 버튼 누르기 전까지
+  // 3. AI 판독 = AI판독 시작 버튼 누르고난 후
+  // 4. 결과 확인 = AI 판독 완료 후
+  const currentStep = aiResult ? 4 : (aiAnalyzing ? 3 : (selectedLand ? 2 : 1));
 
   // 검색 실행
   const handleSearch = () => {
