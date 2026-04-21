@@ -41,15 +41,15 @@ interface ApplicationDetailProps {
 }
 
 const judgmentConfig = {
-  매수: { label: "매수", icon: CheckCircle2, color: "text-blue-600" },
-  기각: { label: "기각", icon: XCircle, color: "text-red-600" },
-  심의위원회이관: { label: "심의위원회 이관", icon: AlertTriangle, color: "text-orange-600" },
+  매수: { label: "매수", icon: CheckCircle2, color: "text-primary" },
+  기각: { label: "기각", icon: XCircle, color: "text-destructive" },
+  심의위원회이관: { label: "심의위원회 이관", icon: AlertTriangle, color: "text-amber-600" },
 };
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
-  대기중: { label: "대기중", icon: Clock, color: "text-gray-500" },
-  진행중: { label: "진행중", icon: PlayCircle, color: "text-blue-600" },
-  완료: { label: "완료", icon: CheckCircle2, color: "text-green-600" },
+  대기중: { label: "대기", icon: Clock, color: "text-gray-500" },
+  진행중: { label: "진행중", icon: PlayCircle, color: "text-primary" },
+  완료: { label: "완료", icon: CheckCircle2, color: "text-primary" },
 };
 
 export function ApplicationDetail({ application, onBack, onSave }: ApplicationDetailProps) {
@@ -357,7 +357,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
             {/* 기준 충족 여부 */}
             <div className="space-y-3">
-              <h4 className="font-medium text-foreground">기준 ���족 여부</h4>
+              <h4 className="font-medium text-foreground">기준 �����족 여부</h4>
               {aiResult?.criteriaChecks.map((check, index) => (
                 <div
                   key={index}

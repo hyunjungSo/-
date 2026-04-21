@@ -231,3 +231,33 @@
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   }
 }
+
+/* KRDS 컴포넌트 스타일 */
+@layer components {
+  /* 뱃지 기본 스타일 */
+  .krds-badge {
+    @apply inline-flex items-center rounded px-2.5 py-0.5 text-xs font-medium;
+  }
+  
+  /* 스텝 인디케이터 */
+  .krds-step {
+    @apply flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold;
+  }
+  
+  .krds-step-active {
+    @apply bg-primary text-white;
+  }
+  
+  .krds-step-completed {
+    @apply bg-gray-200 text-gray-600;
+  }
+  
+  .krds-step-pending {
+    @apply bg-gray-100 text-gray-400;
+  }
+  
+  /* 리스트 아이템 */
+  .krds-list-item {
+    @apply border-b border-gray-200 py-4 last:border-b-0;
+  }
+}

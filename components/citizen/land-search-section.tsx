@@ -395,30 +395,70 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
   return (
     <div className="space-y-6">
-      {/* 진행 단계 표시 */}
-      <div className="flex items-center justify-center gap-2 text-sm">
-        <div className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 ${
-          !searchResult ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-        }`}>
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-xs font-bold">1</span>
-          <span>토지 검색</span>
-        </div>
-        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-        <div className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 ${
-          searchResult && !aiResult ? "bg-primary text-primary-foreground" : 
-          aiResult ? "bg-muted text-muted-foreground" : "bg-muted/50 text-muted-foreground/50"
-        }`}>
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-xs font-bold">2</span>
-          <span>AI 판독</span>
-        </div>
-        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-        <div className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 ${
-          aiResult ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground/50"
-        }`}>
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-xs font-bold">3</span>
-          <span>결과 확인</span>
-        </div>
-      </div>
+      {/* KRDS 진행 단계 표시기 */}
+      <nav aria-label="신청 진행 단계" className="w-full">
+        <ol className="flex items-center justify-center">
+          {/* Step 1: 토지 검색 */}
+          <li className="flex items-center">
+            <div className={`flex items-center gap-2 ${!searchResult ? "text-primary" : "text-muted-foreground"}`}>
+              <span className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
+                !searchResult 
+                  ? "bg-primary text-white" 
+                  : "bg-gray-200 text-gray-600"
+              }`}>
+                1
+              </span>
+              <span className={`text-sm font-medium ${!searchResult ? "text-primary" : "text-muted-foreground"}`}>
+                토지 검색
+              </span>
+            </div>
+          </li>
+          
+          {/* Connector 1-2 */}
+          <li className="mx-4 h-px w-12 bg-gray-300 sm:w-16" aria-hidden="true" />
+          
+          {/* Step 2: AI 판독 */}
+          <li className="flex items-center">
+            <div className={`flex items-center gap-2 ${
+              searchResult && !aiResult ? "text-primary" : aiResult ? "text-muted-foreground" : "text-gray-400"
+            }`}>
+              <span className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
+                searchResult && !aiResult 
+                  ? "bg-primary text-white" 
+                  : aiResult 
+                    ? "bg-gray-200 text-gray-600"
+                    : "bg-gray-100 text-gray-400"
+              }`}>
+                2
+              </span>
+              <span className={`text-sm font-medium ${
+                searchResult && !aiResult ? "text-primary" : aiResult ? "text-muted-foreground" : "text-gray-400"
+              }`}>
+                AI 판독
+              </span>
+            </div>
+          </li>
+          
+          {/* Connector 2-3 */}
+          <li className="mx-4 h-px w-12 bg-gray-300 sm:w-16" aria-hidden="true" />
+          
+          {/* Step 3: 결과 확인 */}
+          <li className="flex items-center">
+            <div className={`flex items-center gap-2 ${aiResult ? "text-primary" : "text-gray-400"}`}>
+              <span className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
+                aiResult 
+                  ? "bg-primary text-white" 
+                  : "bg-gray-100 text-gray-400"
+              }`}>
+                3
+              </span>
+              <span className={`text-sm font-medium ${aiResult ? "text-primary" : "text-gray-400"}`}>
+                결과 확인
+              </span>
+            </div>
+          </li>
+        </ol>
+      </nav>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* 검색 영역 */}
@@ -477,7 +517,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                     />
                     <Button 
                       onClick={handleSearch} 
-                      className="cursor-pointer px-6"
+                      className="h-12 cursor-pointer px-6"
                       disabled={isSearching || !searchQuery.trim()}
                     >
                       {isSearching ? (

@@ -36,9 +36,9 @@ const statusConfig: Record<ProcessStatus, { label: string; className: string }> 
 };
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
-  대기중: { label: "대기중", icon: Clock, color: "text-gray-500" },
-  진행중: { label: "진행중", icon: PlayCircle, color: "text-blue-600" },
-  완료: { label: "완료", icon: CheckCircle2, color: "text-green-600" },
+  대기중: { label: "대기", icon: Clock, color: "text-gray-500" },
+  진행중: { label: "진행중", icon: PlayCircle, color: "text-primary" },
+  완료: { label: "완료", icon: CheckCircle2, color: "text-primary" },
 };
 
 export function ApplicationList({ applications, onSelect }: ApplicationListProps) {

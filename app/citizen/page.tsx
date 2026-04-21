@@ -49,7 +49,18 @@ export default function CitizenPage() {
       </div>
 
       {/* 상위 메뉴: 신규 신청 / 신청 현황 조회 - KRDS 라인형 탭 */}
-      <Tabs value={mainTab} onValueChange={(v) => setMainTab(v as "new" | "status")} className="w-full">
+      <Tabs 
+        value={mainTab} 
+        onValueChange={(v) => {
+          const newTab = v as "new" | "status";
+          setMainTab(newTab);
+          // 신규 신청 탭 클릭 시 데이터 초기화
+          if (newTab === "new") {
+            handleNewApplication();
+          }
+        }} 
+        className="w-full"
+      >
         <TabsList aria-label="서비스 메뉴">
           <TabsTrigger value="new">
             <FilePlus className="h-5 w-5" />

@@ -181,21 +181,21 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 sm:grid-cols-3">
             <div className="flex flex-col items-center text-center">
-              <CheckCircle2 className="h-10 w-10 text-green-600" />
+              <CheckCircle2 className="h-10 w-10 text-primary" />
               <p className="mt-4 text-3xl font-bold text-foreground">일관된 판정</p>
               <p className="mt-2 text-sm text-muted-foreground">
                 동일 조건에 동일한 결과 제공
               </p>
             </div>
             <div className="flex flex-col items-center text-center">
-              <Clock className="h-10 w-10 text-blue-600" />
+              <Clock className="h-10 w-10 text-primary" />
               <p className="mt-4 text-3xl font-bold text-foreground">신속한 처리</p>
               <p className="mt-2 text-sm text-muted-foreground">
                 AI 분석으로 검토 시간 단축
               </p>
             </div>
             <div className="flex flex-col items-center text-center">
-              <FileText className="h-10 w-10 text-amber-600" />
+              <FileText className="h-10 w-10 text-primary" />
               <p className="mt-4 text-3xl font-bold text-foreground">자동 문서화</p>
               <p className="mt-2 text-sm text-muted-foreground">
                 심의서 자동 생성으로 업무 효율화

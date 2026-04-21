@@ -19,9 +19,9 @@ const statusConfig = {
 };
 
 const judgmentConfig = {
-  매수: { label: "매수 결정", color: "bg-accent text-accent-foreground" },
+  매수: { label: "매수 결정", color: "bg-primary text-primary-foreground" },
   기각: { label: "기각", color: "bg-destructive text-destructive-foreground" },
-  심의위원회이관: { label: "심의위원회 이관", color: "bg-chart-3 text-card" },
+  심의위원회이관: { label: "심의위원회 이관", color: "bg-amber-500 text-white" },
 };
 
 export function ApplicationResultSection({ application, onNewApplication }: ApplicationResultSectionProps) {
@@ -150,13 +150,13 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
             <h4 className="font-medium text-foreground">판정 결과 안내</h4>
             <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
               <li>
-                <strong className="text-accent">매수:</strong> 매수 기준 충족. 보상 절차가 진행됩니다.
+                <strong className="text-primary">매수:</strong> 매수 기준 충족. 보상 절차가 진행됩니다.
               </li>
               <li>
                 <strong className="text-destructive">기각:</strong> 매수 기준 미충족. 사유가 안내됩니다.
               </li>
               <li>
-                <strong className="text-chart-3">심의위원회 이관:</strong> 추가 심의가 필요한 경우입니다.
+                <strong className="text-amber-600">심의위원회 이관:</strong> 추가 심의가 필요한 경우입니다.
               </li>
             </ul>
           </div>
