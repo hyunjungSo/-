@@ -357,7 +357,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
             {/* 기준 충족 여부 */}
             <div className="space-y-2">
-              <h4 className="font-medium text-foreground">기준 ������족 여부</h4>
+              <h4 className="font-medium text-foreground">기준 충족 여부</h4>
               {aiResult?.criteriaChecks.map((check, index) => (
                 <div
                   key={index}
