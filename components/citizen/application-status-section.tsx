@@ -58,8 +58,7 @@ function StatusRationaleSection({ rationale }: { rationale: JudgmentRationale })
       <CollapsibleTrigger asChild>
         <Button 
           variant="outline" 
-          className="w-full cursor-pointer justify-between"
-          size="sm"
+          className="h-12 w-full cursor-pointer justify-between"
         >
           <div className="flex items-center gap-2">
             <Scale className="h-4 w-4 text-primary" />
