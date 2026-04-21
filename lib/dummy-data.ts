@@ -4,7 +4,7 @@ import type { LandInfo, Application, AIAnalysisResult, JudgmentRationale } from 
 export const dummyLandInfoList: LandInfo[] = [
   {
     id: "land-001",
-    address: "경기도 용인시 처인구 포곡읍 마성리 123-4",
+    address: "경기도 용인시 처인구 양지면 마성리 123-4",
     originalArea: 1200,
     includedArea: 850,
     remainingArea: 350,
@@ -18,10 +18,16 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "김철수",
     ownerContact: "010-1234-5678",
     hasIncludedLand: true,
+    coordinates: [
+      { lat: 37.2180, lng: 127.2950 },
+      { lat: 37.2185, lng: 127.2960 },
+      { lat: 37.2178, lng: 127.2965 },
+      { lat: 37.2173, lng: 127.2955 },
+    ],
   },
   {
     id: "land-002",
-    address: "경기도 화성시 동탄면 신리 456-7",
+    address: "경기도 용인시 처인구 양지면 마성리 125-1",
     originalArea: 2500,
     includedArea: 1800,
     remainingArea: 700,
@@ -35,10 +41,16 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "박영희",
     ownerContact: "010-9876-5432",
     hasIncludedLand: true,
+    coordinates: [
+      { lat: 37.2185, lng: 127.2960 },
+      { lat: 37.2192, lng: 127.2972 },
+      { lat: 37.2188, lng: 127.2980 },
+      { lat: 37.2178, lng: 127.2965 },
+    ],
   },
   {
     id: "land-003",
-    address: "경기도 평택시 진위면 봉남리 789-1",
+    address: "경기도 용인시 처인구 양지면 마성리 127",
     originalArea: 5000,
     includedArea: 4200,
     remainingArea: 800,
@@ -52,10 +64,16 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "이민호",
     ownerContact: "010-5555-1234",
     hasIncludedLand: true,
+    coordinates: [
+      { lat: 37.2192, lng: 127.2972 },
+      { lat: 37.2200, lng: 127.2985 },
+      { lat: 37.2195, lng: 127.2995 },
+      { lat: 37.2188, lng: 127.2980 },
+    ],
   },
   {
     id: "land-004",
-    address: "경기도 안성시 공도읍 진사리 234-5",
+    address: "경기도 용인시 처인구 양지면 마성리 130-2",
     originalArea: 800,
     includedArea: 500,
     remainingArea: 300,
@@ -69,11 +87,17 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "최지영",
     ownerContact: "010-7777-8888",
     hasIncludedLand: true,
+    coordinates: [
+      { lat: 37.2173, lng: 127.2955 },
+      { lat: 37.2178, lng: 127.2965 },
+      { lat: 37.2170, lng: 127.2970 },
+      { lat: 37.2165, lng: 127.2960 },
+    ],
   },
   // 편입토지 없는 토지 (신청 불가 케이스)
   {
     id: "land-005",
-    address: "경기도 수원시 권선구 금곡동 567-8",
+    address: "경기도 용인시 처인구 양지면 마성리 135",
     originalArea: 600,
     includedArea: 0,
     remainingArea: 600,
@@ -87,10 +111,16 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "정민수",
     ownerContact: "010-2222-3333",
     hasIncludedLand: false,
+    coordinates: [
+      { lat: 37.2165, lng: 127.2960 },
+      { lat: 37.2170, lng: 127.2970 },
+      { lat: 37.2162, lng: 127.2975 },
+      { lat: 37.2157, lng: 127.2965 },
+    ],
   },
   {
     id: "land-006",
-    address: "경기도 오산시 오산동 가장리 890-2",
+    address: "경기도 용인시 처인구 양지면 마성리 140",
     originalArea: 1500,
     includedArea: 0,
     remainingArea: 1500,
@@ -104,6 +134,12 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "한소영",
     ownerContact: "010-4444-5555",
     hasIncludedLand: false,
+    coordinates: [
+      { lat: 37.2200, lng: 127.2985 },
+      { lat: 37.2210, lng: 127.2998 },
+      { lat: 37.2205, lng: 127.3008 },
+      { lat: 37.2195, lng: 127.2995 },
+    ],
   },
   // 동일 소유자 복수 필지 (일단지 판정 케이스) - 주 필지
   {

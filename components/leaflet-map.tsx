@@ -58,17 +58,20 @@ const regionCoordinates: Record<string, { lat: number; lng: number; zoom: number
   "신리": { lat: 37.3620, lng: 127.3180, zoom: 17 },
 };
 
+interface ParcelData {
+  id: string;
+  coordinates: Array<{ lat: number; lng: number }>;
+  address: string;
+  isIncluded: boolean;
+}
+
 interface LeafletMapProps {
   center?: { lat: number; lng: number };
   zoom?: number;
   selectedRegion?: string;
   onParcelClick?: (parcelId: string) => void;
-  parcels?: Array<{
-    id: string;
-    coordinates: Array<{ lat: number; lng: number }>;
-    address: string;
-    isIncluded: boolean;
-  }>;
+  parcels?: ParcelData[];
+  selectedParcelId?: string;
 }
 
 type BaseMapType = "normal" | "satellite";
@@ -79,9 +82,11 @@ export function LeafletMap({
   selectedRegion,
   onParcelClick,
   parcels = [],
+  selectedParcelId,
 }: LeafletMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
+  const polygonLayerRef = useRef<L.LayerGroup | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
   const [currentZoom, setCurrentZoom] = useState(zoom);
   const [baseMap, setBaseMap] = useState<BaseMapType>("normal");
@@ -148,6 +153,10 @@ export function LeafletMap({
       // 기본 타일 추가
       osmTile.addTo(map);
 
+      // 폴리곤 레이어 그룹 생성
+      const polygonLayer = L.layerGroup().addTo(map);
+      polygonLayerRef.current = polygonLayer;
+
       // 줌 변경 이벤트
       map.on("zoomend", () => {
         setCurrentZoom(map.getZoom());
@@ -178,6 +187,61 @@ export function LeafletMap({
       });
     }
   }, [selectedRegion]);
+
+  // 필지 폴리곤 렌더링
+  useEffect(() => {
+    if (!mapInstanceRef.current || !polygonLayerRef.current || !isMapReady) return;
+
+    const L = (window as typeof window & { L: typeof import("leaflet") }).L;
+    const polygonLayer = polygonLayerRef.current;
+
+    // 기존 폴리곤 제거
+    polygonLayer.clearLayers();
+
+    if (parcels.length === 0) return;
+
+    // 각 필지에 대해 폴리곤 생성
+    parcels.forEach((parcel) => {
+      if (!parcel.coordinates || parcel.coordinates.length < 3) return;
+
+      const isSelected = parcel.id === selectedParcelId;
+      const latlngs = parcel.coordinates.map(coord => [coord.lat, coord.lng] as [number, number]);
+
+      // 폴리곤 스타일 (분홍색/마젠타 라인)
+      const polygon = L.polygon(latlngs, {
+        color: isSelected ? "#e91e63" : "#ec407a", // 선택된 경우 더 진한 분홍
+        weight: isSelected ? 3 : 2,
+        fillColor: isSelected ? "#f48fb1" : "transparent",
+        fillOpacity: isSelected ? 0.3 : 0,
+        opacity: 1,
+      });
+
+      // 클릭 이벤트
+      polygon.on("click", () => {
+        if (onParcelClick) {
+          onParcelClick(parcel.id);
+        }
+      });
+
+      // 툴팁 추가
+      polygon.bindTooltip(parcel.address, {
+        permanent: false,
+        direction: "top",
+        className: "parcel-tooltip",
+      });
+
+      polygon.addTo(polygonLayer);
+    });
+
+    // 필지들이 있으면 해당 영역으로 지도 이동
+    if (parcels.length > 0 && parcels[0].coordinates.length > 0) {
+      const allCoords = parcels.flatMap(p => p.coordinates.map(c => [c.lat, c.lng] as [number, number]));
+      if (allCoords.length > 0) {
+        const bounds = L.latLngBounds(allCoords);
+        mapInstanceRef.current.fitBounds(bounds, { padding: [50, 50] });
+      }
+    }
+  }, [parcels, selectedParcelId, onParcelClick, isMapReady]);
 
   // 줌 컨트롤
   const handleZoomIn = () => {

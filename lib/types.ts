@@ -59,6 +59,7 @@ export interface LandInfo {
   ownerName: string; // 소유자명
   ownerContact?: string; // 소유자 연락처
   hasIncludedLand: boolean; // 편입토지 존재 여부
+  coordinates?: Array<{ lat: number; lng: number }>; // 필지 경계 좌표
 }
 
 // 일단지 판정 조건

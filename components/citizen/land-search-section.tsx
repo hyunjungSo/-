@@ -51,7 +51,7 @@ const regionData = {
     // 경기도 - 광주시
     "광주시": ["곤지암읍", "도척면", "퇴촌면", "남종면", "남한산성면", "실촌읍", "오포읍", "초월읍"],
     // 경기도 - 화성시
-    "화성시": ["동탄면", "봉담읍", "서신면", "송산면", "양감면", "우정읍", "장���면", "���남면", "팔탄면", "향남읍"],
+    "화성시": ["동탄면", "봉담읍", "서신면", "송산면", "양감면", "우정읍", "장안면", "정남면", "팔탄면", "향남읍"],
     // 경기도 - 평택시
     "평택시": ["고덕면", "서탄면", "안중읍", "오성면", "청북읍", "팽성읍", "포승읍", "현덕면"],
     // 충청북도 - 음성군
@@ -222,14 +222,14 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
       autoDetected: true,
     },
     {
-      criteriaName: "��여지 형상",
+      criteriaName: "잔여지 형상",
       criteriaDescription: `잔여지 형상: ${land.remainingShape}`,
       isMet: ["부정형", "삼각형", "역삼각형", "자루형"].includes(land.remainingShape),
       autoDetected: true,
     },
     {
       criteriaName: "접면도로 상실",
-      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목적 �����용 곤란",
+      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목적 사용 곤란",
       isMet: false,
       autoDetected: false,
     },
@@ -617,6 +617,13 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               const land = searchResults.find(l => l.id === id);
               if (land) handleLandSelect(land);
             }}
+            parcels={searchResults.map(land => ({
+              id: land.id,
+              coordinates: land.coordinates || [],
+              address: land.address,
+              isIncluded: land.includedArea > 0,
+            }))}
+            selectedParcelId={selectedLand?.id}
           />
         </div>
 
