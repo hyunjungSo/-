@@ -574,7 +574,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
             {/* 지번 */}
             <Input 
-              placeholder="�������번" 
+              placeholder="지번" 
               value={jibun}
               onChange={(e) => setJibun(e.target.value)}
               className="h-9 w-[70px] shrink-0"
