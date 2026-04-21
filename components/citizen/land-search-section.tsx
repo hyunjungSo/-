@@ -574,7 +574,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
             {/* 지번 */}
             <Input 
-              placeholder="지번" 
+              placeholder="���번" 
               value={jibun}
               onChange={(e) => setJibun(e.target.value)}
               className="h-9 w-[70px] shrink-0"
@@ -630,8 +630,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
           <Card className="flex h-full flex-col overflow-hidden shadow-lg">
             {/* 검색 결과 헤더 */}
             <CardHeader className="shrink-0 border-b px-3 py-2">
-              <CardTitle className="flex items-center gap-1.5 text-xs font-medium">
-                <Search className="h-3.5 w-3.5 text-primary" />
+              <CardTitle className="flex items-center gap-2 text-base font-medium">
+                <Search className="h-4 w-4 text-primary" />
                 검색 결과 {searchResults.length > 0 && `(${searchResults.length}건)`}
               </CardTitle>
             </CardHeader>
