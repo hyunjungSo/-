@@ -62,7 +62,7 @@ const regionData = {
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
-    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "�����������장면"],
+    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "�������������장면"],
     // 충청남도 - 아산시
     "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악���", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
@@ -220,7 +220,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
       autoDetected: true,
     },
     {
-      criteriaName: "���상���수 변화",
+      criteriaName: "�����상���수 변화",
       criteriaDescription: `형상지수 변화 +${shapeIndexChange.toFixed(1)} (기준: 1.0 이상)`,
       isMet: shapeIndexChange >= 1.0,
       autoDetected: true,
@@ -248,7 +248,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     });
     criteriaChecks.push({
       criteriaName: "수로 상실",
-      criteriaDescription: "관개수로 상실로 농업용수 공급이 불가능한 경우",
+      criteriaDescription: "관개수��� 상실로 농업용수 공급이 불가능한 경우",
       isMet: false,
       autoDetected: false,
     });
@@ -427,6 +427,18 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
             { lat: 37.2200, lng: 127.2985 },
             { lat: 37.2195, lng: 127.2995 },
             { lat: 37.2188, lng: 127.2980 },
+          ],
+          [
+            { lat: 37.2170, lng: 127.2940 },
+            { lat: 37.2176, lng: 127.2948 },
+            { lat: 37.2172, lng: 127.2956 },
+            { lat: 37.2165, lng: 127.2948 },
+          ],
+          [
+            { lat: 37.2200, lng: 127.2985 },
+            { lat: 37.2208, lng: 127.2998 },
+            { lat: 37.2202, lng: 127.3008 },
+            { lat: 37.2195, lng: 127.2995 },
           ],
         ];
         results = dummyLandInfoList.slice(0, 5).map((land, idx) => ({
