@@ -220,19 +220,18 @@ function ApplicationDetailCard({ application, onClose }: { application: Applicat
         {application.adminStatus === "완료" && application.finalJudgment && (
           <div className={`rounded-lg border p-4 ${
             application.finalJudgment === "매수" 
-              ? "border-primary/30 bg-primary/5" 
+              ? "border-emerald-200 bg-emerald-50" 
               : application.finalJudgment === "기각"
-                ? "border-destructive/30 bg-destructive/5"
-                : "border-amber-500/30 bg-amber-50"
+                ? "border-red-200 bg-red-50"
+                : "border-amber-200 bg-amber-50"
           }`}>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className={`h-5 w-5 ${
-                application.finalJudgment === "매수" ? "text-primary" : 
-                application.finalJudgment === "기각" ? "text-destructive" : "text-amber-600"
-              }`} />
+              {application.finalJudgment === "매수" && <CheckCircle2 className="h-5 w-5 text-emerald-600" />}
+              {application.finalJudgment === "기각" && <AlertTriangle className="h-5 w-5 text-red-600" />}
+              {application.finalJudgment === "심의위원회이관" && <Info className="h-5 w-5 text-amber-600" />}
               <span className={`font-semibold ${
-                application.finalJudgment === "매수" ? "text-primary" : 
-                application.finalJudgment === "기각" ? "text-destructive" : "text-amber-600"
+                application.finalJudgment === "매수" ? "text-emerald-700" : 
+                application.finalJudgment === "기각" ? "text-red-700" : "text-amber-700"
               }`}>최종 결과: {application.finalJudgment}</span>
             </div>
             {application.reviewerComment && (
@@ -338,15 +337,18 @@ export function ApplicationStatusSection() {
                             {statusConfig.label}
                           </Badge>
                           {app.adminStatus === "완료" && app.finalJudgment && (
-                            <Badge className={
+                            <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                               app.finalJudgment === "매수" 
-                                ? "bg-primary text-white font-medium" 
+                                ? "bg-emerald-100 text-emerald-700" 
                                 : app.finalJudgment === "기각"
-                                  ? "bg-destructive text-white font-medium"
-                                  : "bg-amber-500 text-white font-medium"
-                            }>
+                                  ? "bg-red-100 text-red-700"
+                                  : "bg-amber-100 text-amber-700"
+                            }`}>
+                              {app.finalJudgment === "매수" && <CheckCircle2 className="h-3 w-3" />}
+                              {app.finalJudgment === "기각" && <AlertTriangle className="h-3 w-3" />}
+                              {app.finalJudgment === "심의위원회이관" && <Info className="h-3 w-3" />}
                               {app.finalJudgment}
-                            </Badge>
+                            </span>
                           )}
                         </div>
 
