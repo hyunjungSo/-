@@ -229,7 +229,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     },
     {
       criteriaName: "접면도로 상실",
-      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 ���������������� 사용 곤란",
+      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종�� ���������������� 사용 곤란",
       isMet: false,
       autoDetected: false,
     },
@@ -654,76 +654,79 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
           />
         </div>
 
-        {/* 좌측 사이드바 - 검색 결과 패널 */}
-        <div className="absolute bottom-0 left-0 top-0 z-10 w-[280px] bg-background shadow-lg">
-          {/* 검색 결과 헤더 */}
-          <div className="flex items-center justify-between border-b px-4 py-3">
-            <span className="text-base font-medium">결과</span>
-            {searchResults.length > 0 && (
-              <span className="text-sm text-primary">총 {searchResults.length}건</span>
-            )}
-          </div>
-          
-          {/* 검색 결과 목록 */}
-          <div className="h-[calc(100%-100px)] overflow-y-auto">
-            {searchResults.length === 0 ? (
-              <div className="flex h-full flex-col items-center justify-center py-12 text-center">
-                <MapPin className="h-8 w-8 text-muted-foreground" />
-                <p className="mt-2 text-sm text-muted-foreground">
-                  행정구역을 선택하고<br />검색 버튼을 클릭하세요.
-                </p>
-              </div>
-            ) : (
-              <ul>
-                {searchResults.map((land) => (
-                  <li key={land.id} className="border-b border-border">
-                    <button
-                      onClick={() => handleLandSelect(land)}
-                      className={`flex w-full cursor-pointer items-center justify-between px-4 py-3 text-left transition-colors hover:bg-muted/50 ${
-                        selectedLand?.id === land.id ? "bg-primary/5" : ""
-                      }`}
-                    >
-                      {/* 주소 텍스트 */}
-                      <span className="flex-1 text-sm">{land.address}</span>
-                      {/* 화살표 */}
-                      <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          {/* 페이지네이션 */}
-          {searchResults.length > 0 && (
-            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-1 border-t bg-background py-3">
-              <Button variant="ghost" size="icon" className="h-8 w-8" disabled>
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button variant="default" size="sm" className="h-8 w-8 p-0">1</Button>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">2</Button>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">3</Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+        {/* 좌측 사이드바 - 결과 + 기본정보 패널 */}
+        <div className="absolute bottom-0 left-0 top-0 z-10 flex shadow-lg">
+          {/* 결과 패널 */}
+          <div className="w-[280px] bg-background">
+            {/* 검색 결과 헤더 */}
+            <div className="flex items-center justify-between border-b bg-primary px-4 py-3">
+              <span className="text-base font-medium text-primary-foreground">결과</span>
+              {searchResults.length > 0 && (
+                <span className="text-sm text-primary-foreground">총 {searchResults.length}건</span>
+              )}
             </div>
-          )}
+            
+            {/* 검색 결과 목록 */}
+            <div className="h-[calc(100%-100px)] overflow-y-auto">
+              {searchResults.length === 0 ? (
+                <div className="flex h-full flex-col items-center justify-center py-12 text-center">
+                  <MapPin className="h-8 w-8 text-muted-foreground" />
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    행정구역을 선택하고<br />검색 버튼을 클릭하세요.
+                  </p>
+                </div>
+              ) : (
+                <ul>
+                  {searchResults.map((land) => (
+                    <li key={land.id} className="border-b border-border">
+                      <button
+                        onClick={() => handleLandSelect(land)}
+                        className={`flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/50 ${
+                          selectedLand?.id === land.id ? "border-2 border-primary bg-primary/5" : ""
+                        }`}
+                      >
+                        {/* 주소 배지 */}
+                        <span className="shrink-0 rounded border border-primary bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">
+                          주소
+                        </span>
+                        {/* 주소 텍스트 */}
+                        <span className="flex-1 text-sm">{land.address}</span>
+                        {/* 화살표 */}
+                        <ChevronRight className={`h-5 w-5 shrink-0 ${selectedLand?.id === land.id ? "text-primary" : "text-muted-foreground"}`} />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
 
-        </div>
+            {/* 페이지네이션 */}
+            {searchResults.length > 0 && (
+              <div className="absolute bottom-0 left-0 flex w-[280px] items-center justify-center gap-1 border-t bg-background py-3">
+                <Button variant="ghost" size="icon" className="h-8 w-8" disabled>
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button variant="default" size="sm" className="h-8 w-8 p-0">1</Button>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">2</Button>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">3</Button>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </div>
 
-        {/* 사이드바 토글 버튼 */}
-        <button className="absolute left-[280px] top-1/2 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-r-md bg-background shadow-md">
-          <ChevronLeft className="h-4 w-4 text-muted-foreground" />
-        </button>
-
-        {/* 선택된 토지 정보 패널 - 우측 하단 */}
-        {selectedLand && (
-          <div className="absolute bottom-3 right-3 z-10 w-[320px]">
-            <Card className="shadow-lg">
-              <CardHeader className="border-b px-3 py-2">
-                <CardTitle className="text-sm font-medium">선택된 토지 정보</CardTitle>
-              </CardHeader>
-              <CardContent className="max-h-[60vh] space-y-3 overflow-y-auto p-3">
+          {/* 기본정보 패널 (선택된 토지 정보) - 슬라이드 */}
+          <div className={`w-[320px] border-l bg-background transition-all duration-300 ${selectedLand ? "translate-x-0" : "-translate-x-full hidden"}`}>
+            {/* 헤더 */}
+            <div className="flex items-center justify-between border-b bg-primary px-4 py-3">
+              <span className="text-base font-medium text-primary-foreground">기본정보</span>
+            </div>
+            
+            {/* 컨텐츠 */}
+            <div className="h-[calc(100%-52px)] overflow-y-auto p-4">
+              {selectedLand ? (
+                <div className="space-y-4">
                 {/* 토지 기본 정보 */}
                 <div className="rounded border border-border bg-muted/30 p-3">
                   <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
@@ -740,7 +743,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                       <span className="font-medium text-primary">{selectedLand.remainingArea.toLocaleString()}m²</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">���여 비율</span>
+                      <span className="text-muted-foreground">잔여 비율</span>
                       <span className={`font-bold ${selectedLand.remainingRatio <= 30 ? "text-primary" : "text-foreground"}`}>
                         {selectedLand.remainingRatio}%
                       </span>
@@ -748,7 +751,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                   </div>
                 </div>
 
-                {/* 편입���지 없음 경고 */}
+                {/* 편입토지 없음 경고 */}
                 {noIncludedLand && (
                   <div className="rounded border border-destructive bg-destructive/5 p-3">
                     <div className="flex items-center gap-2">
@@ -866,7 +869,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                           <div className="rounded border border-muted bg-muted/30 p-2">
                             <p className="text-xs leading-relaxed text-muted-foreground">
                               <strong className="text-foreground">AI 윤리 원칙:</strong> 본 AI 판독 결과는 참고용이며, 
-                              최종 판단은 담당자�� 관련 법령과 현장 상황을 종합적으로 검토하여 결정합니다.
+                              최종 판단은 담당자가 관련 법령과 현장 상황을 종합적으로 검토하여 결정합니다.
                             </p>
                           </div>
                         </div>
@@ -886,10 +889,20 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                     <ChevronRight className="ml-1 h-4 w-4" />
                   </Button>
                 )}
-              </CardContent>
-            </Card>
+                </div>
+              ) : (
+                <div className="flex h-full items-center justify-center text-muted-foreground">
+                  정보 제공 대상 필지가 아닙니다.
+                </div>
+              )}
+            </div>
           </div>
-        )}
+
+          {/* 사이드바 토글 버튼 */}
+          <button className="flex h-12 w-6 cursor-pointer items-center justify-center self-center rounded-r-md bg-background shadow-md">
+            <ChevronLeft className="h-4 w-4 text-muted-foreground" />
+          </button>
+        </div>
       </div>
     </div>
   );
