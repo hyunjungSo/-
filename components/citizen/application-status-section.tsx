@@ -72,73 +72,73 @@ function StatusRationaleSection({ rationale }: { rationale: JudgmentRationale })
             )}
           </Button>
         </CollapsibleTrigger>
-        <CollapsibleContent className="space-y-3 p-3">
+        <CollapsibleContent className="space-y-4 p-4">
         {/* 판단 요약 */}
-        <div className="rounded-lg border border-border bg-card p-3">
-          <div className="flex items-start gap-2">
-            <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-            <div>
-              <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
-              <p className="mt-1 text-xs text-muted-foreground">{rationale.summary}</p>
-            </div>
+        <div className="flex items-start gap-3">
+          <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+          <div>
+            <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{rationale.summary}</p>
           </div>
         </div>
 
         {/* 법적 근거 */}
-        <div className="rounded-lg border border-border bg-muted/30 p-3">
-          <div className="flex items-start gap-2">
-            <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-            <div>
-              <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
-              <p className="mt-1 text-xs text-muted-foreground">{rationale.legalBasis}</p>
-            </div>
+        <div className="flex items-start gap-3">
+          <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+          <div>
+            <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{rationale.legalBasis}</p>
           </div>
         </div>
 
         {/* 적용 기준 */}
-        <div className="rounded-lg border border-border bg-card p-3">
-          <h4 className="mb-2 text-sm font-semibold text-foreground">적용 기준</h4>
-          <ul className="space-y-1">
-            {rationale.appliedCriteria.map((criteria, idx) => (
-              <li key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
-                <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-primary" />
-                <span>{criteria}</span>
-              </li>
-            ))}
-          </ul>
+        <div className="flex items-start gap-3">
+          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+          <div>
+            <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
+            <ul className="mt-1 space-y-1">
+              {rationale.appliedCriteria.map((criteria, idx) => (
+                <li key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
+                  <span>{criteria}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         {/* 수동 확인 필요 항목 */}
         {rationale.manualCheckItems && rationale.manualCheckItems.length > 0 && (
-          <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
-            <div className="flex items-start gap-2">
-              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-              <div>
-                <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
-                <ul className="mt-1 space-y-0.5">
-                  {rationale.manualCheckItems.map((item, idx) => (
-                    <li key={idx} className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Info className="h-3 w-3 text-amber-600" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+            <div>
+              <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
+              <ul className="mt-1 space-y-1">
+                {rationale.manualCheckItems.map((item, idx) => (
+                  <li key={idx} className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         )}
 
         {/* 상세 설명 */}
-        <div className="rounded-lg border border-border bg-card p-3">
-          <h4 className="mb-2 text-sm font-semibold text-foreground">상세 분석</h4>
-          <pre className="whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
-            {rationale.detailedExplanation}
-          </pre>
+        <div className="flex items-start gap-3">
+          <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+          <div>
+            <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
+            <pre className="mt-1 whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
+              {rationale.detailedExplanation}
+            </pre>
+          </div>
         </div>
 
         {/* 안내 문구 */}
-        <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-2">
-          <Info className="mt-0.5 h-3 w-3 shrink-0 text-primary" />
+        <div className="flex items-start gap-2 pt-2">
+          <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
           <p className="text-xs text-muted-foreground">
             AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
           </p>
