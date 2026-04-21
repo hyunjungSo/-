@@ -62,7 +62,7 @@ const regionData = {
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
-    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "���������������장면"],
+    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "�����������������장면"],
     // 충청남도 - 아산시
     "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악���", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
@@ -460,6 +460,11 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
     setSelectedLand(land);
     setAiResult(null);
     setNoIncludedLand(false);
+    
+    // 기본정보 패널이 접혀 있으면 자동으로 펼침
+    if (isBasicInfoCollapsed) {
+      setIsBasicInfoCollapsed(false);
+    }
     
     // 편입토지 없는 경우 체크
     if (land.includedArea === 0) {
