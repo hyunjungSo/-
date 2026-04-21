@@ -16,9 +16,9 @@ import {
   Scale,
   ChevronDown,
   ChevronUp,
+  ChevronRight,
   AlertTriangle,
-  Info,
-  Eye
+  Info
 } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { JudgmentRationale } from "@/lib/types";
@@ -342,10 +342,10 @@ export function ApplicationStatusSection() {
                       variant="outline"
                       size="sm"
                       onClick={() => setSelectedApplication(app)}
-                      className="ml-4 gap-1"
+                      className="ml-4 gap-2"
                     >
-                      <Eye className="h-4 w-4" />
                       상세보기
+                      <ChevronRight className="h-4 w-4" />
                     </Button>
                   </div>
                 );
