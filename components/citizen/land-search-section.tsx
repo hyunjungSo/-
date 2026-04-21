@@ -927,7 +927,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                     {/* 다크패턴 버튼 - 눈에 잘 안 띄게 */}
                     <button
                       onClick={() => onLandSelect(selectedLand, aiResult!)}
-                      className="w-full cursor-pointer py-1 text-[10px] text-muted-foreground/50 underline-offset-2 transition-colors hover:text-muted-foreground/70 hover:underline"
+                      className="w-full cursor-pointer py-1 text-[11px] text-muted-foreground/50 underline-offset-2 transition-colors hover:text-muted-foreground/70 hover:underline"
                     >
                       그래도 매수 신청하기
                     </button>
