@@ -222,8 +222,8 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
       autoDetected: true,
     },
     {
-      criteriaName: "���지 형상",
-      criteriaDescription: `잔여지 ��상: ${land.remainingShape}`,
+      criteriaName: "잔여지 형상",
+      criteriaDescription: `잔여지 형상: ${land.remainingShape}`,
       isMet: ["부정형", "삼각형", "역삼각형", "자루형"].includes(land.remainingShape),
       autoDetected: true,
     },
@@ -326,7 +326,7 @@ function generateJudgmentRationale(
 
   if (judgment === "매수") {
     summary = `본 토지는 잔여지 매수 기준 ${metCriteriaCount}개 항목을 충족하여 「매수 가능」으로 판정되었습니다.`;
-    detailedExplanation = `1. 분석 대상 토지\n- 소재지: ${land.address}\n- 토지 유형: ${land.landType}\n- 지목: ${land.landCategory}\n\n2. 편입 현황\n- 편입 전 ���적: ${land.originalArea.toLocaleString()}㎡\n- 편입 면적: ${land.includedArea.toLocaleString()}㎡\n- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡\n- 잔여 비율: ${land.remainingRatio}%\n\n3. 형상 분석\n- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})\n- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})\n- 형상지수 변화: +${shapeIndexChange.toFixed(1)}\n\n4. 충족 기준\n${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}\n\n5. 판정 결과\n위 분석 결과, 본 토지는 공익사업 편입으로 인해 잔여지의 종래 목적대로 사용이 현저히 곤란하게 되었으므로, 잔여지 매수 청구 대상에 해당합니다.`;
+    detailedExplanation = `1. 분석 대상 토지\n- 소재지: ${land.address}\n- 토지 유형: ${land.landType}\n- 지목: ${land.landCategory}\n\n2. 편입 현황\n- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n- 편입 면적: ${land.includedArea.toLocaleString()}㎡\n- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡\n- 잔여 비율: ${land.remainingRatio}%\n\n3. 형상 분석\n- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})\n- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})\n- 형상지수 변화: +${shapeIndexChange.toFixed(1)}\n\n4. 충족 기준\n${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}\n\n5. 판정 결과\n위 분석 결과, 본 토지는 공익사업 편입으로 인해 잔여지의 종래 목적대로 사용이 현저히 곤란하게 되었으므로, 잔여지 매수 청구 대상에 해당합니다.`;
   } else if (judgment === "기각") {
     summary = `본 토지는 잔여지 매수 기준을 충족하지 않아 「기각」으로 판정되었습니다.`;
     detailedExplanation = `1. 분석 대상 토지\n- 소재지: ${land.address}\n- 토지 유형: ${land.landType}\n- 지목: ${land.landCategory}\n\n2. 편입 현황\n- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n- 편입 면적: ${land.includedArea.toLocaleString()}㎡\n- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡\n- 잔여 비율: ${land.remainingRatio}%\n\n3. 형상 분석\n- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})\n- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})\n- 형상지수 변화: +${shapeIndexChange.toFixed(1)}\n\n4. 미충족 사유\n- 잔여 비율 ${land.remainingRatio}%로 기준(30% 이하) 초과\n- 형상지수 변화 ${shapeIndexChange.toFixed(1)}로 기준(1.0 이상) 미달\n\n5. 판정 결과\n위 분석 결과, 본 토지는 공익사업 편입 후에도 잔여지의 종래 목적대로 사용이 가능한 것으로 판단되어, 잔여지 매수 청구 대상에 해당하지 않습니다.`;

@@ -176,7 +176,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             </div>
           </div>
 
-          {/* 테이블 (데스��톱) */}
+          {/* 테이블 (데스크톱) */}
           <div className="hidden rounded-lg border border-border md:block">
             <Table>
               <TableHeader>
