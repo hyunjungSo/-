@@ -491,7 +491,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
       </nav>
 
       {/* 상단 검색 필터 영역 - 고정 */}
-      <Card className="mb-4">
+      <Card className="relative z-20 mb-4">
         <CardContent className="py-4">
           <div className="flex flex-wrap items-end gap-3">
             {/* 시도 */}
@@ -790,7 +790,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         </div>
 
         {/* 우측: 지도 영역 */}
-        <Card className="overflow-hidden">
+        <Card className="relative z-0 overflow-hidden">
           <CardContent className="h-full p-0">
             <LeafletMap 
               selectedRegion={selectedRi || selectedEupmyeondong || selectedSigungu || selectedSido}
