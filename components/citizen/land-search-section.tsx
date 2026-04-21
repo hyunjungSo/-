@@ -491,12 +491,11 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
       </nav>
 
       {/* 상단 검색 필터 영역 - 고정 */}
-      <Card className="relative z-20 mb-3">
-        <CardContent className="px-3 py-2">
-          <div className="flex flex-wrap items-end gap-2">
+      <Card className="relative z-20 mb-2">
+        <CardContent className="p-2">
+          <div className="flex flex-wrap items-center gap-2">
             {/* 시도 */}
-            <div className="min-w-[140px] space-y-1">
-              <Label className="text-xs">시도</Label>
+            <div className="min-w-[130px]">
               <Select 
                 value={selectedSido} 
                 onValueChange={(v) => {
@@ -519,8 +518,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
             </div>
 
             {/* 시군구 */}
-            <div className="min-w-[140px] space-y-1">
-              <Label className="text-xs">시군구</Label>
+            <div className="min-w-[130px]">
               <Select 
                 value={selectedSigungu} 
                 onValueChange={(v) => {
@@ -543,8 +541,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
             </div>
 
             {/* 읍면동 */}
-            <div className="min-w-[140px] space-y-1">
-              <Label className="text-xs">읍면동</Label>
+            <div className="min-w-[130px]">
               <Select 
                 value={selectedEupmyeondong} 
                 onValueChange={(v) => {
@@ -566,8 +563,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
             </div>
 
             {/* 리 */}
-            <div className="min-w-[120px] space-y-1">
-              <Label className="text-xs">리</Label>
+            <div className="min-w-[100px]">
               <Select 
                 value={selectedRi} 
                 onValueChange={setSelectedRi}
@@ -585,8 +581,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
             </div>
 
             {/* 지번 */}
-            <div className="min-w-[100px] space-y-1">
-              <Label className="text-xs">지번</Label>
+            <div className="w-[100px]">
               <Input 
                 placeholder="예: 123-4" 
                 value={jibun}
