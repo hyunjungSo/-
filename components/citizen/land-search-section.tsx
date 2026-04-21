@@ -491,9 +491,9 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
       </nav>
 
       {/* 상단 검색 필터 영역 - 고정 */}
-      <Card className="relative z-20 mb-4">
-        <CardContent className="py-4">
-          <div className="flex flex-wrap items-end gap-3">
+      <Card className="relative z-20 mb-3">
+        <CardContent className="px-3 py-2">
+          <div className="flex flex-wrap items-end gap-2">
             {/* 시도 */}
             <div className="min-w-[140px] space-y-1">
               <Label className="text-xs">시도</Label>
