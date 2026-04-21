@@ -219,7 +219,6 @@ export function ApplicationFormSection({
                         setFormData((prev) => ({ ...prev, applicantName: e.target.value }))
                       }
                       required
-                      className="h-12 text-base"
                     />
                   </div>
                   
@@ -233,7 +232,6 @@ export function ApplicationFormSection({
                         setFormData((prev) => ({ ...prev, applicantContact: e.target.value }))
                       }
                       required
-                      className="h-12 text-base"
                     />
                   </div>
                 </div>
@@ -248,7 +246,6 @@ export function ApplicationFormSection({
                       setFormData((prev) => ({ ...prev, applicantAddress: e.target.value }))
                     }
                     required
-                    className="h-12 text-base"
                   />
                 </div>
               </div>
@@ -343,7 +340,6 @@ export function ApplicationFormSection({
                     setFormData((prev) => ({ ...prev, reason: e.target.value }))
                   }
                   required
-                  className="text-base"
                 />
               </div>
 

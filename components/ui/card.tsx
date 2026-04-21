@@ -7,7 +7,8 @@ function Card({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="card"
       className={cn(
-        'bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm',
+        // KRDS 카드 스타일: 깔끔한 보더, 미세한 그림자
+        'bg-card text-card-foreground flex flex-col gap-6 rounded-lg border border-gray-200 py-6',
         className,
       )}
       {...props}
@@ -32,7 +33,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-title"
-      className={cn('font-semibold leading-none tracking-tight', className)}
+      className={cn('text-lg font-semibold leading-tight tracking-tight text-foreground', className)}
       {...props}
     />
   )
