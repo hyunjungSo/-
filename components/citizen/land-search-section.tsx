@@ -606,7 +606,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         {/* 검색/초기화 버튼 */}
         <Button 
               onClick={handleSearch} 
-              className="!h-9 cursor-pointer px-4"
+              className="!h-9 cursor-pointer bg-[#222222] px-4 hover:bg-[#333333]"
               disabled={!selectedSigungu || isSearching}
             >
               {isSearching ? (
@@ -623,9 +623,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
             </Button>
         {(selectedSido || searchResults.length > 0) && (
           <Button 
-            variant="outline" 
             onClick={handleReset}
-            className="!h-9 cursor-pointer px-3"
+            className="!h-9 cursor-pointer bg-[#222222] px-3 hover:bg-[#333333]"
           >
             <RotateCcw className="h-3.5 w-3.5" />
           </Button>
@@ -702,7 +701,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 <Button variant="ghost" size="icon" className="h-8 w-8" disabled>
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <Button variant="default" size="sm" className="h-8 w-8 p-0">1</Button>
+                <Button size="sm" className="h-8 w-8 bg-[#222222] p-0 hover:bg-[#333333]">1</Button>
                 <Button variant="ghost" size="sm" className="h-8 w-8 p-0">2</Button>
                 <Button variant="ghost" size="sm" className="h-8 w-8 p-0">3</Button>
                 <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -761,7 +760,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 {!noIncludedLand && !aiResult && (
                   <Button 
                     onClick={handleAIAnalysis}
-                    className="h-12 w-full cursor-pointer"
+                    className="h-12 w-full cursor-pointer bg-[#222222] hover:bg-[#333333]"
                     disabled={aiAnalyzing}
                   >
                     {aiAnalyzing ? (
