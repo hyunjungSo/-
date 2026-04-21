@@ -849,13 +849,63 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                         </div>
                       )}
 
-                      {/* 판단 근거 */}
+                      {/* 판단 근거 - 신청현황조회와 동일 */}
                       {aiResult.judgmentRationale && (
-                        <div className="space-y-1.5 border-t border-border pt-2">
-                          <p className="text-xs font-medium text-muted-foreground">판단 근거</p>
-                          <p className="text-xs leading-relaxed text-foreground">
-                            {aiResult.judgmentRationale.summary}
-                          </p>
+                        <div className="space-y-2 border-t border-border pt-2">
+                          {/* 판단 요약 */}
+                          <div className="rounded border border-border bg-card p-2">
+                            <div className="flex items-start gap-2">
+                              <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                              <div>
+                                <h4 className="text-xs font-semibold text-foreground">판단 요약</h4>
+                                <p className="mt-1 text-xs text-muted-foreground">{aiResult.judgmentRationale.summary}</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* 법적 근거 */}
+                          <div className="rounded border border-border bg-muted/30 p-2">
+                            <div className="flex items-start gap-2">
+                              <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                              <div>
+                                <h4 className="text-xs font-semibold text-foreground">법적 근거</h4>
+                                <p className="mt-1 text-xs text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* 적용 기준 */}
+                          <div className="rounded border border-border bg-card p-2">
+                            <h4 className="mb-1.5 text-xs font-semibold text-foreground">적용 기준</h4>
+                            <ul className="space-y-1">
+                              {aiResult.judgmentRationale.appliedCriteria.map((criteria, idx) => (
+                                <li key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
+                                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary" />
+                                  <span>{criteria}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          {/* 수동 확인 필요 항목 */}
+                          {aiResult.judgmentRationale.manualCheckItems && aiResult.judgmentRationale.manualCheckItems.length > 0 && (
+                            <div className="rounded border border-amber-200 bg-amber-50 p-2">
+                              <div className="flex items-start gap-2">
+                                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                <div>
+                                  <h4 className="text-xs font-semibold text-foreground">수동 확인 항목</h4>
+                                  <ul className="mt-1 space-y-0.5">
+                                    {aiResult.judgmentRationale.manualCheckItems.map((item, idx) => (
+                                      <li key={idx} className="flex items-center gap-1 text-xs text-muted-foreground">
+                                        <Info className="h-3 w-3 text-amber-600" />
+                                        <span>{item}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
 
