@@ -180,9 +180,10 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               const stepNum = idx + 1;
               const isActive = stepNum <= currentStep;
               const isCurrent = stepNum === currentStep;
+              const isLast = idx === 2;
 
               return (
-                <li key={status} className="flex flex-1 items-center">
+                <li key={status} className={`flex items-center ${isLast ? "flex-none" : "flex-1"}`}>
                   <div className="flex flex-col items-center">
                     <span className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
                       isCurrent 
