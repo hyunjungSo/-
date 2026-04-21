@@ -933,7 +933,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               <div className="shrink-0 border-t bg-background p-3">
                 {aiResult.provisionalJudgment !== "기각" ? (
                   <Button 
-                    onClick={() => onProceedToApplication?.(selectedLand)}
+                    onClick={() => onLandSelect(selectedLand, aiResult!)}
                     className="h-12 w-full cursor-pointer"
                     variant="default"
                   >
@@ -950,7 +950,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                     </div>
                     {/* 다크패턴 버튼 - 눈에 잘 안 띄게 */}
                     <button
-                      onClick={() => onProceedToApplication?.(selectedLand)}
+                      onClick={() => onLandSelect(selectedLand, aiResult!)}
                       className="w-full cursor-pointer py-1 text-[10px] text-muted-foreground/50 underline-offset-2 transition-colors hover:text-muted-foreground/70 hover:underline"
                     >
                       그래도 매수 신청하기
