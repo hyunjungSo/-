@@ -63,7 +63,7 @@ const regionData = {
     // 충청남도 - 천안시 서북구
     "천안시 서북구": ["성환읍", "성거읍", "직산읍", "입장면"],
     // 충청남도 - 아산시
-    "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악���", "신창면", "염치읍", "영인면", "인주면"],
+    "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악����", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
     "강남구": ["논현동", "삼성동", "역삼동", "청담동"],
     "해운대구": ["우동", "중동", "좌동", "송정동"],
@@ -229,7 +229,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     },
     {
       criteriaName: "접면도로 상실",
-      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목����� 사용 곤란",
+      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목������� 사용 곤란",
       isMet: false,
       autoDetected: false,
     },
@@ -600,7 +600,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               placeholder="지번" 
               value={jibun}
               onChange={(e) => setJibun(e.target.value)}
-              className="!h-9 w-[70px] shrink-0"
+              className="!h-9 w-[100px] shrink-0"
             />
 
             {/* 검색/초기화 버튼 */}
