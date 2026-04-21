@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { Layers, Map as MapIcon } from "lucide-react";
+import { Layers, Map as MapIcon, Plus, Minus, Info } from "lucide-react";
 import type { LandInfo } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,6 +21,9 @@ interface LandMapProps {
 
 type BaseMapType = "normal" | "satellite";
 
+// 레이어 가시화 최소 줌 레벨
+const LAYER_MIN_ZOOM = 17;
+
 export function LandMap({
   landInfo,
   showOverlay = true,
@@ -31,11 +34,17 @@ export function LandMap({
   // 배경지도 타입
   const [baseMap, setBaseMap] = useState<BaseMapType>("normal");
   
+  // 줌 레벨 (14-20)
+  const [zoomLevel, setZoomLevel] = useState(14);
+  
   // 레이어 옵션
   const [layers, setLayers] = useState({
     landSupplyDemand: false, // 국토수급
     roadArea: true, // 도로구역
   });
+  
+  // 레이어 가시화 여부
+  const isLayerVisible = zoomLevel >= LAYER_MIN_ZOOM;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -89,8 +98,8 @@ export function LandMap({
       }
     }
 
-    // 국토수급 레이어
-    if (layers.landSupplyDemand) {
+    // 국토수급 레이어 (17레벨 이상에서만 표시)
+    if (layers.landSupplyDemand && isLayerVisible) {
       ctx.fillStyle = "rgba(255, 193, 7, 0.2)";
       ctx.fillRect(rect.width * 0.1, rect.height * 0.1, rect.width * 0.3, rect.height * 0.25);
       ctx.strokeStyle = "#ffc107";
@@ -102,8 +111,8 @@ export function LandMap({
       ctx.strokeRect(rect.width * 0.6, rect.height * 0.65, rect.width * 0.3, rect.height * 0.25);
     }
 
-    // 도로구역 레이어 (도로)
-    if (layers.roadArea) {
+    // 도로구역 레이어 (17레벨 이상에서만 표시)
+    if (layers.roadArea && isLayerVisible) {
       ctx.fillStyle = baseMap === "satellite" ? "#555555" : "#888888";
       ctx.beginPath();
       ctx.moveTo(rect.width * 0.1, rect.height * 0.3);
@@ -201,8 +210,8 @@ export function LandMap({
       ctx.fillStyle = legendText;
       ctx.fillText("잔여지", rect.width - 98, 49);
       
-      // 도로구역 범례 (레이어 활성화 시)
-      if (layers.roadArea) {
+      // 도로구역 범례 (레이어 활성화 + 가시화 줌 레벨)
+      if (layers.roadArea && isLayerVisible) {
         ctx.strokeStyle = "#ff6b6b";
         ctx.lineWidth = 2;
         ctx.setLineDash([4, 2]);
@@ -226,7 +235,7 @@ export function LandMap({
       const shortAddress = addressParts.slice(-1)[0];
       ctx.fillText(shortAddress, rect.width * 0.5, rect.height * 0.92);
     }
-  }, [landInfo, showOverlay, baseMap, layers]);
+  }, [landInfo, showOverlay, baseMap, layers, isLayerVisible]);
 
   return (
     <div className="relative w-full overflow-hidden rounded-lg border border-border bg-muted">
@@ -270,7 +279,7 @@ export function LandMap({
               <span className="text-xs">레이어</span>
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-40 p-3" align="start">
+          <PopoverContent className="w-52 p-3" align="start">
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Checkbox
@@ -296,9 +305,45 @@ export function LandMap({
                   도로구역
                 </Label>
               </div>
+              
+              {/* 레이어 가시화 안내 */}
+              <div className="flex items-start gap-1.5 rounded bg-amber-50 p-2">
+                <Info className="mt-0.5 h-3 w-3 shrink-0 text-amber-600" />
+                <p className="text-xs leading-relaxed text-amber-700">
+                  국토수급, 도로구역 레이어는 {LAYER_MIN_ZOOM}Level 부터 가시화됩니다. 
+                  현재 지도 Zoom Level은 <strong>{zoomLevel}Level</strong> 입니다.
+                </p>
+              </div>
             </div>
           </PopoverContent>
         </Popover>
+      </div>
+      
+      {/* 줌 컨트롤 */}
+      <div className="absolute right-3 top-3 z-10 flex flex-col gap-1">
+        <div className="flex flex-col overflow-hidden rounded-md bg-white/90 shadow-sm">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 rounded-none p-0 hover:bg-gray-100"
+            onClick={() => setZoomLevel(prev => Math.min(20, prev + 1))}
+            disabled={zoomLevel >= 20}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+          <div className="border-t border-gray-200 px-1 py-1 text-center text-xs font-medium text-gray-700">
+            {zoomLevel}
+          </div>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 rounded-none border-t border-gray-200 p-0 hover:bg-gray-100"
+            onClick={() => setZoomLevel(prev => Math.max(10, prev - 1))}
+            disabled={zoomLevel <= 10}
+          >
+            <Minus className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
       <canvas
