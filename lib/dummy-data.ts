@@ -158,6 +158,12 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "강동원",
     ownerContact: "010-6666-7777",
     hasIncludedLand: true,
+    coordinates: [
+      { lat: 37.4115, lng: 127.1275 },
+      { lat: 37.4120, lng: 127.1285 },
+      { lat: 37.4113, lng: 127.1290 },
+      { lat: 37.4108, lng: 127.1280 },
+    ],
   },
   // 동일 소유자 복수 필지 - 인접 필지 1
   {
@@ -176,6 +182,12 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "강동원",
     ownerContact: "010-6666-7777",
     hasIncludedLand: true,
+    coordinates: [
+      { lat: 37.4120, lng: 127.1285 },
+      { lat: 37.4125, lng: 127.1295 },
+      { lat: 37.4118, lng: 127.1300 },
+      { lat: 37.4113, lng: 127.1290 },
+    ],
   },
   // AI 판정 경계 사례 (기준 충족 애매한 케이스)
   {
@@ -194,6 +206,12 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "윤서연",
     ownerContact: "010-8888-9999",
     hasIncludedLand: true,
+    coordinates: [
+      { lat: 37.3685, lng: 127.1420 },
+      { lat: 37.3690, lng: 127.1430 },
+      { lat: 37.3683, lng: 127.1435 },
+      { lat: 37.3678, lng: 127.1425 },
+    ],
   },
   // 매수 불가 케이스 1: 잔여비율이 너무 높고 형상 변화 없음
   {
@@ -212,6 +230,12 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "조현우",
     ownerContact: "010-1111-2222",
     hasIncludedLand: true,
+    coordinates: [
+      { lat: 37.2745, lng: 127.4320 },
+      { lat: 37.2750, lng: 127.4330 },
+      { lat: 37.2743, lng: 127.4335 },
+      { lat: 37.2738, lng: 127.4325 },
+    ],
   },
   // 매수 불가 케이스 2: 면적/형상 기준 모두 미충족
   {
@@ -230,6 +254,12 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "송지훈",
     ownerContact: "010-3333-4444",
     hasIncludedLand: true,
+    coordinates: [
+      { lat: 37.2985, lng: 127.6420 },
+      { lat: 37.2990, lng: 127.6430 },
+      { lat: 37.2983, lng: 127.6435 },
+      { lat: 37.2978, lng: 127.6425 },
+    ],
   },
 ];
 

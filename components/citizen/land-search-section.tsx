@@ -229,7 +229,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     },
     {
       criteriaName: "접면도로 상실",
-      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 ���������� 사용 곤란",
+      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 ������������ 사용 곤란",
       isMet: false,
       autoDetected: false,
     },
@@ -642,12 +642,14 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               const land = searchResults.find(l => l.id === id);
               if (land) handleLandSelect(land);
             }}
-            parcels={searchResults.map(land => ({
-              id: land.id,
-              coordinates: land.coordinates || [],
-              address: land.address,
-              isIncluded: land.includedArea > 0,
-            }))}
+            parcels={searchResults
+              .filter(land => land.coordinates && land.coordinates.length >= 3)
+              .map(land => ({
+                id: land.id,
+                coordinates: land.coordinates!,
+                address: land.address,
+                isIncluded: land.includedArea > 0,
+              }))}
             selectedParcelId={selectedLand?.id}
           />
         </div>
