@@ -490,153 +490,155 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         </ol>
       </nav>
 
-      {/* 상단 검색 필터 영역 - 고정 */}
-      <Card className="relative z-20 mb-2">
-        <CardContent className="p-2">
-          <div className="flex flex-wrap items-center gap-2">
-            {/* 시도 */}
-            <div className="min-w-[130px]">
-              <Select 
-                value={selectedSido} 
-                onValueChange={(v) => {
-                  setSelectedSido(v);
-                  setSelectedSigungu("");
-                  setSelectedEupmyeondong("");
-                  setSelectedRi("");
-                  setSearchResults([]);
-                }}
-              >
-                <SelectTrigger className="h-9">
-                  <SelectValue placeholder="시도 선택" />
-                </SelectTrigger>
-                <SelectContent>
-                  {regionData.시도.map((sido) => (
-                    <SelectItem key={sido} value={sido}>{sido}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+      {/* 전체 화면 지도 컨테이너 */}
+      <div className="relative h-[calc(100vh-200px)] min-h-[600px] w-full">
+        {/* 지도 (전체 화면) */}
+        <div className="absolute inset-0 z-0">
+          <LeafletMap 
+            selectedRegion={selectedRi || selectedEupmyeondong || selectedSigungu || selectedSido}
+            onParcelClick={(id) => {
+              const land = searchResults.find(l => l.id === id);
+              if (land) handleLandSelect(land);
+            }}
+          />
+        </div>
 
-            {/* 시군구 */}
-            <div className="min-w-[130px]">
-              <Select 
-                value={selectedSigungu} 
-                onValueChange={(v) => {
-                  setSelectedSigungu(v);
-                  setSelectedEupmyeondong("");
-                  setSelectedRi("");
-                  setSearchResults([]);
-                }}
-                disabled={!selectedSido}
-              >
-                <SelectTrigger className="h-9">
-                  <SelectValue placeholder="시군구 선택" />
-                </SelectTrigger>
-                <SelectContent>
-                  {sigunguOptions.map((sigungu) => (
-                    <SelectItem key={sigungu} value={sigungu}>{sigungu}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* 읍면동 */}
-            <div className="min-w-[130px]">
-              <Select 
-                value={selectedEupmyeondong} 
-                onValueChange={(v) => {
-                  setSelectedEupmyeondong(v);
-                  setSelectedRi("");
-                  setSearchResults([]);
-                }}
-                disabled={!selectedSigungu || eupmyeondongOptions.length === 0}
-              >
-                <SelectTrigger className="h-9">
-                  <SelectValue placeholder={eupmyeondongOptions.length === 0 ? "해당 없음" : "읍면동 선택"} />
-                </SelectTrigger>
-                <SelectContent>
-                  {eupmyeondongOptions.map((eupmyeondong) => (
-                    <SelectItem key={eupmyeondong} value={eupmyeondong}>{eupmyeondong}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* 리 */}
-            <div className="min-w-[100px]">
-              <Select 
-                value={selectedRi} 
-                onValueChange={setSelectedRi}
-                disabled={!selectedEupmyeondong || riOptions.length === 0}
-              >
-                <SelectTrigger className="h-9">
-                  <SelectValue placeholder={riOptions.length === 0 ? "해당 없음" : "리 선택"} />
-                </SelectTrigger>
-                <SelectContent>
-                  {riOptions.map((ri) => (
-                    <SelectItem key={ri} value={ri}>{ri}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* 지번 */}
-            <div className="w-[100px]">
-              <Input 
-                placeholder="예: 123-4" 
-                value={jibun}
-                onChange={(e) => setJibun(e.target.value)}
-                className="h-9"
-              />
-            </div>
-
-            {/* 검색/초기화 버튼 */}
-            <div className="flex gap-2">
-              <Button 
-                onClick={handleSearch} 
-                className="h-9 cursor-pointer px-6"
-                disabled={!selectedSigungu || isSearching}
-              >
-                {isSearching ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Search className="mr-2 h-4 w-4" />
-                )}
-                검색
-              </Button>
-              {(selectedSido || searchResults.length > 0) && (
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleReset}
-                  className="h-9 cursor-pointer"
+        {/* 상단 검색 필터 영역 - 지도 위 오버레이 */}
+        <div className="absolute left-1/2 top-3 z-20 -translate-x-1/2">
+          <Card className="shadow-lg">
+            <CardContent className="p-2">
+              <div className="flex flex-wrap items-center gap-2">
+                {/* 시도 */}
+                <Select 
+                  value={selectedSido} 
+                  onValueChange={(v) => {
+                    setSelectedSido(v);
+                    setSelectedSigungu("");
+                    setSelectedEupmyeondong("");
+                    setSelectedRi("");
+                    setSearchResults([]);
+                  }}
                 >
-                  <RotateCcw className="mr-1 h-3 w-3" />
-                  초기화
-                </Button>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+                  <SelectTrigger className="h-8 w-[120px]">
+                    <SelectValue placeholder="시도" />
+                  </SelectTrigger>
+                  <SelectContent className="z-[1002]">
+                    {regionData.시도.map((sido) => (
+                      <SelectItem key={sido} value={sido}>{sido}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-      {/* 메인 영역: 좌측 검색결과 / 우측 지도 */}
-      <div className="grid h-[calc(100vh-280px)] min-h-[500px] gap-4 lg:grid-cols-[350px_1fr]">
-        {/* 좌측: 검색 결과 목록 */}
-        <div className="flex flex-col gap-3 overflow-auto">
-          {/* 필지 목록 */}
-          <Card className="overflow-hidden">
-            <CardHeader className="border-b px-3 py-1">
+                {/* 시군구 */}
+                <Select 
+                  value={selectedSigungu} 
+                  onValueChange={(v) => {
+                    setSelectedSigungu(v);
+                    setSelectedEupmyeondong("");
+                    setSelectedRi("");
+                    setSearchResults([]);
+                  }}
+                  disabled={!selectedSido}
+                >
+                  <SelectTrigger className="h-8 w-[130px]">
+                    <SelectValue placeholder="시군구" />
+                  </SelectTrigger>
+                  <SelectContent className="z-[1002]">
+                    {sigunguOptions.map((sigungu) => (
+                      <SelectItem key={sigungu} value={sigungu}>{sigungu}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* 읍면동 */}
+                <Select 
+                  value={selectedEupmyeondong} 
+                  onValueChange={(v) => {
+                    setSelectedEupmyeondong(v);
+                    setSelectedRi("");
+                    setSearchResults([]);
+                  }}
+                  disabled={!selectedSigungu || eupmyeondongOptions.length === 0}
+                >
+                  <SelectTrigger className="h-8 w-[120px]">
+                    <SelectValue placeholder={eupmyeondongOptions.length === 0 ? "해당없음" : "읍면동"} />
+                  </SelectTrigger>
+                  <SelectContent className="z-[1002]">
+                    {eupmyeondongOptions.map((eupmyeondong) => (
+                      <SelectItem key={eupmyeondong} value={eupmyeondong}>{eupmyeondong}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* 리 */}
+                <Select 
+                  value={selectedRi} 
+                  onValueChange={setSelectedRi}
+                  disabled={!selectedEupmyeondong || riOptions.length === 0}
+                >
+                  <SelectTrigger className="h-8 w-[100px]">
+                    <SelectValue placeholder={riOptions.length === 0 ? "해당없음" : "리"} />
+                  </SelectTrigger>
+                  <SelectContent className="z-[1002]">
+                    {riOptions.map((ri) => (
+                      <SelectItem key={ri} value={ri}>{ri}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* 지번 */}
+                <Input 
+                  placeholder="지번" 
+                  value={jibun}
+                  onChange={(e) => setJibun(e.target.value)}
+                  className="h-8 w-[80px]"
+                />
+
+                {/* 검색/초기화 버튼 */}
+                <Button 
+                  onClick={handleSearch} 
+                  size="sm"
+                  className="h-8 cursor-pointer px-4"
+                  disabled={!selectedSigungu || isSearching}
+                >
+                  {isSearching ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Search className="h-4 w-4" />
+                  )}
+                </Button>
+                {(selectedSido || searchResults.length > 0) && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={handleReset}
+                    className="h-8 cursor-pointer"
+                  >
+                    <RotateCcw className="h-3 w-3" />
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* 좌측 사이드바 - 검색 결과 패널 */}
+        <div className="absolute bottom-3 left-3 top-14 z-10 w-[340px]">
+          <Card className="flex h-full flex-col overflow-hidden shadow-lg">
+            {/* 검색 결과 헤더 */}
+            <CardHeader className="shrink-0 border-b px-3 py-2">
               <CardTitle className="flex items-center gap-1.5 text-xs font-medium">
                 <Search className="h-3.5 w-3.5 text-primary" />
                 검색 결과 {searchResults.length > 0 && `(${searchResults.length}건)`}
               </CardTitle>
             </CardHeader>
-            <CardContent className="max-h-[540px] overflow-y-auto p-0">
+            
+            {/* 검색 결과 목록 */}
+            <div className="flex-1 overflow-y-auto">
               {searchResults.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center py-12 text-center">
-                  <MapPin className="h-10 w-10 text-muted-foreground" />
-                  <p className="mt-3 text-sm text-muted-foreground">
+                  <MapPin className="h-8 w-8 text-muted-foreground" />
+                  <p className="mt-2 text-xs text-muted-foreground">
                     행정구역을 선택하고<br />검색 버튼을 클릭하세요.
                   </p>
                 </div>
@@ -646,7 +648,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                     <li key={land.id}>
                       <button
                         onClick={() => handleLandSelect(land)}
-                        className={`w-full cursor-pointer px-4 py-3 text-left transition-colors hover:bg-muted/50 ${
+                        className={`w-full cursor-pointer px-3 py-2 text-left transition-colors hover:bg-muted/50 ${
                           selectedLand?.id === land.id ? "border-l-2 border-l-primary bg-primary/5" : ""
                         }`}
                       >
@@ -658,11 +660,11 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                             </p>
                           </div>
                           {land.includedArea > 0 ? (
-                            <span className="rounded bg-primary/10 px-2 py-0.5 text-xs text-primary">
+                            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs text-primary">
                               편입 {land.includedArea.toLocaleString()}m²
                             </span>
                           ) : (
-                            <span className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
+                            <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500">
                               편입 없음
                             </span>
                           )}
@@ -672,196 +674,185 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                   ))}
                 </ul>
               )}
-            </CardContent>
-          </Card>
+            </div>
 
           {/* 선택된 토지 정보 및 AI 판독 */}
-          {selectedLand && (
-            <Card className="overflow-hidden">
-              <CardHeader className="border-b px-3 py-1">
-                <CardTitle className="text-xs font-medium">선택된 토지 정보</CardTitle>
-              </CardHeader>
-              <CardContent className="max-h-[540px] space-y-3 overflow-y-auto p-3">
-                {/* 토지 기본 정보 */}
-                <div className="rounded-lg border border-border bg-muted/30 p-3">
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">지번</span>
-                      <span className="font-medium">{selectedLand.address.split(" ").slice(-2).join(" ")}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">지목</span>
-                      <span className="font-medium">{selectedLand.landCategory}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">잔여 면적</span>
-                      <span className="font-medium text-primary">{selectedLand.remainingArea.toLocaleString()}m²</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">잔여 비율</span>
-                      <span className={`font-bold ${selectedLand.remainingRatio <= 30 ? "text-primary" : "text-foreground"}`}>
-                        {selectedLand.remainingRatio}%
-                      </span>
-                    </div>
-                  </div>
+            {/* 선택된 토지 정보 섹션 */}
+            {selectedLand && (
+              <div className="shrink-0 border-t border-border">
+                <div className="border-b bg-muted/30 px-3 py-1.5">
+                  <p className="text-xs font-medium">선택된 토지 정보</p>
                 </div>
-
-                {/* 편입토지 없음 경고 */}
-                {noIncludedLand && (
-                  <div className="rounded-lg border border-destructive bg-destructive/5 p-3">
-                    <div className="flex items-center gap-2">
-                      <Ban className="h-5 w-5 text-destructive" />
-                      <span className="text-sm font-medium text-destructive">편입토지 없음 - 매수 신청 불가</span>
+                <div className="max-h-[300px] space-y-2 overflow-y-auto p-3">
+                  {/* 토지 기본 정보 */}
+                  <div className="rounded border border-border bg-background p-2">
+                    <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">지번</span>
+                        <span className="font-medium">{selectedLand.address.split(" ").slice(-2).join(" ")}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">지목</span>
+                        <span className="font-medium">{selectedLand.landCategory}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">잔여 면적</span>
+                        <span className="font-medium text-primary">{selectedLand.remainingArea.toLocaleString()}m²</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">잔여 비율</span>
+                        <span className={`font-bold ${selectedLand.remainingRatio <= 30 ? "text-primary" : "text-foreground"}`}>
+                          {selectedLand.remainingRatio}%
+                        </span>
+                      </div>
                     </div>
                   </div>
-                )}
 
-                {/* AI 판독 버튼 */}
-                {!noIncludedLand && !aiResult && (
-                  <Button 
-                    onClick={handleAIAnalysis}
-                    className="w-full cursor-pointer"
-                    disabled={aiAnalyzing}
-                  >
-                    {aiAnalyzing ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        AI 판독 중...
-                      </>
-                    ) : (
-                      <>
-                        <Bot className="mr-2 h-4 w-4" />
-                        AI 판독 시작
-                      </>
-                    )}
-                  </Button>
-                )}
+                  {/* 편입토지 없음 경고 */}
+                  {noIncludedLand && (
+                    <div className="rounded border border-destructive bg-destructive/5 p-2">
+                      <div className="flex items-center gap-2">
+                        <Ban className="h-4 w-4 text-destructive" />
+                        <span className="text-xs font-medium text-destructive">편입토지 없음 - 매수 신청 불가</span>
+                      </div>
+                    </div>
+                  )}
 
-                {/* AI 판독 결과 아코디언 */}
-                {aiResult && (
-                  <Accordion type="single" collapsible className="w-full">
-                    <AccordionItem value="ai-result" className={`rounded-lg border ${
-                      aiResult.provisionalJudgment === "매수" 
-                        ? "border-primary bg-primary/5" 
-                        : aiResult.provisionalJudgment === "심의위원회이관"
-                          ? "border-warning bg-warning/5"
-                          : "border-destructive bg-destructive/5"
-                    }`}>
-                      <AccordionTrigger className="px-3 py-2 hover:no-underline">
-                        <div className="flex w-full items-center justify-between pr-2">
-                          <div className="flex items-center gap-2">
-                            <Bot className="h-4 w-4 text-primary" />
-                            <span className="text-sm font-semibold">AI 판독 결과</span>
+                  {/* AI 판독 버튼 */}
+                  {!noIncludedLand && !aiResult && (
+                    <Button 
+                      onClick={handleAIAnalysis}
+                      className="w-full cursor-pointer"
+                      size="sm"
+                      disabled={aiAnalyzing}
+                    >
+                      {aiAnalyzing ? (
+                        <>
+                          <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+                          AI 판독 중...
+                        </>
+                      ) : (
+                        <>
+                          <Bot className="mr-2 h-3.5 w-3.5" />
+                          AI 판독 시작
+                        </>
+                      )}
+                    </Button>
+                  )}
+
+                  {/* AI 판독 결과 아코디언 */}
+                  {aiResult && (
+                    <Accordion type="single" collapsible className="w-full">
+                      <AccordionItem value="ai-result" className={`rounded border ${
+                        aiResult.provisionalJudgment === "매수" 
+                          ? "border-primary bg-primary/5" 
+                          : aiResult.provisionalJudgment === "심의위원회이관"
+                            ? "border-warning bg-warning/5"
+                            : "border-destructive bg-destructive/5"
+                      }`}>
+                        <AccordionTrigger className="px-2 py-1.5 hover:no-underline">
+                          <div className="flex w-full items-center justify-between pr-2">
+                            <div className="flex items-center gap-1.5">
+                              <Bot className="h-3.5 w-3.5 text-primary" />
+                              <span className="text-xs font-semibold">AI 판독 결과</span>
+                            </div>
+                            <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
+                              aiResult.provisionalJudgment === "매수"
+                                ? "bg-primary text-white"
+                                : aiResult.provisionalJudgment === "심의위원회이관"
+                                  ? "bg-warning text-white"
+                                  : "bg-destructive text-white"
+                            }`}>
+                              {aiResult.provisionalJudgment === "매수" 
+                                ? "매수 가능" 
+                                : aiResult.provisionalJudgment === "심의위원회이관"
+                                  ? "경계 사례"
+                                  : "기준 미충족"}
+                            </span>
                           </div>
-                          <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${
-                            aiResult.provisionalJudgment === "매수"
-                              ? "bg-primary text-white"
-                              : aiResult.provisionalJudgment === "심의위원회이관"
-                                ? "bg-warning text-white"
-                                : "bg-destructive text-white"
-                          }`}>
-                            {aiResult.provisionalJudgment === "매수" 
-                              ? "매수 가능" 
-                              : aiResult.provisionalJudgment === "심의위원회이관"
-                                ? "경계 사례"
-                                : "기준 미충족"}
-                          </span>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="px-3 pb-3">
-                        <div className="space-y-3">
-                          {/* 기준 체크 결과 */}
-                          <div className="space-y-1.5">
-                            <p className="text-xs font-medium text-muted-foreground">충족 기준</p>
-                            {aiResult.criteriaChecks.filter(c => c.autoDetected).map((check, idx) => (
-                              <div key={idx} className="flex items-center gap-2 text-sm">
-                                {check.isMet ? (
-                                  <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
-                                ) : (
-                                  <XCircle className="h-4 w-4 shrink-0 text-muted-foreground" />
-                                )}
-                                <span className={check.isMet ? "text-foreground" : "text-muted-foreground"}>
-                                  {check.criteriaName}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-
-                          {/* 수동 확인 필요 항목 */}
-                          {aiResult.criteriaChecks.some(c => !c.autoDetected) && (
-                            <div className="space-y-1.5 border-t border-border pt-2">
-                              <p className="text-xs font-medium text-amber-600">현장 확인 필요</p>
-                              {aiResult.criteriaChecks.filter(c => !c.autoDetected).map((check, idx) => (
-                                <div key={idx} className="flex items-center gap-2 text-sm">
-                                  <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" />
-                                  <span className="text-muted-foreground">{check.criteriaName}</span>
+                        </AccordionTrigger>
+                        <AccordionContent className="px-2 pb-2">
+                          <div className="space-y-2">
+                            {/* 기준 체크 결과 */}
+                            <div className="space-y-1">
+                              <p className="text-[10px] font-medium text-muted-foreground">충족 기준</p>
+                              {aiResult.criteriaChecks.filter(c => c.autoDetected).map((check, idx) => (
+                                <div key={idx} className="flex items-center gap-1.5 text-xs">
+                                  {check.isMet ? (
+                                    <CheckCircle2 className="h-3 w-3 shrink-0 text-primary" />
+                                  ) : (
+                                    <XCircle className="h-3 w-3 shrink-0 text-muted-foreground" />
+                                  )}
+                                  <span className={check.isMet ? "text-foreground" : "text-muted-foreground"}>
+                                    {check.criteriaName}
+                                  </span>
                                 </div>
                               ))}
                             </div>
-                          )}
 
-                          {/* 경계 사례 안내 */}
-                          {aiResult.isBorderlineCase && (
-                            <div className="flex items-start gap-2 rounded-lg border border-warning/50 bg-warning/10 p-2">
-                              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
-                              <p className="text-xs text-muted-foreground">
-                                {aiResult.borderlineReason}
+                            {/* 수동 확인 필요 항목 */}
+                            {aiResult.criteriaChecks.some(c => !c.autoDetected) && (
+                              <div className="space-y-1 border-t border-border pt-1.5">
+                                <p className="text-[10px] font-medium text-amber-600">현장 확인 필요</p>
+                                {aiResult.criteriaChecks.filter(c => !c.autoDetected).map((check, idx) => (
+                                  <div key={idx} className="flex items-center gap-1.5 text-xs">
+                                    <AlertTriangle className="h-3 w-3 shrink-0 text-amber-500" />
+                                    <span className="text-muted-foreground">{check.criteriaName}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* 경계 사례 안내 */}
+                            {aiResult.isBorderlineCase && (
+                              <div className="flex items-start gap-1.5 rounded border border-warning/50 bg-warning/10 p-1.5">
+                                <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0 text-warning" />
+                                <p className="text-[10px] text-muted-foreground">
+                                  {aiResult.borderlineReason}
+                                </p>
+                              </div>
+                            )}
+
+                            {/* 판단 근거 */}
+                            {aiResult.judgmentRationale && (
+                              <div className="space-y-1 border-t border-border pt-1.5">
+                                <p className="text-[10px] font-medium text-muted-foreground">판단 근거</p>
+                                <p className="text-[10px] leading-relaxed text-foreground">
+                                  {aiResult.judgmentRationale.summary}
+                                </p>
+                              </div>
+                            )}
+
+                            {/* AI 윤리 원칙 안내 */}
+                            <div className="rounded border border-muted bg-muted/30 p-1.5">
+                              <p className="text-[10px] leading-relaxed text-muted-foreground">
+                                <strong className="text-foreground">AI 윤리 원칙:</strong> 본 AI 판독 결과는 참고용이며, 
+                                최종 판단은 담당자가 관련 법령과 현장 상황을 종합적으로 검토하여 결정합니다.
                               </p>
                             </div>
-                          )}
-
-                          {/* 판단 근거 */}
-                          {aiResult.judgmentRationale && (
-                            <div className="space-y-2 border-t border-border pt-2">
-                              <p className="text-xs font-medium text-muted-foreground">판단 근거</p>
-                              <p className="text-xs leading-relaxed text-foreground">
-                                {aiResult.judgmentRationale.summary}
-                              </p>
-                            </div>
-                          )}
-
-                          {/* AI 윤리 원칙 안내 */}
-                          <div className="mt-3 rounded-lg border border-muted bg-muted/30 p-2">
-                            <p className="text-xs leading-relaxed text-muted-foreground">
-                              <strong className="text-foreground">AI 윤리 원칙:</strong> 본 AI 판독 결과는 참고용이며, 
-                              최종 판단은 담당자가 관련 법령과 현장 상황을 종합적으로 검토하여 결정합니다. 
-                              AI는 의사결정을 보조하는 도구로만 활용됩니다.
-                            </p>
                           </div>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                )}
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  )}
 
-                {/* 매수 신청 버튼 */}
-                {aiResult && aiResult.provisionalJudgment !== "기각" && (
-                  <Button 
-                    onClick={() => onProceedToApplication?.(selectedLand)}
-                    className="w-full cursor-pointer"
-                    variant="default"
-                  >
-                    매수 신청하기
-                    <ChevronRight className="ml-1 h-4 w-4" />
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-          )}
+                  {/* 매수 신청 버튼 */}
+                  {aiResult && aiResult.provisionalJudgment !== "기각" && (
+                    <Button 
+                      onClick={() => onProceedToApplication?.(selectedLand)}
+                      className="w-full cursor-pointer"
+                      size="sm"
+                      variant="default"
+                    >
+                      매수 신청하기
+                      <ChevronRight className="ml-1 h-3.5 w-3.5" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+          </Card>
         </div>
-
-        {/* 우측: 지도 영역 */}
-        <Card className="relative z-0 overflow-hidden">
-          <CardContent className="h-full p-0">
-            <LeafletMap 
-              selectedRegion={selectedRi || selectedEupmyeondong || selectedSigungu || selectedSido}
-              onParcelClick={(id) => {
-                const land = searchResults.find(l => l.id === id);
-                if (land) handleLandSelect(land);
-              }}
-            />
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
