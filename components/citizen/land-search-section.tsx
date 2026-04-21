@@ -685,8 +685,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 {aiAnalyzing && !noIncludedLand && (
                   <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/30 bg-primary/5 py-8">
                     <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                    <p className="mt-3 font-medium text-primary">AI 자동 판독 진행 중</p>
-                    <p className="mt-1 text-sm text-muted-foreground">형상지수, 잔여비율 등을 분석하고 있습니다.</p>
+                    <p className="mt-3 font-medium text-primary">GIS 기반 자동 분석 중</p>
+                    <p className="mt-1 text-sm text-muted-foreground">Polygon 데이터로 형상지수, 잔여비율 등을 산출하고 있습니다.</p>
                   </div>
                 )}
 
@@ -720,8 +720,10 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                         </div>
                       </div>
 
+                      {/* GIS 자동 산출 항목 */}
                       <div className="space-y-1.5">
-                        {aiResult.criteriaChecks.map((check, idx) => (
+                        <p className="text-xs font-medium text-muted-foreground">GIS 자동 산출</p>
+                        {aiResult.criteriaChecks.filter(c => c.autoDetected).map((check, idx) => (
                           <div key={idx} className="flex items-center gap-2 text-sm">
                             {check.isMet ? (
                               <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
@@ -731,14 +733,24 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                             <span className={check.isMet ? "text-foreground" : "text-muted-foreground"}>
                               {check.criteriaName}
                             </span>
-                            {!check.autoDetected && (
-                              <span className="rounded bg-warning/20 px-1.5 py-0.5 text-xs text-warning-foreground">
-                                수동확인
-                              </span>
-                            )}
                           </div>
                         ))}
                       </div>
+                      
+                      {/* 수동 확인 필요 항목 */}
+                      {aiResult.criteriaChecks.some(c => !c.autoDetected) && (
+                        <div className="mt-3 space-y-1.5 border-t border-border pt-3">
+                          <p className="text-xs font-medium text-amber-600">현장 확인 필요</p>
+                          {aiResult.criteriaChecks.filter(c => !c.autoDetected).map((check, idx) => (
+                            <div key={idx} className="flex items-center gap-2 text-sm">
+                              <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" />
+                              <span className="text-muted-foreground">
+                                {check.criteriaName}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
                     {/* 경계 사례 안내 */}
