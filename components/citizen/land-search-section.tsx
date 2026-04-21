@@ -51,7 +51,7 @@ const regionData = {
     // 경기도 - 광주시
     "광주시": ["곤지암읍", "도척면", "퇴촌면", "남종면", "남한산성면", "실촌읍", "오포읍", "초월읍"],
     // 경기도 - 화성시
-    "화성시": ["동탄면", "봉담읍", "서신면", "송산면", "양감면", "우정읍", "장안면", "정남면", "팔탄면", "향남읍"],
+    "화성시": ["동탄면", "봉담읍", "서신면", "송산면", "양감면", "우정읍", "장안면", "���남면", "팔탄면", "향남읍"],
     // 경기도 - 평택시
     "평택시": ["고덕면", "서탄면", "안중읍", "오성면", "청북읍", "팽성읍", "포승읍", "현덕면"],
     // 충청북도 - 음성군
@@ -824,6 +824,15 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                               </p>
                             </div>
                           )}
+
+                          {/* AI 윤리 원칙 안내 */}
+                          <div className="mt-3 rounded-lg border border-muted bg-muted/30 p-2">
+                            <p className="text-xs leading-relaxed text-muted-foreground">
+                              <strong className="text-foreground">AI 윤리 원칙:</strong> 본 AI 판독 결과는 참고용이며, 
+                              최종 판단은 담당자가 관련 법령과 현장 상황을 종합적으로 검토하여 결정합니다. 
+                              AI는 의사결정을 보조하는 도구로만 활용됩니다.
+                            </p>
+                          </div>
                         </div>
                       </AccordionContent>
                     </AccordionItem>
