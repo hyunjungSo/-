@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { LeafletMap } from "@/components/leaflet-map";
 import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult, JudgmentRationale } from "@/lib/types";
-import { Search, MapPin, ChevronRight, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp } from "lucide-react";
+import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface LandSearchSectionProps {
@@ -574,7 +574,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
             {/* 지번 */}
             <Input 
-              placeholder="�����번" 
+              placeholder="�������번" 
               value={jibun}
               onChange={(e) => setJibun(e.target.value)}
               className="h-9 w-[70px] shrink-0"
@@ -626,234 +626,245 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         </div>
 
         {/* 좌측 사이드바 - 검색 결과 패널 */}
-        <div className="absolute bottom-3 left-3 top-3 z-10 w-[340px]">
-          <Card className="flex h-full flex-col overflow-hidden shadow-lg">
-            {/* 검색 결과 헤더 */}
-            <CardHeader className="shrink-0 border-b px-3 py-2">
-              <CardTitle className="flex items-center gap-2 text-base font-medium">
-                <Search className="h-4 w-4 text-primary" />
-                검색 결과 {searchResults.length > 0 && `(${searchResults.length}건)`}
-              </CardTitle>
-            </CardHeader>
-            
-            {/* 검색 결과 목록 */}
-            <div className="flex-1 overflow-y-auto">
-              {searchResults.length === 0 ? (
-                <div className="flex h-full flex-col items-center justify-center py-12 text-center">
-                  <MapPin className="h-8 w-8 text-muted-foreground" />
-                  <p className="mt-2 text-xs text-muted-foreground">
-                    행정구역을 선택하고<br />검색 버튼을 클릭하세요.
-                  </p>
-                </div>
-              ) : (
-                <ul className="divide-y divide-border">
-                  {searchResults.map((land) => (
-                    <li key={land.id}>
-                      <button
-                        onClick={() => handleLandSelect(land)}
-                        className={`w-full cursor-pointer px-3 py-2 text-left transition-colors hover:bg-muted/50 ${
-                          selectedLand?.id === land.id ? "border-l-2 border-l-primary bg-primary/5" : ""
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm font-medium">{land.address.split(" ").slice(-2).join(" ")}</p>
-                            <p className="mt-0.5 text-xs text-muted-foreground">
-                              {land.landCategory} | {land.originalArea.toLocaleString()}m²
-                            </p>
-                          </div>
-                          {land.includedArea > 0 ? (
-                            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs text-primary">
-                              편입 {land.includedArea.toLocaleString()}m²
-                            </span>
-                          ) : (
-                            <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500">
-                              편입 없음
-                            </span>
-                          )}
-                        </div>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+        <div className="absolute bottom-0 left-0 top-0 z-10 w-[280px] bg-background shadow-lg">
+          {/* 검색 결과 헤더 */}
+          <div className="flex items-center justify-between border-b px-4 py-3">
+            <span className="text-base font-medium">결과</span>
+            {searchResults.length > 0 && (
+              <span className="text-sm text-primary">총 {searchResults.length}건</span>
+            )}
+          </div>
+          
+          {/* 검색 결과 목록 */}
+          <div className="h-[calc(100%-100px)] overflow-y-auto">
+            {searchResults.length === 0 ? (
+              <div className="flex h-full flex-col items-center justify-center py-12 text-center">
+                <MapPin className="h-8 w-8 text-muted-foreground" />
+                <p className="mt-2 text-sm text-muted-foreground">
+                  행정구역을 선택하고<br />검색 버튼을 클릭하세요.
+                </p>
+              </div>
+            ) : (
+              <ul>
+                {searchResults.map((land) => (
+                  <li key={land.id} className="border-b border-border">
+                    <button
+                      onClick={() => handleLandSelect(land)}
+                      className={`flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/50 ${
+                        selectedLand?.id === land.id ? "bg-primary/5" : ""
+                      }`}
+                    >
+                      {/* 주소 배지 */}
+                      <span className="shrink-0 rounded border border-primary px-1.5 py-0.5 text-xs font-medium text-primary">
+                        주소
+                      </span>
+                      {/* 주소 텍스트 */}
+                      <span className="flex-1 text-sm">{land.address}</span>
+                      {/* 화살표 */}
+                      <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
 
-          {/* 선택된 토지 정보 및 AI 판독 */}
-            {/* 선택된 토지 정보 섹션 */}
-            {selectedLand && (
-              <div className="shrink-0 border-t border-border">
-                <div className="border-b bg-muted/30 px-3 py-1.5">
-                  <p className="text-xs font-medium">선택된 토지 정보</p>
-                </div>
-                <div className="max-h-[300px] space-y-2 overflow-y-auto p-3">
-                  {/* 토지 기본 정보 */}
-                  <div className="rounded border border-border bg-background p-2">
-                    <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">지번</span>
-                        <span className="font-medium">{selectedLand.address.split(" ").slice(-2).join(" ")}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">지목</span>
-                        <span className="font-medium">{selectedLand.landCategory}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">잔여 면적</span>
-                        <span className="font-medium text-primary">{selectedLand.remainingArea.toLocaleString()}m²</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">잔여 비율</span>
-                        <span className={`font-bold ${selectedLand.remainingRatio <= 30 ? "text-primary" : "text-foreground"}`}>
-                          {selectedLand.remainingRatio}%
-                        </span>
-                      </div>
+          {/* 페이지네이션 */}
+          {searchResults.length > 0 && (
+            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-1 border-t bg-background py-3">
+              <Button variant="ghost" size="icon" className="h-8 w-8" disabled>
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button variant="default" size="sm" className="h-8 w-8 p-0">1</Button>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">2</Button>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">3</Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+
+        </div>
+
+        {/* 사이드바 토글 버튼 */}
+        <button className="absolute left-[280px] top-1/2 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-r-md bg-background shadow-md">
+          <ChevronLeft className="h-4 w-4 text-muted-foreground" />
+        </button>
+
+        {/* 선택된 토지 정보 패널 - 우측 하단 */}
+        {selectedLand && (
+          <div className="absolute bottom-3 right-3 z-10 w-[320px]">
+            <Card className="shadow-lg">
+              <CardHeader className="border-b px-4 py-3">
+                <CardTitle className="text-sm font-medium">선택된 토지 정보</CardTitle>
+              </CardHeader>
+              <CardContent className="max-h-[400px] space-y-3 overflow-y-auto p-4">
+                {/* 토지 기본 정보 */}
+                <div className="rounded border border-border bg-muted/30 p-3">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">지번</span>
+                      <span className="font-medium">{selectedLand.address.split(" ").slice(-2).join(" ")}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">지목</span>
+                      <span className="font-medium">{selectedLand.landCategory}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">잔여 면적</span>
+                      <span className="font-medium text-primary">{selectedLand.remainingArea.toLocaleString()}m²</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">잔여 비율</span>
+                      <span className={`font-bold ${selectedLand.remainingRatio <= 30 ? "text-primary" : "text-foreground"}`}>
+                        {selectedLand.remainingRatio}%
+                      </span>
                     </div>
                   </div>
+                </div>
 
-                  {/* 편입토지 없음 경고 */}
-                  {noIncludedLand && (
-                    <div className="rounded border border-destructive bg-destructive/5 p-2">
-                      <div className="flex items-center gap-2">
-                        <Ban className="h-4 w-4 text-destructive" />
-                        <span className="text-xs font-medium text-destructive">편입토지 없음 - 매수 신청 불가</span>
-                      </div>
+                {/* 편입토지 없음 경고 */}
+                {noIncludedLand && (
+                  <div className="rounded border border-destructive bg-destructive/5 p-3">
+                    <div className="flex items-center gap-2">
+                      <Ban className="h-4 w-4 text-destructive" />
+                      <span className="text-sm font-medium text-destructive">편입토지 없음 - 매수 신청 불가</span>
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {/* AI 판독 버튼 */}
-                  {!noIncludedLand && !aiResult && (
-                    <Button 
-                      onClick={handleAIAnalysis}
-                      className="h-12 w-full cursor-pointer"
-                      disabled={aiAnalyzing}
-                    >
-                      {aiAnalyzing ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          AI 판독 중...
-                        </>
-                      ) : (
-                        <>
-                          <Bot className="mr-2 h-4 w-4" />
-                          AI 판독 시작
-                        </>
-                      )}
-                    </Button>
-                  )}
+                {/* AI 판독 버튼 */}
+                {!noIncludedLand && !aiResult && (
+                  <Button 
+                    onClick={handleAIAnalysis}
+                    className="h-12 w-full cursor-pointer"
+                    disabled={aiAnalyzing}
+                  >
+                    {aiAnalyzing ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        AI 판독 중...
+                      </>
+                    ) : (
+                      <>
+                        <Bot className="mr-2 h-4 w-4" />
+                        AI 판독 시작
+                      </>
+                    )}
+                  </Button>
+                )}
 
-                  {/* AI 판독 결과 아코디언 */}
-                  {aiResult && (
-                    <Accordion type="single" collapsible className="w-full">
-                      <AccordionItem value="ai-result" className={`rounded border ${
-                        aiResult.provisionalJudgment === "매수" 
-                          ? "border-primary bg-primary/5" 
-                          : aiResult.provisionalJudgment === "심의위원회이관"
-                            ? "border-warning bg-warning/5"
-                            : "border-destructive bg-destructive/5"
-                      }`}>
-                        <AccordionTrigger className="px-2 py-1.5 hover:no-underline">
-                          <div className="flex w-full items-center justify-between pr-2">
-                            <div className="flex items-center gap-1.5">
-                              <Bot className="h-3.5 w-3.5 text-primary" />
-                              <span className="text-xs font-semibold">AI 판독 결과</span>
-                            </div>
-                            <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
-                              aiResult.provisionalJudgment === "매수"
-                                ? "bg-primary text-white"
-                                : aiResult.provisionalJudgment === "심의위원회이관"
-                                  ? "bg-warning text-white"
-                                  : "bg-destructive text-white"
-                            }`}>
-                              {aiResult.provisionalJudgment === "매수" 
-                                ? "매수 가능" 
-                                : aiResult.provisionalJudgment === "심의위원회이관"
-                                  ? "경계 사례"
-                                  : "기준 미충족"}
-                            </span>
+                {/* AI 판독 결과 아코디언 */}
+                {aiResult && (
+                  <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="ai-result" className={`rounded border ${
+                      aiResult.provisionalJudgment === "매수" 
+                        ? "border-primary bg-primary/5" 
+                        : aiResult.provisionalJudgment === "심의위원회이관"
+                          ? "border-warning bg-warning/5"
+                          : "border-destructive bg-destructive/5"
+                    }`}>
+                      <AccordionTrigger className="px-3 py-2 hover:no-underline">
+                        <div className="flex w-full items-center justify-between pr-2">
+                          <div className="flex items-center gap-2">
+                            <Bot className="h-4 w-4 text-primary" />
+                            <span className="text-sm font-semibold">AI 판독 결과</span>
                           </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="px-2 pb-2">
-                          <div className="space-y-2">
-                            {/* 기준 체크 결과 */}
-                            <div className="space-y-1">
-                              <p className="text-[10px] font-medium text-muted-foreground">충족 기준</p>
-                              {aiResult.criteriaChecks.filter(c => c.autoDetected).map((check, idx) => (
-                                <div key={idx} className="flex items-center gap-1.5 text-xs">
-                                  {check.isMet ? (
-                                    <CheckCircle2 className="h-3 w-3 shrink-0 text-primary" />
-                                  ) : (
-                                    <XCircle className="h-3 w-3 shrink-0 text-muted-foreground" />
-                                  )}
-                                  <span className={check.isMet ? "text-foreground" : "text-muted-foreground"}>
-                                    {check.criteriaName}
-                                  </span>
+                          <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+                            aiResult.provisionalJudgment === "매수"
+                              ? "bg-primary text-white"
+                              : aiResult.provisionalJudgment === "심의위원회이관"
+                                ? "bg-warning text-white"
+                                : "bg-destructive text-white"
+                          }`}>
+                            {aiResult.provisionalJudgment === "매수" 
+                              ? "매수 가능" 
+                              : aiResult.provisionalJudgment === "심의위원회이관"
+                                ? "경계 사례"
+                                : "기준 미충족"}
+                          </span>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="px-3 pb-3">
+                        <div className="space-y-2">
+                          {/* 기준 체크 결과 */}
+                          <div className="space-y-1.5">
+                            <p className="text-xs font-medium text-muted-foreground">충족 기준</p>
+                            {aiResult.criteriaChecks.filter(c => c.autoDetected).map((check, idx) => (
+                              <div key={idx} className="flex items-center gap-2 text-sm">
+                                {check.isMet ? (
+                                  <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
+                                ) : (
+                                  <XCircle className="h-4 w-4 shrink-0 text-muted-foreground" />
+                                )}
+                                <span className={check.isMet ? "text-foreground" : "text-muted-foreground"}>
+                                  {check.criteriaName}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* 수동 확인 필요 항목 */}
+                          {aiResult.criteriaChecks.some(c => !c.autoDetected) && (
+                            <div className="space-y-1.5 border-t border-border pt-2">
+                              <p className="text-xs font-medium text-amber-600">현장 확인 필요</p>
+                              {aiResult.criteriaChecks.filter(c => !c.autoDetected).map((check, idx) => (
+                                <div key={idx} className="flex items-center gap-2 text-sm">
+                                  <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" />
+                                  <span className="text-muted-foreground">{check.criteriaName}</span>
                                 </div>
                               ))}
                             </div>
+                          )}
 
-                            {/* 수동 확인 필요 항목 */}
-                            {aiResult.criteriaChecks.some(c => !c.autoDetected) && (
-                              <div className="space-y-1 border-t border-border pt-1.5">
-                                <p className="text-[10px] font-medium text-amber-600">현장 확인 필요</p>
-                                {aiResult.criteriaChecks.filter(c => !c.autoDetected).map((check, idx) => (
-                                  <div key={idx} className="flex items-center gap-1.5 text-xs">
-                                    <AlertTriangle className="h-3 w-3 shrink-0 text-amber-500" />
-                                    <span className="text-muted-foreground">{check.criteriaName}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-
-                            {/* 경계 사례 안내 */}
-                            {aiResult.isBorderlineCase && (
-                              <div className="flex items-start gap-1.5 rounded border border-warning/50 bg-warning/10 p-1.5">
-                                <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0 text-warning" />
-                                <p className="text-[10px] text-muted-foreground">
-                                  {aiResult.borderlineReason}
-                                </p>
-                              </div>
-                            )}
-
-                            {/* 판단 근거 */}
-                            {aiResult.judgmentRationale && (
-                              <div className="space-y-1 border-t border-border pt-1.5">
-                                <p className="text-[10px] font-medium text-muted-foreground">판단 근거</p>
-                                <p className="text-[10px] leading-relaxed text-foreground">
-                                  {aiResult.judgmentRationale.summary}
-                                </p>
-                              </div>
-                            )}
-
-                            {/* AI 윤리 원칙 안내 */}
-                            <div className="rounded border border-muted bg-muted/30 p-1.5">
-                              <p className="text-[10px] leading-relaxed text-muted-foreground">
-                                <strong className="text-foreground">AI 윤리 원칙:</strong> 본 AI 판독 결과는 참고용이며, 
-                                최종 판단은 담당자가 관련 법령과 현장 상황을 종합적으로 검토하여 결정합니다.
+                          {/* 경계 사례 안내 */}
+                          {aiResult.isBorderlineCase && (
+                            <div className="flex items-start gap-2 rounded border border-warning/50 bg-warning/10 p-2">
+                              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
+                              <p className="text-xs text-muted-foreground">
+                                {aiResult.borderlineReason}
                               </p>
                             </div>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                  )}
+                          )}
 
-                  {/* 매수 신청 버튼 */}
-                  {aiResult && aiResult.provisionalJudgment !== "기각" && (
-                    <Button 
-                      onClick={() => onProceedToApplication?.(selectedLand)}
-                      className="h-12 w-full cursor-pointer"
-                      variant="default"
-                    >
-                      매수 신청하기
-                      <ChevronRight className="ml-1 h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-              </div>
-            )}
-          </Card>
-        </div>
+                          {/* 판단 근거 */}
+                          {aiResult.judgmentRationale && (
+                            <div className="space-y-1.5 border-t border-border pt-2">
+                              <p className="text-xs font-medium text-muted-foreground">판단 근거</p>
+                              <p className="text-xs leading-relaxed text-foreground">
+                                {aiResult.judgmentRationale.summary}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* AI 윤리 원칙 안내 */}
+                          <div className="rounded border border-muted bg-muted/30 p-2">
+                            <p className="text-xs leading-relaxed text-muted-foreground">
+                              <strong className="text-foreground">AI 윤리 원칙:</strong> 본 AI 판독 결과는 참고용이며, 
+                              최종 판단은 담당자가 관련 법령과 현장 상황을 종합적으로 검토하여 결정합니다.
+                            </p>
+                          </div>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                )}
+
+                {/* 매수 신청 버튼 */}
+                {aiResult && aiResult.provisionalJudgment !== "기각" && (
+                  <Button 
+                    onClick={() => onProceedToApplication?.(selectedLand)}
+                    className="h-12 w-full cursor-pointer"
+                    variant="default"
+                  >
+                    매수 신청하기
+                    <ChevronRight className="ml-1 h-4 w-4" />
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );
