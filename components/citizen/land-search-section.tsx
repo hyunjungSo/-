@@ -229,7 +229,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     },
     {
       criteriaName: "접면도로 상실",
-      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 ������������ 사용 곤란",
+      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 �������������� 사용 곤란",
       isMet: false,
       autoDetected: false,
     },
@@ -517,8 +517,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
       {/* 검색 필터 영역 - 단계 표시 UI와 지도 사이 */}
       <div className="mb-2 flex w-full flex-wrap items-center gap-2 rounded-md border bg-card px-3 py-1.5">
-            {/* 시도 */}
-            <Select 
+        {/* 시도 */}
+        <Select 
               value={selectedSido} 
               onValueChange={(v) => {
                 setSelectedSido(v);
@@ -538,8 +538,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               </SelectContent>
             </Select>
 
-            {/* 시군구 */}
-            <Select 
+        {/* 시군구 */}
+        <Select 
               value={selectedSigungu} 
               onValueChange={(v) => {
                 setSelectedSigungu(v);
@@ -559,8 +559,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               </SelectContent>
             </Select>
 
-            {/* 읍면동 */}
-            <Select 
+        {/* 읍면동 */}
+        <Select 
               value={selectedEupmyeondong} 
               onValueChange={(v) => {
                 setSelectedEupmyeondong(v);
@@ -579,8 +579,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               </SelectContent>
             </Select>
 
-            {/* 리 */}
-            <Select 
+        {/* 리 */}
+        <Select 
               value={selectedRi} 
               onValueChange={setSelectedRi}
               disabled={!selectedEupmyeondong || riOptions.length === 0}
@@ -595,16 +595,16 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               </SelectContent>
             </Select>
 
-            {/* 지번 */}
-            <Input 
+        {/* 지번 */}
+        <Input 
               placeholder="지번" 
               value={jibun}
               onChange={(e) => setJibun(e.target.value)}
               className="!h-9 w-[100px] shrink-0"
             />
 
-            {/* 검색/초기화 버튼 */}
-            <Button 
+        {/* 검색/초기화 버튼 */}
+        <Button 
               onClick={handleSearch} 
               className="!h-9 cursor-pointer px-4"
               disabled={!selectedSigungu || isSearching}
@@ -621,15 +621,15 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 </>
               )}
             </Button>
-            {(selectedSido || searchResults.length > 0) && (
-              <Button 
-                variant="outline" 
-                onClick={handleReset}
-                className="!h-9 cursor-pointer px-3"
-              >
-                <RotateCcw className="h-3.5 w-3.5" />
-              </Button>
-            )}
+        {(selectedSido || searchResults.length > 0) && (
+          <Button 
+            variant="outline" 
+            onClick={handleReset}
+            className="!h-9 cursor-pointer px-3"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+          </Button>
+        )}
       </div>
 
       {/* 전체 화면 지도 컨테이너 */}
