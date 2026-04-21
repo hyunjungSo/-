@@ -222,7 +222,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
       autoDetected: true,
     },
     {
-      criteriaName: "��지 형상",
+      criteriaName: "���지 형상",
       criteriaDescription: `잔여지 ��상: ${land.remainingShape}`,
       isMet: ["부정형", "삼각형", "역삼각형", "자루형"].includes(land.remainingShape),
       autoDetected: true,
@@ -369,7 +369,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
   // 검색 실행
   const handleSearch = () => {
-    if (!selectedRi) return;
+    // 최소 시군구까지 선택되어야 검색 가능
+    if (!selectedSigungu) return;
     
     setIsSearching(true);
     setSelectedLand(null);
@@ -377,10 +378,32 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
     setNoIncludedLand(false);
     
     setTimeout(() => {
-      // 선택된 리에 해당하는 토지 필터링
-      const results = dummyLandInfoList.filter(land => 
-        land.address.includes(selectedRi)
-      );
+      // 선택된 지역에 해당하는 토지 필터링
+      let results = dummyLandInfoList.filter(land => {
+        // 시군구 포함 여부
+        if (!land.address.includes(selectedSigungu)) return false;
+        
+        // 읍면동이 선택되었으면 필터링
+        if (selectedEupmyeondong && !land.address.includes(selectedEupmyeondong)) return false;
+        
+        // 리가 선택되었으면 필터링
+        if (selectedRi && !land.address.includes(selectedRi)) return false;
+        
+        // 지번이 입력되었으면 필터링
+        if (jibun && !land.address.includes(jibun)) return false;
+        
+        return true;
+      });
+      
+      // 검색 결과가 없으면 해당 지역의 더미 데이터 생성
+      if (results.length === 0) {
+        results = dummyLandInfoList.slice(0, 3).map((land, idx) => ({
+          ...land,
+          id: `search-${idx}`,
+          address: `${selectedSido} ${selectedSigungu}${selectedEupmyeondong ? ` ${selectedEupmyeondong}` : ""}${selectedRi ? ` ${selectedRi}` : ""} ${jibun || `${100 + idx}-${idx + 1}`}`,
+        }));
+      }
+      
       setSearchResults(results);
       setIsSearching(false);
     }, 500);
@@ -602,7 +625,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               <Button 
                 onClick={handleSearch} 
                 className="w-full cursor-pointer"
-                disabled={!selectedRi || isSearching}
+                disabled={!selectedSigungu || isSearching}
               >
                 {isSearching ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
