@@ -62,7 +62,7 @@ const regionData = {
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
-    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "�����장면"],
+    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "�������장면"],
     // 충청남도 - 아산시
     "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악���", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
@@ -397,7 +397,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         // 리가 선택되었으면 필터링
         if (selectedRi && !land.address.includes(selectedRi)) return false;
         
-        // 지번이 입력되었으면 필���링
+        // 지번이 입력되었으�� 필���링
         if (jibun && !land.address.includes(jibun)) return false;
         
         return true;
@@ -554,7 +554,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               disabled={!selectedSido}
             >
               <SelectTrigger className="!h-9 w-[200px] shrink-0">
-                <SelectValue placeholder="시군구" className="truncate" />
+                <SelectValue placeholder="시군��" className="truncate" />
               </SelectTrigger>
               <SelectContent>
                 {sigunguOptions.map((sigungu) => (
@@ -920,7 +920,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                   <div className="space-y-2">
                     {/* 매수 불가 안내 */}
                     <div className="rounded bg-muted/50 p-2 text-center">
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-sm font-semibold text-muted-foreground">
                         AI 분석 결과 매수 기준에 충족하지 않습니다.
                       </p>
                     </div>
