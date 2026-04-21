@@ -10,7 +10,7 @@ import { LeafletMap } from "@/components/leaflet-map";
 import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult, JudgmentRationale } from "@/lib/types";
 import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp } from "lucide-react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+
 
 interface LandSearchSectionProps {
   onLandSelect: (land: LandInfo, aiResult: AIAnalysisResult) => void;
@@ -63,7 +63,7 @@ const regionData = {
     // 충청남도 - 천안시 서북구
     "천안시 서북구": ["성환읍", "성거읍", "직산읍", "입장면"],
     // 충청남도 - 아산시
-    "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악��", "신창면", "염치읍", "영인면", "인주면"],
+    "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악���", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
     "강남구": ["논현동", "삼성동", "역삼동", "청담동"],
     "해운대구": ["우동", "중동", "좌동", "송정동"],
@@ -352,7 +352,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
   const [selectedRi, setSelectedRi] = useState<string>("");
   const [jibun, setJibun] = useState<string>("");
   
-  // 검색 결과 상태
+  // 검색 결과 상��
   const [searchResults, setSearchResults] = useState<LandInfo[]>([]);
   const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -778,99 +778,96 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                   </Button>
                 )}
 
-                {/* AI 판독 결과 아코디언 */}
+                {/* AI 판독 결과 */}
                 {aiResult && (
-                  <Accordion type="single" collapsible className="w-full">
-                    <AccordionItem value="ai-result" className={`rounded border ${
-                      aiResult.provisionalJudgment === "매수" 
-                        ? "border-primary bg-primary/5" 
-                        : aiResult.provisionalJudgment === "심의위원회이관"
-                          ? "border-warning bg-warning/5"
-                          : "border-destructive bg-destructive/5"
-                    }`}>
-                      <AccordionTrigger className="px-3 py-2 hover:no-underline">
-                        <div className="flex w-full items-center justify-between pr-2">
-                          <div className="flex items-center gap-2">
-                            <Bot className="h-4 w-4 text-primary" />
-                            <span className="text-sm font-semibold">AI 판독 결과</span>
+                  <div className={`rounded border p-3 ${
+                    aiResult.provisionalJudgment === "매수" 
+                      ? "border-primary bg-primary/5" 
+                      : aiResult.provisionalJudgment === "심의위원회이관"
+                        ? "border-warning bg-warning/5"
+                        : "border-destructive bg-destructive/5"
+                  }`}>
+                    {/* 헤더 */}
+                    <div className="mb-3 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Bot className="h-4 w-4 text-primary" />
+                        <span className="text-sm font-semibold">AI 판독 결과</span>
+                      </div>
+                      <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+                        aiResult.provisionalJudgment === "매수"
+                          ? "bg-primary text-white"
+                          : aiResult.provisionalJudgment === "심의위원회이관"
+                            ? "bg-warning text-white"
+                            : "bg-destructive text-white"
+                      }`}>
+                        {aiResult.provisionalJudgment === "매수" 
+                          ? "매수 가능" 
+                          : aiResult.provisionalJudgment === "심의위원회이관"
+                            ? "경계 사례"
+                            : "기준 미충족"}
+                      </span>
+                    </div>
+
+                    {/* 내용 */}
+                    <div className="space-y-2">
+                      {/* 기준 체크 결과 */}
+                      <div className="space-y-1.5">
+                        <p className="text-xs font-medium text-muted-foreground">충족 기준</p>
+                        {aiResult.criteriaChecks.filter(c => c.autoDetected).map((check, idx) => (
+                          <div key={idx} className="flex items-center gap-2 text-sm">
+                            {check.isMet ? (
+                              <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
+                            ) : (
+                              <XCircle className="h-4 w-4 shrink-0 text-muted-foreground" />
+                            )}
+                            <span className={check.isMet ? "text-foreground" : "text-muted-foreground"}>
+                              {check.criteriaName}
+                            </span>
                           </div>
-                          <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${
-                            aiResult.provisionalJudgment === "매수"
-                              ? "bg-primary text-white"
-                              : aiResult.provisionalJudgment === "심의위원회이관"
-                                ? "bg-warning text-white"
-                                : "bg-destructive text-white"
-                          }`}>
-                            {aiResult.provisionalJudgment === "매수" 
-                              ? "매수 가능" 
-                              : aiResult.provisionalJudgment === "심의위원회이관"
-                                ? "경계 사례"
-                                : "기준 미충족"}
-                          </span>
+                        ))}
+                      </div>
+
+                      {/* 수동 확인 필요 항목 */}
+                      {aiResult.criteriaChecks.some(c => !c.autoDetected) && (
+                        <div className="space-y-1.5 border-t border-border pt-2">
+                          <p className="text-xs font-medium text-amber-600">현장 확인 필요</p>
+                          {aiResult.criteriaChecks.filter(c => !c.autoDetected).map((check, idx) => (
+                            <div key={idx} className="flex items-center gap-2 text-sm">
+                              <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" />
+                              <span className="text-muted-foreground">{check.criteriaName}</span>
+                            </div>
+                          ))}
                         </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="px-3 pb-3">
-                        <div className="space-y-2">
-                          {/* 기준 체크 결과 */}
-                          <div className="space-y-1.5">
-                            <p className="text-xs font-medium text-muted-foreground">충족 기준</p>
-                            {aiResult.criteriaChecks.filter(c => c.autoDetected).map((check, idx) => (
-                              <div key={idx} className="flex items-center gap-2 text-sm">
-                                {check.isMet ? (
-                                  <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
-                                ) : (
-                                  <XCircle className="h-4 w-4 shrink-0 text-muted-foreground" />
-                                )}
-                                <span className={check.isMet ? "text-foreground" : "text-muted-foreground"}>
-                                  {check.criteriaName}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
+                      )}
 
-                          {/* 수동 확인 필요 항목 */}
-                          {aiResult.criteriaChecks.some(c => !c.autoDetected) && (
-                            <div className="space-y-1.5 border-t border-border pt-2">
-                              <p className="text-xs font-medium text-amber-600">현장 확인 필요</p>
-                              {aiResult.criteriaChecks.filter(c => !c.autoDetected).map((check, idx) => (
-                                <div key={idx} className="flex items-center gap-2 text-sm">
-                                  <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" />
-                                  <span className="text-muted-foreground">{check.criteriaName}</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-
-                          {/* 경계 사례 안내 */}
-                          {aiResult.isBorderlineCase && (
-                            <div className="flex items-start gap-2 rounded border border-warning/50 bg-warning/10 p-2">
-                              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
-                              <p className="text-xs text-muted-foreground">
-                                {aiResult.borderlineReason}
-                              </p>
-                            </div>
-                          )}
-
-                          {/* 판단 근거 */}
-                          {aiResult.judgmentRationale && (
-                            <div className="space-y-1.5 border-t border-border pt-2">
-                              <p className="text-xs font-medium text-muted-foreground">판단 근거</p>
-                              <p className="text-xs leading-relaxed text-foreground">
-                                {aiResult.judgmentRationale.summary}
-                              </p>
-                            </div>
-                          )}
-
-                          {/* AI 참고 안내 */}
-                          <div className="rounded border border-muted bg-muted/30 p-2">
-                            <p className="text-xs leading-relaxed text-muted-foreground">
-                              본 결과는 AI가 분석한 참고 자료입니다. 최종 판단은 담당자 검토 후 결정됩니다.
-                            </p>
-                          </div>
+                      {/* 경계 사례 안내 */}
+                      {aiResult.isBorderlineCase && (
+                        <div className="flex items-start gap-2 rounded border border-warning/50 bg-warning/10 p-2">
+                          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
+                          <p className="text-xs text-muted-foreground">
+                            {aiResult.borderlineReason}
+                          </p>
                         </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
+                      )}
+
+                      {/* 판단 근거 */}
+                      {aiResult.judgmentRationale && (
+                        <div className="space-y-1.5 border-t border-border pt-2">
+                          <p className="text-xs font-medium text-muted-foreground">판단 근거</p>
+                          <p className="text-xs leading-relaxed text-foreground">
+                            {aiResult.judgmentRationale.summary}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* AI 참고 안내 */}
+                      <div className="rounded border border-muted bg-muted/30 p-2">
+                        <p className="text-xs leading-relaxed text-muted-foreground">
+                          본 결과는 AI가 분석한 참고 자료입니다. 최종 판단은 담당자 검토 후 결정됩니다.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 )}
 
                 {/* 매수 신청 버튼 */}
