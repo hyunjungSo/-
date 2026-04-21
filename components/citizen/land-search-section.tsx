@@ -229,7 +229,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     },
     {
       criteriaName: "접면도로 상실",
-      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목��� 사용 곤란",
+      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목����� 사용 곤란",
       isMet: false,
       autoDetected: false,
     },
@@ -528,7 +528,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 setSearchResults([]);
               }}
             >
-              <SelectTrigger className="!h-9 w-[100px] shrink-0">
+              <SelectTrigger className="!h-9 w-[200px] shrink-0">
                 <SelectValue placeholder="시도" className="truncate" />
               </SelectTrigger>
               <SelectContent>
@@ -549,7 +549,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               }}
               disabled={!selectedSido}
             >
-              <SelectTrigger className="!h-9 w-[100px] shrink-0">
+              <SelectTrigger className="!h-9 w-[200px] shrink-0">
                 <SelectValue placeholder="시군구" className="truncate" />
               </SelectTrigger>
               <SelectContent>
@@ -569,7 +569,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               }}
               disabled={!selectedSigungu || eupmyeondongOptions.length === 0}
             >
-              <SelectTrigger className="!h-9 w-[100px] shrink-0">
+              <SelectTrigger className="!h-9 w-[200px] shrink-0">
                 <SelectValue placeholder={eupmyeondongOptions.length === 0 ? "해당없음" : "읍면동"} className="truncate" />
               </SelectTrigger>
               <SelectContent>
@@ -585,7 +585,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               onValueChange={setSelectedRi}
               disabled={!selectedEupmyeondong || riOptions.length === 0}
             >
-              <SelectTrigger className="!h-9 w-[80px] shrink-0">
+              <SelectTrigger className="!h-9 w-[200px] shrink-0">
                 <SelectValue placeholder={riOptions.length === 0 ? "해당없음" : "리"} className="truncate" />
               </SelectTrigger>
               <SelectContent>
