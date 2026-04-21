@@ -55,23 +55,24 @@ function StatusRationaleSection({ rationale }: { rationale: JudgmentRationale })
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <CollapsibleTrigger asChild>
-        <Button 
-          variant="outline" 
-          className="h-12 w-full cursor-pointer justify-between"
-        >
-          <div className="flex items-center gap-2">
-            <Scale className="h-4 w-4 text-primary" />
-            <span>AI 판단 근거 보기</span>
-          </div>
-          {isOpen ? (
-            <ChevronUp className="h-4 w-4" />
-          ) : (
-            <ChevronDown className="h-4 w-4" />
-          )}
-        </Button>
-      </CollapsibleTrigger>
-      <CollapsibleContent className="mt-3 space-y-3">
+      <div className={`rounded-lg border ${isOpen ? "border-primary/30 bg-muted/20" : "border-border"}`}>
+        <CollapsibleTrigger asChild>
+          <Button 
+            variant="ghost" 
+            className={`h-12 w-full cursor-pointer justify-between rounded-b-none ${isOpen ? "border-b border-border" : ""}`}
+          >
+            <div className="flex items-center gap-2">
+              <Scale className="h-4 w-4 text-primary" />
+              <span>AI 판단 근거 보기</span>
+            </div>
+            {isOpen ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="space-y-3 p-3">
         {/* 판단 요약 */}
         <div className="rounded-lg border border-border bg-card p-3">
           <div className="flex items-start gap-2">
@@ -143,6 +144,7 @@ function StatusRationaleSection({ rationale }: { rationale: JudgmentRationale })
           </p>
         </div>
       </CollapsibleContent>
+      </div>
     </Collapsible>
   );
 }
