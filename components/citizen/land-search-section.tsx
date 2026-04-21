@@ -51,7 +51,7 @@ const regionData = {
     // 경기도 - 광주시
     "광주시": ["곤지암읍", "도척면", "퇴촌면", "남종면", "남한산성면", "실촌읍", "오포읍", "초월읍"],
     // 경기도 - 화성시
-    "화성시": ["동탄면", "봉담읍", "서신면", "송산면", "양감면", "우정읍", "장안면", "���남면", "팔탄면", "향남읍"],
+    "화성시": ["동탄면", "봉담읍", "서신면", "송산면", "양감면", "우정읍", "장���면", "���남면", "팔탄면", "향남읍"],
     // 경기도 - 평택시
     "평택시": ["고덕면", "서탄면", "안중읍", "오성면", "청북읍", "팽성읍", "포승읍", "현덕면"],
     // 충청북도 - 음성군
@@ -491,9 +491,9 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
       </nav>
 
       {/* 검색 필터 영역 - 단계 표시 UI와 지도 사이 */}
-      <Card className="mb-3">
+      <Card className="mb-3 w-full">
         <CardContent className="p-2">
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex w-full flex-wrap items-center gap-2">
             {/* 시도 */}
             <Select 
               value={selectedSido} 
