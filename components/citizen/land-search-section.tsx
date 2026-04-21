@@ -658,10 +658,10 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
           {/* 결과 패널 */}
           <div className="w-[280px] bg-background">
             {/* 검색 결과 헤더 */}
-            <div className="flex items-center justify-between border-b bg-primary px-4 py-3">
-              <span className="text-base font-medium text-primary-foreground">결과</span>
+            <div className="flex items-center justify-between border-b bg-muted px-4 py-3">
+              <span className="text-base font-medium text-foreground">결과</span>
               {searchResults.length > 0 && (
-                <span className="text-sm text-primary-foreground">총 {searchResults.length}건</span>
+                <span className="text-sm text-muted-foreground">총 {searchResults.length}건</span>
               )}
             </div>
             
@@ -714,8 +714,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
           {/* 기본정보 패널 (선택된 토지 정보) - 슬라이드 */}
           <div className={`flex h-full w-[320px] flex-col border-l bg-background transition-all duration-300 ${selectedLand ? "translate-x-0" : "-translate-x-full hidden"}`}>
             {/* 헤더 */}
-            <div className="flex shrink-0 items-center justify-between border-b bg-primary px-4 py-3">
-              <span className="text-base font-medium text-primary-foreground">기본정보</span>
+            <div className="flex shrink-0 items-center justify-between border-b bg-muted px-4 py-3">
+              <span className="text-base font-medium text-foreground">기본정보</span>
             </div>
             
             {/* 컨텐츠 */}
@@ -760,7 +760,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 {!noIncludedLand && !aiResult && (
                   <Button 
                     onClick={handleAIAnalysis}
-                    className="h-12 w-full cursor-pointer bg-[#222222] hover:bg-[#333333]"
+                    className="h-12 w-full cursor-pointer"
+                    variant="default"
                     disabled={aiAnalyzing}
                   >
                     {aiAnalyzing ? (
