@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LandMap } from "@/components/land-map";
 import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult, JudgmentRationale } from "@/lib/types";
@@ -15,6 +14,48 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 interface LandSearchSectionProps {
   onLandSelect: (land: LandInfo, aiResult: AIAnalysisResult) => void;
 }
+
+// 행정구역 데이터 (테스트용)
+const regionData = {
+  시도: ["경기도", "충청북도", "충청남도"],
+  시군구: {
+    "경기도": ["용인시 처인구", "이천시", "광주시"],
+    "충청북도": ["음성군", "진천군"],
+    "충청남도": ["천안시", "아산시"],
+  },
+  읍면동: {
+    "용인시 처인구": ["양지면", "백암면", "원삼면"],
+    "이천시": ["마장면", "대월면", "모가면"],
+    "광주시": ["곤지암읍", "도척면", "퇴촌면"],
+    "음성군": ["삼성면", "대소면", "금왕읍"],
+    "진천군": ["진천읍", "덕산면", "초평면"],
+    "천안시": ["성환읍", "성거읍", "직산읍"],
+    "아산시": ["탕정면", "배방읍", "음봉면"],
+  },
+  리: {
+    "양지면": ["마성리", "송문리", "대대리"],
+    "백암면": ["봉남리", "백봉리", "근창리"],
+    "원삼면": ["사암리", "문촌리", "두창리"],
+    "마장면": ["덕평리", "이치리", "장암리"],
+    "대월면": ["사동리", "초지리", "대월리"],
+    "모가면": ["진가리", "어농리", "소고리"],
+    "곤지암읍": ["신리", "역동리", "삼리"],
+    "도척면": ["진우리", "노곡리", "상림리"],
+    "퇴촌면": ["정지리", "영동리", "도수리"],
+    "삼성면": ["천남리", "양덕리", "용성리"],
+    "대소면": ["성본리", "대풍리", "삼호리"],
+    "금왕읍": ["용계리", "내송리", "호산리"],
+    "진천읍": ["성석리", "연곡리", "읍내리"],
+    "덕산면": ["용몽리", "구산리", "합목리"],
+    "초평면": ["용정리", "화산리", "영구리"],
+    "성환읍": ["대홍리", "수향리", "매주리"],
+    "성거읍": ["요방리", "신월리", "천흥리"],
+    "직산읍": ["군동리", "삼은리", "마정리"],
+    "탕정면": ["갈산리", "용두리", "매곡리"],
+    "배방읍": ["장재리", "갈매리", "호서리"],
+    "음봉면": ["신수리", "동천리", "쌍용리"],
+  }
+} as const;
 
 // 판단 근거 설명 컴포넌트
 function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale }) {
@@ -146,11 +187,10 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
       criteriaName: "접면도로 상실",
       criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목적 사용 곤란",
       isMet: false,
-      autoDetected: false, // 수동 확인 필요
+      autoDetected: false,
     },
   ];
 
-  // 농지의 경우 추가 수동 확인 항목
   if (land.landType === "농지") {
     criteriaChecks.push({
       criteriaName: "농기계 진입/회전 곤란",
@@ -166,13 +206,11 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     });
   }
 
-  // 자동 판독 기준 충족 개수
   const metAutoCriteria = criteriaChecks.filter(c => c.isMet && c.autoDetected).length;
   const hasManualCheckNeeded = criteriaChecks.some(c => !c.autoDetected);
   const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
-  // 경계 사례 판정: 자동 판독 기준 1개만 충족하고 수동 확인 항목이 있는 경우
   const isBorderlineCase = metAutoCriteria === 1 && hasManualCheckNeeded;
   
   let provisionalJudgment: "매수" | "기각" | "심의위원회이관";
@@ -187,7 +225,6 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     provisionalJudgment = "기각";
   }
 
-  // 판단 근거 생성
   const judgmentRationale: JudgmentRationale = generateJudgmentRationale(
     land,
     provisionalJudgment,
@@ -229,11 +266,10 @@ function generateJudgmentRationale(
   let detailedExplanation: string;
   const appliedCriteria: string[] = [];
 
-  // 토지 유형별 기준 설명
   if (land.landType === "대지") {
-    appliedCriteria.push(`대지 면적 기준: 주거지역 90㎡, 상업지역 150㎡, 공업지역 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)`);
+    appliedCriteria.push(`대지 면적 기준: 주거지역 90㎡, 상업지역 150㎡, 공업지역 330㎡ 이하`);
   } else if (land.landType === "농지") {
-    appliedCriteria.push(`농지 면적 기준: 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)`);
+    appliedCriteria.push(`농지 면적 기준: 330㎡ 이하`);
   } else if (land.landType === "산지") {
     appliedCriteria.push(`산지 면적 기준: 990㎡ 이하`);
   } else {
@@ -246,395 +282,374 @@ function generateJudgmentRationale(
 
   if (judgment === "매수") {
     summary = `본 토지는 잔여지 매수 기준 ${metCriteriaCount}개 항목을 충족하여 「매수 가능」으로 판정되었습니다.`;
-    
-    detailedExplanation = `1. 분석 대상 토지
-- 소재지: ${land.address}
-- 토지 유형: ${land.landType}
-- 지목: ${land.landCategory}
-
-2. 편입 현황
-- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡
-- 편입 면적: ${land.includedArea.toLocaleString()}㎡
-- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡
-- 잔여 비율: ${land.remainingRatio}%
-
-3. 형상 분석
-- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
-- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
-- 형상지수 변화: +${shapeIndexChange.toFixed(1)}
-
-4. 충족 기준
-${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
-
-5. 판정 결과
-위 분석 결과, 본 토지는 공익사업 편입으로 인해 잔여지의 종래 목적대로 사용이 현저히 곤란하게 되었으므로, 잔여지 매수 청구 대상에 해당합니다.`;
-
+    detailedExplanation = `1. 분석 대상 토지\n- 소재지: ${land.address}\n- 토지 유형: ${land.landType}\n- 지목: ${land.landCategory}\n\n2. 편입 현황\n- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n- 편입 면적: ${land.includedArea.toLocaleString()}㎡\n- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡\n- 잔여 비율: ${land.remainingRatio}%\n\n3. 형상 분석\n- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})\n- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})\n- 형상지수 변화: +${shapeIndexChange.toFixed(1)}\n\n4. 충족 기준\n${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}\n\n5. 판정 결과\n위 분석 결과, 본 토지는 공익사업 편입으로 인해 잔여지의 종래 목적대로 사용이 현저히 곤란하게 되었으므로, 잔여지 매수 청구 대상에 해당합니다.`;
   } else if (judgment === "기각") {
     summary = `본 토지는 잔여지 매수 기준을 충족하지 않아 「기각」으로 판정되었습니다.`;
-    
-    detailedExplanation = `1. 분석 대상 토지
-- 소재지: ${land.address}
-- 토지 유형: ${land.landType}
-- 지목: ${land.landCategory}
-
-2. 편입 현황
-- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡
-- 편입 면적: ${land.includedArea.toLocaleString()}㎡
-- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡
-- 잔여 비율: ${land.remainingRatio}%
-
-3. 형상 분석
-- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
-- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
-- 형상지수 변화: +${shapeIndexChange.toFixed(1)}
-
-4. 미충족 사유
-- 잔여 비율 ${land.remainingRatio}%로 기준(30% 이하) 초과
-- 형상지수 변화 ${shapeIndexChange.toFixed(1)}로 기준(1.0 이상) 미달
-- 잔여지 형상이 정상 범위 내로 종래 용도 사용 가능
-
-5. 판정 결과
-위 분석 결과, 본 토지는 공익사업 편입 후에도 잔여지의 종래 목적대로 사용이 가능한 것으로 판단되어, 잔여지 매수 청구 대상에 해당하지 않습니다.
-
-※ 단, 현장 상황에 따라 실제 사용 가능 여부가 다를 수 있으며, 이 경우 담당자 검토를 통해 재판정될 수 있습니다.`;
-
+    detailedExplanation = `1. 분석 대상 토지\n- 소재지: ${land.address}\n- 토지 유형: ${land.landType}\n- 지목: ${land.landCategory}\n\n2. 편입 현황\n- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n- 편입 면적: ${land.includedArea.toLocaleString()}㎡\n- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡\n- 잔여 비율: ${land.remainingRatio}%\n\n3. 형상 분석\n- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})\n- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})\n- 형상지수 변화: +${shapeIndexChange.toFixed(1)}\n\n4. 미충족 사유\n- 잔여 비율 ${land.remainingRatio}%로 기준(30% 이하) 초과\n- 형상지수 변화 ${shapeIndexChange.toFixed(1)}로 기준(1.0 이상) 미달\n\n5. 판정 결과\n위 분석 결과, 본 토지는 공익사업 편입 후에도 잔여지의 종래 목적대로 사용이 가능한 것으로 판단되어, 잔여지 매수 청구 대상에 해당하지 않습니다.`;
   } else {
-    summary = `본 토지는 자동 판독 기준만으로 명확한 판정이 어려워 「심의위원회 이관」이 필요합니다.`;
-    
-    detailedExplanation = `1. 분석 대상 토지
-- 소재지: ${land.address}
-- 토지 유형: ${land.landType}
-- 지목: ${land.landCategory}
-
-2. 편입 현황
-- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡
-- 편입 면적: ${land.includedArea.toLocaleString()}㎡
-- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡
-- 잔여 비율: ${land.remainingRatio}%
-
-3. 형상 분석
-- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
-- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
-- 형상지수 변화: +${shapeIndexChange.toFixed(1)}
-
-4. 경계 사례 판정 사유
-- 자동 판독 가능 기준 중 일부만 충족
-- 수동 확인이 필요한 항목 존재: ${manualCheckItems.join(", ")}
-
-5. 판정 결과
-본 토지는 자동 판독 기준만으로는 명확한 판정이 어려운 경계 사례입니다. 담당자가 현장 확인 및 추가 검토를 진행한 후, 필요시 토지보상심의위원회에서 최종 판정합니다.
-
-※ 수동 확인 항목(접면도로 상실, 농기계 진입 곤란, 수로 상실 등)의 충족 여부에 따라 최종 판정이 달라질 수 있습니다.`;
+    summary = `본 토지는 자동 판독 기준 충족이 애매하여 담당자 검토가 필요한 「경계 사례」로 분류되었습니다.`;
+    detailedExplanation = `1. 분석 대상 토지\n- 소재지: ${land.address}\n- 토지 유형: ${land.landType}\n- 지목: ${land.landCategory}\n\n2. 편입 현황\n- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n- 편입 면적: ${land.includedArea.toLocaleString()}㎡\n- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡\n- 잔여 비율: ${land.remainingRatio}%\n\n3. 형상 분석\n- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})\n- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})\n- 형상지수 변화: +${shapeIndexChange.toFixed(1)}\n\n4. 경계 사례 판정 사유\n- 자동 판독 기준 일부만 충족\n- 수동 확인 필요 항목: ${manualCheckItems.join(", ")}\n\n5. 판정 결과\n위 분석 결과, 본 토지는 자동 판독만으로 명확한 판정이 어려워 담당자 검토 후 최종 결정됩니다.`;
   }
 
   return {
     summary,
     legalBasis,
     appliedCriteria,
-    detailedExplanation,
     manualCheckItems: manualCheckItems.length > 0 ? manualCheckItems : undefined,
+    detailedExplanation,
   };
 }
 
 export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResult, setSearchResult] = useState<LandInfo | null>(null);
-  const [searchMethod, setSearchMethod] = useState("address");
-  const [aiAnalyzing, setAiAnalyzing] = useState(false);
-  const [aiResult, setAiResult] = useState<AIAnalysisResult | null>(null);
+  // 행정구역 선택 상태
+  const [selectedSido, setSelectedSido] = useState<string>("");
+  const [selectedSigungu, setSelectedSigungu] = useState<string>("");
+  const [selectedEupmyeondong, setSelectedEupmyeondong] = useState<string>("");
+  const [selectedRi, setSelectedRi] = useState<string>("");
+  
+  // 검색 결과 상태
+  const [searchResults, setSearchResults] = useState<LandInfo[]>([]);
+  const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
   const [isSearching, setIsSearching] = useState(false);
-  const [searchNotFound, setSearchNotFound] = useState(false);
+  
+  // AI 분석 상태
+  const [aiResult, setAiResult] = useState<AIAnalysisResult | null>(null);
+  const [aiAnalyzing, setAiAnalyzing] = useState(false);
+  
+  // 편입토지 없음 상태
   const [noIncludedLand, setNoIncludedLand] = useState(false);
 
+  // 현재 단계 계산
+  const currentStep = aiResult ? 4 : aiAnalyzing ? 3 : selectedLand ? 3 : searchResults.length > 0 ? 2 : 1;
+
+  // 검색 실행
   const handleSearch = () => {
-    if (!searchQuery.trim()) return;
+    if (!selectedRi) return;
     
     setIsSearching(true);
-    setSearchNotFound(false);
-    setNoIncludedLand(false);
+    setSelectedLand(null);
     setAiResult(null);
+    setNoIncludedLand(false);
     
-    // 검색 시뮬레이션 (0.5초 딜레이)
     setTimeout(() => {
-      const found = dummyLandInfoList.find(
-        (land) =>
-          land.address.includes(searchQuery) ||
-          land.id.includes(searchQuery)
+      // 선택된 리에 해당하는 토지 필터링
+      const results = dummyLandInfoList.filter(land => 
+        land.address.includes(selectedRi)
       );
-      setSearchResult(found || null);
-      setSearchNotFound(!found);
-      
-      // 편입토지 없는 경우 체크
-      if (found && !found.hasIncludedLand) {
-        setNoIncludedLand(true);
-      }
-      
+      setSearchResults(results);
       setIsSearching(false);
     }, 500);
   };
 
-  // 토지 조회 성공 시 자동으로 AI 분석 실행 (편입토지가 있는 경우에만)
-  useEffect(() => {
-    if (searchResult && !aiResult && !aiAnalyzing && searchResult.hasIncludedLand) {
-      setAiAnalyzing(true);
-      setTimeout(() => {
-        const result = simulateAIAnalysis(searchResult);
-        setAiResult(result);
-        setAiAnalyzing(false);
-      }, 1200);
-    }
-  }, [searchResult, aiResult, aiAnalyzing]);
-
-  const handleReset = () => {
-    setSearchQuery("");
-    setSearchResult(null);
+  // 필지 선택
+  const handleLandSelect = (land: LandInfo) => {
+    setSelectedLand(land);
     setAiResult(null);
-    setSearchNotFound(false);
+    setNoIncludedLand(false);
+    
+    // 편입토지 없는 경우 체크
+    if (land.includedArea === 0) {
+      setNoIncludedLand(true);
+    }
+  };
+
+  // AI 판독 실행
+  const handleAIAnalysis = () => {
+    if (!selectedLand || noIncludedLand) return;
+    
+    setAiAnalyzing(true);
+    
+    setTimeout(() => {
+      const result = simulateAIAnalysis(selectedLand);
+      setAiResult(result);
+      setAiAnalyzing(false);
+    }, 1500);
+  };
+
+  // 초기화
+  const handleReset = () => {
+    setSelectedSido("");
+    setSelectedSigungu("");
+    setSelectedEupmyeondong("");
+    setSelectedRi("");
+    setSearchResults([]);
+    setSelectedLand(null);
+    setAiResult(null);
     setNoIncludedLand(false);
   };
+
+  // 드롭다운 옵션
+  const sigunguOptions = selectedSido ? regionData.시군구[selectedSido as keyof typeof regionData.시군구] || [] : [];
+  const eupmyeondongOptions = selectedSigungu ? regionData.읍면동[selectedSigungu as keyof typeof regionData.읍면동] || [] : [];
+  const riOptions = selectedEupmyeondong ? regionData.리[selectedEupmyeondong as keyof typeof regionData.리] || [] : [];
 
   return (
     <div className="space-y-6">
       {/* KRDS 진행 단계 표시기 */}
       <nav aria-label="신청 진행 단계" className="w-full">
         <ol className="flex items-center justify-center">
-          {/* Step 1: 토지 검색 */}
-          <li className="flex items-center">
-            <div className={`flex items-center gap-2 ${!searchResult ? "text-primary" : "text-muted-foreground"}`}>
-              <span className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
-                !searchResult 
-                  ? "bg-primary text-white" 
-                  : "bg-gray-200 text-gray-600"
-              }`}>
-                1
-              </span>
-              <span className={`text-sm font-medium ${!searchResult ? "text-primary" : "text-muted-foreground"}`}>
-                토지 검색
-              </span>
-            </div>
-          </li>
-          
-          {/* Connector 1-2 */}
-          <li className="mx-4 h-px w-12 bg-gray-300 sm:w-16" aria-hidden="true" />
-          
-          {/* Step 2: AI 판독 */}
-          <li className="flex items-center">
-            <div className={`flex items-center gap-2 ${
-              searchResult && !aiResult ? "text-primary" : aiResult ? "text-muted-foreground" : "text-gray-400"
-            }`}>
-              <span className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
-                searchResult && !aiResult 
-                  ? "bg-primary text-white" 
-                  : aiResult 
-                    ? "bg-gray-200 text-gray-600"
-                    : "bg-gray-100 text-gray-400"
-              }`}>
-                2
-              </span>
-              <span className={`text-sm font-medium ${
-                searchResult && !aiResult ? "text-primary" : aiResult ? "text-muted-foreground" : "text-gray-400"
-              }`}>
-                AI 판독
-              </span>
-            </div>
-          </li>
-          
-          {/* Connector 2-3 */}
-          <li className="mx-4 h-px w-12 bg-gray-300 sm:w-16" aria-hidden="true" />
-          
-          {/* Step 3: 결과 확인 */}
-          <li className="flex items-center">
-            <div className={`flex items-center gap-2 ${aiResult ? "text-primary" : "text-gray-400"}`}>
-              <span className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
-                aiResult 
-                  ? "bg-primary text-white" 
-                  : "bg-gray-100 text-gray-400"
-              }`}>
-                3
-              </span>
-              <span className={`text-sm font-medium ${aiResult ? "text-primary" : "text-gray-400"}`}>
-                결과 확인
-              </span>
-            </div>
-          </li>
+          {[
+            { step: 1, label: "지번 조회" },
+            { step: 2, label: "필지 선택" },
+            { step: 3, label: "AI 판독" },
+            { step: 4, label: "결과 확인" },
+          ].map((item, idx) => (
+            <li key={item.step} className="flex items-center">
+              <div className={`flex items-center gap-2 ${currentStep >= item.step ? "text-primary" : "text-gray-400"}`}>
+                <span className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
+                  currentStep === item.step 
+                    ? "bg-primary text-white" 
+                    : currentStep > item.step
+                      ? "bg-gray-200 text-gray-600"
+                      : "bg-gray-100 text-gray-400"
+                }`}>
+                  {currentStep > item.step ? <CheckCircle2 className="h-5 w-5" /> : item.step}
+                </span>
+                <span className={`hidden text-sm font-medium sm:block ${
+                  currentStep >= item.step ? "text-primary" : "text-gray-400"
+                }`}>
+                  {item.label}
+                </span>
+              </div>
+              {idx < 3 && (
+                <div className={`mx-2 h-px w-8 sm:mx-4 sm:w-12 ${
+                  currentStep > item.step ? "bg-primary" : "bg-gray-300"
+                }`} aria-hidden="true" />
+              )}
+            </li>
+          ))}
         </ol>
       </nav>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* 검색 영역 */}
-        <Card className="border-2 border-primary/20">
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <Search className="h-5 w-5 text-primary" />
-                  토지 조회
-                </CardTitle>
-                <CardDescription className="mt-1">
-                  편입 토지 지번을 입력하여 잔여지 정보를 조회하세요.
-                </CardDescription>
+      <div className="grid gap-6 lg:grid-cols-[400px_1fr]">
+        {/* 좌측: 검색 영역 */}
+        <div className="space-y-4">
+          {/* 행정구역 검색 */}
+          <Card>
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Search className="h-5 w-5 text-primary" />
+                    토지 조회
+                  </CardTitle>
+                  <CardDescription className="mt-1 text-xs">
+                    행정구역을 선택하여 편입 토지를 조회하세요.
+                  </CardDescription>
+                </div>
+                {(selectedSido || searchResults.length > 0) && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={handleReset}
+                    className="cursor-pointer text-xs text-muted-foreground hover:text-foreground"
+                  >
+                    <RotateCcw className="mr-1 h-3 w-3" />
+                    초기화
+                  </Button>
+                )}
               </div>
-              {searchResult && (
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={handleReset}
-                  className="cursor-pointer text-muted-foreground hover:text-foreground"
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {/* 시도 */}
+              <div className="space-y-2">
+                <Label className="text-xs">시도</Label>
+                <Select 
+                  value={selectedSido} 
+                  onValueChange={(v) => {
+                    setSelectedSido(v);
+                    setSelectedSigungu("");
+                    setSelectedEupmyeondong("");
+                    setSelectedRi("");
+                    setSearchResults([]);
+                  }}
                 >
-                  <RotateCcw className="mr-1 h-4 w-4" />
-                  초기화
-                </Button>
-              )}
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Tabs value={searchMethod} onValueChange={setSearchMethod}>
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="address" className="cursor-pointer text-xs sm:text-sm">
-                  <Search className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
-                  지번 입력
-                </TabsTrigger>
-                <TabsTrigger value="map" className="cursor-pointer text-xs sm:text-sm">
-                  <MapPin className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
-                  지도 선택
-                </TabsTrigger>
-              </TabsList>
+                  <SelectTrigger className="h-10">
+                    <SelectValue placeholder="시도 선택" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {regionData.시도.map((sido) => (
+                      <SelectItem key={sido} value={sido}>{sido}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-              <TabsContent value="address" className="mt-4 space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="address-input" className="text-sm font-medium">편입토지 지번</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="address-input"
-                      placeholder="예: 마성리, 신리, 봉남리"
-                      value={searchQuery}
-                      onChange={(e) => {
-                        setSearchQuery(e.target.value);
-                        setSearchNotFound(false);
-                      }}
-                      onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                      className={searchNotFound ? "border-destructive" : ""}
-                    />
-                    <Button 
-                      onClick={handleSearch} 
-                      className="h-12 cursor-pointer px-6"
-                      disabled={isSearching || !searchQuery.trim()}
-                    >
-                      {isSearching ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        "조회"
-                      )}
-                    </Button>
-                  </div>
-                  
-                  {searchNotFound && (
-                    <div className="flex items-center gap-2 rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
-                      <XCircle className="h-4 w-4 shrink-0" />
-                      <span>검색 결과가 없습니다. 다른 지번으로 검색해 주세요.</span>
-                    </div>
-                  )}
-                  
-                  <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
-                    <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                    <div className="text-xs text-muted-foreground">
-                      <p className="font-medium text-foreground">검색 가능 지번 (테스트용)</p>
-                      <p className="mt-1">
-                        <span className="text-primary">매수 가능:</span> 마성리, 신리, 봉남리, 진사리
-                      </p>
-                      <p className="mt-0.5">
-                        <span className="text-warning">경계 사례:</span> 능평리, 야탑동
-                      </p>
-                      <p className="mt-0.5">
-                        <span className="text-destructive">매수 불가:</span> 덕평리, 천남리
-                      </p>
-                      <p className="mt-0.5">
-                        <span className="text-muted-foreground">편입토지 없음:</span> 금곡동, 가장리
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </TabsContent>
+              {/* 시군구 */}
+              <div className="space-y-2">
+                <Label className="text-xs">시군구</Label>
+                <Select 
+                  value={selectedSigungu} 
+                  onValueChange={(v) => {
+                    setSelectedSigungu(v);
+                    setSelectedEupmyeondong("");
+                    setSelectedRi("");
+                    setSearchResults([]);
+                  }}
+                  disabled={!selectedSido}
+                >
+                  <SelectTrigger className="h-10">
+                    <SelectValue placeholder="시군구 선택" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sigunguOptions.map((sigungu) => (
+                      <SelectItem key={sigungu} value={sigungu}>{sigungu}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-              <TabsContent value="map" className="mt-4">
-                <LandMap interactive showOverlay={false} />
-                <p className="mt-2 text-center text-sm text-muted-foreground">
-                  지도에서 토지를 클릭하여 선택하세요.
-                </p>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+              {/* 읍면동 */}
+              <div className="space-y-2">
+                <Label className="text-xs">읍면동</Label>
+                <Select 
+                  value={selectedEupmyeondong} 
+                  onValueChange={(v) => {
+                    setSelectedEupmyeondong(v);
+                    setSelectedRi("");
+                    setSearchResults([]);
+                  }}
+                  disabled={!selectedSigungu}
+                >
+                  <SelectTrigger className="h-10">
+                    <SelectValue placeholder="읍면동 선택" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {eupmyeondongOptions.map((eupmyeondong) => (
+                      <SelectItem key={eupmyeondong} value={eupmyeondong}>{eupmyeondong}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-        {/* 조회 결과 */}
-        <Card className={`border-2 transition-all duration-300 ${
-          searchResult ? "border-primary/20" : "border-dashed border-muted-foreground/20"
-        }`}>
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-2">
-              {noIncludedLand ? (
-                <Ban className="h-5 w-5 text-destructive" />
-              ) : aiAnalyzing ? (
-                <Loader2 className="h-5 w-5 animate-spin text-primary" />
-              ) : aiResult ? (
-                aiResult.provisionalJudgment === "매수" ? (
-                  <CheckCircle2 className="h-5 w-5 text-primary" />
+              {/* 리 */}
+              <div className="space-y-2">
+                <Label className="text-xs">리</Label>
+                <Select 
+                  value={selectedRi} 
+                  onValueChange={setSelectedRi}
+                  disabled={!selectedEupmyeondong}
+                >
+                  <SelectTrigger className="h-10">
+                    <SelectValue placeholder="리 선택" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {riOptions.map((ri) => (
+                      <SelectItem key={ri} value={ri}>{ri}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* 검색 버튼 */}
+              <Button 
+                onClick={handleSearch} 
+                className="w-full cursor-pointer"
+                disabled={!selectedRi || isSearching}
+              >
+                {isSearching ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
-                  <XCircle className="h-5 w-5 text-destructive" />
-                )
-              ) : (
-                <Bot className="h-5 w-5 text-muted-foreground" />
-              )}
-              {noIncludedLand 
-                ? "신청 불가" 
-                : aiAnalyzing 
-                  ? "AI 분석 중..." 
-                  : aiResult 
-                    ? "AI 판독 완료" 
-                    : "조회 결과"}
-            </CardTitle>
-            <CardDescription>
-              {noIncludedLand
-                ? "편입토지가 없는 토지는 잔여지 매수 신청이 불가합니다."
-                : aiAnalyzing 
-                  ? "잠시만 기다려 주세요. AI가 토지 정보를 분석하고 있습니다."
-                  : aiResult 
-                    ? "AI 분석이 완료되었습니다. 결과를 확인하고 신청을 진행하세요."
-                    : "토지를 조회하면 AI가 자동으로 매수 가능 여부를 분석합니다."
-              }
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {searchResult ? (
-              <div className="space-y-4">
-                {/* 지도 - 컴팩트하게 */}
-                <div className="overflow-hidden rounded-lg border border-border">
-                  <LandMap landInfo={searchResult} showOverlay />
-                </div>
+                  <Search className="mr-2 h-4 w-4" />
+                )}
+                검색
+              </Button>
+            </CardContent>
+          </Card>
 
-                {/* 토지 정보 - 컴팩트한 그리드 */}
+          {/* 필지 목록 */}
+          {searchResults.length > 0 && (
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">
+                  검색 결과 ({searchResults.length}건)
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <ul className="max-h-[300px] divide-y divide-border overflow-y-auto">
+                  {searchResults.map((land) => (
+                    <li key={land.id}>
+                      <button
+                        onClick={() => handleLandSelect(land)}
+                        className={`w-full cursor-pointer px-4 py-3 text-left transition-colors hover:bg-muted/50 ${
+                          selectedLand?.id === land.id ? "border-l-2 border-l-primary bg-primary/5" : ""
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium">{land.address.split(" ").slice(-2).join(" ")}</p>
+                            <p className="mt-0.5 text-xs text-muted-foreground">
+                              {land.landCategory} | {land.originalArea.toLocaleString()}m²
+                            </p>
+                          </div>
+                          {land.includedArea > 0 ? (
+                            <span className="rounded bg-primary/10 px-2 py-0.5 text-xs text-primary">
+                              편입 {land.includedArea.toLocaleString()}m²
+                            </span>
+                          ) : (
+                            <span className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
+                              편입 없음
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
+        {/* 우측: 지도 및 결과 영역 */}
+        <div className="space-y-4">
+          {/* 지도 */}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-sm">
+                <MapPin className="h-4 w-4 text-primary" />
+                토지 위치
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <LandMap landInfo={selectedLand || undefined} showOverlay={!!selectedLand} />
+            </CardContent>
+          </Card>
+
+          {/* 선택된 토지 정보 및 AI 판독 */}
+          {selectedLand && (
+            <Card>
+              <CardHeader className="pb-4">
+                <CardTitle className="text-sm">선택된 토지 정보</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* 토지 기본 정보 */}
                 <div className="rounded-lg border border-border bg-muted/30 p-3">
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">지번</span>
-                      <span className="font-medium">{searchResult.address.split(" ").slice(-2).join(" ")}</span>
+                      <span className="font-medium">{selectedLand.address.split(" ").slice(-2).join(" ")}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">지목</span>
-                      <span className="font-medium">{searchResult.landCategory}</span>
+                      <span className="font-medium">{selectedLand.landCategory}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">총면적</span>
+                      <span className="font-medium">{selectedLand.originalArea.toLocaleString()}m²</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">편입 면적</span>
-                      <span className="font-medium text-destructive">{searchResult.includedArea.toLocaleString()}m²</span>
+                      <span className="font-medium text-destructive">{selectedLand.includedArea.toLocaleString()}m²</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">잔여 면적</span>
-                      <span className="font-medium text-primary">{searchResult.remainingArea.toLocaleString()}m²</span>
+                      <span className="font-medium text-primary">{selectedLand.remainingArea.toLocaleString()}m²</span>
                     </div>
-                    <div className="col-span-2 flex justify-between border-t border-border pt-1.5">
+                    <div className="flex justify-between">
                       <span className="text-muted-foreground">잔여 비율</span>
-                      <span className={`font-bold ${searchResult.remainingRatio <= 30 ? "text-primary" : "text-foreground"}`}>
-                        {searchResult.remainingRatio}%
+                      <span className={`font-bold ${selectedLand.remainingRatio <= 30 ? "text-primary" : "text-foreground"}`}>
+                        {selectedLand.remainingRatio}%
                       </span>
                     </div>
                   </div>
@@ -642,57 +657,44 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
                 {/* 편입토지 없음 경고 */}
                 {noIncludedLand && (
-                  <div className="rounded-lg border-2 border-destructive bg-destructive/5 p-6">
-                    <div className="flex flex-col items-center text-center">
-                      <div className="rounded-full bg-destructive/10 p-3">
-                        <Ban className="h-8 w-8 text-destructive" />
+                  <div className="rounded-lg border-2 border-destructive bg-destructive/5 p-4">
+                    <div className="flex items-center gap-3">
+                      <Ban className="h-8 w-8 text-destructive" />
+                      <div>
+                        <h4 className="font-bold text-destructive">편입토지 없음</h4>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          해당 토지는 도로 등에 편입된 토지가 없어 잔여지 매수 신청이 불가합니다.
+                        </p>
                       </div>
-                      <h4 className="mt-4 text-lg font-bold text-destructive">편입토지 없음</h4>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        해당 토지는 도로 등에 편입된 토지가 없습니다.
-                      </p>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        잔여지 매수 신청은 <span className="font-medium text-foreground">편입토지가 있는 경우에만</span> 가능합니다.
-                      </p>
                     </div>
-                    
-                    <div className="mt-4 rounded-lg bg-muted/50 p-3">
-                      <p className="text-xs font-medium text-foreground">잔여지 매수 신청 조건</p>
-                      <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
-                        <li className="flex items-center gap-1.5">
-                          <XCircle className="h-3 w-3 text-destructive" />
-                          <span>편입토지 존재 여부: <span className="font-medium text-destructive">미충족</span></span>
-                        </li>
-                        <li className="flex items-start gap-1.5">
-                          <Info className="mt-0.5 h-3 w-3 text-muted-foreground" />
-                          <span>공익사업(도로, 철도 등)에 토지가 편입되어 잔여지가 발생한 경우에만 매수 신청이 가능합니다.</span>
-                        </li>
-                      </ul>
-                    </div>
-
-                    <Button 
-                      variant="outline"
-                      className="mt-4 w-full cursor-pointer" 
-                      onClick={handleReset}
-                    >
-                      <RotateCcw className="mr-2 h-4 w-4" />
-                      다른 토지 검색하기
-                    </Button>
                   </div>
                 )}
 
-                {/* AI 분석 중 */}
-                {aiAnalyzing && !noIncludedLand && (
-                  <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/30 bg-primary/5 py-8">
-                    <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                    <p className="mt-3 font-medium text-primary">GIS 기반 자동 분석 중</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Polygon 데이터로 형상지수, 잔여비율 등을 산출하고 있습니다.</p>
-                  </div>
+                {/* AI 판독 버튼 */}
+                {!noIncludedLand && !aiResult && (
+                  <Button 
+                    onClick={handleAIAnalysis}
+                    className="w-full cursor-pointer"
+                    size="lg"
+                    disabled={aiAnalyzing}
+                  >
+                    {aiAnalyzing ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        AI 판독 중...
+                      </>
+                    ) : (
+                      <>
+                        <Bot className="mr-2 h-5 w-5" />
+                        AI 판독 시작
+                      </>
+                    )}
+                  </Button>
                 )}
 
-                {/* AI 결과 */}
-                {aiResult && !noIncludedLand && (
-                  <div className="space-y-2">
+                {/* AI 판독 결과 */}
+                {aiResult && (
+                  <div className="space-y-3">
                     <div className={`rounded-lg border-2 p-4 ${
                       aiResult.provisionalJudgment === "매수" 
                         ? "border-primary bg-primary/5" 
@@ -703,26 +705,25 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                       <div className="mb-3 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <Bot className="h-5 w-5 text-primary" />
-                          <span className="font-semibold text-foreground">AI 판독 결과</span>
+                          <span className="font-semibold">AI 판독 결과</span>
                         </div>
-                        <div className={`rounded-full px-3 py-1 text-sm font-bold ${
+                        <span className={`rounded-full px-3 py-1 text-sm font-bold ${
                           aiResult.provisionalJudgment === "매수"
-                            ? "bg-primary text-primary-foreground"
+                            ? "bg-primary text-white"
                             : aiResult.provisionalJudgment === "심의위원회이관"
-                              ? "bg-warning text-warning-foreground"
-                              : "bg-destructive text-destructive-foreground"
+                              ? "bg-warning text-white"
+                              : "bg-destructive text-white"
                         }`}>
                           {aiResult.provisionalJudgment === "매수" 
                             ? "매수 가능" 
                             : aiResult.provisionalJudgment === "심의위원회이관"
                               ? "경계 사례"
                               : "기준 미충족"}
-                        </div>
+                        </span>
                       </div>
 
-                      {/* GIS 자동 산출 항목 */}
+                      {/* 기준 체크 결과 */}
                       <div className="space-y-1.5">
-                        <p className="text-xs font-medium text-muted-foreground">GIS 자동 산출</p>
                         {aiResult.criteriaChecks.filter(c => c.autoDetected).map((check, idx) => (
                           <div key={idx} className="flex items-center gap-2 text-sm">
                             {check.isMet ? (
@@ -736,7 +737,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                           </div>
                         ))}
                       </div>
-                      
+
                       {/* 수동 확인 필요 항목 */}
                       {aiResult.criteriaChecks.some(c => !c.autoDetected) && (
                         <div className="mt-3 space-y-1.5 border-t border-border pt-3">
@@ -744,9 +745,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                           {aiResult.criteriaChecks.filter(c => !c.autoDetected).map((check, idx) => (
                             <div key={idx} className="flex items-center gap-2 text-sm">
                               <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" />
-                              <span className="text-muted-foreground">
-                                {check.criteriaName}
-                              </span>
+                              <span className="text-muted-foreground">{check.criteriaName}</span>
                             </div>
                           ))}
                         </div>
@@ -757,31 +756,20 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                     {aiResult.isBorderlineCase && (
                       <div className="flex items-start gap-2 rounded-lg border border-warning/50 bg-warning/10 p-3">
                         <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
-                        <div className="text-xs">
-                          <p className="font-medium text-foreground">AI 판정 경계 사례</p>
-                          <p className="mt-0.5 text-muted-foreground">
-                            {aiResult.borderlineReason || "자동 판독 기준만으로는 명확한 판정이 어렵습니다. 담당자가 수동 확인 항목을 검토한 후 최종 결정합니다."}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
-                    {aiResult.provisionalJudgment === "기각" && !aiResult.isBorderlineCase && (
-                      <div className="flex items-start gap-2 rounded-lg border border-destructive/50 bg-destructive/10 p-3">
-                        <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
-                        <p className="text-xs text-foreground">
-                          AI 분석 결과 기준 미충족이지만, 현장 상황에 따라 다를 수 있습니다.
+                        <p className="text-xs text-muted-foreground">
+                          {aiResult.borderlineReason}
                         </p>
                       </div>
                     )}
 
-                    {/* 판단 근거 설명 */}
+                    {/* 판단 근거 */}
                     <JudgmentRationaleSection rationale={aiResult.judgmentRationale} />
 
+                    {/* 매수 신청 버튼 */}
                     <Button 
                       className="w-full cursor-pointer" 
                       size="lg"
-                      onClick={() => onLandSelect(searchResult, aiResult)}
+                      onClick={() => onLandSelect(selectedLand, aiResult)}
                     >
                       {aiResult.provisionalJudgment === "매수" 
                         ? "매수 신청 진행하기" 
@@ -792,20 +780,25 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                     </Button>
                   </div>
                 )}
-              </div>
-            ) : (
-              <div className="flex h-[300px] flex-col items-center justify-center text-center">
+              </CardContent>
+            </Card>
+          )}
+
+          {/* 검색 전 안내 */}
+          {!selectedLand && searchResults.length === 0 && (
+            <Card className="border-dashed">
+              <CardContent className="flex h-[300px] flex-col items-center justify-center text-center">
                 <div className="rounded-full bg-muted p-4">
                   <Search className="h-8 w-8 text-muted-foreground" />
                 </div>
-                <p className="mt-4 font-medium text-foreground">토지를 조회해 주세요</p>
+                <p className="mt-4 font-medium">토지를 조회해 주세요</p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  좌측에서 지번을 입력하거나 지도에서 선택하세요.
+                  좌측에서 행정구역을 선택하여 편입 토지를 검색하세요.
                 </p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
     </div>
   );
