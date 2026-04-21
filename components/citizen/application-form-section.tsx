@@ -17,7 +17,7 @@ import {
 import { LandMap } from "@/components/land-map";
 import { landCategories, landShapes } from "@/lib/dummy-data";
 import type { LandInfo, Application, LandCategory, LandShape, AIAnalysisResult } from "@/lib/types";
-import { ArrowLeft, Upload, Send, Bot, CheckCircle2, XCircle } from "lucide-react";
+import { ArrowLeft, Upload, Send, Bot, CheckCircle2, XCircle, X, Check, Loader2 } from "lucide-react";
 
 interface ApplicationFormSectionProps {
   landInfo: LandInfo;
@@ -32,6 +32,12 @@ export function ApplicationFormSection({
   onSubmit,
   onBack,
 }: ApplicationFormSectionProps) {
+  interface FileItem {
+    name: string;
+    size: string;
+    status: "uploading" | "complete";
+  }
+
   const [formData, setFormData] = useState({
     applicantName: landInfo.ownerName,
     applicantContact: landInfo.ownerContact || "",
@@ -40,8 +46,10 @@ export function ApplicationFormSection({
     reportedShape: landInfo.remainingShape as LandShape,
     farmMachineDifficulty: false,
     reason: "",
-    attachments: [] as string[],
+    attachments: [] as FileItem[],
   });
+
+  const MAX_FILES = 10;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -75,15 +83,51 @@ export function ApplicationFormSection({
     }, 1500);
   };
 
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return bytes + "B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + "KB";
+    return (bytes / (1024 * 1024)).toFixed(1) + "MB";
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
-      const fileNames = Array.from(files).map((f) => f.name);
+      const newFiles: FileItem[] = Array.from(files).map((f) => ({
+        name: f.name,
+        size: formatFileSize(f.size),
+        status: "uploading" as const,
+      }));
+
       setFormData((prev) => ({
         ...prev,
-        attachments: [...prev.attachments, ...fileNames],
+        attachments: [...prev.attachments, ...newFiles].slice(0, MAX_FILES),
       }));
+
+      // Simulate upload completion
+      setTimeout(() => {
+        setFormData((prev) => ({
+          ...prev,
+          attachments: prev.attachments.map((file) =>
+            file.status === "uploading" ? { ...file, status: "complete" } : file
+          ),
+        }));
+      }, 1500);
     }
+    e.target.value = "";
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      attachments: prev.attachments.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleRemoveAllFiles = () => {
+    setFormData((prev) => ({
+      ...prev,
+      attachments: [],
+    }));
   };
 
   return (
@@ -303,36 +347,88 @@ export function ApplicationFormSection({
                 />
               </div>
 
-              {/* 첨부 서류 */}
-              <div className="space-y-2">
+              {/* 첨부 서류 - KRDS 스타일 */}
+              <div className="space-y-4">
                 <Label>첨부 서류</Label>
-                <div className="rounded-lg border border-dashed border-border p-4">
+                <p className="text-sm text-muted-foreground">
+                  토지 소유 증빙 서류, 사진 등을 첨부해주세요.
+                </p>
+                
+                {/* 드롭존 영역 */}
+                <div className="rounded-lg bg-gray-100 p-8">
                   <div className="flex flex-col items-center justify-center text-center">
-                    <Upload className="h-8 w-8 text-muted-foreground" />
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      클릭하거나 파일을 드래그하여 업로드
+                    <p className="mb-4 text-sm text-gray-600">
+                      첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 직접 선택해주세요.
                     </p>
-                    <p className="text-xs text-muted-foreground">
-                      PDF, JPG, PNG (최대 10MB)
-                    </p>
-                    <input
-                      type="file"
-                      multiple
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      onChange={handleFileChange}
-                      className="absolute inset-0 cursor-pointer opacity-0"
-                      style={{ position: "relative" }}
-                    />
+                    <label className="cursor-pointer">
+                      <span className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90">
+                        <Upload className="h-4 w-4" />
+                        파일선택
+                      </span>
+                      <input
+                        type="file"
+                        multiple
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        onChange={handleFileChange}
+                        className="sr-only"
+                      />
+                    </label>
                   </div>
                 </div>
+
+                {/* 파일 개수 및 전체 삭제 */}
                 {formData.attachments.length > 0 && (
-                  <ul className="mt-2 space-y-1 text-sm">
-                    {formData.attachments.map((file, index) => (
-                      <li key={index} className="text-muted-foreground">
-                        - {file}
-                      </li>
-                    ))}
-                  </ul>
+                  <>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm">
+                        <span className="font-semibold text-primary">{formData.attachments.length}개</span>
+                        <span className="text-muted-foreground"> / {MAX_FILES}개</span>
+                      </p>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleRemoveAllFiles}
+                        className="text-muted-foreground hover:text-foreground"
+                      >
+                        전체 파일 삭제
+                        <X className="ml-1 h-3 w-3" />
+                      </Button>
+                    </div>
+
+                    {/* 파일 리스트 */}
+                    <ul className="space-y-2">
+                      {formData.attachments.map((file, index) => (
+                        <li
+                          key={index}
+                          className="flex items-center justify-between rounded-md border border-gray-200 bg-white px-4 py-3"
+                        >
+                          <span className="text-sm text-foreground">
+                            {file.name} [{file.size}]
+                          </span>
+                          <div className="flex items-center gap-3">
+                            {file.status === "uploading" ? (
+                              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                            ) : (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveFile(index)}
+                                  className="flex items-center gap-1 text-sm text-muted-foreground hover:text-destructive"
+                                >
+                                  삭제
+                                  <X className="h-3 w-3" />
+                                </button>
+                                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary">
+                                  <Check className="h-3 w-3 text-white" />
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
                 )}
               </div>
 
