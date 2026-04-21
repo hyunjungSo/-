@@ -555,10 +555,10 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                     setSelectedRi("");
                     setSearchResults([]);
                   }}
-                  disabled={!selectedSigungu}
+                  disabled={!selectedSigungu || eupmyeondongOptions.length === 0}
                 >
                   <SelectTrigger className="h-10">
-                    <SelectValue placeholder="읍면동 선택" />
+                    <SelectValue placeholder={eupmyeondongOptions.length === 0 ? "해당 없음" : "읍면동 선택"} />
                   </SelectTrigger>
                   <SelectContent>
                     {eupmyeondongOptions.map((eupmyeondong) => (
@@ -574,10 +574,10 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 <Select 
                   value={selectedRi} 
                   onValueChange={setSelectedRi}
-                  disabled={!selectedEupmyeondong}
+                  disabled={!selectedEupmyeondong || riOptions.length === 0}
                 >
                   <SelectTrigger className="h-10">
-                    <SelectValue placeholder="리 선택" />
+                    <SelectValue placeholder={riOptions.length === 0 ? "해당 없음" : "리 선택"} />
                   </SelectTrigger>
                   <SelectContent>
                     {riOptions.map((ri) => (
