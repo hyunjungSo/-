@@ -62,7 +62,7 @@ const regionData = {
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
-    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "�������������장면"],
+    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "���������������장면"],
     // 충청남도 - 아산시
     "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악���", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
@@ -324,7 +324,7 @@ function generateJudgmentRationale(
     appliedCriteria.push(`그 밖의 토지 면적 기준: 330㎡ 이하`);
   }
   
-  appliedCriteria.push(`형상지수 변화 기준: 편입 전 대비 1.0 이상 상승 시 형상 불량으로 판단`);
+  appliedCriteria.push(`형상지수 변화 기준: 편입 전 대비 1.0 이상 상승 시 형상 불��으로 판단`);
   appliedCriteria.push(`���지 형상 기준: 삼각형, 역삼각형, 자루형, 부정형 등 불규칙 형상`);
   appliedCriteria.push(`잔여비율 기준: 30% 이하일 경우 종래 목적 사용 곤란으로 판단`);
 
@@ -362,7 +362,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
   const [isSearching, setIsSearching] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isResultsCollapsed, setIsResultsCollapsed] = useState(false);
+  const [isBasicInfoCollapsed, setIsBasicInfoCollapsed] = useState(false);
   
   // AI 분석 상태
   const [aiResult, setAiResult] = useState<AIAnalysisResult | null>(null);
@@ -674,9 +675,9 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         </div>
 
         {/* 좌측 사이드바 - 결과 + 기본정보 패널 */}
-        <div className={`absolute bottom-0 left-0 top-0 z-10 flex shadow-lg transition-transform duration-300 ${isSidebarCollapsed ? "-translate-x-full" : "translate-x-0"}`}>
+        <div className="absolute bottom-0 left-0 top-0 z-10 flex shadow-lg">
           {/* 결과 패널 */}
-          <div className="w-[280px] bg-background">
+          <div className={`bg-background transition-all duration-300 overflow-hidden ${isResultsCollapsed ? "w-0" : "w-[280px]"}`}>
             {/* 검색 결과 헤더 */}
             <div className="flex items-center justify-between border-b bg-muted px-4 py-3">
               <span className="text-base font-medium text-foreground">결과</span>
@@ -761,7 +762,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
           </div>
 
           {/* 기본정보 패널 (선택된 토지 정보) - 슬라이드 */}
-          <div className={`flex h-full w-[320px] flex-col border-l bg-background transition-all duration-300 ${selectedLand ? "translate-x-0" : "-translate-x-full hidden"}`}>
+          {selectedLand && (
+          <div className={`flex h-full flex-col border-l bg-background transition-all duration-300 overflow-hidden ${isBasicInfoCollapsed ? "w-0 border-l-0" : "w-[320px]"}`}>
             {/* 헤더 */}
             <div className="flex shrink-0 items-center justify-between border-b bg-muted px-4 py-3">
               <span className="text-base font-medium text-foreground">기본정보</span>
@@ -981,16 +983,33 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               </div>
             )}
           </div>
+          )}
 
         </div>
 
-        {/* 사이드바 토글 버튼 - 항상 표시 */}
+        {/* 사이드바 토글 버튼 - 결과 패널용 */}
         <button 
-          onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-          className={`absolute top-1/2 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-r-md bg-background shadow-md transition-all duration-300 ${isSidebarCollapsed ? "left-0" : selectedLand ? "left-[600px]" : "left-[280px]"}`}
+          onClick={() => setIsResultsCollapsed(!isResultsCollapsed)}
+          className={`absolute top-1/2 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-r-md bg-background shadow-md transition-all duration-300 ${isResultsCollapsed ? "left-0" : "left-[280px]"}`}
+          style={{ display: selectedLand && !isBasicInfoCollapsed ? "none" : "flex" }}
         >
-          <ChevronLeft className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${isSidebarCollapsed ? "rotate-180" : ""}`} />
+          <ChevronLeft className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${isResultsCollapsed ? "rotate-180" : ""}`} />
         </button>
+
+        {/* 사이드바 토글 버튼 - 기본정보 패널용 (선택된 토지가 있을 때만) */}
+        {selectedLand && (
+          <button 
+            onClick={() => setIsBasicInfoCollapsed(!isBasicInfoCollapsed)}
+            className={`absolute top-1/2 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-r-md bg-background shadow-md transition-all duration-300`}
+            style={{ 
+              left: isBasicInfoCollapsed 
+                ? (isResultsCollapsed ? "0px" : "280px") 
+                : (isResultsCollapsed ? "320px" : "600px") 
+            }}
+          >
+            <ChevronLeft className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${isBasicInfoCollapsed ? "rotate-180" : ""}`} />
+          </button>
+        )}
       </div>
     </div>
   );
