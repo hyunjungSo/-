@@ -229,7 +229,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     },
     {
       criteriaName: "접면도로 상실",
-      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목적 사용 곤란",
+      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목��� 사용 곤란",
       isMet: false,
       autoDetected: false,
     },
@@ -257,7 +257,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
   
   const isBorderlineCase = metAutoCriteria === 1 && hasManualCheckNeeded;
   
-  let provisionalJudgment: "매수" | "기각" | "심의위원회이관";
+  let provisionalJudgment: "매수" | "기각" | "심의���원회이관";
   let borderlineReason: string | undefined;
   
   if (isBorderlineCase) {
@@ -352,7 +352,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
   const [selectedRi, setSelectedRi] = useState<string>("");
   const [jibun, setJibun] = useState<string>("");
   
-  // 검색 결과 상��
+  // 검색 ���과 상��
   const [searchResults, setSearchResults] = useState<LandInfo[]>([]);
   const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -715,7 +715,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               <CardHeader className="border-b px-3 py-2">
                 <CardTitle className="text-sm font-medium">선택된 토지 정보</CardTitle>
               </CardHeader>
-              <CardContent className="max-h-[400px] space-y-3 overflow-y-auto p-3">
+              <CardContent className="max-h-[60vh] space-y-3 overflow-y-auto p-3">
                 {/* 토지 기본 정보 */}
                 <div className="rounded border border-border bg-muted/30 p-3">
                   <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
