@@ -229,7 +229,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     },
     {
       criteriaName: "접면도로 상실",
-      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목������� 사용 곤란",
+      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 ���������� 사용 곤란",
       isMet: false,
       autoDetected: false,
     },
@@ -610,9 +610,15 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               disabled={!selectedSigungu || isSearching}
             >
               {isSearching ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <>
+                  <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />
+                  조회 중
+                </>
               ) : (
-                <Search className="h-4 w-4" />
+                <>
+                  <Search className="mr-1.5 h-4 w-4" />
+                  조회
+                </>
               )}
             </Button>
             {(selectedSido || searchResults.length > 0) && (
