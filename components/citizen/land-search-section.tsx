@@ -713,14 +713,14 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
           </div>
 
           {/* 기본정보 패널 (선택된 토지 정보) - 슬라이드 */}
-          <div className={`w-[320px] border-l bg-background transition-all duration-300 ${selectedLand ? "translate-x-0" : "-translate-x-full hidden"}`}>
+          <div className={`flex h-full w-[320px] flex-col border-l bg-background transition-all duration-300 ${selectedLand ? "translate-x-0" : "-translate-x-full hidden"}`}>
             {/* 헤더 */}
-            <div className="flex items-center justify-between border-b bg-primary px-4 py-3">
+            <div className="flex shrink-0 items-center justify-between border-b bg-primary px-4 py-3">
               <span className="text-base font-medium text-primary-foreground">기본정보</span>
             </div>
             
             {/* 컨텐츠 */}
-            <div className="h-[calc(100%-52px)] overflow-y-auto p-4">
+            <div className="flex-1 overflow-y-auto p-4">
               {selectedLand ? (
                 <div className="space-y-4">
                 {/* 토지 기본 정보 */}
