@@ -908,6 +908,19 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                               </div>
                             </div>
                           )}
+
+                          {/* 상세 분석 */}
+                          {aiResult.judgmentRationale.detailedExplanation && (
+                            <div className="flex items-start gap-3">
+                              <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                              <div>
+                                <h4 className="text-xs font-semibold text-foreground">상세 분석</h4>
+                                <pre className="mt-1 whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
+                                  {aiResult.judgmentRationale.detailedExplanation}
+                                </pre>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
 
