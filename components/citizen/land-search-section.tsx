@@ -631,7 +631,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         <div className="flex flex-col gap-4 overflow-hidden">
           {/* 필지 목록 */}
           <Card className="flex-1 overflow-hidden">
-            <CardHeader className="border-b pb-3">
+            <CardHeader className="border-b px-3 py-2">
               <CardTitle className="flex items-center gap-2 text-sm">
                 <Search className="h-4 w-4 text-primary" />
                 검색 결과 {searchResults.length > 0 && `(${searchResults.length}건)`}
@@ -682,11 +682,11 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
           {/* 선택된 토지 정보 및 AI 판독 */}
           {selectedLand && (
-            <Card className="shrink-0">
-              <CardHeader className="border-b pb-3">
+            <Card className="max-h-[50%] shrink-0 overflow-hidden">
+              <CardHeader className="border-b px-3 py-2">
                 <CardTitle className="text-sm">선택된 토지 정보</CardTitle>
               </CardHeader>
-              <CardContent className="max-h-[250px] space-y-3 overflow-y-auto pt-3">
+              <CardContent className="space-y-3 overflow-y-auto p-3">
                 {/* 토지 기본 정보 */}
                 <div className="rounded-lg border border-border bg-muted/30 p-3">
                   <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
