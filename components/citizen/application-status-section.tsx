@@ -148,8 +148,8 @@ function StatusRationaleSection({ rationale }: { rationale: JudgmentRationale })
   );
 }
 
-// 상세 정보 모달/확장 컴포넌트
-function ApplicationDetailCard({ application, onClose }: { application: Application; onClose: () => void }) {
+// 상세 정보 패널 컴포넌트
+function ApplicationDetailPanel({ application }: { application: Application }) {
   const getStatusStep = (status: AdminStatus) => {
     switch (status) {
       case "대기중": return 1;
@@ -160,17 +160,12 @@ function ApplicationDetailCard({ application, onClose }: { application: Applicat
   };
 
   return (
-    <Card className="border-2 border-primary/20">
+    <Card>
       <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <FileText className="h-5 w-5 text-primary" />
-            신청 상세 정보
-          </CardTitle>
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            닫기
-          </Button>
-        </div>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <FileText className="h-5 w-5 text-primary" />
+          신청 상세 정보
+        </CardTitle>
         <CardDescription>
           접수번호: {application.applicationNumber}
         </CardDescription>
@@ -285,18 +280,13 @@ export function ApplicationStatusSection() {
   // 여기서는 더미 데이터 전체를 표시
   const myApplications = dummyApplications;
 
-  return (
-    <div className="space-y-6">
-      {/* 선택된 신청 상세 */}
-      {selectedApplication && (
-        <ApplicationDetailCard 
-          application={selectedApplication} 
-          onClose={() => setSelectedApplication(null)} 
-        />
-      )}
+  // 첫 번째 신청이 있으면 기본 선택
+  const displayedApplication = selectedApplication || (myApplications.length > 0 ? myApplications[0] : null);
 
-      {/* 타이틀 영역 - 리스트와 분리 */}
-      <div className="space-y-2">
+  return (
+    <div className="space-y-4">
+      {/* 타이틀 영역 */}
+      <div className="space-y-1">
         <h2 className="flex items-center gap-2 text-xl font-bold text-foreground">
           <FileText className="h-5 w-5 text-primary" />
           내 신청 현황
@@ -306,38 +296,40 @@ export function ApplicationStatusSection() {
         </p>
       </div>
 
-      {/* 신청 목록 */}
-      <Card>
-        <CardContent className="pt-6">
-          {myApplications.length === 0 ? (
-            <div className="flex h-40 flex-col items-center justify-center text-center">
-              <FileText className="h-10 w-10 text-muted-foreground" />
-              <p className="mt-4 font-medium text-foreground">신청 내역이 없습니다</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                신규 신청 탭에서 잔여지 매수를 신청해 주세요.
-              </p>
-            </div>
-          ) : (
-            <div className="krds-board-list divide-y divide-border">
-              {myApplications.map((app) => {
-                const statusConfig = adminStatusConfig[app.adminStatus];
-                const StatusIcon = statusConfig.icon;
+      {/* 2-column 레이아웃: 왼쪽 리스트 / 오른쪽 상세 */}
+      <div className="grid gap-4 lg:grid-cols-[1fr_1.2fr]">
+        {/* 왼쪽: 신청 목록 */}
+        <Card className="h-fit">
+          <CardContent className="p-0">
+            {myApplications.length === 0 ? (
+              <div className="flex h-40 flex-col items-center justify-center p-6 text-center">
+                <FileText className="h-10 w-10 text-muted-foreground" />
+                <p className="mt-4 font-medium text-foreground">신청 내역이 없습니다</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  신규 신청 탭에서 잔여지 매수를 신청해 주세요.
+                </p>
+              </div>
+            ) : (
+              <ul className="divide-y divide-border">
+                {myApplications.map((app) => {
+                  const statusConfig = adminStatusConfig[app.adminStatus];
+                  const isSelected = displayedApplication?.id === app.id;
 
-                return (
-                  <article
-                    key={app.id}
-                    className="krds-board-item py-5 first:pt-0 last:pb-0"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      {/* 좌측: 콘텐츠 영역 */}
-                      <div className="min-w-0 flex-1">
+                  return (
+                    <li key={app.id}>
+                      <button
+                        onClick={() => setSelectedApplication(app)}
+                        className={`w-full cursor-pointer px-4 py-4 text-left transition-colors hover:bg-muted/50 ${
+                          isSelected ? "border-l-2 border-l-primary bg-primary/5" : ""
+                        }`}
+                      >
                         {/* 뱃지 영역 */}
                         <div className="mb-2 flex flex-wrap items-center gap-2">
                           <Badge className={statusConfig.className}>
                             {statusConfig.label}
                           </Badge>
                           {app.adminStatus === "완료" && app.finalJudgment && (
-                            <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                            <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${
                               app.finalJudgment === "매수" 
                                 ? "bg-emerald-100 text-emerald-700" 
                                 : app.finalJudgment === "기각"
@@ -352,54 +344,43 @@ export function ApplicationStatusSection() {
                           )}
                         </div>
 
-                        {/* 타이틀 영역 - 클릭 가능 */}
-                        <button
-                          onClick={() => setSelectedApplication(app)}
-                          className="group mb-2 flex cursor-pointer items-center gap-1 text-left"
-                        >
-                          <h3 className="text-base font-semibold text-foreground group-hover:text-primary group-hover:underline">
-                            {app.applicationNumber}
-                          </h3>
-                          <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
-                        </button>
+                        {/* 접수번호 */}
+                        <h3 className={`text-sm font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
+                          {app.applicationNumber}
+                        </h3>
 
-                        {/* 설명 영역 */}
-                        <p className="mb-3 text-sm text-muted-foreground">
+                        {/* 주소 */}
+                        <p className="mt-1 truncate text-xs text-muted-foreground">
                           {app.landInfo.address}
                         </p>
 
-                        {/* 메타데이터 영역 - 파이프로 구분 */}
-                        <div className="flex flex-wrap items-center gap-x-3 text-xs text-gray-500">
-                          <span>신청일 {app.appliedAt}</span>
+                        {/* 메타데이터 */}
+                        <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
+                          <span>{app.appliedAt}</span>
                           <span className="text-gray-300">|</span>
-                          <span>토지유형 {app.landInfo.landType}</span>
-                          <span className="text-gray-300">|</span>
-                          <span>잔여면적 {app.landInfo.remainingArea.toLocaleString()}m²</span>
-                          <span className="text-gray-300">|</span>
-                          <span>잔여비율 {app.landInfo.remainingRatio}%</span>
+                          <span>{app.landInfo.remainingArea.toLocaleString()}m²</span>
                         </div>
-                      </div>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </CardContent>
+        </Card>
 
-                      {/* 우측: 액션 버튼 */}
-                      <div className="shrink-0">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setSelectedApplication(app)}
-                          className="gap-1 text-muted-foreground hover:text-primary"
-                        >
-                          상세보기
-                          <ChevronRight className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </article>
-                );
-              })}
+        {/* 오른쪽: 신청 상세 정보 */}
+        {displayedApplication ? (
+          <ApplicationDetailPanel application={displayedApplication} />
+        ) : (
+          <Card className="flex h-64 items-center justify-center">
+            <div className="text-center text-muted-foreground">
+              <FileText className="mx-auto h-10 w-10" />
+              <p className="mt-2 text-sm">신청 내역을 선택해주세요</p>
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }
