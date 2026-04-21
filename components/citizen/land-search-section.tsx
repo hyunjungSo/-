@@ -519,8 +519,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                     setSearchResults([]);
                   }}
                 >
-                  <SelectTrigger className="h-8 w-[120px]">
-                    <SelectValue placeholder="시도" />
+                  <SelectTrigger className="h-8 w-[100px] shrink-0">
+                    <SelectValue placeholder="시도" className="truncate" />
                   </SelectTrigger>
                   <SelectContent className="z-[1002]">
                     {regionData.시도.map((sido) => (
@@ -540,8 +540,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                   }}
                   disabled={!selectedSido}
                 >
-                  <SelectTrigger className="h-8 w-[130px]">
-                    <SelectValue placeholder="시군구" />
+                  <SelectTrigger className="h-8 w-[100px] shrink-0">
+                    <SelectValue placeholder="시군구" className="truncate" />
                   </SelectTrigger>
                   <SelectContent className="z-[1002]">
                     {sigunguOptions.map((sigungu) => (
@@ -560,8 +560,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                   }}
                   disabled={!selectedSigungu || eupmyeondongOptions.length === 0}
                 >
-                  <SelectTrigger className="h-8 w-[120px]">
-                    <SelectValue placeholder={eupmyeondongOptions.length === 0 ? "해당없음" : "읍면동"} />
+                  <SelectTrigger className="h-8 w-[100px] shrink-0">
+                    <SelectValue placeholder={eupmyeondongOptions.length === 0 ? "해당없음" : "읍면동"} className="truncate" />
                   </SelectTrigger>
                   <SelectContent className="z-[1002]">
                     {eupmyeondongOptions.map((eupmyeondong) => (
@@ -576,8 +576,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                   onValueChange={setSelectedRi}
                   disabled={!selectedEupmyeondong || riOptions.length === 0}
                 >
-                  <SelectTrigger className="h-8 w-[100px]">
-                    <SelectValue placeholder={riOptions.length === 0 ? "해당없음" : "리"} />
+                  <SelectTrigger className="h-8 w-[80px] shrink-0">
+                    <SelectValue placeholder={riOptions.length === 0 ? "해당없음" : "리"} className="truncate" />
                   </SelectTrigger>
                   <SelectContent className="z-[1002]">
                     {riOptions.map((ri) => (
@@ -591,7 +591,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                   placeholder="지번" 
                   value={jibun}
                   onChange={(e) => setJibun(e.target.value)}
-                  className="h-8 w-[80px]"
+                  className="h-8 w-[70px] shrink-0"
                 />
 
                 {/* 검색/초기화 버튼 */}
