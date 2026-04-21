@@ -395,12 +395,33 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         return true;
       });
       
-      // 검색 결과가 없으면 해당 지역의 더미 데이터 생성
+      // 검색 결과가 없으면 해당 지역의 더미 데이터 생성 (좌표 포함)
       if (results.length === 0) {
+        const baseCoords = [
+          [
+            { lat: 37.2180, lng: 127.2950 },
+            { lat: 37.2185, lng: 127.2960 },
+            { lat: 37.2178, lng: 127.2965 },
+            { lat: 37.2173, lng: 127.2955 },
+          ],
+          [
+            { lat: 37.2185, lng: 127.2960 },
+            { lat: 37.2192, lng: 127.2972 },
+            { lat: 37.2188, lng: 127.2980 },
+            { lat: 37.2178, lng: 127.2965 },
+          ],
+          [
+            { lat: 37.2192, lng: 127.2972 },
+            { lat: 37.2200, lng: 127.2985 },
+            { lat: 37.2195, lng: 127.2995 },
+            { lat: 37.2188, lng: 127.2980 },
+          ],
+        ];
         results = dummyLandInfoList.slice(0, 3).map((land, idx) => ({
           ...land,
           id: `search-${idx}`,
           address: `${selectedSido} ${selectedSigungu}${selectedEupmyeondong ? ` ${selectedEupmyeondong}` : ""}${selectedRi ? ` ${selectedRi}` : ""} ${jibun || `${100 + idx}-${idx + 1}`}`,
+          coordinates: baseCoords[idx] || baseCoords[0],
         }));
       }
       
