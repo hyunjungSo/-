@@ -207,12 +207,12 @@ export function LeafletMap({
       const isSelected = parcel.id === selectedParcelId;
       const latlngs = parcel.coordinates.map(coord => [coord.lat, coord.lng] as [number, number]);
 
-      // 폴리곤 스타일 (분홍색/마젠타 라인)
+      // 폴리곤 스타일 (분홍색/마젠타 라인) - EXCO 스타일
       const polygon = L.polygon(latlngs, {
-        color: isSelected ? "#e91e63" : "#ec407a", // 선택된 경우 더 진한 분홍
-        weight: isSelected ? 3 : 2,
-        fillColor: isSelected ? "#f48fb1" : "transparent",
-        fillOpacity: isSelected ? 0.3 : 0,
+        color: "#ec407a", // 분홍/마젠타
+        weight: isSelected ? 4 : 3,
+        fillColor: isSelected ? "#f48fb1" : "#fce4ec",
+        fillOpacity: isSelected ? 0.4 : 0.1,
         opacity: 1,
       });
 
@@ -311,7 +311,7 @@ export function LeafletMap({
       {/* 지도 컨테이너 */}
       <div ref={mapRef} className="h-full w-full" />
 
-      {/* 로딩 상태 */}
+      {/* 로딩 ���태 */}
       {!isMapReady && (
         <div className="absolute inset-0 flex items-center justify-center bg-muted">
           <div className="text-center">

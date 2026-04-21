@@ -63,7 +63,7 @@ const regionData = {
     // 충청남도 - 천안시 서북구
     "천안시 서북구": ["성환읍", "성거읍", "직산읍", "입장면"],
     // 충청남도 - 아산시
-    "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악����", "신창면", "염치읍", "영인면", "인주면"],
+    "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악�����", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
     "강남구": ["논현동", "삼성동", "역삼동", "청담동"],
     "해운대구": ["우동", "중동", "좌동", "송정동"],
@@ -229,7 +229,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     },
     {
       criteriaName: "접면도로 상실",
-      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 �������������� 사용 곤란",
+      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 ���������������� 사용 곤란",
       isMet: false,
       autoDetected: false,
     },
@@ -740,7 +740,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                       <span className="font-medium text-primary">{selectedLand.remainingArea.toLocaleString()}m²</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">잔여 비율</span>
+                      <span className="text-muted-foreground">���여 비율</span>
                       <span className={`font-bold ${selectedLand.remainingRatio <= 30 ? "text-primary" : "text-foreground"}`}>
                         {selectedLand.remainingRatio}%
                       </span>
