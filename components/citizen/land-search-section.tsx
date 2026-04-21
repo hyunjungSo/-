@@ -621,18 +621,18 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
       </Card>
 
       {/* 메인 영역: 좌측 검색결과 / 우측 지도 */}
-      <div className="grid h-[calc(100vh-320px)] min-h-[500px] gap-4 lg:grid-cols-[350px_1fr]">
+      <div className="grid h-[calc(100vh-280px)] min-h-[500px] gap-4 lg:grid-cols-[350px_1fr]">
         {/* 좌측: 검색 결과 목록 */}
-        <div className="flex flex-col gap-4 overflow-hidden">
+        <div className="flex flex-col gap-3 overflow-auto">
           {/* 필지 목록 */}
-          <Card className="flex-1 overflow-hidden">
+          <Card className="overflow-hidden">
             <CardHeader className="border-b px-3 py-1">
               <CardTitle className="flex items-center gap-1.5 text-xs font-medium">
                 <Search className="h-3.5 w-3.5 text-primary" />
                 검색 결과 {searchResults.length > 0 && `(${searchResults.length}건)`}
               </CardTitle>
             </CardHeader>
-            <CardContent className="h-full overflow-y-auto p-0">
+            <CardContent className="max-h-[540px] overflow-y-auto p-0">
               {searchResults.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center py-12 text-center">
                   <MapPin className="h-10 w-10 text-muted-foreground" />
@@ -677,11 +677,11 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
           {/* 선택된 토지 정보 및 AI 판독 */}
           {selectedLand && (
-            <Card className="max-h-[50%] shrink-0 overflow-hidden">
+            <Card className="overflow-hidden">
               <CardHeader className="border-b px-3 py-1">
                 <CardTitle className="text-xs font-medium">선택된 토지 정보</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3 overflow-y-auto p-3">
+              <CardContent className="max-h-[540px] space-y-3 overflow-y-auto p-3">
                 {/* 토지 기본 정보 */}
                 <div className="rounded-lg border border-border bg-muted/30 p-3">
                   <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
