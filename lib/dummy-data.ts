@@ -470,7 +470,7 @@ export const dummyApplications: Application[] = [
     applicationNumber: "2026-0404-001",
     applicantName: "최지영",
     applicantContact: "010-7777-8888",
-    applicantAddress: "경기도 안성시 공도읍 ���사리 200",
+    applicantAddress: "경기도 안성시 공도읍 용사리 200",
     landInfo: dummyLandInfoList[3],
     actualUsage: "잡",
     reportedShape: "역삼각형",

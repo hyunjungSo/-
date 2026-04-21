@@ -404,7 +404,7 @@ export function LeafletMap({
       {/* 지도 컨테이너 */}
       <div ref={mapRef} className="h-full w-full" />
 
-      {/* 로딩 ���태 */}
+      {/* 로딩 상태 */}
       {!isMapReady && (
         <div className="absolute inset-0 flex items-center justify-center bg-muted">
           <div className="text-center">
@@ -534,7 +534,7 @@ export function LeafletMap({
         축척: 1:{Math.round(591657550.5 / Math.pow(2, currentZoom))}
       </div>
 
-      {/* 저작권 표��� */}
+      {/* 저작권 표시 */}
       <div className="absolute bottom-3 right-3 z-[1000] rounded bg-white/90 px-2 py-1 text-xs text-gray-500">
         © VWorld, OpenStreetMap
       </div>
