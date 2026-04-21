@@ -187,7 +187,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <TableHead>대상 지번</TableHead>
                   <TableHead>토지 유형</TableHead>
                   <TableHead>면적</TableHead>
-                  <TableHead>처리상태</TableHead>
                   <TableHead>진행상황</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
@@ -222,11 +221,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     </TableCell>
                     <TableCell>{app.landInfo.landType}</TableCell>
                     <TableCell>{app.landInfo.remainingArea.toLocaleString()}㎡</TableCell>
-                    <TableCell>
-                      <Badge className={statusConfig[app.status].className}>
-                        {statusConfig[app.status].label}
-                      </Badge>
-                    </TableCell>
                     <TableCell>
                       {(() => {
                         const config = adminStatusConfig[app.adminStatus];

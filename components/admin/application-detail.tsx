@@ -584,14 +584,22 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </p>
           </div>
 
-          {/* 최종 판정 */}
+          {/* 최종 판정 - 진행상황이 완료일 때만 활성화 */}
           <div className="space-y-2">
-            <Label>최종 판정</Label>
+            <Label className={reviewData.adminStatus !== "완료" ? "text-muted-foreground" : ""}>
+              최종 판정
+              {reviewData.adminStatus !== "완료" && (
+                <span className="ml-2 text-xs font-normal text-muted-foreground">
+                  (진행상황을 &apos;완료&apos;로 설정하면 활성화됩니다)
+                </span>
+              )}
+            </Label>
             <div className="flex flex-wrap gap-2">
               {(["매수", "기각", "심의위원회이관"] as JudgmentResult[]).map((judgment) => {
                 const config = judgmentConfig[judgment];
                 const Icon = config.icon;
                 const isSelected = reviewData.finalJudgment === judgment;
+                const isDisabled = reviewData.adminStatus !== "완료";
                 return (
                   <Button
                     key={judgment}
@@ -600,7 +608,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     onClick={() =>
                       setReviewData((prev) => ({ ...prev, finalJudgment: judgment }))
                     }
-                    className={`cursor-pointer ${isSelected ? "" : config.color}`}
+                    disabled={isDisabled}
+                    className={`cursor-pointer ${isSelected ? "" : config.color} ${isDisabled ? "opacity-50" : ""}`}
                   >
                     <Icon className="mr-2 h-4 w-4" />
                     {config.label}
