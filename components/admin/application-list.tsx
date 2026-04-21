@@ -148,12 +148,12 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 placeholder="접수번호, 신청인명, 지번으로 검색"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-9 pl-10"
+                className="!h-9 pl-10"
               />
             </div>
             <div className="flex items-center gap-2">
               <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as AdminStatus | "all")}>
-                <SelectTrigger className="h-9 w-[150px] gap-2">
+                <SelectTrigger className="!h-9 w-[150px] gap-2">
                   <Filter className="h-4 w-4 text-muted-foreground" />
                   <SelectValue placeholder="처리상태" />
                 </SelectTrigger>
@@ -167,7 +167,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               <Button
                 variant="outline"
                 size="default"
-                className="h-9 gap-2 px-4"
+                className="!h-9 gap-2 px-4"
                 onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
               >
                 <span className="text-muted-foreground">{sortOrder === "desc" ? "↓" : "↑"}</span>
