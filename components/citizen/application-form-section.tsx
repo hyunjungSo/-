@@ -250,49 +250,9 @@ export function ApplicationFormSection({
                 </div>
               </div>
 
-              {/* GIS 자동 산출 정보 (시스템 제공) */}
+              {/* 토지 정보 */}
               <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <h4 className="font-semibold text-foreground">GIS 자동 산출 정보</h4>
-                  <span className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600">시스템 제공</span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  아래 정보는 GIS 데이터(polygon)를 기반으로 시스템이 자동 산출한 값입니다.
-                </p>
-                
-                <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                  <div className="grid gap-4 text-sm sm:grid-cols-2">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">원래 형상지수</span>
-                      <span className="font-medium">{landInfo.originalShapeIndex.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">잔여지 형상지수</span>
-                      <span className="font-medium">{landInfo.remainingShapeIndex.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">형상지수 변화</span>
-                      <span className="font-medium text-primary">
-                        +{(landInfo.remainingShapeIndex - landInfo.originalShapeIndex).toFixed(2)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">시스템 판정 형상</span>
-                      <span className="font-medium">{landInfo.remainingShape}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 실제 이용 상황 보정 (사용자 입력) */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <h4 className="font-semibold text-foreground">실제 이용 상황 보정</h4>
-                  <span className="rounded bg-primary/10 px-2 py-0.5 text-xs text-primary">사용자 입력</span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  GIS 데이터만으로 판단이 어려운 건축/영농 가능 여부 등 현장 상황을 입력해주세요.
-                </p>
+                <h4 className="font-semibold text-foreground">토지 정보</h4>
                 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
@@ -317,7 +277,7 @@ export function ApplicationFormSection({
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="reportedShape">토지 모양 (현장 확인) *</Label>
+                    <Label htmlFor="reportedShape">토지 모양 *</Label>
                     <Select
                       value={formData.reportedShape}
                       onValueChange={(value) =>
