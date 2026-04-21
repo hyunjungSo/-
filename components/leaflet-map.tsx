@@ -234,11 +234,20 @@ export function LeafletMap({
     });
 
     // 필지들이 있으면 해당 영역으로 지도 이동
-    if (parcels.length > 0 && parcels[0].coordinates.length > 0) {
-      const allCoords = parcels.flatMap(p => p.coordinates.map(c => [c.lat, c.lng] as [number, number]));
-      if (allCoords.length > 0) {
-        const bounds = L.latLngBounds(allCoords);
-        mapInstanceRef.current.fitBounds(bounds, { padding: [50, 50] });
+    if (parcels.length > 0) {
+      const validParcels = parcels.filter(p => p.coordinates && p.coordinates.length >= 3);
+      if (validParcels.length > 0) {
+        const allCoords = validParcels.flatMap(p => p.coordinates.map(c => [c.lat, c.lng] as [number, number]));
+        if (allCoords.length > 0) {
+          try {
+            const bounds = L.latLngBounds(allCoords);
+            if (bounds.isValid()) {
+              mapInstanceRef.current.fitBounds(bounds, { padding: [50, 50] });
+            }
+          } catch (e) {
+            console.log("[v0] fitBounds error:", e);
+          }
+        }
       }
     }
   }, [parcels, selectedParcelId, onParcelClick, isMapReady]);
