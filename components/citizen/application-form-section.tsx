@@ -295,7 +295,7 @@ export function ApplicationFormSection({
                 </p>
                 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Label htmlFor="actualUsage">실제 이용 상황 *</Label>
                     <Select
                       value={formData.actualUsage}
@@ -316,7 +316,7 @@ export function ApplicationFormSection({
                     </Select>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Label htmlFor="reportedShape">토지 모양 (현장 확인) *</Label>
                     <Select
                       value={formData.reportedShape}

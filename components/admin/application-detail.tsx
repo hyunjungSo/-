@@ -356,8 +356,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             )}
 
             {/* 기준 충족 여부 */}
-            <div className="space-y-3">
-              <h4 className="font-medium text-foreground">기준 �����족 여부</h4>
+            <div className="space-y-2">
+              <h4 className="font-medium text-foreground">기준 ������족 여부</h4>
               {aiResult?.criteriaChecks.map((check, index) => (
                 <div
                   key={index}
@@ -429,7 +429,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardContent className="space-y-6">
           {/* 수정 가능 항목 */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="space-y-3">
+            <div className="space-y-2">
               <Label>실제 이용 상황</Label>
               <Select
                 value={reviewData.actualUsage}
@@ -450,7 +450,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </Select>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-2">
               <Label>토지 모양</Label>
               <Select
                 value={reviewData.landShape}
@@ -482,7 +482,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </Select>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-2">
               <Label>농기계 진입/회전 곤란</Label>
               <Select
                 value={reviewData.farmMachineDifficulty}
@@ -506,7 +506,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
 
           {/* 자동 판독 불가 항목 */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <Label>자동 판독 불가 항목 (수동 입력)</Label>
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center space-x-2">
@@ -537,7 +537,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
 
           {/* 소유자 의견 */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <Label>소유자 의견 (신청 사유)</Label>
             <div className="rounded-lg border border-border bg-muted/50 p-3 text-sm text-foreground">
               {application.reason}
@@ -545,7 +545,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
 
           {/* 검토 의견 */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <Label htmlFor="reviewerComment">검토 의견</Label>
             <Textarea
               id="reviewerComment"
@@ -559,7 +559,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
 
           {/* 진행상황 설정 */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <Label>진행상황 설정</Label>
             <div className="flex flex-wrap gap-2">
               {(["대기중", "진행중", "완료"] as AdminStatus[]).map((status) => {
@@ -588,7 +588,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
 
           {/* 최종 판정 */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <Label>최종 판정</Label>
             <div className="flex flex-wrap gap-2">
               {(["매수", "기각", "심의위원회이관"] as JudgmentResult[]).map((judgment) => {

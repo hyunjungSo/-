@@ -501,7 +501,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               </TabsList>
 
               <TabsContent value="address" className="mt-4 space-y-4">
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <Label htmlFor="address-input" className="text-sm font-medium">편입토지 지번</Label>
                   <div className="flex gap-2">
                     <Input
@@ -692,7 +692,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
                 {/* AI 결과 */}
                 {aiResult && !noIncludedLand && (
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <div className={`rounded-lg border-2 p-4 ${
                       aiResult.provisionalJudgment === "매수" 
                         ? "border-primary bg-primary/5" 

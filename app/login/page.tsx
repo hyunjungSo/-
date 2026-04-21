@@ -83,7 +83,7 @@ export default function LoginPage() {
                 </Alert>
               )}
 
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <Label htmlFor="userId">아이디</Label>
                 <Input
                   id="userId"
@@ -96,7 +96,7 @@ export default function LoginPage() {
                 />
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <Label htmlFor="password">비밀번호</Label>
                 <div className="relative">
                   <Input
