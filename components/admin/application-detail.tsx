@@ -52,6 +52,15 @@ const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock
   완료: { label: "완료", icon: CheckCircle2, color: "text-primary" },
 };
 
+// 담당자 목록 (실제로는 API에서 가져옴)
+const assigneeList = [
+  { id: "admin-001", name: "홍길동", department: "토지보상과" },
+  { id: "admin-002", name: "김철수", department: "토지보상과" },
+  { id: "admin-003", name: "이영희", department: "토지보상과" },
+  { id: "admin-004", name: "박민수", department: "보상심의팀" },
+  { id: "admin-005", name: "정수연", department: "보상심의팀" },
+];
+
 export function ApplicationDetail({ application, onBack, onSave }: ApplicationDetailProps) {
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
@@ -62,12 +71,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     reviewerComment: application.reviewerComment || "",
     finalJudgment: application.finalJudgment || application.aiResult?.provisionalJudgment || ("매수" as JudgmentResult),
     adminStatus: application.adminStatus || ("대기중" as AdminStatus),
+    assigneeId: application.adminName ? assigneeList.find(a => a.name === application.adminName)?.id || "" : "",
   });
 
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = () => {
     setIsSaving(true);
+    
+    const selectedAssignee = assigneeList.find(a => a.id === reviewData.assigneeId);
     
     const updatedApplication: Application = {
       ...application,
@@ -78,7 +90,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       finalJudgment: reviewData.finalJudgment,
       adminStatus: reviewData.adminStatus,
       status: reviewData.adminStatus === "완료" ? "처리완료" : application.status,
-      adminName: "홍길동", // 실제로는 로그인한 담당자 정보
+      adminName: selectedAssignee?.name || application.adminName,
       statusUpdatedAt: new Date().toISOString().split("T")[0],
     };
 
@@ -128,7 +140,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             <div>
               <p className="text-sm text-muted-foreground">신청인</p>
               <p className="font-medium text-foreground">{application.applicantName}</p>
@@ -144,6 +156,26 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             <div>
               <p className="text-sm text-muted-foreground">대상 지번</p>
               <p className="font-medium text-foreground">{application.landInfo.address}</p>
+            </div>
+            <div>
+              <p className="mb-1 text-sm text-muted-foreground">담당자</p>
+              <Select
+                value={reviewData.assigneeId}
+                onValueChange={(value) =>
+                  setReviewData((prev) => ({ ...prev, assigneeId: value }))
+                }
+              >
+                <SelectTrigger className="h-9">
+                  <SelectValue placeholder="담당자 지정" />
+                </SelectTrigger>
+                <SelectContent>
+                  {assigneeList.map((assignee) => (
+                    <SelectItem key={assignee.id} value={assignee.id}>
+                      {assignee.name} ({assignee.department})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardContent>
