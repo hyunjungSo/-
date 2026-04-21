@@ -62,7 +62,7 @@ const regionData = {
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
-    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "���������장면"],
+    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "�����������장면"],
     // 충청남도 - 아산시
     "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악���", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
@@ -220,7 +220,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
       autoDetected: true,
     },
     {
-      criteriaName: "형상지수 변화",
+      criteriaName: "형상���수 변화",
       criteriaDescription: `형상지수 변화 +${shapeIndexChange.toFixed(1)} (기준: 1.0 이상)`,
       isMet: shapeIndexChange >= 1.0,
       autoDetected: true,
@@ -356,10 +356,12 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
   const [selectedRi, setSelectedRi] = useState<string>("");
   const [jibun, setJibun] = useState<string>("");
   
-  // 검색 결과 상��
+  // 검색 결과 상태
   const [searchResults, setSearchResults] = useState<LandInfo[]>([]);
   const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   
   // AI 분석 상태
   const [aiResult, setAiResult] = useState<AIAnalysisResult | null>(null);
@@ -382,6 +384,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
     
     setIsSearching(true);
     setSelectedLand(null);
+    setCurrentPage(1);
     setAiResult(null);
     setNoIncludedLand(false);
     
@@ -699,20 +702,49 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               )}
             </div>
 
-            {/* 페이지네이션 */}
-            {searchResults.length > 0 && (
+              {/* 페이지네이션 */}
+              {searchResults.length > 0 && (
               <div className="absolute bottom-0 left-0 flex w-[280px] items-center justify-center gap-1 border-t bg-background py-3">
-                <Button variant="ghost" size="icon" className="h-8 w-8" disabled>
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Button size="sm" className="h-8 w-8 bg-[#222222] p-0 hover:bg-[#333333]">1</Button>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">2</Button>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">3</Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+                {(() => {
+                  const totalPages = Math.ceil(searchResults.length / itemsPerPage);
+                  if (totalPages <= 1) return null;
+                  
+                  return (
+                    <>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8" 
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                        <Button 
+                          key={page}
+                          size="sm" 
+                          className={`h-8 w-8 p-0 ${currentPage === page ? "bg-[#222222] hover:bg-[#333333]" : ""}`}
+                          variant={currentPage === page ? "default" : "ghost"}
+                          onClick={() => setCurrentPage(page)}
+                        >
+                          {page}
+                        </Button>
+                      ))}
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8"
+                        disabled={currentPage === totalPages}
+                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </>
+                  );
+                })()}
               </div>
-            )}
+              )}
           </div>
 
           {/* 기본정보 패널 (선택된 토지 정보) - 슬라이드 */}
