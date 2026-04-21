@@ -37,15 +37,6 @@ export default function CitizenPage() {
     setApplicationStep("search");
   };
 
-  // 단계 정보
-  const steps = [
-    { id: "search", label: "토지 조회", number: 1 },
-    { id: "apply", label: "매수 신청", number: 2 },
-    { id: "result", label: "접수 완료", number: 3 },
-  ];
-
-  const currentStepIndex = steps.findIndex(s => s.id === applicationStep);
-
   return (
     <div className="space-y-6">
       <div>
@@ -114,75 +105,6 @@ export default function CitizenPage() {
           id="tabpanel-new"
           aria-labelledby="tab-new"
         >
-          {/* KRDS 단계 표시기 (Step Indicator) */}
-          <nav aria-label="신청 진행 단계" className="krds-step-wrap py-8">
-            <div className="mx-auto max-w-xl">
-              <ol className="relative flex items-start justify-between">
-                {/* 연결선 배경 - 전체 가로선 */}
-                <div 
-                  className="absolute left-0 top-3 h-px w-full bg-gray-300" 
-                  aria-hidden="true" 
-                />
-                {/* 완료된 단계까지의 연결선 */}
-                {currentStepIndex > 0 && (
-                  <div 
-                    className="absolute left-0 top-3 h-px bg-gray-900 transition-all" 
-                    style={{ width: `${(currentStepIndex / (steps.length - 1)) * 100}%` }}
-                    aria-hidden="true" 
-                  />
-                )}
-                
-                {steps.map((step, index) => {
-                  const isCompleted = index < currentStepIndex;
-                  const isCurrent = index === currentStepIndex;
-
-                  return (
-                    <li 
-                      key={step.id} 
-                      className={`relative flex flex-col items-center ${isCompleted ? "done" : ""} ${isCurrent ? "active" : ""}`}
-                    >
-                      {/* 원형 인디케이터 */}
-                      <div 
-                        className={`relative z-10 flex h-6 w-6 items-center justify-center rounded-full border-2 bg-white ${
-                          isCurrent || isCompleted
-                            ? "border-gray-400" 
-                            : "border-gray-300"
-                        }`}
-                        aria-current={isCurrent ? "step" : undefined}
-                      >
-                        {/* 현재/완료 단계: 내부 채워진 원 */}
-                        {(isCurrent || isCompleted) && (
-                          <span className="h-3 w-3 rounded-full bg-gray-900" aria-hidden="true" />
-                        )}
-                      </div>
-                      
-                      {/* 단계 레이블 */}
-                      <div className="mt-3 text-center">
-                        <span className={`block text-xs ${
-                          isCurrent || isCompleted ? "text-gray-500" : "text-gray-400"
-                        }`}>
-                          Step {step.number}
-                        </span>
-                        <span className={`mt-1 block text-sm ${
-                          isCurrent 
-                            ? "font-bold text-gray-900" 
-                            : isCompleted 
-                              ? "font-medium text-gray-600"
-                              : "text-gray-400"
-                        }`}>
-                          {step.label}
-                          {isCurrent && <span className="sr-only">(현재 단계)</span>}
-                          {isCompleted && <span className="sr-only">(완료)</span>}
-                        </span>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ol>
-            </div>
-          </nav>
-
-          {/* 단계별 콘텐츠 */}
           {applicationStep === "search" && (
             <LandSearchSection onLandSelect={handleLandSelect} />
           )}
