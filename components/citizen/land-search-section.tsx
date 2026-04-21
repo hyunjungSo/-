@@ -505,7 +505,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 setSearchResults([]);
               }}
             >
-              <SelectTrigger className="h-8 w-[100px] shrink-0">
+              <SelectTrigger className="h-9 w-[100px] shrink-0">
                 <SelectValue placeholder="시도" className="truncate" />
               </SelectTrigger>
               <SelectContent>
@@ -526,7 +526,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               }}
               disabled={!selectedSido}
             >
-              <SelectTrigger className="h-8 w-[100px] shrink-0">
+              <SelectTrigger className="h-9 w-[100px] shrink-0">
                 <SelectValue placeholder="시군구" className="truncate" />
               </SelectTrigger>
               <SelectContent>
@@ -546,7 +546,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               }}
               disabled={!selectedSigungu || eupmyeondongOptions.length === 0}
             >
-              <SelectTrigger className="h-8 w-[100px] shrink-0">
+              <SelectTrigger className="h-9 w-[100px] shrink-0">
                 <SelectValue placeholder={eupmyeondongOptions.length === 0 ? "해당없음" : "읍면동"} className="truncate" />
               </SelectTrigger>
               <SelectContent>
@@ -562,7 +562,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               onValueChange={setSelectedRi}
               disabled={!selectedEupmyeondong || riOptions.length === 0}
             >
-              <SelectTrigger className="h-8 w-[80px] shrink-0">
+              <SelectTrigger className="h-9 w-[80px] shrink-0">
                 <SelectValue placeholder={riOptions.length === 0 ? "해당없음" : "리"} className="truncate" />
               </SelectTrigger>
               <SelectContent>
@@ -577,14 +577,13 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               placeholder="지번" 
               value={jibun}
               onChange={(e) => setJibun(e.target.value)}
-              className="h-8 w-[70px] shrink-0"
+              className="h-9 w-[70px] shrink-0"
             />
 
             {/* 검색/초기화 버튼 */}
             <Button 
               onClick={handleSearch} 
-              size="sm"
-              className="h-8 cursor-pointer px-4"
+              className="h-9 cursor-pointer px-4"
               disabled={!selectedSigungu || isSearching}
             >
               {isSearching ? (
@@ -596,11 +595,10 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
             {(selectedSido || searchResults.length > 0) && (
               <Button 
                 variant="outline" 
-                size="sm" 
                 onClick={handleReset}
-                className="h-8 cursor-pointer"
+                className="h-9 cursor-pointer px-3"
               >
-                <RotateCcw className="h-3 w-3" />
+                <RotateCcw className="h-3.5 w-3.5" />
               </Button>
             )}
           </div>
