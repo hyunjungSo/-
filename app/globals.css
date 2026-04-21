@@ -177,6 +177,12 @@
     -moz-osx-font-smoothing: grayscale;
   }
   
+  /* Placeholder 색상 설정 */
+  ::placeholder {
+    color: #7a7a7a;
+    opacity: 1;
+  }
+  
   /* Tailwind text-xs를 13px로 오버라이드 (최소 폰트 사이즈) */
   .text-xs {
     font-size: 0.8125rem !important; /* 13px */
