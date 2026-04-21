@@ -235,7 +235,7 @@ export function LandMap({
       const shortAddress = addressParts.slice(-1)[0];
       ctx.fillText(shortAddress, rect.width * 0.5, rect.height * 0.92);
     }
-  }, [landInfo, showOverlay, baseMap, layers, isLayerVisible]);
+  }, [landInfo, showOverlay, baseMap, layers, zoomLevel]);
 
   return (
     <div className="relative w-full overflow-hidden rounded-lg border border-border bg-muted">
