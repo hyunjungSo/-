@@ -681,14 +681,10 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                     <li key={land.id} className="border-b border-border">
                       <button
                         onClick={() => handleLandSelect(land)}
-                        className={`flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/50 ${
+                        className={`flex w-full cursor-pointer items-center justify-between px-4 py-3 text-left transition-colors hover:bg-muted/50 ${
                           selectedLand?.id === land.id ? "border-2 border-primary bg-primary/5" : ""
                         }`}
                       >
-                        {/* 주소 배지 */}
-                        <span className="shrink-0 rounded border border-primary bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">
-                          주소
-                        </span>
                         {/* 주소 텍스트 */}
                         <span className="flex-1 text-sm">{land.address}</span>
                         {/* 화살표 */}
