@@ -63,7 +63,7 @@ const regionData = {
     "천안시 서북구": ["성환읍", "성거읍", "직산읍", "입장면"],
     // 충청남도 - 아산시
     "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악면", "신창면", "염치읍", "영인면", "인주면"],
-    // 기본값 (선택되지 않은 시군구용)
+    // ��본값 (선택되지 않은 시군구용)
     "강남구": ["논현동", "삼성동", "역삼동", "청담동"],
     "해운대구": ["우동", "중동", "좌동", "송정동"],
     "세종시": ["조치원읍", "금남면", "부강면", "소정면", "연기면", "연동면", "연서면", "장군면", "전동면", "전의면"],
@@ -222,7 +222,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     },
     {
       criteriaName: "토지 형상",
-      criteriaDescription: `잔여지 형상: ${land.remainingShape}`,
+      criteriaDescription: `잔여지 ��상: ${land.remainingShape}`,
       isMet: ["부정형", "삼각형", "역삼각형", "자루형"].includes(land.remainingShape),
       autoDetected: true,
     },
@@ -349,6 +349,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
   const [selectedSigungu, setSelectedSigungu] = useState<string>("");
   const [selectedEupmyeondong, setSelectedEupmyeondong] = useState<string>("");
   const [selectedRi, setSelectedRi] = useState<string>("");
+  const [jibun, setJibun] = useState<string>("");
   
   // 검색 결과 상태
   const [searchResults, setSearchResults] = useState<LandInfo[]>([]);
@@ -415,6 +416,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
     setSelectedSigungu("");
     setSelectedEupmyeondong("");
     setSelectedRi("");
+    setJibun("");
     setSearchResults([]);
     setSelectedLand(null);
     setAiResult(null);
@@ -582,6 +584,17 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+
+              {/* 지번 */}
+              <div className="space-y-2">
+                <Label className="text-xs">지번</Label>
+                <Input 
+                  placeholder="예: 123-4" 
+                  value={jibun}
+                  onChange={(e) => setJibun(e.target.value)}
+                  className="h-10"
+                />
               </div>
 
               {/* 검색 버튼 */}
