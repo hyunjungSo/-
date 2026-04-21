@@ -574,7 +574,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
             {/* 지번 */}
             <Input 
-              placeholder="���번" 
+              placeholder="�����번" 
               value={jibun}
               onChange={(e) => setJibun(e.target.value)}
               className="h-9 w-[70px] shrink-0"
@@ -725,18 +725,17 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                   {!noIncludedLand && !aiResult && (
                     <Button 
                       onClick={handleAIAnalysis}
-                      className="w-full cursor-pointer"
-                      size="sm"
+                      className="h-12 w-full cursor-pointer"
                       disabled={aiAnalyzing}
                     >
                       {aiAnalyzing ? (
                         <>
-                          <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                           AI 판독 중...
                         </>
                       ) : (
                         <>
-                          <Bot className="mr-2 h-3.5 w-3.5" />
+                          <Bot className="mr-2 h-4 w-4" />
                           AI 판독 시작
                         </>
                       )}
@@ -843,12 +842,11 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                   {aiResult && aiResult.provisionalJudgment !== "기각" && (
                     <Button 
                       onClick={() => onProceedToApplication?.(selectedLand)}
-                      className="w-full cursor-pointer"
-                      size="sm"
+                      className="h-12 w-full cursor-pointer"
                       variant="default"
                     >
                       매수 신청하기
-                      <ChevronRight className="ml-1 h-3.5 w-3.5" />
+                      <ChevronRight className="ml-1 h-4 w-4" />
                     </Button>
                   )}
                 </div>
