@@ -928,16 +928,34 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
             </div>
             
             {/* 매수 신청 버튼 - 하단 고정 */}
-            {selectedLand && aiResult && aiResult.provisionalJudgment !== "기각" && (
+            {selectedLand && aiResult && (
               <div className="shrink-0 border-t bg-background p-3">
-                <Button 
-                  onClick={() => onProceedToApplication?.(selectedLand)}
-                  className="h-12 w-full cursor-pointer"
-                  variant="default"
-                >
-                  매수 신청하기
-                  <ChevronRight className="ml-1 h-4 w-4" />
-                </Button>
+                {aiResult.provisionalJudgment !== "기각" ? (
+                  <Button 
+                    onClick={() => onProceedToApplication?.(selectedLand)}
+                    className="h-12 w-full cursor-pointer"
+                    variant="default"
+                  >
+                    매수 신청하기
+                    <ChevronRight className="ml-1 h-4 w-4" />
+                  </Button>
+                ) : (
+                  <div className="space-y-2">
+                    {/* 매수 불가 안내 */}
+                    <div className="rounded bg-muted/50 p-2 text-center">
+                      <p className="text-xs text-muted-foreground">
+                        AI 분석 결과 매수 기준에 충족하지 않습니다.
+                      </p>
+                    </div>
+                    {/* 다크패턴 버튼 - 눈에 잘 안 띄게 */}
+                    <button
+                      onClick={() => onProceedToApplication?.(selectedLand)}
+                      className="w-full cursor-pointer py-1 text-[10px] text-muted-foreground/50 underline-offset-2 transition-colors hover:text-muted-foreground/70 hover:underline"
+                    >
+                      그래도 매수 신청하기
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
