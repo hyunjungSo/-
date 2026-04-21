@@ -295,59 +295,80 @@ export function ApplicationStatusSection() {
               </p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="krds-board-list divide-y divide-border">
               {myApplications.map((app) => {
                 const statusConfig = adminStatusConfig[app.adminStatus];
                 const StatusIcon = statusConfig.icon;
 
                 return (
-                  <div
+                  <article
                     key={app.id}
-                    className="flex items-center justify-between rounded-lg border border-border p-4 transition-colors hover:bg-muted/50"
+                    className="krds-board-item py-5 first:pt-0 last:pb-0"
                   >
-                    <div className="flex-1 space-y-1">
-                      <div className="flex items-center gap-3">
-                        <span className="font-medium text-foreground">
-                          {app.applicationNumber}
-                        </span>
-                        <Badge className={`${statusConfig.bgColor} ${statusConfig.color}`}>
-                          <StatusIcon className="mr-1 h-3 w-3" />
-                          {statusConfig.label}
-                        </Badge>
-                        {app.adminStatus === "완료" && app.finalJudgment && (
-                          <Badge className={
-                            app.finalJudgment === "매수" 
-                              ? "bg-green-100 text-green-700" 
-                              : app.finalJudgment === "기각"
-                                ? "bg-red-100 text-red-700"
-                                : "bg-amber-100 text-amber-700"
-                          }>
-                            {app.finalJudgment}
+                    <div className="flex items-start justify-between gap-4">
+                      {/* 좌측: 콘텐츠 영역 */}
+                      <div className="min-w-0 flex-1">
+                        {/* 뱃지 영역 */}
+                        <div className="mb-2 flex flex-wrap items-center gap-2">
+                          <Badge className={`${statusConfig.bgColor} ${statusConfig.color}`}>
+                            <StatusIcon className="mr-1 h-3 w-3" />
+                            {statusConfig.label}
                           </Badge>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <MapPin className="h-3.5 w-3.5" />
+                          {app.adminStatus === "완료" && app.finalJudgment && (
+                            <Badge className={
+                              app.finalJudgment === "매수" 
+                                ? "bg-green-100 text-green-700" 
+                                : app.finalJudgment === "기각"
+                                  ? "bg-red-100 text-red-700"
+                                  : "bg-amber-100 text-amber-700"
+                            }>
+                              {app.finalJudgment}
+                            </Badge>
+                          )}
+                        </div>
+
+                        {/* 타이틀 영역 - 클릭 가능 */}
+                        <button
+                          onClick={() => setSelectedApplication(app)}
+                          className="group mb-2 flex cursor-pointer items-center gap-1 text-left"
+                        >
+                          <h3 className="text-base font-semibold text-foreground group-hover:text-primary group-hover:underline">
+                            {app.applicationNumber}
+                          </h3>
+                          <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
+                        </button>
+
+                        {/* 설명 영역 */}
+                        <p className="mb-3 text-sm text-muted-foreground">
                           {app.landInfo.address}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Calendar className="h-3.5 w-3.5" />
-                          <span className="text-muted-foreground">신청일</span>
-                          {app.appliedAt}
-                        </span>
+                        </p>
+
+                        {/* 메타데이터 영역 - 파이프로 구분 */}
+                        <div className="flex flex-wrap items-center gap-x-3 text-xs text-gray-500">
+                          <span>신청일 {app.appliedAt}</span>
+                          <span className="text-gray-300">|</span>
+                          <span>토지유형 {app.landInfo.landType}</span>
+                          <span className="text-gray-300">|</span>
+                          <span>잔여면적 {app.landInfo.remainingArea.toLocaleString()}m²</span>
+                          <span className="text-gray-300">|</span>
+                          <span>잔여비율 {app.landInfo.remainingRatio}%</span>
+                        </div>
+                      </div>
+
+                      {/* 우측: 액션 버튼 */}
+                      <div className="shrink-0">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setSelectedApplication(app)}
+                          className="gap-1 text-muted-foreground hover:text-primary"
+                        >
+                          상세보기
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSelectedApplication(app)}
-                      className="ml-4 gap-2"
-                    >
-                      상세보기
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  </article>
                 );
               })}
             </div>
