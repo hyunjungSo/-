@@ -1,7 +1,16 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import { Layers, Map as MapIcon } from "lucide-react";
 import type { LandInfo } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface LandMapProps {
   landInfo?: LandInfo;
@@ -10,12 +19,23 @@ interface LandMapProps {
   onSelect?: (landId: string) => void;
 }
 
+type BaseMapType = "normal" | "satellite";
+
 export function LandMap({
   landInfo,
   showOverlay = true,
   interactive = false,
 }: LandMapProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  
+  // 배경지도 타입
+  const [baseMap, setBaseMap] = useState<BaseMapType>("normal");
+  
+  // 레이어 옵션
+  const [layers, setLayers] = useState({
+    landSupplyDemand: false, // 국토수급
+    roadArea: true, // 도로구역
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -31,38 +51,78 @@ export function LandMap({
     canvas.height = rect.height * dpr;
     ctx.scale(dpr, dpr);
 
-    // 배경 그리기 (지적도 시뮬레이션)
-    ctx.fillStyle = "#f0f4e8";
-    ctx.fillRect(0, 0, rect.width, rect.height);
+    // 배경 그리기 (배경지도 타입에 따라)
+    if (baseMap === "satellite") {
+      // 위성 배경
+      ctx.fillStyle = "#2d4a3e";
+      ctx.fillRect(0, 0, rect.width, rect.height);
+      
+      // 위성 텍스처 시뮬레이션
+      for (let i = 0; i < 500; i++) {
+        ctx.fillStyle = `rgba(${Math.random() * 50 + 30}, ${Math.random() * 60 + 50}, ${Math.random() * 40 + 30}, 0.3)`;
+        ctx.fillRect(
+          Math.random() * rect.width,
+          Math.random() * rect.height,
+          Math.random() * 20 + 5,
+          Math.random() * 20 + 5
+        );
+      }
+    } else {
+      // 일반 지적도 배경
+      ctx.fillStyle = "#f0f4e8";
+      ctx.fillRect(0, 0, rect.width, rect.height);
 
-    // 그리드 그리기
-    ctx.strokeStyle = "#d0d8c8";
-    ctx.lineWidth = 0.5;
-    for (let i = 0; i < rect.width; i += 20) {
-      ctx.beginPath();
-      ctx.moveTo(i, 0);
-      ctx.lineTo(i, rect.height);
-      ctx.stroke();
-    }
-    for (let i = 0; i < rect.height; i += 20) {
-      ctx.beginPath();
-      ctx.moveTo(0, i);
-      ctx.lineTo(rect.width, i);
-      ctx.stroke();
+      // 그리드 그리기
+      ctx.strokeStyle = "#d0d8c8";
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < rect.width; i += 20) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, rect.height);
+        ctx.stroke();
+      }
+      for (let i = 0; i < rect.height; i += 20) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(rect.width, i);
+        ctx.stroke();
+      }
     }
 
-    // 도로 그리기 (고속도로)
-    ctx.fillStyle = "#888888";
-    ctx.beginPath();
-    ctx.moveTo(rect.width * 0.1, rect.height * 0.3);
-    ctx.lineTo(rect.width * 0.9, rect.height * 0.5);
-    ctx.lineTo(rect.width * 0.9, rect.height * 0.6);
-    ctx.lineTo(rect.width * 0.1, rect.height * 0.4);
-    ctx.closePath();
-    ctx.fill();
+    // 국토수급 레이어
+    if (layers.landSupplyDemand) {
+      ctx.fillStyle = "rgba(255, 193, 7, 0.2)";
+      ctx.fillRect(rect.width * 0.1, rect.height * 0.1, rect.width * 0.3, rect.height * 0.25);
+      ctx.strokeStyle = "#ffc107";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(rect.width * 0.1, rect.height * 0.1, rect.width * 0.3, rect.height * 0.25);
+      
+      ctx.fillStyle = "rgba(255, 193, 7, 0.2)";
+      ctx.fillRect(rect.width * 0.6, rect.height * 0.65, rect.width * 0.3, rect.height * 0.25);
+      ctx.strokeRect(rect.width * 0.6, rect.height * 0.65, rect.width * 0.3, rect.height * 0.25);
+    }
+
+    // 도로구역 레이어 (도로)
+    if (layers.roadArea) {
+      ctx.fillStyle = baseMap === "satellite" ? "#555555" : "#888888";
+      ctx.beginPath();
+      ctx.moveTo(rect.width * 0.1, rect.height * 0.3);
+      ctx.lineTo(rect.width * 0.9, rect.height * 0.5);
+      ctx.lineTo(rect.width * 0.9, rect.height * 0.6);
+      ctx.lineTo(rect.width * 0.1, rect.height * 0.4);
+      ctx.closePath();
+      ctx.fill();
+      
+      // 도로구역 경계선
+      ctx.strokeStyle = "#ff6b6b";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
 
     // 원래 토지 그리기 (편입 전)
-    ctx.strokeStyle = "#666666";
+    ctx.strokeStyle = baseMap === "satellite" ? "#ffffff" : "#666666";
     ctx.lineWidth = 2;
     ctx.setLineDash([5, 5]);
     ctx.beginPath();
@@ -113,40 +173,134 @@ export function LandMap({
       ctx.stroke();
 
       // 범례
+      const legendBg = baseMap === "satellite" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.9)";
+      const legendText = baseMap === "satellite" ? "#ffffff" : "#333333";
+      
+      ctx.fillStyle = legendBg;
+      ctx.fillRect(rect.width - 130, 5, 125, 75);
+      ctx.strokeStyle = baseMap === "satellite" ? "#555" : "#ddd";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(rect.width - 130, 5, 125, 75);
+      
       ctx.font = "12px sans-serif";
       
       // 편입 구간 범례
       ctx.fillStyle = "rgba(239, 68, 68, 0.3)";
-      ctx.fillRect(rect.width - 120, 10, 16, 16);
+      ctx.fillRect(rect.width - 120, 15, 16, 16);
       ctx.strokeStyle = "#ef4444";
       ctx.lineWidth = 1;
-      ctx.strokeRect(rect.width - 120, 10, 16, 16);
-      ctx.fillStyle = "#333";
-      ctx.fillText("편입 구간", rect.width - 100, 22);
+      ctx.strokeRect(rect.width - 120, 15, 16, 16);
+      ctx.fillStyle = legendText;
+      ctx.fillText("편입 구간", rect.width - 98, 27);
 
       // 잔여지 범례
       ctx.fillStyle = "rgba(59, 130, 246, 0.3)";
-      ctx.fillRect(rect.width - 120, 32, 16, 16);
+      ctx.fillRect(rect.width - 120, 37, 16, 16);
       ctx.strokeStyle = "#3b82f6";
-      ctx.strokeRect(rect.width - 120, 32, 16, 16);
-      ctx.fillStyle = "#333";
-      ctx.fillText("잔여지", rect.width - 100, 44);
+      ctx.strokeRect(rect.width - 120, 37, 16, 16);
+      ctx.fillStyle = legendText;
+      ctx.fillText("잔여지", rect.width - 98, 49);
+      
+      // 도로구역 범례 (레이어 활성화 시)
+      if (layers.roadArea) {
+        ctx.strokeStyle = "#ff6b6b";
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 2]);
+        ctx.beginPath();
+        ctx.moveTo(rect.width - 120, 65);
+        ctx.lineTo(rect.width - 104, 65);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = legendText;
+        ctx.fillText("도로구역", rect.width - 98, 69);
+      }
     }
 
     // 지번 표시
     if (landInfo) {
       ctx.font = "bold 11px sans-serif";
-      ctx.fillStyle = "#1e3a5f";
+      ctx.fillStyle = baseMap === "satellite" ? "#ffffff" : "#1e3a5f";
       ctx.textAlign = "center";
       
       const addressParts = landInfo.address.split(" ");
       const shortAddress = addressParts.slice(-1)[0];
       ctx.fillText(shortAddress, rect.width * 0.5, rect.height * 0.92);
     }
-  }, [landInfo, showOverlay]);
+  }, [landInfo, showOverlay, baseMap, layers]);
 
   return (
     <div className="relative w-full overflow-hidden rounded-lg border border-border bg-muted">
+      {/* 지도 컨트롤 */}
+      <div className="absolute left-3 top-3 z-10 flex gap-2">
+        {/* 배경지도 선택 */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="secondary" size="sm" className="h-8 gap-1.5 bg-white/90 shadow-sm hover:bg-white">
+              <MapIcon className="h-4 w-4" />
+              <span className="text-xs">배경지도</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-36 p-2" align="start">
+            <div className="space-y-1">
+              <button
+                onClick={() => setBaseMap("normal")}
+                className={`w-full rounded px-2 py-1.5 text-left text-sm ${
+                  baseMap === "normal" ? "bg-primary text-white" : "hover:bg-muted"
+                }`}
+              >
+                일반
+              </button>
+              <button
+                onClick={() => setBaseMap("satellite")}
+                className={`w-full rounded px-2 py-1.5 text-left text-sm ${
+                  baseMap === "satellite" ? "bg-primary text-white" : "hover:bg-muted"
+                }`}
+              >
+                위성
+              </button>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* 레이어 선택 */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="secondary" size="sm" className="h-8 gap-1.5 bg-white/90 shadow-sm hover:bg-white">
+              <Layers className="h-4 w-4" />
+              <span className="text-xs">레이어</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-40 p-3" align="start">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="layer-land"
+                  checked={layers.landSupplyDemand}
+                  onCheckedChange={(checked) =>
+                    setLayers((prev) => ({ ...prev, landSupplyDemand: checked === true }))
+                  }
+                />
+                <Label htmlFor="layer-land" className="text-sm font-normal">
+                  국토수급
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="layer-road"
+                  checked={layers.roadArea}
+                  onCheckedChange={(checked) =>
+                    setLayers((prev) => ({ ...prev, roadArea: checked === true }))
+                  }
+                />
+                <Label htmlFor="layer-road" className="text-sm font-normal">
+                  도로구역
+                </Label>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+
       <canvas
         ref={canvasRef}
         className={cn(
