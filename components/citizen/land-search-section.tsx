@@ -63,7 +63,7 @@ const regionData = {
     // 충청남도 - 천안시 서북구
     "천안시 서북구": ["성환읍", "성거읍", "직산읍", "입장면"],
     // 충청남도 - 아산시
-    "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악면", "신창면", "염치읍", "영인면", "인주면"],
+    "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악��", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
     "강남구": ["논현동", "삼성동", "역삼동", "청담동"],
     "해운대구": ["우동", "중동", "좌동", "송정동"],
@@ -865,11 +865,10 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                             </div>
                           )}
 
-                          {/* AI 윤리 원칙 안내 */}
+                          {/* AI 참고 안내 */}
                           <div className="rounded border border-muted bg-muted/30 p-2">
                             <p className="text-xs leading-relaxed text-muted-foreground">
-                              <strong className="text-foreground">AI 윤리 원칙:</strong> 본 AI 판독 결과는 참고용이며, 
-                              최종 판단은 담당자가 관련 법령과 현장 상황을 종합적으로 검토하여 결정합니다.
+                              본 결과는 AI가 분석한 참고 자료입니다. 최종 판단은 담당자 검토 후 결정됩니다.
                             </p>
                           </div>
                         </div>
