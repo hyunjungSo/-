@@ -220,7 +220,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
       autoDetected: true,
     },
     {
-      criteriaName: "형상���수 변화",
+      criteriaName: "���상���수 변화",
       criteriaDescription: `형상지수 변화 +${shapeIndexChange.toFixed(1)} (기준: 1.0 이상)`,
       isMet: shapeIndexChange >= 1.0,
       autoDetected: true,
@@ -362,6 +362,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
   const [isSearching, setIsSearching] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   
   // AI 분석 상태
   const [aiResult, setAiResult] = useState<AIAnalysisResult | null>(null);
@@ -661,7 +662,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         </div>
 
         {/* 좌측 사이드바 - 결과 + 기본정보 패널 */}
-        <div className="absolute bottom-0 left-0 top-0 z-10 flex shadow-lg">
+        <div className={`absolute bottom-0 left-0 top-0 z-10 flex shadow-lg transition-transform duration-300 ${isSidebarCollapsed ? "-translate-x-full" : "translate-x-0"}`}>
           {/* 결과 패널 */}
           <div className="w-[280px] bg-background">
             {/* 검색 결과 헤더 */}
@@ -969,11 +970,15 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
             )}
           </div>
 
-          {/* 사이드바 토글 버튼 */}
-          <button className="flex h-12 w-6 cursor-pointer items-center justify-center self-center rounded-r-md bg-background shadow-md">
-            <ChevronLeft className="h-4 w-4 text-muted-foreground" />
-          </button>
         </div>
+
+        {/* 사이드바 토글 버튼 - 항상 표시 */}
+        <button 
+          onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+          className={`absolute top-1/2 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-r-md bg-background shadow-md transition-all duration-300 ${isSidebarCollapsed ? "left-0" : selectedLand ? "left-[600px]" : "left-[280px]"}`}
+        >
+          <ChevronLeft className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${isSidebarCollapsed ? "rotate-180" : ""}`} />
+        </button>
       </div>
     </div>
   );
