@@ -50,7 +50,7 @@ const adminStatusConfig: Record<AdminStatus, {
 };
 
 // 신청 현황용 판단 근거 컴포넌트
-function StatusRationaleSection({ rationale }: { rationale: JudgmentRationale }) {
+function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale: JudgmentRationale; provisionalJudgment?: "매수" | "기각" | "심의위원회이관" }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -64,6 +64,21 @@ function StatusRationaleSection({ rationale }: { rationale: JudgmentRationale })
             <div className="flex items-center gap-2">
               <Scale className="h-4 w-4 text-primary" />
               <span>AI 판단 근거 보기</span>
+              {provisionalJudgment && (
+                <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+                  provisionalJudgment === "매수"
+                    ? "bg-primary text-white"
+                    : provisionalJudgment === "심의위원회이관"
+                      ? "bg-warning text-white"
+                      : "bg-destructive text-white"
+                }`}>
+                  {provisionalJudgment === "매수" 
+                    ? "매수 가능" 
+                    : provisionalJudgment === "심의위원회이관"
+                      ? "경계 사례"
+                      : "기준 미충족"}
+                </span>
+              )}
             </div>
             {isOpen ? (
               <ChevronUp className="h-4 w-4" />
@@ -239,10 +254,13 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           </div>
         )}
 
-        {/* AI 판단 근거 표시 */}
-        {application.aiResult?.judgmentRationale && (
-          <StatusRationaleSection rationale={application.aiResult.judgmentRationale} />
-        )}
+{/* AI 판단 근거 표시 */}
+  {application.aiResult?.judgmentRationale && (
+<StatusRationaleSection 
+  rationale={application.aiResult.judgmentRationale} 
+  provisionalJudgment={application.aiResult.provisionalJudgment}
+/>
+  )}
 
         {/* 토지 정보 요약 */}
         <div className="rounded-lg border border-border bg-muted/30 p-3">
