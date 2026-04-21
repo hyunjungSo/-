@@ -89,6 +89,8 @@ export function LeafletMap({
   const polygonLayerRef = useRef<L.LayerGroup | null>(null);
   const normalTileRef = useRef<L.TileLayer | null>(null);
   const satelliteTileRef = useRef<L.TileLayer | null>(null);
+  const landSupplyLayerRef = useRef<L.LayerGroup | null>(null);
+  const roadAreaLayerRef = useRef<L.LayerGroup | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
   const [currentZoom, setCurrentZoom] = useState(zoom);
   const [baseMap, setBaseMap] = useState<BaseMapType>("normal");
@@ -151,6 +153,14 @@ export function LeafletMap({
       const polygonLayer = L.layerGroup().addTo(map);
       polygonLayerRef.current = polygonLayer;
 
+      // 국토수급 레이어 그룹 생성
+      const landSupplyLayer = L.layerGroup();
+      landSupplyLayerRef.current = landSupplyLayer;
+
+      // 도로구역 레이어 그룹 생성 (기본 활성화)
+      const roadAreaLayer = L.layerGroup().addTo(map);
+      roadAreaLayerRef.current = roadAreaLayer;
+
       // 줌 변경 이벤트
       map.on("zoomend", () => {
         setCurrentZoom(map.getZoom());
@@ -208,6 +218,68 @@ export function LeafletMap({
       }
     }
   }, [baseMap, isMapReady]);
+
+  // 레이어 토글 효과 (국토수급, 도로구역)
+  useEffect(() => {
+    if (!mapInstanceRef.current || !landSupplyLayerRef.current || !roadAreaLayerRef.current || !isMapReady) return;
+
+    const L = (window as typeof window & { L: typeof import("leaflet") }).L;
+    const map = mapInstanceRef.current;
+    const landSupplyLayer = landSupplyLayerRef.current;
+    const roadAreaLayer = roadAreaLayerRef.current;
+
+    // 국토수급 레이어 토글
+    if (layers.landSupplyDemand) {
+      if (!map.hasLayer(landSupplyLayer)) {
+        // 국토수급 영역 표시 (예시 데이터 - 파란색 영역)
+        landSupplyLayer.clearLayers();
+        const landSupplyArea = L.polygon([
+          [37.2200, 127.2900],
+          [37.2250, 127.2900],
+          [37.2250, 127.3000],
+          [37.2200, 127.3000],
+        ], {
+          color: "#2196f3",
+          weight: 2,
+          fillColor: "#2196f3",
+          fillOpacity: 0.2,
+          dashArray: "5, 5",
+        });
+        landSupplyArea.addTo(landSupplyLayer);
+        landSupplyLayer.addTo(map);
+      }
+    } else {
+      if (map.hasLayer(landSupplyLayer)) {
+        map.removeLayer(landSupplyLayer);
+      }
+    }
+
+    // 도로구역 레이어 토글
+    if (layers.roadArea) {
+      if (!map.hasLayer(roadAreaLayer)) {
+        // 도로구역 영역 표시 (예시 데이터 - 주황색 영역)
+        roadAreaLayer.clearLayers();
+        const roadArea = L.polygon([
+          [37.2170, 127.2940],
+          [37.2210, 127.2940],
+          [37.2210, 127.3010],
+          [37.2170, 127.3010],
+        ], {
+          color: "#ff9800",
+          weight: 2,
+          fillColor: "#ff9800",
+          fillOpacity: 0.15,
+          dashArray: "10, 5",
+        });
+        roadArea.addTo(roadAreaLayer);
+        roadAreaLayer.addTo(map);
+      }
+    } else {
+      if (map.hasLayer(roadAreaLayer)) {
+        map.removeLayer(roadAreaLayer);
+      }
+    }
+  }, [layers, isMapReady]);
 
   // 필지 폴리곤 렌더링
   useEffect(() => {
