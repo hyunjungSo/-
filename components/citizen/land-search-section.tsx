@@ -229,7 +229,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     },
     {
       criteriaName: "접면도로 상실",
-      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목적 사용 곤란",
+      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목적 ���용 곤란",
       isMet: false,
       autoDetected: false,
     },
@@ -453,7 +453,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
   const riOptions = selectedEupmyeondong ? regionData.리[selectedEupmyeondong as keyof typeof regionData.리] || [] : [];
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-[100rem] space-y-6">
       {/* KRDS 진행 단계 표시기 */}
       <nav aria-label="신청 진행 단계" className="w-full">
         <ol className="flex items-center justify-center">
