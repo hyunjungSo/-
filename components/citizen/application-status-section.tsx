@@ -23,10 +23,30 @@ import {
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { JudgmentRationale } from "@/lib/types";
 
-const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string; bgColor: string }> = {
-  대기중: { label: "대기중", icon: Clock, color: "text-gray-600", bgColor: "bg-gray-100" },
-  진행중: { label: "진행중", icon: PlayCircle, color: "text-blue-600", bgColor: "bg-blue-100" },
-  완료: { label: "완료", icon: CheckCircle2, color: "text-green-600", bgColor: "bg-green-100" },
+const adminStatusConfig: Record<AdminStatus, { 
+  label: string; 
+  icon: typeof Clock; 
+  variant: "text" | "outline" | "filled";
+  className: string;
+}> = {
+  대기중: { 
+    label: "접수중", 
+    icon: Clock, 
+    variant: "text",
+    className: "bg-transparent text-gray-700 font-medium" 
+  },
+  진행중: { 
+    label: "진행중", 
+    icon: PlayCircle, 
+    variant: "outline",
+    className: "border-2 border-primary bg-transparent text-primary font-medium" 
+  },
+  완료: { 
+    label: "처리완료", 
+    icon: CheckCircle2, 
+    variant: "filled",
+    className: "bg-[#1a3a6e] text-white border-[#1a3a6e] font-medium" 
+  },
 };
 
 // 신청 현황용 판단 근거 컴포넌트
@@ -310,17 +330,22 @@ export function ApplicationStatusSection() {
                       <div className="min-w-0 flex-1">
                         {/* 뱃지 영역 */}
                         <div className="mb-2 flex flex-wrap items-center gap-2">
-                          <Badge className={`${statusConfig.bgColor} ${statusConfig.color}`}>
-                            <StatusIcon className="mr-1 h-3 w-3" />
-                            {statusConfig.label}
-                          </Badge>
+                          {statusConfig.variant === "text" ? (
+                            <span className="text-sm font-medium text-gray-700">
+                              {statusConfig.label}
+                            </span>
+                          ) : (
+                            <Badge className={statusConfig.className}>
+                              {statusConfig.label}
+                            </Badge>
+                          )}
                           {app.adminStatus === "완료" && app.finalJudgment && (
                             <Badge className={
                               app.finalJudgment === "매수" 
-                                ? "bg-green-100 text-green-700" 
+                                ? "border-2 border-green-600 bg-transparent text-green-600 font-medium" 
                                 : app.finalJudgment === "기각"
-                                  ? "bg-red-100 text-red-700"
-                                  : "bg-amber-100 text-amber-700"
+                                  ? "border-2 border-red-600 bg-transparent text-red-600 font-medium"
+                                  : "border-2 border-amber-600 bg-transparent text-amber-600 font-medium"
                             }>
                               {app.finalJudgment}
                             </Badge>
