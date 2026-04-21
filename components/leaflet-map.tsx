@@ -288,8 +288,8 @@ export function LeafletMap({
         </div>
       )}
 
-      {/* 지도 컨트롤 */}
-      <div className="absolute left-3 top-3 z-[1000] flex flex-col gap-2">
+      {/* 지도 컨트롤 - 배경지도/레이어 */}
+      <div className="absolute right-14 top-3 z-[1000] flex flex-col gap-2">
         {/* 배경지도 선택 */}
         <Popover>
           <PopoverTrigger asChild>
