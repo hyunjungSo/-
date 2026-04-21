@@ -223,14 +223,44 @@ export function LeafletMap({
         }
       });
 
-      // 툴팁 추가
-      polygon.bindTooltip(parcel.address, {
-        permanent: false,
-        direction: "top",
-        className: "parcel-tooltip",
-      });
-
       polygon.addTo(polygonLayer);
+
+      // 필지 중앙에 지번 라벨 추가
+      const bounds = polygon.getBounds();
+      const center = bounds.getCenter();
+      
+      // 주소에서 지번만 추출 (마지막 부분)
+      const addressParts = parcel.address.split(" ");
+      const jibunNumber = addressParts[addressParts.length - 1];
+      
+      // 커스텀 라벨 마커 생성
+      const labelIcon = L.divIcon({
+        className: "parcel-label",
+        html: `<div style="
+          background: transparent;
+          color: #333;
+          font-size: 11px;
+          font-weight: 500;
+          white-space: nowrap;
+          text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;
+        ">${jibunNumber}</div>`,
+        iconSize: [50, 20],
+        iconAnchor: [25, 10],
+      });
+      
+      const labelMarker = L.marker(center, { 
+        icon: labelIcon,
+        interactive: true,
+      });
+      
+      // 라벨 클릭시에도 필지 선택
+      labelMarker.on("click", () => {
+        if (onParcelClick) {
+          onParcelClick(parcel.id);
+        }
+      });
+      
+      labelMarker.addTo(polygonLayer);
     });
 
     // 필지들이 있으면 해당 영역으로 지도 이동
