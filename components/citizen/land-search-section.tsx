@@ -870,17 +870,6 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                   </div>
                 )}
 
-                {/* 매수 신청 버튼 */}
-                {aiResult && aiResult.provisionalJudgment !== "기각" && (
-                  <Button 
-                    onClick={() => onProceedToApplication?.(selectedLand)}
-                    className="h-12 w-full cursor-pointer"
-                    variant="default"
-                  >
-                    매수 신청하기
-                    <ChevronRight className="ml-1 h-4 w-4" />
-                  </Button>
-                )}
                 </div>
               ) : (
                 <div className="flex h-full items-center justify-center text-muted-foreground">
@@ -888,6 +877,20 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 </div>
               )}
             </div>
+            
+            {/* 매수 신청 버튼 - 하단 고정 */}
+            {selectedLand && aiResult && aiResult.provisionalJudgment !== "기각" && (
+              <div className="shrink-0 border-t bg-background p-3">
+                <Button 
+                  onClick={() => onProceedToApplication?.(selectedLand)}
+                  className="h-12 w-full cursor-pointer"
+                  variant="default"
+                >
+                  매수 신청하기
+                  <ChevronRight className="ml-1 h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* 사이드바 토글 버튼 */}
