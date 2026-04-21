@@ -87,6 +87,8 @@ export function LeafletMap({
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const polygonLayerRef = useRef<L.LayerGroup | null>(null);
+  const normalTileRef = useRef<L.TileLayer | null>(null);
+  const satelliteTileRef = useRef<L.TileLayer | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
   const [currentZoom, setCurrentZoom] = useState(zoom);
   const [baseMap, setBaseMap] = useState<BaseMapType>("normal");
@@ -123,35 +125,27 @@ export function LeafletMap({
         zoomControl: false,
       });
 
-      // 타일 레이어 추가 (VWorld 또는 OpenStreetMap)
+      // 타일 레이어 추가 (OpenStreetMap 기본, ESRI 위성)
       const normalTile = L.tileLayer(
-        "https://api.vworld.kr/req/wmts/1.0.0/{key}/{layer}/{z}/{y}/{x}.png",
-        {
-          key: "3E5CB67C-4F9F-31CD-9988-C95C83BD486D", // VWorld 공개 테스트 키
-          layer: "Base",
-          attribution: "© VWorld",
-        }
-      );
-
-      const satelliteTile = L.tileLayer(
-        "https://api.vworld.kr/req/wmts/1.0.0/{key}/{layer}/{z}/{y}/{x}.jpeg",
-        {
-          key: "3E5CB67C-4F9F-31CD-9988-C95C83BD486D",
-          layer: "Satellite",
-          attribution: "© VWorld",
-        }
-      );
-
-      // OpenStreetMap 폴백
-      const osmTile = L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
           attribution: "© OpenStreetMap contributors",
         }
       );
 
+      const satelliteTile = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+          attribution: "© Esri, Maxar, Earthstar Geographics",
+        }
+      );
+
+      // ref에 저장
+      normalTileRef.current = normalTile;
+      satelliteTileRef.current = satelliteTile;
+
       // 기본 타일 추가
-      osmTile.addTo(map);
+      normalTile.addTo(map);
 
       // 폴리곤 레이어 그룹 생성
       const polygonLayer = L.layerGroup().addTo(map);
@@ -187,6 +181,33 @@ export function LeafletMap({
       });
     }
   }, [selectedRegion]);
+
+  // 배경지도 타입 변경 시 타일 전환
+  useEffect(() => {
+    if (!mapInstanceRef.current || !normalTileRef.current || !satelliteTileRef.current || !isMapReady) return;
+
+    const map = mapInstanceRef.current;
+    const normalTile = normalTileRef.current;
+    const satelliteTile = satelliteTileRef.current;
+
+    if (baseMap === "satellite") {
+      if (map.hasLayer(normalTile)) {
+        map.removeLayer(normalTile);
+      }
+      if (!map.hasLayer(satelliteTile)) {
+        satelliteTile.addTo(map);
+        satelliteTile.bringToBack();
+      }
+    } else {
+      if (map.hasLayer(satelliteTile)) {
+        map.removeLayer(satelliteTile);
+      }
+      if (!map.hasLayer(normalTile)) {
+        normalTile.addTo(map);
+        normalTile.bringToBack();
+      }
+    }
+  }, [baseMap, isMapReady]);
 
   // 필지 폴리곤 렌더링
   useEffect(() => {
@@ -441,7 +462,7 @@ export function LeafletMap({
         축척: 1:{Math.round(591657550.5 / Math.pow(2, currentZoom))}
       </div>
 
-      {/* 저작권 표시 */}
+      {/* 저작권 표��� */}
       <div className="absolute bottom-3 right-3 z-[1000] rounded bg-white/90 px-2 py-1 text-xs text-gray-500">
         © VWorld, OpenStreetMap
       </div>
