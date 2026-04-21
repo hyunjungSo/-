@@ -63,7 +63,7 @@ const regionData = {
     // 충청남도 - 천안시 서북구
     "천안시 서북구": ["성환읍", "성거읍", "직산읍", "입장면"],
     // 충청남도 - 아산시
-    "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악면", "신창면", "염치읍", "영인면", "인주면"],
+    "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악��", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
     "강남구": ["논현동", "삼성동", "역삼동", "청담동"],
     "해운대구": ["우동", "중동", "좌동", "송정동"],
@@ -712,10 +712,10 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         {selectedLand && (
           <div className="absolute bottom-3 right-3 z-10 w-[320px]">
             <Card className="shadow-lg">
-              <CardHeader className="border-b px-4 py-3">
+              <CardHeader className="border-b px-3 py-2">
                 <CardTitle className="text-sm font-medium">선택된 토지 정보</CardTitle>
               </CardHeader>
-              <CardContent className="max-h-[400px] space-y-3 overflow-y-auto p-4">
+              <CardContent className="max-h-[400px] space-y-3 overflow-y-auto p-3">
                 {/* 토지 기본 정보 */}
                 <div className="rounded border border-border bg-muted/30 p-3">
                   <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
@@ -740,7 +740,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                   </div>
                 </div>
 
-                {/* 편입토지 없음 경고 */}
+                {/* 편입���지 없음 경고 */}
                 {noIncludedLand && (
                   <div className="rounded border border-destructive bg-destructive/5 p-3">
                     <div className="flex items-center gap-2">
