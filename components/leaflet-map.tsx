@@ -234,7 +234,7 @@ export function LeafletMap({
               <span className="text-xs">배경지도</span>
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-36 p-2" align="start">
+          <PopoverContent className="z-[1001] w-36 p-2" align="start" sideOffset={5}>
             <div className="space-y-1">
               <button
                 onClick={() => setBaseMap("normal")}
@@ -264,7 +264,7 @@ export function LeafletMap({
               <span className="text-xs">레이어</span>
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-52 p-3" align="start">
+          <PopoverContent className="z-[1001] w-52 p-3" align="start" sideOffset={5}>
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Checkbox
