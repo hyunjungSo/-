@@ -162,8 +162,8 @@ export function ApplicationFormSection({
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* 신청인 정보 */}
-              <div className="space-y-4">
-                <h4 className="font-semibold text-foreground">신청인 정보</h4>
+              <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-5">
+                <h4 className="mb-5 font-semibold text-foreground">신청인 정보</h4>
                 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
@@ -194,7 +194,7 @@ export function ApplicationFormSection({
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="mt-4 space-y-2">
                   <Label htmlFor="applicantAddress">주소 *</Label>
                   <Input
                     id="applicantAddress"
@@ -210,8 +210,8 @@ export function ApplicationFormSection({
               </div>
 
               {/* 토지 정보 */}
-              <div className="space-y-4">
-                <h4 className="font-semibold text-foreground">토지 정보</h4>
+              <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-5">
+                <h4 className="mb-5 font-semibold text-foreground">토지 정보</h4>
                 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-3">
@@ -269,7 +269,7 @@ export function ApplicationFormSection({
                 </div>
 
                 {landInfo.landType === "농지" && (
-                  <div className="flex items-center space-x-2">
+                  <div className="mt-4 flex items-center space-x-2">
                     <Checkbox
                       id="farmMachine"
                       checked={formData.farmMachineDifficulty}
