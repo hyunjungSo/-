@@ -512,9 +512,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
       </nav>
 
       {/* 검색 필터 영역 - 단계 표시 UI와 지도 사이 */}
-      <Card className="mb-3 w-full">
-        <CardContent className="p-2">
-          <div className="flex w-full flex-wrap items-center gap-2">
+      <div className="mb-2 flex w-full flex-wrap items-center gap-2 rounded-md border bg-card px-3 py-1.5">
             {/* 시도 */}
             <Select 
               value={selectedSido} 
@@ -622,9 +620,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 <RotateCcw className="h-3.5 w-3.5" />
               </Button>
             )}
-          </div>
-        </CardContent>
-      </Card>
+      </div>
 
       {/* 전체 화면 지도 컨테이너 */}
       <div className="relative h-[calc(100vh-260px)] min-h-[500px] w-full">
@@ -858,7 +854,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                           <div className="rounded border border-muted bg-muted/30 p-2">
                             <p className="text-xs leading-relaxed text-muted-foreground">
                               <strong className="text-foreground">AI 윤리 원칙:</strong> 본 AI 판독 결과는 참고용이며, 
-                              최종 판단은 담당자가 관련 법령과 현장 상황을 종합적으로 검토하여 결정합니다.
+                              최종 판단은 담당자�� 관련 법령과 현장 상황을 종합적으로 검토하여 결정합니다.
                             </p>
                           </div>
                         </div>
