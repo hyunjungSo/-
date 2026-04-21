@@ -166,7 +166,7 @@ export function ApplicationFormSection({
                 <h4 className="font-semibold text-foreground">신청인 정보</h4>
                 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <Label htmlFor="applicantName">성명 *</Label>
                     <Input
                       id="applicantName"
@@ -178,7 +178,7 @@ export function ApplicationFormSection({
                     />
                   </div>
                   
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <Label htmlFor="applicantContact">연락처 *</Label>
                     <Input
                       id="applicantContact"
@@ -192,7 +192,7 @@ export function ApplicationFormSection({
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label htmlFor="applicantAddress">주소 *</Label>
                   <Input
                     id="applicantAddress"
@@ -211,7 +211,7 @@ export function ApplicationFormSection({
                 <h4 className="font-semibold text-foreground">토지 정보</h4>
                 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <Label htmlFor="actualUsage">실제 이용 상황 *</Label>
                     <Select
                       value={formData.actualUsage}
@@ -232,7 +232,7 @@ export function ApplicationFormSection({
                     </Select>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <Label htmlFor="reportedShape">토지 모양 *</Label>
                     <Select
                       value={formData.reportedShape}
@@ -285,7 +285,7 @@ export function ApplicationFormSection({
               </div>
 
               {/* 신청 사유 */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <Label htmlFor="reason">신청 사유 (소유자 의견) *</Label>
                 <Textarea
                   id="reason"
@@ -300,7 +300,7 @@ export function ApplicationFormSection({
               </div>
 
               {/* 첨부 서류 */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <Label>첨부 서류</Label>
                 <div className="rounded-lg border border-dashed border-border p-4">
                   <div className="flex flex-col items-center justify-center text-center">
