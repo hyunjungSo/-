@@ -396,6 +396,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "대기중",
     appliedAt: "2026-04-01",
     aiResult: generateAIResult(dummyLandInfoList[0]),
+    adminName: "박민수",
   },
   {
     id: "app-002",
@@ -432,13 +433,14 @@ export const dummyApplications: Application[] = [
     adminStatus: "대기중",
     appliedAt: "2026-04-03",
     aiResult: generateAIResult(dummyLandInfoList[2]),
+    adminName: "이정은",
   },
   {
     id: "app-004",
     applicationNumber: "2026-0404-001",
     applicantName: "최지영",
     applicantContact: "010-7777-8888",
-    applicantAddress: "경기도 안성시 공도읍 진사리 200",
+    applicantAddress: "경기도 안성시 공도읍 ���사리 200",
     landInfo: dummyLandInfoList[3],
     actualUsage: "잡",
     reportedShape: "역삼각형",
@@ -499,6 +501,7 @@ export const dummyApplications: Application[] = [
     appliedAt: "2026-04-06",
     aiResult: generateAIResult(dummyLandInfoList[8], true), // 경계 사례로 생성
     isBorderlineCase: true,
+    adminName: "최영호",
   },
   // 매수 불가 케이스 - 기각 처리됨
   {
