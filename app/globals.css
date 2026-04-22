@@ -5,121 +5,51 @@
 
 :root {
   /* 
-   * KRDS v1.0.0 - 디지털 정부서비스 UI/UX 가이드라인
-   * 색상 팔레트: 매직넘버 기반 접근성 준수
-   * - 매직넘버 40: 3:1 대비율 (아이콘, 큰 텍스트)
-   * - 매직넘버 50: 4.5:1 대비율 (일반 텍스트 - AA)
-   * - 매직넘버 70: 7:1 대비율 (AAA)
+   * 디지털 정부서비스 UI/UX 가이드라인 (KRDS) 준수
+   * WCAG 2.1 AA 기준 충족
+   * - 일반 텍스트: 최소 4.5:1 대비율
+   * - 대형 텍스트(18px+)/UI 컴포넌트: 최소 3:1 대비율
    */
   
-  /* KRDS Gray Scale (Blue Gray 계열) */
-  --gray-0: #FFFFFF;
-  --gray-5: #F7F8FA;
-  --gray-10: #F0F1F4;
-  --gray-20: #E1E3E8;
-  --gray-30: #CACDD5;
-  --gray-40: #A9ADB8;
-  --gray-50: #8B909E;
-  --gray-60: #6C7182;
-  --gray-70: #525766;
-  --gray-80: #3A3E4A;
-  --gray-90: #25282F;
-  --gray-95: #181A1F;
-  --gray-100: #0E0F12;
-  
   /* 배경/전경 */
-  --background: var(--gray-0);
-  --foreground: var(--gray-90);
+  --background: #FFFFFF;
+  --foreground: #171717;
   
   /* 카드/팝오버 */
-  --card: var(--gray-0);
-  --card-foreground: var(--gray-90);
-  --popover: var(--gray-0);
-  --popover-foreground: var(--gray-90);
+  --card: #FFFFFF;
+  --card-foreground: #171717;
+  --popover: #FFFFFF;
+  --popover-foreground: #171717;
   
-  /* Primary - 한국도로공사 녹색 (KRDS 정부 색상 기반) */
-  --primary-5: #E8F5EE;
-  --primary-10: #C6E7D5;
-  --primary-20: #8DCFAC;
-  --primary-30: #54B783;
-  --primary-40: #2DA162;
-  --primary-50: #008B4E;
-  --primary-60: #007A45;
-  --primary-70: #006B3F;
-  --primary-80: #005533;
-  --primary-90: #003D25;
+  /* Primary - 한국도로공사 녹색 */
+  --primary: #006B3F;
+  --primary-foreground: #FFFFFF;
   
-  --primary: var(--primary-70);
-  --primary-foreground: var(--gray-0);
-  
-  /* Secondary - Blue Gray 계열 */
-  --secondary-5: #F0F3F7;
-  --secondary-10: #E1E6EE;
-  --secondary-50: #6B7A99;
-  --secondary-70: #3D4A66;
-  
-  --secondary: var(--gray-5);
-  --secondary-foreground: var(--gray-90);
+  /* Secondary */
+  --secondary: #F4F4F5;
+  --secondary-foreground: #171717;
   
   /* Muted */
-  --muted: var(--gray-5);
-  --muted-foreground: var(--gray-60);
+  --muted: #F4F4F5;
+  --muted-foreground: #525252;
   
-  /* Accent (Point) - 제한적 사용 5% 이하 */
-  --accent-50: #E63312;
-  --accent: var(--gray-5);
-  --accent-foreground: var(--gray-90);
+  /* Accent */
+  --accent: #F4F4F5;
+  --accent-foreground: #171717;
   
-  /* System Colors - Danger */
-  --danger-5: #FEF2F2;
-  --danger-10: #FEE2E2;
-  --danger-50: #EF4444;
-  --danger-60: #DC2626;
-  --danger-90: #7F1D1D;
-  --danger-95: #450A0A;
-  
-  --destructive: var(--danger-60);
-  --destructive-foreground: var(--gray-0);
-  
-  /* System Colors - Warning */
-  --warning-5: #FFFBEB;
-  --warning-10: #FEF3C7;
-  --warning-50: #F59E0B;
-  --warning-60: #D97706;
-  --warning-90: #78350F;
-  --warning-95: #451A03;
-  
-  --warning: var(--warning-50);
-  --warning-foreground: var(--gray-90);
-  
-  /* System Colors - Success */
-  --success-5: #F0FDF4;
-  --success-10: #DCFCE7;
-  --success-50: #22C55E;
-  --success-60: #16A34A;
-  --success-90: #14532D;
-  --success-95: #052E16;
-  
-  --success: var(--success-60);
-  --success-foreground: var(--gray-0);
-  
-  /* System Colors - Information */
-  --info-5: #EFF6FF;
-  --info-10: #DBEAFE;
-  --info-50: #3B82F6;
-  --info-60: #2563EB;
-  --info-90: #1E3A8A;
-  --info-95: #1E1B4B;
+  /* Destructive */
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
   
   /* Border/Input */
-  --border: var(--gray-20);
-  --input: var(--gray-20);
-  --ring: var(--primary);
+  --border: #E5E5E5;
+  --input: #E5E5E5;
+  --ring: #006B3F;
   
-  /* Charts - Graphic Colors */
-  --chart-1: var(--primary-70);
-  --chart-2: var(--info-60);
-  --chart-3: var(--warning-60);
+  /* Charts */
+  --chart-1: #006B3F;
+  --chart-2: #2563EB;
+  --chart-3: #D97706;
   --chart-4: #7C3AED;
   --chart-5: #0891B2;
   
@@ -130,59 +60,65 @@
   --radius-xl: 0.75rem; /* 12px - 최대값 제한 */
   
   /* Sidebar */
-  --sidebar: var(--gray-5);
-  --sidebar-foreground: var(--gray-90);
-  --sidebar-primary: var(--primary);
-  --sidebar-primary-foreground: var(--gray-0);
-  --sidebar-accent: var(--gray-10);
-  --sidebar-accent-foreground: var(--gray-90);
-  --sidebar-border: var(--gray-20);
-  --sidebar-ring: var(--primary);
+  --sidebar: #FAFAFA;
+  --sidebar-foreground: #171717;
+  --sidebar-primary: #006B3F;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F4F4F5;
+  --sidebar-accent-foreground: #171717;
+  --sidebar-border: #E5E5E5;
+  --sidebar-ring: #006B3F;
+  
+  /* Warning */
+  --warning: #F59E0B;
+  --warning-foreground: #171717;
+  
+  /* Success */
+  --success: #16A34A;
+  --success-foreground: #FFFFFF;
 }
 
-/* KRDS 선명한 화면 모드 (고대비) */
 .dark {
-  --background: var(--gray-100);
-  --foreground: var(--gray-5);
-  --card: var(--gray-95);
-  --card-foreground: var(--gray-5);
-  --popover: var(--gray-95);
-  --popover-foreground: var(--gray-5);
-  --primary: var(--primary-30);
-  --primary-foreground: var(--gray-100);
-  --secondary: var(--gray-80);
-  --secondary-foreground: var(--gray-5);
-  --muted: var(--gray-80);
-  --muted-foreground: var(--gray-40);
-  --accent: var(--info-50);
-  --accent-foreground: var(--gray-100);
-  --destructive: var(--danger-50);
-  --destructive-foreground: var(--gray-100);
-  --border: var(--gray-70);
-  --input: var(--gray-80);
-  --ring: var(--primary-30);
-  --chart-1: var(--primary-30);
-  --chart-2: var(--info-50);
-  --chart-3: var(--warning-50);
+  --background: #121212;
+  --foreground: #F5F5F5;
+  --card: #1E1E1E;
+  --card-foreground: #F5F5F5;
+  --popover: #1E1E1E;
+  --popover-foreground: #F5F5F5;
+  --primary: #4ADE80;
+  --primary-foreground: #1A1A1A;
+  --secondary: #2D2D2D;
+  --secondary-foreground: #F5F5F5;
+  --muted: #2D2D2D;
+  --muted-foreground: #A3A3A3;
+  --accent: #60A5FA;
+  --accent-foreground: #1A1A1A;
+  --destructive: #F87171;
+  --destructive-foreground: #1A1A1A;
+  --border: #404040;
+  --input: #2D2D2D;
+  --ring: #4ADE80;
+  --chart-1: #4ADE80;
+  --chart-2: #60A5FA;
+  --chart-3: #FBBF24;
   --chart-4: #A78BFA;
   --chart-5: #22D3EE;
-  --sidebar: var(--gray-95);
-  --sidebar-foreground: var(--gray-5);
-  --sidebar-primary: var(--primary-30);
-  --sidebar-primary-foreground: var(--gray-100);
-  --sidebar-accent: var(--gray-80);
-  --sidebar-accent-foreground: var(--gray-5);
-  --sidebar-border: var(--gray-70);
-  --sidebar-ring: var(--primary-30);
-  --warning: var(--warning-50);
-  --warning-foreground: var(--gray-100);
-  --success: var(--success-50);
-  --success-foreground: var(--gray-100);
+  --sidebar: #1E1E1E;
+  --sidebar-foreground: #F5F5F5;
+  --sidebar-primary: #4ADE80;
+  --sidebar-primary-foreground: #1A1A1A;
+  --sidebar-accent: #2D2D2D;
+  --sidebar-accent-foreground: #F5F5F5;
+  --sidebar-border: #404040;
+  --sidebar-ring: #4ADE80;
+  --warning: #FBBF24;
+  --warning-foreground: #1A1A1A;
+  --success: #4ADE80;
+  --success-foreground: #1A1A1A;
 }
 
 @theme inline {
-  /* KRDS v1.0.0: Pretendard GOV 또는 Noto Sans KR */
-  --font-sans: var(--font-pretendard), 'Pretendard GOV', var(--font-noto-sans-kr), 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: var(--font-noto-sans-kr), 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
@@ -232,16 +168,15 @@
     @apply border-border outline-ring/50;
   }
   
-  /* KRDS v1.0.0: rem 기본값 10px (62.5%) */
+  /* 최소 폰트 사이즈 13px 설정 */
   html {
-    font-size: 62.5%; /* 1rem = 10px */
+    font-size: 100%;
   }
   
   body {
     @apply bg-background text-foreground;
-    font-size: 1.7rem; /* 17px - KRDS 본문 기본 크기 */
-    line-height: 1.5; /* 150% - KRDS 줄간격 */
-    font-weight: 400; /* regular */
+    font-size: 1rem; /* 16px */
+    line-height: 1.6;
     font-feature-settings: "kern" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -249,27 +184,19 @@
     overflow-wrap: break-word;
   }
   
-  /* KRDS Heading Scale */
-  h1 { font-size: 4rem; font-weight: 700; line-height: 1.5; } /* 40px - xlarge */
-  h2 { font-size: 3.2rem; font-weight: 700; line-height: 1.5; } /* 32px - large */
-  h3 { font-size: 2.4rem; font-weight: 700; line-height: 1.5; } /* 24px - medium */
-  h4 { font-size: 1.9rem; font-weight: 700; line-height: 1.5; } /* 19px - small */
-  h5 { font-size: 1.7rem; font-weight: 700; line-height: 1.5; } /* 17px - xsmall */
-  h6 { font-size: 1.5rem; font-weight: 700; line-height: 1.5; } /* 15px - xxsmall */
-  
-  /* Placeholder 색상 설정 - KRDS gray-50 */
+  /* Placeholder 색상 설정 */
   ::placeholder {
-    color: var(--gray-50);
+    color: #7a7a7a;
     opacity: 1;
   }
   
-  /* KRDS 최소 폰트 사이즈 13px */
+  /* Tailwind text-xs를 13px로 오버라이드 (최소 폰트 사이즈) */
   .text-xs {
-    font-size: 1.3rem !important; /* 13px */
+    font-size: 0.8125rem !important; /* 13px */
     line-height: 1.5;
   }
   
-  /* KRDS 접근성: 포커스 표시 강화 */
+  /* 디지털 정부서비스 가이드라인: 포커스 표시 강화 */
   :focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
@@ -280,7 +207,7 @@
     cursor: pointer;
   }
   
-  /* KRDS 링크 스타일 - 밑줄은 텍스트 링크에만 */
+  /* KRDS 링크 스타일 */
   a {
     cursor: pointer;
   }
@@ -360,42 +287,14 @@
   }
 }
 
-/* KRDS v1.0.0 컴포넌트 스타일 */
+/* KRDS 컴포넌트 스타일 */
 @layer components {
-  /* KRDS 뱃지 */
+  /* 뱃지 기본 스타일 */
   .krds-badge {
     @apply inline-flex items-center rounded px-2.5 py-0.5 text-xs font-medium;
   }
   
-  /* KRDS 시스템 색상 알림 - Danger */
-  .krds-alert-danger {
-    background-color: var(--danger-5);
-    border: 1px solid var(--danger-10);
-    color: var(--danger-60);
-  }
-  
-  /* KRDS 시스템 색상 알림 - Warning */
-  .krds-alert-warning {
-    background-color: var(--warning-5);
-    border: 1px solid var(--warning-10);
-    color: var(--warning-60);
-  }
-  
-  /* KRDS 시스템 색상 알림 - Success */
-  .krds-alert-success {
-    background-color: var(--success-5);
-    border: 1px solid var(--success-10);
-    color: var(--success-60);
-  }
-  
-  /* KRDS 시스템 색상 알림 - Info */
-  .krds-alert-info {
-    background-color: var(--info-5);
-    border: 1px solid var(--info-10);
-    color: var(--info-60);
-  }
-  
-  /* KRDS 스텝 인디케이터 */
+  /* 스텝 인디케이터 */
   .krds-step {
     @apply flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold;
   }
@@ -412,30 +311,8 @@
     @apply bg-gray-100 text-gray-400;
   }
   
-  /* KRDS 리스트 아이템 */
+  /* 리스트 아이템 */
   .krds-list-item {
     @apply border-b border-gray-200 py-4 last:border-b-0;
   }
-  
-  /* KRDS 버튼 상태 값 (점진적 증감) */
-  .krds-btn-primary {
-    @apply bg-primary text-primary-foreground;
-  }
-  .krds-btn-primary:hover {
-    background-color: var(--primary-60);
-  }
-  .krds-btn-primary:active {
-    background-color: var(--primary-80);
-  }
-  
-  /* KRDS 표면 색상 elevation */
-  .krds-surface-0 { background-color: var(--gray-0); }
-  .krds-surface-1 { background-color: var(--gray-5); }
-  .krds-surface-2 { background-color: var(--gray-0); }
-  
-  /* KRDS 텍스트 색상 */
-  .krds-text-primary { color: var(--gray-90); }
-  .krds-text-secondary { color: var(--gray-70); }
-  .krds-text-tertiary { color: var(--gray-60); }
-  .krds-text-disabled { color: var(--gray-40); }
 }
