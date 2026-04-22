@@ -38,17 +38,11 @@ export default function HomePage() {
               <br className="hidden sm:block" />
               온라인으로 간편하게 매수 신청을 진행하실 수 있습니다.
             </p>
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <div className="mt-10">
               <Button asChild size="lg" className="h-12 min-w-[200px] text-base font-medium shadow-sm">
                 <Link href="/citizen">
                   잔여지 매수 조회
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="h-12 min-w-[200px] text-base font-medium">
-                <Link href="/admin">
-                  담당자 로그인
-                  <ChevronRight className="ml-1 h-5 w-5" />
                 </Link>
               </Button>
             </div>
@@ -148,7 +142,7 @@ export default function HomePage() {
               </div>
               <h3 className="mt-5 text-lg font-semibold text-foreground">토지 조회</h3>
               <p className="mt-2 max-w-[200px] text-base leading-relaxed text-muted-foreground">
-                편입 토지 지번으로 잔여지 정보를 조회합니다
+                편입 토지 지번으로 잔여지 정보를 조회합니���
               </p>
             </div>
 
