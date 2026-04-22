@@ -64,11 +64,11 @@ export default function HomePage() {
 
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <Card className="border-border bg-card transition-shadow hover:shadow-md">
-              <CardHeader className="pb-3">
+              <CardHeader className="pb-1">
                 <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
                   <FileSearch className="h-7 w-7 text-primary" />
                 </div>
-                <CardTitle className="mt-5 text-lg font-semibold">간편한 토지 조회</CardTitle>
+                <CardTitle className="mt-4 text-lg font-semibold">간편한 토지 조회</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
                 <CardDescription className="text-base leading-relaxed">
@@ -78,11 +78,11 @@ export default function HomePage() {
             </Card>
 
             <Card className="border-border bg-card transition-shadow hover:shadow-md">
-              <CardHeader className="pb-3">
+              <CardHeader className="pb-1">
                 <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-blue-500/10">
                   <ClipboardList className="h-7 w-7 text-blue-600" />
                 </div>
-                <CardTitle className="mt-5 text-lg font-semibold">매수 가능 여부 확인</CardTitle>
+                <CardTitle className="mt-4 text-lg font-semibold">매수 가능 여부 확인</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
                 <CardDescription className="text-base leading-relaxed">
@@ -92,11 +92,11 @@ export default function HomePage() {
             </Card>
 
             <Card className="border-border bg-card transition-shadow hover:shadow-md">
-              <CardHeader className="pb-3">
+              <CardHeader className="pb-1">
                 <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-amber-500/10">
                   <FileText className="h-7 w-7 text-amber-600" />
                 </div>
-                <CardTitle className="mt-5 text-lg font-semibold">온라인 신청</CardTitle>
+                <CardTitle className="mt-4 text-lg font-semibold">온라인 신청</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
                 <CardDescription className="text-base leading-relaxed">
@@ -106,11 +106,11 @@ export default function HomePage() {
             </Card>
 
             <Card className="border-border bg-card transition-shadow hover:shadow-md">
-              <CardHeader className="pb-3">
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-violet-500/10">
-                  <Clock className="h-7 w-7 text-violet-600" />
+              <CardHeader className="pb-1">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-teal-500/10">
+                  <Clock className="h-7 w-7 text-teal-600" />
                 </div>
-                <CardTitle className="mt-5 text-lg font-semibold">빠른 결과 확인</CardTitle>
+                <CardTitle className="mt-4 text-lg font-semibold">빠른 결과 확인</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
                 <CardDescription className="text-base leading-relaxed">
