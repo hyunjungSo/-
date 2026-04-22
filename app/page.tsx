@@ -8,7 +8,11 @@ import {
   ClipboardList, 
   ArrowRight,
   Clock,
-  FileText
+  FileText,
+  Search,
+  Zap,
+  FileCheck,
+  CheckCircle2
 } from "lucide-react";
 
 export default function HomePage() {
@@ -127,8 +131,44 @@ export default function HomePage() {
           <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div className="relative flex flex-col items-center text-center">
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <span className="text-xl font-bold">1</span>
+                <Search className="h-8 w-8" />
               </div>
+              <h3 className="mt-4 font-semibold text-foreground">토지 조회</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                편입 토지 지번으로 잔여지 정보를 조회합니다
+              </p>
+            </div>
+
+            <div className="relative flex flex-col items-center text-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <Zap className="h-8 w-8" />
+              </div>
+              <h3 className="mt-4 font-semibold text-foreground">AI 분석 확인</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                AI가 매수 가능 여부를 사전 분석합니다
+              </p>
+            </div>
+
+            <div className="relative flex flex-col items-center text-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <FileCheck className="h-8 w-8" />
+              </div>
+              <h3 className="mt-4 font-semibold text-foreground">매수 신청</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                신청인 정보와 필요 서류를 제출합니다
+              </p>
+            </div>
+
+            <div className="relative flex flex-col items-center text-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <CheckCircle2 className="h-8 w-8" />
+              </div>
+              <h3 className="mt-4 font-semibold text-foreground">결과 통보</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                매수, 기각, 또는 심의위원회 이관 결과를 통보합니다
+              </p>
+            </div>
+          </div>
               <h3 className="mt-4 font-semibold text-foreground">토지 조회</h3>
               <p className="mt-2 text-sm text-muted-foreground">
                 편입 토지 지번으로 잔여지 정보를 조회합니다
