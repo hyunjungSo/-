@@ -39,7 +39,7 @@ const dummyUsers: { userId: string; password: string; user: User }[] = [
     password: "1234",
     user: {
       id: "admin-1",
-      name: "김담당",
+      name: "홍길동",
       email: "admin@test.com",
       role: "admin",
     },
