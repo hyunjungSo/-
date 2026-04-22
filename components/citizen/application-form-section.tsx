@@ -270,7 +270,7 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p className="text-sm text-muted-foreground">
             본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
-            판단 근거에 이의가 있으시면 신청서 제출 시 ���견을 기재해 주시기 바랍니다.
+            판단 근거에 이의가 있으시면 신청서 제출 시 �����을 기재해 주시기 바랍니다.
           </p>
         </div>
       </CollapsibleContent>
@@ -388,7 +388,7 @@ export function ApplicationFormSection({
 
   return (
     <div className="space-y-6">
-      <Button variant="outline" onClick={onBack} className="mb-4">
+      <Button variant="outline" onClick={onBack} className="mb-4 h-10">
         <ArrowLeft className="mr-2 h-4 w-4" />
         토지 조회로 돌아가기
       </Button>

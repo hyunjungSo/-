@@ -165,12 +165,12 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
 
       {/* 버튼 */}
       <div className="flex flex-col gap-3 sm:flex-row">
-        <Button variant="outline" className="flex-1 cursor-pointer">
+        <Button variant="outline" className="h-10 flex-1 cursor-pointer">
           <Printer className="mr-2 h-4 w-4" />
           접수증 출력
         </Button>
         {onNewApplication && (
-          <Button onClick={onNewApplication} className="flex-1 cursor-pointer">
+          <Button onClick={onNewApplication} className="h-10 flex-1 cursor-pointer">
             <FilePlus className="mr-2 h-4 w-4" />
             새 신청하기
           </Button>

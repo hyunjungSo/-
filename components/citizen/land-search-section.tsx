@@ -619,13 +619,13 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               placeholder="지번" 
               value={jibun}
               onChange={(e) => setJibun(e.target.value)}
-              className="!h-9 w-[100px] shrink-0"
+              className="h-10 w-[100px] shrink-0"
             />
 
         {/* 검색/초기화 버튼 */}
         <Button 
               onClick={handleSearch} 
-              className="!h-9 cursor-pointer bg-[#222222] px-4 hover:bg-[#333333]"
+              className="h-10 cursor-pointer bg-[#222222] px-4 hover:bg-[#333333]"
               disabled={!selectedSigungu || isSearching}
             >
               {isSearching ? (
@@ -643,7 +643,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         {(selectedSido || searchResults.length > 0) && (
           <Button 
             onClick={handleReset}
-            className="!h-9 cursor-pointer border border-[#222222] bg-transparent px-3 text-[#222222] hover:bg-[#222222]/10"
+            className="h-10 cursor-pointer border border-[#222222] bg-transparent px-3 text-[#222222] hover:bg-[#222222]/10"
           >
             <RotateCcw className="h-3.5 w-3.5" />
           </Button>
