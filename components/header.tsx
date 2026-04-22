@@ -90,10 +90,10 @@ export function Header() {
                   variant="ghost"
                   size="sm"
                   onClick={handleLogout}
-                  className="h-8 gap-1 text-sm text-gray-600 hover:text-gray-900"
+                  className="h-8 gap-1.5 text-sm text-gray-600 hover:text-gray-900"
                 >
                   <LogOut className="h-4 w-4" />
-                  로그아웃
+                  <span>로그아웃</span>
                 </Button>
               </div>
             )}
@@ -139,8 +139,8 @@ export function Header() {
             {user && (
               <>
                 <div className="my-2 border-t" />
-                <div className="flex items-center gap-2 px-4 py-2 text-base text-gray-600">
-                  <User className="h-4 w-4" />
+                <div className="flex items-center gap-2.5 px-4 py-2 text-base text-gray-600">
+                  <User className="h-4 w-4 shrink-0" />
                   <span>{user.name}</span>
                 </div>
                 <button
@@ -148,10 +148,10 @@ export function Header() {
                     setMobileMenuOpen(false);
                     handleLogout();
                   }}
-                  className="flex items-center gap-2 rounded-md px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-100"
+                  className="flex items-center gap-2.5 rounded-md px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-100"
                 >
-                  <LogOut className="h-4 w-4" />
-                  로그아웃
+                  <LogOut className="h-4 w-4 shrink-0" />
+                  <span>로그아웃</span>
                 </button>
               </>
             )}

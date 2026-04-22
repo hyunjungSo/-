@@ -225,10 +225,10 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10">
                 <Phone className="h-6 w-6 text-primary" />
               </div>
-              <div>
+              <div className="flex flex-col justify-center">
                 <p className="text-sm text-muted-foreground">잔여지 매수 관련 문의</p>
                 <p className="text-xl font-bold text-foreground">1588-2504</p>
               </div>
