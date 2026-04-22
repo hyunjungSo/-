@@ -197,7 +197,10 @@ export default function ReviewDocumentPage({
                     <Edit3 className="mr-2 h-4 w-4" />
                     수정
                   </Button>
-                  <Button variant="outline" onClick={() => window.print()}>
+                  <Button variant="outline" onClick={() => {
+                    alert('인쇄 설정에서 용지 방향을 "가로"로 선택해주세요.');
+                    window.print();
+                  }}>
                     <Printer className="mr-2 h-4 w-4" />
                     인쇄
                   </Button>
