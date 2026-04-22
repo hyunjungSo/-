@@ -17,13 +17,159 @@ import {
 import { LandMap } from "@/components/land-map";
 import { landCategories, landShapes } from "@/lib/dummy-data";
 import type { LandInfo, Application, LandCategory, LandShape, AIAnalysisResult } from "@/lib/types";
-import { ArrowLeft, Upload, Send, Bot, CheckCircle2, XCircle, X, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, Upload, Send, Bot, CheckCircle2, XCircle, X, Check, Loader2, Scale, FileText, AlertTriangle, Info, ChevronDown, ChevronUp } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface ApplicationFormSectionProps {
   landInfo: LandInfo;
   aiResult: AIAnalysisResult;
   onSubmit: (application: Application) => void;
   onBack: () => void;
+}
+
+// AI 분석 결과 상세 섹션
+function AIResultDetailSection({ aiResult, landInfo }: { aiResult: AIAnalysisResult; landInfo: LandInfo }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  // 판단 근거 생성
+  const shapeIndexChange = aiResult.shapeIndexChange || 0;
+  const metCriteriaNames = aiResult.criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
+  const manualCheckItems = aiResult.criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
+
+  const appliedCriteria: string[] = [];
+  if (metCriteriaNames.includes("잔여지 비율")) {
+    appliedCriteria.push(`잔여지 비율 기준: 잔여 면적이 원 면적의 30% 이하 (현재 ${landInfo.remainingRatio}%)`);
+  }
+  if (metCriteriaNames.includes("형상지수 변화")) {
+    appliedCriteria.push(`형상지수 변화 기준: 편입 전 대비 1.0 이상 상승 시 형상 불량으로 판단`);
+  }
+  if (metCriteriaNames.includes("잔여지 형상")) {
+    appliedCriteria.push(`잔여지 형상 기준: 삼각형, 역삼각형, 자루형, 부정형 등 불규칙 형상`);
+  }
+
+  const summary = aiResult.provisionalJudgment === "매수"
+    ? `잔여지 비율 ${landInfo.remainingRatio}%로 기준(30% 이하) 충족, 형상지수 +${shapeIndexChange.toFixed(1)} 상승으로 매수 대상 판정`
+    : `분석 결과 매수 기준에 충족하지 않아 기각 대상으로 판정되었습니다.`;
+
+  const legalBasis = "공익사업을 위한 토지 등의 취득 및 보상에 관한 법률 제73조 (잔여지의 매수청구)";
+
+  const detailedExplanation = `[토지 정보]
+- 소재지: ${landInfo.address}
+- 편입 전 면적: ${landInfo.originalArea.toLocaleString()}㎡
+- 편입 면적: ${landInfo.includedArea.toLocaleString()}㎡
+- 잔여 면적: ${landInfo.remainingArea.toLocaleString()}㎡
+- 잔여 비율: ${landInfo.remainingRatio}%
+
+[형상 분석]
+- 편입 전 형상지수: ${landInfo.originalShapeIndex.toFixed(2)}
+- 편입 후 형상지수: ${landInfo.remainingShapeIndex.toFixed(2)}
+- 형상지수 변화: +${shapeIndexChange.toFixed(2)}
+- 잔여지 형상: ${landInfo.remainingShape}
+
+[판정 결과]
+- 충족 기준: ${metCriteriaNames.join(", ") || "없음"}
+${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckItems.join(", ")}` : ""}`;
+
+  return (
+    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="mt-4">
+      <CollapsibleTrigger asChild>
+        <Button 
+          variant="outline" 
+          className="w-full cursor-pointer justify-between"
+          size="sm"
+          type="button"
+        >
+          <div className="flex items-center gap-2">
+            <Scale className="h-4 w-4 text-primary" />
+            <span>판단 근거 상세 보기</span>
+          </div>
+          {isOpen ? (
+            <ChevronUp className="h-4 w-4" />
+          ) : (
+            <ChevronDown className="h-4 w-4" />
+          )}
+        </Button>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="mt-3 space-y-3">
+        {/* 판단 요약 */}
+        <div className="rounded-lg border border-border bg-card p-4">
+          <div className="flex items-start gap-2">
+            <FileText className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+            <div>
+              <h4 className="font-semibold text-foreground">판단 요약</h4>
+              <p className="mt-1 text-sm text-muted-foreground">{summary}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 법적 근거 */}
+        <div className="rounded-lg border border-border bg-muted/30 p-4">
+          <div className="flex items-start gap-2">
+            <Scale className="mt-0.5 h-5 w-5 shrink-0 text-chart-3" />
+            <div>
+              <h4 className="font-semibold text-foreground">법적 근거</h4>
+              <p className="mt-1 text-sm text-muted-foreground">{legalBasis}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 적용 기준 */}
+        {appliedCriteria.length > 0 && (
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="mb-2 font-semibold text-foreground">적용 기준</h4>
+            <ul className="space-y-1.5">
+              {appliedCriteria.map((criteria, idx) => (
+                <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                  <span>{criteria}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* 직접 확인 필요 항목 */}
+        {manualCheckItems.length > 0 && (
+          <div className="rounded-lg border border-warning/50 bg-warning/5 p-4">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
+              <div>
+                <h4 className="font-semibold text-foreground">직접 확인 필요 항목</h4>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  다음 항목은 AI 자동 판독이 불가하여 담당자가 현장 확인 후 판단합니다.
+                </p>
+                <ul className="mt-2 space-y-1">
+                  {manualCheckItems.map((item, idx) => (
+                    <li key={idx} className="flex items-center gap-2 text-sm">
+                      <Info className="h-3 w-3 text-warning" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 상세 설명 */}
+        <div className="rounded-lg border border-border bg-card p-4">
+          <h4 className="mb-2 font-semibold text-foreground">상세 분석 내용</h4>
+          <pre className="whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
+            {detailedExplanation}
+          </pre>
+        </div>
+
+        {/* 안내 문구 */}
+        <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+          <p className="text-xs text-muted-foreground">
+            본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
+            판단 근거에 이의가 있으시면 신청서 제출 시 의견을 기재해 주시기 바랍니다.
+          </p>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
 }
 
 export function ApplicationFormSection({
@@ -192,6 +338,9 @@ export function ApplicationFormSection({
                 {aiResult.criteriaChecks.filter(c => c.isMet).length}/{aiResult.criteriaChecks.length}개 기준 충족
               </p>
             </div>
+
+            {/* 판단 근거 상세 보기 */}
+            <AIResultDetailSection aiResult={aiResult} landInfo={landInfo} />
           </CardContent>
         </Card>
 
