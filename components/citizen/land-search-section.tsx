@@ -62,7 +62,7 @@ const regionData = {
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
-    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "�������장면"],
+    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "���������장면"],
     // 충청남도 - 아산시
     "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악면", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
@@ -248,7 +248,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     });
     criteriaChecks.push({
       criteriaName: "수로 상실",
-      criteriaDescription: "관개수로 상실로 농업용수 공급이 불가능한 경우",
+      criteriaDescription: "관개수로 상실로 농업용수 공���이 불가능한 경우",
       isMet: false,
       autoDetected: false,
     });
@@ -829,25 +829,31 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
                 {/* AI 판독 결과 */}
                 {aiResult && (
-                  <div className={`rounded border p-3 ${
+                  <div className={`rounded-lg border-2 p-4 ${
                     aiResult.provisionalJudgment === "매수" 
                       ? "border-primary bg-primary/5" 
                       : aiResult.provisionalJudgment === "심의위원회이관"
-                        ? "border-warning bg-warning/5"
-                        : "border-destructive bg-destructive/5"
+                        ? "border-amber-500 bg-amber-50"
+                        : "border-red-500 bg-red-50"
                   }`}>
                     {/* 헤더 */}
                     <div className="mb-3 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Bot className="h-4 w-4 text-primary" />
+                        <Bot className={`h-5 w-5 ${
+                          aiResult.provisionalJudgment === "매수" 
+                            ? "text-primary" 
+                            : aiResult.provisionalJudgment === "심의위원회이관"
+                              ? "text-amber-600"
+                              : "text-red-600"
+                        }`} />
                         <span className="text-sm font-semibold">AI 판독 결과</span>
                       </div>
-                      <span className={`rounded-full px-2 py-0.5 text-sm font-bold ${
+                      <span className={`rounded-full px-3 py-1 text-sm font-bold ${
                         aiResult.provisionalJudgment === "매수"
                           ? "bg-primary text-white"
                           : aiResult.provisionalJudgment === "심의위원회이관"
-                            ? "bg-warning text-white"
-                            : "bg-destructive text-white"
+                            ? "bg-amber-500 text-white"
+                            : "bg-red-600 text-white shadow-sm"
                       }`}>
                         {aiResult.provisionalJudgment === "매수" 
                           ? "매수 가능" 

@@ -270,7 +270,7 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p className="text-sm text-muted-foreground">
             본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
-            판단 근거에 이의가 있으시면 신청서 제출 시 �����을 기재해 주시기 바랍니다.
+            판단 근거에 이의가 있으시면 ��청서 제출 시 �����을 기재해 주시기 바랍니다.
           </p>
         </div>
       </CollapsibleContent>
@@ -422,29 +422,31 @@ export function ApplicationFormSection({
             </div>
 
             {/* AI 판독 결과 요약 */}
-            <div className={`mt-4 rounded-lg border p-3 ${
+            <div className={`mt-4 rounded-lg border-2 p-4 ${
               aiResult.provisionalJudgment === "매수" 
                 ? "border-primary bg-primary/5" 
-                : "border-destructive bg-destructive/5"
+                : "border-red-500 bg-red-50"
             }`}>
               <div className="mb-2 flex items-center gap-2">
-                <Bot className="h-4 w-4 text-primary" />
+                <Bot className={`h-5 w-5 ${
+                  aiResult.provisionalJudgment === "매수" ? "text-primary" : "text-red-600"
+                }`} />
                 <span className="text-sm font-semibold text-foreground">AI 판독 결과</span>
               </div>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 {aiResult.provisionalJudgment === "매수" ? (
                   <>
-                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
                     <span className="text-sm font-bold text-primary">매수 가능성 높음</span>
                   </>
                 ) : (
                   <>
-                    <XCircle className="h-4 w-4 text-destructive" />
-                    <span className="text-sm font-bold text-destructive">기준 미충족</span>
+                    <XCircle className="h-5 w-5 text-red-600" />
+                    <span className="rounded-full bg-red-600 px-3 py-1 text-sm font-bold text-white">기준 미충족</span>
                   </>
                 )}
               </div>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="mt-2 text-sm text-muted-foreground">
                 {aiResult.criteriaChecks.filter(c => c.isMet).length}/{aiResult.criteriaChecks.length}개 기준 충족
               </p>
             </div>
