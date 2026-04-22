@@ -135,7 +135,7 @@ function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale 
             <FileText className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
             <div>
               <h4 className="font-semibold text-foreground">판단 요약</h4>
-              <p className="mt-1 text-sm text-muted-foreground">{rationale.summary}</p>
+              <p className="mt-1 text-base text-muted-foreground">{rationale.summary}</p>
             </div>
           </div>
         </div>
@@ -146,7 +146,7 @@ function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale 
             <Scale className="mt-0.5 h-5 w-5 shrink-0 text-chart-3" />
             <div>
               <h4 className="font-semibold text-foreground">법적 근거</h4>
-              <p className="mt-1 text-sm text-muted-foreground">{rationale.legalBasis}</p>
+              <p className="mt-1 text-base text-muted-foreground">{rationale.legalBasis}</p>
             </div>
           </div>
         </div>
@@ -156,7 +156,7 @@ function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale 
           <h4 className="mb-2 font-semibold text-foreground">적용 기준</h4>
           <ul className="space-y-1.5">
             {rationale.appliedCriteria.map((criteria, idx) => (
-              <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+              <li key={idx} className="flex items-start gap-2 text-base text-muted-foreground">
                 <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                 <span>{criteria}</span>
               </li>
@@ -171,12 +171,12 @@ function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale 
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
               <div>
                 <h4 className="font-semibold text-foreground">직접 확인 필요 항목</h4>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="mt-1 text-base text-muted-foreground">
                   다음 항목은 AI 자동 판독이 불가하여 담당자가 현장 확인 후 판단합니다.
                 </p>
                 <ul className="mt-2 space-y-1">
                   {rationale.manualCheckItems.map((item, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-sm">
+                    <li key={idx} className="flex items-center gap-2 text-base">
                       <Info className="h-3 w-3 text-warning" />
                       <span>{item}</span>
                     </li>
@@ -190,7 +190,7 @@ function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale 
         {/* 상세 설명 */}
         <div className="rounded-lg border border-border bg-card p-4">
           <h4 className="mb-2 font-semibold text-foreground">상세 분석 내용</h4>
-          <pre className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
+          <pre className="whitespace-pre-wrap text-base leading-relaxed text-muted-foreground">
             {rationale.detailedExplanation}
           </pre>
         </div>
@@ -198,7 +198,7 @@ function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale 
         {/* 안내 문구 */}
         <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-          <p className="text-sm text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
             판단 근거에 이의가 있으시면 신청서 제출 시 의견을 기재해 주시기 바랍니다.
           </p>
@@ -509,7 +509,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
           ].map((item, idx) => (
             <li key={item.step} className="flex items-center">
               <div className={`flex items-center gap-2 ${currentStep >= item.step ? "text-primary" : "text-gray-400"}`}>
-                <span className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
+                <span className={`flex h-8 w-8 items-center justify-center rounded-full text-base font-semibold ${
                   currentStep === item.step 
                     ? "bg-primary text-white" 
                     : currentStep > item.step
@@ -518,7 +518,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 }`}>
                   {currentStep > item.step ? <CheckCircle2 className="h-5 w-5" /> : item.step}
                 </span>
-                <span className={`hidden text-sm font-medium sm:block ${
+                <span className={`hidden text-base font-medium sm:block ${
                   currentStep >= item.step ? "text-primary" : "text-gray-400"
                 }`}>
                   {item.label}
@@ -680,7 +680,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
             <div className="flex items-center justify-between border-b bg-muted px-4 py-3">
               <span className="text-base font-medium text-foreground">결과</span>
               {searchResults.length > 0 && (
-                <span className="text-sm text-muted-foreground">총 {searchResults.length}건</span>
+                <span className="text-base text-muted-foreground">총 {searchResults.length}건</span>
               )}
             </div>
             
@@ -689,7 +689,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               {searchResults.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center py-12 text-center">
                   <MapPin className="h-8 w-8 text-muted-foreground" />
-                  <p className="mt-2 text-sm text-muted-foreground">
+                  <p className="mt-2 text-base text-muted-foreground">
                     행정구역을 선택하고<br />검색 버튼을 클릭하세요.
                   </p>
                 </div>
@@ -704,7 +704,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                         }`}
                       >
                         {/* 주소 텍스트 */}
-                        <span className="flex-1 text-sm">{land.address}</span>
+                        <span className="flex-1 text-base">{land.address}</span>
                         {/* 화살표 */}
                         <ChevronRight className={`h-5 w-5 shrink-0 ${selectedLand?.id === land.id ? "text-primary" : "text-muted-foreground"}`} />
                       </button>
@@ -773,7 +773,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 <div className="space-y-4">
                 {/* 토지 기본 정보 */}
                 <div className="rounded border border-border bg-muted/30 p-3">
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-base">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">지번</span>
                       <span className="font-medium">{selectedLand.address.split(" ").slice(-2).join(" ")}</span>
@@ -800,7 +800,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                   <div className="rounded border border-destructive bg-destructive/5 p-3">
                     <div className="flex items-center gap-2">
                       <Ban className="h-4 w-4 text-destructive" />
-                      <span className="text-sm font-medium text-destructive">편입토지 없음 - 매수 신청 불가</span>
+                      <span className="text-base font-medium text-destructive">편입토지 없음 - 매수 신청 불가</span>
                     </div>
                   </div>
                 )}
@@ -846,9 +846,9 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                               ? "text-amber-600"
                               : "text-red-600"
                         }`} />
-                        <span className="text-sm font-semibold">AI 판독 결과</span>
+                        <span className="text-base font-semibold">AI 판독 결과</span>
                       </div>
-                      <span className={`rounded-full px-3 py-1 text-sm font-bold ${
+                      <span className={`rounded-full px-3 py-1 text-base font-bold ${
                         aiResult.provisionalJudgment === "매수"
                           ? "bg-primary text-white"
                           : aiResult.provisionalJudgment === "심의위원회이관"
@@ -870,8 +870,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                         <div className="flex items-start gap-3">
                           <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                           <div>
-                            <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
-                            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.summary}</p>
+                            <h4 className="text-base font-semibold text-foreground">판단 요약</h4>
+                            <p className="mt-1 text-base leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.summary}</p>
                           </div>
                         </div>
                       )}
@@ -881,8 +881,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                         <div className="flex items-start gap-3">
                           <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                           <div>
-                            <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
-                            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
+                            <h4 className="text-base font-semibold text-foreground">법적 근거</h4>
+                            <p className="mt-1 text-base leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
                           </div>
                         </div>
                       )}
@@ -892,10 +892,10 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                         <div className="flex items-start gap-3">
                           <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                           <div>
-                            <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
+                            <h4 className="text-base font-semibold text-foreground">적용 기준</h4>
                             <ul className="mt-1 space-y-1">
                               {aiResult.judgmentRationale.appliedCriteria.map((criteria, idx) => (
-                                <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                                <li key={idx} className="flex items-start gap-2 text-base text-muted-foreground">
                                   <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
                                   <span>{criteria}</span>
                                 </li>
@@ -910,10 +910,10 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                         <div className="flex items-start gap-3">
                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                           <div>
-                            <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
+                            <h4 className="text-base font-semibold text-foreground">수동 확인 항목</h4>
                             <ul className="mt-1 space-y-1">
                               {aiResult.judgmentRationale.manualCheckItems.map((item, idx) => (
-                                <li key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <li key={idx} className="flex items-center gap-2 text-base text-muted-foreground">
                                   <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
                                   <span>{item}</span>
                                 </li>
@@ -928,8 +928,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                         <div className="flex items-start gap-3">
                           <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                           <div>
-                            <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
-                            <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
+                            <h4 className="text-base font-semibold text-foreground">상세 분석</h4>
+                            <pre className="mt-1 whitespace-pre-wrap text-base leading-relaxed text-muted-foreground">
                               {aiResult.judgmentRationale.detailedExplanation}
                             </pre>
                           </div>
@@ -939,7 +939,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                       {/* 안내 문구 */}
                       <div className="flex items-start gap-2 pt-2">
                         <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-base text-muted-foreground">
                           AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                         </p>
                       </div>
@@ -971,7 +971,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                   <div className="space-y-2">
                     {/* 매수 불가 안내 */}
                     <div className="rounded bg-muted/50 p-2 text-center">
-                      <p className="text-sm font-semibold text-muted-foreground">
+                      <p className="text-base font-semibold text-muted-foreground">
                         AI 분석 결과 매수 기준에 충족하지 않습니다.
                       </p>
                     </div>

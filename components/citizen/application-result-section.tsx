@@ -99,7 +99,7 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
                 <dt className="text-muted-foreground">최종 판정</dt>
                 <dd>
                   <span
-                    className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${judgmentConfig[application.finalJudgment].color}`}
+                    className={`inline-flex items-center rounded-full px-3 py-1 text-base font-medium ${judgmentConfig[application.finalJudgment].color}`}
                   >
                     {judgmentConfig[application.finalJudgment].label}
                   </span>
@@ -119,9 +119,9 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ol className="space-y-3 text-sm text-muted-foreground">
+          <ol className="space-y-3 text-base text-muted-foreground">
             <li className="flex gap-3">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-base font-medium text-primary-foreground">
                 1
               </span>
               <span>
@@ -129,7 +129,7 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
               </span>
             </li>
             <li className="flex gap-3">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-base font-medium text-primary-foreground">
                 2
               </span>
               <span>
@@ -137,7 +137,7 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
               </span>
             </li>
             <li className="flex gap-3">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-base font-medium text-primary-foreground">
                 3
               </span>
               <span>
@@ -148,7 +148,7 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
 
           <div className="mt-6 rounded-lg bg-muted p-4">
             <h4 className="font-medium text-foreground">판정 결과 안내</h4>
-            <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
+            <ul className="mt-2 space-y-1 text-base text-muted-foreground">
               <li>
                 <strong className="text-primary">매수:</strong> 매수 기준 충족. 보상 절차가 진행됩니다.
               </li>

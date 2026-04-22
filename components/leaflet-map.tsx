@@ -409,7 +409,7 @@ export function LeafletMap({
         <div className="absolute inset-0 flex items-center justify-center bg-muted">
           <div className="text-center">
             <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-            <p className="mt-2 text-sm text-muted-foreground">지도 로딩중...</p>
+            <p className="mt-2 text-base text-muted-foreground">지도 로딩중...</p>
           </div>
         </div>
       )}
@@ -421,14 +421,14 @@ export function LeafletMap({
           <PopoverTrigger asChild>
             <Button variant="secondary" size="sm" className="h-8 gap-1.5 bg-white shadow-md hover:bg-gray-50">
               <MapIcon className="h-4 w-4" />
-              <span className="text-sm">배경지도</span>
+              <span className="text-base">배경지도</span>
             </Button>
           </PopoverTrigger>
           <PopoverContent className="z-[1001] w-36 p-2" align="start" sideOffset={5}>
             <div className="space-y-1">
               <button
                 onClick={() => setBaseMap("normal")}
-                className={`w-full rounded px-3 py-2 text-left text-sm ${
+                className={`w-full rounded px-3 py-2 text-left text-base ${
                   baseMap === "normal" ? "bg-primary text-white" : "hover:bg-muted"
                 }`}
               >
@@ -436,7 +436,7 @@ export function LeafletMap({
               </button>
               <button
                 onClick={() => setBaseMap("satellite")}
-                className={`w-full rounded px-3 py-2 text-left text-sm ${
+                className={`w-full rounded px-3 py-2 text-left text-base ${
                   baseMap === "satellite" ? "bg-primary text-white" : "hover:bg-muted"
                 }`}
               >
@@ -451,7 +451,7 @@ export function LeafletMap({
           <PopoverTrigger asChild>
             <Button variant="secondary" size="sm" className="h-8 gap-1.5 bg-white shadow-md hover:bg-gray-50">
               <Layers className="h-4 w-4" />
-              <span className="text-sm">레이어</span>
+              <span className="text-base">레이어</span>
             </Button>
           </PopoverTrigger>
           <PopoverContent className="z-[1001] w-52 p-3" align="start" sideOffset={5}>
@@ -464,7 +464,7 @@ export function LeafletMap({
                     setLayers((prev) => ({ ...prev, landSupplyDemand: checked === true }))
                   }
                 />
-                <Label htmlFor="layer-land" className="text-sm font-normal">
+                <Label htmlFor="layer-land" className="text-base font-normal">
                   국토수급
                 </Label>
               </div>
@@ -476,7 +476,7 @@ export function LeafletMap({
                     setLayers((prev) => ({ ...prev, roadArea: checked === true }))
                   }
                 />
-                <Label htmlFor="layer-road" className="text-sm font-normal">
+                <Label htmlFor="layer-road" className="text-base font-normal">
                   도로구역
                 </Label>
               </div>
@@ -484,7 +484,7 @@ export function LeafletMap({
               {/* 레이어 가시화 안내 */}
               <div className="flex items-start gap-1.5 rounded bg-amber-50 p-2">
                 <Info className="mt-0.5 h-3 w-3 shrink-0 text-amber-600" />
-                <p className="text-sm leading-relaxed text-amber-700">
+                <p className="text-base leading-relaxed text-amber-700">
                   국토수급, 도로구역 레이어는 {LAYER_MIN_ZOOM}Level 부터 가시화됩니다.
                   현재 Zoom Level은 <strong>{currentZoom}Level</strong> 입니다.
                 </p>
@@ -505,7 +505,7 @@ export function LeafletMap({
           >
             <Plus className="h-4 w-4" />
           </Button>
-          <div className="border-t border-gray-200 px-1 py-1 text-center text-sm font-medium text-gray-700">
+          <div className="border-t border-gray-200 px-1 py-1 text-center text-base font-medium text-gray-700">
             {currentZoom}
           </div>
           <Button
@@ -530,12 +530,12 @@ export function LeafletMap({
       </div>
 
       {/* 축척 표시 */}
-      <div className="absolute bottom-3 left-3 z-[1000] rounded bg-white/90 px-2 py-1 text-sm text-gray-600 shadow">
+      <div className="absolute bottom-3 left-3 z-[1000] rounded bg-white/90 px-2 py-1 text-base text-gray-600 shadow">
         축척: 1:{Math.round(591657550.5 / Math.pow(2, currentZoom))}
       </div>
 
       {/* 저작권 표시 */}
-      <div className="absolute bottom-3 right-3 z-[1000] rounded bg-white/90 px-2 py-1 text-sm text-gray-500">
+      <div className="absolute bottom-3 right-3 z-[1000] rounded bg-white/90 px-2 py-1 text-base text-gray-500">
         © VWorld, OpenStreetMap
       </div>
     </div>

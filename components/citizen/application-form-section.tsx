@@ -94,7 +94,7 @@ function AddressSearchModal({
           
           <div className="mt-4 max-h-64 overflow-y-auto">
             {hasSearched && searchResults.length === 0 ? (
-              <p className="py-8 text-center text-sm text-muted-foreground">
+              <p className="py-8 text-center text-base text-muted-foreground">
                 검색 결과가 없습니다.
               </p>
             ) : searchResults.length > 0 ? (
@@ -103,10 +103,10 @@ function AddressSearchModal({
                   <li key={idx}>
                     <button
                       type="button"
-                      className="w-full rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-muted"
+                      className="w-full rounded-md px-3 py-2 text-left text-base transition-colors hover:bg-muted"
                       onClick={() => onSelect(addr)}
                     >
-                      <span className="mr-2 text-sm text-muted-foreground">
+                      <span className="mr-2 text-base text-muted-foreground">
                         [{addr.postalCode}]
                       </span>
                       <span>{addr.address}</span>
@@ -115,16 +115,16 @@ function AddressSearchModal({
                 ))}
               </ul>
             ) : (
-              <div className="space-y-2 py-4 text-center text-sm text-muted-foreground">
+              <div className="space-y-2 py-4 text-center text-base text-muted-foreground">
                 <p>도로명, 건물명 또는 지번을 입력하세요.</p>
-                <p className="text-sm">예: 천안시 동남구, 신부동 100</p>
+                <p className="text-base">예: 천안시 동남구, 신부동 100</p>
               </div>
             )}
           </div>
         </div>
         
         <div className="border-t bg-muted/30 p-3">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             * 정확한 주소를 찾을 수 없는 경우, 가까운 건물명이나 도로명으로 검색해 보세요.
           </p>
         </div>
@@ -203,7 +203,7 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
             <FileText className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
             <div>
               <h4 className="font-semibold text-foreground">판단 요약</h4>
-              <p className="mt-1 text-sm text-muted-foreground">{summary}</p>
+              <p className="mt-1 text-base text-muted-foreground">{summary}</p>
             </div>
           </div>
         </div>
@@ -214,7 +214,7 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
             <Scale className="mt-0.5 h-5 w-5 shrink-0 text-chart-3" />
             <div>
               <h4 className="font-semibold text-foreground">법적 근거</h4>
-              <p className="mt-1 text-sm text-muted-foreground">{legalBasis}</p>
+              <p className="mt-1 text-base text-muted-foreground">{legalBasis}</p>
             </div>
           </div>
         </div>
@@ -225,7 +225,7 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
             <h4 className="mb-2 font-semibold text-foreground">적용 기준</h4>
             <ul className="space-y-1.5">
               {appliedCriteria.map((criteria, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                <li key={idx} className="flex items-start gap-2 text-base text-muted-foreground">
                   <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                   <span>{criteria}</span>
                 </li>
@@ -241,12 +241,12 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
               <div>
                 <h4 className="font-semibold text-foreground">직접 확인 필요 항목</h4>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="mt-1 text-base text-muted-foreground">
                   다음 항목은 AI 자동 판독이 불가하여 담당자가 현장 확인 후 판단합니다.
                 </p>
                 <ul className="mt-2 space-y-1">
                   {manualCheckItems.map((item, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-sm">
+                    <li key={idx} className="flex items-center gap-2 text-base">
                       <Info className="h-3 w-3 text-warning" />
                       <span>{item}</span>
                     </li>
@@ -260,7 +260,7 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
         {/* 상세 설명 */}
         <div className="rounded-lg border border-border bg-card p-4">
           <h4 className="mb-2 font-semibold text-foreground">상세 분석 내용</h4>
-          <pre className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
+          <pre className="whitespace-pre-wrap text-base leading-relaxed text-muted-foreground">
             {detailedExplanation}
           </pre>
         </div>
@@ -268,7 +268,7 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
         {/* 안내 문구 */}
         <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-          <p className="text-sm text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
             판단 근거에 이의가 있으시면 ��청서 제출 시 �����을 기재해 주시기 바랍니다.
           </p>
@@ -402,7 +402,7 @@ export function ApplicationFormSection({
           <CardContent className="space-y-4">
             <LandMap landInfo={landInfo} showOverlay />
             
-            <div className="space-y-2 text-sm">
+            <div className="space-y-2 text-base">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">지번</span>
                 <span className="font-medium text-foreground">{landInfo.address.split(" ").slice(-2).join(" ")}</span>
@@ -431,22 +431,22 @@ export function ApplicationFormSection({
                 <Bot className={`h-5 w-5 ${
                   aiResult.provisionalJudgment === "매수" ? "text-primary" : "text-red-600"
                 }`} />
-                <span className="text-sm font-semibold text-foreground">AI 판독 결과</span>
+                <span className="text-base font-semibold text-foreground">AI 판독 결과</span>
               </div>
               <div className="flex items-center gap-2">
                 {aiResult.provisionalJudgment === "매수" ? (
                   <>
                     <CheckCircle2 className="h-5 w-5 text-primary" />
-                    <span className="text-sm font-bold text-primary">매수 가능성 높음</span>
+                    <span className="text-base font-bold text-primary">매수 가능성 높음</span>
                   </>
                 ) : (
                   <>
                     <XCircle className="h-5 w-5 text-red-600" />
-                    <span className="rounded-full bg-red-600 px-3 py-1 text-sm font-bold text-white">기준 미충족</span>
+                    <span className="rounded-full bg-red-600 px-3 py-1 text-base font-bold text-white">기준 미충족</span>
                   </>
                 )}
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">
+              <p className="mt-2 text-base text-muted-foreground">
                 {aiResult.criteriaChecks.filter(c => c.isMet).length}/{aiResult.criteriaChecks.length}개 기준 충족
               </p>
             </div>
@@ -589,7 +589,7 @@ export function ApplicationFormSection({
                         <SelectValue placeholder="선택하세요" />
                       </SelectTrigger>
                       <SelectContent>
-                        <div className="px-2 py-1 text-sm font-semibold text-muted-foreground">
+                        <div className="px-2 py-1 text-base font-semibold text-muted-foreground">
                           정형
                         </div>
                         {landShapes.regular.map((shape) => (
@@ -597,7 +597,7 @@ export function ApplicationFormSection({
                             {shape.label}
                           </SelectItem>
                         ))}
-                        <div className="px-2 py-1 text-sm font-semibold text-muted-foreground">
+                        <div className="px-2 py-1 text-base font-semibold text-muted-foreground">
                           비정형
                         </div>
                         {landShapes.irregular.map((shape) => (
@@ -622,7 +622,7 @@ export function ApplicationFormSection({
                         }))
                       }
                     />
-                    <Label htmlFor="farmMachine" className="text-sm font-normal">
+                    <Label htmlFor="farmMachine" className="text-base font-normal">
                       농기계 진입 및 회전이 곤란합니다
                     </Label>
                   </div>
@@ -647,18 +647,18 @@ export function ApplicationFormSection({
               {/* 첨부 서류 - KRDS 스타일 */}
               <div className="space-y-4">
                 <Label>첨부 서류</Label>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-base text-muted-foreground">
                   토지 소유 증빙 서류, 사진 등을 첨부해주세요.
                 </p>
                 
                 {/* 드롭존 영역 */}
                 <div className="rounded-lg bg-gray-100 p-8">
                   <div className="flex flex-col items-center justify-center text-center">
-                    <p className="mb-4 text-sm text-gray-600">
+                    <p className="mb-4 text-base text-gray-600">
                       첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 직접 선택해주세요.
                     </p>
                     <label className="cursor-pointer">
-                      <span className="inline-flex items-center gap-2 rounded-md bg-[#222222] px-4 py-2 text-sm font-medium text-white hover:bg-[#333333]">
+                      <span className="inline-flex items-center gap-2 rounded-md bg-[#222222] px-4 py-2 text-base font-medium text-white hover:bg-[#333333]">
                         <Upload className="h-4 w-4" />
                         파일선택
                       </span>
@@ -677,7 +677,7 @@ export function ApplicationFormSection({
                 {formData.attachments.length > 0 && (
                   <>
                     <div className="flex items-center justify-between">
-                      <p className="text-sm">
+                      <p className="text-base">
                         <span className="font-semibold text-primary">{formData.attachments.length}개</span>
                         <span className="text-muted-foreground"> / {MAX_FILES}개</span>
                       </p>
@@ -700,7 +700,7 @@ export function ApplicationFormSection({
                           key={index}
                           className="flex items-center justify-between rounded-md border border-gray-200 bg-white px-4 py-3"
                         >
-                          <span className="text-sm text-foreground">
+                          <span className="text-base text-foreground">
                             {file.name} [{file.size}]
                           </span>
                           <div className="flex items-center gap-3">
@@ -711,7 +711,7 @@ export function ApplicationFormSection({
                                 <button
                                   type="button"
                                   onClick={() => handleRemoveFile(index)}
-                                  className="flex items-center gap-1 text-sm text-muted-foreground hover:text-destructive"
+                                  className="flex items-center gap-1 text-base text-muted-foreground hover:text-destructive"
                                 >
                                   삭제
                                   <X className="h-3 w-3" />

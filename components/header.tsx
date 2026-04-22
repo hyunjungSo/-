@@ -50,7 +50,7 @@ export function Header() {
                   key={item.name}
                   href={item.href}
                   className={cn(
-                    "cursor-pointer rounded-md px-4 py-2 text-sm font-medium transition-colors",
+                    "cursor-pointer rounded-md px-4 py-2 text-base font-medium transition-colors",
                     pathname.startsWith(item.href)
                       ? "bg-primary text-white"
                       : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
@@ -65,7 +65,7 @@ export function Header() {
             {/* 사용자 정보 및 로그아웃 */}
             {user && (
               <div className="flex items-center gap-3 border-l pl-4">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-base text-gray-600">
                   <User className="h-4 w-4" />
                   <span>{user.name}</span>
                 </div>
@@ -109,7 +109,7 @@ export function Header() {
                 href={item.href}
                 onClick={() => setMobileMenuOpen(false)}
                 className={cn(
-                  "cursor-pointer rounded-md px-4 py-3 text-sm font-medium transition-colors",
+                  "cursor-pointer rounded-md px-4 py-3 text-base font-medium transition-colors",
                   pathname.startsWith(item.href)
                     ? "bg-primary text-white"
                     : "text-gray-700 hover:bg-gray-100"
@@ -122,7 +122,7 @@ export function Header() {
             {user && (
               <>
                 <div className="my-2 border-t" />
-                <div className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 px-4 py-2 text-base text-gray-600">
                   <User className="h-4 w-4" />
                   <span>{user.name}</span>
                 </div>
@@ -131,7 +131,7 @@ export function Header() {
                     setMobileMenuOpen(false);
                     handleLogout();
                   }}
-                  className="flex items-center gap-2 rounded-md px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                  className="flex items-center gap-2 rounded-md px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-100"
                 >
                   <LogOut className="h-4 w-4" />
                   로그아웃

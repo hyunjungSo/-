@@ -21,10 +21,10 @@ export function Footer() {
               height={32}
               className="h-8 w-auto"
             />
-            <p className="text-sm text-gray-600">
+            <p className="text-base text-gray-600">
               (39660) 경상북도 김천시 혁신8로 77 (율곡동 941) 한국도로공사
             </p>
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-base font-medium text-gray-900">
               대표전화 1588-2504
             </p>
           </div>
@@ -35,7 +35,7 @@ export function Footer() {
               href="https://www.ex.co.kr/site/com/pageProcess.do?url=/kor/company/location"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-primary"
+              className="inline-flex items-center gap-1 text-base font-medium text-gray-700 hover:text-primary"
             >
               찾아오시는 길
               <ExternalLink className="h-4 w-4" />
@@ -45,7 +45,7 @@ export function Footer() {
 
         {/* 링크 및 저작권 */}
         <div className="mt-6 flex flex-col gap-4 border-t pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <nav className="flex flex-wrap items-center gap-4 text-sm" aria-label="푸터 링크">
+          <nav className="flex flex-wrap items-center gap-4 text-base" aria-label="푸터 링크">
             <Link
               href="/privacy"
               className="font-semibold text-primary hover:underline"
@@ -71,7 +71,7 @@ export function Footer() {
               이메일무단수집거부
             </Link>
           </nav>
-          <p className="text-sm text-gray-500">
+          <p className="text-base text-gray-500">
             © {currentYear} Korea Expressway Corporation. All Rights reserved.
           </p>
         </div>

@@ -142,23 +142,23 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             <div>
-              <p className="text-sm text-muted-foreground">신청인</p>
+              <p className="text-base text-muted-foreground">신청인</p>
               <p className="font-medium text-foreground">{application.applicantName}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">연락처</p>
+              <p className="text-base text-muted-foreground">연락처</p>
               <p className="font-medium text-foreground">{application.applicantContact}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">신청일</p>
+              <p className="text-base text-muted-foreground">신청일</p>
               <p className="font-medium text-foreground">{application.appliedAt}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">대상 지번</p>
+              <p className="text-base text-muted-foreground">대상 지번</p>
               <p className="font-medium text-foreground">{application.landInfo.address}</p>
             </div>
             <div>
-              <p className="mb-1 text-sm text-muted-foreground">담당자</p>
+              <p className="mb-1 text-base text-muted-foreground">담당자</p>
               <Select
                 value={reviewData.assigneeId}
                 onValueChange={(value) =>
@@ -206,7 +206,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   ) : (
                     <XCircle className="h-5 w-5 text-red-600" />
                   )}
-                  <span className={`text-sm ${application.unifiedParcelCondition?.sameOwner ? "" : "text-red-700 font-medium"}`}>소유자 동일성</span>
+                  <span className={`text-base ${application.unifiedParcelCondition?.sameOwner ? "" : "text-red-700 font-medium"}`}>소유자 동일성</span>
                 </div>
                 <div className={`flex items-center gap-2 rounded-md px-2 py-1 ${
                   application.unifiedParcelCondition?.continuous ? "bg-green-50" : "bg-red-50"
@@ -216,7 +216,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   ) : (
                     <XCircle className="h-5 w-5 text-red-600" />
                   )}
-                  <span className={`text-sm ${application.unifiedParcelCondition?.continuous ? "" : "text-red-700 font-medium"}`}>지반 연속성</span>
+                  <span className={`text-base ${application.unifiedParcelCondition?.continuous ? "" : "text-red-700 font-medium"}`}>지반 연속성</span>
                 </div>
                 <div className={`flex items-center gap-2 rounded-md px-2 py-1 ${
                   application.unifiedParcelCondition?.sameUsage ? "bg-green-50" : "bg-red-50"
@@ -226,13 +226,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   ) : (
                     <XCircle className="h-5 w-5 text-red-600" />
                   )}
-                  <span className={`text-sm ${application.unifiedParcelCondition?.sameUsage ? "" : "text-red-700 font-medium"}`}>용도 일체성</span>
+                  <span className={`text-base ${application.unifiedParcelCondition?.sameUsage ? "" : "text-red-700 font-medium"}`}>용도 일체성</span>
                 </div>
               </div>
               {application.unifiedParcelCondition?.isUnifiedParcel && (
                 <div className="mt-3 flex items-center gap-2 rounded bg-primary/10 px-3 py-2">
                   <CheckCircle2 className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-medium text-primary">일단지 조건 충족 - 병합 처리 가능</span>
+                  <span className="text-base font-medium text-primary">일단지 조건 충족 - 병합 처리 가능</span>
                 </div>
               )}
             </div>
@@ -244,7 +244,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 <div className="flex items-center justify-between p-3 bg-muted/30">
                   <div>
                     <p className="font-medium text-foreground">{application.landInfo.address}</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-base text-muted-foreground">
                       잔여면적: {application.landInfo.remainingArea.toLocaleString()}m² ({application.landInfo.remainingRatio}%)
                     </p>
                   </div>
@@ -254,7 +254,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div key={land.id} className="flex items-center justify-between p-3">
                     <div>
                       <p className="font-medium text-foreground">{land.address}</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-base text-muted-foreground">
                         잔여면적: {land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)
                       </p>
                     </div>
@@ -302,25 +302,25 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
             <div className="grid grid-cols-2 gap-4 rounded-lg border border-border p-4">
               <div>
-                <p className="text-sm text-muted-foreground">편입 전 면적</p>
+                <p className="text-base text-muted-foreground">편입 전 면적</p>
                 <p className="text-lg font-semibold text-foreground">
                   {application.landInfo.originalArea.toLocaleString()}㎡
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">편입 면적</p>
+                <p className="text-base text-muted-foreground">편입 면적</p>
                 <p className="text-lg font-semibold text-destructive">
                   {application.landInfo.includedArea.toLocaleString()}㎡
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">잔여 면적</p>
+                <p className="text-base text-muted-foreground">잔여 면적</p>
                 <p className="text-lg font-semibold text-primary">
                   {application.landInfo.remainingArea.toLocaleString()}㎡
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">잔여 비율</p>
+                <p className="text-base text-muted-foreground">잔여 비율</p>
                 <p className="text-lg font-semibold text-foreground">
                   {application.landInfo.remainingRatio}%
                 </p>
@@ -345,7 +345,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             {aiResult && (
               <div className="rounded-lg border border-border bg-muted/50 p-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">잠정 판정</span>
+                  <span className="text-base text-muted-foreground">잠정 판정</span>
                   <div className="flex items-center gap-2">
                     {(() => {
                       const config = judgmentConfig[aiResult.provisionalJudgment];
@@ -385,17 +385,17 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <div className="flex items-center gap-2">
                       <p className={`font-medium ${check.isMet ? "text-foreground" : "text-red-700"}`}>{check.criteriaName}</p>
                       {!check.isMet && (
-                        <Badge className="bg-red-600 text-white text-sm hover:bg-red-700">
+                        <Badge className="bg-red-600 text-white text-base hover:bg-red-700">
                           미충족
                         </Badge>
                       )}
                       {!check.autoDetected && (
-                        <Badge variant="outline" className="text-sm">
+                        <Badge variant="outline" className="text-base">
                           직접 확인 필요
                         </Badge>
                       )}
                     </div>
-                    <p className={`mt-1 text-sm ${check.isMet ? "text-muted-foreground" : "text-red-600"}`}>
+                    <p className={`mt-1 text-base ${check.isMet ? "text-muted-foreground" : "text-red-600"}`}>
                       {check.criteriaDescription}
                     </p>
                   </div>
@@ -407,7 +407,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             {aiResult && (
               <div className="rounded-lg border border-border p-4">
                 <h4 className="mb-3 font-medium text-foreground">형상지수</h4>
-                <div className="grid grid-cols-3 gap-4 text-center text-sm">
+                <div className="grid grid-cols-3 gap-4 text-center text-base">
                   <div>
                     <p className="text-muted-foreground">편입 전</p>
                     <p className="text-lg font-semibold text-foreground">
@@ -480,7 +480,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <div className="px-2 py-1 text-sm font-semibold text-muted-foreground">
+                  <div className="px-2 py-1 text-base font-semibold text-muted-foreground">
                     정형
                   </div>
                   {landShapes.regular.map((shape) => (
@@ -488,7 +488,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       {shape.label}
                     </SelectItem>
                   ))}
-                  <div className="px-2 py-1 text-sm font-semibold text-muted-foreground">
+                  <div className="px-2 py-1 text-base font-semibold text-muted-foreground">
                     비정형
                   </div>
                   {landShapes.irregular.map((shape) => (
@@ -535,7 +535,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     setReviewData((prev) => ({ ...prev, accessRoadLost: checked === true }))
                   }
                 />
-                <Label htmlFor="accessRoadLost" className="text-sm font-normal">
+                <Label htmlFor="accessRoadLost" className="text-base font-normal">
                   접면도로 상실
                 </Label>
               </div>
@@ -547,7 +547,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     setReviewData((prev) => ({ ...prev, waterChannelLost: checked === true }))
                   }
                 />
-                <Label htmlFor="waterChannelLost" className="text-sm font-normal">
+                <Label htmlFor="waterChannelLost" className="text-base font-normal">
                   수로 상실
                 </Label>
               </div>
@@ -557,7 +557,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           {/* 소유자 의견 */}
           <div className="space-y-2">
             <Label>소유자 의견 (신청 사유)</Label>
-            <div className="rounded-lg border border-border bg-muted/50 p-3 text-sm text-foreground">
+            <div className="rounded-lg border border-border bg-muted/50 p-3 text-base text-foreground">
               {application.reason}
             </div>
           </div>
@@ -600,7 +600,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 );
               })}
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-base text-muted-foreground">
               민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다.
             </p>
           </div>
@@ -610,7 +610,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 <Label className={reviewData.adminStatus !== "심사완료" ? "text-muted-foreground" : ""}>
                   최종 판정
 {reviewData.adminStatus !== "심사완료" && (
-                    <span className="ml-2 text-sm font-normal text-muted-foreground">
+                    <span className="ml-2 text-base font-normal text-muted-foreground">
                     (진행상황을 &apos;심사완료&apos;로 설정하면 활성화됩니다)
                 </span>
               )}
