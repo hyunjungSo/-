@@ -291,13 +291,23 @@ export const dummyLandInfoList: LandInfo[] = [
 function generateAIResult(landInfo: LandInfo): AIAnalysisResult {
   const criteriaChecks = [];
   
+  // 잔여비율 기준 체크 (30% 이하여야 매수 가능)
+  const remainingRatioMet = landInfo.remainingRatio <= 30;
+  criteriaChecks.push({
+    criteriaName: "잔여비율 기준",
+    criteriaDescription: "잔여비율 30% 이하",
+    isMet: remainingRatioMet,
+    autoDetected: true,
+  });
+
   // 면적 기준 체크
+  const areaMet = landInfo.remainingArea <= 330 || landInfo.remainingRatio <= 25;
   criteriaChecks.push({
     criteriaName: "면적 기준",
     criteriaDescription: landInfo.landType === "대지" 
       ? "주거 90㎡ / 상업 150㎡ / 공업 330㎡ (잔여비율 25% 이하 시 1.5배 완화)"
       : "330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)",
-    isMet: landInfo.remainingArea <= 330 || landInfo.remainingRatio <= 25,
+    isMet: areaMet,
     autoDetected: true,
   });
 
@@ -305,59 +315,62 @@ function generateAIResult(landInfo: LandInfo): AIAnalysisResult {
   const isIrregularShape = ["삼각형", "역삼각형", "부정형", "자루형"].includes(landInfo.remainingShape);
   criteriaChecks.push({
     criteriaName: "형상 기준",
-    criteriaDescription: "형상 폭 5m 이하 또는 삼각형 한 변 11m 이하, 부정형",
+    criteriaDescription: "삼각형, 역삼각형, 부정형, 자루형 등 불규칙 형상",
     isMet: isIrregularShape,
     autoDetected: true,
   });
 
   // 형상지수 변화
   const shapeIndexChange = landInfo.remainingShapeIndex - landInfo.originalShapeIndex;
+  const shapeIndexMet = shapeIndexChange >= 1.0;
   criteriaChecks.push({
     criteriaName: "형상지수 변화",
     criteriaDescription: "형상지수 1.0 이상 상승",
-    isMet: shapeIndexChange >= 1.0,
+    isMet: shapeIndexMet,
     autoDetected: true,
   });
 
-  // 접도 상태 (직접 확인 필요)
+  // 접도 상태 (직접 확인 필요 - 맹지 여부에 따라 설정)
+  const isBlindLand = isIrregularShape && landInfo.remainingRatio <= 35;
   criteriaChecks.push({
     criteriaName: "접면도로 상실",
     criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목적 사용 곤란",
-    isMet: false,
+    isMet: isBlindLand,
     autoDetected: false,
   });
 
-  // 농기계 진입/회전 곤란 (농지의 경우 직접 확인 필요)
+  // 농기계 진입/회전 곤란 (농지의 경우)
   if (landInfo.landType === "농지") {
+    const farmDifficulty = isIrregularShape && landInfo.remainingArea <= 500;
     criteriaChecks.push({
       criteriaName: "농기계 진입/회전 곤란",
       criteriaDescription: "농기계 진입 및 회전이 곤란하여 영농이 불가능한 경우",
-      isMet: false,
+      isMet: farmDifficulty,
       autoDetected: false,
     });
   }
 
-  // 수로 상실 (농지의 경우 직접 확인 필요)
-  if (landInfo.landType === "농지") {
-    criteriaChecks.push({
-      criteriaName: "수로 상실",
-      criteriaDescription: "관개수로 상실로 농업용수 공급이 불가능한 경우",
-      isMet: false,
-      autoDetected: false,
-    });
-  }
-
-  // 최종 판정 결정
-  const metAutoCriteria = criteriaChecks.filter(c => c.isMet && c.autoDetected).length;
-  const hasManualCheckNeeded = criteriaChecks.some(c => !c.autoDetected);
+  // 최종 판정 결정 - 자동 감지 기준 중 충족 개수 확인
+  const autoDetectedCriteria = criteriaChecks.filter(c => c.autoDetected);
+  const metAutoCriteria = autoDetectedCriteria.filter(c => c.isMet).length;
+  const totalAutoCriteria = autoDetectedCriteria.length;
   const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
-  // AI 1차 판독: 매수 또는 기각만 판정
-  let provisionalJudgment: "매수" | "기각";
+  // AI 1차 판독 로직:
+  // - 잔여비율 30% 초과이면 무조건 기각
+  // - 자동 감지 기준 중 3개 이상 충족 시 매수
+  // - 2개 충족 시 심의위원회 이관
+  // - 1개 이하 충족 시 기각
+  let provisionalJudgment: "매수" | "기각" | "심의위원회이관";
   
-  if (metAutoCriteria >= 1) {
+  if (!remainingRatioMet) {
+    // 잔여비율 30% 초과는 매수 불가
+    provisionalJudgment = "기각";
+  } else if (metAutoCriteria >= 3) {
     provisionalJudgment = "매수";
+  } else if (metAutoCriteria === 2) {
+    provisionalJudgment = "심의위원회이관";
   } else {
     provisionalJudgment = "기각";
   }
@@ -372,10 +385,10 @@ function generateAIResult(landInfo: LandInfo): AIAnalysisResult {
     originalShapeIndex: landInfo.originalShapeIndex,
     remainingShapeIndex: landInfo.remainingShapeIndex,
     shapeIndexChange,
-    isBlindLand: false,
-    accessRoadLost: false,
+    isBlindLand,
+    accessRoadLost: isBlindLand,
     waterChannelLost: false,
-    farmMachineDifficulty: false,
+    farmMachineDifficulty: landInfo.landType === "농지" && isIrregularShape,
     judgmentRationale,
   };
 }
@@ -383,7 +396,7 @@ function generateAIResult(landInfo: LandInfo): AIAnalysisResult {
 // 판단 근거 생성 헬퍼 함수
 function generateRationale(
   land: LandInfo,
-  judgment: "매수" | "기각",
+  judgment: "매수" | "기각" | "심의위원회이관",
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],
@@ -392,10 +405,10 @@ function generateRationale(
   const legalBasis = "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조";
   
   const appliedCriteria = [
-    `${land.landType} 면적 기준 적용`,
-    `형상지수 변화 기준: 1.0 이상 상승`,
-    `토지 형상 기준: 불규칙 형상 여부`,
     `잔여비율 기준: 30% 이하`,
+    `${land.landType} 면적 기준 적용`,
+    `토지 형상 기준: 불규칙 형상 여부`,
+    `형상지수 변화 기준: 1.0 이상 상승`,
   ];
 
   let summary: string;
@@ -403,13 +416,16 @@ function generateRationale(
 
   if (judgment === "매수") {
     summary = `잔여지 매수 기준 ${metCriteriaCount}개 항목 충족으로 「매수 가능」 판정`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (지수 +${shapeIndexChange.toFixed(1)})\n충족기준: ${metCriteriaNames.join(", ")}`;
+    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (지수 +${shapeIndexChange.toFixed(1)})\n충족기준: ${metCriteriaNames.join(", ")}`;
   } else if (judgment === "기각") {
+    const rejectionReason = land.remainingRatio > 30 
+      ? `잔여비율 ${land.remainingRatio}%로 기준(30% 이하) 초과` 
+      : `충족 기준 ${metCriteriaCount}개로 최소 요건(3개) 미달`;
     summary = `잔여지 매수 기준 미충족으로 「기각」 판정`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (지수 +${shapeIndexChange.toFixed(1)})\n미충족사유: 잔여비율 ${land.remainingRatio}% > 30%, 형상 정상 범위`;
+    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}`;
   } else {
-    summary = `자동 판독 기준 애매하여 「심의위원회 이관」 필요`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (${land.remainingRatio}%)\n수동확인필요: ${manualCheckItems.join(", ")}`;
+    summary = `자동 판독 기준 ${metCriteriaCount}개 충족으로 「심의위원회 이관」 필요`;
+    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (지수 +${shapeIndexChange.toFixed(1)})\n충족기준: ${metCriteriaNames.join(", ")}\n추가확인필요: ${manualCheckItems.join(", ")}`;
   }
 
   return {
