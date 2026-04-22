@@ -357,7 +357,7 @@ export function ApplicationFormSection({
                       첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 직접 선택해주세요.
                     </p>
                     <label className="cursor-pointer">
-                      <span className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90">
+                      <span className="inline-flex items-center gap-2 rounded-md bg-[#222222] px-4 py-2 text-sm font-medium text-white hover:bg-[#333333]">
                         <Upload className="h-4 w-4" />
                         파일선택
                       </span>
