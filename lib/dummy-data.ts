@@ -288,7 +288,7 @@ export const dummyLandInfoList: LandInfo[] = [
 ];
 
 // AI 분석 결과 생성 함수
-function generateAIResult(landInfo: LandInfo, isBorderline: boolean = false): AIAnalysisResult {
+function generateAIResult(landInfo: LandInfo): AIAnalysisResult {
   const criteriaChecks = [];
   
   // 면적 기준 체크
@@ -353,20 +353,11 @@ function generateAIResult(landInfo: LandInfo, isBorderline: boolean = false): AI
   const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
-  // 경계 사례 판정: 자동 판독 기준 1개만 충족하거나, 수동 확인 항목이 많은 경우
-  const isBorderlineResult = isBorderline || (metAutoCriteria === 1 && hasManualCheckNeeded);
+  // AI 1차 판독: 매수 또는 기각만 판정
+  let provisionalJudgment: "매수" | "기각";
   
-  let provisionalJudgment: "매수" | "기각" | "심의위원회이관";
-  let borderlineReason: string | undefined;
-  
-  if (isBorderlineResult) {
-    provisionalJudgment = "심의위원회이관";
-    borderlineReason = "자동 판독 기준 충족이 애매하여 담당자 검토 및 심의위원회 판단이 필요합니다.";
-  } else if (metAutoCriteria >= 2) {
+  if (metAutoCriteria >= 1) {
     provisionalJudgment = "매수";
-  } else if (hasManualCheckNeeded && metAutoCriteria >= 1) {
-    provisionalJudgment = "심의위원회이관";
-    borderlineReason = "수동 확인 항목이 존재하여 담당자 검토가 필요합니다.";
   } else {
     provisionalJudgment = "기각";
   }
@@ -385,8 +376,6 @@ function generateAIResult(landInfo: LandInfo, isBorderline: boolean = false): AI
     accessRoadLost: false,
     waterChannelLost: false,
     farmMachineDifficulty: false,
-    isBorderlineCase: isBorderlineResult,
-    borderlineReason,
     judgmentRationale,
   };
 }
@@ -394,7 +383,7 @@ function generateAIResult(landInfo: LandInfo, isBorderline: boolean = false): AI
 // 판단 근거 생성 헬퍼 함수
 function generateRationale(
   land: LandInfo,
-  judgment: "매수" | "기각" | "심의위원회이관",
+  judgment: "매수" | "기각",
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],
@@ -551,11 +540,10 @@ export const dummyApplications: Application[] = [
     reason: "도로 편입 후 농지 형태가 사다리형으로 변경되어 농기계 작업이 매우 곤란합니다. 수로도 일부 단절되어 관개가 어렵습니다.",
     attachments: ["토지대장.pdf", "농지원부.pdf"],
     status: "AI분석완료",
-    adminStatus: "대기중",
-    appliedAt: "2026-04-06",
-    aiResult: generateAIResult(dummyLandInfoList[8], true), // 경계 사례로 생성
-    isBorderlineCase: true,
-    adminName: "최영호",
+  adminStatus: "대기중",
+  appliedAt: "2026-04-06",
+  aiResult: generateAIResult(dummyLandInfoList[8]),
+  adminName: "최영호",
   },
   // 매수 불가 케이스 - 기각 처리됨
   {

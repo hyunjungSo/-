@@ -267,32 +267,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </Card>
       )}
 
-      {/* AI 판정 경계 사례 경고 */}
-      {(application.isBorderlineCase || application.aiResult?.isBorderlineCase) && (
-        <Card className="border-2 border-warning/50 bg-warning/5">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-warning">
-              <AlertTriangle className="h-5 w-5" />
-              AI 판정 경계 사례
-            </CardTitle>
-            <CardDescription>
-              이 신청건은 AI 자동 판정 기준 충족이 애매하여 담당자의 세심한 검토가 필요합니다.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-start gap-3 rounded-lg border border-warning/30 bg-card p-4">
-              <Info className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
-              <div>
-                <p className="font-medium text-foreground">토지보상심의위원회 이관 권장</p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {application.aiResult?.borderlineReason || "자동 판독 기준만으로는 명확한 판정이 어렵습니다. 수동 확인 항목을 검토하고, 필요시 심의위원회에 이관해 주세요."}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       <div className="grid gap-6 lg:grid-cols-2">
         {/* 지도 및 토지 정보 */}
         <Card>

@@ -62,7 +62,7 @@ const regionData = {
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
-    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "입장면"],
+    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "���장면"],
     // 충청남도 - 아산시
     "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악면", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
@@ -259,15 +259,10 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
   const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
-  const isBorderlineCase = metAutoCriteria === 1 && hasManualCheckNeeded;
+  // AI 1차 판독: 매수 또는 기각만 판정
+  let provisionalJudgment: "매수" | "기각";
   
-  let provisionalJudgment: "매수" | "기각" | "심의위원회이관";
-  let borderlineReason: string | undefined;
-  
-  if (isBorderlineCase) {
-    provisionalJudgment = "심의위원회이관";
-    borderlineReason = "자동 판독 기준 충족이 애매합니다. 담당자 검토 후 최종 결정됩니다.";
-  } else if (metAutoCriteria >= 2) {
+  if (metAutoCriteria >= 1) {
     provisionalJudgment = "매수";
   } else {
     provisionalJudgment = "기각";
@@ -293,8 +288,6 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     accessRoadLost: false,
     waterChannelLost: false,
     farmMachineDifficulty: false,
-    isBorderlineCase,
-    borderlineReason,
     judgmentRationale,
   };
 }
@@ -302,7 +295,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
 // 판단 근거 설명 생성 함수
 function generateJudgmentRationale(
   land: LandInfo,
-  judgment: "매수" | "기각" | "심의위원회이관",
+  judgment: "매수" | "기각",
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],

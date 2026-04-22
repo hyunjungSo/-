@@ -208,11 +208,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                             {app.additionalLands.length + 1}
                           </span>
                         )}
-                        {(app.isBorderlineCase || app.aiResult?.isBorderlineCase) && (
-                          <span className="flex items-center rounded bg-warning/10 px-1.5 py-0.5 text-xs text-warning" title="AI 판정 경계 사례">
-                            <AlertTriangle className="h-3 w-3" />
-                          </span>
-                        )}
                       </div>
                     </TableCell>
                     <TableCell>{app.applicantName}</TableCell>
@@ -268,12 +263,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       <span className="flex items-center gap-0.5 rounded bg-primary/10 px-1.5 py-0.5 text-xs text-primary">
                         <Layers className="h-3 w-3" />
                         복수필지
-                      </span>
-                    )}
-                    {(app.isBorderlineCase || app.aiResult?.isBorderlineCase) && (
-                      <span className="flex items-center gap-0.5 rounded bg-warning/10 px-1.5 py-0.5 text-xs text-warning">
-                        <AlertTriangle className="h-3 w-3" />
-                        경계사례
                       </span>
                     )}
                   </div>

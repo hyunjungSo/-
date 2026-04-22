@@ -99,7 +99,6 @@ export interface Application {
   reviewerComment?: string; // 담당자 검토 의견
   adminName?: string; // 담당자명
   statusUpdatedAt?: string; // 상태 변경일
-  isBorderlineCase?: boolean; // AI 판정 경계 사례 여부
 }
 
 // AI 분석 결과
@@ -111,11 +110,9 @@ export interface AIAnalysisResult {
   remainingShapeIndex: number;
   shapeIndexChange: number;
   isBlindLand: boolean; // 맹지 여부
-  accessRoadLost: boolean; // 접면도로 상실 (수동확인)
-  waterChannelLost: boolean; // 수로 상실 (수동확인)
-  farmMachineDifficulty: boolean; // 농기계 진입/회전 곤란 (수동확인)
-  isBorderlineCase: boolean; // AI 판정 경계 사례
-  borderlineReason?: string; // 경계 사례 사유
+  accessRoadLost: boolean; // 접면도로 상실 (직접확인)
+  waterChannelLost: boolean; // 수로 상실 (직접확인)
+  farmMachineDifficulty: boolean; // 농기계 진입/회전 곤란 (직접확인)
   judgmentRationale: JudgmentRationale; // 판단 근거 설명
 }
 
