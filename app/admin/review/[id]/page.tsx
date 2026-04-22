@@ -518,28 +518,32 @@ export default function ReviewDocumentPage({
                           )}
                         </>
                       ) : (
-                        <label className={`flex h-full w-full flex-col items-center justify-center bg-muted/30 transition-colors ${isEditing ? 'cursor-pointer hover:bg-muted/50' : ''}`}>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            disabled={!isEditing}
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) {
-                                const reader = new FileReader();
-                                reader.onload = (event) => {
-                                  setCadastralMapImage(event.target?.result as string);
-                                };
-                                reader.readAsDataURL(file);
-                              }
-                            }}
-                          />
-                          <Upload className="h-8 w-8 text-muted-foreground" />
-                          <p className="mt-2 text-sm text-muted-foreground">
-                            {isEditing ? '지적도 이미지 업로드' : '지적도 미등록'}
+                        <div className="flex h-full w-full flex-col items-center justify-center bg-muted/30">
+                          <p className="mb-4 text-sm text-muted-foreground">
+                            {isEditing ? '첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 직접 선택해주세요.' : '지적도 미등록'}
                           </p>
-                        </label>
+                          {isEditing && (
+                            <label className="inline-flex cursor-pointer items-center gap-2 rounded-md bg-[#222222] px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#333333]">
+                              <Upload className="h-4 w-4" />
+                              파일선택
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    const reader = new FileReader();
+                                    reader.onload = (event) => {
+                                      setCadastralMapImage(event.target?.result as string);
+                                    };
+                                    reader.readAsDataURL(file);
+                                  }
+                                }}
+                              />
+                            </label>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -565,28 +569,32 @@ export default function ReviewDocumentPage({
                           )}
                         </>
                       ) : (
-                        <label className={`flex h-full w-full flex-col items-center justify-center bg-muted/30 transition-colors ${isEditing ? 'cursor-pointer hover:bg-muted/50' : ''}`}>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            disabled={!isEditing}
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) {
-                                const reader = new FileReader();
-                                reader.onload = (event) => {
-                                  setAerialPhotoImage(event.target?.result as string);
-                                };
-                                reader.readAsDataURL(file);
-                              }
-                            }}
-                          />
-                          <Upload className="h-8 w-8 text-muted-foreground" />
-                          <p className="mt-2 text-sm text-muted-foreground">
-                            {isEditing ? '항공사진 이미지 업로드' : '항공사진 미등록'}
+                        <div className="flex h-full w-full flex-col items-center justify-center bg-muted/30">
+                          <p className="mb-4 text-sm text-muted-foreground">
+                            {isEditing ? '첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 직접 선택해주세요.' : '항공사진 미등록'}
                           </p>
-                        </label>
+                          {isEditing && (
+                            <label className="inline-flex cursor-pointer items-center gap-2 rounded-md bg-[#222222] px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#333333]">
+                              <Upload className="h-4 w-4" />
+                              파일선택
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    const reader = new FileReader();
+                                    reader.onload = (event) => {
+                                      setAerialPhotoImage(event.target?.result as string);
+                                    };
+                                    reader.readAsDataURL(file);
+                                  }
+                                }}
+                              />
+                            </label>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>
