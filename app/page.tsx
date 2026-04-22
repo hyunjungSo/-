@@ -129,8 +129,8 @@ export default function HomePage() {
           <div className="mt-14 flex flex-col items-center gap-6 lg:flex-row lg:justify-center lg:gap-0">
             {/* Step 1 */}
             <div className="flex flex-col items-center text-center lg:flex-1">
-              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
-                <Search className="h-9 w-9" />
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gray-100">
+                <Search className="h-9 w-9 text-primary" />
               </div>
               <h3 className="mt-5 text-lg font-semibold text-foreground">토지 조회</h3>
               <p className="mt-2 max-w-[200px] text-base leading-relaxed text-muted-foreground">
@@ -148,8 +148,8 @@ export default function HomePage() {
 
             {/* Step 2 */}
             <div className="flex flex-col items-center text-center lg:flex-1">
-              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
-                <Zap className="h-9 w-9" />
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gray-100">
+                <Zap className="h-9 w-9 text-primary" />
               </div>
               <h3 className="mt-5 text-lg font-semibold text-foreground">AI 분석 확인</h3>
               <p className="mt-2 max-w-[200px] text-base leading-relaxed text-muted-foreground">
@@ -167,8 +167,8 @@ export default function HomePage() {
 
             {/* Step 3 */}
             <div className="flex flex-col items-center text-center lg:flex-1">
-              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
-                <FileCheck className="h-9 w-9" />
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gray-100">
+                <FileCheck className="h-9 w-9 text-primary" />
               </div>
               <h3 className="mt-5 text-lg font-semibold text-foreground">매수 신청</h3>
               <p className="mt-2 max-w-[200px] text-base leading-relaxed text-muted-foreground">
@@ -186,8 +186,8 @@ export default function HomePage() {
 
             {/* Step 4 */}
             <div className="flex flex-col items-center text-center lg:flex-1">
-              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
-                <CheckCircle2 className="h-9 w-9" />
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gray-100">
+                <CheckCircle2 className="h-9 w-9 text-primary" />
               </div>
               <h3 className="mt-5 text-lg font-semibold text-foreground">결과 통보</h3>
               <p className="mt-2 max-w-[200px] text-base leading-relaxed text-muted-foreground">
