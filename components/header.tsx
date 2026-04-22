@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Menu, X, LogOut, User, ExternalLink, ChevronDown, LogIn, UserPlus, Users, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 
 const citizenNavigation = [
@@ -25,6 +25,15 @@ export function Header() {
   const [viewMode, setViewMode] = useState<"citizen" | "admin">(
     pathname.startsWith("/admin") ? "admin" : "citizen"
   );
+
+  // URL 변경 시 viewMode 동기화
+  useEffect(() => {
+    if (pathname.startsWith("/admin")) {
+      setViewMode("admin");
+    } else if (pathname.startsWith("/citizen") || pathname === "/") {
+      setViewMode("citizen");
+    }
+  }, [pathname]);
 
   const handleLogout = () => {
     logout();
