@@ -54,7 +54,7 @@ export default function HomePage() {
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <Card className="border-border">
-              <CardHeader>
+              <CardHeader className="pb-2">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                   <FileSearch className="h-6 w-6 text-primary" />
                 </div>
@@ -68,7 +68,7 @@ export default function HomePage() {
             </Card>
 
             <Card className="border-border">
-              <CardHeader>
+              <CardHeader className="pb-2">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
                   <ClipboardList className="h-6 w-6 text-blue-600" />
                 </div>
@@ -82,7 +82,7 @@ export default function HomePage() {
             </Card>
 
             <Card className="border-border">
-              <CardHeader>
+              <CardHeader className="pb-2">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-chart-3/10">
                   <FileText className="h-6 w-6 text-chart-3" />
                 </div>
@@ -96,7 +96,7 @@ export default function HomePage() {
             </Card>
 
             <Card className="border-border">
-              <CardHeader>
+              <CardHeader className="pb-2">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-chart-4/10">
                   <Clock className="h-6 w-6 text-chart-4" />
                 </div>
