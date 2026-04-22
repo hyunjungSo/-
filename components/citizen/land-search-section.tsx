@@ -208,162 +208,61 @@ function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale 
   );
 }
 
-// PRD 기준 면적 기준 계산 함수
-function getAreaCriteria(land: LandInfo): { baseArea: number; relaxedArea: number; description: string } {
-  const isRelaxed = land.remainingRatio <= 25; // 잔여비율 25% 이하 시 완화 적용
-  
-  if (land.landType === "대지") {
-    // 대지: 단독·다세대 90㎡, 연립 330㎡, 아파트 1,000㎡, 공업용 330㎡
-    const subType = land.landSubType || "단독다세대";
-    let base: number;
-    switch (subType) {
-      case "단독다세대": base = 90; break;
-      case "연립": base = 330; break;
-      case "아파트": base = 1000; break;
-      case "공업용": base = 330; break;
-      default: base = 90;
-    }
-    const relaxed = isRelaxed ? base * 1.5 : base;
-    return { 
-      baseArea: base, 
-      relaxedArea: relaxed, 
-      description: `${subType} ${base}㎡${isRelaxed ? ` (완화: ${relaxed}㎡)` : ""}` 
-    };
-  } else if (land.landType === "농지") {
-    // 농지: 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)
-    return { 
-      baseArea: 330, 
-      relaxedArea: isRelaxed ? 495 : 330, 
-      description: `330㎡${isRelaxed ? " (완화: 495㎡)" : ""}` 
-    };
-  } else if (land.landType === "산지") {
-    // 산지: 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)
-    return { 
-      baseArea: 330, 
-      relaxedArea: isRelaxed ? 495 : 330, 
-      description: `330㎡${isRelaxed ? " (완화: 495㎡)" : ""}` 
-    };
-  } else {
-    // 그 밖의 토지: 330㎡ 이하 또는 잔여비율 50% 이하
-    return { 
-      baseArea: 330, 
-      relaxedArea: 330, 
-      description: "330㎡ 이하 또는 잔여비율 50% 이하" 
-    };
-  }
-}
-
-// PRD 기준 형상 조건 체크 함수
-function checkShapeCondition(land: LandInfo): { isMet: boolean; description: string } {
-  const width = land.remainingWidth || 10; // 기본값 10m
-  const triangleSide = land.remainingTriangleSide || 15; // 기본값 15m
-  
-  // 사각형: 폭 5m 이하 / 삼각형: 한 변 11m 이하
-  if (["삼각형", "역삼각형"].includes(land.remainingShape)) {
-    const isMet = triangleSide <= 11;
-    return { 
-      isMet, 
-      description: `삼각형 한 변 ${triangleSide}m (기준: 11m 이하)` 
-    };
-  } else if (["정방형", "가로장방형", "세로장방형", "사다리형", "역사다리형", "변형사다리형"].includes(land.remainingShape)) {
-    const isMet = width <= 5;
-    return { 
-      isMet, 
-      description: `사각형 폭 ${width}m (기준: 5m 이하)` 
-    };
-  } else {
-    // 부정형, 자루형 등
-    return { 
-      isMet: true, 
-      description: `부정형 형상 (${land.remainingShape})` 
-    };
-  }
-}
-
-// AI 분석 결과 시뮬레이션 (PRD 기준 적용)
+// AI 분석 결과 시뮬레이션
 function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
   const shapeIndexChange = land.remainingShapeIndex - land.originalShapeIndex;
-  const areaCriteria = getAreaCriteria(land);
-  const shapeCondition = checkShapeCondition(land);
-  
-  // 면적 기준 충족 여부
-  const areaIsMet = land.landType === "그밖의토지" 
-    ? (land.remainingArea <= areaCriteria.relaxedArea || land.remainingRatio <= 50)
-    : land.remainingArea <= areaCriteria.relaxedArea;
   
   const criteriaChecks = [
     {
-      criteriaName: "면적 기준",
-      criteriaDescription: `잔여 면적 ${land.remainingArea.toLocaleString()}㎡ (기준: ${areaCriteria.description})`,
-      isMet: areaIsMet,
-      autoDetected: true,
-    },
-    {
-      criteriaName: "형상 기준",
-      criteriaDescription: shapeCondition.description,
-      isMet: shapeCondition.isMet,
+      criteriaName: "잔여지 비율",
+      criteriaDescription: `잔여 비율 ${land.remainingRatio}% (기준: 30% 이하)`,
+      isMet: land.remainingRatio <= 30,
       autoDetected: true,
     },
     {
       criteriaName: "형상지수 변화",
-      criteriaDescription: `형상지수 변화 +${shapeIndexChange.toFixed(1)} (기준: 1.0 이상 상승)`,
+      criteriaDescription: `형상지수 변화 +${shapeIndexChange.toFixed(1)} (기준: 1.0 이상)`,
       isMet: shapeIndexChange >= 1.0,
       autoDetected: true,
     },
+    {
+      criteriaName: "잔여지 형상",
+      criteriaDescription: `잔여지 형상: ${land.remainingShape}`,
+      isMet: ["부정형", "삼각형", "역삼각형", "자루형"].includes(land.remainingShape),
+      autoDetected: true,
+    },
+    {
+      criteriaName: "접면도로 상실",
+      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목적 사용 곤란",
+      isMet: false,
+      autoDetected: false,
+    },
   ];
 
-  // 토지 유형별 물리 조건 추가
-  if (land.landType === "대지") {
-    criteriaChecks.push({
-      criteriaName: "접면도로 상태",
-      criteriaDescription: "접면도로 상태 변경으로 건축법상 건축허가 불가",
-      isMet: land.hasAccessRoad === false,
-      autoDetected: false,
-    });
-  } else if (land.landType === "농지") {
-    criteriaChecks.push({
-      criteriaName: "도로/수로 상실",
-      criteriaDescription: "접한 도로 또는 수로가 없어져 농지 사용 현저히 곤란",
-      isMet: land.hasAccessRoad === false || land.hasWaterChannel === false,
-      autoDetected: false,
-    });
+  if (land.landType === "농지") {
     criteriaChecks.push({
       criteriaName: "농기계 진입/회전 곤란",
-      criteriaDescription: "농기계 진입·회전 곤란 또는 형상 부정형 변경",
-      isMet: false,
-      autoDetected: false,
-    });
-  } else if (land.landType === "산지") {
-    criteriaChecks.push({
-      criteriaName: "법정도로 상실",
-      criteriaDescription: "잔여지에 접한 법정도로(건축법 도로·농어촌도로·임도)가 없어져 종래 목적대로 사용 곤란",
-      isMet: land.hasAccessRoad === false,
-      autoDetected: false,
-    });
-  } else {
-    // 그 밖의 토지
-    criteriaChecks.push({
-      criteriaName: "진입 곤란",
-      criteriaDescription: "절토·성토·옹벽 설치 등으로 진입 곤란",
+      criteriaDescription: "농기계 진입 및 회전이 곤란하여 영농이 불가능한 경우",
       isMet: false,
       autoDetected: false,
     });
     criteriaChecks.push({
-      criteriaName: "토지 양분",
-      criteriaDescription: "일단의 토지가 양분되어 잔여지 발생",
+      criteriaName: "수로 상실",
+      criteriaDescription: "관개수로 상실로 농업용수 공급이 불가능한 경우",
       isMet: false,
       autoDetected: false,
     });
   }
 
   const metAutoCriteria = criteriaChecks.filter(c => c.isMet && c.autoDetected).length;
+  const hasManualCheckNeeded = criteriaChecks.some(c => !c.autoDetected);
   const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
-  // AI 1차 판독: 면적 또는 물리 조건 중 하나라도 충족 시 매수
+  // AI 1차 판독: 매수 또는 기각만 판정
   let provisionalJudgment: "매수" | "기각";
   
-  if (areaIsMet || shapeCondition.isMet || shapeIndexChange >= 1.0) {
+  if (metAutoCriteria >= 1) {
     provisionalJudgment = "매수";
   } else {
     provisionalJudgment = "기각";
@@ -385,15 +284,15 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     originalShapeIndex: land.originalShapeIndex,
     remainingShapeIndex: land.remainingShapeIndex,
     shapeIndexChange,
-    isBlindLand: land.hasAccessRoad === false,
-    accessRoadLost: land.hasAccessRoad === false,
-    waterChannelLost: land.hasWaterChannel === false,
+    isBlindLand: land.remainingRatio <= 20,
+    accessRoadLost: false,
+    waterChannelLost: false,
     farmMachineDifficulty: false,
     judgmentRationale,
   };
 }
 
-// 판단 근거 설명 생성 함수 (PRD 기준 적용)
+// 판단 근거 설명 생성 함수
 function generateJudgmentRationale(
   land: LandInfo,
   judgment: "매수" | "기각",
@@ -407,26 +306,20 @@ function generateJudgmentRationale(
   let summary: string;
   let detailedExplanation: string;
   const appliedCriteria: string[] = [];
-  const isRelaxed = land.remainingRatio <= 25;
 
-  // PRD 기준 토지 유형별 면적 기준
   if (land.landType === "대지") {
-    const subType = land.landSubType || "단독다세대";
-    appliedCriteria.push(`대지(${subType}) 면적 기준: 단독·다세대 90㎡, 연립 330㎡, 아파트 1,000㎡, 공업용 330㎡${isRelaxed ? " (잔여비율 25% 이하 시 1.5배 완화)" : ""}`);
-    appliedCriteria.push(`대지 물리 조건: ① 접면도로 상태 변경으로 건축허가 불가 ② 형상 부정형 변경 (사각형 폭 5m 이하 / 삼각형 한 변 11m 이하)`);
+    appliedCriteria.push(`대지 면적 기준: 주거지역 90㎡, 상업지역 150㎡, 공업지역 330㎡ 이하`);
   } else if (land.landType === "농지") {
-    appliedCriteria.push(`농지 면적 기준: 330㎡ 이하${isRelaxed ? " (잔여비율 25% 이하 시 495㎡까지 완화)" : ""}`);
-    appliedCriteria.push(`농지 물리 조건: ① 접한 도로/수로 없어져 농지 사용 곤란 ② 농기계 진입·회전 곤란 또는 형상 부정형 (사각형 폭 5m 이하 / 삼각형 한 변 11m 이하)`);
+    appliedCriteria.push(`농지 면적 기준: 330㎡ 이하`);
   } else if (land.landType === "산지") {
-    appliedCriteria.push(`산지 면적 기준: 330㎡ 이하${isRelaxed ? " (잔여비율 25% 이하 시 495㎡까지 완화)" : ""}`);
-    appliedCriteria.push(`산지 물리 조건: 법정도로(건축법 도로·농어촌도로·임도)가 없어져 종래 목적대로 사용 곤란`);
+    appliedCriteria.push(`산지 면적 기준: 990㎡ 이하`);
   } else {
-    appliedCriteria.push(`그 밖의 토지 면적 기준: 330㎡ 이하 또는 잔여비율 50% 이하`);
-    appliedCriteria.push(`그 밖의 토지 물리 조건: ① 절토·성토·옹벽으로 진입 곤란 ② 토지 양분 ③ 형상 변경 (정형: 폭 기준 이하 / 비정형: 형상지수 1.0 이상 상승)`);
+    appliedCriteria.push(`그 밖의 토지 면적 기준: 330㎡ 이하`);
   }
   
-  appliedCriteria.push(`형상지수 변화 기준: 편입 전 대비 1.0 이상 상승 시 비정형으로 판단`);
-  appliedCriteria.push(`일단지 판정: 소유자 동일성, 지반 연속성, 용도 일체성 충족 시 병합 처리`);
+  appliedCriteria.push(`형상지수 변화 기준: 편입 전 대비 1.0 이상 상승 시 형상 불량으로 판단`);
+  appliedCriteria.push(`잔여지 형상 기준: 삼각형, 역삼각형, 자루형, 부정형 등 불규칙 형상`);
+  appliedCriteria.push(`잔여비율 기준: 30% 이하일 경우 종래 목적 사용 곤란으로 판단`);
 
   if (judgment === "매수") {
     summary = `본 토지는 잔여지 매수 기준 ${metCriteriaCount}개 항목을 충족하여 「매수 가능」으로 판정되었습니다.`;
