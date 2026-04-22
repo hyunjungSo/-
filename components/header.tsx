@@ -26,10 +26,10 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
-      {/* 상단 기관 식별 및 네비게이션 통합 영역 */}
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+      {/* KRDS: 헤더 영역 - 기관 식별 및 네비게이션 */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-16 items-center justify-between lg:h-[72px]">
           {/* 로고 */}
           <Link href="/" className="flex cursor-pointer items-center py-2">
             <Image
@@ -42,18 +42,18 @@ export function Header() {
             />
           </Link>
 
-          {/* 데스크톱 네비게이션 */}
-          <div className="hidden items-center gap-4 md:flex">
+          {/* 데스크톱 네비게이션 - KRDS 메인 메뉴 스타일 */}
+          <div className="hidden items-center gap-6 md:flex">
             <nav className="flex items-center gap-1" role="navigation" aria-label="메인 메뉴">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
                   className={cn(
-                    "cursor-pointer rounded-md px-4 py-2 text-base font-medium transition-colors",
+                    "relative cursor-pointer px-4 py-2.5 text-base font-medium transition-colors",
                     pathname.startsWith(item.href)
-                      ? "bg-primary text-white"
-                      : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      ? "text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary"
+                      : "text-foreground hover:text-primary"
                   )}
                   aria-current={pathname.startsWith(item.href) ? "page" : undefined}
                 >
@@ -64,16 +64,16 @@ export function Header() {
 
             {/* 사용자 정보 및 로그아웃 */}
             {user && (
-              <div className="flex items-center gap-3 border-l pl-4">
-                <div className="flex items-center gap-2 text-base text-gray-600">
+              <div className="flex items-center gap-4 border-l border-border pl-6">
+                <div className="flex items-center gap-2 text-base text-muted-foreground">
                   <User className="h-4 w-4" />
-                  <span>{user.name}</span>
+                  <span className="font-medium text-foreground">{user.name}</span>
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={handleLogout}
-                  className="gap-1"
+                  className="h-9 gap-1.5 text-sm"
                 >
                   <LogOut className="h-4 w-4" />
                   로그아웃

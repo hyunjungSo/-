@@ -8,9 +8,9 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="mt-auto border-t bg-[#f6f6f6]">
-      {/* 상단 정보 영역 */}
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <footer className="mt-auto border-t border-border bg-muted/50">
+      {/* KRDS: 푸터 영역 */}
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           {/* 좌측: 로고 및 연락처 */}
           <div className="space-y-3">
@@ -21,10 +21,10 @@ export function Footer() {
               height={32}
               className="h-8 w-auto"
             />
-            <p className="text-sm text-gray-600">
+            <p className="text-sm leading-relaxed text-muted-foreground">
               (39660) 경상북도 김천시 혁신8로 77 (율곡동 941) 한국도로공사
             </p>
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-sm font-medium text-foreground">
               대표전화 1588-2504
             </p>
           </div>
@@ -35,7 +35,7 @@ export function Footer() {
               href="https://www.ex.co.kr/site/com/pageProcess.do?url=/kor/company/location"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-base font-medium text-gray-700 hover:text-primary"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
             >
               찾아오시는 길
               <ExternalLink className="h-4 w-4" />
@@ -43,35 +43,35 @@ export function Footer() {
           </div>
         </div>
 
-        {/* 링크 및 저작권 */}
-        <div className="mt-6 flex flex-col gap-4 border-t pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <nav className="flex flex-wrap items-center gap-4 text-sm" aria-label="푸터 링크">
+        {/* KRDS: 링크 및 저작권 영역 */}
+        <div className="mt-8 flex flex-col gap-4 border-t border-border pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm" aria-label="푸터 링크">
             <Link
               href="/privacy"
-              className="font-semibold text-primary hover:underline"
+              className="font-semibold text-primary transition-colors hover:underline"
             >
               개인정보처리방침
             </Link>
             <Link
               href="/guide"
-              className="text-gray-600 hover:text-gray-900"
+              className="text-muted-foreground transition-colors hover:text-foreground"
             >
               이용안내
             </Link>
             <Link
               href="/terms"
-              className="text-gray-600 hover:text-gray-900"
+              className="text-muted-foreground transition-colors hover:text-foreground"
             >
               이용약관
             </Link>
             <Link
               href="/email-policy"
-              className="text-gray-600 hover:text-gray-900"
+              className="text-muted-foreground transition-colors hover:text-foreground"
             >
               이메일무단수집거부
             </Link>
           </nav>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             © {currentYear} Korea Expressway Corporation. All Rights reserved.
           </p>
         </div>

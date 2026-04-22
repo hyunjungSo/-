@@ -12,7 +12,8 @@ import {
   Search,
   Zap,
   FileCheck,
-  CheckCircle2
+  CheckCircle2,
+  ChevronRight
 } from "lucide-react";
 
 export default function HomePage() {
@@ -20,23 +21,34 @@ export default function HomePage() {
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
       
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-background to-accent/5">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+      {/* Hero Section - KRDS 가이드라인 준수 */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background">
+        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
           <div className="text-center">
+            <div className="mb-4">
+              <span className="inline-flex items-center rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
+                한국도로공사 공공서비스
+              </span>
+            </div>
             <h1 className="text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
               잔여지 매수 신청 서비스
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg">
+            <p className="mx-auto mt-6 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
               도로 편입으로 발생한 잔여지의 매수 가능 여부를 빠르게 확인하고
-              <br />
+              <br className="hidden sm:block" />
               온라인으로 간편하게 매수 신청을 진행하실 수 있습니다.
             </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button asChild size="lg" className="w-full sm:w-auto">
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button asChild size="lg" className="h-12 min-w-[200px] text-base font-medium shadow-sm">
                 <Link href="/citizen">
                   잔여지 매수 조회
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="h-12 min-w-[200px] text-base font-medium">
+                <Link href="/admin">
+                  담당자 로그인
+                  <ChevronRight className="ml-1 h-5 w-5" />
                 </Link>
               </Button>
             </div>
@@ -44,70 +56,70 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="border-t border-border bg-card py-16 sm:py-24">
+      {/* Features Section - KRDS 컴포넌트 스타일 적용 */}
+      <section className="border-t border-border bg-muted/30 py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
               주요 기능
             </h2>
-            <p className="mt-2 text-muted-foreground">
+            <p className="mt-3 text-base text-muted-foreground">
               편리한 잔여지 매수 신청을 위한 기능을 제공합니다
             </p>
           </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <Card className="border-border">
-              <CardHeader className="pb-2">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <FileSearch className="h-6 w-6 text-primary" />
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <Card className="border-border bg-card transition-shadow hover:shadow-md">
+              <CardHeader className="pb-3">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
+                  <FileSearch className="h-7 w-7 text-primary" />
                 </div>
-                <CardTitle className="mt-4 text-lg">간편한 토지 조회</CardTitle>
+                <CardTitle className="mt-5 text-lg font-semibold">간편한 토지 조회</CardTitle>
               </CardHeader>
-              <CardContent>
-                <CardDescription>
+              <CardContent className="pt-0">
+                <CardDescription className="text-base leading-relaxed">
                   지번을 몰라도 읍면동만 선택하면 해당 지역의 편입 토지 목록에서 내 땅을 찾을 수 있습니다.
                 </CardDescription>
               </CardContent>
             </Card>
 
-            <Card className="border-border">
-              <CardHeader className="pb-2">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-                  <ClipboardList className="h-6 w-6 text-blue-600" />
+            <Card className="border-border bg-card transition-shadow hover:shadow-md">
+              <CardHeader className="pb-3">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-blue-500/10">
+                  <ClipboardList className="h-7 w-7 text-blue-600" />
                 </div>
-                <CardTitle className="mt-4 text-lg">매수 가능 여부 확인</CardTitle>
+                <CardTitle className="mt-5 text-lg font-semibold">매수 가능 여부 확인</CardTitle>
               </CardHeader>
-              <CardContent>
-                <CardDescription>
+              <CardContent className="pt-0">
+                <CardDescription className="text-base leading-relaxed">
                   AI가 면적, 형상, 용도 등 법적 기준을 분석하여 매수 가능 여부를 사전에 안내해드립니다.
                 </CardDescription>
               </CardContent>
             </Card>
 
-            <Card className="border-border">
-              <CardHeader className="pb-2">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-chart-3/10">
-                  <FileText className="h-6 w-6 text-chart-3" />
+            <Card className="border-border bg-card transition-shadow hover:shadow-md">
+              <CardHeader className="pb-3">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-amber-500/10">
+                  <FileText className="h-7 w-7 text-amber-600" />
                 </div>
-                <CardTitle className="mt-4 text-lg">온라인 신청</CardTitle>
+                <CardTitle className="mt-5 text-lg font-semibold">온라인 신청</CardTitle>
               </CardHeader>
-              <CardContent>
-                <CardDescription>
+              <CardContent className="pt-0">
+                <CardDescription className="text-base leading-relaxed">
                   방문 없이 온라인으로 매수 신청서를 제출하고 진행 상황을 실시간으로 확인하세요.
                 </CardDescription>
               </CardContent>
             </Card>
 
-            <Card className="border-border">
-              <CardHeader className="pb-2">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-chart-4/10">
-                  <Clock className="h-6 w-6 text-chart-4" />
+            <Card className="border-border bg-card transition-shadow hover:shadow-md">
+              <CardHeader className="pb-3">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-violet-500/10">
+                  <Clock className="h-7 w-7 text-violet-600" />
                 </div>
-                <CardTitle className="mt-4 text-lg">빠른 결과 확인</CardTitle>
+                <CardTitle className="mt-5 text-lg font-semibold">빠른 결과 확인</CardTitle>
               </CardHeader>
-              <CardContent>
-                <CardDescription>
+              <CardContent className="pt-0">
+                <CardDescription className="text-base leading-relaxed">
                   신청 접수부터 결과 통보까지 모든 진행 상황을 온라인에서 확인할 수 있습니다.
                 </CardDescription>
               </CardContent>
@@ -116,89 +128,102 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Process Section */}
-      <section className="border-t border-border py-16 sm:py-24">
+      {/* Process Section - KRDS 단계 표시기 스타일 */}
+      <section className="border-t border-border bg-card py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
               처리 절차
             </h2>
-            <p className="mt-2 text-muted-foreground">
+            <p className="mt-3 text-base text-muted-foreground">
               간단한 4단계로 잔여지 매수 신청이 완료됩니다
             </p>
           </div>
 
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Step 1 */}
             <div className="relative flex flex-col items-center text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <Search className="h-8 w-8" />
-          </div>
-
-            <div className="relative flex flex-col items-center text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <Zap className="h-8 w-8" />
+              <div className="relative">
+                <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
+                  <Search className="h-9 w-9" />
+                </div>
+                <span className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-sm font-bold text-background">
+                  1
+                </span>
               </div>
-              <h3 className="mt-4 font-semibold text-foreground">AI 분석 확인</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                AI가 매수 가능 여부를 사전 분석합니다
-              </p>
-            </div>
-
-            <div className="relative flex flex-col items-center text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <FileCheck className="h-8 w-8" />
-              </div>
-              <h3 className="mt-4 font-semibold text-foreground">매수 신청</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                신청인 정보와 필요 서류를 제출합니다
-              </p>
-            </div>
-
-            <div className="relative flex flex-col items-center text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <CheckCircle2 className="h-8 w-8" />
-              </div>
-              <h3 className="mt-4 font-semibold text-foreground">결과 통보</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                매수, 기각, 또는 심의위원회 이관 결과를 통보합니다
-              </p>
-            </div>
-          </div>
-              <h3 className="mt-4 font-semibold text-foreground">토지 조회</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
+              <h3 className="mt-6 text-lg font-semibold text-foreground">토지 조회</h3>
+              <p className="mt-2 text-base leading-relaxed text-muted-foreground">
                 편입 토지 지번으로 잔여지 정보를 조회합니다
               </p>
             </div>
 
+            {/* Step 2 */}
             <div className="relative flex flex-col items-center text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <span className="text-xl font-bold">2</span>
+              <div className="relative">
+                <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
+                  <Zap className="h-9 w-9" />
+                </div>
+                <span className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-sm font-bold text-background">
+                  2
+                </span>
               </div>
-              <h3 className="mt-4 font-semibold text-foreground">AI 분석 확인</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
+              <h3 className="mt-6 text-lg font-semibold text-foreground">AI 분석 확인</h3>
+              <p className="mt-2 text-base leading-relaxed text-muted-foreground">
                 AI가 매수 가능 여부를 사전 분석합니다
               </p>
             </div>
 
+            {/* Step 3 */}
             <div className="relative flex flex-col items-center text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <span className="text-xl font-bold">3</span>
+              <div className="relative">
+                <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
+                  <FileCheck className="h-9 w-9" />
+                </div>
+                <span className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-sm font-bold text-background">
+                  3
+                </span>
               </div>
-              <h3 className="mt-4 font-semibold text-foreground">매수 신청</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
+              <h3 className="mt-6 text-lg font-semibold text-foreground">매수 신청</h3>
+              <p className="mt-2 text-base leading-relaxed text-muted-foreground">
                 신청인 정보와 필요 서류를 제출합니다
               </p>
             </div>
 
+            {/* Step 4 */}
             <div className="relative flex flex-col items-center text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <span className="text-xl font-bold">4</span>
+              <div className="relative">
+                <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
+                  <CheckCircle2 className="h-9 w-9" />
+                </div>
+                <span className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-sm font-bold text-background">
+                  4
+                </span>
               </div>
-              <h3 className="mt-4 font-semibold text-foreground">���과 통보</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
+              <h3 className="mt-6 text-lg font-semibold text-foreground">결과 통보</h3>
+              <p className="mt-2 text-base leading-relaxed text-muted-foreground">
                 매수, 기각, 또는 심의위원회 이관 결과를 통보합니다
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section - KRDS 액션 버튼 스타일 */}
+      <section className="border-t border-border bg-primary/5 py-16 sm:py-20">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
+            지금 바로 시작하세요
+          </h2>
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+            잔여지 매수 가능 여부를 무료로 확인하고, 온라인으로 간편하게 신청하세요.
+          </p>
+          <div className="mt-8">
+            <Button asChild size="lg" className="h-12 min-w-[200px] text-base font-medium shadow-sm">
+              <Link href="/citizen">
+                잔여지 조회 시작하기
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
