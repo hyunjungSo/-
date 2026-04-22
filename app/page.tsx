@@ -69,7 +69,7 @@ export default function HomePage() {
                 <CardTitle className="mt-4 text-lg font-semibold">간편한 토지 조회</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <CardDescription className="text-base leading-relaxed">
+                <CardDescription className="mt-2 text-base leading-relaxed">
                   지번을 몰라도 읍면동만 선택하면 해당 지역의 편입 토지 목록에서 내 땅을 찾을 수 있습니다.
                 </CardDescription>
               </CardContent>
@@ -81,7 +81,7 @@ export default function HomePage() {
                 <CardTitle className="mt-4 text-lg font-semibold">매수 가능 여부 확인</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <CardDescription className="text-base leading-relaxed">
+                <CardDescription className="mt-2 text-base leading-relaxed">
                   AI가 면적, 형상, 용도 등 법적 기준을 분석하여 매수 가능 여부를 사전에 안내해드립니다.
                 </CardDescription>
               </CardContent>
@@ -93,7 +93,7 @@ export default function HomePage() {
                 <CardTitle className="mt-4 text-lg font-semibold">온라인 신청</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <CardDescription className="text-base leading-relaxed">
+                <CardDescription className="mt-2 text-base leading-relaxed">
                   방문 없이 온라인으로 매수 신청서를 제출하고 진행 상황을 실시간으로 확인하세요.
                 </CardDescription>
               </CardContent>
@@ -105,7 +105,7 @@ export default function HomePage() {
                 <CardTitle className="mt-4 text-lg font-semibold">빠른 결과 확인</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <CardDescription className="text-base leading-relaxed">
+                <CardDescription className="mt-2 text-base leading-relaxed">
                   신청 접수부터 결과 통보까지 모든 진행 상황을 온라인에서 확인할 수 있습니다.
                 </CardDescription>
               </CardContent>
