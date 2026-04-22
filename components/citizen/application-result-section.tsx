@@ -12,7 +12,7 @@ interface ApplicationResultSectionProps {
 }
 
 const statusConfig = {
-  접수됨: { label: "접수됨", variant: "secondary" as const, icon: Clock },
+  접수완료: { label: "접수완료", variant: "secondary" as const, icon: Clock },
   AI분석완료: { label: "AI 분석 완료", variant: "secondary" as const, icon: Clock },
   검토중: { label: "검토 중", variant: "secondary" as const, icon: Clock },
   처리완료: { label: "처리 완료", variant: "default" as const, icon: CheckCircle2 },

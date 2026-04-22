@@ -472,7 +472,7 @@ export const dummyApplications: Application[] = [
     farmMachineDifficulty: false,
     reason: "산지가 자루형으로 변형되어 임도 접근이 불가능해졌습니다. 종래 목적으로 사용이 현저히 곤란합니다.",
     attachments: ["토지대장.pdf", "산지전용허가서.pdf"],
-    status: "접수됨",
+    status: "접수완료",
     adminStatus: "접수완료",
     appliedAt: "2026-04-03",
     aiResult: generateAIResult(dummyLandInfoList[2]),

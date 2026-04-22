@@ -29,7 +29,7 @@ interface ApplicationListProps {
 }
 
 const statusConfig: Record<ProcessStatus, { label: string; className: string }> = {
-  접수됨: { label: "접수됨", className: "bg-gray-100 text-gray-700 border-gray-300" },
+  접수완료: { label: "접수완료", className: "bg-gray-100 text-gray-700 border-gray-300" },
   AI분석완료: { label: "AI 분석 완료", className: "bg-blue-100 text-blue-700 border-blue-300" },
   검토중: { label: "검토 중", className: "bg-amber-100 text-amber-700 border-amber-300" },
   처리완료: { label: "처리 완료", className: "bg-green-100 text-green-700 border-green-300" },
