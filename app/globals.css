@@ -269,7 +269,7 @@
   
   /* 페이지 설정 */
   @page {
-    size: A4;
+    size: A4 landscape;
     margin: 10mm;
   }
   
