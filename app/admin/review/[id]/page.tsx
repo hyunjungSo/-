@@ -201,13 +201,21 @@ export default function ReviewDocumentPage({
             </div>
           </div>
 
-          <div>
-            <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
-              심의서 작성 {isGenerated && !isEditing && "완료"}
-            </h1>
-            <p className="mt-1 text-muted-foreground">
-              접수번호: {application.applicationNumber}
-            </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
+                심의서 작성 {isGenerated && !isEditing && "완료"}
+              </h1>
+              <p className="mt-1 text-muted-foreground">
+                접수번호: {application.applicationNumber}
+              </p>
+            </div>
+            {isEditing && (
+              <Button onClick={handleGenerate} size="lg" className="px-8 print:hidden">
+                <FileText className="mr-2 h-4 w-4" />
+                심의서 생성
+              </Button>
+            )}
           </div>
 
           {/* 심의서 본문 */}
@@ -504,16 +512,6 @@ export default function ReviewDocumentPage({
                     </div>
                   </div>
                 </div>
-
-                {/* 생성 버튼 */}
-                {isEditing && (
-                  <div className="mt-6 flex justify-center print:hidden">
-                    <Button onClick={handleGenerate} size="lg" className="px-8">
-                      <FileText className="mr-2 h-4 w-4" />
-                      심의서 생성
-                    </Button>
-                  </div>
-                )}
 
                 {/* 생성 완료 메시지 */}
                 {isGenerated && !isEditing && (
