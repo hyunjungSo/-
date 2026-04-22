@@ -212,7 +212,7 @@ export default function ReviewDocumentPage({
 
           <div className="print:hidden">
             <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
-              심의서 작성 {isGenerated && !isEditing && "완��"}
+              심의서 작성 {isGenerated && !isEditing && "완료"}
             </h1>
             <p className="mt-1 text-muted-foreground">
               접수번호: {application.applicationNumber}
