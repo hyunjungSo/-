@@ -86,7 +86,7 @@ function AddressSearchModal({
             />
             <Button 
               onClick={handleSearch}
-              className="shrink-0 bg-[#222222] hover:bg-[#333333]"
+              className="h-10 shrink-0 bg-[#222222] hover:bg-[#333333]"
             >
               검색
             </Button>
