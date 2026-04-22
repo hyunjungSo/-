@@ -31,7 +31,7 @@ interface LandParcel {
   remainingLotNumber: string;
   remainingArea: number;
   remainingRatio: number;
-  purchaseDecision: "O" | "X" | "-";
+  purchaseDecision: "O" | "X" | "-" | "선택";
 }
 
 // 심의위원회 결정
@@ -118,30 +118,30 @@ export default function ReviewDocumentPage({
           remainingLotNumber: "359-1",
           remainingArea: 260,
           remainingRatio: 40.0,
-          purchaseDecision: "X",
-        },
-        {
-          originalLotNumber: "359-2",
-          landCategory: "대",
-          originalArea: 780,
-          includedLotNumber: "359-7",
-          includedArea: 325,
-          remainingLotNumber: "359-2",
-          remainingArea: 195,
-          remainingRatio: 23.2,
-          purchaseDecision: "O",
-        },
-        {
-          originalLotNumber: "359-4",
-          landCategory: "대",
-          originalArea: 585,
-          includedLotNumber: "359-9",
-          includedArea: 357,
-          remainingLotNumber: "359-4",
-          remainingArea: 227,
-          remainingRatio: 30.6,
-          purchaseDecision: "X",
-        },
+      purchaseDecision: "선택",
+      },
+      {
+        originalLotNumber: "359-2",
+        landCategory: "대",
+        originalArea: 780,
+        includedLotNumber: "359-7",
+        includedArea: 325,
+        remainingLotNumber: "359-2",
+        remainingArea: 195,
+        remainingRatio: 23.2,
+        purchaseDecision: "선택",
+      },
+      {
+        originalLotNumber: "359-4",
+        landCategory: "대",
+        originalArea: 585,
+        includedLotNumber: "359-9",
+        includedArea: 357,
+        remainingLotNumber: "359-4",
+        remainingArea: 227,
+        remainingRatio: 30.6,
+        purchaseDecision: "선택",
+      },
       ]);
       setOwnerOpinion(found.reason || ownerOpinion);
     }
@@ -157,7 +157,7 @@ export default function ReviewDocumentPage({
   };
 
   // 필지별 매수여부 변경 핸들러
-  const handlePurchaseDecisionChange = (index: number, decision: "O" | "X" | "-") => {
+  const handlePurchaseDecisionChange = (index: number, decision: "O" | "X" | "-" | "선택") => {
     setLandParcels((prev) =>
       prev.map((parcel, i) =>
         i === index ? { ...parcel, purchaseDecision: decision } : parcel
@@ -385,24 +385,27 @@ export default function ReviewDocumentPage({
                             {isEditing ? (
                               <Select
                                 value={parcel.purchaseDecision}
-                                onValueChange={(value) =>
-                                  handlePurchaseDecisionChange(index, value as "O" | "X" | "-")
-                                }
-                              >
-                                <SelectTrigger className="h-10 min-h-0 w-full min-w-0 border-primary/50 text-center font-bold">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="O" className="font-bold text-primary">
-                                    O (매수)
-                                  </SelectItem>
-                                  <SelectItem value="X" className="font-bold text-destructive">
-                                    X (매수불가)
-                                  </SelectItem>
-                                  <SelectItem value="-" className="text-muted-foreground">
-                                    - (미정)
-                                  </SelectItem>
-                                </SelectContent>
+                                    onValueChange={(value) =>
+                                      handlePurchaseDecisionChange(index, value as "O" | "X" | "-" | "선택")
+                                    }
+                                  >
+                                    <SelectTrigger className="h-10 min-h-0 w-full min-w-0 border-primary/50 text-center font-bold">
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="선택" className="text-muted-foreground">
+                                        선택
+                                      </SelectItem>
+                                      <SelectItem value="O" className="font-bold text-primary">
+                                        O (매수)
+                                      </SelectItem>
+                                      <SelectItem value="X" className="font-bold text-destructive">
+                                        X (매수불가)
+                                      </SelectItem>
+                                      <SelectItem value="-" className="text-muted-foreground">
+                                        - (미정)
+                                      </SelectItem>
+                                    </SelectContent>
                               </Select>
                             ) : (
                               <span
