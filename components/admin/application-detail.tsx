@@ -198,29 +198,35 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             <div className="rounded-lg border border-border bg-card p-4">
               <h4 className="mb-3 font-medium text-foreground">일단지 판정 조건</h4>
               <div className="grid gap-3 sm:grid-cols-3">
-                <div className="flex items-center gap-2">
+                <div className={`flex items-center gap-2 rounded-md px-2 py-1 ${
+                  application.unifiedParcelCondition?.sameOwner ? "bg-green-50" : "bg-red-50"
+                }`}>
                   {application.unifiedParcelCondition?.sameOwner ? (
-                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                    <CheckCircle2 className="h-5 w-5 text-green-600" />
                   ) : (
-                    <XCircle className="h-5 w-5 text-muted-foreground" />
+                    <XCircle className="h-5 w-5 text-red-600" />
                   )}
-                  <span className="text-sm">소유자 동일성</span>
+                  <span className={`text-sm ${application.unifiedParcelCondition?.sameOwner ? "" : "text-red-700 font-medium"}`}>소유자 동일성</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className={`flex items-center gap-2 rounded-md px-2 py-1 ${
+                  application.unifiedParcelCondition?.continuous ? "bg-green-50" : "bg-red-50"
+                }`}>
                   {application.unifiedParcelCondition?.continuous ? (
-                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                    <CheckCircle2 className="h-5 w-5 text-green-600" />
                   ) : (
-                    <XCircle className="h-5 w-5 text-muted-foreground" />
+                    <XCircle className="h-5 w-5 text-red-600" />
                   )}
-                  <span className="text-sm">지반 연속성</span>
+                  <span className={`text-sm ${application.unifiedParcelCondition?.continuous ? "" : "text-red-700 font-medium"}`}>지반 연속성</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className={`flex items-center gap-2 rounded-md px-2 py-1 ${
+                  application.unifiedParcelCondition?.sameUsage ? "bg-green-50" : "bg-red-50"
+                }`}>
                   {application.unifiedParcelCondition?.sameUsage ? (
-                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                    <CheckCircle2 className="h-5 w-5 text-green-600" />
                   ) : (
-                    <XCircle className="h-5 w-5 text-muted-foreground" />
+                    <XCircle className="h-5 w-5 text-red-600" />
                   )}
-                  <span className="text-sm">용도 일체성</span>
+                  <span className={`text-sm ${application.unifiedParcelCondition?.sameUsage ? "" : "text-red-700 font-medium"}`}>용도 일체성</span>
                 </div>
               </div>
               {application.unifiedParcelCondition?.isUnifiedParcel && (
@@ -364,23 +370,32 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               {aiResult?.criteriaChecks.map((check, index) => (
                 <div
                   key={index}
-                  className="flex items-start gap-3 rounded-lg border border-border p-3"
+                  className={`flex items-start gap-3 rounded-lg border-2 p-3 ${
+                    check.isMet 
+                      ? "border-green-200 bg-green-50/50" 
+                      : "border-red-300 bg-red-50"
+                  }`}
                 >
                   {check.isMet ? (
                     <CheckCircle2 className="h-5 w-5 shrink-0 text-green-600" />
                   ) : (
-                    <XCircle className="h-5 w-5 shrink-0 text-gray-400" />
+                    <XCircle className="h-5 w-5 shrink-0 text-red-600" />
                   )}
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="font-medium text-foreground">{check.criteriaName}</p>
+                      <p className={`font-medium ${check.isMet ? "text-foreground" : "text-red-700"}`}>{check.criteriaName}</p>
+                      {!check.isMet && (
+                        <Badge className="bg-red-600 text-white text-sm hover:bg-red-700">
+                          미충족
+                        </Badge>
+                      )}
                       {!check.autoDetected && (
                         <Badge variant="outline" className="text-sm">
                           직접 확인 필요
                         </Badge>
                       )}
                     </div>
-                    <p className="mt-1 text-sm text-muted-foreground">
+                    <p className={`mt-1 text-sm ${check.isMet ? "text-muted-foreground" : "text-red-600"}`}>
                       {check.criteriaDescription}
                     </p>
                   </div>
