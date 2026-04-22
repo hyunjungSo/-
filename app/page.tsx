@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
@@ -20,27 +21,40 @@ export default function HomePage() {
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
       
-      {/* Hero Section - 토지보상 시스템 스타일 */}
-      <section className="relative bg-gradient-to-br from-primary/5 via-white to-primary/5">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <div className="mb-4 inline-flex items-center rounded bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+      {/* Hero Section - 배너 이미지 포함 */}
+      <section className="relative overflow-hidden">
+        {/* 배경 이미지 */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/hero-banner.jpg"
+            alt="고속도로와 토지 전경"
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
+        </div>
+        
+        {/* 컨텐츠 */}
+        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+          <div className="max-w-xl">
+            <div className="mb-4 inline-flex items-center rounded bg-white/20 px-3 py-1 text-sm font-medium text-white backdrop-blur-sm">
               한국도로공사 토지보상
             </div>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl">
+            <h1 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
               잔여지 매수 신청 서비스
             </h1>
-            <p className="mt-5 text-base leading-relaxed text-muted-foreground">
+            <p className="mt-5 text-base leading-relaxed text-white/90 sm:text-lg">
               도로 편입으로 발생한 잔여지의 매수 가능 여부를 확인하고 온라인으로 간편하게 매수 신청을 진행하실 수 있습니다.
             </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg" className="h-12 px-8 text-base font-medium">
                 <Link href="/citizen">
                   잔여지 매수 조회
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="h-12 px-8 text-base font-medium">
+              <Button asChild variant="outline" size="lg" className="h-12 border-white/30 bg-white/10 px-8 text-base font-medium text-white backdrop-blur-sm hover:bg-white/20 hover:text-white">
                 <Link href="/citizen?tab=status">
                   신청현황 확인
                 </Link>
