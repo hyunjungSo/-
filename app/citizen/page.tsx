@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { LandSearchSection } from "@/components/citizen/land-search-section";
 import { ApplicationFormSection } from "@/components/citizen/application-form-section";
 import { ApplicationResultSection } from "@/components/citizen/application-result-section";
@@ -13,11 +14,21 @@ import type { LandInfo, Application, AIAnalysisResult } from "@/lib/types";
 type ApplicationStep = "search" | "apply" | "result";
 
 export default function CitizenPage() {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  
   const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
   const [aiResult, setAiResult] = useState<AIAnalysisResult | null>(null);
   const [submittedApplication, setSubmittedApplication] = useState<Application | null>(null);
-  const [mainTab, setMainTab] = useState<"new" | "status">("new");
+  const [mainTab, setMainTab] = useState<"new" | "status">(tabParam === "status" ? "status" : "new");
   const [applicationStep, setApplicationStep] = useState<ApplicationStep>("search");
+  
+  // URL 파라미터 변경 시 탭 상태 업데이트
+  useEffect(() => {
+    if (tabParam === "status") {
+      setMainTab("status");
+    }
+  }, [tabParam]);
 
   const handleLandSelect = (land: LandInfo, result: AIAnalysisResult) => {
     setSelectedLand(land);
