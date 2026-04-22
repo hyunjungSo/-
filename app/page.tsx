@@ -132,12 +132,7 @@ export default function HomePage() {
             <div className="relative flex flex-col items-center text-center">
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
                 <Search className="h-8 w-8" />
-              </div>
-              <h3 className="mt-4 font-semibold text-foreground">토지 조회</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                편입 토지 지번으로 잔여지 정보를 조회합니다
-              </p>
-            </div>
+          </div>
 
             <div className="relative flex flex-col items-center text-center">
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
