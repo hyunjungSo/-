@@ -212,8 +212,7 @@ export default function ReviewDocumentPage({
             </div>
             {isEditing && (
               <Button onClick={handleGenerate} size="lg" className="px-8 print:hidden">
-                <FileText className="mr-2 h-4 w-4" />
-                심의서 생성
+                완료
               </Button>
             )}
           </div>
