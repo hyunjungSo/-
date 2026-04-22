@@ -139,11 +139,11 @@ export default function HomePage() {
             </div>
 
             {/* Arrow 1 */}
-            <div className="hidden shrink-0 px-4 text-muted-foreground/50 lg:block">
-              <ChevronRight className="h-10 w-10" />
+            <div className="hidden shrink-0 px-4 text-gray-300 lg:block">
+              <ChevronRight className="h-11 w-11" />
             </div>
-            <div className="block rotate-90 text-muted-foreground/50 lg:hidden">
-              <ChevronRight className="h-8 w-8" />
+            <div className="block rotate-90 text-gray-300 lg:hidden">
+              <ChevronRight className="h-9 w-9" />
             </div>
 
             {/* Step 2 */}
@@ -158,11 +158,11 @@ export default function HomePage() {
             </div>
 
             {/* Arrow 2 */}
-            <div className="hidden shrink-0 px-4 text-muted-foreground/50 lg:block">
-              <ChevronRight className="h-10 w-10" />
+            <div className="hidden shrink-0 px-4 text-gray-300 lg:block">
+              <ChevronRight className="h-11 w-11" />
             </div>
-            <div className="block rotate-90 text-muted-foreground/50 lg:hidden">
-              <ChevronRight className="h-8 w-8" />
+            <div className="block rotate-90 text-gray-300 lg:hidden">
+              <ChevronRight className="h-9 w-9" />
             </div>
 
             {/* Step 3 */}
@@ -177,11 +177,11 @@ export default function HomePage() {
             </div>
 
             {/* Arrow 3 */}
-            <div className="hidden shrink-0 px-4 text-muted-foreground/50 lg:block">
-              <ChevronRight className="h-10 w-10" />
+            <div className="hidden shrink-0 px-4 text-gray-300 lg:block">
+              <ChevronRight className="h-11 w-11" />
             </div>
-            <div className="block rotate-90 text-muted-foreground/50 lg:hidden">
-              <ChevronRight className="h-8 w-8" />
+            <div className="block rotate-90 text-gray-300 lg:hidden">
+              <ChevronRight className="h-9 w-9" />
             </div>
 
             {/* Step 4 */}
