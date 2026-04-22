@@ -4,13 +4,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Menu, X, LogOut, User, ExternalLink, ChevronDown, LogIn, UserPlus } from "lucide-react";
+import { Menu, X, LogOut, User, ExternalLink, ChevronDown, LogIn, UserPlus, Users, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 
-const mainNavigation = [
+const citizenNavigation = [
   { name: "잔여지 매수", href: "/citizen" },
+];
+
+const adminNavigation = [
+  { name: "신청 목록", href: "/admin" },
 ];
 
 export function Header() {
@@ -18,41 +22,86 @@ export function Header() {
   const router = useRouter();
   const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"citizen" | "admin">(
+    pathname.startsWith("/admin") ? "admin" : "citizen"
+  );
 
   const handleLogout = () => {
     logout();
     router.push("/");
   };
 
+  const handleViewModeChange = (mode: "citizen" | "admin") => {
+    setViewMode(mode);
+    if (mode === "citizen") {
+      router.push("/citizen");
+    } else {
+      router.push("/admin");
+    }
+  };
+
+  const mainNavigation = viewMode === "citizen" ? citizenNavigation : adminNavigation;
+
   return (
     <header className="sticky top-0 z-50 w-full bg-white">
       {/* 1. 최상단 유틸리티 바 (녹색 배경) */}
       <div className="bg-[#2e7d32]">
-        <div className="mx-auto flex h-9 max-w-7xl items-center justify-end gap-1 px-4 text-sm text-white sm:px-6 lg:px-8">
-          <Link 
-            href="https://exland.ex.co.kr/lc/main" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="flex items-center gap-1 px-3 py-1 transition-colors hover:bg-white/10"
-          >
-            <span>토지관리</span>
-            <ExternalLink className="h-3 w-3" />
-          </Link>
-          <span className="text-white/40">|</span>
-          <Link 
-            href="https://exland.ex.co.kr/lc/main" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="flex items-center gap-1 px-3 py-1 transition-colors hover:bg-white/10"
-          >
-            <span>누리집 안내지도</span>
-            <ExternalLink className="h-3 w-3" />
-          </Link>
-          <span className="text-white/40">|</span>
-          <button className="flex items-center gap-1 px-3 py-1 transition-colors hover:bg-white/10">
-            <span>화면크기</span>
-            <ChevronDown className="h-3 w-3" />
-          </button>
+        <div className="mx-auto flex h-9 max-w-7xl items-center justify-between gap-1 px-4 text-sm text-white sm:px-6 lg:px-8">
+          {/* 좌측: 화면 전환 토글 */}
+          <div className="flex items-center gap-1 rounded-full bg-white/20 p-0.5">
+            <button
+              onClick={() => handleViewModeChange("citizen")}
+              className={cn(
+                "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                viewMode === "citizen"
+                  ? "bg-white text-[#2e7d32]"
+                  : "text-white/90 hover:bg-white/10"
+              )}
+            >
+              <Users className="h-3.5 w-3.5" />
+              <span>민원인</span>
+            </button>
+            <button
+              onClick={() => handleViewModeChange("admin")}
+              className={cn(
+                "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                viewMode === "admin"
+                  ? "bg-white text-[#2e7d32]"
+                  : "text-white/90 hover:bg-white/10"
+              )}
+            >
+              <Shield className="h-3.5 w-3.5" />
+              <span>관리자</span>
+            </button>
+          </div>
+
+          {/* 우측: 유틸리티 링크 */}
+          <div className="flex items-center gap-1">
+            <Link 
+              href="https://exland.ex.co.kr/lc/main" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center gap-1 px-3 py-1 transition-colors hover:bg-white/10"
+            >
+              <span>토지관리</span>
+              <ExternalLink className="h-3 w-3" />
+            </Link>
+            <span className="text-white/40">|</span>
+            <Link 
+              href="https://exland.ex.co.kr/lc/main" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center gap-1 px-3 py-1 transition-colors hover:bg-white/10"
+            >
+              <span>누리집 안내지도</span>
+              <ExternalLink className="h-3 w-3" />
+            </Link>
+            <span className="text-white/40">|</span>
+            <button className="flex items-center gap-1 px-3 py-1 transition-colors hover:bg-white/10">
+              <span>화면크기</span>
+              <ChevronDown className="h-3 w-3" />
+            </button>
+          </div>
         </div>
       </div>
 
