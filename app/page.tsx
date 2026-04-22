@@ -12,8 +12,7 @@ import {
   FileCheck,
   CheckCircle2,
   ChevronRight,
-  Phone,
-  HelpCircle
+  Phone
 } from "lucide-react";
 
 export default function HomePage() {
@@ -24,65 +23,28 @@ export default function HomePage() {
       {/* Hero Section - 토지보상 시스템 스타일 */}
       <section className="relative bg-gradient-to-br from-primary/5 via-white to-primary/5">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            <div>
-              <div className="mb-4 inline-flex items-center rounded bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-                한국도로공사 토지보상
-              </div>
-              <h1 className="text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl">
-                잔여지 매수 신청 서비스
-              </h1>
-              <p className="mt-5 text-base leading-relaxed text-muted-foreground">
-                도로 편입으로 발생한 잔여지의 매수 가능 여부를 확인하고 온라인으로 간편하게 매수 신청을 진행하실 수 있습니다.
-              </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button asChild size="lg" className="h-12 px-8 text-base font-medium">
-                  <Link href="/citizen">
-                    잔여지 매수 조회
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="lg" className="h-12 px-8 text-base font-medium">
-                  <Link href="/citizen?tab=status">
-                    신청현황 확인
-                  </Link>
-                </Button>
-              </div>
+          <div className="mx-auto max-w-2xl text-center">
+            <div className="mb-4 inline-flex items-center rounded bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+              한국도로공사 토지보상
             </div>
-            
-            {/* 빠른 링크 카드 */}
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Link href="/citizen" className="group rounded-lg border border-gray-200 bg-white p-5 transition-all hover:border-primary hover:shadow-md">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <Search className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="font-semibold text-foreground group-hover:text-primary">토지 조회</h3>
-                <p className="mt-1 text-sm text-muted-foreground">편입 토지 정보 검색</p>
-              </Link>
-              
-              <Link href="/citizen" className="group rounded-lg border border-gray-200 bg-white p-5 transition-all hover:border-primary hover:shadow-md">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <FileText className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="font-semibold text-foreground group-hover:text-primary">매수 신청</h3>
-                <p className="mt-1 text-sm text-muted-foreground">온라인 신청서 제출</p>
-              </Link>
-              
-              <Link href="/citizen?tab=status" className="group rounded-lg border border-gray-200 bg-white p-5 transition-all hover:border-primary hover:shadow-md">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <Clock className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="font-semibold text-foreground group-hover:text-primary">진행현황</h3>
-                <p className="mt-1 text-sm text-muted-foreground">신청 처리상태 확인</p>
-              </Link>
-              
-              <Link href="/guide" className="group rounded-lg border border-gray-200 bg-white p-5 transition-all hover:border-primary hover:shadow-md">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <HelpCircle className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="font-semibold text-foreground group-hover:text-primary">이용안내</h3>
-                <p className="mt-1 text-sm text-muted-foreground">서비스 안내 및 FAQ</p>
-              </Link>
+            <h1 className="text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl">
+              잔여지 매수 신청 서비스
+            </h1>
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground">
+              도로 편입으로 발생한 잔여지의 매수 가능 여부를 확인하고 온라인으로 간편하게 매수 신청을 진행하실 수 있습니다.
+            </p>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Button asChild size="lg" className="h-12 px-8 text-base font-medium">
+                <Link href="/citizen">
+                  잔여지 매수 조회
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="h-12 px-8 text-base font-medium">
+                <Link href="/citizen?tab=status">
+                  신청현황 확인
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
