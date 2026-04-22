@@ -603,7 +603,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     onClick={() =>
                       setReviewData((prev) => ({ ...prev, adminStatus: status }))
                     }
-                    className={`cursor-pointer ${isSelected ? "" : config.color}`}
+                    className={`cursor-pointer ${isSelected ? "bg-[#222222] hover:bg-[#333333]" : config.color}`}
                   >
                     <Icon className={`mr-2 h-4 w-4 ${status === "진행중" && isSelected ? "animate-spin" : ""}`} />
                     {config.label}
@@ -641,7 +641,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       setReviewData((prev) => ({ ...prev, finalJudgment: judgment }))
                     }
                     disabled={isDisabled}
-                    className={`cursor-pointer ${isSelected ? "" : config.color} ${isDisabled ? "opacity-50" : ""}`}
+                    className={`cursor-pointer ${isSelected ? "bg-[#222222] hover:bg-[#333333]" : config.color} ${isDisabled ? "opacity-50" : ""}`}
                   >
                     <Icon className="mr-2 h-4 w-4" />
                     {config.label}
