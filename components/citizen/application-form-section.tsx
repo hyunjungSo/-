@@ -731,14 +731,14 @@ export function ApplicationFormSection({
               <Button
                 type="submit"
                 size="lg"
-                className="mx-auto block w-full max-w-[600px]"
+                className="mx-auto flex w-full max-w-[600px] items-center justify-center gap-2"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
                   "신청서 제출 중..."
                 ) : (
                   <>
-                    <Send className="mr-2 h-4 w-4" />
+                    <Send className="h-4 w-4" />
                     매수 신청서 제출
                   </>
                 )}
