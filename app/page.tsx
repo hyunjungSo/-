@@ -63,7 +63,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <Card className="border-border bg-card transition-shadow hover:shadow-md">
+            <Card className="border-border bg-card">
               <CardHeader className="pb-1">
                 <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
                   <FileSearch className="h-7 w-7 text-primary" />
@@ -77,7 +77,7 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            <Card className="border-border bg-card transition-shadow hover:shadow-md">
+            <Card className="border-border bg-card">
               <CardHeader className="pb-1">
                 <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-blue-500/10">
                   <ClipboardList className="h-7 w-7 text-blue-600" />
@@ -91,7 +91,7 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            <Card className="border-border bg-card transition-shadow hover:shadow-md">
+            <Card className="border-border bg-card">
               <CardHeader className="pb-1">
                 <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-amber-500/10">
                   <FileText className="h-7 w-7 text-amber-600" />
@@ -105,7 +105,7 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            <Card className="border-border bg-card transition-shadow hover:shadow-md">
+            <Card className="border-border bg-card">
               <CardHeader className="pb-1">
                 <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-teal-500/10">
                   <Clock className="h-7 w-7 text-teal-600" />
