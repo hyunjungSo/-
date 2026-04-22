@@ -1,6 +1,9 @@
 // 토지 유형
 export type LandType = "대지" | "농지" | "산지" | "그밖의토지";
 
+// 대지 세부 유형 (PRD 기준)
+export type LandSubType = "단독다세대" | "연립" | "아파트" | "공업용";
+
 // 토지 형상
 export type LandShape =
   | "정방형"
@@ -57,14 +60,19 @@ export interface LandInfo {
   remainingArea: number; // 잔여 면적 (㎡)
   remainingRatio: number; // 잔여 비율 (%)
   landType: LandType; // 토지 유형
+  landSubType?: LandSubType; // 대지 세부 유형 (대지인 경우)
   landCategory: LandCategory; // 지목
   originalShape: LandShape; // 편입 전 형상
   remainingShape: LandShape; // 잔여지 형상
   originalShapeIndex: number; // 편입 전 형상지수
   remainingShapeIndex: number; // 잔여지 형상지수
+  remainingWidth?: number; // 잔여지 폭 (m) - 형상 판단용
+  remainingTriangleSide?: number; // 삼각형인 경우 한 변 길이 (m)
   ownerName: string; // 소유자명
   ownerContact?: string; // 소유자 연락처
   hasIncludedLand: boolean; // 편입토지 존재 여부
+  hasAccessRoad: boolean; // 접면도로 존재 여부
+  hasWaterChannel?: boolean; // 수로 존재 여부 (농지)
   coordinates?: Array<{ lat: number; lng: number }>; // 필지 경계 좌표
 }
 
