@@ -319,7 +319,7 @@ function generateAIResult(landInfo: LandInfo, isBorderline: boolean = false): AI
     autoDetected: true,
   });
 
-  // 접도 상태 (수동 확인 필요)
+  // 접도 상태 (직접 확인 필요)
   criteriaChecks.push({
     criteriaName: "접면도로 상실",
     criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목적 사용 곤란",
@@ -327,7 +327,7 @@ function generateAIResult(landInfo: LandInfo, isBorderline: boolean = false): AI
     autoDetected: false,
   });
 
-  // 농기계 진입/회전 곤란 (농지의 경우 수동 확인 필요)
+  // 농기계 진입/회전 곤란 (농지의 경우 직접 확인 필요)
   if (landInfo.landType === "농지") {
     criteriaChecks.push({
       criteriaName: "농기계 진입/회전 곤란",
@@ -337,7 +337,7 @@ function generateAIResult(landInfo: LandInfo, isBorderline: boolean = false): AI
     });
   }
 
-  // 수로 상실 (농지의 경우 수동 확인 필요)
+  // 수로 상실 (농지의 경우 직접 확인 필요)
   if (landInfo.landType === "농지") {
     criteriaChecks.push({
       criteriaName: "수로 상실",

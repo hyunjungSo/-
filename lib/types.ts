@@ -119,7 +119,7 @@ export interface JudgmentRationale {
   legalBasis: string; // 법적 근거
   appliedCriteria: string[]; // 적용된 기준
   detailedExplanation: string; // 상세 설명
-  manualCheckItems?: string[]; // 수동 확인 필요 항목
+  manualCheckItems?: string[]; // 직접 확인 필요 항목
 }
 
 // 기준 충족 여부

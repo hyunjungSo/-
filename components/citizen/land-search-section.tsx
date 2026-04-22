@@ -62,7 +62,7 @@ const regionData = {
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
-    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "입장면"],
+    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "���장면"],
     // 충청남도 - 아산시
     "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악면", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
@@ -164,13 +164,13 @@ function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale 
           </ul>
         </div>
 
-        {/* 수동 확인 필요 항목 */}
+        {/* 직접 확인 필요 항목 */}
         {rationale.manualCheckItems && rationale.manualCheckItems.length > 0 && (
           <div className="rounded-lg border border-warning/50 bg-warning/5 p-4">
             <div className="flex items-start gap-2">
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
               <div>
-                <h4 className="font-semibold text-foreground">수동 확인 필요 항목</h4>
+                <h4 className="font-semibold text-foreground">직접 확인 필요 항목</h4>
                 <p className="mt-1 text-sm text-muted-foreground">
                   다음 항목은 AI 자동 판독이 불가하여 담당자가 현장 확인 후 판단합니다.
                 </p>
@@ -325,7 +325,7 @@ function generateJudgmentRationale(
   }
   
   appliedCriteria.push(`형상지수 변화 기준: 편입 전 대비 1.0 이상 상승 시 형상 불량으로 판단`);
-  appliedCriteria.push(`잔여지 형상 기준: 삼각형, 역삼각형, 자루형, 부정형 등 불규칙 형상`);
+  appliedCriteria.push(`잔여지 형상 기준: 삼각형, 역삼각형, 자루형, 부정형 �� 불규칙 형상`);
   appliedCriteria.push(`잔여비율 기준: 30% 이하일 경우 종래 목적 사용 곤란으로 판단`);
 
   if (judgment === "매수") {
@@ -336,7 +336,7 @@ function generateJudgmentRationale(
     detailedExplanation = `1. 분석 대상 토지\n- 소재지: ${land.address}\n- 토지 유형: ${land.landType}\n- 지목: ${land.landCategory}\n\n2. 편입 현황\n- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n- 편입 면적: ${land.includedArea.toLocaleString()}㎡\n- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡\n- 잔여 비율: ${land.remainingRatio}%\n\n3. 형상 분석\n- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})\n- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})\n- 형상지수 변화: +${shapeIndexChange.toFixed(1)}\n\n4. 미충족 사유\n- 잔여 비율 ${land.remainingRatio}%로 기준(30% 이하) 초과\n- 형상지수 변화 ${shapeIndexChange.toFixed(1)}로 기준(1.0 이상) 미달\n\n5. 판정 결과\n위 분석 결과, 본 토지는 공익사업 편입 후에도 잔여지의 종래 목적대로 사용이 가능한 것으로 판단되어, 잔여지 매수 청구 대상에 해당하지 않습니다.`;
   } else {
     summary = `본 토지는 자동 판독 기준 충족이 애매하여 담당자 검토가 필요한 「경계 사례」로 분류되었습니다.`;
-    detailedExplanation = `1. 분석 대상 토지\n- 소재지: ${land.address}\n- 토지 유형: ${land.landType}\n- 지목: ${land.landCategory}\n\n2. 편입 현황\n- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n- 편입 면적: ${land.includedArea.toLocaleString()}㎡\n- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡\n- 잔여 비율: ${land.remainingRatio}%\n\n3. 형상 분석\n- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})\n- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})\n- 형상지수 변화: +${shapeIndexChange.toFixed(1)}\n\n4. 경계 사례 판정 사유\n- 자동 판독 기준 일부만 충족\n- 수동 확인 필요 항목: ${manualCheckItems.join(", ")}\n\n5. 판정 결과\n위 분석 결과, 본 토지는 자동 판독만으로 명확한 판정이 어려워 담당자 검토 후 최종 결정됩니다.`;
+    detailedExplanation = `1. 분석 대상 토지\n- 소재지: ${land.address}\n- 토지 유형: ${land.landType}\n- 지목: ${land.landCategory}\n\n2. 편입 현황\n- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n- 편입 면적: ${land.includedArea.toLocaleString()}㎡\n- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡\n- 잔여 비율: ${land.remainingRatio}%\n\n3. 형상 분석\n- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})\n- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})\n- 형상지수 변화: +${shapeIndexChange.toFixed(1)}\n\n4. 경계 사례 판정 사유\n- 자동 판독 기준 일부만 충족\n- 직접 확인 필요 항목: ${manualCheckItems.join(", ")}\n\n5. 판정 결과\n위 분석 결과, 본 토지는 자동 판독만으로 명확한 판정이 어려워 담당자 검토 후 최종 결정됩니다.`;
   }
 
   return {

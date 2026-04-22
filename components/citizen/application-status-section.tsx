@@ -122,12 +122,12 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
           </div>
         </div>
 
-        {/* 수동 확인 필요 항목 */}
+        {/* 직접 확인 필요 항목 */}
         {rationale.manualCheckItems && rationale.manualCheckItems.length > 0 && (
           <div className="flex items-start gap-3">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
             <div>
-              <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
+              <h4 className="text-sm font-semibold text-foreground">직접 확인 항목</h4>
               <ul className="mt-1 space-y-1">
                 {rationale.manualCheckItems.map((item, idx) => (
                   <li key={idx} className="flex items-center gap-2 text-xs text-muted-foreground">

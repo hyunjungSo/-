@@ -402,7 +402,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <p className="font-medium text-foreground">{check.criteriaName}</p>
                       {!check.autoDetected && (
                         <Badge variant="outline" className="text-xs">
-                          수동 확인 필요
+                          직접 확인 필요
                         </Badge>
                       )}
                     </div>
