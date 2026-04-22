@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Download, Printer, FileText, CheckCircle2, Edit3 } from "lucide-react";
+import { ArrowLeft, Download, Printer, FileText, CheckCircle2, Edit3, Upload, ImageIcon, X } from "lucide-react";
 
 // 대상 토지 필지 데이터 (샘플과 동일하게)
 interface LandParcel {
@@ -65,6 +65,10 @@ export default function ReviewDocumentPage({
     address: "",
     ownerName: "",
   });
+
+  // 이미지 업로드 상태
+  const [cadastralMapImage, setCadastralMapImage] = useState<string | null>(null);
+  const [aerialPhotoImage, setAerialPhotoImage] = useState<string | null>(null);
 
   // 현지상황 및 검토의견 (textarea로 편집 가능)
   const [fieldConditionReview, setFieldConditionReview] = useState(`현황 : 지목(전, 임), 현황 임야
@@ -496,18 +500,94 @@ export default function ReviewDocumentPage({
                     <div className="border-b border-foreground bg-muted px-2 py-1 text-center text-sm font-medium text-foreground">
                       지적도
                     </div>
-                    <div className="h-[300px] overflow-hidden">
-                      <div className="h-full w-full [&>*]:h-full [&>*]:w-full [&_canvas]:!h-full [&_canvas]:!w-full [&_canvas]:object-contain">
-                        <LandMap landInfo={application.landInfo} showOverlay />
-                      </div>
+                    <div className="relative h-[300px] overflow-hidden">
+                      {cadastralMapImage ? (
+                        <>
+                          <img 
+                            src={cadastralMapImage} 
+                            alt="지적도" 
+                            className="h-full w-full object-contain"
+                          />
+                          {isEditing && (
+                            <button
+                              onClick={() => setCadastralMapImage(null)}
+                              className="absolute right-2 top-2 rounded-full bg-destructive p-1 text-white hover:bg-destructive/80 print:hidden"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          )}
+                        </>
+                      ) : (
+                        <label className={`flex h-full w-full flex-col items-center justify-center bg-muted/30 transition-colors ${isEditing ? 'cursor-pointer hover:bg-muted/50' : ''}`}>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            disabled={!isEditing}
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                const reader = new FileReader();
+                                reader.onload = (event) => {
+                                  setCadastralMapImage(event.target?.result as string);
+                                };
+                                reader.readAsDataURL(file);
+                              }
+                            }}
+                          />
+                          <Upload className="h-8 w-8 text-muted-foreground" />
+                          <p className="mt-2 text-sm text-muted-foreground">
+                            {isEditing ? '지적도 이미지 업로드' : '지적도 미등록'}
+                          </p>
+                        </label>
+                      )}
                     </div>
                   </div>
                   <div className="border border-l-0 border-foreground">
                     <div className="border-b border-foreground bg-muted px-2 py-1 text-center text-sm font-medium text-foreground">
                       항공사진
                     </div>
-                    <div className="flex h-[300px] items-center justify-center bg-muted/30">
-                      <p className="text-sm text-muted-foreground">항공사진 이미지 영역</p>
+                    <div className="relative h-[300px] overflow-hidden">
+                      {aerialPhotoImage ? (
+                        <>
+                          <img 
+                            src={aerialPhotoImage} 
+                            alt="항공사진" 
+                            className="h-full w-full object-contain"
+                          />
+                          {isEditing && (
+                            <button
+                              onClick={() => setAerialPhotoImage(null)}
+                              className="absolute right-2 top-2 rounded-full bg-destructive p-1 text-white hover:bg-destructive/80 print:hidden"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          )}
+                        </>
+                      ) : (
+                        <label className={`flex h-full w-full flex-col items-center justify-center bg-muted/30 transition-colors ${isEditing ? 'cursor-pointer hover:bg-muted/50' : ''}`}>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            disabled={!isEditing}
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                const reader = new FileReader();
+                                reader.onload = (event) => {
+                                  setAerialPhotoImage(event.target?.result as string);
+                                };
+                                reader.readAsDataURL(file);
+                              }
+                            }}
+                          />
+                          <Upload className="h-8 w-8 text-muted-foreground" />
+                          <p className="mt-2 text-sm text-muted-foreground">
+                            {isEditing ? '항공사진 이미지 업로드' : '항공사진 미등록'}
+                          </p>
+                        </label>
+                      )}
                     </div>
                   </div>
                 </div>
