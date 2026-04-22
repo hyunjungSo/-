@@ -113,7 +113,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <Button variant="secondary" asChild>
             <Link href={`/admin/review/${application.id}`}>
               <FileText className="mr-2 h-4 w-4" />
-              심의서 생성
+              심의서 작성
             </Link>
           </Button>
         </div>
