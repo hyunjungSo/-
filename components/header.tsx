@@ -4,13 +4,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Menu, X, LogOut, User } from "lucide-react";
+import { Menu, X, LogOut, User, ExternalLink, ChevronDown, LogIn, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 
-const navigation = [
-  { name: "잔여지 매수 신청", href: "/citizen" },
+const mainNavigation = [
+  { name: "잔여지 매수", href: "/citizen" },
 ];
 
 export function Header() {
@@ -21,82 +21,102 @@ export function Header() {
 
   const handleLogout = () => {
     logout();
-    router.push("/login");
+    router.push("/");
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
-      {/* 상단 유틸리티 바 */}
-      <div className="border-b border-gray-100 bg-gray-50">
-        <div className="mx-auto flex h-8 max-w-7xl items-center justify-end gap-4 px-4 text-xs text-gray-600 sm:px-6 lg:px-8">
-          <Link href="https://www.ex.co.kr" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
-            한국도로공사
+    <header className="sticky top-0 z-50 w-full bg-white">
+      {/* 1. 최상단 유틸리티 바 (녹색 배경) */}
+      <div className="bg-[#2e7d32]">
+        <div className="mx-auto flex h-9 max-w-7xl items-center justify-end gap-1 px-4 text-sm text-white sm:px-6 lg:px-8">
+          <Link 
+            href="https://exland.ex.co.kr/lc/main" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="flex items-center gap-1 px-3 py-1 transition-colors hover:bg-white/10"
+          >
+            <span>토지관리</span>
+            <ExternalLink className="h-3 w-3" />
           </Link>
-          <span className="text-gray-300">|</span>
-          <Link href="https://exland.ex.co.kr" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
-            토지보상시스템
+          <span className="text-white/40">|</span>
+          <Link 
+            href="https://exland.ex.co.kr/lc/main" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="flex items-center gap-1 px-3 py-1 transition-colors hover:bg-white/10"
+          >
+            <span>누리집 안내지도</span>
+            <ExternalLink className="h-3 w-3" />
           </Link>
+          <span className="text-white/40">|</span>
+          <button className="flex items-center gap-1 px-3 py-1 transition-colors hover:bg-white/10">
+            <span>화면크기</span>
+            <ChevronDown className="h-3 w-3" />
+          </button>
         </div>
       </div>
-      
-      {/* 메인 헤더 */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+
+      {/* 2. 로고 및 유틸리티 링크 영역 (흰색 배경) */}
+      <div className="border-b border-gray-200">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* 로고 */}
-          <Link href="/" className="flex cursor-pointer items-center gap-3 py-2">
+          <Link href="/" className="flex cursor-pointer items-center gap-2 py-2">
             <Image
               src="/images/logo-lc.png"
-              alt="한국도로공사 토지정보 토지보상"
-              width={180}
-              height={36}
-              className="h-9 w-auto object-contain"
+              alt="한국도로공사 토지정보"
+              width={200}
+              height={40}
+              className="h-10 w-auto object-contain"
               priority
             />
-            <span className="hidden border-l border-gray-300 pl-3 text-lg font-semibold text-foreground sm:block">
-              잔여지 매수
+            <span className="ml-2 border-l border-gray-300 pl-3 text-xl font-bold text-[#d32f2f]">
+              토지보상
             </span>
           </Link>
 
-          {/* 데스크톱 네비게이션 */}
-          <div className="hidden items-center gap-6 md:flex">
-            <nav className="flex items-center" role="navigation" aria-label="메인 메뉴">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    "relative cursor-pointer px-5 py-2 text-base font-medium transition-colors",
-                    pathname.startsWith(item.href)
-                      ? "text-primary"
-                      : "text-foreground hover:text-primary"
-                  )}
-                  aria-current={pathname.startsWith(item.href) ? "page" : undefined}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </nav>
-
-            {/* 사용자 정보 및 로그아웃 */}
-            {user && (
-              <div className="flex items-center gap-3 border-l border-gray-200 pl-5">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10">
-                    <User className="h-4 w-4 text-primary" />
-                  </div>
-                  <span className="font-medium text-foreground">{user.name}</span>
+          {/* 우측 유틸리티 링크 */}
+          <div className="hidden items-center gap-4 md:flex">
+            {user ? (
+              <>
+                <div className="flex items-center gap-2 text-sm text-gray-700">
+                  <User className="h-4 w-4" />
+                  <span className="font-medium">{user.name}</span>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
+                <button
                   onClick={handleLogout}
-                  className="h-8 gap-1.5 text-sm text-gray-600 hover:text-gray-900"
+                  className="flex items-center gap-1.5 text-sm text-gray-600 transition-colors hover:text-gray-900"
                 >
                   <LogOut className="h-4 w-4" />
                   <span>로그아웃</span>
-                </Button>
-              </div>
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="flex items-center gap-1.5 text-sm text-gray-700 transition-colors hover:text-primary"
+                >
+                  <LogIn className="h-4 w-4" />
+                  <span>로그인</span>
+                </Link>
+                <Link
+                  href="/signup"
+                  className="flex items-center gap-1.5 text-sm text-gray-700 transition-colors hover:text-primary"
+                >
+                  <UserPlus className="h-4 w-4" />
+                  <span>회원가입</span>
+                </Link>
+              </>
             )}
+            <span className="text-gray-300">|</span>
+            <Link
+              href="https://www.ex.co.kr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 rounded bg-[#f5f5f5] px-3 py-1.5 text-sm text-gray-700 transition-colors hover:bg-gray-200"
+            >
+              <span>신고채널</span>
+            </Link>
           </div>
 
           {/* 모바일 메뉴 버튼 */}
@@ -116,11 +136,35 @@ export function Header() {
         </div>
       </div>
 
+      {/* 3. 메인 네비게이션 (연한 회색 배경) */}
+      <div className="hidden border-b border-gray-200 bg-[#fafafa] md:block">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <nav className="flex items-center gap-0" role="navigation" aria-label="메인 메뉴">
+            {mainNavigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-1 border-r border-gray-200 px-8 py-3.5 text-base font-medium transition-colors first:border-l",
+                  pathname.startsWith(item.href)
+                    ? "bg-primary text-white"
+                    : "text-gray-700 hover:bg-gray-100 hover:text-primary"
+                )}
+                aria-current={pathname.startsWith(item.href) ? "page" : undefined}
+              >
+                {item.name}
+                <ChevronDown className="h-4 w-4" />
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </div>
+
       {/* 모바일 네비게이션 */}
       {mobileMenuOpen && (
         <div className="border-t bg-white md:hidden">
           <nav className="flex flex-col p-2" role="navigation" aria-label="모바일 메뉴">
-            {navigation.map((item) => (
+            {mainNavigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
@@ -136,9 +180,9 @@ export function Header() {
                 {item.name}
               </Link>
             ))}
-            {user && (
+            <div className="my-2 border-t" />
+            {user ? (
               <>
-                <div className="my-2 border-t" />
                 <div className="flex items-center gap-2.5 px-4 py-2 text-base text-gray-600">
                   <User className="h-4 w-4 shrink-0" />
                   <span>{user.name}</span>
@@ -153,6 +197,25 @@ export function Header() {
                   <LogOut className="h-4 w-4 shrink-0" />
                   <span>로그아웃</span>
                 </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 rounded-md px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-100"
+                >
+                  <LogIn className="h-4 w-4 shrink-0" />
+                  <span>로그인</span>
+                </Link>
+                <Link
+                  href="/signup"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 rounded-md px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-100"
+                >
+                  <UserPlus className="h-4 w-4 shrink-0" />
+                  <span>회원가입</span>
+                </Link>
               </>
             )}
           </nav>
