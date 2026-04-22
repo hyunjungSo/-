@@ -37,7 +37,7 @@ export type LandCategory =
 export type ProcessStatus = "접수됨" | "AI분석완료" | "검토중" | "처리완료";
 
 // 담당자 진행상황
-export type AdminStatus = "대기중" | "진행중" | "완료";
+export type AdminStatus = "접수완료" | "진행중" | "완료";
 
 // AI 1차 판독 결과 (매수/기각만 가능)
 export type AIJudgmentResult = "매수" | "기각";

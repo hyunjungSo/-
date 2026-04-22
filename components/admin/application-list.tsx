@@ -36,7 +36,7 @@ const statusConfig: Record<ProcessStatus, { label: string; className: string }> 
 };
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
-  대기중: { label: "대기", icon: Clock, color: "text-gray-500" },
+  접수완료: { label: "접수완료", icon: Clock, color: "text-gray-500" },
   진행중: { label: "진행중", icon: PlayCircle, color: "text-primary" },
   완료: { label: "완료", icon: CheckCircle2, color: "text-primary" },
 };
@@ -67,7 +67,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   const stats = useMemo(() => {
     return {
       total: applications.length,
-      대기중: applications.filter((a) => a.adminStatus === "대기중").length,
+      접수완료: applications.filter((a) => a.adminStatus === "접수완료").length,
       진행중: applications.filter((a) => a.adminStatus === "진행중").length,
       완료: applications.filter((a) => a.adminStatus === "완료").length,
     };
@@ -97,8 +97,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <Clock className="h-5 w-5 text-gray-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-600">{stats.대기중}</p>
-                <p className="text-xs text-muted-foreground">대기중</p>
+                <p className="text-2xl font-bold text-gray-600">{stats.접수완료}</p>
+                <p className="text-xs text-muted-foreground">접수완료</p>
               </div>
             </div>
           </CardContent>
@@ -159,7 +159,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">전체 민원</SelectItem>
-                  <SelectItem value="대기중">대기중</SelectItem>
+                  <SelectItem value="접수완료">접수완료</SelectItem>
                   <SelectItem value="진행중">진행중</SelectItem>
                   <SelectItem value="완료">완료</SelectItem>
                 </SelectContent>

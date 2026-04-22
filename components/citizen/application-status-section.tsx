@@ -29,8 +29,8 @@ const adminStatusConfig: Record<AdminStatus, {
   variant: "text" | "outline" | "filled";
   className: string;
 }> = {
-  대기중: { 
-    label: "대기", 
+  접수완료: { 
+    label: "접수완료", 
     icon: Clock, 
     variant: "outline",
     className: "border border-gray-400 bg-transparent text-gray-600 font-medium" 
@@ -50,7 +50,7 @@ const adminStatusConfig: Record<AdminStatus, {
 };
 
 // 신청 현황용 판단 근거 컴포넌트
-function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale: JudgmentRationale; provisionalJudgment?: "매수" | "기각" | "심의위원회이관" }) {
+function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale: JudgmentRationale; provisionalJudgment?: "매수" | "기각" }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -68,15 +68,11 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
                 <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${
                   provisionalJudgment === "매수"
                     ? "bg-primary text-white"
-                    : provisionalJudgment === "심의위원회이관"
-                      ? "bg-warning text-white"
-                      : "bg-destructive text-white"
+                    : "bg-destructive text-white"
                 }`}>
                   {provisionalJudgment === "매수" 
                     ? "매수 가능" 
-                    : provisionalJudgment === "심의위원회이관"
-                      ? "경계 사례"
-                      : "기준 미충족"}
+                    : "기준 미충족"}
                 </span>
               )}
             </div>
@@ -168,7 +164,7 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
 function ApplicationDetailPanel({ application }: { application: Application }) {
   const getStatusStep = (status: AdminStatus) => {
     switch (status) {
-      case "대기중": return 1;
+      case "접수완료": return 1;
       case "진행중": return 2;
       case "완료": return 3;
       default: return 1;
@@ -191,7 +187,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
         <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
           <h4 className="mb-4 text-sm font-semibold text-foreground">진행 상황</h4>
           <ol className="flex items-center justify-between">
-            {(["대기중", "진행중", "완료"] as AdminStatus[]).map((status, idx) => {
+            {(["접수완료", "진행중", "완료"] as AdminStatus[]).map((status, idx) => {
               const config = adminStatusConfig[status];
               const currentStep = getStatusStep(application.adminStatus);
               const stepNum = idx + 1;

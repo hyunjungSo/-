@@ -47,7 +47,7 @@ const judgmentConfig = {
 };
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
-  대기중: { label: "대기", icon: Clock, color: "text-[#222222] border-[#222222]" },
+  접수완료: { label: "접수완료", icon: Clock, color: "text-[#222222] border-[#222222]" },
   진행중: { label: "진행중", icon: PlayCircle, color: "text-[#222222] border-[#222222]" },
   완료: { label: "완료", icon: CheckCircle2, color: "text-[#222222] border-[#222222]" },
 };
@@ -70,7 +70,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
     finalJudgment: application.finalJudgment || application.aiResult?.provisionalJudgment || ("매수" as JudgmentResult),
-    adminStatus: application.adminStatus || ("대기중" as AdminStatus),
+    adminStatus: application.adminStatus || ("접수완료" as AdminStatus),
     assigneeId: application.adminName ? assigneeList.find(a => a.name === application.adminName)?.id || "" : "",
   });
 
@@ -565,7 +565,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <div className="space-y-2">
             <Label>진행상황 설정</Label>
             <div className="flex flex-wrap gap-2">
-              {(["대기중", "진행중", "완료"] as AdminStatus[]).map((status) => {
+              {(["접수완료", "진행중", "완료"] as AdminStatus[]).map((status) => {
                 const config = adminStatusConfig[status];
                 const Icon = config.icon;
                 const isSelected = reviewData.adminStatus === status;
