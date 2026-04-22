@@ -62,7 +62,7 @@ export default function HomePage() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  지번 입력만으로 편입 토지와 잔여지 정보를 손쉽게 확인할 수 있습니다.
+                  지번을 몰라도 읍면동만 선택하면 해당 지역의 편입 토지 목록에서 내 땅을 찾을 수 있습니다.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -159,7 +159,7 @@ export default function HomePage() {
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
                 <span className="text-xl font-bold">4</span>
               </div>
-              <h3 className="mt-4 font-semibold text-foreground">결과 통보</h3>
+              <h3 className="mt-4 font-semibold text-foreground">���과 통보</h3>
               <p className="mt-2 text-sm text-muted-foreground">
                 매수, 기각, 또는 심의위원회 이관 결과를 통보합니다
               </p>
