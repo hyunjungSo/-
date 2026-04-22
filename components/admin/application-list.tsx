@@ -85,7 +85,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">{stats.total}</p>
-                <p className="text-xs text-muted-foreground">전체 민원</p>
+                <p className="text-sm text-muted-foreground">전체 민원</p>
               </div>
             </div>
           </CardContent>
@@ -98,7 +98,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-600">{stats.접수완료}</p>
-                <p className="text-xs text-muted-foreground">접수완료</p>
+                <p className="text-sm text-muted-foreground">접수완료</p>
               </div>
             </div>
           </CardContent>
@@ -111,7 +111,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
               <div>
                 <p className="text-2xl font-bold text-blue-600">{stats.진행중}</p>
-                <p className="text-xs text-muted-foreground">진행중</p>
+                <p className="text-sm text-muted-foreground">진행중</p>
               </div>
             </div>
           </CardContent>
@@ -124,7 +124,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
               <div>
                 <p className="text-2xl font-bold text-green-600">{stats.심사완료}</p>
-                <p className="text-xs text-muted-foreground">심사완료</p>
+                <p className="text-sm text-muted-foreground">심사완료</p>
               </div>
             </div>
           </CardContent>
@@ -203,7 +203,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       <div className="flex items-center gap-2">
                         {app.applicationNumber}
                         {app.additionalLands && app.additionalLands.length > 0 && (
-                          <span className="flex items-center gap-0.5 rounded bg-primary/10 px-1.5 py-0.5 text-xs text-primary" title="복수 필지">
+                          <span className="flex items-center gap-0.5 rounded bg-primary/10 px-1.5 py-0.5 text-sm text-primary" title="복수 필지">
                             <Layers className="h-3 w-3" />
                             {app.additionalLands.length + 1}
                           </span>
@@ -256,11 +256,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     <span className="font-medium text-foreground">
                       {app.applicationNumber}
                     </span>
-                    <Badge className={`text-xs ${statusConfig[app.status].className}`}>
+                    <Badge className={`text-sm ${statusConfig[app.status].className}`}>
                       {statusConfig[app.status].label}
                     </Badge>
                     {app.additionalLands && app.additionalLands.length > 0 && (
-                      <span className="flex items-center gap-0.5 rounded bg-primary/10 px-1.5 py-0.5 text-xs text-primary">
+                      <span className="flex items-center gap-0.5 rounded bg-primary/10 px-1.5 py-0.5 text-sm text-primary">
                         <Layers className="h-3 w-3" />
                         복수필지
                       </span>
@@ -269,7 +269,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <p className="text-sm text-muted-foreground">
                     {app.applicantName} | {app.appliedAt}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     {app.landInfo.address}
                   </p>
                 </div>

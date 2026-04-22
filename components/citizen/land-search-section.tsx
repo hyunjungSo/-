@@ -62,7 +62,7 @@ const regionData = {
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
-    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "���장면"],
+    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "�����장면"],
     // 충청남도 - 아산시
     "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악면", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
@@ -190,7 +190,7 @@ function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale 
         {/* 상세 설명 */}
         <div className="rounded-lg border border-border bg-card p-4">
           <h4 className="mb-2 font-semibold text-foreground">상세 분석 내용</h4>
-          <pre className="whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
+          <pre className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
             {rationale.detailedExplanation}
           </pre>
         </div>
@@ -198,7 +198,7 @@ function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale 
         {/* 안내 문구 */}
         <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
             판단 근거에 이의가 있으시면 신청서 제출 시 의견을 기재해 주시기 바랍니다.
           </p>
@@ -842,7 +842,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                         <Bot className="h-4 w-4 text-primary" />
                         <span className="text-sm font-semibold">AI 판독 결과</span>
                       </div>
-                      <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+                      <span className={`rounded-full px-2 py-0.5 text-sm font-bold ${
                         aiResult.provisionalJudgment === "매수"
                           ? "bg-primary text-white"
                           : aiResult.provisionalJudgment === "심의위원회이관"
@@ -865,7 +865,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                           <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                           <div>
                             <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
-                            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.summary}</p>
+                            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.summary}</p>
                           </div>
                         </div>
                       )}
@@ -876,7 +876,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                           <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                           <div>
                             <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
-                            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
+                            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
                           </div>
                         </div>
                       )}
@@ -889,7 +889,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                             <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
                             <ul className="mt-1 space-y-1">
                               {aiResult.judgmentRationale.appliedCriteria.map((criteria, idx) => (
-                                <li key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
+                                <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
                                   <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
                                   <span>{criteria}</span>
                                 </li>
@@ -907,7 +907,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                             <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
                             <ul className="mt-1 space-y-1">
                               {aiResult.judgmentRationale.manualCheckItems.map((item, idx) => (
-                                <li key={idx} className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <li key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
                                   <span>{item}</span>
                                 </li>
@@ -923,7 +923,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                           <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                           <div>
                             <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
-                            <pre className="mt-1 whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
+                            <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                               {aiResult.judgmentRationale.detailedExplanation}
                             </pre>
                           </div>
@@ -933,7 +933,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                       {/* 안내 문구 */}
                       <div className="flex items-start gap-2 pt-2">
                         <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                           AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                         </p>
                       </div>

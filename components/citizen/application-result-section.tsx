@@ -121,7 +121,7 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
         <CardContent>
           <ol className="space-y-3 text-sm text-muted-foreground">
             <li className="flex gap-3">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
                 1
               </span>
               <span>
@@ -129,7 +129,7 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
               </span>
             </li>
             <li className="flex gap-3">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
                 2
               </span>
               <span>
@@ -137,7 +137,7 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
               </span>
             </li>
             <li className="flex gap-3">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
                 3
               </span>
               <span>

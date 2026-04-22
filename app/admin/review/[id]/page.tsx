@@ -275,20 +275,20 @@ export default function ReviewDocumentPage({
                         </td>
                         <td
                           rowSpan={2}
-                          className="border border-foreground bg-muted px-1 py-1 text-center text-xs font-medium text-foreground"
+                          className="border border-foreground bg-muted px-1 py-1 text-center text-sm font-medium text-foreground"
                           style={{ width: "50px" }}
                         >
                           원지번
                         </td>
                         <td
                           rowSpan={2}
-                          className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground"
+                          className="border border-foreground bg-muted px-2 py-1 text-center text-sm font-medium text-foreground"
                         >
                           지목
                         </td>
                         <td
                           rowSpan={2}
-                          className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground"
+                          className="border border-foreground bg-muted px-2 py-1 text-center text-sm font-medium text-foreground"
                         >
                           면적(m&sup2;)
                         </td>
@@ -313,33 +313,33 @@ export default function ReviewDocumentPage({
                             <Textarea
                               value={fieldConditionReview}
                               onChange={(e) => setFieldConditionReview(e.target.value)}
-                              className="h-full min-h-[300px] cursor-text resize-none rounded-none border-0 text-xs leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
+                              className="h-full min-h-[300px] cursor-text resize-none rounded-none border-0 text-sm leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
                               placeholder="현지상황 및 검토의견을 입력하세요"
                             />
                           ) : (
-                            <div className="whitespace-pre-wrap p-2 text-xs leading-relaxed text-foreground">
+                            <div className="whitespace-pre-wrap p-2 text-sm leading-relaxed text-foreground">
                               {fieldConditionReview}
                             </div>
                           )}
                         </td>
                       </tr>
                       <tr>
-                        <td className="border border-foreground bg-muted px-1 py-1 text-center text-xs font-medium text-foreground" style={{ width: "50px" }}>
+                        <td className="border border-foreground bg-muted px-1 py-1 text-center text-sm font-medium text-foreground" style={{ width: "50px" }}>
                           지번
                         </td>
-                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-sm font-medium text-foreground">
                           면적(m&sup2;)
                         </td>
-                        <td className="border border-foreground bg-muted px-1 py-1 text-center text-xs font-medium text-foreground" style={{ width: "50px" }}>
+                        <td className="border border-foreground bg-muted px-1 py-1 text-center text-sm font-medium text-foreground" style={{ width: "50px" }}>
                           지번
                         </td>
-                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-sm font-medium text-foreground">
                           면적(m&sup2;)
                         </td>
-                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-sm font-medium text-foreground">
                           잔여비율
                         </td>
-                        <td className="border border-foreground bg-primary/10 px-2 py-1 text-center text-xs font-semibold text-primary">
+                        <td className="border border-foreground bg-primary/10 px-2 py-1 text-center text-sm font-semibold text-primary">
                           매수여부
                         </td>
                       </tr>
@@ -425,7 +425,7 @@ export default function ReviewDocumentPage({
                       <tr>
                         <td
                           rowSpan={4}
-                          className="w-8 border border-foreground bg-muted px-1 py-2 text-center text-xs font-medium text-foreground"
+                          className="w-8 border border-foreground bg-muted px-1 py-2 text-center text-sm font-medium text-foreground"
                           style={{ writingMode: "vertical-rl", textOrientation: "mixed" }}
                         >
                           소유자의견
@@ -435,38 +435,38 @@ export default function ReviewDocumentPage({
                             <Textarea
                               value={ownerOpinion}
                               onChange={(e) => setOwnerOpinion(e.target.value)}
-                              className="h-full min-h-[100px] cursor-text resize-none rounded-none border-0 text-xs leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
+                              className="h-full min-h-[100px] cursor-text resize-none rounded-none border-0 text-sm leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
                               placeholder="소유자 의견을 입력하세요"
                             />
                           ) : (
-                            <div className="whitespace-pre-wrap p-2 text-xs leading-relaxed text-foreground">
+                            <div className="whitespace-pre-wrap p-2 text-sm leading-relaxed text-foreground">
                               {ownerOpinion}
                             </div>
                           )}
                         </td>
                         <td
                           colSpan={7}
-                          className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground"
+                          className="border border-foreground bg-muted px-2 py-1 text-center text-sm font-medium text-foreground"
                         >
                           심의위원회결정{" "}
                           <span className="text-muted-foreground">(매수시 O, 매수불가시 X표시)</span>
                         </td>
                       </tr>
                       <tr>
-                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-sm font-medium text-foreground">
                           구분
                         </td>
                         {committeeDecisions.map((item, idx) => (
                           <td
                             key={idx}
-                            className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground"
+                            className="border border-foreground bg-muted px-2 py-1 text-center text-sm font-medium text-foreground"
                           >
                             {item.role}
                           </td>
                         ))}
                       </tr>
                       <tr>
-                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-sm font-medium text-foreground">
                           O, X
                         </td>
                         {committeeDecisions.map((_, idx) => (
@@ -479,7 +479,7 @@ export default function ReviewDocumentPage({
                         ))}
                       </tr>
                       <tr>
-                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-xs font-medium text-foreground">
+                        <td className="border border-foreground bg-muted px-2 py-1 text-center text-sm font-medium text-foreground">
                           서명
                         </td>
                         {committeeDecisions.map((_, idx) => (

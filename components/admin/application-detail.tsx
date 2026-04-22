@@ -375,7 +375,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <div className="flex items-center gap-2">
                       <p className="font-medium text-foreground">{check.criteriaName}</p>
                       {!check.autoDetected && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-sm">
                           직접 확인 필요
                         </Badge>
                       )}
@@ -465,7 +465,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">
+                  <div className="px-2 py-1 text-sm font-semibold text-muted-foreground">
                     정형
                   </div>
                   {landShapes.regular.map((shape) => (
@@ -473,7 +473,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       {shape.label}
                     </SelectItem>
                   ))}
-                  <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">
+                  <div className="px-2 py-1 text-sm font-semibold text-muted-foreground">
                     비정형
                   </div>
                   {landShapes.irregular.map((shape) => (
@@ -585,7 +585,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 );
               })}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다.
             </p>
           </div>
@@ -595,7 +595,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 <Label className={reviewData.adminStatus !== "심사완료" ? "text-muted-foreground" : ""}>
                   최종 판정
 {reviewData.adminStatus !== "심사완료" && (
-                    <span className="ml-2 text-xs font-normal text-muted-foreground">
+                    <span className="ml-2 text-sm font-normal text-muted-foreground">
                     (진행상황을 &apos;심사완료&apos;로 설정하면 활성화됩니다)
                 </span>
               )}

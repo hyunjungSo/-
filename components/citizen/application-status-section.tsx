@@ -65,7 +65,7 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
               <Scale className="h-4 w-4 text-primary" />
               <span>AI 판단 근거 보기</span>
               {provisionalJudgment && (
-                <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+                <span className={`rounded-full px-2 py-0.5 text-sm font-bold ${
                   provisionalJudgment === "매수"
                     ? "bg-primary text-white"
                     : "bg-destructive text-white"
@@ -89,7 +89,7 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
           <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <div>
             <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
-            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{rationale.summary}</p>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{rationale.summary}</p>
           </div>
         </div>
 
@@ -98,7 +98,7 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
           <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
           <div>
             <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
-            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{rationale.legalBasis}</p>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{rationale.legalBasis}</p>
           </div>
         </div>
 
@@ -109,7 +109,7 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
             <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
             <ul className="mt-1 space-y-1">
               {rationale.appliedCriteria.map((criteria, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
+                <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
                   <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
                   <span>{criteria}</span>
                 </li>
@@ -126,7 +126,7 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
               <h4 className="text-sm font-semibold text-foreground">직접 확인 항목</h4>
               <ul className="mt-1 space-y-1">
                 {rationale.manualCheckItems.map((item, idx) => (
-                  <li key={idx} className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <li key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
                     <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
                     <span>{item}</span>
                   </li>
@@ -141,7 +141,7 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
           <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
           <div>
             <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
-            <pre className="mt-1 whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
+            <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
               {rationale.detailedExplanation}
             </pre>
           </div>
@@ -150,7 +150,7 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
         {/* 안내 문구 */}
         <div className="flex items-start gap-2 pt-2">
           <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
           </p>
         </div>
@@ -207,7 +207,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                     }`}>
                       {stepNum}
                     </span>
-                    <span className={`mt-2 text-xs font-medium ${
+                    <span className={`mt-2 text-sm font-medium ${
                       isCurrent ? "text-primary" : isActive ? "text-gray-700" : "text-gray-400"
                     }`}>
                       {config.label}
@@ -345,7 +345,7 @@ export function ApplicationStatusSection() {
                             {statusConfig.label}
                           </Badge>
                           {app.adminStatus === "심사완료" && app.finalJudgment && (
-                            <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${
+                            <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-sm font-semibold ${
                               app.finalJudgment === "매수" 
                                 ? "bg-emerald-100 text-emerald-700" 
                                 : app.finalJudgment === "기각"
@@ -366,12 +366,12 @@ export function ApplicationStatusSection() {
                         </h3>
 
                         {/* 주소 */}
-                        <p className="mt-1 truncate text-xs text-muted-foreground">
+                        <p className="mt-1 truncate text-sm text-muted-foreground">
                           {app.landInfo.address}
                         </p>
 
                         {/* 메타데이터 */}
-                        <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
+                        <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
                           <span>{app.appliedAt}</span>
                           <span className="text-gray-300">|</span>
                           <span>{app.landInfo.remainingArea.toLocaleString()}m²</span>

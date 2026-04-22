@@ -106,7 +106,7 @@ function AddressSearchModal({
                       className="w-full rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-muted"
                       onClick={() => onSelect(addr)}
                     >
-                      <span className="mr-2 text-xs text-muted-foreground">
+                      <span className="mr-2 text-sm text-muted-foreground">
                         [{addr.postalCode}]
                       </span>
                       <span>{addr.address}</span>
@@ -117,14 +117,14 @@ function AddressSearchModal({
             ) : (
               <div className="space-y-2 py-4 text-center text-sm text-muted-foreground">
                 <p>도로명, 건물명 또는 지번을 입력하세요.</p>
-                <p className="text-xs">예: 천안시 동남구, 신부동 100</p>
+                <p className="text-sm">예: 천안시 동남구, 신부동 100</p>
               </div>
             )}
           </div>
         </div>
         
         <div className="border-t bg-muted/30 p-3">
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             * 정확한 주소를 찾을 수 없는 경우, 가까운 건물명이나 도로명으로 검색해 보세요.
           </p>
         </div>
@@ -260,7 +260,7 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
         {/* 상세 설명 */}
         <div className="rounded-lg border border-border bg-card p-4">
           <h4 className="mb-2 font-semibold text-foreground">상세 분석 내용</h4>
-          <pre className="whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
+          <pre className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
             {detailedExplanation}
           </pre>
         </div>
@@ -268,9 +268,9 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
         {/* 안내 문구 */}
         <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
-            판단 근거에 이의가 있으시면 신청서 제출 시 의견을 기재해 주시기 바랍니다.
+            판단 근거에 이의가 있으시면 신청서 제출 시 ���견을 기재해 주시기 바랍니다.
           </p>
         </div>
       </CollapsibleContent>
@@ -429,7 +429,7 @@ export function ApplicationFormSection({
             }`}>
               <div className="mb-2 flex items-center gap-2">
                 <Bot className="h-4 w-4 text-primary" />
-                <span className="text-xs font-semibold text-foreground">AI 판독 결과</span>
+                <span className="text-sm font-semibold text-foreground">AI 판독 결과</span>
               </div>
               <div className="flex items-center gap-1.5">
                 {aiResult.provisionalJudgment === "매수" ? (
@@ -444,7 +444,7 @@ export function ApplicationFormSection({
                   </>
                 )}
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {aiResult.criteriaChecks.filter(c => c.isMet).length}/{aiResult.criteriaChecks.length}개 기준 충족
               </p>
             </div>
@@ -587,7 +587,7 @@ export function ApplicationFormSection({
                         <SelectValue placeholder="선택하세요" />
                       </SelectTrigger>
                       <SelectContent>
-                        <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">
+                        <div className="px-2 py-1 text-sm font-semibold text-muted-foreground">
                           정형
                         </div>
                         {landShapes.regular.map((shape) => (
@@ -595,7 +595,7 @@ export function ApplicationFormSection({
                             {shape.label}
                           </SelectItem>
                         ))}
-                        <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">
+                        <div className="px-2 py-1 text-sm font-semibold text-muted-foreground">
                           비정형
                         </div>
                         {landShapes.irregular.map((shape) => (
