@@ -140,67 +140,71 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-14 flex flex-col items-center gap-6 lg:flex-row lg:justify-center lg:gap-0">
             {/* Step 1 */}
-            <div className="relative flex flex-col items-center text-center">
-              <div className="relative">
-                <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
-                  <Search className="h-9 w-9" />
-                </div>
-                <span className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-sm font-bold text-background">
-                  1
-                </span>
+            <div className="flex flex-col items-center text-center lg:flex-1">
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
+                <Search className="h-9 w-9" />
               </div>
-              <h3 className="mt-6 text-lg font-semibold text-foreground">토지 조회</h3>
-              <p className="mt-2 text-base leading-relaxed text-muted-foreground">
+              <h3 className="mt-5 text-lg font-semibold text-foreground">토지 조회</h3>
+              <p className="mt-2 max-w-[200px] text-base leading-relaxed text-muted-foreground">
                 편입 토지 지번으로 잔여지 정보를 조회합니다
               </p>
             </div>
 
+            {/* Arrow 1 */}
+            <div className="hidden shrink-0 px-4 text-muted-foreground/50 lg:block">
+              <ChevronRight className="h-10 w-10" />
+            </div>
+            <div className="block rotate-90 text-muted-foreground/50 lg:hidden">
+              <ChevronRight className="h-8 w-8" />
+            </div>
+
             {/* Step 2 */}
-            <div className="relative flex flex-col items-center text-center">
-              <div className="relative">
-                <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
-                  <Zap className="h-9 w-9" />
-                </div>
-                <span className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-sm font-bold text-background">
-                  2
-                </span>
+            <div className="flex flex-col items-center text-center lg:flex-1">
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
+                <Zap className="h-9 w-9" />
               </div>
-              <h3 className="mt-6 text-lg font-semibold text-foreground">AI 분석 확인</h3>
-              <p className="mt-2 text-base leading-relaxed text-muted-foreground">
+              <h3 className="mt-5 text-lg font-semibold text-foreground">AI 분석 확인</h3>
+              <p className="mt-2 max-w-[200px] text-base leading-relaxed text-muted-foreground">
                 AI가 매수 가능 여부를 사전 분석합니다
               </p>
             </div>
 
+            {/* Arrow 2 */}
+            <div className="hidden shrink-0 px-4 text-muted-foreground/50 lg:block">
+              <ChevronRight className="h-10 w-10" />
+            </div>
+            <div className="block rotate-90 text-muted-foreground/50 lg:hidden">
+              <ChevronRight className="h-8 w-8" />
+            </div>
+
             {/* Step 3 */}
-            <div className="relative flex flex-col items-center text-center">
-              <div className="relative">
-                <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
-                  <FileCheck className="h-9 w-9" />
-                </div>
-                <span className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-sm font-bold text-background">
-                  3
-                </span>
+            <div className="flex flex-col items-center text-center lg:flex-1">
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
+                <FileCheck className="h-9 w-9" />
               </div>
-              <h3 className="mt-6 text-lg font-semibold text-foreground">매수 신청</h3>
-              <p className="mt-2 text-base leading-relaxed text-muted-foreground">
+              <h3 className="mt-5 text-lg font-semibold text-foreground">매수 신청</h3>
+              <p className="mt-2 max-w-[200px] text-base leading-relaxed text-muted-foreground">
                 신청인 정보와 필요 서류를 제출합니다
               </p>
             </div>
 
+            {/* Arrow 3 */}
+            <div className="hidden shrink-0 px-4 text-muted-foreground/50 lg:block">
+              <ChevronRight className="h-10 w-10" />
+            </div>
+            <div className="block rotate-90 text-muted-foreground/50 lg:hidden">
+              <ChevronRight className="h-8 w-8" />
+            </div>
+
             {/* Step 4 */}
-            <div className="relative flex flex-col items-center text-center">
-              <div className="relative">
-                <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
-                  <CheckCircle2 className="h-9 w-9" />
-                </div>
-                <span className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-sm font-bold text-background">
-                  4
-                </span>
+            <div className="flex flex-col items-center text-center lg:flex-1">
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
+                <CheckCircle2 className="h-9 w-9" />
               </div>
-              <h3 className="mt-6 text-lg font-semibold text-foreground">결과 통보</h3>
-              <p className="mt-2 text-base leading-relaxed text-muted-foreground">
+              <h3 className="mt-5 text-lg font-semibold text-foreground">결과 통보</h3>
+              <p className="mt-2 max-w-[200px] text-base leading-relaxed text-muted-foreground">
                 매수, 기각, 또는 심의위원회 이관 결과를 통보합니다
               </p>
             </div>
