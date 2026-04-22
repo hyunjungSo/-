@@ -27,6 +27,112 @@ interface ApplicationFormSectionProps {
   onBack: () => void;
 }
 
+// 샘플 주소 데이터
+const sampleAddresses = [
+  { postalCode: "31000", address: "충청남도 천안시 동남구 신부동 100" },
+  { postalCode: "31001", address: "충청남도 천안시 동남구 신방동 200" },
+  { postalCode: "31002", address: "충청남도 천안시 동남구 봉명동 300" },
+  { postalCode: "31010", address: "충청남도 천안시 서북구 성정동 150" },
+  { postalCode: "31011", address: "충청남도 천안시 서북구 쌍용동 250" },
+  { postalCode: "31100", address: "충청남도 아산시 탕정면 갈산리 50" },
+  { postalCode: "31101", address: "충청남도 아산시 배방읍 장재리 100" },
+  { postalCode: "31200", address: "충청남도 공주시 중동 200" },
+  { postalCode: "31201", address: "충청남도 공주시 산성동 300" },
+  { postalCode: "31300", address: "충청남도 논산시 내동 150" },
+];
+
+// 주소 검색 모달 컴포넌트
+function AddressSearchModal({
+  onSelect,
+  onClose,
+}: {
+  onSelect: (address: { postalCode: string; address: string }) => void;
+  onClose: () => void;
+}) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<typeof sampleAddresses>([]);
+  const [hasSearched, setHasSearched] = useState(false);
+
+  const handleSearch = () => {
+    if (!searchQuery.trim()) return;
+    
+    // 샘플 데이터에서 검색 (실제로는 API 호출)
+    const results = sampleAddresses.filter(
+      (addr) =>
+        addr.address.includes(searchQuery) || addr.postalCode.includes(searchQuery)
+    );
+    setSearchResults(results);
+    setHasSearched(true);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="mx-4 w-full max-w-lg rounded-lg bg-background shadow-xl">
+        <div className="flex items-center justify-between border-b p-4">
+          <h3 className="text-lg font-semibold">주소 검색</h3>
+          <Button variant="ghost" size="icon" onClick={onClose}>
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        <div className="p-4">
+          <div className="flex gap-2">
+            <Input
+              placeholder="도로명, 건물명 또는 지번 입력"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              autoFocus
+            />
+            <Button 
+              onClick={handleSearch}
+              className="shrink-0 bg-[#222222] hover:bg-[#333333]"
+            >
+              검색
+            </Button>
+          </div>
+          
+          <div className="mt-4 max-h-64 overflow-y-auto">
+            {hasSearched && searchResults.length === 0 ? (
+              <p className="py-8 text-center text-sm text-muted-foreground">
+                검색 결과가 없습니다.
+              </p>
+            ) : searchResults.length > 0 ? (
+              <ul className="space-y-1">
+                {searchResults.map((addr, idx) => (
+                  <li key={idx}>
+                    <button
+                      type="button"
+                      className="w-full rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-muted"
+                      onClick={() => onSelect(addr)}
+                    >
+                      <span className="mr-2 text-xs text-muted-foreground">
+                        [{addr.postalCode}]
+                      </span>
+                      <span>{addr.address}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="space-y-2 py-4 text-center text-sm text-muted-foreground">
+                <p>도로명, 건물명 또는 지번을 입력하세요.</p>
+                <p className="text-xs">예: 천안시 동남구, 신부동 100</p>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        <div className="border-t bg-muted/30 p-3">
+          <p className="text-xs text-muted-foreground">
+            * 정확한 주소를 찾을 수 없는 경우, 가까운 건물명이나 도로명으로 검색해 보세요.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // AI 분석 결과 상세 섹션
 function AIResultDetailSection({ aiResult, landInfo }: { aiResult: AIAnalysisResult; landInfo: LandInfo }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -164,7 +270,7 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p className="text-xs text-muted-foreground">
             본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
-            판단 근거에 이���가 있으시면 신청서 제출 시 의견을 기재해 주시기 바랍니다.
+            판단 근거에 이�����가 있으시면 신청서 제출 시 의견을 기재해 주시기 바랍니다.
           </p>
         </div>
       </CollapsibleContent>
@@ -187,13 +293,17 @@ export function ApplicationFormSection({
   const [formData, setFormData] = useState({
     applicantName: landInfo.ownerName,
     applicantContact: landInfo.ownerContact || "",
-    applicantAddress: "",
+    postalCode: "",
+    baseAddress: "",
+    detailAddress: "",
     actualUsage: landInfo.landCategory as LandCategory,
     reportedShape: landInfo.remainingShape as LandShape,
     farmMachineDifficulty: false,
     reason: "",
     attachments: [] as FileItem[],
   });
+
+  const [isAddressSearchOpen, setIsAddressSearchOpen] = useState(false);
 
   const MAX_FILES = 10;
 
@@ -209,7 +319,7 @@ export function ApplicationFormSection({
       applicationNumber: `2026-${String(new Date().getMonth() + 1).padStart(2, "0")}${String(new Date().getDate()).padStart(2, "0")}-${String(Math.floor(Math.random() * 999)).padStart(3, "0")}`,
       applicantName: formData.applicantName,
       applicantContact: formData.applicantContact,
-      applicantAddress: formData.applicantAddress,
+      applicantAddress: `(${formData.postalCode}) ${formData.baseAddress} ${formData.detailAddress}`.trim(),
       landInfo,
       actualUsage: formData.actualUsage,
       reportedShape: formData.reportedShape,
@@ -386,17 +496,57 @@ export function ApplicationFormSection({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="applicantAddress">주소 *</Label>
-                  <Input
-                    id="applicantAddress"
-                    placeholder="우편물 수령 가능한 주소를 입력해주세요"
-                    value={formData.applicantAddress}
-                    onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, applicantAddress: e.target.value }))
-                    }
-                    required
-                  />
+                  <Label>주소 *</Label>
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <Input
+                        id="postalCode"
+                        placeholder="우편번호"
+                        value={formData.postalCode}
+                        readOnly
+                        className="w-28 bg-muted"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="shrink-0 bg-[#222222] text-white hover:bg-[#333333] hover:text-white"
+                        onClick={() => setIsAddressSearchOpen(true)}
+                      >
+                        주소 검색
+                      </Button>
+                    </div>
+                    <Input
+                      id="baseAddress"
+                      placeholder="기본주소"
+                      value={formData.baseAddress}
+                      readOnly
+                      className="bg-muted"
+                    />
+                    <Input
+                      id="detailAddress"
+                      placeholder="상세주소를 입력해주세요"
+                      value={formData.detailAddress}
+                      onChange={(e) =>
+                        setFormData((prev) => ({ ...prev, detailAddress: e.target.value }))
+                      }
+                    />
+                  </div>
                 </div>
+
+                {/* 주소 검색 모달 */}
+                {isAddressSearchOpen && (
+                  <AddressSearchModal
+                    onSelect={(address) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        postalCode: address.postalCode,
+                        baseAddress: address.address,
+                      }));
+                      setIsAddressSearchOpen(false);
+                    }}
+                    onClose={() => setIsAddressSearchOpen(false)}
+                  />
+                )}
               </div>
 
               {/* 토지 정보 */}
