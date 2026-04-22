@@ -6,8 +6,11 @@ import './globals.css'
 
 const notoSansKR = Noto_Sans_KR({ 
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-noto-sans-kr"
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-noto-sans-kr",
+  display: "swap",
+  preload: true,
+  fallback: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
 });
 
 export const metadata: Metadata = {
