@@ -142,7 +142,7 @@ export default function HomePage() {
               </div>
               <h3 className="mt-5 text-lg font-semibold text-foreground">토지 조회</h3>
               <p className="mt-2 max-w-[200px] text-base leading-relaxed text-muted-foreground">
-                편입 토지 지번으로 잔여지 정보를 조회합니���
+                편입 토지 지번으로 잔여지 정보를 조회합니다
               </p>
             </div>
 

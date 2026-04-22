@@ -449,7 +449,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "고속도로 편입으로 인해 잔여지가 삼각형 형태로 남��� 건축물 건축이 불가능합니다. 잔여 면적도 협소하여 종래 목적대로 사용할 수 없습니다.",
+    reason: "고속도로 편입으로 인해 잔여지가 삼각형 형태로 남아 건축물 건축이 불가능합니다. 잔여 면적도 협소하여 종래 목적대로 사용할 수 없습니다.",
     attachments: ["토지대장.pdf", "등기부등본.pdf"],
     status: "AI분석완료",
     adminStatus: "접수완료",
