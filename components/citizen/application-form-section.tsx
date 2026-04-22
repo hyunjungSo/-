@@ -731,7 +731,7 @@ export function ApplicationFormSection({
               <Button
                 type="submit"
                 size="lg"
-                className="w-full"
+                className="mx-auto block w-full max-w-[600px]"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
