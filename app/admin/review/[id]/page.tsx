@@ -186,6 +186,11 @@ export default function ReviewDocumentPage({
               돌아가기
             </Button>
             <div className="flex gap-2">
+              {isEditing && (
+                <Button onClick={handleGenerate}>
+                  완료
+                </Button>
+              )}
               {isGenerated && !isEditing && (
                 <>
                   <Button variant="outline" onClick={handleEdit}>
@@ -205,20 +210,13 @@ export default function ReviewDocumentPage({
             </div>
           </div>
 
-          <div className="flex items-center justify-between print:hidden">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
-                심의서 작성 {isGenerated && !isEditing && "완료"}
-              </h1>
-              <p className="mt-1 text-muted-foreground">
-                접수번호: {application.applicationNumber}
-              </p>
-            </div>
-            {isEditing && (
-              <Button onClick={handleGenerate} size="lg" className="px-8">
-                완료
-              </Button>
-            )}
+          <div className="print:hidden">
+            <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
+              심의서 작성 {isGenerated && !isEditing && "완료"}
+            </h1>
+            <p className="mt-1 text-muted-foreground">
+              접수번호: {application.applicationNumber}
+            </p>
           </div>
 
           {/* 심의서 본문 */}
