@@ -39,8 +39,14 @@ export type ProcessStatus = "접수됨" | "AI분석완료" | "검토중" | "처�
 // 담당자 진행상황
 export type AdminStatus = "대기중" | "진행중" | "완료";
 
-// 판정 결과
-export type JudgmentResult = "매수" | "기각" | "심의위원회이관";
+// AI 1차 판독 결과 (매수/기각만 가능)
+export type AIJudgmentResult = "매수" | "기각";
+
+// 최종 판정 결과 (담당자-민원인 의견 충돌 시 심의위원회이관 가능)
+export type FinalJudgmentResult = "매수" | "기각" | "심의위원회이관";
+
+// 판정 결과 (하위 호환용)
+export type JudgmentResult = FinalJudgmentResult;
 
 // 토지 정보
 export interface LandInfo {
@@ -100,7 +106,7 @@ export interface Application {
 export interface AIAnalysisResult {
   landTypePath: LandType; // 판단 경로 (토지 유형)
   criteriaChecks: CriteriaCheck[]; // 기준 충족 여부
-  provisionalJudgment: JudgmentResult; // 잠정 판정
+  provisionalJudgment: AIJudgmentResult; // AI 1차 판독 결과 (매수/기각)
   originalShapeIndex: number;
   remainingShapeIndex: number;
   shapeIndexChange: number;
