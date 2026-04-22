@@ -47,9 +47,9 @@ const judgmentConfig = {
 };
 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
-  대기중: { label: "대기", icon: Clock, color: "text-gray-500" },
-  진행중: { label: "진행중", icon: PlayCircle, color: "text-primary" },
-  완료: { label: "완료", icon: CheckCircle2, color: "text-primary" },
+  대기중: { label: "대기", icon: Clock, color: "text-[#222222] border-[#222222]" },
+  진행중: { label: "진행중", icon: PlayCircle, color: "text-[#222222] border-[#222222]" },
+  완료: { label: "완료", icon: CheckCircle2, color: "text-[#222222] border-[#222222]" },
 };
 
 // 담당자 목록 (실제로는 API에서 가져옴)
@@ -603,7 +603,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     onClick={() =>
                       setReviewData((prev) => ({ ...prev, adminStatus: status }))
                     }
-                    className={`cursor-pointer ${isSelected ? "bg-[#222222] hover:bg-[#333333]" : config.color}`}
+                    className={`cursor-pointer border ${isSelected ? "bg-[#222222] hover:bg-[#333333]" : config.color}`}
                   >
                     <Icon className={`mr-2 h-4 w-4 ${status === "진행중" && isSelected ? "animate-spin" : ""}`} />
                     {config.label}
