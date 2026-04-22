@@ -38,7 +38,7 @@ const statusConfig: Record<ProcessStatus, { label: string; className: string }> 
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
   접수완료: { label: "접수완료", icon: Clock, color: "text-gray-500" },
   진행중: { label: "진행중", icon: PlayCircle, color: "text-primary" },
-  완료: { label: "완료", icon: CheckCircle2, color: "text-primary" },
+  심사완료: { label: "심사완료", icon: CheckCircle2, color: "text-primary" },
 };
 
 export function ApplicationList({ applications, onSelect }: ApplicationListProps) {
@@ -69,7 +69,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       total: applications.length,
       접수완료: applications.filter((a) => a.adminStatus === "접수완료").length,
       진행중: applications.filter((a) => a.adminStatus === "진행중").length,
-      완료: applications.filter((a) => a.adminStatus === "완료").length,
+      심사완료: applications.filter((a) => a.adminStatus === "심사완료").length,
     };
   }, [applications]);
 
@@ -123,8 +123,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <CheckCircle2 className="h-5 w-5 text-green-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-green-600">{stats.완료}</p>
-                <p className="text-xs text-muted-foreground">완료</p>
+                <p className="text-2xl font-bold text-green-600">{stats.심사완료}</p>
+                <p className="text-xs text-muted-foreground">심사완료</p>
               </div>
             </div>
           </CardContent>
@@ -161,7 +161,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <SelectItem value="all">전체 민원</SelectItem>
                   <SelectItem value="접수완료">접수완료</SelectItem>
                   <SelectItem value="진행중">진행중</SelectItem>
-                  <SelectItem value="완료">완료</SelectItem>
+                  <SelectItem value="심사완료">심사완료</SelectItem>
                 </SelectContent>
               </Select>
               <Button

@@ -41,8 +41,8 @@ const adminStatusConfig: Record<AdminStatus, {
     variant: "outline",
     className: "border border-primary bg-transparent text-primary font-medium" 
   },
-  완료: { 
-    label: "완료", 
+  심사완료: { 
+    label: "심사완료", 
     icon: CheckCircle2, 
     variant: "filled",
     className: "bg-primary text-white border-primary font-medium" 
@@ -164,10 +164,10 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
 function ApplicationDetailPanel({ application }: { application: Application }) {
   const getStatusStep = (status: AdminStatus) => {
     switch (status) {
-      case "접수완료": return 1;
-      case "진행중": return 2;
-      case "완료": return 3;
-      default: return 1;
+  case "접수완료": return 1;
+  case "진행중": return 2;
+  case "심사완료": return 3;
+  default: return 1;
     }
   };
 
@@ -187,7 +187,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
         <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
           <h4 className="mb-4 text-sm font-semibold text-foreground">진행 상황</h4>
           <ol className="flex items-center justify-between">
-            {(["접수완료", "진행중", "완료"] as AdminStatus[]).map((status, idx) => {
+            {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status, idx) => {
               const config = adminStatusConfig[status];
               const currentStep = getStatusStep(application.adminStatus);
               const stepNum = idx + 1;
@@ -225,7 +225,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
         </div>
 
         {/* 처리 완료 시 결과 표시 */}
-        {application.adminStatus === "완료" && application.finalJudgment && (
+        {application.adminStatus === "심사완료" && application.finalJudgment && (
           <div className={`rounded-lg border p-4 ${
             application.finalJudgment === "매수" 
               ? "border-emerald-200 bg-emerald-50" 
@@ -344,7 +344,7 @@ export function ApplicationStatusSection() {
                           <Badge className={statusConfig.className}>
                             {statusConfig.label}
                           </Badge>
-                          {app.adminStatus === "완료" && app.finalJudgment && (
+                          {app.adminStatus === "심사완료" && app.finalJudgment && (
                             <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${
                               app.finalJudgment === "매수" 
                                 ? "bg-emerald-100 text-emerald-700" 

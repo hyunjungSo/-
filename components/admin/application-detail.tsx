@@ -49,7 +49,7 @@ const judgmentConfig = {
 const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
   접수완료: { label: "접수완료", icon: Clock, color: "text-[#222222] border-[#222222]" },
   진행중: { label: "진행중", icon: PlayCircle, color: "text-[#222222] border-[#222222]" },
-  완료: { label: "완료", icon: CheckCircle2, color: "text-[#222222] border-[#222222]" },
+  심사완료: { label: "심사완료", icon: CheckCircle2, color: "text-[#222222] border-[#222222]" },
 };
 
 // 담당자 목록 (실제로는 API에서 가져옴)
@@ -89,7 +89,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       reviewerComment: reviewData.reviewerComment,
       finalJudgment: reviewData.finalJudgment,
       adminStatus: reviewData.adminStatus,
-      status: reviewData.adminStatus === "완료" ? "처리완료" : application.status,
+      status: reviewData.adminStatus === "심사완료" ? "처리완료" : application.status,
       adminName: selectedAssignee?.name || application.adminName,
       statusUpdatedAt: new Date().toISOString().split("T")[0],
     };
@@ -565,7 +565,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <div className="space-y-2">
             <Label>진행상황 설정</Label>
             <div className="flex flex-wrap gap-2">
-              {(["접수완료", "진행중", "완료"] as AdminStatus[]).map((status) => {
+              {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
                 const config = adminStatusConfig[status];
                 const Icon = config.icon;
                 const isSelected = reviewData.adminStatus === status;
@@ -592,11 +592,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
           {/* 최종 판정 - 진행상황이 완료일 때만 활성화 */}
           <div className="space-y-2">
-            <Label className={reviewData.adminStatus !== "완료" ? "text-muted-foreground" : ""}>
-              최종 판정
-              {reviewData.adminStatus !== "완료" && (
-                <span className="ml-2 text-xs font-normal text-muted-foreground">
-                  (진행상황을 &apos;완료&apos;로 설정하면 활성화됩니다)
+<Label className={reviewData.adminStatus !== "심사완료" ? "text-muted-foreground" : ""}>
+                  최종 판정
+{reviewData.adminStatus !== "심사완료" && (
+                    <span className="ml-2 text-xs font-normal text-muted-foreground">
+                    (진행상황을 &apos;심사완료&apos;로 설정하면 활성화됩니다)
                 </span>
               )}
             </Label>
@@ -605,7 +605,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 const config = judgmentConfig[judgment];
                 const Icon = config.icon;
                 const isSelected = reviewData.finalJudgment === judgment;
-                const isDisabled = reviewData.adminStatus !== "완료";
+                const isDisabled = reviewData.adminStatus !== "심사완료";
                 return (
                   <Button
                     key={judgment}
