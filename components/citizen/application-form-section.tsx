@@ -427,10 +427,7 @@ export function ApplicationFormSection({
                 ? "border-primary bg-primary/5" 
                 : "border-red-500 bg-red-50"
             }`}>
-              <div className="mb-2 flex items-center gap-2">
-                <Bot className={`h-5 w-5 ${
-                  aiResult.provisionalJudgment === "매수" ? "text-primary" : "text-red-600"
-                }`} />
+              <div className="mb-2">
                 <span className="text-base font-semibold text-foreground">AI 판독 결과</span>
               </div>
               <div className="flex items-center gap-2">
