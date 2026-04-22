@@ -180,7 +180,7 @@ export default function ReviewDocumentPage({
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="space-y-6">
           {/* 상단 네비게이션 */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between print:hidden">
             <Button variant="ghost" onClick={() => router.back()}>
               <ArrowLeft className="mr-2 h-4 w-4" />
               돌아가기
@@ -205,7 +205,7 @@ export default function ReviewDocumentPage({
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between print:hidden">
             <div>
               <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
                 심의서 작성 {isGenerated && !isEditing && "완료"}
@@ -215,7 +215,7 @@ export default function ReviewDocumentPage({
               </p>
             </div>
             {isEditing && (
-              <Button onClick={handleGenerate} size="lg" className="px-8 print:hidden">
+              <Button onClick={handleGenerate} size="lg" className="px-8">
                 완료
               </Button>
             )}

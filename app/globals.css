@@ -232,6 +232,54 @@
   }
 }
 
+/* 인쇄 스타일 */
+@media print {
+  /* 사이트 헤더 숨기기 */
+  header,
+  nav,
+  .print\\:hidden {
+    display: none !important;
+  }
+  
+  /* 본문 여백 초기화 */
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+  
+  /* 심의서 카드 스타일 */
+  .print\\:border-none {
+    border: none !important;
+    box-shadow: none !important;
+  }
+  
+  .print\\:shadow-none {
+    box-shadow: none !important;
+  }
+  
+  .print\\:p-0 {
+    padding: 0 !important;
+  }
+  
+  /* 페이지 설정 */
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+  
+  /* 컬러 인쇄 */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
 /* KRDS 컴포넌트 스타일 */
 @layer components {
   /* 뱃지 기본 스타일 */
