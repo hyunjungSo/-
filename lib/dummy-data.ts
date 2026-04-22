@@ -462,7 +462,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "부정형",
     farmMachineDifficulty: true,
-    reason: "도로 편��으로 농지가 분할되어 농기계 진입 및 회전이 불가능해졌습니다. 남은 면적으로는 농업 활동이 어렵습니다.",
+    reason: "도로 편입으로 농지가 분할되어 농기계 진입 및 회전이 불가능해졌습니다. 남은 면적으로는 농업 활동이 어렵습니다.",
     attachments: ["토지대장.pdf", "농지원부.pdf"],
     status: "검토중",
     adminStatus: "진행중",

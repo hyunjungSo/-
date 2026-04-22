@@ -62,9 +62,9 @@ const regionData = {
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
-    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "�����������������장면"],
+    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "입장면"],
     // 충청남도 - 아산시
-    "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악���", "신창면", "염치읍", "영인면", "인주면"],
+    "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악면", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
     "강남구": ["논현동", "삼성동", "역삼동", "청담동"],
     "해운대구": ["우동", "중동", "좌동", "송정동", "반여동", "반송동", "석대동", "재송동"],
@@ -220,7 +220,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
       autoDetected: true,
     },
     {
-      criteriaName: "�����상���수 변화",
+      criteriaName: "형상지수 변화",
       criteriaDescription: `형상지수 변화 +${shapeIndexChange.toFixed(1)} (기준: 1.0 이상)`,
       isMet: shapeIndexChange >= 1.0,
       autoDetected: true,
@@ -248,7 +248,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     });
     criteriaChecks.push({
       criteriaName: "수로 상실",
-      criteriaDescription: "관개수��� 상실로 농업용수 공급이 불가능한 경우",
+      criteriaDescription: "관개수로 상실로 농업용수 공급이 불가능한 경우",
       isMet: false,
       autoDetected: false,
     });
@@ -324,8 +324,8 @@ function generateJudgmentRationale(
     appliedCriteria.push(`그 밖의 토지 면적 기준: 330㎡ 이하`);
   }
   
-  appliedCriteria.push(`형상지수 변화 기준: 편입 전 대비 1.0 이상 상승 시 형상 불��으로 판단`);
-  appliedCriteria.push(`���지 형상 기준: 삼각형, 역삼각형, 자루형, 부정형 등 불규칙 형상`);
+  appliedCriteria.push(`형상지수 변화 기준: 편입 전 대비 1.0 이상 상승 시 형상 불량으로 판단`);
+  appliedCriteria.push(`잔여지 형상 기준: 삼각형, 역삼각형, 자루형, 부정형 등 불규칙 형상`);
   appliedCriteria.push(`잔여비율 기준: 30% 이하일 경우 종래 목적 사용 곤란으로 판단`);
 
   if (judgment === "매수") {
@@ -402,7 +402,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         // 리가 선택되었으면 필터링
         if (selectedRi && !land.address.includes(selectedRi)) return false;
         
-        // 지번이 입력되��으�� 필���링
+        // 지번이 입력되었으면 필터링
         if (jibun && !land.address.includes(jibun)) return false;
         
         return true;
