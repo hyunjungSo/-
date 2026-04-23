@@ -345,31 +345,33 @@ export function ApplicationStatusSection() {
                         }`}
                       >
                         {/* 접수번호 + 현황 뱃지 */}
-                        <div className="mb-1 flex flex-wrap items-center gap-2">
+                        <div className="mb-1 flex items-center justify-between gap-2">
                           <h3 className={`text-base font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
                             {app.applicationNumber}
                           </h3>
-                          <Badge variant={statusConfig.variant}>
-                            <statusConfig.icon className="h-3.5 w-3.5" />
-                            {statusConfig.label}
-                          </Badge>
-                          {app.adminStatus === "심사완료" && app.finalJudgment && (
-                            <Badge 
-                              variant="outline"
-                              className={
-                                app.finalJudgment === "매수" 
-                                  ? "border-emerald-600 text-emerald-700" 
-                                  : app.finalJudgment === "기각"
-                                    ? "border-red-600 text-red-700"
-                                    : "border-amber-600 text-amber-700"
-                              }
-                            >
-                              {app.finalJudgment === "매수" && <CheckCircle2 className="h-3.5 w-3.5" />}
-                              {app.finalJudgment === "기각" && <AlertTriangle className="h-3.5 w-3.5" />}
-                              {app.finalJudgment === "심의위원회이관" && <Info className="h-3.5 w-3.5" />}
-                              {app.finalJudgment}
+                          <div className="flex items-center gap-1.5">
+                            <Badge variant={statusConfig.variant}>
+                              <statusConfig.icon className="h-3.5 w-3.5" />
+                              {statusConfig.label}
                             </Badge>
-                          )}
+                            {app.adminStatus === "심사완료" && app.finalJudgment && (
+                              <Badge 
+                                variant="outline"
+                                className={
+                                  app.finalJudgment === "매수" 
+                                    ? "border-emerald-600 text-emerald-700" 
+                                    : app.finalJudgment === "기각"
+                                      ? "border-red-600 text-red-700"
+                                      : "border-amber-600 text-amber-700"
+                                }
+                              >
+                                {app.finalJudgment === "매수" && <CheckCircle2 className="h-3.5 w-3.5" />}
+                                {app.finalJudgment === "기각" && <AlertTriangle className="h-3.5 w-3.5" />}
+                                {app.finalJudgment === "심의위원회이관" && <Info className="h-3.5 w-3.5" />}
+                                {app.finalJudgment}
+                              </Badge>
+                            )}
+                          </div>
                         </div>
 
                         {/* 주소 */}
