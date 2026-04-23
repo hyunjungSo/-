@@ -53,7 +53,7 @@ const regionData = {
     "광주시": ["곤지암읍", "도척면", "퇴촌면", "남종면", "남한산성면", "실촌읍", "오포읍", "초월읍"],
     // 경기도 - 화성시
     "화성시": ["동탄면", "봉담읍", "서신면", "송산면", "양감면", "우정읍", "장안면", "정남면", "팔탄면", "향남읍"],
-    // 경기도 - 평택시
+    // 경기도 - ���택시
     "평택시": ["고덕면", "서탄면", "안중읍", "오성면", "청북읍", "팽성읍", "포승읍", "현덕면"],
     // 충청북도 - 음성군
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍"],
@@ -62,7 +62,7 @@ const regionData = {
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
-    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "입장면"],
+    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "���장면"],
     // 충청남도 - 아산시
     "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악면", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
@@ -322,7 +322,7 @@ function generateJudgmentRationale(
   appliedCriteria.push(`잔여비율 기준: 30% 이하일 경우 종래 목적 사용 곤란으로 판단`);
 
   if (judgment === "매수") {
-    summary = `본 토지는 잔여지 매수 기준 ${metCriteriaCount}개 항목을 충족하여 「매수 가능」으로 판정되었습니다.`;
+    summary = `본 토지는 잔여지 매수 기준 ${metCriteriaCount}개 항목을 충족하여 「매수 가능」으로 판정되었���니다.`;
     detailedExplanation = `1. 분석 대상 토지\n- 소재지: ${land.address}\n- 토지 유형: ${land.landType}\n- 지목: ${land.landCategory}\n\n2. 편입 현황\n- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n- 편입 면적: ${land.includedArea.toLocaleString()}㎡\n- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡\n- 잔여 비율: ${land.remainingRatio}%\n\n3. 형상 분석\n- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})\n- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})\n- 형상지수 변화: +${shapeIndexChange.toFixed(1)}\n\n4. 충족 기준\n${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}\n\n5. 판정 결과\n위 분석 결과, 본 토지는 공익사업 편입으로 인해 잔여지의 종래 목적대로 사용이 현저히 곤란하게 되었으므로, 잔여지 매수 청구 대상에 해당합니다.`;
   } else if (judgment === "기각") {
     summary = `본 토지는 잔여지 매수 기준을 충족하지 않아 「기각」으로 판정되었습니다.`;
@@ -538,7 +538,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
       <div className="mb-3 rounded-lg border border-border bg-card p-4">
         <div className="flex flex-wrap items-end gap-3">
           {/* 시도 */}
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-2">
             <label className="text-sm font-medium text-foreground">시도</label>
             <Select 
               value={selectedSido} 
@@ -562,7 +562,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
           </div>
 
           {/* 시군구 */}
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-2">
             <label className="text-sm font-medium text-foreground">시군구</label>
             <Select 
               value={selectedSigungu} 
@@ -586,7 +586,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
           </div>
 
           {/* 읍면동 */}
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-2">
             <label className="text-sm font-medium text-foreground">읍면동</label>
             <Select 
               value={selectedEupmyeondong} 
@@ -609,7 +609,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
           </div>
 
           {/* 리 */}
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-2">
             <label className="text-sm font-medium text-foreground">리</label>
             <Select 
               value={selectedRi} 
@@ -628,7 +628,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
           </div>
 
           {/* 지번 */}
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-2">
             <label className="text-sm font-medium text-foreground">지번</label>
             <div className="relative">
               <Input 

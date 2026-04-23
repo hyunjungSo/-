@@ -144,7 +144,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           <div className="mb-6 rounded-lg border border-border bg-secondary/30 p-4">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
               {/* 검색 입력 */}
-              <div className="flex flex-1 flex-col gap-1.5">
+              <div className="flex flex-1 flex-col gap-2">
                 <label className="text-sm font-medium text-foreground">검색</label>
                 <div className="relative">
                   <Input
@@ -158,7 +158,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
               
               {/* 처리상태 필터 */}
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-foreground">처리상태</label>
                 <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as AdminStatus | "all")}>
                   <SelectTrigger className="w-[150px]">

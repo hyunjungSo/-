@@ -68,7 +68,7 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
 
     return (
       <div className="flex items-center gap-3">
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-2">
           {label && (
             <label className="text-sm font-medium text-foreground">
               {label}
@@ -164,7 +164,7 @@ const SearchWithSelect = React.forwardRef<HTMLInputElement, SearchWithSelectProp
   ) => {
     return (
       <div className="flex items-center gap-3">
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-2">
           {props.label && (
             <label className="text-sm font-medium text-foreground">
               {props.label}
