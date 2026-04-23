@@ -244,9 +244,9 @@ export function LandMap({
         {/* 배경지도 선택 */}
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="secondary" size="sm" className="h-8 gap-1.5 bg-white/90 shadow-sm hover:bg-white">
+            <Button variant="outline" size="sm" className="h-8 gap-1.5 border-gray-300 bg-white/95 text-gray-700 shadow-sm hover:bg-white">
               <MapIcon className="h-4 w-4" />
-              <span className="text-base">배경지도</span>
+              <span className="text-sm">배경지도</span>
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-36 p-2" align="start">
@@ -274,9 +274,9 @@ export function LandMap({
         {/* 레이어 선택 */}
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="secondary" size="sm" className="h-8 gap-1.5 bg-white/90 shadow-sm hover:bg-white">
+            <Button variant="outline" size="sm" className="h-8 gap-1.5 border-gray-300 bg-white/95 text-gray-700 shadow-sm hover:bg-white">
               <Layers className="h-4 w-4" />
-              <span className="text-base">레이어</span>
+              <span className="text-sm">레이어</span>
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-52 p-3" align="start">
