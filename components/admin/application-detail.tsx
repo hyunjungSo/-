@@ -349,7 +349,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             {aiResult && (
               <div className="rounded-lg border border-border bg-muted/50 p-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-base text-muted-foreground">잠정 판정</span>
+                  <span className="text-base text-muted-foreground">���정 판정</span>
                   <div className="flex items-center gap-2">
                     {(() => {
                       const config = judgmentConfig[aiResult.provisionalJudgment];
@@ -380,24 +380,25 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       : "border-red-200 bg-red-50/50"
                   }`}
                 >
-                  {check.isMet && (
-                    <CheckCircle2 className="h-5 w-5 shrink-0 text-green-600" />
-                  )}
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      {!check.isMet && (
+                      {check.isMet ? (
+                        <Badge variant="default" className="bg-green-600 hover:bg-green-600">
+                          충족
+                        </Badge>
+                      ) : (
                         <Badge variant="destructive-subtle">
                           미충족
                         </Badge>
                       )}
-                      <p className={`font-medium ${check.isMet ? "text-foreground" : "text-foreground"}`}>{check.criteriaName}</p>
+                      <p className="font-medium text-foreground">{check.criteriaName}</p>
                       {!check.autoDetected && (
                         <Badge variant="outline">
                           직접 확인 필요
                         </Badge>
                       )}
                     </div>
-                    <p className={`mt-1 text-base ${check.isMet ? "text-muted-foreground" : "text-muted-foreground"}`}>
+                    <p className="mt-1 text-base text-muted-foreground">
                       {check.criteriaDescription}
                     </p>
                   </div>
@@ -705,7 +706,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               })}
             </div>
             <p className="text-base text-muted-foreground">
-              민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다.
+              민원��이 신청 현황 조회 시 이 진행상황이 표시됩니다.
             </p>
           </div>
 
