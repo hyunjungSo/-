@@ -957,7 +957,7 @@ export function ApplicationFormSection({
                 {/* 드롭존 영역 */}
                 <div className="rounded-lg bg-gray-100 p-8">
                   <div className="flex flex-col items-center justify-center text-center">
-                    <p className="mb-4 text-base text-gray-600">
+                    <p className="mb-4 text-sm text-gray-600">
                       첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 직접 선택해주세요.
                     </p>
                     <label className="cursor-pointer">
