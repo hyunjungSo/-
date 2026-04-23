@@ -1139,6 +1139,49 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               )}
             </div>
 
+              {/* 페이지네이션 */}
+              {searchResults.length > 0 && (
+              <div className="absolute bottom-0 left-0 flex w-[280px] items-center justify-center gap-1 border-t bg-background py-3">
+                {(() => {
+                  const totalPages = Math.ceil(searchResults.length / itemsPerPage);
+                  if (totalPages <= 1) return null;
+                  
+                  return (
+                    <>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8" 
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                        <Button 
+                          key={page}
+                          size="sm" 
+                          className={`h-8 w-8 p-0 ${currentPage === page ? "bg-[#222222] hover:bg-[#333333]" : ""}`}
+                          variant={currentPage === page ? "default" : "ghost"}
+                          onClick={() => setCurrentPage(page)}
+                        >
+                          {page}
+                        </Button>
+                      ))}
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8"
+                        disabled={currentPage === totalPages}
+                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </>
+                  );
+                })()}
+              </div>
+              )}
 
           </div>
 
