@@ -582,7 +582,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             remainingArea: 230,
             remainingRatio: 27.1,
             landType: "농지",
-            landCategory: "답",
+            landCategory: "��",
             businessUnit: "양평이천",
             projectName: "이천-여주 국도확장사업",
           },
@@ -1347,7 +1347,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     <div className="space-y-4">
                       {/* 판단 요약 */}
                       {aiResult.judgmentRationale && (
-                        <div className="flex items-start gap-3">
+                        <div className="flex items-start gap-2">
                           <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                           <div>
                             <h4 className="text-base font-semibold text-foreground">판단 요약</h4>
@@ -1358,7 +1358,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
                       {/* 법적 근거 */}
                       {aiResult.judgmentRationale && (
-                        <div className="flex items-start gap-3">
+                        <div className="flex items-start gap-2">
                           <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                           <div>
                             <h4 className="text-base font-semibold text-foreground">법적 근거</h4>
@@ -1369,13 +1369,13 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
                       {/* 적용 기준 */}
                       {aiResult.judgmentRationale && (
-                        <div className="flex items-start gap-3">
+                        <div className="flex items-start gap-2">
                           <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                           <div>
                             <h4 className="text-base font-semibold text-foreground">적용 기준</h4>
                             <ul className="mt-1 space-y-1">
                               {aiResult.judgmentRationale.appliedCriteria.map((criteria, idx) => (
-                                <li key={idx} className="flex items-start gap-2 text-base text-muted-foreground">
+                                <li key={idx} className="flex items-start gap-1.5 text-base text-muted-foreground">
                                   <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
                                   <span>{criteria}</span>
                                 </li>
@@ -1387,13 +1387,13 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
                       {/* 수동 확인 항목 */}
                       {aiResult.judgmentRationale?.manualCheckItems && aiResult.judgmentRationale.manualCheckItems.length > 0 && (
-                        <div className="flex items-start gap-3">
+                        <div className="flex items-start gap-2">
                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                           <div>
                             <h4 className="text-base font-semibold text-foreground">수동 확인 항목</h4>
                             <ul className="mt-1 space-y-1">
                               {aiResult.judgmentRationale.manualCheckItems.map((item, idx) => (
-                                <li key={idx} className="flex items-center gap-2 text-base text-muted-foreground">
+                                <li key={idx} className="flex items-center gap-1.5 text-base text-muted-foreground">
                                   <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
                                   <span>{item}</span>
                                 </li>
@@ -1405,7 +1405,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
                       {/* 상세 분석 */}
                       {aiResult.judgmentRationale?.detailedExplanation && (
-                        <div className="flex items-start gap-3">
+                        <div className="flex items-start gap-2">
                           <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                           <div>
                             <h4 className="text-base font-semibold text-foreground">상세 분석</h4>
