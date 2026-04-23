@@ -349,7 +349,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             {aiResult && (
               <div className="rounded-lg border border-border bg-muted/50 p-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-base text-muted-foreground">���정 판정</span>
+                  <span className="text-base text-muted-foreground">잠정 판정</span>
                   <div className="flex items-center gap-2">
                     {(() => {
                       const config = judgmentConfig[aiResult.provisionalJudgment];
@@ -706,7 +706,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               })}
             </div>
             <p className="text-base text-muted-foreground">
-              민원��이 신청 현황 조회 시 이 진행상황이 표시됩니다.
+              민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다.
             </p>
           </div>
 

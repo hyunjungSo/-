@@ -449,7 +449,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
       provisionalJudgment = "심의위원회이관";
     }
   } else {
-    // ��심 기준 미충족
+    // 핵심 기준 미충족
     if (isIrregularShape && shapeIndexMet) {
       // 형상이 매우 불리한 경우 심의위원회 이관
       provisionalJudgment = "심의위원회이관";
@@ -611,7 +611,7 @@ export const dummyApplications: Application[] = [
     adminName: "홍길동",
     statusUpdatedAt: "2026-04-15",
   },
-  // 동일 소유자 ���수 필지 신청 (일단지 판정 케이스)
+  // 동일 소유자 복수 필지 신청 (일단지 판정 케이스)
   {
     id: "app-005",
     applicationNumber: "2026-0405-001",
@@ -700,7 +700,7 @@ export const dummyApplications: Application[] = [
     adminName: "박담당",
     statusUpdatedAt: "2026-04-18",
   },
-  // 매수 불가 케이스 - ���토 중 (곧 기각 예정)
+  // 매수 불가 케이스 - 검토 중 (곧 기각 예정)
   {
     id: "app-008",
     applicationNumber: "2026-0408-001",
