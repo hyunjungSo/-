@@ -53,8 +53,8 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white">
-      {/* 1. 최상단 유틸리티 바 (녹색 배경) */}
-      <div className="bg-[#2e7d32]">
+      {/* 1. 최상단 유틸리티 바 (KRDS Primary 배경) */}
+      <div className="bg-primary">
         <div className="mx-auto flex h-9 max-w-7xl items-center justify-between gap-1 px-4 text-sm text-white sm:px-6 lg:px-8">
           {/* 좌측: 화면 전환 토글 */}
           <div className="flex items-center gap-1 rounded-full bg-white/20 p-0.5">
@@ -63,7 +63,7 @@ export function Header() {
               className={cn(
                 "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors",
                 viewMode === "citizen"
-                  ? "bg-white text-[#2e7d32]"
+                  ? "bg-white text-primary"
                   : "text-white/90 hover:bg-white/10"
               )}
             >
@@ -75,7 +75,7 @@ export function Header() {
               className={cn(
                 "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors",
                 viewMode === "admin"
-                  ? "bg-white text-[#2e7d32]"
+                  ? "bg-white text-primary"
                   : "text-white/90 hover:bg-white/10"
               )}
             >
@@ -168,7 +168,7 @@ export function Header() {
               href="https://www.ex.co.kr"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 rounded bg-[#f5f5f5] px-3 py-1.5 text-sm text-gray-700 transition-colors hover:bg-gray-200"
+              className="flex items-center gap-1 rounded bg-secondary px-3 py-1.5 text-sm text-gray-700 transition-colors hover:bg-gray-200"
             >
               <span>신고채널</span>
             </Link>
@@ -191,8 +191,8 @@ export function Header() {
         </div>
       </div>
 
-      {/* 3. 메인 네비게이션 (연한 회색 배경) */}
-      <div className="hidden border-b border-gray-200 bg-[#fafafa] md:block">
+      {/* 3. 메인 네비게이션 (KRDS Secondary 배경) */}
+      <div className="hidden border-b border-border bg-secondary md:block">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <nav className="flex items-center gap-0" role="navigation" aria-label="메인 메뉴">
             {mainNavigation.map((item) => (
