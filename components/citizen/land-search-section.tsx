@@ -1255,7 +1255,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       <div className="space-y-2">
                         <Button 
                           onClick={() => onAddToCart(selectedLand, aiResult!)}
-                          className="h-12 w-full cursor-pointer"
+                          className="h-12 w-full cursor-pointer text-base"
                           variant="default"
                         >
                           <Plus className="mr-2 h-4 w-4" />
