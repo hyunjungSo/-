@@ -180,6 +180,9 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
       {/* 상단: 접수번호 + 소재지 */}
       <div className="rounded-lg border border-border bg-background p-6">
         <div className="flex items-center gap-3">
+          <Badge variant={adminStatusConfig[application.adminStatus].variant}>
+            {adminStatusConfig[application.adminStatus].label}
+          </Badge>
           <span className="text-sm text-muted-foreground">접수번호</span>
           <span className="text-xl font-bold text-foreground">{application.applicationNumber}</span>
         </div>
