@@ -329,9 +329,9 @@ export function LandMap({
             onClick={() => setZoomLevel(prev => Math.min(20, prev + 1))}
             disabled={zoomLevel >= 20}
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-4 w-4" style={{ color: "rgb(26, 26, 26)" }} />
           </Button>
-          <div className="border-t border-gray-200 px-1 py-1 text-center text-base font-medium text-gray-700">
+          <div className="border-t border-gray-200 px-1 py-1 text-center text-base font-medium" style={{ color: "rgb(26, 26, 26)" }}>
             {zoomLevel}
           </div>
           <Button 
@@ -341,7 +341,7 @@ export function LandMap({
             onClick={() => setZoomLevel(prev => Math.max(10, prev - 1))}
             disabled={zoomLevel <= 10}
           >
-            <Minus className="h-4 w-4" />
+            <Minus className="h-4 w-4" style={{ color: "rgb(26, 26, 26)" }} />
           </Button>
         </div>
       </div>
