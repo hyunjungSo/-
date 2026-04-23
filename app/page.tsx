@@ -54,7 +54,7 @@ export default function HomePage() {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="h-12 border-white/30 bg-white/10 px-8 text-base font-medium text-white backdrop-blur-sm hover:bg-white/20 hover:text-white">
+              <Button asChild variant="outline" size="lg" className="h-12 border-1 border-gray-400 bg-white px-8 text-base font-medium text-gray-800 hover:bg-gray-50 hover:text-gray-800">
                 <Link href="/citizen?tab=status">
                   신청현황 확인
                 </Link>
