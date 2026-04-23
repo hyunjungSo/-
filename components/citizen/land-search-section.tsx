@@ -63,7 +63,7 @@ const regionData = {
     // 충청북도 - 음성군
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍"],
     // 충청북도 - 진천군
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만��면", "백곡면", "이월면", "문백면"],
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
@@ -204,7 +204,7 @@ function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale 
         <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p className="text-base text-muted-foreground">
-            본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
+            본 AI 판독 결과는 참고용이며, 최��� 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
             판단 근거에 이의가 있으시면 신청서 제출 시 의견을 기재해 주시기 바랍니다.
           </p>
         </div>
@@ -384,7 +384,7 @@ function generateJudgmentRationale(
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
-- 소재지: ${land.address}
+- ���재지: ${land.address}
 - 토지 유형: ${land.landType}
 - 지목: ${land.landCategory}
 - 소유자: ${land.ownerName}
@@ -997,10 +997,10 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       setSelectedRi("");
                       setSearchResults([]);
                     }}
-                    disabled={!selectedSigungu || eupmyeondongOptions.length === 0}
+                    disabled={!selectedSigungu}
                   >
                     <SelectTrigger className="w-[140px]">
-                      <SelectValue placeholder={eupmyeondongOptions.length === 0 ? "데이터 없음" : "선택"} />
+                      <SelectValue placeholder="선택" />
                     </SelectTrigger>
                     <SelectContent>
                       {eupmyeondongOptions.map((eupmyeondong) => (
