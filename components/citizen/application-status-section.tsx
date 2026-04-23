@@ -198,7 +198,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
       {/* 진행 상태 스텝 인디케이터 */}
       <div>
         <h4 className="mb-6 text-base font-semibold text-foreground">진행 상태</h4>
-        <div className="relative mx-auto max-w-md">
+        <div className="relative max-w-md">
           {/* 배경 라인 */}
           <div className="absolute left-0 right-0 top-5 h-0.5 bg-gray-200" />
           {/* 진행 라인 */}
