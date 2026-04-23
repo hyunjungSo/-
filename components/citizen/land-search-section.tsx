@@ -63,7 +63,7 @@ const regionData = {
     // 충청북도 - 음성군
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍"],
     // 충청북도 - 진천군
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만���면", "백곡면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만����면", "백곡면", "이월면", "문백면"],
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
@@ -1098,7 +1098,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         </div>
 
         {/* 좌측 사이드바 - 결과 + 기본정보 패널 */}
-        <div className="absolute bottom-0 left-0 top-0 z-10 flex shadow-lg">
+        <div className="absolute bottom-0 left-0 top-0 z-10 flex">
           {/* 결과 패널 */}
           <div className={`bg-background transition-all duration-300 overflow-hidden ${isResultsCollapsed ? "w-0" : "w-[280px]"}`}>
             {/* 검색 결과 헤더 */}
