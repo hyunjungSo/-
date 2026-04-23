@@ -311,26 +311,68 @@ export const dummyLandInfoList: LandInfo[] = [
   },
 ];
 
+// 토지분류별 면적 기준 (슬라이드 3 기준)
+const LAND_TYPE_CRITERIA = {
+  // 농지 (답, 전, 과수원): 330㎡ 미만 또는 잔여비율 24% 미만
+  농지: { areaThreshold: 330, ratioThreshold: 24 },
+  // 택지 (대지): 세부 유형별 기준
+  대지: {
+    "residential-detached": { areaThreshold: 90, ratioThreshold: 24, label: "주거용-단독주택" },
+    "residential-multi": { areaThreshold: 165, ratioThreshold: 24, label: "주거용-연립/다세대" },
+    "residential-apartment": { areaThreshold: 60, ratioThreshold: 24, label: "주거용-아파트" },
+    "commercial": { areaThreshold: 150, ratioThreshold: 24, label: "상업용" },
+    "industrial": { areaThreshold: 330, ratioThreshold: 24, label: "공업용" },
+    default: { areaThreshold: 90, ratioThreshold: 24, label: "기본(단독주택 기준)" },
+  },
+  // 임야 (산지): 660㎡ 미만 또는 잔여비율 24% 미만
+  임야: { areaThreshold: 660, ratioThreshold: 24 },
+  // 기타 (잡종지 등): 330㎡ 미만 또는 잔여비율 24% 미만
+  기타: { areaThreshold: 330, ratioThreshold: 24 },
+};
+
 // AI 분석 결과 생성 함수
-function generateAIResult(landInfo: LandInfo): AIAnalysisResult {
+function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisResult {
   const criteriaChecks = [];
   
-  // 잔여비율 기준 체크 (30% 이하여야 매수 가능)
-  const remainingRatioMet = landInfo.remainingRatio <= 30;
+  // 토지 유형별 기준 가져오기
+  let areaThreshold: number;
+  let ratioThreshold: number;
+  let criteriaLabel: string;
+  
+  if (landInfo.landType === "대지") {
+    const subTypeKey = landSubType || "default";
+    const subTypeCriteria = LAND_TYPE_CRITERIA.대지[subTypeKey as keyof typeof LAND_TYPE_CRITERIA.대지] || LAND_TYPE_CRITERIA.대지.default;
+    areaThreshold = subTypeCriteria.areaThreshold;
+    ratioThreshold = subTypeCriteria.ratioThreshold;
+    criteriaLabel = `택지(${subTypeCriteria.label}) 기준 ${areaThreshold}㎡ 미만`;
+  } else if (landInfo.landType === "농지") {
+    areaThreshold = LAND_TYPE_CRITERIA.농지.areaThreshold;
+    ratioThreshold = LAND_TYPE_CRITERIA.농지.ratioThreshold;
+    criteriaLabel = `농지 기준 ${areaThreshold}㎡ 미만`;
+  } else if (landInfo.landType === "임야") {
+    areaThreshold = LAND_TYPE_CRITERIA.임야.areaThreshold;
+    ratioThreshold = LAND_TYPE_CRITERIA.임야.ratioThreshold;
+    criteriaLabel = `임야 기준 ${areaThreshold}㎡ 미만`;
+  } else {
+    areaThreshold = LAND_TYPE_CRITERIA.기타.areaThreshold;
+    ratioThreshold = LAND_TYPE_CRITERIA.기타.ratioThreshold;
+    criteriaLabel = `기타 토지 기준 ${areaThreshold}㎡ 미만`;
+  }
+  
+  // 잔여비율 기준 체크 (토지유형별 기준 적용)
+  const remainingRatioMet = landInfo.remainingRatio < ratioThreshold;
   criteriaChecks.push({
     criteriaName: "잔여비율 기준",
-    criteriaDescription: "잔여비율 30% 이하",
+    criteriaDescription: `잔여비율 ${ratioThreshold}% 미만`,
     isMet: remainingRatioMet,
     autoDetected: true,
   });
 
-  // 면적 기준 체크
-  const areaMet = landInfo.remainingArea <= 330 || landInfo.remainingRatio <= 25;
+  // 면적 기준 체크 (토지유형별 기준 적용)
+  const areaMet = landInfo.remainingArea < areaThreshold;
   criteriaChecks.push({
     criteriaName: "면적 기준",
-    criteriaDescription: landInfo.landType === "대지" 
-      ? "주거 90㎡ / 상업 150㎡ / 공업 330㎡ (잔여비율 25% 이하 시 1.5배 완화)"
-      : "330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)",
+    criteriaDescription: criteriaLabel,
     isMet: areaMet,
     autoDetected: true,
   });
@@ -354,50 +396,75 @@ function generateAIResult(landInfo: LandInfo): AIAnalysisResult {
     autoDetected: true,
   });
 
-  // 접도 상태 (직접 확인 필요 - 맹지 여부에 따라 설정)
-  const isBlindLand = isIrregularShape && landInfo.remainingRatio <= 35;
-  criteriaChecks.push({
-    criteriaName: "접면도로 상실",
-    criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목적 사용 곤란",
-    isMet: isBlindLand,
-    autoDetected: false,
-  });
-
-  // 농기계 진입/회전 곤란 (농지의 경우)
-  if (landInfo.landType === "농지") {
-    const farmDifficulty = isIrregularShape && landInfo.remainingArea <= 500;
+  // 토지유형별 추가 기준
+  const isBlindLand = isIrregularShape && landInfo.remainingRatio < ratioThreshold;
+  
+  if (landInfo.landType === "대지") {
+    // 택지: 접면도로 상실
+    criteriaChecks.push({
+      criteriaName: "접면도로 상실",
+      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 출입 불가",
+      isMet: isBlindLand,
+      autoDetected: false,
+    });
+  } else if (landInfo.landType === "농지") {
+    // 농지: 농기계 진입/회전 곤란, 관개수로 상실
+    const farmDifficulty = isIrregularShape && landInfo.remainingArea < 500;
     criteriaChecks.push({
       criteriaName: "농기계 진입/회전 곤란",
       criteriaDescription: "농기계 진입 및 회전이 곤란하여 영농이 불가능한 경우",
       isMet: farmDifficulty,
       autoDetected: false,
     });
+    criteriaChecks.push({
+      criteriaName: "관개수로 상실",
+      criteriaDescription: "수로 편입으로 인해 농업용수 공급 불가",
+      isMet: false,
+      autoDetected: false,
+    });
+  } else if (landInfo.landType === "임야") {
+    // 임야: 접근로 상실
+    criteriaChecks.push({
+      criteriaName: "접근로 상실",
+      criteriaDescription: "접근로 상실로 임야 이용 곤란",
+      isMet: isBlindLand,
+      autoDetected: false,
+    });
   }
 
-  // 최종 판정 결정 - 자동 감지 기준 중 충족 개수 확인
-  const autoDetectedCriteria = criteriaChecks.filter(c => c.autoDetected);
-  const metAutoCriteria = autoDetectedCriteria.filter(c => c.isMet).length;
-  const totalAutoCriteria = autoDetectedCriteria.length;
+  // 최종 판정 결정
   const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
-  // AI 1차 판독 로직:
-  // - 잔여비율 30% 초과이면 무조건 기각
-  // - 자동 감지 기준 중 3개 이상 충족 시 매수
-  // - 2개 충족 시 심의위원회 이관
-  // - 1개 이하 충족 시 기각
+  // AI 1차 판독 로직 (슬라이드 3 기준):
+  // - 잔여 면적 < 기준 면적 OR 잔여 비율 < 24% → 매수
+  // - 형상 불규칙 + 형상지수 상승 → 매수 가산점
+  // - 추가 조건(접면도로 상실, 농기계 진입 곤란 등) 충족 시 → 매수 확정
   let provisionalJudgment: "매수" | "기각" | "심의위원회이관";
   
-  if (!remainingRatioMet) {
-    // 잔여비율 30% 초과는 매수 불가
-    provisionalJudgment = "기각";
-  } else if (metAutoCriteria >= 3) {
-    provisionalJudgment = "매수";
-  } else if (metAutoCriteria === 2) {
-    provisionalJudgment = "심의위원회이관";
+  // 핵심 기준: 면적 OR 비율 충족 시 매수 대상
+  const coreCriteriaMet = areaMet || remainingRatioMet;
+  
+  if (coreCriteriaMet) {
+    // 핵심 기준 충족
+    if (isIrregularShape || shapeIndexMet) {
+      // 형상 기준도 충족하면 매수 확정
+      provisionalJudgment = "매수";
+    } else {
+      // 형상 기준 미충족 시 심의위원회 이관
+      provisionalJudgment = "심의위원회이관";
+    }
   } else {
-    provisionalJudgment = "기각";
+    // 핵심 기준 미충족
+    if (isIrregularShape && shapeIndexMet) {
+      // 형상이 매우 불리한 경우 심의위원회 이관
+      provisionalJudgment = "심의위원회이관";
+    } else {
+      provisionalJudgment = "기각";
+    }
   }
+  
+  const metAutoCriteria = criteriaChecks.filter(c => c.autoDetected && c.isMet).length;
 
   // 판단 근거 생성
   const judgmentRationale = generateRationale(landInfo, provisionalJudgment, metAutoCriteria, metCriteriaNames, manualCheckItems, shapeIndexChange);
@@ -428,9 +495,20 @@ function generateRationale(
 ): JudgmentRationale {
   const legalBasis = "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조";
   
+  // 토지유형별 기준 설명
+  let landTypeCriteria: string;
+  if (land.landType === "농지") {
+    landTypeCriteria = "농지 기준: 잔여면적 330㎡ 미만 또는 잔여비율 24% 미만";
+  } else if (land.landType === "대지") {
+    landTypeCriteria = "택지 기준: 단독주택 90㎡, 연립/다세대 165㎡, 아파트 60㎡, 상업 150㎡, 공업 330㎡ 미만 또는 잔여비율 24% 미만";
+  } else if (land.landType === "임야") {
+    landTypeCriteria = "임야 기준: 잔여면적 660㎡ 미만 또는 잔여비율 24% 미만";
+  } else {
+    landTypeCriteria = "기타 토지 기준: 잔여면적 330㎡ 미만 또는 잔여비율 24% 미만";
+  }
+  
   const appliedCriteria = [
-    `잔여비율 기준: 30% 이하`,
-    `${land.landType} 면적 기준 적용`,
+    landTypeCriteria,
     `토지 형상 기준: 불규칙 형상 여부`,
     `형상지수 변화 기준: 1.0 이상 상승`,
   ];
@@ -439,16 +517,16 @@ function generateRationale(
   let detailedExplanation: string;
 
   if (judgment === "매수") {
-    summary = `잔여지 매수 기준 ${metCriteriaCount}개 항목 충족으로 「매수 가능」 판정`;
+    summary = `${land.landType} 매수 기준 충족으로 「매수 가능」 판정`;
     detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (지수 +${shapeIndexChange.toFixed(1)})\n충족기준: ${metCriteriaNames.join(", ")}`;
   } else if (judgment === "기각") {
-    const rejectionReason = land.remainingRatio > 30 
-      ? `잔여비율 ${land.remainingRatio}%로 기준(30% 이하) 초과` 
-      : `충족 기준 ${metCriteriaCount}개로 최소 요건(3개) 미달`;
-    summary = `잔여지 매수 기준 미충족으로 「기각」 판정`;
+    const rejectionReason = land.remainingRatio >= 24 && land.remainingArea >= (land.landType === "임야" ? 660 : 330)
+      ? `잔여비율 ${land.remainingRatio}% 및 잔여면적 ${land.remainingArea}㎡로 매수 기준 미충족` 
+      : `형상 및 추가 기준 미충족`;
+    summary = `${land.landType} 매수 기준 미충족으로 「기각」 판정`;
     detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}`;
   } else {
-    summary = `자동 판독 기준 ${metCriteriaCount}개 충족으로 「심의위원회 이관」 필요`;
+    summary = `${land.landType} 매수 기준 일부 충족으로 「심의위원회 이관」 필요`;
     detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (지수 +${shapeIndexChange.toFixed(1)})\n충족기준: ${metCriteriaNames.join(", ")}\n추가확인필요: ${manualCheckItems.join(", ")}`;
   }
 
@@ -628,7 +706,7 @@ export const dummyApplications: Application[] = [
     adminName: "박담당",
     statusUpdatedAt: "2026-04-18",
   },
-  // 매수 불가 케이스 - 검토 중 (곧 기각 예정)
+  // 매수 불가 케이스 - ���토 중 (곧 기각 예정)
   {
     id: "app-008",
     applicationNumber: "2026-0408-001",
