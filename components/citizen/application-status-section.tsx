@@ -344,8 +344,8 @@ export function ApplicationStatusSection() {
                           isSelected ? "border-l-2 border-l-primary bg-primary/5" : ""
                         }`}
                       >
-                        {/* 뱃지 영역 */}
-                        <div className="mb-2 flex flex-wrap items-center gap-2">
+                        {/* 접수번호 + 현황 뱃지 */}
+                        <div className="mb-1 flex flex-wrap items-center gap-2">
                           <Badge variant={statusConfig.variant}>
                             <statusConfig.icon className="h-3.5 w-3.5" />
                             {statusConfig.label}
@@ -367,12 +367,10 @@ export function ApplicationStatusSection() {
                               {app.finalJudgment}
                             </Badge>
                           )}
+                          <h3 className={`text-base font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
+                            {app.applicationNumber}
+                          </h3>
                         </div>
-
-                        {/* 접수번호 */}
-                        <h3 className={`text-base font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
-                          {app.applicationNumber}
-                        </h3>
 
                         {/* 주소 */}
                         <p className="mt-1 truncate text-base text-muted-foreground">
