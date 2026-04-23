@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { LandSearchSection } from "@/components/citizen/land-search-section";
 import { ApplicationFormSection } from "@/components/citizen/application-form-section";
@@ -13,7 +13,7 @@ import type { LandInfo, Application, AIAnalysisResult, ApplicationCartItem } fro
 // 신청 프로세스 단계
 type ApplicationStep = "search" | "apply" | "result";
 
-export default function CitizenPage() {
+function CitizenPageContent() {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab");
   
@@ -187,5 +187,13 @@ export default function CitizenPage() {
         </TabsContent>
       </Tabs>
     </div>
+  );
+}
+
+export default function CitizenPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">로딩 중...</div>}>
+      <CitizenPageContent />
+    </Suspense>
   );
 }
