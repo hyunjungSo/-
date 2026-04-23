@@ -1106,10 +1106,10 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 {aiResult && (
                   <div className={`rounded-lg border-2 p-4 ${
                     aiResult.provisionalJudgment === "매수" 
-                      ? "border-primary bg-primary/5" 
+                      ? "border-success bg-success/5" 
                       : aiResult.provisionalJudgment === "심의위원회이관"
-                        ? "border-amber-500 bg-amber-50"
-                        : "border-red-500 bg-red-50"
+                        ? "border-warning bg-warning/5"
+                        : "border-destructive bg-destructive/5"
                   }`}>
                     {/* 헤더 */}
                     <div className="mb-3 flex items-center justify-between">
