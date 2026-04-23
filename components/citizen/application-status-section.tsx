@@ -27,21 +27,33 @@ const adminStatusConfig: Record<AdminStatus, {
   label: string; 
   icon: typeof Clock; 
   variant: "warning-subtle" | "info-subtle" | "success-subtle";
+  iconColor: string;
+  bgColor: string;
+  textColor: string;
 }> = {
   접수완료: { 
     label: "접수완료", 
     icon: Clock, 
     variant: "warning-subtle",  // 주황 solid-pastel
+    iconColor: "text-amber-700",
+    bgColor: "bg-amber-50",
+    textColor: "text-amber-700",
   },
   진행중: { 
     label: "진행중", 
     icon: PlayCircle, 
     variant: "info-subtle",     // 파랑 solid-pastel
+    iconColor: "text-sky-700",
+    bgColor: "bg-sky-50",
+    textColor: "text-sky-700",
   },
   심사완료: { 
     label: "심사완료", 
     icon: CheckCircle2, 
     variant: "success-subtle",  // 녹색 solid-pastel
+    iconColor: "text-emerald-700",
+    bgColor: "bg-emerald-50",
+    textColor: "text-emerald-700",
   },
 };
 
@@ -187,27 +199,28 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               const isCurrent = stepNum === currentStep;
               const isLast = idx === 2;
 
+              const Icon = config.icon;
               return (
                 <li key={status} className={`flex items-center ${isLast ? "flex-none" : "flex-1"}`}>
                   <div className="flex flex-col items-center">
                     <span className={`flex h-8 w-8 items-center justify-center rounded-full text-base font-semibold ${
                       isCurrent 
-                        ? "bg-primary text-white" 
+                        ? `${config.bgColor} ${config.iconColor}` 
                         : isActive 
-                          ? "bg-gray-300 text-gray-700"
-                          : "bg-gray-200 text-gray-400"
+                          ? "bg-gray-200 text-gray-600"
+                          : "bg-gray-100 text-gray-400"
                     }`}>
-                      {stepNum}
+                      <Icon className="h-4 w-4" />
                     </span>
                     <span className={`mt-2 text-base font-medium ${
-                      isCurrent ? "text-primary" : isActive ? "text-gray-700" : "text-gray-400"
+                      isCurrent ? config.textColor : isActive ? "text-gray-600" : "text-gray-400"
                     }`}>
                       {config.label}
                     </span>
                   </div>
                   {idx < 2 && (
                     <div className={`mx-3 h-0.5 flex-1 ${
-                      stepNum < currentStep ? "bg-primary" : "bg-gray-200"
+                      stepNum < currentStep ? "bg-gray-300" : "bg-gray-200"
                     }`} aria-hidden="true" />
                   )}
                 </li>
