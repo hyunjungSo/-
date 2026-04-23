@@ -62,8 +62,8 @@ const regionData = {
     "평택시": ["고덕면", "서탄면", "안중읍", "오성면", "청북읍", "팽성읍", "포승읍", "현덕면"],
     // 충청북도 - 음성군
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍"],
-    // 충청���도 - 진천군
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만�����면", "백곡면", "이월면", "문백면"],
+    // 충청북도 - 진천군
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
@@ -204,7 +204,7 @@ function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale 
         <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p className="text-base text-muted-foreground">
-            본 AI 판독 결과는 참고용이며, ���종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
+            본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
             판단 근거에 이의가 있으시면 신청서 제출 시 의견을 기재해 주시기 바랍니다.
           </p>
         </div>
@@ -380,11 +380,11 @@ function generateJudgmentRationale(
   const usageDescription = getUsageDifficultyDescription(land.landType, land.remainingArea, land.remainingShape);
 
   if (judgment === "매수") {
-    summary = `${shapeDescription} ${usageDescription} 수용할 수 있는 것으로 판단됩��다.`;
+    summary = `${shapeDescription} ${usageDescription} 수용할 수 있는 것으로 판단됩니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
-- ���재지: ${land.address}
+- 소재지: ${land.address}
 - 토지 유형: ${land.landType}
 - 지목: ${land.landCategory}
 - 소유자: ${land.ownerName}
@@ -434,7 +434,7 @@ ${summary}`;
 ${summary}`;
   } else {
     summary = `본 토지는 자동 판독 기준 충족이 애매하여 담당자 검토가 필요한 「경계 사례」로 분류되었습니다.`;
-    detailedExplanation = `[중앙토지수용위원회 ��고기준에 따른 분석]
+    detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
 - 소재지: ${land.address}
@@ -582,7 +582,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             remainingArea: 230,
             remainingRatio: 27.1,
             landType: "농지",
-            landCategory: "���",
+            landCategory: "전",
             businessUnit: "양평이천",
             projectName: "이천-여주 국도확장사업",
           },
@@ -1280,7 +1280,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
                         <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
                         <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
-                        <SelectItem value="commercial">��업용 (기준: 150㎡)</SelectItem>
+                        <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
                         <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
                       </SelectContent>
                     </Select>
