@@ -551,65 +551,84 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             businessUnit: "양평이천",
             projectName: "양평-홍천 도로확장사업",
           },
-          // 수도권 관할기관 - 2건
+          // 부산울산 관할기관 - 2건
           {
             id: "owner-search-2",
-            address: "경기도 용인시 처인구 양지면 마성리 100-1",
+            address: "부산광역시 해운대구 우동 1450-2",
             coordinates: [
-              { lat: 37.2180, lng: 127.2950 },
-              { lat: 37.2185, lng: 127.2960 },
-              { lat: 37.2178, lng: 127.2965 },
-              { lat: 37.2173, lng: 127.2955 },
-            ],
-            originalArea: 1250,
-            incorporatedArea: 980,
-            remainingArea: 270,
-            remainingRatio: 21.6,
-            landType: "농지",
-            landCategory: "전",
-            businessUnit: "수도권",
-            projectName: "용인-양지 도로확장사업",
-          },
-          {
-            id: "owner-search-3",
-            address: "경기도 화성시 봉담읍 동화리 88-2",
-            coordinates: [
-              { lat: 37.2120, lng: 126.9520 },
-              { lat: 37.2128, lng: 126.9532 },
-              { lat: 37.2122, lng: 126.9540 },
-              { lat: 37.2115, lng: 126.9528 },
-            ],
-            originalArea: 680,
-            incorporatedArea: 520,
-            remainingArea: 160,
-            remainingRatio: 23.5,
-            landType: "대지",
-            landCategory: "대",
-            businessUnit: "수도권",
-            projectName: "화성 동탄 도시개발사업",
-          },
-          // 천안안성 관할기관 - 1건
-          {
-            id: "owner-search-4",
-            address: "충청남도 천안시 서북구 직산읍 삼은리 250-1",
-            coordinates: [
-              { lat: 36.9120, lng: 127.0820 },
-              { lat: 36.9128, lng: 127.0832 },
-              { lat: 36.9122, lng: 127.0840 },
-              { lat: 36.9115, lng: 127.0828 },
+              { lat: 35.1620, lng: 129.1635 },
+              { lat: 35.1628, lng: 129.1645 },
+              { lat: 35.1622, lng: 129.1652 },
+              { lat: 35.1615, lng: 129.1642 },
             ],
             originalArea: 980,
             incorporatedArea: 750,
             remainingArea: 230,
             remainingRatio: 23.5,
+            landType: "대지",
+            landCategory: "대",
+            businessUnit: "부산울산",
+            projectName: "해운대 도시재생사업",
+          },
+          {
+            id: "owner-search-3",
+            address: "울산광역시 울주군 범서읍 천상리 88-5",
+            coordinates: [
+              { lat: 35.5420, lng: 129.2635 },
+              { lat: 35.5428, lng: 129.2645 },
+              { lat: 35.5422, lng: 129.2652 },
+              { lat: 35.5415, lng: 129.2642 },
+            ],
+            originalArea: 1350,
+            incorporatedArea: 1020,
+            remainingArea: 330,
+            remainingRatio: 24.4,
+            landType: "농지",
+            landCategory: "전",
+            businessUnit: "부산울산",
+            projectName: "울산-경주 산업도로 확장사업",
+          },
+          // 강진광주 관할기관 - 1건
+          {
+            id: "owner-search-4",
+            address: "광주광역시 광산구 송정동 250-1",
+            coordinates: [
+              { lat: 35.1320, lng: 126.7920 },
+              { lat: 35.1328, lng: 126.7932 },
+              { lat: 35.1322, lng: 126.7940 },
+              { lat: 35.1315, lng: 126.7928 },
+            ],
+            originalArea: 780,
+            incorporatedArea: 550,
+            remainingArea: 230,
+            remainingRatio: 29.5,
+            landType: "대지",
+            landCategory: "대",
+            businessUnit: "강진광주",
+            projectName: "광주 도시개발사업",
+          },
+          // 춘천원주 관할기관 - 1건
+          {
+            id: "owner-search-5",
+            address: "강원특별자치도 춘천시 서면 현암리 155-3",
+            coordinates: [
+              { lat: 37.8520, lng: 127.6835 },
+              { lat: 37.8528, lng: 127.6845 },
+              { lat: 37.8522, lng: 127.6852 },
+              { lat: 37.8515, lng: 127.6842 },
+            ],
+            originalArea: 1650,
+            incorporatedArea: 1280,
+            remainingArea: 370,
+            remainingRatio: 22.4,
             landType: "농지",
             landCategory: "답",
-            businessUnit: "천안안성",
-            projectName: "천안-아산 산업단지 조성사업",
+            businessUnit: "춘천원주",
+            projectName: "춘천-홍천 국도확장사업",
           },
         ];
         
-        // ��러 필지를 소유한 경우 (3개 관할기관: 양평이천 2건, 수도권 2건, 천안안성 1건)
+        // 여러 필지를 소유한 경우 (4개 관할기관: 양평이천 2건, 부산울산 2건, 강진광주 1건, 춘천원주 1건)
         results = ownerLandData.map((landData) => ({
           ...dummyLandInfoList[0],
           ...landData,
@@ -1023,7 +1042,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         <div className="absolute bottom-0 left-0 top-0 z-10 flex shadow-lg">
           {/* 결과 패널 */}
           <div className={`bg-background transition-all duration-300 overflow-hidden ${isResultsCollapsed ? "w-0" : "w-[280px]"}`}>
-            {/* 검색 결과 ��더 */}
+            {/* 검색 결과 헤더 */}
             <div className="flex items-center justify-between border-b bg-muted px-4 py-3">
               <span className="text-base font-medium text-foreground">결과</span>
               {searchResults.length > 0 && (
