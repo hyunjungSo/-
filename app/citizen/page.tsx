@@ -110,7 +110,7 @@ export default function CitizenPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
-          민원인 서비스
+          잔여지 매수
         </h1>
         <p className="mt-1 text-muted-foreground">
           잔여지 매수 신청 및 신청 현황 조회
