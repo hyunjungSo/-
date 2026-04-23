@@ -797,11 +797,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               소유자로 검색
             </button>
           </div>
-          {searchMode === "owner" && (
-            <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-              대리신청 가능
-            </span>
-          )}
         </div>
 
         {searchMode === "owner" ? (
