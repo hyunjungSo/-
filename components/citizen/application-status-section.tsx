@@ -320,7 +320,7 @@ export function ApplicationStatusSection() {
       {/* 2-column 레이아웃: 왼쪽 리스트 / 오른쪽 상세 */}
       <div className="grid gap-4 lg:grid-cols-[1fr_1.2fr]">
         {/* 왼쪽: 신청 목록 */}
-        <Card className="h-fit">
+        <Card className="h-fit py-0">
           <CardContent className="p-0">
             {myApplications.length === 0 ? (
               <div className="flex h-40 flex-col items-center justify-center p-6 text-center">
