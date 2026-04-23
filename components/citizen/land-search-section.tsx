@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { LeafletMap } from "@/components/leaflet-map";
 import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult, JudgmentRationale, ApplicationCartItem } from "@/lib/types";
@@ -63,7 +62,7 @@ const regionData = {
     "평택시": ["고덕면", "서탄면", "안중읍", "오성면", "청북읍", "팽성읍", "포승읍", "현덕면"],
     // 충청북도 - 음성군
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍"],
-    // 충청북도 - 진천군
+    // 충청���도 - 진천군
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만�����면", "백곡면", "이월면", "문백면"],
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
@@ -381,7 +380,7 @@ function generateJudgmentRationale(
   const usageDescription = getUsageDifficultyDescription(land.landType, land.remainingArea, land.remainingShape);
 
   if (judgment === "매수") {
-    summary = `${shapeDescription} ${usageDescription} 수용할 수 있는 것으로 판단됩니다.`;
+    summary = `${shapeDescription} ${usageDescription} 수용할 수 있는 것으로 판단됩��다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -435,7 +434,7 @@ ${summary}`;
 ${summary}`;
   } else {
     summary = `본 토지는 자동 판독 기준 충족이 애매하여 담당자 검토가 필요한 「경계 사례」로 분류되었습니다.`;
-    detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
+    detailedExplanation = `[중앙토지수용위원회 ��고기준에 따른 분석]
 
 1. 분석 대상 토지
 - 소재지: ${land.address}
@@ -854,21 +853,10 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         </ol>
       </nav>
 
-      {/* KRDS 검색 필터 영역 - 아코디언 UI */}
-      <Accordion type="single" collapsible defaultValue="search" className="mb-3">
-        <AccordionItem value="search" className="rounded-lg border border-border bg-card">
-          <AccordionTrigger className="px-4 py-3 hover:no-underline [&[data-state=open]>svg]:rotate-180">
-            <div className="flex items-center gap-2">
-              <Search className="h-4 w-4" />
-              <span className="text-sm font-medium">토지 검색</span>
-              {searchResults.length > 0 && (
-                <Badge variant="secondary" className="ml-2">{searchResults.length}건</Badge>
-              )}
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="px-4 pb-4">
-            {/* 검색 방식 스위치 토글 (텍스트 내장형) */}
-            <div className="mb-4 flex items-center gap-3">
+      {/* KRDS 검색 필터 영역 */}
+      <div className="mb-3 rounded-lg border border-border bg-card p-4">
+        {/* 검색 방식 스위치 토글 (텍스트 내장형) */}
+        <div className="mb-4 flex items-center gap-3">
               <div className="inline-flex rounded-lg bg-muted p-1">
                 <button
                   type="button"
@@ -1084,10 +1072,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   )}
                 </div>
               </div>
-            )}
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+        )}
+      </div>
 
       {/* 전체 화면 지도 컨테이너 */}
       <div className="relative h-[calc(100vh-260px)] min-h-[500px] w-full">
@@ -1294,7 +1280,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
                         <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
                         <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
-                        <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
+                        <SelectItem value="commercial">��업용 (기준: 150㎡)</SelectItem>
                         <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
                       </SelectContent>
                     </Select>
