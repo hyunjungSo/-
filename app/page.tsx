@@ -38,9 +38,6 @@ export default function HomePage() {
         {/* 컨텐츠 */}
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
           <div className="max-w-xl">
-            <div className="mb-4 inline-flex items-center rounded bg-white/20 px-3 py-1 text-sm font-medium text-white backdrop-blur-sm">
-              한국도로공사 토지보상
-            </div>
             <h1 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
               잔여지 매수 신청 서비스
             </h1>
