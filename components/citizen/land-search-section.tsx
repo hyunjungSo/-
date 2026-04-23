@@ -1325,7 +1325,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           variant="default"
                         >
                           <Plus className="mr-2 h-4 w-4" />
-                          ��청 목록에 추가
+                          신청 목록에 추가
                         </Button>
                         <p className="text-center text-xs text-muted-foreground">
                           여러 필지를 한번에 신청할 수 있습니다
