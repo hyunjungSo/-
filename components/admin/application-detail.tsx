@@ -374,32 +374,30 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               {aiResult?.criteriaChecks.map((check, index) => (
                 <div
                   key={index}
-                  className={`flex items-start gap-3 rounded-lg border-2 p-3 ${
+                  className={`flex items-start gap-3 rounded-lg border p-3 ${
                     check.isMet 
                       ? "border-green-200 bg-green-50/50" 
-                      : "border-red-300 bg-red-50"
+                      : "border-red-200 bg-red-50/50"
                   }`}
                 >
-                  {check.isMet ? (
+                  {check.isMet && (
                     <CheckCircle2 className="h-5 w-5 shrink-0 text-green-600" />
-                  ) : (
-                    <XCircle className="h-5 w-5 shrink-0 text-red-600" />
                   )}
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <p className={`font-medium ${check.isMet ? "text-foreground" : "text-red-700"}`}>{check.criteriaName}</p>
                       {!check.isMet && (
-                        <Badge className="bg-red-600 text-white text-base hover:bg-red-700">
+                        <Badge variant="destructive-subtle">
                           미충족
                         </Badge>
                       )}
+                      <p className={`font-medium ${check.isMet ? "text-foreground" : "text-foreground"}`}>{check.criteriaName}</p>
                       {!check.autoDetected && (
-                        <Badge variant="outline" className="text-base">
+                        <Badge variant="outline">
                           직접 확인 필요
                         </Badge>
                       )}
                     </div>
-                    <p className={`mt-1 text-base ${check.isMet ? "text-muted-foreground" : "text-red-600"}`}>
+                    <p className={`mt-1 text-base ${check.isMet ? "text-muted-foreground" : "text-muted-foreground"}`}>
                       {check.criteriaDescription}
                     </p>
                   </div>
