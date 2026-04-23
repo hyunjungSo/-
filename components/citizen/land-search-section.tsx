@@ -52,12 +52,12 @@ const regionData = {
     // 경기도 - 용인시 처인구
     "용인시 처인구": ["양지면", "백암면", "원삼면", "이동읍", "남사읍", "포곡읍", "모현읍"],
     // 경기도 - 이천시
-    "이천시": ["마장면", "대월면", "모가면", "백사면", "설성면", "신둔면", "장호원읍", "���법면"],
+    "이천시": ["마장면", "대월면", "모가면", "백사면", "설성면", "신둔면", "장호원읍", "율면"],
     // 경기도 - 광주시
-    "광주시": ["곤지암읍", "도척면", "퇴촌면", "남종면", "남한산성면", "��촌읍", "오포읍", "초월읍"],
+    "광주시": ["곤지암읍", "도척면", "퇴촌면", "남종면", "남한산성면", "경안동", "오포읍", "초월읍"],
     // 경기도 - 화성시
     "화성시": ["동탄면", "봉담읍", "서신면", "송산면", "양감면", "우정읍", "장안면", "정남면", "팔탄면", "향남읍"],
-    // 경기도 - ���택시
+    // 경기도 - 평택시
     "평택시": ["고덕면", "서탄면", "안중읍", "오성면", "청북읍", "팽성읍", "포승읍", "현덕면"],
     // 충청북도 - 음성군
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍"],
@@ -66,7 +66,7 @@ const regionData = {
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
-    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "���장면"],
+    "천안시 서북구": ["성환읍", "성거읍", "직산읍", "입장면"],
     // 충청남도 - 아산시
     "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악면", "신창면", "염치읍", "영인면", "인주면"],
     // 기본값 (선택되지 않은 시군구용)
@@ -224,7 +224,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
       autoDetected: true,
     },
     {
-      criteriaName: "형�����지�� 변화",
+      criteriaName: "형상지수 변화",
       criteriaDescription: `형상지수 변화 +${shapeIndexChange.toFixed(1)} (기준: 1.0 이상)`,
       isMet: shapeIndexChange >= 1.0,
       autoDetected: true,
@@ -315,7 +315,7 @@ function generateJudgmentRationale(
   if (land.landType === "대지") {
     appliedCriteria.push(`택지(대지) 면적 기준: 주거용(단독주택) 90㎡, 주거용(연립·다세대) 165㎡, 주거용(아파트) 60㎡, 상업용 150㎡, 공업용 330㎡ 이하`);
   } else if (land.landType === "농지") {
-    appliedCriteria.push(`농지 면적 기준: 330㎡(약 100��) 이하이거나, 폭 5m 이하의 부정형으로서 농기계 진입·회전이 곤란한 경우`);
+    appliedCriteria.push(`농지 면적 기준: 330㎡(약 100평) 이하이거나, 폭 5m 이하의 부정형으로서 농기계 진입·회전이 곤란한 경우`);
   } else if (land.landType === "산지") {
     appliedCriteria.push(`산지 면적 기준: 990㎡(약 300평) 이하`);
   } else {
@@ -377,7 +377,7 @@ ${summary}`;
 - 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
 - 형상지수 변화: +${shapeIndexChange.toFixed(1)}
 
-4. 미충족 ��유
+4. 미충족 사유
 - 잔여 비율 ${land.remainingRatio}%로 기준(30% 이하) 초과
 - 형상지수 변화 ${shapeIndexChange.toFixed(1)}로 기준(1.0 이상) 미달
 
@@ -454,7 +454,7 @@ function getUsageDifficultyDescription(landType: string, area: number, shape: st
 export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, onRemoveFromCart, onSubmitCart }: LandSearchSectionProps) {
   // 장바구니 패널 표시 상태
   const [isCartOpen, setIsCartOpen] = useState(false);
-  // 검색 방식 탭 (지��� / 소유자)
+  // 검색 방식 탭 (지번 / 소유자)
   const [searchMode, setSearchMode] = useState<"address" | "owner">("address");
   
   // 소유자 검색 상태 (이름 + 주민번호 앞자리)
@@ -619,7 +619,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
       setIsBasicInfoCollapsed(false);
     }
     
-    // 편���토��� 없는 경우 체크
+    // 편입토지가 없는 경우 체크
     if (land.includedArea === 0) {
       setNoIncludedLand(true);
     }
@@ -947,7 +947,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           />
         </div>
 
-        {/* 좌측 사이드�� - 결과 + 기본정보 패널 */}
+        {/* 좌측 사이드바 - 결과 + 기본정보 패널 */}
         <div className="absolute bottom-0 left-0 top-0 z-10 flex shadow-lg">
           {/* 결과 패널 */}
           <div className={`bg-background transition-all duration-300 overflow-hidden ${isResultsCollapsed ? "w-0" : "w-[280px]"}`}>
