@@ -219,7 +219,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
       autoDetected: true,
     },
     {
-      criteriaName: "형상지�� 변화",
+      criteriaName: "형���지�� 변화",
       criteriaDescription: `형상지수 변화 +${shapeIndexChange.toFixed(1)} (기준: 1.0 이상)`,
       isMet: shapeIndexChange >= 1.0,
       autoDetected: true,
@@ -612,7 +612,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
       setIsBasicInfoCollapsed(false);
     }
     
-    // 편입토지 없는 경우 체크
+    // 편입토��� 없는 경우 체크
     if (land.includedArea === 0) {
       setNoIncludedLand(true);
     }
@@ -693,29 +693,32 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
       {/* KRDS 검색 필터 영역 */}
       <div className="mb-3 rounded-lg border border-border bg-card p-4">
-        {/* 검색 방식 스위치 토글 */}
+        {/* 검색 방식 스위치 토글 (텍스트 내장형) */}
         <div className="mb-4 flex items-center gap-3">
-          <span className={`text-sm font-medium ${searchMode === "address" ? "text-foreground" : "text-muted-foreground"}`}>
-            지번으로 검색
-          </span>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={searchMode === "owner"}
-            onClick={() => setSearchMode(searchMode === "address" ? "owner" : "address")}
-            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
-              searchMode === "owner" ? "bg-primary" : "bg-gray-200"
-            }`}
-          >
-            <span
-              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                searchMode === "owner" ? "translate-x-5" : "translate-x-0"
+          <div className="inline-flex rounded-lg bg-muted p-1">
+            <button
+              type="button"
+              onClick={() => setSearchMode("address")}
+              className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                searchMode === "address"
+                  ? "bg-white text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
-            />
-          </button>
-          <span className={`text-sm font-medium ${searchMode === "owner" ? "text-foreground" : "text-muted-foreground"}`}>
-            소유자로 검색
-          </span>
+            >
+              지번으로 검색
+            </button>
+            <button
+              type="button"
+              onClick={() => setSearchMode("owner")}
+              className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                searchMode === "owner"
+                  ? "bg-white text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              소유자로 검색
+            </button>
+          </div>
           {searchMode === "owner" && (
             <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
               대리신청 가능
