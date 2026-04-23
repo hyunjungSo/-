@@ -18,6 +18,8 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "김철수",
     ownerContact: "010-1234-5678",
     hasIncludedLand: true,
+    businessUnit: "수도권",
+    projectName: "용인-양지 도로확장사업",
     coordinates: [
       { lat: 37.2180, lng: 127.2950 },
       { lat: 37.2185, lng: 127.2960 },
@@ -41,6 +43,8 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "박영희",
     ownerContact: "010-9876-5432",
     hasIncludedLand: true,
+    businessUnit: "수도권",
+    projectName: "용인-양지 도로확장사업",
     coordinates: [
       { lat: 37.2185, lng: 127.2960 },
       { lat: 37.2192, lng: 127.2972 },
@@ -64,6 +68,8 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "이민호",
     ownerContact: "010-5555-1234",
     hasIncludedLand: true,
+    businessUnit: "수도권",
+    projectName: "용인-양지 도로확장사업",
     coordinates: [
       { lat: 37.2192, lng: 127.2972 },
       { lat: 37.2200, lng: 127.2985 },
@@ -87,6 +93,8 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "최지영",
     ownerContact: "010-7777-8888",
     hasIncludedLand: true,
+    businessUnit: "수도권",
+    projectName: "용인-양지 도로확장사업",
     coordinates: [
       { lat: 37.2173, lng: 127.2955 },
       { lat: 37.2178, lng: 127.2965 },
@@ -111,6 +119,8 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "정민수",
     ownerContact: "010-2222-3333",
     hasIncludedLand: true,
+    businessUnit: "수도권",
+    projectName: "용인-양지 도로확장사업",
     coordinates: [
       { lat: 37.2165, lng: 127.2960 },
       { lat: 37.2170, lng: 127.2970 },
@@ -135,6 +145,8 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "한지민",
     ownerContact: "010-4444-5555",
     hasIncludedLand: false,
+    businessUnit: "수도권",
+    projectName: "용인-양지 도로확장사업",
     coordinates: [
       { lat: 37.2155, lng: 127.2950 },
       { lat: 37.2160, lng: 127.2960 },
@@ -143,7 +155,7 @@ export const dummyLandInfoList: LandInfo[] = [
     ],
   },
   {
-    id: "land-006",
+    id: "land-006-2",
     address: "경기도 용인시 처인구 양지면 마성리 140",
     originalArea: 1500,
     includedArea: 0,
@@ -158,6 +170,8 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "한소영",
     ownerContact: "010-4444-5555",
     hasIncludedLand: false,
+    businessUnit: "수도권",
+    projectName: "용인-양지 도로확장사업",
     coordinates: [
       { lat: 37.2200, lng: 127.2985 },
       { lat: 37.2210, lng: 127.2998 },
@@ -182,6 +196,8 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "강동원",
     ownerContact: "010-6666-7777",
     hasIncludedLand: true,
+    businessUnit: "수도권",
+    projectName: "성남-분당 도시개발사업",
     coordinates: [
       { lat: 37.4115, lng: 127.1275 },
       { lat: 37.4120, lng: 127.1285 },
@@ -206,6 +222,8 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "강동원",
     ownerContact: "010-6666-7777",
     hasIncludedLand: true,
+    businessUnit: "수도권",
+    projectName: "성남-분당 도시개발사업",
     coordinates: [
       { lat: 37.4120, lng: 127.1285 },
       { lat: 37.4125, lng: 127.1295 },
@@ -230,6 +248,8 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "윤서연",
     ownerContact: "010-8888-9999",
     hasIncludedLand: true,
+    businessUnit: "수도권",
+    projectName: "광주-이천 국도확장사업",
     coordinates: [
       { lat: 37.3685, lng: 127.1420 },
       { lat: 37.3690, lng: 127.1430 },
@@ -254,6 +274,8 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "조현우",
     ownerContact: "010-1111-2222",
     hasIncludedLand: true,
+    businessUnit: "양평이천",
+    projectName: "이천-여주 국도확장사업",
     coordinates: [
       { lat: 37.2745, lng: 127.4320 },
       { lat: 37.2750, lng: 127.4330 },
@@ -278,6 +300,8 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "송지훈",
     ownerContact: "010-3333-4444",
     hasIncludedLand: true,
+    businessUnit: "양평이천",
+    projectName: "여주-양평 도로확장사업",
     coordinates: [
       { lat: 37.2985, lng: 127.6420 },
       { lat: 37.2990, lng: 127.6430 },
@@ -449,7 +473,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "고속도로 편입으로 인해 잔여지가 삼각형 형태로 남아 건축물 건축이 불가능합니다. 잔여 면적도 협소하여 종래 목적대로 사용할 수 없습니다.",
+    reason: "고속도로 편입으로 인해 잔여지가 삼각형 형태로 남��� 건축물 건축이 불가능합니다. 잔여 면적도 협소하여 종래 목적대로 사용할 수 없습니다.",
     attachments: ["토지대장.pdf", "등기부등본.pdf"],
     status: "AI분석완료",
     adminStatus: "접수완료",
@@ -616,7 +640,7 @@ export const landCategories = [
   { value: "묘", label: "묘지" },
   { value: "양", label: "양어장" },
   { value: "임", label: "임야" },
-  { value: "잡", label: "잡종지" },
+  { value: "��", label: "잡종지" },
   { value: "장", label: "공장용지" },
   { value: "전", label: "전" },
   { value: "제", label: "제방" },
