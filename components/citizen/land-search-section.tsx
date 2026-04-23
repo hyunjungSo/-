@@ -1201,10 +1201,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 <div className="rounded border border-border bg-muted/30 p-3">
                   <div className="flex flex-col gap-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">지번</span>
-                      <span className="font-medium">{selectedLand.address.split(" ").pop()}</span>
-                    </div>
-                    <div className="flex justify-between">
                       <span className="text-muted-foreground">잔여 면적</span>
                       <span className="font-medium text-primary">{selectedLand.remainingArea.toLocaleString()}m²</span>
                     </div>
