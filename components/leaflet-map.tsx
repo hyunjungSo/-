@@ -500,29 +500,29 @@ export function LeafletMap({
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 w-8 rounded-none p-0 hover:bg-gray-100"
+            className="h-8 w-8 rounded-none p-0 text-[#1a1a1a] hover:bg-gray-100 [&_svg]:text-[#1a1a1a]"
             onClick={handleZoomIn}
           >
-            <Plus className="h-4 w-4" style={{ color: "rgb(26, 26, 26)" }} />
+            <Plus className="h-4 w-4" />
           </Button>
-          <div className="border-t border-gray-200 px-1 py-1 text-center text-base font-medium" style={{ color: "rgb(26, 26, 26)" }}>
+          <div className="border-t border-gray-200 px-1 py-1 text-center text-base font-medium text-[#1a1a1a]">
             {currentZoom}
           </div>
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 w-8 rounded-none border-t border-gray-200 p-0 hover:bg-gray-100"
+            className="h-8 w-8 rounded-none border-t border-gray-200 p-0 text-[#1a1a1a] hover:bg-gray-100 [&_svg]:text-[#1a1a1a]"
             onClick={handleZoomOut}
           >
-            <Minus className="h-4 w-4" style={{ color: "rgb(26, 26, 26)" }} />
+            <Minus className="h-4 w-4" />
           </Button>
         </div>
         
         {/* 현재 위치 버튼 */}
         <Button
-          variant="secondary"
+          variant="ghost"
           size="sm"
-          className="h-8 w-8 bg-white p-0 shadow-md hover:bg-gray-50"
+          className="h-8 w-8 bg-white p-0 text-[#1a1a1a] shadow-md hover:bg-gray-50 [&_svg]:text-[#1a1a1a]"
           onClick={handleLocate}
         >
           <Locate className="h-4 w-4" />
