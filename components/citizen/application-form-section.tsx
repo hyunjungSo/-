@@ -670,8 +670,7 @@ export function ApplicationFormSection({
                       />
                       <Button
                         type="button"
-                        variant="outline"
-                        className="h-10 shrink-0 bg-[#222222] text-white hover:bg-[#333333] hover:text-white"
+                        className="h-10 shrink-0 border-0 bg-[#222222] text-white hover:bg-[#333333] hover:text-white"
                         onClick={() => setIsAddressSearchOpen(true)}
                       >
                         주소 검색
