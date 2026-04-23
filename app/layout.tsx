@@ -1,17 +1,7 @@
 import type { Metadata } from 'next'
-import { Noto_Sans_KR } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { AuthProvider } from '@/lib/auth-context'
 import './globals.css'
-
-const notoSansKR = Noto_Sans_KR({ 
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-noto-sans-kr",
-  display: "swap",
-  preload: true,
-  fallback: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
-});
 
 export const metadata: Metadata = {
   title: '잔여지 매수 판독 솔루션 | 한국도로공사',
@@ -29,7 +19,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="ko" className={notoSansKR.variable}>
+    <html lang="ko">
+      <head>
+        <link
+          rel="stylesheet"
+          as="style"
+          crossOrigin="anonymous"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+        />
+      </head>
       <body className="font-sans antialiased bg-background">
         <AuthProvider>
           {children}

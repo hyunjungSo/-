@@ -131,8 +131,8 @@
 }
 
 @theme inline {
-  /* KRDS Typography - Pretendard/Noto Sans KR */
-  --font-sans: var(--font-noto-sans-kr), 'Pretendard', 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* KRDS Typography - Pretendard */
+  --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
   
   /* KRDS Spacing Scale (8px 단위) */
