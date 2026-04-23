@@ -99,6 +99,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
   const [landReviewDataList, setLandReviewDataList] = useState<LandReviewData[]>(initializeLandReviewData);
   
+  // 선택된 필지 인덱스 (복수 필지용)
+  const [selectedLandIndex, setSelectedLandIndex] = useState(0);
+  
   // 필지별 검토 데이터 업데이트 함수
   const updateLandReviewData = (index: number, field: keyof LandReviewData, value: LandReviewData[keyof LandReviewData]) => {
     setLandReviewDataList(prev => {
@@ -479,108 +482,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </Card>
       </div>
 
-      {/* 민원인 입력 정보 (복수 필지) */}
-      {application.landDataList && application.landDataList.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Layers className="h-5 w-5" />
-              민원인 입력 정보 (토지별)
-            </CardTitle>
-            <CardDescription>
-              민원인이 각 토지별로 입력한 정보입니다. 검토 시 참고하세요.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {(() => {
-                const allLands = [application.landInfo, ...(application.additionalLands || [])];
-                return application.landDataList.map((landData, index) => {
-                  const land = allLands[index];
-                  if (!land) return null;
-                  
-                  const landSubTypeLabels: Record<string, string> = {
-                    "residential-detached": "주거용 - 단독주택",
-                    "residential-multi": "주거용 - 연립/다세대",
-                    "residential-apartment": "주거용 - 아파트",
-                    "commercial": "상업용",
-                    "industrial": "공업용",
-                  };
-                  
-                  return (
-                    <div key={land.id} className="rounded-lg border border-border p-4">
-                      <div className="mb-3 flex items-center justify-between border-b border-border pb-3">
-                        <div>
-                          <span className="text-base font-semibold text-foreground">
-                            필지 {index + 1}
-                          </span>
-                          <p className="text-sm text-muted-foreground">{land.address}</p>
-                        </div>
-                        <span className="rounded bg-primary/10 px-2 py-0.5 text-sm font-medium text-primary">
-                          {land.remainingArea.toLocaleString()}m²
-                        </span>
-                      </div>
-                      
-                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                        <div>
-                          <p className="text-sm text-muted-foreground">현재 활용 지목</p>
-                          <p className="font-medium text-foreground">
-                            {landData.currentUsage} ({landCategories.find(c => c.value === landData.currentUsage)?.label || ""})
-                          </p>
-                        </div>
-                        {landData.currentUsage === "대" && landData.landSubType && (
-                          <div>
-                            <p className="text-sm text-muted-foreground">택지 세부 유형</p>
-                            <p className="font-medium text-foreground">
-                              {landSubTypeLabels[landData.landSubType] || landData.landSubType}
-                            </p>
-                          </div>
-                        )}
-                        <div>
-                          <p className="text-sm text-muted-foreground">공부상 지목</p>
-                          <p className="font-medium text-foreground">
-                            {landData.actualUsage} ({landCategories.find(c => c.value === landData.actualUsage)?.label || ""})
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">토지 모양</p>
-                          <p className="font-medium text-foreground">{landData.reportedShape}</p>
-                        </div>
-                      </div>
-                      
-                      {/* 직접 확인 항목 */}
-                      <div className="mt-3 flex flex-wrap gap-3">
-                        {landData.accessRoadLost && (
-                          <span className="flex items-center gap-1 rounded bg-red-50 px-2 py-1 text-sm text-red-700">
-                            <AlertTriangle className="h-3.5 w-3.5" />
-                            접면도로 상실
-                          </span>
-                        )}
-                        {landData.waterChannelLost && (
-                          <span className="flex items-center gap-1 rounded bg-amber-50 px-2 py-1 text-sm text-amber-700">
-                            <AlertTriangle className="h-3.5 w-3.5" />
-                            관개수로 상실
-                          </span>
-                        )}
-                        {landData.farmMachineDifficulty && (
-                          <span className="flex items-center gap-1 rounded bg-amber-50 px-2 py-1 text-sm text-amber-700">
-                            <AlertTriangle className="h-3.5 w-3.5" />
-                            농기계 진입 곤란
-                          </span>
-                        )}
-                        {!landData.accessRoadLost && !landData.waterChannelLost && !landData.farmMachineDifficulty && (
-                          <span className="text-sm text-muted-foreground">직접 확인 항목 없음</span>
-                        )}
-                      </div>
-                    </div>
-                  );
-                });
-              })()}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* 담당자 검토 영역 */}
       <Card>
         <CardHeader>
@@ -602,136 +503,328 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* 복수 필지: 각 필지별 검토 */}
+          {/* 복수 필지: 비교 테이블 + 셀렉트박스 + 상세 검토 */}
           {isMultipleLands ? (
             <div className="space-y-6">
-              {allLands.map((land, index) => {
-                const landReview = landReviewDataList[index];
-                const isAgricultural = land.landType === "농지" || landReview?.actualUsage === "답" || landReview?.actualUsage === "전";
+              {/* 필지별 비교 요약 테이블 */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-foreground">필지별 비교 요약</h4>
+                <div className="overflow-x-auto rounded-lg border border-border">
+                  <table className="w-full text-sm">
+                    <thead className="bg-muted/50">
+                      <tr>
+                        <th className="px-3 py-2 text-left font-medium text-muted-foreground">필지</th>
+                        <th className="px-3 py-2 text-left font-medium text-muted-foreground">잔여면적</th>
+                        <th className="px-3 py-2 text-left font-medium text-muted-foreground">잔여비율</th>
+                        <th className="px-3 py-2 text-left font-medium text-muted-foreground">토지모양</th>
+                        <th className="px-3 py-2 text-left font-medium text-muted-foreground">AI 판정</th>
+                        <th className="px-3 py-2 text-left font-medium text-muted-foreground">담당자 판정</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {allLands.map((land, index) => {
+                        const landReview = landReviewDataList[index];
+                        const landData = application.landDataList?.[index];
+                        const isSelected = selectedLandIndex === index;
+                        // AI 판정 결과 (실제로는 필지별로 다르게 계산되어야 함)
+                        const aiJudgment = application.aiResult?.provisionalJudgment || "-";
+                        
+                        return (
+                          <tr 
+                            key={land.id} 
+                            className={`cursor-pointer border-t border-border transition-colors ${
+                              isSelected ? "bg-primary/10" : "hover:bg-muted/30"
+                            }`}
+                            onClick={() => setSelectedLandIndex(index)}
+                          >
+                            <td className="px-3 py-2">
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium">필지 {index + 1}</span>
+                                {isSelected && (
+                                  <Badge variant="outline" className="text-xs">선택됨</Badge>
+                                )}
+                              </div>
+                              <p className="text-xs text-muted-foreground truncate max-w-[200px]">{land.address}</p>
+                            </td>
+                            <td className="px-3 py-2 font-medium text-primary">{land.remainingArea.toLocaleString()}m2</td>
+                            <td className={`px-3 py-2 ${land.remainingRatio >= 24 ? "text-amber-600 font-medium" : ""}`}>
+                              {land.remainingRatio}%
+                              {land.remainingRatio >= 24 && <span className="ml-1 text-xs">(기준초과)</span>}
+                            </td>
+                            <td className="px-3 py-2">{landData?.reportedShape || land.remainingShape}</td>
+                            <td className="px-3 py-2">
+                              <Badge variant={aiJudgment === "매수" ? "default" : aiJudgment === "기각" ? "destructive" : "secondary"} className="text-xs">
+                                {aiJudgment}
+                              </Badge>
+                            </td>
+                            <td className="px-3 py-2">
+                              {landReview?.landJudgment ? (
+                                <Badge variant={landReview.landJudgment === "매수" ? "default" : landReview.landJudgment === "기각" ? "destructive" : "secondary"} className="text-xs">
+                                  {landReview.landJudgment}
+                                </Badge>
+                              ) : (
+                                <span className="text-muted-foreground">-</span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* 필지 선택 셀렉트박스 */}
+              <div className="flex items-center gap-4">
+                <Label className="shrink-0">상세 검토할 필지</Label>
+                <Select
+                  value={selectedLandIndex.toString()}
+                  onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
+                >
+                  <SelectTrigger className="w-[300px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {allLands.map((land, index) => (
+                      <SelectItem key={land.id} value={index.toString()}>
+                        필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")} ({land.remainingArea.toLocaleString()}m2)
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* 선택된 필지 상세 정보: AI 분석 | 민원인 입력 2컬럼 */}
+              {(() => {
+                const selectedLand = allLands[selectedLandIndex];
+                const selectedLandData = application.landDataList?.[selectedLandIndex];
+                const selectedLandReview = landReviewDataList[selectedLandIndex];
+                const isAgricultural = selectedLand.landType === "농지" || selectedLandReview?.actualUsage === "답" || selectedLandReview?.actualUsage === "전";
                 
+                const landSubTypeLabels: Record<string, string> = {
+                  "residential-detached": "주거용 - 단독주택",
+                  "residential-multi": "주거용 - 연립/다세대",
+                  "residential-apartment": "주거용 - 아파트",
+                  "commercial": "상업용",
+                  "industrial": "공업용",
+                };
+
                 return (
-                  <div key={land.id} className="rounded-lg border border-border p-5">
+                  <div className="rounded-lg border border-border p-5 space-y-5">
                     {/* 필지 헤더 */}
-                    <div className="mb-4 flex items-center justify-between border-b border-border pb-3">
+                    <div className="flex items-center justify-between border-b border-border pb-3">
                       <div>
-                        <span className="text-base font-semibold text-foreground">필지 {index + 1}</span>
-                        <p className="text-sm text-muted-foreground">{land.address}</p>
+                        <span className="text-lg font-semibold text-foreground">필지 {selectedLandIndex + 1} 상세</span>
+                        <p className="text-sm text-muted-foreground">{selectedLand.address}</p>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className="rounded bg-primary/10 px-2 py-0.5 text-sm font-medium text-primary">
-                          {land.remainingArea.toLocaleString()}m²
+                      <div className="flex items-center gap-3">
+                        <span className="rounded bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+                          {selectedLand.remainingArea.toLocaleString()}m2 / {selectedLand.remainingRatio}%
                         </span>
-                        {/* 필지별 판정 */}
-                        <Select
-                          value={landReview?.landJudgment || ""}
-                          onValueChange={(value) => updateLandReviewData(index, "landJudgment", value as JudgmentResult)}
-                        >
-                          <SelectTrigger className="w-[140px]">
-                            <SelectValue placeholder="판정 선택" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="매수">매수</SelectItem>
-                            <SelectItem value="기각">기각</SelectItem>
-                            <SelectItem value="심의위원회이관">심의위원회 이관</SelectItem>
-                          </SelectContent>
-                        </Select>
                       </div>
                     </div>
-                    
-                    {/* 필지별 검토 항목 */}
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                      <div className="space-y-2">
-                        <Label>실제 이용 상황</Label>
-                        <Select
-                          value={landReview?.actualUsage || ""}
-                          onValueChange={(value) => updateLandReviewData(index, "actualUsage", value as LandCategory)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {landCategories.map((cat) => (
-                              <SelectItem key={cat.value} value={cat.value}>
-                                {cat.value} ({cat.label})
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+
+                    {/* 2컬럼: AI 분석 결과 | 민원인 입력 정보 */}
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      {/* AI 분석 결과 */}
+                      <div className="rounded-lg border border-blue-200 bg-blue-50/30 p-4 space-y-3">
+                        <h5 className="flex items-center gap-2 font-semibold text-blue-700">
+                          <Bot className="h-4 w-4" />
+                          AI 분석 결과
+                        </h5>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">토지 유형</span>
+                            <span className="font-medium">{selectedLand.landType}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">지목</span>
+                            <span className="font-medium">{selectedLand.landCategory}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">토지 형상</span>
+                            <span className="font-medium">{selectedLand.remainingShape}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">형상지수 변화</span>
+                            <span className="font-medium">
+                              {selectedLand.originalShapeIndex?.toFixed(1) || "-"} → {selectedLand.remainingShapeIndex?.toFixed(1) || "-"}
+                            </span>
+                          </div>
+                          <div className="flex justify-between border-t border-blue-200 pt-2 mt-2">
+                            <span className="text-muted-foreground">AI 잠정 판정</span>
+                            <Badge variant={application.aiResult?.provisionalJudgment === "매수" ? "default" : "destructive"}>
+                              {application.aiResult?.provisionalJudgment || "-"}
+                            </Badge>
+                          </div>
+                        </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <Label>토지 모양</Label>
-                        <Select
-                          value={landReview?.landShape || ""}
-                          onValueChange={(value) => updateLandReviewData(index, "landShape", value as LandShape)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <div className="px-2 py-1 text-base font-semibold text-muted-foreground">정형</div>
-                            {landShapes.regular.map((shape) => (
-                              <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
-                            ))}
-                            <div className="px-2 py-1 text-base font-semibold text-muted-foreground">비정형</div>
-                            {landShapes.irregular.map((shape) => (
-                              <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                      {/* 민원인 입력 정보 */}
+                      <div className="rounded-lg border border-violet-200 bg-violet-50/30 p-4 space-y-3">
+                        <h5 className="flex items-center gap-2 font-semibold text-violet-700">
+                          <User className="h-4 w-4" />
+                          민원인 입력 정보
+                        </h5>
+                        {selectedLandData ? (
+                          <div className="space-y-2 text-sm">
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">현재 활용 지목</span>
+                              <span className="font-medium">
+                                {selectedLandData.currentUsage} ({landCategories.find(c => c.value === selectedLandData.currentUsage)?.label || ""})
+                              </span>
+                            </div>
+                            {selectedLandData.currentUsage === "대" && selectedLandData.landSubType && (
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">택지 세부 유형</span>
+                                <span className="font-medium">{landSubTypeLabels[selectedLandData.landSubType] || selectedLandData.landSubType}</span>
+                              </div>
+                            )}
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">공부상 지목</span>
+                              <span className="font-medium">
+                                {selectedLandData.actualUsage} ({landCategories.find(c => c.value === selectedLandData.actualUsage)?.label || ""})
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">토지 모양</span>
+                              <span className="font-medium">{selectedLandData.reportedShape}</span>
+                            </div>
+                            <div className="flex flex-wrap gap-2 border-t border-violet-200 pt-2 mt-2">
+                              {selectedLandData.accessRoadLost && (
+                                <Badge variant="destructive-subtle" className="text-xs">접면도로 상실</Badge>
+                              )}
+                              {selectedLandData.waterChannelLost && (
+                                <Badge variant="destructive-subtle" className="text-xs">관개수로 상실</Badge>
+                              )}
+                              {selectedLandData.farmMachineDifficulty && (
+                                <Badge variant="destructive-subtle" className="text-xs">농기계 진입 곤란</Badge>
+                              )}
+                              {!selectedLandData.accessRoadLost && !selectedLandData.waterChannelLost && !selectedLandData.farmMachineDifficulty && (
+                                <span className="text-xs text-muted-foreground">직접 확인 항목 없음</span>
+                              )}
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-muted-foreground">민원인 입력 정보가 없습니다.</p>
+                        )}
                       </div>
+                    </div>
 
-                      {isAgricultural && (
+                    {/* 담당자 검토 입력 */}
+                    <div className="border-t border-border pt-4 space-y-4">
+                      <h5 className="font-semibold text-foreground">담당자 검토</h5>
+                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         <div className="space-y-2">
-                          <Label>농기계 진입/회전 곤란</Label>
+                          <Label>실제 이용 상황</Label>
                           <Select
-                            value={landReview?.farmMachineDifficulty || "미입력"}
-                            onValueChange={(value) => updateLandReviewData(index, "farmMachineDifficulty", value as "미입력" | "해당" | "해당없음")}
+                            value={selectedLandReview?.actualUsage || ""}
+                            onValueChange={(value) => updateLandReviewData(selectedLandIndex, "actualUsage", value as LandCategory)}
                           >
                             <SelectTrigger>
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="미입력">미입력</SelectItem>
-                              <SelectItem value="해당">해당</SelectItem>
-                              <SelectItem value="해당없음">해당 없음</SelectItem>
+                              {landCategories.map((cat) => (
+                                <SelectItem key={cat.value} value={cat.value}>
+                                  {cat.value} ({cat.label})
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                         </div>
-                      )}
-                    </div>
 
-                    {/* 자동 판독 불가 항목 */}
-                    <div className="mt-4 space-y-2">
-                      <Label>자동 판독 불가 항목</Label>
-                      <div className="flex flex-wrap gap-4">
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            id={`accessRoadLost-${index}`}
-                            checked={landReview?.accessRoadLost || false}
-                            onCheckedChange={(checked) => updateLandReviewData(index, "accessRoadLost", checked === true)}
-                          />
-                          <Label htmlFor={`accessRoadLost-${index}`} className="text-base font-normal">
-                            접면도로 상실
-                          </Label>
+                        <div className="space-y-2">
+                          <Label>토지 모양</Label>
+                          <Select
+                            value={selectedLandReview?.landShape || ""}
+                            onValueChange={(value) => updateLandReviewData(selectedLandIndex, "landShape", value as LandShape)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <div className="px-2 py-1 text-base font-semibold text-muted-foreground">정형</div>
+                              {landShapes.regular.map((shape) => (
+                                <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
+                              ))}
+                              <div className="px-2 py-1 text-base font-semibold text-muted-foreground">비정형</div>
+                              {landShapes.irregular.map((shape) => (
+                                <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </div>
+
                         {isAgricultural && (
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id={`waterChannelLost-${index}`}
-                              checked={landReview?.waterChannelLost || false}
-                              onCheckedChange={(checked) => updateLandReviewData(index, "waterChannelLost", checked === true)}
-                            />
-                            <Label htmlFor={`waterChannelLost-${index}`} className="text-base font-normal">
-                              관개수로 상실
-                            </Label>
+                          <div className="space-y-2">
+                            <Label>농기계 진입/회전 곤란</Label>
+                            <Select
+                              value={selectedLandReview?.farmMachineDifficulty || "미입력"}
+                              onValueChange={(value) => updateLandReviewData(selectedLandIndex, "farmMachineDifficulty", value as "미입력" | "해당" | "해당없음")}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="미입력">미입력</SelectItem>
+                                <SelectItem value="해당">해당</SelectItem>
+                                <SelectItem value="해당없음">해당 없음</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </div>
                         )}
+
+                        <div className="space-y-2">
+                          <Label>필지별 판정</Label>
+                          <Select
+                            value={selectedLandReview?.landJudgment || ""}
+                            onValueChange={(value) => updateLandReviewData(selectedLandIndex, "landJudgment", value as JudgmentResult)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="판정 선택" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="매수">매수</SelectItem>
+                              <SelectItem value="기각">기각</SelectItem>
+                              <SelectItem value="심의위원회이관">심의위원회 이관</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      {/* 자동 판독 불가 항목 */}
+                      <div className="space-y-2">
+                        <Label>자동 판독 불가 항목</Label>
+                        <div className="flex flex-wrap gap-4">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`accessRoadLost-${selectedLandIndex}`}
+                              checked={selectedLandReview?.accessRoadLost || false}
+                              onCheckedChange={(checked) => updateLandReviewData(selectedLandIndex, "accessRoadLost", checked === true)}
+                            />
+                            <Label htmlFor={`accessRoadLost-${selectedLandIndex}`} className="text-base font-normal">
+                              접면도로 상실
+                            </Label>
+                          </div>
+                          {isAgricultural && (
+                            <div className="flex items-center space-x-2">
+                              <Checkbox
+                                id={`waterChannelLost-${selectedLandIndex}`}
+                                checked={selectedLandReview?.waterChannelLost || false}
+                                onCheckedChange={(checked) => updateLandReviewData(selectedLandIndex, "waterChannelLost", checked === true)}
+                              />
+                              <Label htmlFor={`waterChannelLost-${selectedLandIndex}`} className="text-base font-normal">
+                                관개수로 상실
+                              </Label>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
                 );
-              })}
+              })()}
 
               {/* 소유자 의견 */}
               <div className="space-y-2">
