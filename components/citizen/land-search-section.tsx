@@ -523,6 +523,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const [searchResults, setSearchResults] = useState<LandInfo[]>([]);
   const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [isResultsCollapsed, setIsResultsCollapsed] = useState(false);
@@ -554,6 +555,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     if (searchMode === "owner" && (!ownerName || ownerBirthDate.length !== 6)) return;
     
     setIsSearching(true);
+    setHasSearched(true);
     setSelectedLand(null);
     setCurrentPage(1);
     setAiResult(null);
@@ -807,6 +809,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setSelectedLand(null);
     setAiResult(null);
     setNoIncludedLand(false);
+    setHasSearched(false);
   };
 
   // 드롭다운 옵션
@@ -1112,11 +1115,26 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             {/* 검색 결과 목록 */}
             <div className="h-[calc(100%-100px)] overflow-y-auto">
               {searchResults.length === 0 ? (
-                <div className="flex h-full flex-col items-center justify-center py-12 text-center">
+                <div className="flex h-full flex-col items-center justify-center px-4 py-12 text-center">
                   <MapPin className="h-8 w-8 text-muted-foreground" />
-                  <p className="mt-2 text-base text-muted-foreground">
-                    행정구역을 선택하고<br />검색 버튼을 클릭하세요.
-                  </p>
+                  {hasSearched && searchMode === "owner" ? (
+                    <div className="mt-3">
+                      <p className="text-base font-medium text-foreground">
+                        일치하는 토지 정보가 없습니다
+                      </p>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        입력하신 성명과 주민번호 앞자리로<br />
+                        등록된 편입 토지를 찾을 수 없습니다.<br />
+                        정보를 다시 확인해 주세요.
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-base text-muted-foreground">
+                      {searchMode === "owner" 
+                        ? "소유자 정보를 입력하고\n검색 버튼을 클릭하세요."
+                        : "행정구역을 선택하고\n검색 버튼을 클릭하세요."}
+                    </p>
+                  )}
                 </div>
               ) : (
                 <ul>
