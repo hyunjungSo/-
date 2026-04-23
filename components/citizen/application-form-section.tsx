@@ -271,7 +271,7 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
         <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p className="text-base text-muted-foreground">
-            본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
+            본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령�� 따라 결정됩니다. 
             판단 근거에 이의가 있으시면 신청서 제출 시 사유를 기재해 주시기 바랍니다.
           </p>
         </div>
@@ -771,7 +771,7 @@ export function ApplicationFormSection({
                       {isMultipleLands && (
                         <div className="flex items-center justify-between border-b border-border pb-3">
                           <div>
-                            <span className="text-sm font-semibold text-foreground">
+                            <span className="text-base font-semibold text-foreground">
                               필지 {index + 1}
                             </span>
                             <p className="text-base text-muted-foreground">{land.address}</p>
@@ -1040,7 +1040,7 @@ export function ApplicationFormSection({
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
-                  "신청서 제출 중..."
+                  "신청서 제출 ���..."
                 ) : (
                   <>
                     <Send className="h-4 w-4" />
