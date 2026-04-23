@@ -435,6 +435,108 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </Card>
       </div>
 
+      {/* 민원인 입력 정보 (복수 필지) */}
+      {application.landDataList && application.landDataList.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Layers className="h-5 w-5" />
+              민원인 입력 정보 (토지별)
+            </CardTitle>
+            <CardDescription>
+              민원인이 각 토지별로 입력한 정보입니다. 검토 시 참고하세요.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {(() => {
+                const allLands = [application.landInfo, ...(application.additionalLands || [])];
+                return application.landDataList.map((landData, index) => {
+                  const land = allLands[index];
+                  if (!land) return null;
+                  
+                  const landSubTypeLabels: Record<string, string> = {
+                    "residential-detached": "주거용 - 단독주택",
+                    "residential-multi": "주거용 - 연립/다세대",
+                    "residential-apartment": "주거용 - 아파트",
+                    "commercial": "상업용",
+                    "industrial": "공업용",
+                  };
+                  
+                  return (
+                    <div key={land.id} className="rounded-lg border border-border p-4">
+                      <div className="mb-3 flex items-center justify-between border-b border-border pb-3">
+                        <div>
+                          <span className="text-base font-semibold text-foreground">
+                            필지 {index + 1}
+                          </span>
+                          <p className="text-sm text-muted-foreground">{land.address}</p>
+                        </div>
+                        <span className="rounded bg-primary/10 px-2 py-0.5 text-sm font-medium text-primary">
+                          {land.remainingArea.toLocaleString()}m²
+                        </span>
+                      </div>
+                      
+                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <div>
+                          <p className="text-sm text-muted-foreground">현재 활용 지목</p>
+                          <p className="font-medium text-foreground">
+                            {landData.currentUsage} ({landCategories.find(c => c.value === landData.currentUsage)?.label || ""})
+                          </p>
+                        </div>
+                        {landData.currentUsage === "대" && landData.landSubType && (
+                          <div>
+                            <p className="text-sm text-muted-foreground">택지 세부 유형</p>
+                            <p className="font-medium text-foreground">
+                              {landSubTypeLabels[landData.landSubType] || landData.landSubType}
+                            </p>
+                          </div>
+                        )}
+                        <div>
+                          <p className="text-sm text-muted-foreground">공부상 지목</p>
+                          <p className="font-medium text-foreground">
+                            {landData.actualUsage} ({landCategories.find(c => c.value === landData.actualUsage)?.label || ""})
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">토지 모양</p>
+                          <p className="font-medium text-foreground">{landData.reportedShape}</p>
+                        </div>
+                      </div>
+                      
+                      {/* 직접 확인 항목 */}
+                      <div className="mt-3 flex flex-wrap gap-3">
+                        {landData.accessRoadLost && (
+                          <span className="flex items-center gap-1 rounded bg-red-50 px-2 py-1 text-sm text-red-700">
+                            <AlertTriangle className="h-3.5 w-3.5" />
+                            접면도로 상실
+                          </span>
+                        )}
+                        {landData.waterChannelLost && (
+                          <span className="flex items-center gap-1 rounded bg-amber-50 px-2 py-1 text-sm text-amber-700">
+                            <AlertTriangle className="h-3.5 w-3.5" />
+                            관개수로 상실
+                          </span>
+                        )}
+                        {landData.farmMachineDifficulty && (
+                          <span className="flex items-center gap-1 rounded bg-amber-50 px-2 py-1 text-sm text-amber-700">
+                            <AlertTriangle className="h-3.5 w-3.5" />
+                            농기계 진입 곤란
+                          </span>
+                        )}
+                        {!landData.accessRoadLost && !landData.waterChannelLost && !landData.farmMachineDifficulty && (
+                          <span className="text-sm text-muted-foreground">직접 확인 항목 없음</span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                });
+              })()}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* 담당자 검토 영역 */}
       <Card>
         <CardHeader>

@@ -118,6 +118,17 @@ export interface UnifiedParcelCondition {
   isUnifiedParcel: boolean; // 일단지 여부
 }
 
+// 토지별 민원인 입력 데이터
+export interface LandSpecificData {
+  currentUsage: LandCategory; // 현재 활용 지목
+  landSubType: "" | "residential-detached" | "residential-multi" | "residential-apartment" | "commercial" | "industrial"; // 택지 세부 유형
+  actualUsage: LandCategory; // 공부상 지목
+  reportedShape: LandShape; // 토지 모양
+  farmMachineDifficulty: boolean; // 농기계 진입 곤란
+  accessRoadLost: boolean; // 접면도로 상실
+  waterChannelLost: boolean; // 관개수로 상실
+}
+
 // 민원 신청
 export interface Application {
   id: string;
@@ -141,6 +152,7 @@ export interface Application {
   reviewerComment?: string; // 담당자 검토 의견
   adminName?: string; // 담당자명
   statusUpdatedAt?: string; // 상태 변경일
+  landDataList?: LandSpecificData[]; // 토지별 민원인 입력 데이터 (복수 필지)
 }
 
 // AI 분석 결과

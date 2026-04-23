@@ -558,6 +558,27 @@ export const dummyApplications: Application[] = [
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
     reason: "도로 편입으로 인접한 2개 필지가 모두 불규칙한 형태로 남아 건축이 불가능합니다. 일단지로 판정하여 병합 처리를 요청드립니다.",
+    // 토지별 민원인 입력 데이터
+    landDataList: [
+      {
+        currentUsage: "대" as const,
+        landSubType: "residential-detached" as const,
+        actualUsage: "대" as const,
+        reportedShape: "삼각형" as const,
+        farmMachineDifficulty: false,
+        accessRoadLost: true,
+        waterChannelLost: false,
+      },
+      {
+        currentUsage: "대" as const,
+        landSubType: "residential-detached" as const,
+        actualUsage: "대" as const,
+        reportedShape: "역삼각형" as const,
+        farmMachineDifficulty: false,
+        accessRoadLost: true,
+        waterChannelLost: false,
+      },
+    ],
     attachments: ["토지대장_100-1.pdf", "토지대장_100-2.pdf", "등기부등본.pdf"],
     status: "검토중",
     adminStatus: "진행중",
