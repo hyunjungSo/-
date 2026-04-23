@@ -50,13 +50,13 @@ export default function HomePage() {
               온라인으로 간편하게 매수 신청을 진행하실 수 있습니다.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button asChild size="lg" className="h-12 px-8 text-lg font-semibold">
+              <Button asChild size="lg" className="h-[55px] px-8 text-lg font-semibold">
                 <Link href="/citizen">
                   잔여지 매수 조회
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="h-12 border-1 border-gray-400 bg-white px-8 text-lg font-semibold text-gray-800 hover:bg-gray-50 hover:text-gray-800">
+              <Button asChild variant="outline" size="lg" className="h-[55px] border-1 border-gray-400 bg-white px-8 text-lg font-semibold text-gray-800 hover:bg-gray-50 hover:text-gray-800">
                 <Link href="/citizen?tab=status">
                   신청현황 확인
                 </Link>
