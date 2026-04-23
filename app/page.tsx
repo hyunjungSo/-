@@ -78,7 +78,7 @@ export default function HomePage() {
             <div className="rounded-lg bg-white p-6">
               <FileSearch className="h-8 w-8 text-primary" />
               <h3 className="mt-4 text-lg font-semibold text-foreground">간편한 토지 조회</h3>
-              <p className="mt-2 text-base leading-[120%] text-muted-foreground">
+              <p className="mt-2 text-base leading-[140%] text-muted-foreground">
                 지번으로 직접 검색 또는 소유자 정보를 입력하면 편입된 매수 대상 토지를 손쉽게 조회할 수 있습니다.
               </p>
             </div>
@@ -86,7 +86,7 @@ export default function HomePage() {
             <div className="rounded-lg bg-white p-6">
               <Zap className="h-8 w-8 text-primary" />
               <h3 className="mt-4 text-lg font-semibold text-foreground">AI 매수 가능 분석</h3>
-              <p className="mt-2 text-base leading-[120%] text-muted-foreground">
+              <p className="mt-2 text-base leading-[140%] text-muted-foreground">
                 AI가 면적, 형상, 용도 등 법적 기준을 분석하여 매수 가능 여부를 사전에 안내해드립니다.
               </p>
             </div>
@@ -94,7 +94,7 @@ export default function HomePage() {
             <div className="rounded-lg bg-white p-6">
               <FileText className="h-8 w-8 text-primary" />
               <h3 className="mt-4 text-lg font-semibold text-foreground">온라인 신청</h3>
-              <p className="mt-2 text-base leading-[120%] text-muted-foreground">
+              <p className="mt-2 text-base leading-[140%] text-muted-foreground">
                 방문 없이 온라인으로 매수 신청서를 제출하고 진행 상황을 실시간으로 확인하세요.
               </p>
             </div>
@@ -102,7 +102,7 @@ export default function HomePage() {
             <div className="rounded-lg bg-white p-6">
               <Clock className="h-8 w-8 text-primary" />
               <h3 className="mt-4 text-lg font-semibold text-foreground">빠른 결과 확인</h3>
-              <p className="mt-2 text-base leading-[120%] text-muted-foreground">
+              <p className="mt-2 text-base leading-[140%] text-muted-foreground">
                 신청 접수부터 결과 통보까지 모든 진행 상황을 온라인에서 확인할 수 있습니다.
               </p>
             </div>
@@ -129,7 +129,7 @@ export default function HomePage() {
                 <Search className="h-7 w-7 text-primary" />
               </div>
               <h3 className="mt-4 font-semibold text-foreground">토지 조회</h3>
-              <p className="mt-1 max-w-[180px] text-base leading-[120%] text-muted-foreground">
+              <p className="mt-1 max-w-[180px] text-base leading-[140%] text-muted-foreground">
                 편입 토지 지번으로 잔여지 정보를 조회합니다
               </p>
             </div>
@@ -148,7 +148,7 @@ export default function HomePage() {
                 <Zap className="h-7 w-7 text-primary" />
               </div>
               <h3 className="mt-4 font-semibold text-foreground">AI 분석</h3>
-              <p className="mt-1 max-w-[180px] text-base leading-[120%] text-muted-foreground">
+              <p className="mt-1 max-w-[180px] text-base leading-[140%] text-muted-foreground">
                 AI가 매수 가능 여부를 사전 분석합니다
               </p>
             </div>
@@ -167,7 +167,7 @@ export default function HomePage() {
                 <FileCheck className="h-7 w-7 text-primary" />
               </div>
               <h3 className="mt-4 font-semibold text-foreground">매수 신청</h3>
-              <p className="mt-1 max-w-[180px] text-base leading-[120%] text-muted-foreground">
+              <p className="mt-1 max-w-[180px] text-base leading-[140%] text-muted-foreground">
                 신청인 정보와 필요 서류를 제출합니다
               </p>
             </div>
@@ -186,7 +186,7 @@ export default function HomePage() {
                 <CheckCircle2 className="h-7 w-7 text-primary" />
               </div>
               <h3 className="mt-4 font-semibold text-foreground">결과 통보</h3>
-              <p className="mt-1 max-w-[180px] text-base leading-[120%] text-muted-foreground">
+              <p className="mt-1 max-w-[180px] text-base leading-[140%] text-muted-foreground">
                 매수, 기각, 또는 심의위원회 이관 결과를 통보합니다
               </p>
             </div>
