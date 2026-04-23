@@ -632,7 +632,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       setReviewData((prev) => ({ ...prev, finalJudgment: judgment }))
                     }
                     disabled={isDisabled}
-                    className={`cursor-pointer border-2 ${config.borderColor} ${config.textColor} ${isSelected ? "bg-opacity-10" : "bg-transparent"} ${isDisabled ? "opacity-50" : ""}`}
+                    className={`cursor-pointer border-2 ${isSelected ? "border-primary text-primary" : "border-[#E1E4E7] text-foreground"} ${isDisabled ? "opacity-50" : ""}`}
                   >
                     <Icon className="mr-2 h-4 w-4" />
                     {config.label}
