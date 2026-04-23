@@ -184,35 +184,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </Button>
             </div>
           </div>
-              </div>
-              
-              {/* 처리상태 필터 */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-foreground">처리상태</label>
-                <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as AdminStatus | "all")}>
-                  <SelectTrigger className="h-10 w-[150px] rounded border-border bg-background text-sm focus:border-primary focus:ring-2 focus:ring-primary/20">
-                    <SelectValue placeholder="전체" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">��체 민원</SelectItem>
-                    <SelectItem value="접수완료">접수완료</SelectItem>
-                    <SelectItem value="진행중">진행중</SelectItem>
-                    <SelectItem value="심사완료">심사완료</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {/* 정렬 버튼 */}
-              <Button
-                variant="outline"
-                className="h-10 gap-1.5 rounded border-border px-4 text-sm font-medium hover:bg-muted"
-                onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
-              >
-                <span>{sortOrder === "desc" ? "↓" : "↑"}</span>
-                <span>{sortOrder === "desc" ? "최신순" : "오래된순"}</span>
-              </Button>
-            </div>
-          </div>
 
           {/* 테이블 (데스크톱) */}
           <div className="hidden rounded-lg border border-border md:block">
