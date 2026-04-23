@@ -509,34 +509,105 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
       if (searchMode === "owner") {
         // 소유자 검색: 이름 + 주민번호 앞자리로 검색
         // 실제 구현에서는 API 호출, 여기서는 더미 데이터 시뮬레이션
-        const baseCoords = [
-          [
-            { lat: 37.2180, lng: 127.2950 },
-            { lat: 37.2185, lng: 127.2960 },
-            { lat: 37.2178, lng: 127.2965 },
-            { lat: 37.2173, lng: 127.2955 },
-          ],
-          [
-            { lat: 37.2185, lng: 127.2960 },
-            { lat: 37.2192, lng: 127.2972 },
-            { lat: 37.2188, lng: 127.2980 },
-            { lat: 37.2178, lng: 127.2965 },
-          ],
-          [
-            { lat: 37.2192, lng: 127.2972 },
-            { lat: 37.2200, lng: 127.2985 },
-            { lat: 37.2195, lng: 127.2995 },
-            { lat: 37.2188, lng: 127.2980 },
-          ],
+        // 홍길동이 경기도, 서울, 부산 3개 지역에 잔여지를 소유한 경우
+        const ownerLandData = [
+          {
+            id: "owner-search-0",
+            address: "경기도 용인시 처인구 양지면 마성리 100-1",
+            coordinates: [
+              { lat: 37.2180, lng: 127.2950 },
+              { lat: 37.2185, lng: 127.2960 },
+              { lat: 37.2178, lng: 127.2965 },
+              { lat: 37.2173, lng: 127.2955 },
+            ],
+            originalArea: 1250,
+            incorporatedArea: 980,
+            remainingArea: 270,
+            remainingRatio: 21.6,
+            landType: "농지",
+            landCategory: "전",
+            incorporationDate: "2022-03-15",
+            projectName: "용인~양지 도로확장사업",
+          },
+          {
+            id: "owner-search-1",
+            address: "경기도 이천시 마장면 덕평리 55-3",
+            coordinates: [
+              { lat: 37.2350, lng: 127.3800 },
+              { lat: 37.2358, lng: 127.3812 },
+              { lat: 37.2352, lng: 127.3820 },
+              { lat: 37.2345, lng: 127.3808 },
+            ],
+            originalArea: 850,
+            incorporatedArea: 620,
+            remainingArea: 230,
+            remainingRatio: 27.1,
+            landType: "농지",
+            landCategory: "답",
+            incorporationDate: "2021-11-20",
+            projectName: "이천~여주 국도확장사업",
+          },
+          {
+            id: "owner-search-2",
+            address: "서울특별시 강남구 수서동 712-5",
+            coordinates: [
+              { lat: 37.4890, lng: 127.1020 },
+              { lat: 37.4895, lng: 127.1028 },
+              { lat: 37.4892, lng: 127.1035 },
+              { lat: 37.4887, lng: 127.1027 },
+            ],
+            originalArea: 520,
+            incorporatedArea: 380,
+            remainingArea: 140,
+            remainingRatio: 26.9,
+            landType: "대지",
+            landCategory: "대",
+            incorporationDate: "2023-06-10",
+            projectName: "수서~광주 고속철도사업",
+          },
+          {
+            id: "owner-search-3",
+            address: "서울특별시 송파구 문정동 128-9",
+            coordinates: [
+              { lat: 37.4780, lng: 127.1250 },
+              { lat: 37.4788, lng: 127.1260 },
+              { lat: 37.4783, lng: 127.1268 },
+              { lat: 37.4775, lng: 127.1258 },
+            ],
+            originalArea: 680,
+            incorporatedArea: 520,
+            remainingArea: 160,
+            remainingRatio: 23.5,
+            landType: "대지",
+            landCategory: "대",
+            incorporationDate: "2023-06-10",
+            projectName: "송파 도시개발사업",
+          },
+          {
+            id: "owner-search-4",
+            address: "부산광역시 해운대구 우동 1450-2",
+            coordinates: [
+              { lat: 35.1620, lng: 129.1635 },
+              { lat: 35.1628, lng: 129.1645 },
+              { lat: 35.1622, lng: 129.1652 },
+              { lat: 35.1615, lng: 129.1642 },
+            ],
+            originalArea: 980,
+            incorporatedArea: 750,
+            remainingArea: 230,
+            remainingRatio: 23.5,
+            landType: "대지",
+            landCategory: "대",
+            incorporationDate: "2022-09-05",
+            projectName: "해운대 도시재생사업",
+          },
         ];
         
-        // 여러 필지를 소유한 경우 시뮬레이션 (한 사람이 여러 잔여지 보유)
-        results = dummyLandInfoList.slice(0, 3).map((land, idx) => ({
-          ...land,
-          id: `owner-search-${idx}`,
-          ownerName: ownerName,
-          address: `경기도 용인시 처인구 양지면 마성리 ${100 + idx}-${idx + 1}`,
-          coordinates: baseCoords[idx] || baseCoords[0],
+        // 여러 필지를 소유한 경우 (3개 지역: 경기도 2건, 서울 2건, 부산 1건)
+        results = ownerLandData.map((landData) => ({
+          ...dummyLandInfoList[0],
+          ...landData,
+          ownerName: ownerName || "홍길동",
         }));
         
         setSearchResults(results);
@@ -1259,7 +1330,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           variant="default"
                         >
                           <Plus className="mr-2 h-4 w-4" />
-                          신청 목록에 추가
+                          ��청 목록에 추가
                         </Button>
                         <p className="text-center text-xs text-muted-foreground">
                           여러 필지를 한번에 신청할 수 있습니다
