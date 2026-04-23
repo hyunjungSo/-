@@ -73,7 +73,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
-    finalJudgment: application.finalJudgment || application.aiResult?.provisionalJudgment || ("매수" as JudgmentResult),
+    finalJudgment: application.finalJudgment || (null as unknown as JudgmentResult),
     adminStatus: application.adminStatus || ("접수완료" as AdminStatus),
     assigneeId: application.adminName ? assigneeList.find(a => a.name === application.adminName)?.id || "" : "",
   });
