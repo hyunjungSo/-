@@ -1480,14 +1480,11 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                 checked={allSelectedInUnit}
                                 className="h-5 w-5"
                                 onCheckedChange={(checked) => {
-                                  const newSelected = new Set(selectedCartItems);
-                                  items.forEach(item => {
-                                    if (checked) {
-                                      newSelected.add(item.id);
-                                    } else {
-                                      newSelected.delete(item.id);
-                                    }
-                                  });
+                                  // 다른 사업단 선택 해제하고 현재 사업단만 선택
+                                  const newSelected = new Set<string>();
+                                  if (checked) {
+                                    items.forEach(item => newSelected.add(item.id));
+                                  }
                                   setSelectedCartItems(newSelected);
                                 }}
                               />
@@ -1514,7 +1511,11 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                   checked={selectedCartItems.has(item.id)}
                                   className="mt-0.5 h-5 w-5"
                                   onCheckedChange={(checked) => {
-                                    const newSelected = new Set(selectedCartItems);
+                                    // 다른 사업단 항목은 모두 해제하고, 현재 사업단 항목만 유지
+                                    const currentUnitItemIds = items.map(i => i.id);
+                                    const newSelected = new Set(
+                                      Array.from(selectedCartItems).filter(id => currentUnitItemIds.includes(id))
+                                    );
                                     if (checked) {
                                       newSelected.add(item.id);
                                     } else {
@@ -1595,23 +1596,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             {cartItems.length > 0 && (
               <div className="border-t bg-muted/30 px-4 py-4">
                 <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-3">
-                    <Checkbox 
-                      id="select-all"
-                      checked={selectedCartItems.size === cartItems.length && cartItems.length > 0}
-                      className="h-5 w-5"
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSelectedCartItems(new Set(cartItems.map(item => item.id)));
-                        } else {
-                          setSelectedCartItems(new Set());
-                        }
-                      }}
-                    />
-                    <label htmlFor="select-all" className="cursor-pointer text-muted-foreground">
-                      전체 선택 ({selectedCartItems.size}/{cartItems.length})
-                    </label>
-                  </div>
+                  <span className="text-muted-foreground">
+                    총 {cartItems.length}필지 {selectedCartItems.size > 0 && `(${selectedCartItems.size}건 선택)`}
+                  </span>
                   <button
                     onClick={() => {
                       cartItems.forEach(item => onRemoveFromCart(item.id));
