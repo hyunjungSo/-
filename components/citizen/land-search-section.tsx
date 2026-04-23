@@ -997,12 +997,13 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       setSelectedRi("");
                       setSearchResults([]);
                     }}
-                    disabled={!selectedSigungu || eupmyeondongOptions.length === 0}
+                    disabled={!selectedSigungu}
                   >
                     <SelectTrigger className="w-[140px]">
-                      <SelectValue placeholder={eupmyeondongOptions.length === 0 ? "해당없음" : "선택"} />
+                      <SelectValue placeholder="전체" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="전체">전체</SelectItem>
                       {eupmyeondongOptions.map((eupmyeondong) => (
                         <SelectItem key={eupmyeondong} value={eupmyeondong}>{eupmyeondong}</SelectItem>
                       ))}
