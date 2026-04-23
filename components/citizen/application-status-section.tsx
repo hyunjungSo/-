@@ -176,9 +176,9 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
   const currentStep = getStatusStep(application.adminStatus);
 
   return (
-    <div className="space-y-5">
+    <div className="rounded-lg bg-gray-50 p-6 space-y-6">
       {/* 상단: 접수번호 + 소재지 */}
-      <div className="rounded-lg bg-gray-50 p-6">
+      <div>
         <div className="flex items-center gap-3">
           <Badge variant={adminStatusConfig[application.adminStatus].variant}>
             {adminStatusConfig[application.adminStatus].label}
@@ -199,8 +199,10 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
         </div>
       </div>
 
+      <hr className="border-gray-200" />
+
       {/* 진행 상태 스텝 인디케이터 */}
-      <div className="rounded-lg bg-gray-50 p-6">
+      <div>
         <h4 className="mb-6 text-base font-semibold text-foreground">진행 상태</h4>
         <div className="relative mx-auto max-w-md">
           {/* 배경 라인 */}
@@ -248,12 +250,14 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
 
       {/* 처리 완료 시 결과 표시 */}
       {application.adminStatus === "심사완료" && application.finalJudgment && (
-        <div className={`rounded-lg p-6 ${
+        <>
+        <hr className="border-gray-200" />
+        <div className={`rounded-lg p-5 ${
           application.finalJudgment === "매수" 
-            ? "bg-emerald-50" 
+            ? "bg-emerald-100/70" 
             : application.finalJudgment === "기각"
-              ? "bg-red-50"
-              : "bg-amber-50"
+              ? "bg-red-100/70"
+              : "bg-amber-100/70"
         }`}>
           <div className="flex items-center gap-4">
             {application.finalJudgment === "매수" && <CheckCircle2 className="h-7 w-7 text-emerald-600" />}
@@ -268,15 +272,18 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
             </div>
           </div>
           {application.reviewerComment && (
-            <p className="mt-4 rounded-lg bg-white/60 p-4 text-sm text-muted-foreground">
+            <p className="mt-4 rounded-lg bg-white/80 p-4 text-sm text-muted-foreground">
               {application.reviewerComment}
             </p>
           )}
         </div>
+        </>
       )}
 
+      <hr className="border-gray-200" />
+
       {/* 토지 정보 요약 */}
-      <div className="rounded-lg bg-gray-50 p-6">
+      <div>
         <h4 className="mb-5 text-base font-semibold text-foreground">토지 정보</h4>
         <div className="grid grid-cols-4 gap-6">
           <div>
