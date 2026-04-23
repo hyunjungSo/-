@@ -9,12 +9,16 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LeafletMap } from "@/components/leaflet-map";
 import { dummyLandInfoList } from "@/lib/dummy-data";
-import type { LandInfo, AIAnalysisResult, JudgmentRationale } from "@/lib/types";
-import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp } from "lucide-react";
+import type { LandInfo, AIAnalysisResult, JudgmentRationale, ApplicationCartItem } from "@/lib/types";
+import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ShoppingCart, Plus, Trash2, X } from "lucide-react";
 
 
 interface LandSearchSectionProps {
   onLandSelect: (land: LandInfo, aiResult: AIAnalysisResult) => void;
+  cartItems: ApplicationCartItem[];
+  onAddToCart: (land: LandInfo, aiResult: AIAnalysisResult) => void;
+  onRemoveFromCart: (itemId: string) => void;
+  onSubmitCart: (items: ApplicationCartItem[]) => void;
 }
 // 행정구역 데이터 (전국 17개 시도)
 const regionData = {
@@ -311,7 +315,7 @@ function generateJudgmentRationale(
   if (land.landType === "대지") {
     appliedCriteria.push(`택지(대지) 면적 기준: 주거용(단독주택) 90㎡, 주거용(연립·다세대) 165㎡, 주거용(아파트) 60㎡, 상업용 150㎡, 공업용 330㎡ 이하`);
   } else if (land.landType === "농지") {
-    appliedCriteria.push(`농지 면적 기준: 330㎡(약 100평) 이하이거나, 폭 5m 이하의 부정형으로서 농기계 진입·회전이 곤란한 경우`);
+    appliedCriteria.push(`농지 면적 기준: 330㎡(약 100��) 이하이거나, 폭 5m 이하의 부정형으로서 농기계 진입·회전이 곤란한 경우`);
   } else if (land.landType === "산지") {
     appliedCriteria.push(`산지 면적 기준: 990㎡(약 300평) 이하`);
   } else {
@@ -447,7 +451,9 @@ function getUsageDifficultyDescription(landType: string, area: number, shape: st
   }
 }
 
-export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
+export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, onRemoveFromCart, onSubmitCart }: LandSearchSectionProps) {
+  // 장바구니 패널 표시 상태
+  const [isCartOpen, setIsCartOpen] = useState(false);
   // 검색 방식 탭 (지번 / 소유자)
   const [searchMode, setSearchMode] = useState<"address" | "owner">("address");
   
@@ -1217,35 +1223,65 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               )}
             </div>
             
-            {/* 매수 신청 버튼 - 하단 고정 */}
+            {/* 신청 목록 추가 버튼 - 하단 고정 */}
             {selectedLand && aiResult && (
               <div className="shrink-0 border-t bg-background p-3">
-                {aiResult.provisionalJudgment !== "기각" ? (
-                  <Button 
-                    onClick={() => onLandSelect(selectedLand, aiResult!)}
-                    className="h-12 w-full cursor-pointer"
-                    variant="default"
-                  >
-                    매수 신청하기
-                    <ChevronRight className="ml-1 h-4 w-4" />
-                  </Button>
-                ) : (
-                  <div className="space-y-2">
-                    {/* 매수 불가 안내 */}
-                    <div className="rounded bg-muted/50 p-2 text-center">
-                      <p className="text-base font-semibold text-muted-foreground">
-                        AI 분석 결과 매수 기준에 충족하지 않습니다.
-                      </p>
+                {(() => {
+                  const isAlreadyInCart = cartItems.some(item => item.landInfo.id === selectedLand.id);
+                  
+                  if (isAlreadyInCart) {
+                    return (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-center gap-2 rounded-lg bg-primary/10 p-3">
+                          <CheckCircle2 className="h-5 w-5 text-primary" />
+                          <span className="text-sm font-medium text-primary">신청 목록에 추가됨</span>
+                        </div>
+                        <Button 
+                          onClick={() => onRemoveFromCart(selectedLand.id)}
+                          variant="outline"
+                          className="h-10 w-full"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          신청 목록에서 제거
+                        </Button>
+                      </div>
+                    );
+                  }
+                  
+                  if (aiResult.provisionalJudgment !== "기각") {
+                    return (
+                      <div className="space-y-2">
+                        <Button 
+                          onClick={() => onAddToCart(selectedLand, aiResult!)}
+                          className="h-12 w-full cursor-pointer"
+                          variant="default"
+                        >
+                          <Plus className="mr-2 h-4 w-4" />
+                          신청 목록에 추가
+                        </Button>
+                        <p className="text-center text-xs text-muted-foreground">
+                          여러 필지를 한번에 신청할 수 있습니다
+                        </p>
+                      </div>
+                    );
+                  }
+                  
+                  return (
+                    <div className="space-y-2">
+                      <div className="rounded bg-muted/50 p-2 text-center">
+                        <p className="text-sm font-medium text-muted-foreground">
+                          AI 분석 결과 매수 기준에 충족하지 않습니다
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => onAddToCart(selectedLand, aiResult!)}
+                        className="w-full cursor-pointer py-1 text-xs text-muted-foreground/60 underline-offset-2 transition-colors hover:text-muted-foreground hover:underline"
+                      >
+                        그래도 신청 목록에 추가하기
+                      </button>
                     </div>
-                    {/* 다크패턴 버튼 - 눈에 잘 안 띄게 */}
-                    <button
-                      onClick={() => onLandSelect(selectedLand, aiResult!)}
-                      className="w-full cursor-pointer py-1 text-[11px] text-muted-foreground/50 underline-offset-2 transition-colors hover:text-muted-foreground/70 hover:underline"
-                    >
-                      그래도 매수 신청하기
-                    </button>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
             )}
           </div>
@@ -1277,6 +1313,179 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
           </button>
         )}
       </div>
+
+      {/* 장바구니 플로팅 버튼 */}
+      {cartItems.length > 0 && !isCartOpen && (
+        <button
+          onClick={() => setIsCartOpen(true)}
+          className="fixed bottom-6 right-6 z-50 flex h-14 items-center gap-2 rounded-full bg-primary px-5 text-white shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl"
+        >
+          <ShoppingCart className="h-5 w-5" />
+          <span className="font-medium">신청 목록</span>
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-sm font-bold text-primary">
+            {cartItems.length}
+          </span>
+        </button>
+      )}
+
+      {/* 장바구니 슬라이드 패널 */}
+      {isCartOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          {/* 오버레이 */}
+          <div 
+            className="absolute inset-0 bg-black/50" 
+            onClick={() => setIsCartOpen(false)}
+          />
+          
+          {/* 패널 */}
+          <div className="relative z-10 flex h-full w-full max-w-md flex-col bg-background shadow-2xl">
+            {/* 헤더 */}
+            <div className="flex items-center justify-between border-b px-4 py-4">
+              <div className="flex items-center gap-2">
+                <ShoppingCart className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold">신청 목록</h2>
+                <Badge variant="secondary">{cartItems.length}건</Badge>
+              </div>
+              <button
+                onClick={() => setIsCartOpen(false)}
+                className="rounded-lg p-2 hover:bg-muted"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* 안내 문구 */}
+            <div className="border-b bg-muted/30 px-4 py-3">
+              <p className="text-sm text-muted-foreground">
+                <Info className="mr-1 inline h-4 w-4" />
+                같은 지역의 토지만 함께 신청할 수 있습니다. 서로 다른 지역의 토지는 별도로 신청해 주세요.
+              </p>
+            </div>
+
+            {/* 지역별 그룹핑된 목록 */}
+            <div className="flex-1 overflow-y-auto p-4">
+              {(() => {
+                // 지역별로 그룹핑
+                const groupedByRegion = cartItems.reduce((acc, item) => {
+                  // 주소에서 시도+시군구 추출
+                  const addressParts = item.landInfo.address.split(" ");
+                  const region = addressParts.slice(0, 2).join(" ");
+                  
+                  if (!acc[region]) {
+                    acc[region] = [];
+                  }
+                  acc[region].push(item);
+                  return acc;
+                }, {} as Record<string, ApplicationCartItem[]>);
+
+                const regions = Object.keys(groupedByRegion);
+
+                if (regions.length === 0) {
+                  return (
+                    <div className="flex h-full flex-col items-center justify-center text-muted-foreground">
+                      <ShoppingCart className="mb-2 h-12 w-12 opacity-30" />
+                      <p>신청 목록이 비어 있습니다</p>
+                      <p className="mt-1 text-sm">토지를 검색하여 추가해 주세요</p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="space-y-4">
+                    {regions.map((region) => {
+                      const items = groupedByRegion[region];
+                      return (
+                        <div key={region} className="rounded-lg border bg-card">
+                          {/* 지역 헤더 */}
+                          <div className="flex items-center justify-between border-b bg-muted/30 px-4 py-3">
+                            <div className="flex items-center gap-2">
+                              <MapPin className="h-4 w-4 text-primary" />
+                              <span className="font-medium">{region}</span>
+                              <Badge variant="outline" className="text-xs">{items.length}필지</Badge>
+                            </div>
+                          </div>
+                          
+                          {/* 해당 지역 토지 목록 */}
+                          <div className="divide-y">
+                            {items.map((item) => (
+                              <div key={item.id} className="flex items-start justify-between p-3">
+                                <div className="flex-1">
+                                  <p className="text-sm font-medium">{item.landInfo.address}</p>
+                                  <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                                    <span>잔여: {item.landInfo.remainingArea.toLocaleString()}㎡</span>
+                                    <span>|</span>
+                                    <span>{item.landInfo.landType}</span>
+                                    <Badge 
+                                      variant={item.aiResult.provisionalJudgment === "매수" ? "success" : "warning"}
+                                      className="text-xs"
+                                    >
+                                      {item.aiResult.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
+                                    </Badge>
+                                  </div>
+                                </div>
+                                <button
+                                  onClick={() => onRemoveFromCart(item.id)}
+                                  className="ml-2 rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                          
+                          {/* 이 지역 신청하기 버튼 */}
+                          <div className="border-t p-3">
+                            <Button 
+                              onClick={() => {
+                                onSubmitCart(items);
+                                setIsCartOpen(false);
+                              }}
+                              className="w-full"
+                            >
+                              이 지역 {items.length}건 신청하기
+                              <ChevronRight className="ml-1 h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {/* 여러 지역이 있을 때 안내 */}
+                    {regions.length > 1 && (
+                      <div className="rounded-lg border border-warning/50 bg-warning/5 p-3">
+                        <p className="flex items-start gap-2 text-sm text-warning">
+                          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                          <span>
+                            <strong>{regions.length}개 지역</strong>의 토지가 있습니다. 
+                            각 지역별로 별도 신청이 필요합니다.
+                          </span>
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+            </div>
+
+            {/* 하단 요약 */}
+            {cartItems.length > 0 && (
+              <div className="border-t bg-muted/30 px-4 py-4">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">총 {cartItems.length}필지</span>
+                  <button
+                    onClick={() => {
+                      cartItems.forEach(item => onRemoveFromCart(item.id));
+                    }}
+                    className="text-sm text-muted-foreground hover:text-destructive"
+                  >
+                    전체 삭제
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

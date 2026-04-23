@@ -133,6 +133,22 @@ export interface CriteriaCheck {
   autoDetected: boolean; // 자동 판독 가능 여부
 }
 
+// 신청 목록 아이템 (장바구니)
+export interface ApplicationCartItem {
+  id: string;
+  landInfo: LandInfo;
+  aiResult: AIAnalysisResult;
+  addedAt: string;
+  region: string; // 지역 그룹핑용 (시도 + 시군구)
+}
+
+// 지역별 그룹핑된 신청 목록
+export interface RegionGroupedCart {
+  region: string;
+  regionDisplay: string; // 사용자에게 보여줄 지역명
+  items: ApplicationCartItem[];
+}
+
 // 심의서 데이터
 export interface ReviewDocument {
   applicationId: string;

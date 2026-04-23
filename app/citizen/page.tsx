@@ -8,7 +8,7 @@ import { ApplicationResultSection } from "@/components/citizen/application-resul
 import { ApplicationStatusSection } from "@/components/citizen/application-status-section";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FilePlus, ClipboardList } from "lucide-react";
-import type { LandInfo, Application, AIAnalysisResult } from "@/lib/types";
+import type { LandInfo, Application, AIAnalysisResult, ApplicationCartItem } from "@/lib/types";
 
 // 신청 프로세스 단계
 type ApplicationStep = "search" | "apply" | "result";
@@ -18,10 +18,15 @@ export default function CitizenPage() {
   const tabParam = searchParams.get("tab");
   
   const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
+  const [selectedLands, setSelectedLands] = useState<LandInfo[]>([]); // 복수 필지 신청용
   const [aiResult, setAiResult] = useState<AIAnalysisResult | null>(null);
+  const [aiResults, setAiResults] = useState<AIAnalysisResult[]>([]); // 복수 필지 AI 결과
   const [submittedApplication, setSubmittedApplication] = useState<Application | null>(null);
   const [mainTab, setMainTab] = useState<"new" | "status">(tabParam === "status" ? "status" : "new");
   const [applicationStep, setApplicationStep] = useState<ApplicationStep>("search");
+  
+  // 장바구니 (신청 목록)
+  const [cartItems, setCartItems] = useState<ApplicationCartItem[]>([]);
   
   // URL 파라미터 변경 시 탭 상태 업데이트
   useEffect(() => {
@@ -30,9 +35,53 @@ export default function CitizenPage() {
     }
   }, [tabParam]);
 
+  // 장바구니에 추가
+  const handleAddToCart = (land: LandInfo, result: AIAnalysisResult) => {
+    // 이미 장바구니에 있는지 확인
+    if (cartItems.some(item => item.landInfo.id === land.id)) {
+      return;
+    }
+    
+    // 주소에서 지역 추출 (시도 + 시군구)
+    const addressParts = land.address.split(" ");
+    const region = addressParts.slice(0, 2).join(" ");
+    
+    const newItem: ApplicationCartItem = {
+      id: land.id,
+      landInfo: land,
+      aiResult: result,
+      addedAt: new Date().toISOString(),
+      region,
+    };
+    
+    setCartItems(prev => [...prev, newItem]);
+  };
+  
+  // 장바구니에서 제거
+  const handleRemoveFromCart = (itemId: string) => {
+    setCartItems(prev => prev.filter(item => item.id !== itemId));
+  };
+  
+  // 장바구니 아이템들로 신청 진행
+  const handleSubmitCart = (items: ApplicationCartItem[]) => {
+    if (items.length === 0) return;
+    
+    // 복수 필지 신청 설정
+    const lands = items.map(item => item.landInfo);
+    const results = items.map(item => item.aiResult);
+    
+    setSelectedLands(lands);
+    setAiResults(results);
+    setSelectedLand(lands[0]); // 첫 번째 필지를 대표로
+    setAiResult(results[0]);
+    setApplicationStep("apply");
+  };
+
   const handleLandSelect = (land: LandInfo, result: AIAnalysisResult) => {
     setSelectedLand(land);
+    setSelectedLands([land]);
     setAiResult(result);
+    setAiResults([result]);
     setApplicationStep("apply");
   };
 
@@ -43,9 +92,22 @@ export default function CitizenPage() {
 
   const handleNewApplication = () => {
     setSelectedLand(null);
+    setSelectedLands([]);
     setAiResult(null);
+    setAiResults([]);
     setSubmittedApplication(null);
     setApplicationStep("search");
+    // 장바구니는 유지 (신청 완료된 항목만 제거하려면 별도 로직 필요)
+  };
+  
+  // 신청 완료 후 해당 항목들 장바구니에서 제거
+  const handleApplicationSubmitWithCartCleanup = (application: Application) => {
+    // 신청된 필지들 장바구니에서 제거
+    const submittedIds = selectedLands.map(land => land.id);
+    setCartItems(prev => prev.filter(item => !submittedIds.includes(item.id)));
+    
+    setSubmittedApplication(application);
+    setApplicationStep("result");
   };
 
   return (
@@ -92,14 +154,22 @@ export default function CitizenPage() {
           aria-labelledby="tab-new"
         >
           {applicationStep === "search" && (
-            <LandSearchSection onLandSelect={handleLandSelect} />
+            <LandSearchSection 
+              onLandSelect={handleLandSelect}
+              cartItems={cartItems}
+              onAddToCart={handleAddToCart}
+              onRemoveFromCart={handleRemoveFromCart}
+              onSubmitCart={handleSubmitCart}
+            />
           )}
 
           {applicationStep === "apply" && selectedLand && aiResult && (
             <ApplicationFormSection
               landInfo={selectedLand}
+              landInfoList={selectedLands.length > 1 ? selectedLands : undefined}
               aiResult={aiResult}
-              onSubmit={handleApplicationSubmit}
+              aiResultList={aiResults.length > 1 ? aiResults : undefined}
+              onSubmit={handleApplicationSubmitWithCartCleanup}
               onBack={() => setApplicationStep("search")}
             />
           )}

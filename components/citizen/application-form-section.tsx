@@ -22,7 +22,9 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 
 interface ApplicationFormSectionProps {
   landInfo: LandInfo;
+  landInfoList?: LandInfo[]; // 복수 필지 신청용
   aiResult: AIAnalysisResult;
+  aiResultList?: AIAnalysisResult[]; // 복수 필지 AI 결과
   onSubmit: (application: Application) => void;
   onBack: () => void;
 }
@@ -270,7 +272,7 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p className="text-base text-muted-foreground">
             본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
-            판단 근거에 이의가 있으시면 신청서 제출 시 사유를 기재해 주시기 바랍니다.
+            판단 근거에 이의가 있으시면 신청�� 제출 시 사유를 기재해 주시기 바랍니다.
           </p>
         </div>
       </CollapsibleContent>
@@ -280,10 +282,16 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
 
 export function ApplicationFormSection({
   landInfo,
+  landInfoList,
   aiResult,
+  aiResultList,
   onSubmit,
   onBack,
 }: ApplicationFormSectionProps) {
+  // 복수 필지 여부
+  const isMultipleLands = landInfoList && landInfoList.length > 1;
+  const allLands = landInfoList || [landInfo];
+  const allAiResults = aiResultList || [aiResult];
   interface FileItem {
     name: string;
     size: string;
@@ -406,59 +414,132 @@ export function ApplicationFormSection({
         {/* 토지 정보 요약 */}
         <Card className="lg:col-span-1">
           <CardHeader>
-            <CardTitle className="text-lg">신청 대상 토지</CardTitle>
+            <CardTitle className="text-lg">
+              신청 대상 토지
+              {isMultipleLands && (
+                <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-sm font-medium text-white">
+                  {allLands.length}필지
+                </span>
+              )}
+            </CardTitle>
+            {isMultipleLands && (
+              <CardDescription>
+                {allLands[0].address.split(" ").slice(0, 2).join(" ")} 지역 토지 {allLands.length}건
+              </CardDescription>
+            )}
           </CardHeader>
           <CardContent className="space-y-4">
-            <LandMap landInfo={landInfo} showOverlay />
-            
-            <div className="space-y-2 text-base">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">지번</span>
-                <span className="font-medium text-foreground">{landInfo.address.split(" ").slice(-2).join(" ")}</span>
+            {/* 복수 필지일 경우 목록 표시 */}
+            {isMultipleLands ? (
+              <div className="space-y-3">
+                <div className="max-h-[300px] space-y-2 overflow-y-auto">
+                  {allLands.map((land, index) => {
+                    const result = allAiResults[index];
+                    return (
+                      <div 
+                        key={land.id} 
+                        className={`rounded-lg border p-3 ${
+                          result?.provisionalJudgment === "매수" 
+                            ? "border-primary/30 bg-primary/5" 
+                            : "border-amber-500/30 bg-amber-50"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <p className="text-sm font-medium">{land.address}</p>
+                            <div className="mt-1 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                              <span>잔여: {land.remainingArea.toLocaleString()}㎡</span>
+                              <span>|</span>
+                              <span>{land.landType}</span>
+                            </div>
+                          </div>
+                          <div className={`rounded px-2 py-0.5 text-xs font-medium ${
+                            result?.provisionalJudgment === "매수" 
+                              ? "bg-primary/10 text-primary" 
+                              : "bg-amber-100 text-amber-700"
+                          }`}>
+                            {result?.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                
+                {/* 총계 */}
+                <div className="rounded-lg bg-muted/50 p-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">총 필지 수</span>
+                    <span className="font-medium">{allLands.length}필지</span>
+                  </div>
+                  <div className="mt-1 flex justify-between text-sm">
+                    <span className="text-muted-foreground">총 잔여 면적</span>
+                    <span className="font-medium text-primary">
+                      {allLands.reduce((sum, land) => sum + land.remainingArea, 0).toLocaleString()}㎡
+                    </span>
+                  </div>
+                  <div className="mt-1 flex justify-between text-sm">
+                    <span className="text-muted-foreground">매수 가능 필지</span>
+                    <span className="font-medium text-primary">
+                      {allAiResults.filter(r => r?.provisionalJudgment === "매수").length}건
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">잔여 면적</span>
-                <span className="font-medium text-primary">{landInfo.remainingArea.toLocaleString()}㎡</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">잔여 비율</span>
-                <span className="font-medium text-foreground">{landInfo.remainingRatio}%</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">토지 유형</span>
-                <span className="font-medium text-foreground">{landInfo.landType}</span>
-              </div>
-            </div>
+            ) : (
+              <>
+                <LandMap landInfo={landInfo} showOverlay />
+                
+                <div className="space-y-2 text-base">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">지번</span>
+                    <span className="font-medium text-foreground">{landInfo.address.split(" ").slice(-2).join(" ")}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">잔여 면적</span>
+                    <span className="font-medium text-primary">{landInfo.remainingArea.toLocaleString()}㎡</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">잔여 비율</span>
+                    <span className="font-medium text-foreground">{landInfo.remainingRatio}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">토지 유형</span>
+                    <span className="font-medium text-foreground">{landInfo.landType}</span>
+                  </div>
+                </div>
 
-            {/* AI 판독 결과 요약 */}
-            <div className={`mt-4 rounded-lg border-2 p-4 ${
-              aiResult.provisionalJudgment === "매수" 
-                ? "border-primary bg-primary/5" 
-                : "border-red-500 bg-red-50"
-            }`}>
-              <div className="mb-2">
-                <span className="text-base font-semibold text-foreground">AI 판독 결과</span>
-              </div>
-              <div className="flex items-center gap-2">
-                {aiResult.provisionalJudgment === "매수" ? (
-                  <>
-                    <CheckCircle2 className="h-5 w-5 text-primary" />
-                    <span className="text-base font-bold text-primary">매수 가능성 높음</span>
-                  </>
-                ) : (
-                  <>
-                    <XCircle className="h-5 w-5 text-red-600" />
-                    <span className="rounded-full bg-red-600 px-3 py-1 text-base font-bold text-white">기준 미충족</span>
-                  </>
-                )}
-              </div>
-              <p className="mt-2 text-base text-muted-foreground">
-                {aiResult.criteriaChecks.filter(c => c.isMet).length}/{aiResult.criteriaChecks.length}개 기준 충족
-              </p>
-            </div>
+                {/* AI 판독 결과 요약 */}
+                <div className={`mt-4 rounded-lg border-2 p-4 ${
+                  aiResult.provisionalJudgment === "매수" 
+                    ? "border-primary bg-primary/5" 
+                    : "border-red-500 bg-red-50"
+                }`}>
+                  <div className="mb-2">
+                    <span className="text-base font-semibold text-foreground">AI 판독 결과</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {aiResult.provisionalJudgment === "매수" ? (
+                      <>
+                        <CheckCircle2 className="h-5 w-5 text-primary" />
+                        <span className="text-base font-bold text-primary">매수 가능성 높음</span>
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="h-5 w-5 text-red-600" />
+                        <span className="rounded-full bg-red-600 px-3 py-1 text-base font-bold text-white">기준 미충족</span>
+                      </>
+                    )}
+                  </div>
+                  <p className="mt-2 text-base text-muted-foreground">
+                    {aiResult.criteriaChecks.filter(c => c.isMet).length}/{aiResult.criteriaChecks.length}개 기준 충족
+                  </p>
+                </div>
 
-            {/* 판단 근거 상세 보기 */}
-            <AIResultDetailSection aiResult={aiResult} landInfo={landInfo} />
+                {/* 판단 근거 상세 보기 */}
+                <AIResultDetailSection aiResult={aiResult} landInfo={landInfo} />
+              </>
+            )}
           </CardContent>
         </Card>
 
