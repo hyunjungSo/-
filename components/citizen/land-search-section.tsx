@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -219,7 +220,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
       autoDetected: true,
     },
     {
-      criteriaName: "형���지�� 변화",
+      criteriaName: "형�����지�� 변화",
       criteriaDescription: `형상지수 변화 +${shapeIndexChange.toFixed(1)} (기준: 1.0 이상)`,
       isMet: shapeIndexChange >= 1.0,
       autoDetected: true,
@@ -612,7 +613,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
       setIsBasicInfoCollapsed(false);
     }
     
-    // 편입토��� 없는 경우 체크
+    // 편���토��� 없는 경우 체크
     if (land.includedArea === 0) {
       setNoIncludedLand(true);
     }
@@ -1105,19 +1106,23 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                     {/* 헤더 */}
                     <div className="mb-3 flex items-center justify-between">
                       <span className="text-base font-semibold">AI 판독 결과</span>
-                      <span className={`rounded-full px-3 py-1 text-base font-bold ${
-                        aiResult.provisionalJudgment === "매수"
-                          ? "bg-primary text-white"
-                          : aiResult.provisionalJudgment === "심의위원회이관"
-                            ? "bg-amber-500 text-white"
-                            : "bg-red-600 text-white shadow-sm"
-                      }`}>
+                      <Badge 
+                        variant={
+                          aiResult.provisionalJudgment === "매수" 
+                            ? "success" 
+                            : aiResult.provisionalJudgment === "심의위원회이관"
+                              ? "warning"
+                              : "destructive"
+                        }
+                        size="lg"
+                        className="px-3 py-1 text-sm font-bold"
+                      >
                         {aiResult.provisionalJudgment === "매수" 
                           ? "매수 가능" 
                           : aiResult.provisionalJudgment === "심의위원회이관"
                             ? "경계 사례"
                             : "기준 미충족"}
-                      </span>
+                      </Badge>
                     </div>
 
                     {/* 내용 - 신청현황조회와 동일한 순서 */}
