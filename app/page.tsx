@@ -66,10 +66,10 @@ export default function HomePage() {
       <section className="border-y border-gray-100 bg-gray-50 py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-foreground">
+            <h2 className="text-[28px] font-bold text-foreground">
               주요 기능
             </h2>
-            <p className="mt-2 text-base text-muted-foreground">
+            <p className="mt-2 text-[18px] text-muted-foreground">
               편리한 잔여지 매수 신청을 위한 서비스를 제공합니다
             </p>
           </div>
@@ -77,7 +77,7 @@ export default function HomePage() {
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-lg bg-white p-6">
               <FileSearch className="h-8 w-8 text-primary" />
-              <h3 className="mt-4 text-lg font-semibold text-foreground">간편한 토지 조회</h3>
+              <h3 className="mt-4 text-[20px] font-semibold text-foreground">간편한 토지 조회</h3>
               <p className="mt-2 text-base leading-[140%] text-muted-foreground">
                 지번으로 직접 검색 또는 소유자 정보를 입력하면 편입된 매수 대상 토지를 손쉽게 조회할 수 있습니다.
               </p>
@@ -85,7 +85,7 @@ export default function HomePage() {
 
             <div className="rounded-lg bg-white p-6">
               <Zap className="h-8 w-8 text-primary" />
-              <h3 className="mt-4 text-lg font-semibold text-foreground">AI 매수 가능 분석</h3>
+              <h3 className="mt-4 text-[20px] font-semibold text-foreground">AI 매수 가능 분석</h3>
               <p className="mt-2 text-base leading-[140%] text-muted-foreground">
                 AI가 면적, 형상, 용도 등 법적 기준을 분석하여 매수 가능 여부를 사전에 안내해드립니다.
               </p>
@@ -93,7 +93,7 @@ export default function HomePage() {
 
             <div className="rounded-lg bg-white p-6">
               <FileText className="h-8 w-8 text-primary" />
-              <h3 className="mt-4 text-lg font-semibold text-foreground">온라인 신청</h3>
+              <h3 className="mt-4 text-[20px] font-semibold text-foreground">온라인 신청</h3>
               <p className="mt-2 text-base leading-[140%] text-muted-foreground">
                 방문 없이 온라인으로 매수 신청서를 제출하고 진행 상황을 실시간으로 확인하세요.
               </p>
@@ -101,7 +101,7 @@ export default function HomePage() {
 
             <div className="rounded-lg bg-white p-6">
               <Clock className="h-8 w-8 text-primary" />
-              <h3 className="mt-4 text-lg font-semibold text-foreground">빠른 결과 확인</h3>
+              <h3 className="mt-4 text-[20px] font-semibold text-foreground">빠른 결과 확인</h3>
               <p className="mt-2 text-base leading-[140%] text-muted-foreground">
                 신청 접수부터 결과 통보까지 모든 진행 상황을 온라인에서 확인할 수 있습니다.
               </p>
@@ -114,10 +114,10 @@ export default function HomePage() {
       <section className="bg-white py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-foreground">
+            <h2 className="text-[28px] font-bold text-foreground">
               처리 절차
             </h2>
-            <p className="mt-2 text-base text-muted-foreground">
+            <p className="mt-2 text-[18px] text-muted-foreground">
               간단한 4단계로 잔여지 매수 신청이 완료됩니다
             </p>
           </div>
