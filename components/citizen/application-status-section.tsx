@@ -178,7 +178,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
   return (
     <div className="space-y-5">
       {/* 상단: 접수번호 + 소재지 */}
-      <div className="rounded-lg border border-border bg-background p-6">
+      <div className="rounded-lg bg-gray-50 p-6">
         <div className="flex items-center gap-3">
           <Badge variant={adminStatusConfig[application.adminStatus].variant}>
             {adminStatusConfig[application.adminStatus].label}
@@ -200,7 +200,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
       </div>
 
       {/* 진행 상태 스텝 인디케이터 */}
-      <div className="rounded-lg border border-border bg-background p-6">
+      <div className="rounded-lg bg-gray-50 p-6">
         <h4 className="mb-6 text-base font-semibold text-foreground">진행 상태</h4>
         <div className="relative mx-auto max-w-md">
           {/* 배경 라인 */}
@@ -248,12 +248,12 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
 
       {/* 처리 완료 시 결과 표시 */}
       {application.adminStatus === "심사완료" && application.finalJudgment && (
-        <div className={`rounded-lg border-2 p-6 ${
+        <div className={`rounded-lg p-6 ${
           application.finalJudgment === "매수" 
-            ? "border-emerald-300 bg-emerald-50" 
+            ? "bg-emerald-50" 
             : application.finalJudgment === "기각"
-              ? "border-red-300 bg-red-50"
-              : "border-amber-300 bg-amber-50"
+              ? "bg-red-50"
+              : "bg-amber-50"
         }`}>
           <div className="flex items-center gap-4">
             {application.finalJudgment === "매수" && <CheckCircle2 className="h-7 w-7 text-emerald-600" />}
@@ -276,7 +276,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
       )}
 
       {/* 토지 정보 요약 */}
-      <div className="rounded-lg border border-border bg-background p-6">
+      <div className="rounded-lg bg-gray-50 p-6">
         <h4 className="mb-5 text-base font-semibold text-foreground">토지 정보</h4>
         <div className="grid grid-cols-4 gap-6">
           <div>
