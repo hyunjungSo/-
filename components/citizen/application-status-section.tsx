@@ -358,14 +358,14 @@ export function ApplicationStatusSection() {
                             : "hover:bg-muted/50"
                         }`}
                       >
-                        {/* 상단: 접수번호 + 상태 */}
-                        <div className="flex items-center justify-between gap-3">
-                          <span className={`text-base font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
-                            {app.applicationNumber}
-                          </span>
+                        {/* 상단: 상태 + 접수번호 */}
+                        <div className="flex items-center gap-2">
                           <Badge variant={statusConfig.variant}>
                             {statusConfig.label}
                           </Badge>
+                          <span className={`text-base font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
+                            {app.applicationNumber}
+                          </span>
                         </div>
 
                         {/* 주소 (1줄 말줄임) */}
