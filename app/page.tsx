@@ -45,7 +45,9 @@ export default function HomePage() {
               잔여지 매수 신청 서비스
             </h1>
             <p className="mt-5 text-base leading-relaxed text-white/90 sm:text-lg">
-              도로 편입으로 발생한 잔여지의 매수 가능 여부를 확인하고 온라인으로 간편하게 매수 신청을 진행하실 수 있습니다.
+              도로 편입으로 발생한 잔여지의 매수 가능 여부를 확인하고
+              <br />
+              온라인으로 간편하게 매수 신청을 진행하실 수 있습니다.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg" className="h-12 px-8 text-lg font-semibold">
