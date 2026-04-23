@@ -534,10 +534,13 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         </ol>
       </nav>
 
-      {/* 검색 필터 영역 - 단계 표시 UI와 지도 사이 */}
-      <div className="mb-2 flex w-full flex-wrap items-center gap-2 rounded-md border bg-card px-3 py-1.5">
-        {/* 시도 */}
-        <Select 
+      {/* KRDS 검색 필터 영역 */}
+      <div className="mb-3 rounded-lg border border-border bg-card p-4">
+        <div className="flex flex-wrap items-end gap-3">
+          {/* 시도 */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-foreground">시도</label>
+            <Select 
               value={selectedSido} 
               onValueChange={(v) => {
                 setSelectedSido(v);
@@ -547,8 +550,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 setSearchResults([]);
               }}
             >
-              <SelectTrigger className="!h-9 w-[200px] shrink-0">
-                <SelectValue placeholder="시도" className="truncate" />
+              <SelectTrigger className="h-10 w-[140px] rounded border-border bg-background text-sm focus:border-primary focus:ring-2 focus:ring-primary/20">
+                <SelectValue placeholder="선택" />
               </SelectTrigger>
               <SelectContent>
                 {regionData.시도.map((sido) => (
@@ -556,9 +559,12 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 ))}
               </SelectContent>
             </Select>
+          </div>
 
-        {/* 시군구 */}
-        <Select 
+          {/* 시군구 */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-foreground">시군구</label>
+            <Select 
               value={selectedSigungu} 
               onValueChange={(v) => {
                 setSelectedSigungu(v);
@@ -568,8 +574,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               }}
               disabled={!selectedSido}
             >
-              <SelectTrigger className="!h-9 w-[200px] shrink-0">
-                <SelectValue placeholder="시군구" className="truncate" />
+              <SelectTrigger className="h-10 w-[140px] rounded border-border bg-background text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-muted disabled:opacity-50">
+                <SelectValue placeholder="선택" />
               </SelectTrigger>
               <SelectContent>
                 {sigunguOptions.map((sigungu) => (
@@ -577,9 +583,12 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 ))}
               </SelectContent>
             </Select>
+          </div>
 
-        {/* 읍면동 */}
-        <Select 
+          {/* 읍면동 */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-foreground">읍면동</label>
+            <Select 
               value={selectedEupmyeondong} 
               onValueChange={(v) => {
                 setSelectedEupmyeondong(v);
@@ -588,8 +597,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               }}
               disabled={!selectedSigungu || eupmyeondongOptions.length === 0}
             >
-              <SelectTrigger className="!h-9 w-[200px] shrink-0">
-                <SelectValue placeholder={eupmyeondongOptions.length === 0 ? "해당없음" : "읍면동"} className="truncate" />
+              <SelectTrigger className="h-10 w-[140px] rounded border-border bg-background text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-muted disabled:opacity-50">
+                <SelectValue placeholder={eupmyeondongOptions.length === 0 ? "해당없음" : "선택"} />
               </SelectTrigger>
               <SelectContent>
                 {eupmyeondongOptions.map((eupmyeondong) => (
@@ -597,15 +606,18 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 ))}
               </SelectContent>
             </Select>
+          </div>
 
-        {/* 리 */}
-        <Select 
+          {/* 리 */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-foreground">리</label>
+            <Select 
               value={selectedRi} 
               onValueChange={setSelectedRi}
               disabled={!selectedEupmyeondong || riOptions.length === 0}
             >
-              <SelectTrigger className="!h-9 w-[200px] shrink-0">
-                <SelectValue placeholder={riOptions.length === 0 ? "해당없음" : "리"} className="truncate" />
+              <SelectTrigger className="h-10 w-[120px] rounded border-border bg-background text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-muted disabled:opacity-50">
+                <SelectValue placeholder={riOptions.length === 0 ? "해당없음" : "선택"} />
               </SelectTrigger>
               <SelectContent>
                 {riOptions.map((ri) => (
@@ -613,41 +625,53 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 ))}
               </SelectContent>
             </Select>
+          </div>
 
-        {/* 지번 */}
-        <Input 
-              placeholder="지번" 
-              value={jibun}
-              onChange={(e) => setJibun(e.target.value)}
-              className="h-10 w-[100px] shrink-0"
-            />
+          {/* 지번 */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-foreground">지번</label>
+            <div className="relative">
+              <Input 
+                placeholder="번지 입력" 
+                value={jibun}
+                onChange={(e) => setJibun(e.target.value)}
+                className="h-10 w-[120px] rounded border-border pr-8 text-sm focus:border-primary focus:ring-2 focus:ring-primary/20"
+              />
+              <Search className="absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            </div>
+          </div>
 
-        {/* 검색/초기화 버튼 */}
-        <Button 
+          {/* 검색/초기화 버튼 */}
+          <div className="flex items-center gap-2">
+            <Button 
               onClick={handleSearch} 
-              className="h-10 cursor-pointer bg-[#222222] px-4 hover:bg-[#333333]"
+              className="h-10 gap-1.5 rounded bg-primary px-5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
               disabled={!selectedSigungu || isSearching}
             >
               {isSearching ? (
                 <>
-                  <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />
-                  조회 중
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>조회 중</span>
                 </>
               ) : (
                 <>
-                  <Search className="mr-1.5 h-4 w-4" />
-                  조회
+                  <Search className="h-4 w-4" />
+                  <span>조회</span>
                 </>
               )}
             </Button>
-        {(selectedSido || searchResults.length > 0) && (
-          <Button 
-            onClick={handleReset}
-            className="h-10 cursor-pointer border border-[#222222] bg-transparent px-3 text-[#222222] hover:bg-[#222222]/10"
-          >
-            <RotateCcw className="h-3.5 w-3.5" />
-          </Button>
-        )}
+            {(selectedSido || searchResults.length > 0) && (
+              <Button 
+                onClick={handleReset}
+                variant="outline"
+                className="h-10 gap-1.5 rounded border-border px-4 text-sm font-medium hover:bg-muted"
+              >
+                <RotateCcw className="h-4 w-4" />
+                <span>초기화</span>
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* 전체 화면 지도 컨테이너 */}

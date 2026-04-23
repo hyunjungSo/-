@@ -140,38 +140,47 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* 필터 및 검색 */}
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="접수번호, 신청인명, 지번으로 검색"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="!h-9 pl-10"
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as AdminStatus | "all")}>
-                <SelectTrigger className="!h-9 w-[150px] gap-2">
-                  <Filter className="h-4 w-4 text-muted-foreground" />
-                  <SelectValue placeholder="처리상태" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">전체 민원</SelectItem>
-                  <SelectItem value="접수완료">접수완료</SelectItem>
-                  <SelectItem value="진행중">진행중</SelectItem>
-                  <SelectItem value="심사완료">심사완료</SelectItem>
-                </SelectContent>
-              </Select>
+          {/* KRDS 필터 및 검색 */}
+          <div className="mb-6 rounded-lg border border-border bg-secondary/30 p-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
+              {/* 검색 입력 */}
+              <div className="flex flex-1 flex-col gap-1.5">
+                <label className="text-sm font-medium text-foreground">검색</label>
+                <div className="relative">
+                  <Input
+                    placeholder="접수번호, 신청인명, 지번으로 검색"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="h-10 rounded border-border bg-background pr-10 text-sm focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  />
+                  <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                </div>
+              </div>
+              
+              {/* 처리상태 필터 */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-foreground">처리상태</label>
+                <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as AdminStatus | "all")}>
+                  <SelectTrigger className="h-10 w-[150px] rounded border-border bg-background text-sm focus:border-primary focus:ring-2 focus:ring-primary/20">
+                    <SelectValue placeholder="전체" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">전체 민원</SelectItem>
+                    <SelectItem value="접수완료">접수완료</SelectItem>
+                    <SelectItem value="진행중">진행중</SelectItem>
+                    <SelectItem value="심사완료">심사완료</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* 정렬 버튼 */}
               <Button
                 variant="outline"
-                size="default"
-                className="!h-9 gap-2 px-4"
+                className="h-10 gap-1.5 rounded border-border px-4 text-sm font-medium hover:bg-muted"
                 onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
               >
-                <span className="text-muted-foreground">{sortOrder === "desc" ? "↓" : "↑"}</span>
-                {sortOrder === "desc" ? "최신순" : "오래된순"}
+                <span>{sortOrder === "desc" ? "↓" : "↑"}</span>
+                <span>{sortOrder === "desc" ? "최신순" : "오래된순"}</span>
               </Button>
             </div>
           </div>
