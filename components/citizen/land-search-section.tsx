@@ -375,7 +375,7 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
   };
 }
 
-// 판단 근거 설명 생성 함수
+// 중앙토지수용위원회 기준 기반 판단 근거 설명 생성 함수
 function generateJudgmentRationale(
   land: LandInfo,
   judgment: "매수" | "기각",
@@ -384,35 +384,110 @@ function generateJudgmentRationale(
   manualCheckItems: string[],
   shapeIndexChange: number
 ): JudgmentRationale {
-  const legalBasis = "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조(잔여지의 매수청구 등) 및 동법 시행규칙 제34조(잔여지 등의 매수청구)";
+  const legalBasis = "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조(잔여지의 매수청구 등) 및 동법 시행규칙 제34조(잔여지 등의 매수청구), 중앙토지수용위원회 잔여지 수용 및 가치하락 손실보상 참고기준";
   
   let summary: string;
   let detailedExplanation: string;
   const appliedCriteria: string[] = [];
 
+  // 중앙토지수용위원회 기준에 따른 토지 유형별 판단 문장
   if (land.landType === "대지") {
-    appliedCriteria.push(`대지 면적 기준: 주거지역 90㎡, 상업지역 150㎡, 공업지역 330㎡ 이하`);
+    appliedCriteria.push(`택지(대지) 면적 기준: 주거용(단독주택) 90㎡, 주거용(연립·다세대) 165㎡, 주거용(아파트) 60㎡, 상업용 150㎡, 공업용 330㎡ 이하`);
   } else if (land.landType === "농지") {
-    appliedCriteria.push(`농지 면적 기준: 330㎡ 이하`);
+    appliedCriteria.push(`농지 면적 기준: 330㎡(약 100평) 이하이거나, 폭 5m 이하의 부정형으로서 농기계 진입·회전이 곤란한 경우`);
   } else if (land.landType === "산지") {
-    appliedCriteria.push(`산지 면적 기준: 990㎡ 이하`);
+    appliedCriteria.push(`산지 면적 기준: 990㎡(약 300평) 이하`);
   } else {
     appliedCriteria.push(`그 밖의 토지 면적 기준: 330㎡ 이하`);
   }
   
   appliedCriteria.push(`형상지수 변화 기준: 편입 전 대비 1.0 이상 상승 시 형상 불량으로 판단`);
-  appliedCriteria.push(`잔여지 형상 기준: 삼각형, 역삼각형, 자루형, 부정형 등 불규칙 형상`);
-  appliedCriteria.push(`잔여비율 기준: 30% 이하일 경우 종래 목적 사용 곤란으로 판단`);
+  appliedCriteria.push(`잔여지 형상 기준: 삼각형, 역삼각형, 자루형, 부정형 등 불규칙 형상으로 종래 목적 사용 곤란`);
+  appliedCriteria.push(`잔여비율 기준: 30% 이하일 경우 종래 목적 사용이 현저히 곤란한 것으로 판단`);
+
+  // 중앙토지수용위원회 기준 문장 형식의 판단 근거
+  const shapeDescription = getShapeDescription(land.remainingShape, land.remainingArea);
+  const usageDescription = getUsageDifficultyDescription(land.landType, land.remainingArea, land.remainingShape);
 
   if (judgment === "매수") {
-    summary = `본 토지는 잔여지 매수 기준 ${metCriteriaCount}개 항목을 충족하여 「매수 가능」으로 판정되었���니다.`;
-    detailedExplanation = `1. 분석 대상 토지\n- 소재지: ${land.address}\n- 토지 유형: ${land.landType}\n- 지목: ${land.landCategory}\n\n2. 편입 현황\n- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n- 편입 면적: ${land.includedArea.toLocaleString()}㎡\n- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡\n- 잔여 비율: ${land.remainingRatio}%\n\n3. 형상 분석\n- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})\n- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})\n- 형상지수 변화: +${shapeIndexChange.toFixed(1)}\n\n4. 충족 기준\n${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}\n\n5. 판정 결과\n위 분석 결과, 본 토지는 공익사업 편입으로 인해 잔여지의 종래 목적대로 사용이 현저히 곤란하게 되었으므로, 잔여지 매수 청구 대상에 해당합니다.`;
+    summary = `${shapeDescription} ${usageDescription} 수용할 수 있는 것으로 판단됩니다.`;
+    detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
+
+1. 분석 대상 토지
+- 소재지: ${land.address}
+- 토지 유형: ${land.landType}
+- 지목: ${land.landCategory}
+- 소유자: ${land.ownerName}
+
+2. 편입 현황
+- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡
+- 편입 면적: ${land.includedArea.toLocaleString()}㎡
+- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡
+- 잔여 비율: ${land.remainingRatio}%
+
+3. 형상 분석
+- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
+- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
+- 형상지수 변화: +${shapeIndexChange.toFixed(1)}
+
+4. 충족 기준
+${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
+
+5. 판정 결과
+${summary}`;
   } else if (judgment === "기각") {
-    summary = `본 토지는 잔여지 매수 기준을 충족하지 않아 「기각」으로 판정되었습니다.`;
-    detailedExplanation = `1. 분석 대상 토지\n- 소재지: ${land.address}\n- 토지 유형: ${land.landType}\n- 지목: ${land.landCategory}\n\n2. 편입 현황\n- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n- 편입 면적: ${land.includedArea.toLocaleString()}㎡\n- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡\n- 잔여 비율: ${land.remainingRatio}%\n\n3. 형상 분석\n- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})\n- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})\n- 형상지수 변화: +${shapeIndexChange.toFixed(1)}\n\n4. 미충족 사유\n- 잔여 비율 ${land.remainingRatio}%로 기준(30% 이하) 초과\n- 형상지수 변화 ${shapeIndexChange.toFixed(1)}로 기준(1.0 이상) 미달\n\n5. 판정 결과\n위 분석 결과, 본 토지는 공익사업 편입 후에도 잔여지의 종래 목적대로 사용이 가능한 것으로 판단되어, 잔여지 매수 청구 대상에 해당하지 않습니다.`;
+    summary = `본 토지는 잔여지 면적 및 형상이 종래 목적대로 사용 가능한 것으로 판단되어 매수청구 대상에 해당하지 않습니다.`;
+    detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
+
+1. 분석 대상 토지
+- 소재지: ${land.address}
+- 토지 유형: ${land.landType}
+- 지목: ${land.landCategory}
+- 소유자: ${land.ownerName}
+
+2. 편입 현황
+- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡
+- 편입 면적: ${land.includedArea.toLocaleString()}㎡
+- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡
+- 잔여 비율: ${land.remainingRatio}%
+
+3. 형상 분석
+- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
+- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
+- 형상지수 변화: +${shapeIndexChange.toFixed(1)}
+
+4. 미충족 사유
+- 잔여 비율 ${land.remainingRatio}%로 기준(30% 이하) 초과
+- 형상지수 변화 ${shapeIndexChange.toFixed(1)}로 기준(1.0 이상) 미달
+
+5. 판정 결과
+${summary}`;
   } else {
     summary = `본 토지는 자동 판독 기준 충족이 애매하여 담당자 검토가 필요한 「경계 사례」로 분류되었습니다.`;
-    detailedExplanation = `1. 분석 대상 토지\n- 소재지: ${land.address}\n- 토지 유형: ${land.landType}\n- 지목: ${land.landCategory}\n\n2. 편�� 현황\n- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n- 편입 면적: ${land.includedArea.toLocaleString()}㎡\n- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡\n- 잔여 비율: ${land.remainingRatio}%\n\n3. 형상 분석\n- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})\n- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})\n- 형상지수 변화: +${shapeIndexChange.toFixed(1)}\n\n4. 경계 사례 판정 사유\n- 자동 판독 기준 일부만 충족\n- 직접 확인 필요 항목: ${manualCheckItems.join(", ")}\n\n5. 판정 결과\n위 분석 결과, 본 토지는 자동 판독만으로 명확한 판정이 어려워 담당자 검토 후 최종 결정됩니다.`;
+    detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
+
+1. 분석 대상 토지
+- 소재지: ${land.address}
+- 토지 유형: ${land.landType}
+- 지목: ${land.landCategory}
+
+2. 편입 현황
+- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡
+- 편입 면적: ${land.includedArea.toLocaleString()}㎡
+- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡
+- 잔여 비율: ${land.remainingRatio}%
+
+3. 형상 분석
+- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
+- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
+- 형상지수 변화: +${shapeIndexChange.toFixed(1)}
+
+4. 경계 사례 판정 사유
+- 자동 판독 기준 일부만 충족
+- 직접 확인 필요 항목: ${manualCheckItems.join(", ")}
+
+5. 판정 결과
+${summary}`;
   }
 
   return {
@@ -424,7 +499,45 @@ function generateJudgmentRationale(
   };
 }
 
+// 형상 설명 생성 (중앙토지수용위원회 문장 형식)
+function getShapeDescription(shape: string, area: number): string {
+  const width = Math.sqrt(area); // 대략적인 폭 계산
+  
+  switch (shape) {
+    case "삼각형":
+    case "역삼각형":
+      return `잔여지의 형상이 ${shape}으로서 정상적인 이용이 곤란한 부정형으로 보이며,`;
+    case "자루형":
+      return `잔여지의 형상이 자루형(세장형)으로서 폭이 좁아 정상적인 이용이 곤란하며,`;
+    case "부정형":
+      return `잔여지의 형상이 사각형으로서 폭 ${width.toFixed(0)}미터 이하인 부정형으로 보이며,`;
+    default:
+      return `잔여지의 형상이 ${shape}으로서,`;
+  }
+}
+
+// 사용 곤란 설명 생성 (토지 유형별)
+function getUsageDifficultyDescription(landType: string, area: number, shape: string): string {
+  switch (landType) {
+    case "농지":
+      return `이는 농지로서의 사용이 현저히 곤란한 경우(농기계 진입·회전 곤란)로 예상되어`;
+    case "대지":
+      return `이는 택지로서 건축물의 건축이 현저히 곤란한 경우로 예상되어`;
+    case "산지":
+      return `이는 산지로서의 종래 목적대로 사용이 현저히 곤란한 경우로 예상되어`;
+    default:
+      return `이는 종래 목적대로 사용이 현저히 곤란한 경우로 예상되어`;
+  }
+}
+
 export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
+  // 검색 방식 탭 (지번 / 소유자)
+  const [searchMode, setSearchMode] = useState<"address" | "owner">("address");
+  
+  // 소유자 검색 상태 (이름 + 주민번호 앞자리)
+  const [ownerName, setOwnerName] = useState<string>("");
+  const [ownerBirthDate, setOwnerBirthDate] = useState<string>(""); // YYMMDD
+  
   // 사업단 선택 상태
   const [selectedBusinessUnit, setSelectedBusinessUnit] = useState<string>("");
   
@@ -460,8 +573,9 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
   // 검색 실행
   const handleSearch = () => {
-    // 최소 시군구까지 선택되어야 검색 가능
-    if (!selectedSigungu) return;
+    // 검색 모드에 따른 유효성 검사
+    if (searchMode === "address" && !selectedSigungu) return;
+    if (searchMode === "owner" && (!ownerName || ownerBirthDate.length !== 6)) return;
     
     setIsSearching(true);
     setSelectedLand(null);
@@ -470,8 +584,48 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
     setNoIncludedLand(false);
     
     setTimeout(() => {
-      // 선택된 지역에 해당하는 토지 필터링
-      let results = dummyLandInfoList.filter(land => {
+      let results: LandInfo[];
+      
+      if (searchMode === "owner") {
+        // 소유자 검색: 이름 + 주민번호 앞자리로 검색
+        // 실제 구현에서는 API 호출, 여기서는 더미 데이터 시뮬레이션
+        const baseCoords = [
+          [
+            { lat: 37.2180, lng: 127.2950 },
+            { lat: 37.2185, lng: 127.2960 },
+            { lat: 37.2178, lng: 127.2965 },
+            { lat: 37.2173, lng: 127.2955 },
+          ],
+          [
+            { lat: 37.2185, lng: 127.2960 },
+            { lat: 37.2192, lng: 127.2972 },
+            { lat: 37.2188, lng: 127.2980 },
+            { lat: 37.2178, lng: 127.2965 },
+          ],
+          [
+            { lat: 37.2192, lng: 127.2972 },
+            { lat: 37.2200, lng: 127.2985 },
+            { lat: 37.2195, lng: 127.2995 },
+            { lat: 37.2188, lng: 127.2980 },
+          ],
+        ];
+        
+        // 여러 필지를 소유한 경우 시뮬레이션 (한 사람이 여러 잔여지 보유)
+        results = dummyLandInfoList.slice(0, 3).map((land, idx) => ({
+          ...land,
+          id: `owner-search-${idx}`,
+          ownerName: ownerName,
+          address: `경기도 용인시 처인구 양지면 마성리 ${100 + idx}-${idx + 1}`,
+          coordinates: baseCoords[idx] || baseCoords[0],
+        }));
+        
+        setSearchResults(results);
+        setIsSearching(false);
+        return;
+      }
+      
+      // 지번 검색: 선택된 지역에 해당하는 토지 필터링
+      results = dummyLandInfoList.filter(land => {
         // 시군구 포함 여부
         if (!land.address.includes(selectedSigungu)) return false;
         
@@ -568,6 +722,9 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
   // 초기화
   const handleReset = () => {
+    setSearchMode("address");
+    setOwnerName("");
+    setOwnerBirthDate("");
     setSelectedBusinessUnit("");
     setSelectedSido("");
     setSelectedSigungu("");
@@ -637,7 +794,84 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
 
       {/* KRDS 검색 필터 영역 */}
       <div className="mb-3 rounded-lg border border-border bg-card p-4">
-        <div className="flex flex-wrap items-end gap-3">
+        {/* 검색 방식 탭 */}
+        <div className="mb-4 flex border-b border-border">
+          <button
+            type="button"
+            onClick={() => setSearchMode("address")}
+            className={`px-4 py-2 text-sm font-medium transition-colors ${
+              searchMode === "address"
+                ? "border-b-2 border-primary text-primary"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            지번으로 검색
+          </button>
+          <button
+            type="button"
+            onClick={() => setSearchMode("owner")}
+            className={`px-4 py-2 text-sm font-medium transition-colors ${
+              searchMode === "owner"
+                ? "border-b-2 border-primary text-primary"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            소유자로 검색 (대리신청)
+          </button>
+        </div>
+
+        {searchMode === "owner" ? (
+          /* 소유자 검색 폼 */
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              토지 소유자 또는 대리인이 이름과 주민번호 앞자리로 해당 소유자의 모든 잔여지를 검색할 수 있습니다.
+            </p>
+            <div className="flex flex-wrap items-end gap-3">
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium text-foreground">소유자 성명 *</label>
+                <Input
+                  placeholder="홍길동"
+                  value={ownerName}
+                  onChange={(e) => setOwnerName(e.target.value)}
+                  className="w-[160px]"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium text-foreground">주민번호 앞자리 *</label>
+                <Input
+                  placeholder="YYMMDD"
+                  value={ownerBirthDate}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "").slice(0, 6);
+                    setOwnerBirthDate(value);
+                  }}
+                  maxLength={6}
+                  className="w-[120px]"
+                />
+              </div>
+              <Button
+                onClick={handleSearch}
+                disabled={!ownerName || ownerBirthDate.length !== 6 || isSearching}
+                className="h-10 gap-2 px-6"
+              >
+                {isSearching ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Search className="h-4 w-4" />
+                )}
+                검색
+              </Button>
+            </div>
+            <div className="rounded-lg bg-muted/50 p-3">
+              <p className="flex items-start gap-2 text-sm text-muted-foreground">
+                <Info className="mt-0.5 h-4 w-4 shrink-0" />
+                대리 신청 시, 신청서 제출 단계에서 위임장 및 대리인 신분증 사본이 필요합니다.
+              </p>
+            </div>
+          </div>
+        ) : (
+          /* 지번 검색 폼 */
+          <div className="flex flex-wrap items-end gap-3">
           {/* 사업단 */}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-medium text-foreground">사업단</label>
@@ -804,7 +1038,8 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               </Button>
             )}
           </div>
-        </div>
+          </div>
+        )}
       </div>
 
       {/* 전체 화면 지도 컨테이너 */}

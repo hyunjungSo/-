@@ -296,9 +296,18 @@ export function ApplicationFormSection({
     postalCode: "",
     baseAddress: "",
     detailAddress: "",
+    // 신청인과 소유자 관계 (본인/대리인)
+    applicantRelation: "owner" as "owner" | "agent",
+    agentName: "",
+    agentContact: "",
+    // 민원인 입력 필드
+    currentUsage: landInfo.landCategory as LandCategory, // AI 판단과 다를 수 있는 현재 활용 지목
+    landSubType: "" as "" | "residential-detached" | "residential-multi" | "residential-apartment" | "commercial" | "industrial", // 택지 세부 유형
     actualUsage: landInfo.landCategory as LandCategory,
     reportedShape: landInfo.remainingShape as LandShape,
     farmMachineDifficulty: false,
+    accessRoadLost: false, // 접면도로 상실
+    waterChannelLost: false, // 수로 상실
     reason: "",
     attachments: [] as FileItem[],
   });
@@ -467,9 +476,50 @@ export function ApplicationFormSection({
               <div className="space-y-4">
                 <h4 className="font-semibold text-foreground">신청인 정보</h4>
                 
+                {/* 신청인/대리인 선택 */}
+                <div className="space-y-2">
+                  <Label>신청 구분 *</Label>
+                  <div className="flex gap-4">
+                    <label className="flex cursor-pointer items-center gap-2">
+                      <input
+                        type="radio"
+                        name="applicantRelation"
+                        value="owner"
+                        checked={formData.applicantRelation === "owner"}
+                        onChange={() => setFormData((prev) => ({ ...prev, applicantRelation: "owner" }))}
+                        className="h-4 w-4 text-primary"
+                      />
+                      <span className="text-sm">본인 신청</span>
+                    </label>
+                    <label className="flex cursor-pointer items-center gap-2">
+                      <input
+                        type="radio"
+                        name="applicantRelation"
+                        value="agent"
+                        checked={formData.applicantRelation === "agent"}
+                        onChange={() => setFormData((prev) => ({ ...prev, applicantRelation: "agent" }))}
+                        className="h-4 w-4 text-primary"
+                      />
+                      <span className="text-sm">대리인 신청</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* 대리인 신청 시 안내 */}
+                {formData.applicantRelation === "agent" && (
+                  <div className="rounded-lg border border-warning/50 bg-warning/5 p-3">
+                    <p className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
+                      대리인 신청 시 위임장 및 대리인 신분증 사본을 첨부 서류에 추가해 주세요.
+                    </p>
+                  </div>
+                )}
+
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="applicantName">성명 *</Label>
+                    <Label htmlFor="applicantName">
+                      {formData.applicantRelation === "owner" ? "소유자 성명 *" : "소유자 성명 *"}
+                    </Label>
                     <Input
                       id="applicantName"
                       value={formData.applicantName}
@@ -481,7 +531,9 @@ export function ApplicationFormSection({
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="applicantContact">연락처 *</Label>
+                    <Label htmlFor="applicantContact">
+                      {formData.applicantRelation === "owner" ? "연락처 *" : "소유자 연락처 *"}
+                    </Label>
                     <Input
                       id="applicantContact"
                       placeholder="010-0000-0000"
@@ -493,6 +545,36 @@ export function ApplicationFormSection({
                     />
                   </div>
                 </div>
+
+                {/* 대리인 정보 (대리인 신청 시만 표시) */}
+                {formData.applicantRelation === "agent" && (
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="agentName">대리인 성명 *</Label>
+                      <Input
+                        id="agentName"
+                        value={formData.agentName}
+                        onChange={(e) =>
+                          setFormData((prev) => ({ ...prev, agentName: e.target.value }))
+                        }
+                        required={formData.applicantRelation === "agent"}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="agentContact">대리인 연락처 *</Label>
+                      <Input
+                        id="agentContact"
+                        placeholder="010-0000-0000"
+                        value={formData.agentContact}
+                        onChange={(e) =>
+                          setFormData((prev) => ({ ...prev, agentContact: e.target.value }))
+                        }
+                        required={formData.applicantRelation === "agent"}
+                      />
+                    </div>
+                  </div>
+                )}
 
                 <div className="space-y-2">
                   <Label>주소 *</Label>
@@ -550,11 +632,72 @@ export function ApplicationFormSection({
 
               {/* 토지 정보 */}
               <div className="space-y-4">
-                <h4 className="font-semibold text-foreground">토지 정보</h4>
+                <h4 className="font-semibold text-foreground">토지 정보 (민원인 입력)</h4>
+                <p className="text-sm text-muted-foreground">
+                  AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지의 실제 활용 상황을 입력해 주세요.
+                </p>
                 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="actualUsage">실제 이용 상황 *</Label>
+                    <Label htmlFor="currentUsage">현재 활용 지목 *</Label>
+                    <Select
+                      value={formData.currentUsage}
+                      onValueChange={(value) =>
+                        setFormData((prev) => ({ 
+                          ...prev, 
+                          currentUsage: value as LandCategory,
+                          // 택지가 아니면 세부 유형 초기화
+                          landSubType: value === "대" ? prev.landSubType : ""
+                        }))
+                      }
+                    >
+                      <SelectTrigger id="currentUsage">
+                        <SelectValue placeholder="선택하세요" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {landCategories.map((cat) => (
+                          <SelectItem key={cat.value} value={cat.value}>
+                            {cat.value} ({cat.label})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-muted-foreground">
+                      AI가 판단한 지목: {landInfo.landCategory} ({landCategories.find(c => c.value === landInfo.landCategory)?.label || ""})
+                    </p>
+                  </div>
+
+                  {/* 택지(대지) 선택 시 세부 유형 선택 */}
+                  {formData.currentUsage === "대" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="landSubType">택지 세부 유형 *</Label>
+                      <Select
+                        value={formData.landSubType}
+                        onValueChange={(value) =>
+                          setFormData((prev) => ({ ...prev, landSubType: value as typeof formData.landSubType }))
+                        }
+                      >
+                        <SelectTrigger id="landSubType">
+                          <SelectValue placeholder="선택하세요" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
+                          <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
+                          <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
+                          <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
+                          <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground">
+                        택지 유형에 따라 매수 기준 면적이 다릅니다.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="actualUsage">공부상 지목</Label>
                     <Select
                       value={formData.actualUsage}
                       onValueChange={(value) =>
@@ -607,7 +750,53 @@ export function ApplicationFormSection({
                   </div>
                 </div>
 
-                {landInfo.landType === "농지" && (
+                {/* 직접 확인 항목 (민원인 입력) */}
+                <div className="rounded-lg border border-border bg-muted/30 p-4">
+                  <h5 className="mb-3 text-sm font-semibold text-foreground">직접 확인 항목 (해당 시 체크)</h5>
+                  <p className="mb-3 text-xs text-muted-foreground">
+                    아래 항목은 AI가 자동 판독할 수 없는 사항입니다. 해당되는 경우 체크해 주세요.
+                  </p>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="accessRoadLost"
+                        checked={formData.accessRoadLost}
+                        onCheckedChange={(checked) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            accessRoadLost: checked === true,
+                          }))
+                        }
+                      />
+                      <Label htmlFor="accessRoadLost" className="text-sm font-normal">
+                        접면도로 상실 (도로 편입으로 인해 건축허가 불가 또는 출입 불가)
+                      </Label>
+                    </div>
+                    
+                    {(landInfo.landType === "농지" || formData.currentUsage === "답" || formData.currentUsage === "전") && (
+                      <>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="waterChannelLost"
+                            checked={formData.waterChannelLost}
+                            onCheckedChange={(checked) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                waterChannelLost: checked === true,
+                              }))
+                            }
+                          />
+                          <Label htmlFor="waterChannelLost" className="text-sm font-normal">
+                            관개수로 상실 (수로 편입으로 인해 농업용수 공급 불가)
+                          </Label>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {(landInfo.landType === "농지" || formData.currentUsage === "답" || formData.currentUsage === "전") && (
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="farmMachine"
