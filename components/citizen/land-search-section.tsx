@@ -63,7 +63,7 @@ const regionData = {
     // 충청북도 - 음성군
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍"],
     // 충청북도 - 진천군
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만��면", "백곡면", "이월면", "문백면"],
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
@@ -384,7 +384,7 @@ function generateJudgmentRationale(
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
-- 소재지: ${land.address}
+- ���재지: ${land.address}
 - 토지 유형: ${land.landType}
 - 지목: ${land.landCategory}
 - 소유자: ${land.ownerName}
@@ -746,12 +746,18 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             { lat: 37.2195, lng: 127.2995 },
           ],
         ];
-        results = dummyLandInfoList.slice(0, 5).map((land, idx) => ({
-          ...land,
-          id: `search-${idx}`,
-          address: `${selectedSido} ${selectedSigungu}${selectedEupmyeondong ? ` ${selectedEupmyeondong}` : ""}${selectedRi ? ` ${selectedRi}` : ""} ${jibun || `${100 + idx}-${idx + 1}`}`,
-          coordinates: baseCoords[idx] || baseCoords[0],
-        }));
+        // 읍면동이 선택되지 않은 경우 기본 읍면동 목록에서 랜덤 선택
+        const eupmyeondongList = regionData.읍면동[selectedSigungu as keyof typeof regionData.읍면동] || ["중앙동", "남부동", "북부동", "동부동", "서부동"];
+        
+        results = dummyLandInfoList.slice(0, 5).map((land, idx) => {
+          const randomEupmyeondong = selectedEupmyeondong || eupmyeondongList[idx % eupmyeondongList.length];
+          return {
+            ...land,
+            id: `search-${idx}`,
+            address: `${selectedSido} ${selectedSigungu} ${randomEupmyeondong}${selectedRi ? ` ${selectedRi}` : ""} ${jibun || `${100 + idx}-${idx + 1}`}`,
+            coordinates: baseCoords[idx] || baseCoords[0],
+          };
+        });
       }
       
       setSearchResults(results);
