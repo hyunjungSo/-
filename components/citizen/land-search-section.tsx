@@ -63,7 +63,7 @@ const regionData = {
     // 충청북도 - 음성군
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍"],
     // 충청북도 - 진천군
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만��면", "백곡면", "이월면", "문백면"],
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
@@ -384,7 +384,7 @@ function generateJudgmentRationale(
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
-- 소재지: ${land.address}
+- ���재지: ${land.address}
 - 토지 유형: ${land.landType}
 - 지목: ${land.landCategory}
 - 소유자: ${land.ownerName}
@@ -582,7 +582,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             remainingArea: 230,
             remainingRatio: 27.1,
             landType: "농지",
-            landCategory: "��",
+            landCategory: "���",
             businessUnit: "양평이천",
             projectName: "이천-여주 국도확장사업",
           },
@@ -1198,7 +1198,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 <div className="space-y-4">
                 {/* 토지 기본 정보 */}
                 <div className="rounded border border-border bg-muted/30 p-3">
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-base">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">지번</span>
                       <span className="font-medium">{selectedLand.address.split(" ").slice(-2).join(" ")}</span>
