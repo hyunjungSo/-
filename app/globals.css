@@ -21,11 +21,11 @@
   --popover: #FFFFFF;
   --popover-foreground: #1A1A1A;
   
-  /* Primary - KRDS Primary #23b59d */
-  --primary: #23b59d;
+  /* Primary - KRDS Primary #147161 */
+  --primary: #147161;
   --primary-foreground: #FFFFFF;
-  --primary-hover: #1a9982;
-  --primary-active: #147d67;
+  --primary-hover: #0F5A4D;
+  --primary-active: #0A4339;
   --primary-light: #E8F5F2;
   
   /* Secondary - KRDS Secondary */
@@ -62,7 +62,7 @@
   --ring: #157161;
   
   /* Charts - KRDS Color Palette */
-  --chart-1: #23b59d;
+  --chart-1: #147161;
   --chart-2: #0288D1;
   --chart-3: #ED6C02;
   --chart-4: #7B1FA2;
@@ -78,7 +78,7 @@
   /* Sidebar */
   --sidebar: #FAFAFA;
   --sidebar-foreground: #1A1A1A;
-  --sidebar-primary: #23b59d;
+  --sidebar-primary: #147161;
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #F0F9F7;
   --sidebar-accent-foreground: #157161;
@@ -93,10 +93,10 @@
   --card-foreground: #F5F5F5;
   --popover: #1E1E1E;
   --popover-foreground: #F5F5F5;
-  --primary: #44cfc1;
+  --primary: #4DB6A5;
   --primary-foreground: #1A1A1A;
-  --primary-hover: #2eb9b0;
-  --primary-active: #22a59f;
+  --primary-hover: #3DA596;
+  --primary-active: #2D9487;
   --primary-light: #1A2F2B;
   --secondary: #2D2D2D;
   --secondary-foreground: #F5F5F5;
@@ -115,7 +115,7 @@
   --border: #404040;
   --input: #2D2D2D;
   --ring: #4DB6A5;
-  --chart-1: #44cfc1;
+  --chart-1: #4DB6A5;
   --chart-2: #60A5FA;
   --chart-3: #FBBF24;
   --chart-4: #A78BFA;
