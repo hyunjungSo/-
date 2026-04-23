@@ -21,25 +21,27 @@ const badgeVariants = cva(
           'border-transparent bg-destructive text-destructive-foreground',
         // KRDS Outline - 테두리만
         outline: 'border border-border bg-transparent text-foreground',
-        // KRDS Success - #2E7D32
+        // KRDS Success Filled - #2E7D32
         success: 'border-transparent bg-success text-success-foreground',
-        // KRDS Warning - #ED6C02
+        // KRDS Warning Filled - #ED6C02
         warning: 'border-transparent bg-warning text-warning-foreground',
-        // KRDS Info - #0288D1
+        // KRDS Info Filled - #0288D1
         info: 'border-transparent bg-info text-info-foreground',
-        // KRDS Primary Subtle - 연한 primary 배경
+        // KRDS Primary Solid-Pastel
         'primary-subtle': 'border-transparent bg-accent text-primary',
-        // KRDS Success Subtle
-        'success-subtle': 'border-transparent bg-green-50 text-success',
-        // KRDS Warning Subtle
-        'warning-subtle': 'border-transparent bg-orange-50 text-warning',
-        // KRDS Destructive Subtle
+        // KRDS Success Solid-Pastel - 연한 녹색 배경 + 녹색 텍스트
+        'success-subtle': 'border-transparent bg-emerald-50 text-emerald-700',
+        // KRDS Warning Solid-Pastel - 연한 주황 배경 + 주황 텍스트
+        'warning-subtle': 'border-transparent bg-amber-50 text-amber-700',
+        // KRDS Info Solid-Pastel - 연한 파랑 배경 + 파랑 텍스트
+        'info-subtle': 'border-transparent bg-sky-50 text-sky-700',
+        // KRDS Destructive Solid-Pastel
         'destructive-subtle': 'border-transparent bg-red-50 text-destructive',
       },
       size: {
         // KRDS 뱃지 크기 (8px 단위)
         sm: 'h-5 px-1.5 text-xs', // 20px height
-        default: 'h-6 px-2 text-xs', // 24px height
+        default: 'h-6 px-2 text-xs', // 24px height - medium
         lg: 'h-7 px-2.5 text-sm', // 28px height
       },
     },

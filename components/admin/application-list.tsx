@@ -35,10 +35,10 @@ const statusConfig: Record<ProcessStatus, { label: string; variant: "secondary" 
   처리완료: { label: "처리 완료", variant: "success" },
 };
 
-const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; variant: "outline" | "primary-subtle" | "default" }> = {
-  접수완료: { label: "접수완료", icon: Clock, variant: "outline" },
-  진행중: { label: "진행중", icon: PlayCircle, variant: "primary-subtle" },
-  심사완료: { label: "심사완료", icon: CheckCircle2, variant: "default" },
+const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; variant: "warning-subtle" | "info-subtle" | "success-subtle" }> = {
+  접수완료: { label: "접수완료", icon: Clock, variant: "warning-subtle" },      // 주황 solid-pastel
+  진행중: { label: "진행중", icon: PlayCircle, variant: "info-subtle" },        // 파랑 solid-pastel
+  심사완료: { label: "심사완료", icon: CheckCircle2, variant: "success-subtle" }, // 녹색 solid-pastel
 };
 
 export function ApplicationList({ applications, onSelect }: ApplicationListProps) {
@@ -236,8 +236,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                         const config = adminStatusConfig[app.adminStatus];
                         const Icon = config.icon;
                         return (
-                          <Badge variant={config.variant} size="sm">
-                            <Icon className="h-3 w-3" />
+                          <Badge variant={config.variant}>
+                            <Icon className="h-3.5 w-3.5" />
                             {config.label}
                           </Badge>
                         );
@@ -265,7 +265,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     <span className="font-medium text-foreground">
                       {app.applicationNumber}
                     </span>
-                    <Badge variant={statusConfig[app.status].variant} size="sm">
+                    <Badge variant={statusConfig[app.status].variant}>
                       {statusConfig[app.status].label}
                     </Badge>
                     {app.additionalLands && app.additionalLands.length > 0 && (

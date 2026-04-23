@@ -26,22 +26,22 @@ import type { JudgmentRationale } from "@/lib/types";
 const adminStatusConfig: Record<AdminStatus, { 
   label: string; 
   icon: typeof Clock; 
-  variant: "outline" | "default" | "secondary" | "success" | "warning" | "info" | "primary-subtle";
+  variant: "warning-subtle" | "info-subtle" | "success-subtle";
 }> = {
   접수완료: { 
     label: "접수완료", 
     icon: Clock, 
-    variant: "outline",
+    variant: "warning-subtle",  // 주황 solid-pastel
   },
   진행중: { 
     label: "진행중", 
     icon: PlayCircle, 
-    variant: "primary-subtle",
+    variant: "info-subtle",     // 파랑 solid-pastel
   },
   심사완료: { 
     label: "심사완료", 
     icon: CheckCircle2, 
-    variant: "default",
+    variant: "success-subtle",  // 녹색 solid-pastel
   },
 };
 
@@ -62,8 +62,7 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
               <span>AI 판단 근거 보기</span>
               {provisionalJudgment && (
                 <Badge 
-                  variant={provisionalJudgment === "매수" ? "success" : "destructive"}
-                  size="sm"
+                  variant={provisionalJudgment === "매수" ? "success-subtle" : "destructive-subtle"}
                 >
                   {provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
                 </Badge>
@@ -334,8 +333,8 @@ export function ApplicationStatusSection() {
                       >
                         {/* 뱃지 영역 */}
                         <div className="mb-2 flex flex-wrap items-center gap-2">
-                          <Badge variant={statusConfig.variant} size="sm">
-                            <statusConfig.icon className="h-3 w-3" />
+                          <Badge variant={statusConfig.variant}>
+                            <statusConfig.icon className="h-3.5 w-3.5" />
                             {statusConfig.label}
                           </Badge>
                           {app.adminStatus === "심사완료" && app.finalJudgment && (
@@ -347,11 +346,10 @@ export function ApplicationStatusSection() {
                                     ? "destructive-subtle"
                                     : "warning-subtle"
                               }
-                              size="sm"
                             >
-                              {app.finalJudgment === "매수" && <CheckCircle2 className="h-3 w-3" />}
-                              {app.finalJudgment === "기각" && <AlertTriangle className="h-3 w-3" />}
-                              {app.finalJudgment === "심의위원회이관" && <Info className="h-3 w-3" />}
+                              {app.finalJudgment === "매수" && <CheckCircle2 className="h-3.5 w-3.5" />}
+                              {app.finalJudgment === "기각" && <AlertTriangle className="h-3.5 w-3.5" />}
+                              {app.finalJudgment === "심의위원회이관" && <Info className="h-3.5 w-3.5" />}
                               {app.finalJudgment}
                             </Badge>
                           )}
