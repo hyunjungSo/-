@@ -314,7 +314,7 @@ function generateJudgmentRationale(
 
   // 중앙토지수용위원회 기준에 따른 토지 유형별 판단 문장
   if (land.landType === "대지") {
-    appliedCriteria.push(`택지(대지) 면적 기준: 주거용(단독주택) 90㎡, 주거용(연립·다��대) 165㎡, 주거용(아파트) 60㎡, 상업용 150㎡, 공업용 330㎡ 이하`);
+    appliedCriteria.push(`택지(대지) 면적 기준: 주거용(단독주택) 90㎡, 주거용(연립·다세대) 165㎡, 주거용(아파트) 60㎡, 상업용 150㎡, 공업용 330㎡ 이하`);
   } else if (land.landType === "농지") {
     appliedCriteria.push(`농지 면적 기준: 330㎡(약 100평) 이하이거나, 폭 5m 이하의 부정형으로서 농기계 진입·회전이 곤란한 경우`);
   } else if (land.landType === "산지") {
@@ -1022,7 +1022,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           <div className={`bg-background transition-all duration-300 overflow-hidden ${isResultsCollapsed ? "w-0" : "w-[280px]"}`}>
             {/* 검색 결과 헤더 */}
             <div className="flex items-center justify-between border-b bg-muted px-4 py-3">
-              <span className="text-base font-medium text-foreground">결��</span>
+              <span className="text-base font-medium text-foreground">결과</span>
               {searchResults.length > 0 && (
                 <span className="text-base text-muted-foreground">총 {searchResults.length}건</span>
               )}
