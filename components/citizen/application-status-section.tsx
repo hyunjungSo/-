@@ -85,7 +85,7 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
             )}
           </Button>
         </CollapsibleTrigger>
-        <CollapsibleContent className="space-y-4 p-4">
+        <CollapsibleContent className="space-y-4 overflow-visible p-4">
         {/* 판단 요약 */}
         <div className="flex items-start gap-3">
           <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -176,7 +176,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
   const currentStep = getStatusStep(application.adminStatus);
 
   return (
-    <div className="rounded-lg bg-gray-100 p-6 space-y-6">
+    <div className="rounded-lg bg-gray-100 p-6 space-y-6 overflow-visible">
       {/* 상단: 접수번호 + 소재지 */}
       <div>
         <div className="flex items-center gap-2">
