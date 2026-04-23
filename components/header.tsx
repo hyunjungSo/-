@@ -92,7 +92,7 @@ export function Header() {
               rel="noopener noreferrer" 
               className="flex items-center gap-1 px-3 py-1 transition-colors hover:bg-white/10"
             >
-              <span className="font-medium">토지관리</span>
+              <span className="font-semibold">토지관리</span>
               <ExternalLink className="h-3 w-3" />
             </Link>
             <span className="text-white/40">|</span>
@@ -102,12 +102,12 @@ export function Header() {
               rel="noopener noreferrer" 
               className="flex items-center gap-1 px-3 py-1 transition-colors hover:bg-white/10"
             >
-              <span className="font-medium">누리집 안내지도</span>
+              <span className="font-semibold">누리집 안내지도</span>
               <ExternalLink className="h-3 w-3" />
             </Link>
             <span className="text-white/40">|</span>
             <button className="flex items-center gap-1 px-3 py-1 transition-colors hover:bg-white/10">
-              <span className="font-medium">화면크기</span>
+              <span className="font-semibold">화면크기</span>
               <ChevronDown className="h-3 w-3" />
             </button>
           </div>

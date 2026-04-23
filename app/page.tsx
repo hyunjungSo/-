@@ -50,7 +50,6 @@ export default function HomePage() {
               <Button asChild size="lg" className="h-[55px] px-8 text-lg font-semibold">
                 <Link href="/citizen">
                   잔여지 매수 조회
-                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="h-[55px] border-1 border-gray-400 bg-white px-8 text-lg font-semibold text-gray-800 hover:bg-gray-50 hover:text-gray-800">
