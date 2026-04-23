@@ -1197,9 +1197,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             <div className="flex-1 overflow-y-auto p-4">
               {selectedLand ? (
                 <div className="space-y-4">
-                {/* 토지 기본 정보 */}
+                {/* 토지 기본 정보 + 현재 활용 지목 통합 */}
                 <div className="rounded border border-border bg-muted/30 p-3">
-                  <div className="flex flex-col gap-2 text-sm">
+                  <div className="flex flex-col gap-3 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">잔여 면적</span>
                       <span className="font-medium text-primary">{selectedLand.remainingArea.toLocaleString()}m²</span>
@@ -1210,6 +1210,40 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         {selectedLand.remainingRatio}%
                       </span>
                     </div>
+                    {/* 현재 활용 지목 선택 */}
+                    {!noIncludedLand && !aiResult && (
+                      <div className="border-t border-border pt-3">
+                        <div className="mb-2 flex items-center justify-between">
+                          <Label htmlFor="currentUsage" className="text-sm font-medium">
+                            현재 활용 지목 <span className="text-destructive">*</span>
+                          </Label>
+                          <span className="text-xs text-muted-foreground">
+                            공부상 지목: <span className="font-medium text-foreground">{selectedLand.landCategory}</span>
+                          </span>
+                        </div>
+                        <Select 
+                          value={currentUsage} 
+                          onValueChange={(value) => {
+                            setCurrentUsage(value);
+                            if (value !== "대") setLandSubType("");
+                          }}
+                        >
+                          <SelectTrigger id="currentUsage" className="h-10 w-full bg-background">
+                            <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="대">대 (택지)</SelectItem>
+                            <SelectItem value="전">전 (밭)</SelectItem>
+                            <SelectItem value="답">답 (논)</SelectItem>
+                            <SelectItem value="임">임 (임야)</SelectItem>
+                            <SelectItem value="잡">잡 (잡종지)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <p className="mt-1.5 text-xs text-muted-foreground">
+                          실제 토지 활용 상황에 따라 선택해 주세요.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -1220,42 +1254,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       <Ban className="h-4 w-4 text-destructive" />
                       <span className="text-base font-medium text-destructive">편입토지 없음 - 매수 신청 불가</span>
                     </div>
-                  </div>
-                )}
-
-                {/* 현재 활용 지목 선택 */}
-                {!noIncludedLand && !aiResult && (
-                  <div className="rounded border border-border bg-muted/30 p-3">
-                    <div className="mb-2 flex items-center justify-between">
-                      <Label htmlFor="currentUsage" className="text-sm font-medium">
-                        현재 활용 지목 <span className="text-destructive">*</span>
-                      </Label>
-                      <span className="text-xs text-muted-foreground">
-                        공부상 지목: <span className="font-medium text-foreground">{selectedLand.landCategory}</span>
-                      </span>
-                    </div>
-                    <Select 
-                      value={currentUsage} 
-                      onValueChange={(value) => {
-                        setCurrentUsage(value);
-                        // 택지가 아니면 세부 유형 초기화
-                        if (value !== "대") setLandSubType("");
-                      }}
-                    >
-                      <SelectTrigger id="currentUsage" className="h-10 w-full bg-background">
-                        <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="대">대 (택지)</SelectItem>
-                        <SelectItem value="전">전 (밭)</SelectItem>
-                        <SelectItem value="답">답 (논)</SelectItem>
-                        <SelectItem value="임">임 (임야)</SelectItem>
-                        <SelectItem value="잡">잡 (잡종지)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <p className="mt-1.5 text-xs text-muted-foreground">
-                      실제 토지 활용 상황에 따라 선택해 주세요. 공부상 지목과 다를 수 있습니다.
-                    </p>
                   </div>
                 )}
 
