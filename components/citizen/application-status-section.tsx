@@ -351,7 +351,6 @@ export function ApplicationStatusSection() {
                           </h3>
                           <div className="flex items-center gap-1.5">
                             <Badge variant={statusConfig.variant}>
-                              <statusConfig.icon className="h-3.5 w-3.5" />
                               {statusConfig.label}
                             </Badge>
                             {app.adminStatus === "심사완료" && app.finalJudgment && (

@@ -234,10 +234,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     <TableCell>
                       {(() => {
                         const config = adminStatusConfig[app.adminStatus];
-                        const Icon = config.icon;
                         return (
                           <Badge variant={config.variant}>
-                            <Icon className="h-3.5 w-3.5" />
                             {config.label}
                           </Badge>
                         );
