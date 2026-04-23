@@ -48,7 +48,7 @@ export type FinalJudgmentResult = "매수" | "기각" | "심의위원회이관";
 // 판정 결과 (하위 호환용)
 export type JudgmentResult = FinalJudgmentResult;
 
-// 사업단 타입
+// 관할기관 타입
 export type BusinessUnit = 
   | "김포파주" 
   | "수도권" 
@@ -80,7 +80,7 @@ export interface LandInfo {
   ownerContact?: string; // 소유자 연락처
   hasIncludedLand: boolean; // 편입토지 존재 여부
   coordinates?: Array<{ lat: number; lng: number }>; // 필지 경계 좌표
-  businessUnit?: BusinessUnit; // 사업단
+  businessUnit?: BusinessUnit; // 관할기관
   projectName?: string; // 사업명
 }
 
@@ -155,10 +155,10 @@ export interface ApplicationCartItem {
   landInfo: LandInfo;
   aiResult: AIAnalysisResult;
   addedAt: string;
-  businessUnit: BusinessUnit; // 사업단 그룹핑용
+  businessUnit: BusinessUnit; // 관할기관 그룹핑용
 }
 
-// 사업단별 그룹핑된 신청 목록
+// 관할기관별 그룹핑된 신청 목록
 export interface BusinessUnitGroupedCart {
   businessUnit: BusinessUnit;
   items: ApplicationCartItem[];

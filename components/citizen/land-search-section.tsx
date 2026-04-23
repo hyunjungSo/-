@@ -512,9 +512,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
       if (searchMode === "owner") {
         // 소유자 검색: 이름 + 주민번호 앞자리로 검색
         // 실제 구현에서는 API 호출, 여기서는 더미 데이터 시뮬레이션
-        // 홍길동이 3개 사업단(양평이천, 수도권, 천안안성)에 잔여지를 소유한 경우
+        // 홍길동이 3개 관할기관(양평이천, 수도권, 천안안성)에 잔여지를 소유한 경우
         const ownerLandData = [
-          // 양평이천 사업단 - 2건
+          // 양평이천 관할기관 - 2건
           {
             id: "owner-search-0",
             address: "경기도 이천시 마장면 덕평리 55-3",
@@ -551,7 +551,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             businessUnit: "양평이천",
             projectName: "양평-홍천 도로확장사업",
           },
-          // 수도권 사업단 - 2건
+          // 수도권 관할기관 - 2건
           {
             id: "owner-search-2",
             address: "경기도 용인시 처인구 양지면 마성리 100-1",
@@ -588,7 +588,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             businessUnit: "수도권",
             projectName: "화성 동탄 도시개발사업",
           },
-          // 천안안성 사업단 - 1건
+          // 천안안성 관할기관 - 1건
           {
             id: "owner-search-4",
             address: "충청남도 천안시 서북구 직산읍 삼은리 250-1",
@@ -609,7 +609,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           },
         ];
         
-        // 여러 필지를 소유한 경우 (3개 사업단: 양평이천 2건, 수도권 2건, 천안안성 1건)
+        // ��러 필지를 소유한 경우 (3개 관할기관: 양평이천 2건, 수도권 2건, 천안안성 1건)
         results = ownerLandData.map((landData) => ({
           ...dummyLandInfoList[0],
           ...landData,
@@ -1023,7 +1023,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         <div className="absolute bottom-0 left-0 top-0 z-10 flex shadow-lg">
           {/* 결과 패널 */}
           <div className={`bg-background transition-all duration-300 overflow-hidden ${isResultsCollapsed ? "w-0" : "w-[280px]"}`}>
-            {/* 검색 결과 헤더 */}
+            {/* 검색 결과 ��더 */}
             <div className="flex items-center justify-between border-b bg-muted px-4 py-3">
               <span className="text-base font-medium text-foreground">결과</span>
               {searchResults.length > 0 && (
@@ -1432,14 +1432,14 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             <div className="border-b bg-muted/30 px-4 py-3">
               <p className="text-sm text-muted-foreground">
                 <Info className="mr-1 inline h-4 w-4" />
-                같은 사업단의 토지만 함께 신청할 수 있습니다. 서로 다른 사업단의 토지는 별도로 신청해 주세요.
+                같은 관할기관의 토지만 함께 신청할 수 있습니다. 서로 다른 관할기관의 토지는 별도로 신청해 주세요.
               </p>
             </div>
 
-            {/* 사업단별 그룹핑된 목록 */}
+            {/* 관할기관별 그룹핑된 목록 */}
             <div className="flex-1 overflow-y-auto p-4">
               {(() => {
-                // 사업단별로 그룹핑
+                // 관할기관별로 그룹핑
                 const groupedByBusinessUnit = cartItems.reduce((acc, item) => {
                   const businessUnit = item.businessUnit || "수도권";
                   
@@ -1472,7 +1472,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       
                       return (
                         <div key={businessUnit} className="rounded-lg border bg-card">
-                          {/* 사업단 헤더 */}
+                          {/* 관할기관 헤더 */}
                           <div className="flex items-center justify-between border-b bg-muted/30 px-4 py-3">
                             <div className="flex items-center gap-3">
                               <Checkbox 
@@ -1480,7 +1480,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                 checked={allSelectedInUnit}
                                 className="h-5 w-5"
                                 onCheckedChange={(checked) => {
-                                  // 다른 사업단 선택 해제하고 현재 사업단만 선택
+                                  // 다른 관할기관 선택 해제하고 현재 관할기관만 선택
                                   const newSelected = new Set<string>();
                                   if (checked) {
                                     items.forEach(item => newSelected.add(item.id));
@@ -1490,7 +1490,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                               />
                               <div className="flex items-center gap-2">
                                 <FileText className="h-4 w-4 text-primary" />
-                                <span className="font-medium">{businessUnit} 사업단</span>
+                                <span className="font-medium">{businessUnit} 관할기관</span>
                                 <Badge variant="outline" className="text-xs">{items.length}필지</Badge>
                               </div>
                             </div>
@@ -1511,7 +1511,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                   checked={selectedCartItems.has(item.id)}
                                   className="mt-0.5 h-5 w-5"
                                   onCheckedChange={(checked) => {
-                                    // 다른 사업단 항목은 모두 해제하고, 현재 사업단 항목만 유지
+                                    // 다른 관할기관 항목은 모두 해제하고, 현재 관할기관 항목만 유지
                                     const currentUnitItemIds = items.map(i => i.id);
                                     const newSelected = new Set(
                                       Array.from(selectedCartItems).filter(id => currentUnitItemIds.includes(id))
@@ -1548,7 +1548,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             ))}
                           </div>
                           
-                          {/* 이 사업단 선택 항목 신청하기 버튼 */}
+                          {/* 이 관할기관 선택 항목 신청하기 버튼 */}
                           <div className="border-t p-3">
                             <Button 
                               onClick={() => {
@@ -1575,14 +1575,14 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       );
                     })}
 
-                    {/* 여러 사업단이 있을 때 안내 */}
+                    {/* 여러 관할기관이 있을 때 안내 */}
                     {businessUnits.length > 1 && (
                       <div className="rounded-lg border border-warning/50 bg-warning/5 p-3">
                         <p className="flex items-start gap-2 text-sm text-warning">
                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
                           <span>
-                            <strong>{businessUnits.length}개 사업단</strong>의 토지가 있습니다. 
-                            각 사업단별로 별도 신청이 필요합니다.
+                            <strong>{businessUnits.length}개 관할기관</strong>의 토지가 있습니다. 
+                            각 관할기관별로 별도 신청이 필요합니다.
                           </span>
                         </p>
                       </div>

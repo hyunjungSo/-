@@ -47,7 +47,7 @@ export default function CitizenPage() {
       landInfo: land,
       aiResult: result,
       addedAt: new Date().toISOString(),
-      businessUnit: land.businessUnit || "수도권", // 사업단 기준 그룹핑
+      businessUnit: land.businessUnit || "수도권", // 관할기관 기준 그룹핑
     };
     
     setCartItems(prev => [...prev, newItem]);
