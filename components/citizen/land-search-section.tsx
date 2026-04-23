@@ -225,25 +225,26 @@ const LAND_SUB_TYPE_CRITERIA: Record<string, { label: string; maxArea: number }>
 // AI 분석 결과 시뮬레이션
 function simulateAIAnalysis(
   land: LandInfo, 
+  currentUsage: string, // 현재 활용 지목 (사용자 선택)
   landSubType?: "" | "residential-detached" | "residential-multi" | "residential-apartment" | "commercial" | "industrial"
 ): AIAnalysisResult {
   const shapeIndexChange = land.remainingShapeIndex - land.originalShapeIndex;
   
-  // 공부상 지목(landCategory) 기준으로 면적 기준 적용
+  // 현재 활용 지목(currentUsage) 기준으로 면적 기준 적용
   let areaCriteriaLabel = "";
   let areaCriteriaMet = false;
   
-  // 공부상 지목이 "대"(택지)인 경우 세부 유형에 따른 면적 기준 적용
-  if (land.landCategory === "대" && landSubType && LAND_SUB_TYPE_CRITERIA[landSubType]) {
+  // 현재 활용 지목이 "대"(택지)인 경우 세부 유형에 따른 면적 기준 적용
+  if (currentUsage === "대" && landSubType && LAND_SUB_TYPE_CRITERIA[landSubType]) {
     const criteria = LAND_SUB_TYPE_CRITERIA[landSubType];
     areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (${criteria.label} 기준: ${criteria.maxArea}㎡ 이하)`;
     areaCriteriaMet = land.remainingArea <= criteria.maxArea;
-  } else if (land.landCategory === "전" || land.landCategory === "답") {
-    // 공부상 지목이 "전"(밭) 또는 "답"(논)인 경우 농지 기준
+  } else if (currentUsage === "전" || currentUsage === "답") {
+    // 현재 활용 지목이 "전"(밭) 또는 "답"(논)인 경우 농지 기준
     areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (농지 기준: 330㎡ 이하)`;
     areaCriteriaMet = land.remainingArea <= 330;
-  } else if (land.landCategory === "임") {
-    // 공부상 지목이 "임"(임야)인 경우 산지 기준
+  } else if (currentUsage === "임") {
+    // 현재 활용 지목이 "임"(임야)인 경우 산지 기준
     areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (산지 기준: 990㎡ 이하)`;
     areaCriteriaMet = land.remainingArea <= 990;
   } else {
@@ -285,8 +286,8 @@ function simulateAIAnalysis(
     },
   ];
 
-  // 공부상 지목이 농지(전, 답)인 경우 추가 기준
-  if (land.landCategory === "전" || land.landCategory === "답") {
+  // 현재 활용 지목이 농지(전, 답)인 경우 추가 기준
+  if (currentUsage === "전" || currentUsage === "답") {
     criteriaChecks.push({
       criteriaName: "농기계 진입/회전 곤란",
       criteriaDescription: "농기계 진입 및 회전이 곤란하여 영농이 불가능한 경우",
@@ -322,6 +323,7 @@ function simulateAIAnalysis(
     metCriteriaNames,
     manualCheckItems,
     shapeIndexChange,
+    currentUsage,
     landSubType
   );
   
@@ -348,6 +350,7 @@ function generateJudgmentRationale(
   metCriteriaNames: string[],
   manualCheckItems: string[],
   shapeIndexChange: number,
+  currentUsage: string, // 현재 활용 지목
   landSubType?: string
 ): JudgmentRationale {
   const legalBasis = "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조(잔여지의 매수청구 등) 및 동법 시행규칙 제34조(잔여지 등의 매수청구), 중앙토지수용위원회 잔여지 수용 및 가치하락 손실보상 참고기준";
@@ -356,16 +359,16 @@ function generateJudgmentRationale(
   let detailedExplanation: string;
   const appliedCriteria: string[] = [];
 
-  // 공부상 지목(landCategory) 기준에 따른 판단 문장
-  if (land.landCategory === "대" && landSubType && LAND_SUB_TYPE_CRITERIA[landSubType]) {
+  // 현재 활용 지목(currentUsage) 기준에 따른 판단 문장
+  if (currentUsage === "대" && landSubType && LAND_SUB_TYPE_CRITERIA[landSubType]) {
     const criteria = LAND_SUB_TYPE_CRITERIA[landSubType];
-    appliedCriteria.push(`택지(공부상 지목: 대) 면적 기준: ${criteria.label} ${criteria.maxArea}㎡ 이하`);
-  } else if (land.landCategory === "전" || land.landCategory === "답") {
-    appliedCriteria.push(`농지(공부상 지목: ${land.landCategory}) 면적 기준: 330㎡(약 100평) 이하이거나, 폭 5m 이하의 부정형으로서 농기계 진입·회전이 곤란한 경우`);
-  } else if (land.landCategory === "임") {
-    appliedCriteria.push(`산지(공부상 지목: 임) 면적 기준: 990㎡(약 300평) 이하`);
+    appliedCriteria.push(`택지(현재 활용 지목: 대) 면적 기준: ${criteria.label} ${criteria.maxArea}㎡ 이하`);
+  } else if (currentUsage === "전" || currentUsage === "답") {
+    appliedCriteria.push(`농지(현재 활용 지목: ${currentUsage}) 면적 기준: 330㎡(약 100평) 이하이거나, 폭 5m 이하의 부정형으로서 농기계 진입·회전이 곤란한 경우`);
+  } else if (currentUsage === "임") {
+    appliedCriteria.push(`산지(현재 활용 지목: 임) 면적 기준: 990㎡(약 300평) 이하`);
   } else {
-    appliedCriteria.push(`그 밖의 토지(공부상 지목: ${land.landCategory}) 면적 기준: 330㎡ 이하`);
+    appliedCriteria.push(`그 밖의 토지(현재 활용 지목: ${currentUsage}) 면적 기준: 330㎡ 이하`);
   }
   
   appliedCriteria.push(`형상지수 변화 기준: 편입 전 대비 1.0 이상 상승 시 형상 불량으로 판단`);
@@ -532,7 +535,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   // 편입토지 없음 상태
   const [noIncludedLand, setNoIncludedLand] = useState(false);
   
-  // 택지 세부 유형 (대지인 경우에만 사용)
+  // 현재 활용 지목 (공부상 지목과 다를 수 있음 - 사용자 선택)
+  const [currentUsage, setCurrentUsage] = useState<string>("");
+  // 택지 세부 유형 (현재 활용 지목이 "대"인 경우에만 사용)
   const [landSubType, setLandSubType] = useState<"" | "residential-detached" | "residential-multi" | "residential-apartment" | "commercial" | "industrial">("");
 
   // 현재 단계 계산
@@ -757,6 +762,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setSelectedLand(land);
     setAiResult(null);
     setNoIncludedLand(false);
+    setCurrentUsage(land.landCategory); // 공부상 지목을 기본값으로 설정
     setLandSubType(""); // 택지 세부 유형 초기화
     
     // 기본정보 패널이 접혀 있으면 자동으로 펼침
@@ -773,13 +779,15 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   // AI 판독 실행
   const handleAIAnalysis = () => {
     if (!selectedLand || noIncludedLand) return;
-    // 공부상 지목이 "대"(택지)인 경우 세부 유형이 필수
-    if (selectedLand.landCategory === "대" && !landSubType) return;
+    // 현재 활용 지목 필수
+    if (!currentUsage) return;
+    // 현재 활용 지목이 "대"(택지)인 경우 세부 유형이 필수
+    if (currentUsage === "대" && !landSubType) return;
     
     setAiAnalyzing(true);
     
     setTimeout(() => {
-      const result = simulateAIAnalysis(selectedLand, landSubType);
+      const result = simulateAIAnalysis(selectedLand, currentUsage, landSubType);
       setAiResult(result);
       setAiAnalyzing(false);
     }, 1500);
@@ -1222,11 +1230,47 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   </div>
                 )}
 
-                {/* 택지(대지) 세부 유형 선택 - 공부상 지목이 "대"인 경우 */}
-                {!noIncludedLand && !aiResult && selectedLand.landCategory === "대" && (
+                {/* 현재 활용 지목 선택 */}
+                {!noIncludedLand && !aiResult && (
+                  <div className="rounded border border-border bg-muted/30 p-3">
+                    <div className="mb-2 flex items-center justify-between">
+                      <Label htmlFor="currentUsage" className="text-sm font-medium">
+                        현재 활용 지목 <span className="text-destructive">*</span>
+                      </Label>
+                      <span className="text-xs text-muted-foreground">
+                        공부상 지목: <span className="font-medium text-foreground">{selectedLand.landCategory}</span>
+                      </span>
+                    </div>
+                    <Select 
+                      value={currentUsage} 
+                      onValueChange={(value) => {
+                        setCurrentUsage(value);
+                        // 택지가 아니면 세부 유형 초기화
+                        if (value !== "대") setLandSubType("");
+                      }}
+                    >
+                      <SelectTrigger id="currentUsage" className="h-10 w-full bg-background">
+                        <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="대">대 (택지)</SelectItem>
+                        <SelectItem value="전">전 (밭)</SelectItem>
+                        <SelectItem value="답">답 (논)</SelectItem>
+                        <SelectItem value="임">임 (임야)</SelectItem>
+                        <SelectItem value="잡">잡 (잡종지)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="mt-1.5 text-xs text-muted-foreground">
+                      실제 토지 활용 상황에 따라 선택해 주세요. 공부상 지목과 다를 수 있습니다.
+                    </p>
+                  </div>
+                )}
+
+                {/* 택지(대지) 세부 유형 선택 - 현재 활용 지목이 "대"인 경우 */}
+                {!noIncludedLand && !aiResult && currentUsage === "대" && (
                   <div className="rounded border border-border bg-muted/30 p-3">
                     <Label htmlFor="landSubType" className="mb-2 block text-sm font-medium">
-                      건축물 용도 선택 (공부상 지목: 대) <span className="text-destructive">*</span>
+                      건축물 용도 선택 <span className="text-destructive">*</span>
                     </Label>
                     <Select value={landSubType} onValueChange={(value) => setLandSubType(value as typeof landSubType)}>
                       <SelectTrigger id="landSubType" className="h-10 w-full bg-background">
@@ -1252,7 +1296,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     onClick={handleAIAnalysis}
                     className="h-12 w-full cursor-pointer"
                     variant="default"
-                    disabled={aiAnalyzing || (selectedLand.landCategory === "대" && !landSubType)}
+                    disabled={aiAnalyzing || !currentUsage || (currentUsage === "대" && !landSubType)}
                   >
                     {aiAnalyzing ? (
                       <>
