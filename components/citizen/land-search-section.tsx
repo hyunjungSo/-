@@ -1199,14 +1199,10 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 <div className="space-y-4">
                 {/* 토지 기본 정보 */}
                 <div className="rounded border border-border bg-muted/30 p-3">
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                  <div className="flex flex-col gap-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">지번</span>
-                      <span className="font-medium">{selectedLand.address.split(" ").slice(-2).join(" ")}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">지목</span>
-                      <span className="font-medium">{selectedLand.landCategory}</span>
+                      <span className="font-medium">{selectedLand.address.split(" ").pop()}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">잔여 면적</span>
