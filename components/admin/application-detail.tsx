@@ -65,7 +65,49 @@ const assigneeList = [
   { id: "admin-005", name: "정수연", department: "보상심의팀" },
 ];
 
+// 필지별 검토 데이터 타입
+interface LandReviewData {
+  actualUsage: LandCategory;
+  landShape: LandShape;
+  farmMachineDifficulty: "미입력" | "해당" | "해당없음";
+  accessRoadLost: boolean;
+  waterChannelLost: boolean;
+  landJudgment: JudgmentResult | null;
+}
+
 export function ApplicationDetail({ application, onBack, onSave }: ApplicationDetailProps) {
+  // 복수 필지 여부 확인
+  const isMultipleLands = application.additionalLands && application.additionalLands.length > 0;
+  const allLands = isMultipleLands 
+    ? [application.landInfo, ...application.additionalLands] 
+    : [application.landInfo];
+
+  // 필지별 검토 데이터 초기화
+  const initializeLandReviewData = (): LandReviewData[] => {
+    return allLands.map((land, index) => {
+      const landData = application.landDataList?.[index];
+      return {
+        actualUsage: (landData?.actualUsage || land.landCategory) as LandCategory,
+        landShape: (landData?.reportedShape || land.remainingShape) as LandShape,
+        farmMachineDifficulty: landData?.farmMachineDifficulty ? "해당" : "미입력",
+        accessRoadLost: landData?.accessRoadLost || false,
+        waterChannelLost: landData?.waterChannelLost || false,
+        landJudgment: null,
+      };
+    });
+  };
+
+  const [landReviewDataList, setLandReviewDataList] = useState<LandReviewData[]>(initializeLandReviewData);
+  
+  // 필지별 검토 데이터 업데이트 함수
+  const updateLandReviewData = (index: number, field: keyof LandReviewData, value: LandReviewData[keyof LandReviewData]) => {
+    setLandReviewDataList(prev => {
+      const newList = [...prev];
+      newList[index] = { ...newList[index], [field]: value };
+      return newList;
+    });
+  };
+
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
@@ -73,6 +115,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
+    finalReviewOpinion: application.finalReviewOpinion || "", // 최종 검토 의견 (복수 필지용)
     finalJudgment: application.finalJudgment || (null as unknown as JudgmentResult),
     adminStatus: application.adminStatus || ("접수완료" as AdminStatus),
     assigneeId: application.adminName ? assigneeList.find(a => a.name === application.adminName)?.id || "" : "",
@@ -544,142 +587,316 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <CardTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
             담당자 검토
+            {isMultipleLands && (
+              <Badge variant="outline" className="ml-2">
+                <Layers className="mr-1 h-3 w-3" />
+                {allLands.length}필지
+              </Badge>
+            )}
           </CardTitle>
           <CardDescription>
-            AI 분석 결과를 검토하고 필요 시 수정합니다. 자동 판독 불가 항목은 수동으로 입력해주세요.
+            {isMultipleLands 
+              ? "각 필지별로 AI 분석 결과를 검토하고 필요 시 수정합니다."
+              : "AI 분석 결과를 검토하고 필요 시 수정합니다. 자동 판독 불가 항목은 수동으로 입력해주세요."
+            }
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* 수정 가능 항목 */}
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="space-y-2">
-              <Label>실제 이용 상황</Label>
-              <Select
-                value={reviewData.actualUsage}
-                onValueChange={(value) =>
-                  setReviewData((prev) => ({ ...prev, actualUsage: value as LandCategory }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {landCategories.map((cat) => (
-                    <SelectItem key={cat.value} value={cat.value}>
-                      {cat.value} ({cat.label})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          {/* 복수 필지: 각 필지별 검토 */}
+          {isMultipleLands ? (
+            <div className="space-y-6">
+              {allLands.map((land, index) => {
+                const landReview = landReviewDataList[index];
+                const isAgricultural = land.landType === "농지" || landReview?.actualUsage === "답" || landReview?.actualUsage === "전";
+                
+                return (
+                  <div key={land.id} className="rounded-lg border border-border p-5">
+                    {/* 필지 헤더 */}
+                    <div className="mb-4 flex items-center justify-between border-b border-border pb-3">
+                      <div>
+                        <span className="text-base font-semibold text-foreground">필지 {index + 1}</span>
+                        <p className="text-sm text-muted-foreground">{land.address}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="rounded bg-primary/10 px-2 py-0.5 text-sm font-medium text-primary">
+                          {land.remainingArea.toLocaleString()}m²
+                        </span>
+                        {/* 필지별 판정 */}
+                        <Select
+                          value={landReview?.landJudgment || ""}
+                          onValueChange={(value) => updateLandReviewData(index, "landJudgment", value as JudgmentResult)}
+                        >
+                          <SelectTrigger className="w-[140px]">
+                            <SelectValue placeholder="판정 선택" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="매수">매수</SelectItem>
+                            <SelectItem value="기각">기각</SelectItem>
+                            <SelectItem value="심의위원회이관">심의위원회 이관</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    
+                    {/* 필지별 검토 항목 */}
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                      <div className="space-y-2">
+                        <Label>실제 이용 상황</Label>
+                        <Select
+                          value={landReview?.actualUsage || ""}
+                          onValueChange={(value) => updateLandReviewData(index, "actualUsage", value as LandCategory)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {landCategories.map((cat) => (
+                              <SelectItem key={cat.value} value={cat.value}>
+                                {cat.value} ({cat.label})
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-            <div className="space-y-2">
-              <Label>토지 모양</Label>
-              <Select
-                value={reviewData.landShape}
-                onValueChange={(value) =>
-                  setReviewData((prev) => ({ ...prev, landShape: value as LandShape }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <div className="px-2 py-1 text-base font-semibold text-muted-foreground">
-                    정형
+                      <div className="space-y-2">
+                        <Label>토지 모양</Label>
+                        <Select
+                          value={landReview?.landShape || ""}
+                          onValueChange={(value) => updateLandReviewData(index, "landShape", value as LandShape)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <div className="px-2 py-1 text-base font-semibold text-muted-foreground">정형</div>
+                            {landShapes.regular.map((shape) => (
+                              <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
+                            ))}
+                            <div className="px-2 py-1 text-base font-semibold text-muted-foreground">비정형</div>
+                            {landShapes.irregular.map((shape) => (
+                              <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {isAgricultural && (
+                        <div className="space-y-2">
+                          <Label>농기계 진입/회전 곤란</Label>
+                          <Select
+                            value={landReview?.farmMachineDifficulty || "미입력"}
+                            onValueChange={(value) => updateLandReviewData(index, "farmMachineDifficulty", value as "미입력" | "해당" | "해당없음")}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="미입력">미입력</SelectItem>
+                              <SelectItem value="해당">해당</SelectItem>
+                              <SelectItem value="해당없음">해당 없음</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* 자동 판독 불가 항목 */}
+                    <div className="mt-4 space-y-2">
+                      <Label>자동 판독 불가 항목</Label>
+                      <div className="flex flex-wrap gap-4">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`accessRoadLost-${index}`}
+                            checked={landReview?.accessRoadLost || false}
+                            onCheckedChange={(checked) => updateLandReviewData(index, "accessRoadLost", checked === true)}
+                          />
+                          <Label htmlFor={`accessRoadLost-${index}`} className="text-base font-normal">
+                            접면도로 상실
+                          </Label>
+                        </div>
+                        {isAgricultural && (
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`waterChannelLost-${index}`}
+                              checked={landReview?.waterChannelLost || false}
+                              onCheckedChange={(checked) => updateLandReviewData(index, "waterChannelLost", checked === true)}
+                            />
+                            <Label htmlFor={`waterChannelLost-${index}`} className="text-base font-normal">
+                              관개수로 상실
+                            </Label>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  {landShapes.regular.map((shape) => (
-                    <SelectItem key={shape.value} value={shape.value}>
-                      {shape.label}
-                    </SelectItem>
-                  ))}
-                  <div className="px-2 py-1 text-base font-semibold text-muted-foreground">
-                    비정형
+                );
+              })}
+
+              {/* 소유자 의견 */}
+              <div className="space-y-2">
+                <Label>소유자 의견 (신청 사유)</Label>
+                <div className="rounded-lg border border-border bg-muted/50 p-3 text-base text-foreground">
+                  {application.reason}
+                </div>
+              </div>
+
+              {/* 최종 검토 의견 (복수 필지용) */}
+              <div className="rounded-lg border-2 border-primary/30 bg-primary/5 p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-primary" />
+                  <Label className="text-base font-semibold text-primary">최종 검토 의견</Label>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  복수 필지 신청건에 대한 종합적인 검토 의견을 작성하세요. 이 내용은 심의서의 &quot;현지상황 및 검토의견&quot;에 자동 입력됩니다.
+                </p>
+                <Textarea
+                  id="finalReviewOpinion"
+                  placeholder="복수 필지에 대한 종합 검토 의견을 작성하세요. (예: 해당 토지들은 동일 소유자 소유로 연접해 있으며, 도로 편입으로 인해 모두 불규칙한 형태로 남아 건축 및 영농이 곤란한 상태입니다.)"
+                  rows={5}
+                  value={reviewData.finalReviewOpinion}
+                  onChange={(e) =>
+                    setReviewData((prev) => ({ ...prev, finalReviewOpinion: e.target.value }))
+                  }
+                  className="border-primary/20"
+                />
+              </div>
+            </div>
+          ) : (
+            /* 단일 필지: 기존 방식 */
+            <>
+              {/* 수정 가능 항목 */}
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="space-y-2">
+                  <Label>실제 이용 상황</Label>
+                  <Select
+                    value={reviewData.actualUsage}
+                    onValueChange={(value) =>
+                      setReviewData((prev) => ({ ...prev, actualUsage: value as LandCategory }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {landCategories.map((cat) => (
+                        <SelectItem key={cat.value} value={cat.value}>
+                          {cat.value} ({cat.label})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>토지 모양</Label>
+                  <Select
+                    value={reviewData.landShape}
+                    onValueChange={(value) =>
+                      setReviewData((prev) => ({ ...prev, landShape: value as LandShape }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <div className="px-2 py-1 text-base font-semibold text-muted-foreground">
+                        정형
+                      </div>
+                      {landShapes.regular.map((shape) => (
+                        <SelectItem key={shape.value} value={shape.value}>
+                          {shape.label}
+                        </SelectItem>
+                      ))}
+                      <div className="px-2 py-1 text-base font-semibold text-muted-foreground">
+                        비정형
+                      </div>
+                      {landShapes.irregular.map((shape) => (
+                        <SelectItem key={shape.value} value={shape.value}>
+                          {shape.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>농기계 진입/회전 곤란</Label>
+                  <Select
+                    value={reviewData.farmMachineDifficulty}
+                    onValueChange={(value) =>
+                      setReviewData((prev) => ({
+                        ...prev,
+                        farmMachineDifficulty: value as "미입력" | "해당" | "해당없음",
+                      }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="미입력">미입력</SelectItem>
+                      <SelectItem value="해당">해당</SelectItem>
+                      <SelectItem value="해당없음">해당 없음</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* 자동 판독 불가 항목 */}
+              <div className="space-y-2">
+                <Label>자동 판독 불가 항목 (수동 입력)</Label>
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="accessRoadLost"
+                      checked={reviewData.accessRoadLost}
+                      onCheckedChange={(checked) =>
+                        setReviewData((prev) => ({ ...prev, accessRoadLost: checked === true }))
+                      }
+                    />
+                    <Label htmlFor="accessRoadLost" className="text-base font-normal">
+                      접면도로 상실
+                    </Label>
                   </div>
-                  {landShapes.irregular.map((shape) => (
-                    <SelectItem key={shape.value} value={shape.value}>
-                      {shape.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="waterChannelLost"
+                      checked={reviewData.waterChannelLost}
+                      onCheckedChange={(checked) =>
+                        setReviewData((prev) => ({ ...prev, waterChannelLost: checked === true }))
+                      }
+                    />
+                    <Label htmlFor="waterChannelLost" className="text-base font-normal">
+                      수로 상실
+                    </Label>
+                  </div>
+                </div>
+              </div>
 
-            <div className="space-y-2">
-              <Label>농기계 진입/회전 곤란</Label>
-              <Select
-                value={reviewData.farmMachineDifficulty}
-                onValueChange={(value) =>
-                  setReviewData((prev) => ({
-                    ...prev,
-                    farmMachineDifficulty: value as "미입력" | "해당" | "해당없음",
-                  }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="미입력">미입력</SelectItem>
-                  <SelectItem value="해당">해당</SelectItem>
-                  <SelectItem value="해당없음">해당 없음</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+              {/* 소유자 의견 */}
+              <div className="space-y-2">
+                <Label>소유자 의견 (신청 사유)</Label>
+                <div className="rounded-lg border border-border bg-muted/50 p-3 text-base text-foreground">
+                  {application.reason}
+                </div>
+              </div>
 
-          {/* 자동 판독 불가 항목 */}
-          <div className="space-y-2">
-            <Label>자동 판독 불가 항목 (수동 입력)</Label>
-            <div className="flex flex-wrap gap-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="accessRoadLost"
-                  checked={reviewData.accessRoadLost}
-                  onCheckedChange={(checked) =>
-                    setReviewData((prev) => ({ ...prev, accessRoadLost: checked === true }))
+              {/* 검토 의견 */}
+              <div className="space-y-2">
+                <Label htmlFor="reviewerComment">검토 의견</Label>
+                <Textarea
+                  id="reviewerComment"
+                  placeholder="담당자 검토 의견을 작성하세요."
+                  rows={4}
+                  value={reviewData.reviewerComment}
+                  onChange={(e) =>
+                    setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))
                   }
                 />
-                <Label htmlFor="accessRoadLost" className="text-base font-normal">
-                  접면도로 상실
-                </Label>
               </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="waterChannelLost"
-                  checked={reviewData.waterChannelLost}
-                  onCheckedChange={(checked) =>
-                    setReviewData((prev) => ({ ...prev, waterChannelLost: checked === true }))
-                  }
-                />
-                <Label htmlFor="waterChannelLost" className="text-base font-normal">
-                  수로 상실
-                </Label>
-              </div>
-            </div>
-          </div>
-
-          {/* 소유자 의견 */}
-          <div className="space-y-2">
-            <Label>소유자 의견 (신청 사유)</Label>
-            <div className="rounded-lg border border-border bg-muted/50 p-3 text-base text-foreground">
-              {application.reason}
-            </div>
-          </div>
-
-          {/* 검토 의견 */}
-          <div className="space-y-2">
-            <Label htmlFor="reviewerComment">검토 의견</Label>
-            <Textarea
-              id="reviewerComment"
-              placeholder="담당자 검토 의견을 작성하세요."
-              rows={4}
-              value={reviewData.reviewerComment}
-              onChange={(e) =>
-                setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))
-              }
-            />
-          </div>
+            </>
+          )}
 
           {/* 진행상황 설정 */}
           <div className="space-y-2">

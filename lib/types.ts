@@ -150,6 +150,7 @@ export interface Application {
   aiResult?: AIAnalysisResult; // AI 분석 결과
   finalJudgment?: JudgmentResult; // 최종 판정
   reviewerComment?: string; // 담당자 검토 의견
+  finalReviewOpinion?: string; // 최종 검토 의견 (복수 필지용, 심의서 현지상황 및 검토의견에 자동입력)
   adminName?: string; // 담당자명
   statusUpdatedAt?: string; // 상태 변경일
   landDataList?: LandSpecificData[]; // 토지별 민원인 입력 데이터 (복수 필지)
