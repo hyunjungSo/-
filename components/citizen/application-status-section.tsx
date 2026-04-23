@@ -272,7 +272,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
         </div>
       )}
 
-      {/* 토지 정보 요약 */}
+      {/* 토지 정보 요약 - 복수 필지도 단일 필지와 동일한 형태로 표시 */}
       <div>
         <div className="mb-4 flex items-center gap-2">
           <h4 className="text-base font-semibold text-foreground">토지 정보</h4>
@@ -284,64 +284,29 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           )}
         </div>
         
-        {/* 복수 필지일 경우 각 필지별로 표시 */}
-        {application.additionalLands && application.additionalLands.length > 0 ? (
-          <div className="space-y-3">
-            {[application.landInfo, ...application.additionalLands].map((land, index) => (
-              <div key={land.id} className="rounded-lg border border-border bg-background p-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-foreground">필지 {index + 1}</span>
-                    <span className="text-sm text-muted-foreground">{land.address}</span>
-                  </div>
-                </div>
-                <div className="grid grid-cols-4 gap-4">
-                  <div>
-                    <p className="text-xs text-muted-foreground">토지 유형</p>
-                    <p className="mt-1 text-sm font-semibold text-foreground">{land.landType}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">잔여 면적</p>
-                    <p className="mt-1 text-sm font-semibold text-primary">{land.remainingArea.toLocaleString()}m²</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">잔여 비율</p>
-                    <p className="mt-1 text-sm font-semibold text-foreground">{land.remainingRatio}%</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">AI 판정</p>
-                    <p className="mt-1 text-sm font-semibold text-primary">
-                      {application.aiResult?.provisionalJudgment || "-"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
+        {/* 대표 토지(첫 번째 필지) 정보만 표시 */}
+        <div className="grid grid-cols-4 gap-6">
+          <div>
+            <p className="text-sm text-muted-foreground">토지 유형</p>
+            <p className="mt-1.5 text-base font-semibold text-foreground">{application.landInfo.landType}</p>
           </div>
-        ) : (
-          <div className="grid grid-cols-4 gap-6">
-            <div>
-              <p className="text-sm text-muted-foreground">토지 유형</p>
-              <p className="mt-1.5 text-base font-semibold text-foreground">{application.landInfo.landType}</p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">잔여 면적</p>
-              <p className="mt-1.5 text-base font-semibold text-primary">{application.landInfo.remainingArea.toLocaleString()}m²</p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">잔여 비율</p>
-              <p className="mt-1.5 text-base font-semibold text-foreground">{application.landInfo.remainingRatio}%</p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">AI 판정</p>
-              <p className={`mt-1.5 text-base font-semibold ${
-                application.aiResult?.provisionalJudgment === "매수" ? "text-primary" : "text-muted-foreground"
-              }`}>
-                {application.aiResult?.provisionalJudgment || "-"}
-              </p>
-            </div>
+          <div>
+            <p className="text-sm text-muted-foreground">잔여 면적</p>
+            <p className="mt-1.5 text-base font-semibold text-primary">{application.landInfo.remainingArea.toLocaleString()}m2</p>
           </div>
-        )}
+          <div>
+            <p className="text-sm text-muted-foreground">잔여 비율</p>
+            <p className="mt-1.5 text-base font-semibold text-foreground">{application.landInfo.remainingRatio}%</p>
+          </div>
+          <div>
+            <p className="text-sm text-muted-foreground">AI 판정</p>
+            <p className={`mt-1.5 text-base font-semibold ${
+              application.aiResult?.provisionalJudgment === "매수" ? "text-primary" : "text-muted-foreground"
+            }`}>
+              {application.aiResult?.provisionalJudgment || "-"}
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* AI 판단 근거 표시 */}
