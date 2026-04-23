@@ -590,11 +590,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <Button
                     key={status}
                     type="button"
-                    variant={isSelected ? "default" : "outline"}
+                    variant="outline"
                     onClick={() =>
                       setReviewData((prev) => ({ ...prev, adminStatus: status }))
                     }
-                    className={`cursor-pointer border ${isSelected ? "bg-[#222222] hover:bg-[#333333]" : config.color}`}
+                    className={`cursor-pointer border-2 ${isSelected ? "border-primary text-primary" : "border-[#E1E4E7] text-foreground"}`}
                   >
                     <Icon className={`mr-2 h-4 w-4 ${status === "진행중" && isSelected ? "animate-spin" : ""}`} />
                     {config.label}
