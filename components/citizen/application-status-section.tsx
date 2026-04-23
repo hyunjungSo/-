@@ -176,34 +176,34 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
   const currentStep = getStatusStep(application.adminStatus);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* 상단: 접수번호 + 소재지 */}
-      <div className="rounded-xl border border-border bg-background p-5">
-        <div className="flex items-start justify-between gap-4">
+      <div className="rounded-lg border border-border bg-background p-6">
+        <div className="flex items-start justify-between gap-6">
           <div className="min-w-0 flex-1">
             <p className="text-sm text-muted-foreground">접수번호</p>
-            <p className="mt-0.5 text-lg font-bold text-foreground">{application.applicationNumber}</p>
+            <p className="mt-1 text-xl font-bold text-foreground">{application.applicationNumber}</p>
           </div>
           <div className="text-right">
             <p className="text-sm text-muted-foreground">신청일</p>
-            <p className="mt-0.5 font-medium text-foreground">{application.appliedAt}</p>
+            <p className="mt-1 text-base font-medium text-foreground">{application.appliedAt}</p>
           </div>
         </div>
-        <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="mt-5 flex items-center gap-2 text-sm text-muted-foreground">
           <MapPin className="h-4 w-4 shrink-0" />
-          <span className="truncate">{application.landInfo.address}</span>
+          <span>{application.landInfo.address}</span>
         </div>
       </div>
 
       {/* 진행 상태 스텝 인디케이터 */}
-      <div className="rounded-xl border border-border bg-background p-5">
-        <h4 className="mb-5 text-sm font-semibold text-foreground">진행 상태</h4>
-        <div className="relative">
+      <div className="rounded-lg border border-border bg-background p-6">
+        <h4 className="mb-6 text-base font-semibold text-foreground">진행 상태</h4>
+        <div className="relative mx-auto max-w-md">
           {/* 배경 라인 */}
-          <div className="absolute left-0 right-0 top-4 h-0.5 bg-gray-200" />
+          <div className="absolute left-0 right-0 top-5 h-0.5 bg-gray-200" />
           {/* 진행 라인 */}
           <div 
-            className="absolute left-0 top-4 h-0.5 bg-primary transition-all duration-500" 
+            className="absolute left-0 top-5 h-0.5 bg-primary transition-all duration-500" 
             style={{ width: `${((currentStep - 1) / 2) * 100}%` }}
           />
           
@@ -217,7 +217,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
 
               return (
                 <li key={status} className="flex flex-col items-center">
-                  <span className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 transition-all ${
+                  <span className={`relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all ${
                     isCurrent 
                       ? "border-primary bg-primary text-white" 
                       : isCompleted 
@@ -225,12 +225,12 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                         : "border-gray-300 bg-white text-gray-400"
                   }`}>
                     {isCompleted ? (
-                      <CheckCircle2 className="h-4 w-4" />
+                      <CheckCircle2 className="h-5 w-5" />
                     ) : (
-                      <Icon className="h-4 w-4" />
+                      <Icon className="h-5 w-5" />
                     )}
                   </span>
-                  <span className={`mt-2 text-xs font-medium ${
+                  <span className={`mt-3 text-sm font-medium ${
                     isCurrent ? "text-primary" : isCompleted ? "text-foreground" : "text-gray-400"
                   }`}>
                     {config.label}
@@ -244,27 +244,27 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
 
       {/* 처리 완료 시 결과 표시 */}
       {application.adminStatus === "심사완료" && application.finalJudgment && (
-        <div className={`rounded-xl border-2 p-5 ${
+        <div className={`rounded-lg border-2 p-6 ${
           application.finalJudgment === "매수" 
             ? "border-emerald-300 bg-emerald-50" 
             : application.finalJudgment === "기각"
               ? "border-red-300 bg-red-50"
               : "border-amber-300 bg-amber-50"
         }`}>
-          <div className="flex items-center gap-3">
-            {application.finalJudgment === "매수" && <CheckCircle2 className="h-6 w-6 text-emerald-600" />}
-            {application.finalJudgment === "기각" && <AlertTriangle className="h-6 w-6 text-red-600" />}
-            {application.finalJudgment === "심의위원회이관" && <Info className="h-6 w-6 text-amber-600" />}
+          <div className="flex items-center gap-4">
+            {application.finalJudgment === "매수" && <CheckCircle2 className="h-7 w-7 text-emerald-600" />}
+            {application.finalJudgment === "기각" && <AlertTriangle className="h-7 w-7 text-red-600" />}
+            {application.finalJudgment === "심의위원회이관" && <Info className="h-7 w-7 text-amber-600" />}
             <div>
               <p className="text-sm text-muted-foreground">최종 심사 결과</p>
-              <p className={`text-lg font-bold ${
+              <p className={`text-xl font-bold ${
                 application.finalJudgment === "매수" ? "text-emerald-700" : 
                 application.finalJudgment === "기각" ? "text-red-700" : "text-amber-700"
               }`}>{application.finalJudgment}</p>
             </div>
           </div>
           {application.reviewerComment && (
-            <p className="mt-3 rounded-lg bg-white/60 p-3 text-sm text-muted-foreground">
+            <p className="mt-4 rounded-lg bg-white/60 p-4 text-sm text-muted-foreground">
               {application.reviewerComment}
             </p>
           )}
@@ -272,24 +272,24 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
       )}
 
       {/* 토지 정보 요약 */}
-      <div className="rounded-xl border border-border bg-background p-5">
-        <h4 className="mb-4 text-sm font-semibold text-foreground">토지 정보</h4>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="rounded-lg border border-border bg-background p-6">
+        <h4 className="mb-5 text-base font-semibold text-foreground">토지 정보</h4>
+        <div className="grid grid-cols-4 gap-6">
           <div>
-            <p className="text-xs text-muted-foreground">토지 유형</p>
-            <p className="mt-1 font-semibold text-foreground">{application.landInfo.landType}</p>
+            <p className="text-sm text-muted-foreground">토지 유형</p>
+            <p className="mt-1.5 text-base font-semibold text-foreground">{application.landInfo.landType}</p>
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">잔여 면적</p>
-            <p className="mt-1 font-semibold text-primary">{application.landInfo.remainingArea.toLocaleString()}m²</p>
+            <p className="text-sm text-muted-foreground">잔여 면적</p>
+            <p className="mt-1.5 text-base font-semibold text-primary">{application.landInfo.remainingArea.toLocaleString()}m²</p>
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">잔여 비율</p>
-            <p className="mt-1 font-semibold text-foreground">{application.landInfo.remainingRatio}%</p>
+            <p className="text-sm text-muted-foreground">잔여 비율</p>
+            <p className="mt-1.5 text-base font-semibold text-foreground">{application.landInfo.remainingRatio}%</p>
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">AI 판정</p>
-            <p className={`mt-1 font-semibold ${
+            <p className="text-sm text-muted-foreground">AI 판정</p>
+            <p className={`mt-1.5 text-base font-semibold ${
               application.aiResult?.provisionalJudgment === "매수" ? "text-primary" : "text-muted-foreground"
             }`}>
               {application.aiResult?.provisionalJudgment || "-"}
@@ -319,22 +319,22 @@ export function ApplicationStatusSection() {
   const displayedApplication = selectedApplication || (myApplications.length > 0 ? myApplications[0] : null);
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* 2-column 레이아웃: 왼쪽 리스트 / 오른쪽 상세 */}
-      <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
+      <div className="grid grid-cols-[360px_1fr] gap-6">
         {/* 왼쪽: 신청 목록 */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-foreground">신청 목록</h3>
-            <span className="text-xs text-muted-foreground">{myApplications.length}건</span>
+          <div className="flex items-center justify-between px-1">
+            <h3 className="text-base font-semibold text-foreground">신청 목록</h3>
+            <span className="text-sm text-muted-foreground">{myApplications.length}건</span>
           </div>
           
-          <div className="rounded-xl border border-border bg-background">
+          <div className="rounded-lg border border-border bg-background">
             {myApplications.length === 0 ? (
-              <div className="flex h-40 flex-col items-center justify-center p-6 text-center">
-                <FileText className="h-8 w-8 text-muted-foreground" />
-                <p className="mt-3 text-sm font-medium text-foreground">신청 내역이 없습니다</p>
-                <p className="mt-1 text-xs text-muted-foreground">
+              <div className="flex h-48 flex-col items-center justify-center p-8 text-center">
+                <FileText className="h-10 w-10 text-muted-foreground" />
+                <p className="mt-4 text-base font-medium text-foreground">신청 내역이 없습니다</p>
+                <p className="mt-1 text-sm text-muted-foreground">
                   신규 신청 탭에서 잔여지 매수를 신청해 주세요.
                 </p>
               </div>
@@ -348,32 +348,32 @@ export function ApplicationStatusSection() {
                     <li key={app.id}>
                       <button
                         onClick={() => setSelectedApplication(app)}
-                        className={`group w-full px-4 py-3.5 text-left transition-all ${
+                        className={`group w-full px-5 py-4 text-left transition-all ${
                           isSelected 
                             ? "border-l-3 border-l-primary bg-primary/5" 
                             : "hover:bg-muted/50"
                         }`}
                       >
                         {/* 상단: 접수번호 + 상태 */}
-                        <div className="flex items-center justify-between gap-2">
-                          <span className={`text-sm font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
+                        <div className="flex items-center justify-between gap-3">
+                          <span className={`text-base font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
                             {app.applicationNumber}
                           </span>
-                          <Badge variant={statusConfig.variant} className="text-xs">
+                          <Badge variant={statusConfig.variant}>
                             {statusConfig.label}
                           </Badge>
                         </div>
 
                         {/* 주소 (1줄 말줄임) */}
-                        <p className="mt-1.5 truncate text-xs text-muted-foreground">
+                        <p className="mt-2 truncate text-sm text-muted-foreground">
                           {app.landInfo.address}
                         </p>
 
                         {/* 하단: 날짜 + 결과 */}
-                        <div className="mt-2 flex items-center justify-between">
-                          <span className="text-xs text-gray-400">{app.appliedAt}</span>
+                        <div className="mt-3 flex items-center justify-between">
+                          <span className="text-sm text-gray-400">{app.appliedAt}</span>
                           {app.adminStatus === "심사완료" && app.finalJudgment && (
-                            <span className={`text-xs font-medium ${
+                            <span className={`text-sm font-medium ${
                               app.finalJudgment === "매수" 
                                 ? "text-emerald-600" 
                                 : app.finalJudgment === "기각"
@@ -397,10 +397,10 @@ export function ApplicationStatusSection() {
         {displayedApplication ? (
           <ApplicationDetailPanel application={displayedApplication} />
         ) : (
-          <div className="flex h-64 items-center justify-center rounded-xl border border-dashed border-border bg-muted/20">
+          <div className="flex h-64 items-center justify-center rounded-lg border border-dashed border-border bg-muted/20">
             <div className="text-center">
-              <FileText className="mx-auto h-8 w-8 text-muted-foreground" />
-              <p className="mt-2 text-sm text-muted-foreground">신청 내역을 선택해주세요</p>
+              <FileText className="mx-auto h-10 w-10 text-muted-foreground" />
+              <p className="mt-3 text-base text-muted-foreground">신청 내역을 선택해주세요</p>
             </div>
           </div>
         )}
