@@ -1648,51 +1648,61 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           
                           {/* 해당 지역 토지 목록 */}
                           <div className="divide-y">
-                            {items.map((item) => (
+                            {items.map((item) => {
+                              const handleSelect = () => {
+                                const currentUnitItemIds = items.map(i => i.id);
+                                const newSelected = new Set(
+                                  Array.from(selectedCartItems).filter(id => currentUnitItemIds.includes(id))
+                                );
+                                if (!selectedCartItems.has(item.id)) {
+                                  newSelected.add(item.id);
+                                } else {
+                                  newSelected.delete(item.id);
+                                }
+                                setSelectedCartItems(newSelected);
+                              };
+                              
+                              return (
                               <div 
                                 key={item.id} 
-                                className={`flex items-start gap-3 p-3 transition-colors ${selectedCartItems.has(item.id) ? "bg-primary/5" : ""}`}
+                                className={`flex items-start p-3 transition-colors ${selectedCartItems.has(item.id) ? "bg-primary/5" : ""}`}
                               >
-                                <Checkbox 
-                                  id={`item-${item.id}`}
-                                  checked={selectedCartItems.has(item.id)}
-                                  className="mt-0.5 h-5 w-5"
-                                  onCheckedChange={(checked) => {
-                                    // 다른 관할기관 항목은 모두 해제하고, 현재 관할기관 항목만 유지
-                                    const currentUnitItemIds = items.map(i => i.id);
-                                    const newSelected = new Set(
-                                      Array.from(selectedCartItems).filter(id => currentUnitItemIds.includes(id))
-                                    );
-                                    if (checked) {
-                                      newSelected.add(item.id);
-                                    } else {
-                                      newSelected.delete(item.id);
-                                    }
-                                    setSelectedCartItems(newSelected);
-                                  }}
-                                />
-                                <div className="flex-1">
-                                  <p className="text-sm font-medium">{item.landInfo.address}</p>
-                                  <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                                    <span>잔여: {item.landInfo.remainingArea.toLocaleString()}㎡</span>
-                                    <span>|</span>
-                                    <span>{item.landInfo.landType}</span>
-                                    <Badge 
-                                      variant={item.aiResult.provisionalJudgment === "매수" ? "success" : "destructive"}
-                                      className="text-xs"
-                                    >
-                                      {item.aiResult.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
-                                    </Badge>
+                                {/* 클릭 가능한 선택 영역 (60%) */}
+                                <div 
+                                  className="flex flex-[3] cursor-pointer items-start gap-3"
+                                  onClick={handleSelect}
+                                >
+                                  <Checkbox 
+                                    id={`item-${item.id}`}
+                                    checked={selectedCartItems.has(item.id)}
+                                    className="mt-0.5 h-5 w-5"
+                                    onCheckedChange={() => handleSelect()}
+                                  />
+                                  <div className="flex-1">
+                                    <p className="text-sm font-medium">{item.landInfo.address}</p>
+                                    <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                                      <span>잔여: {item.landInfo.remainingArea.toLocaleString()}㎡</span>
+                                      <span>|</span>
+                                      <span>{item.landInfo.landType}</span>
+                                      <Badge 
+                                        variant={item.aiResult.provisionalJudgment === "매수" ? "success" : "destructive"}
+                                        className="text-xs"
+                                      >
+                                        {item.aiResult.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
+                                      </Badge>
+                                    </div>
                                   </div>
                                 </div>
+                                {/* 삭제 버튼 영역 (분리) */}
                                 <button
                                   onClick={() => onRemoveFromCart(item.id)}
-                                  className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+                                  className="ml-2 shrink-0 rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </button>
                               </div>
-                            ))}
+                              );
+                            })}
                           </div>
                           
                           {/* 이 관할기관 선택 항목 신청하기 버튼 */}
