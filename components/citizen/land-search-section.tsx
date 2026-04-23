@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { LeafletMap } from "@/components/leaflet-map";
 import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult, JudgmentRationale, ApplicationCartItem } from "@/lib/types";
-import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ShoppingCart, Plus, Trash2, X } from "lucide-react";
+import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ClipboardList, Plus, Trash2, X } from "lucide-react";
 
 
 interface LandSearchSectionProps {
@@ -314,7 +314,7 @@ function generateJudgmentRationale(
 
   // 중앙토지수용위원회 기준에 따른 토지 유형별 판단 문장
   if (land.landType === "대지") {
-    appliedCriteria.push(`택지(대지) 면적 기준: 주거용(단독주택) 90㎡, 주거용(연립·다세대) 165㎡, 주거용(아파트) 60㎡, 상업용 150㎡, 공업용 330㎡ 이하`);
+    appliedCriteria.push(`택지(대지) 면적 기준: 주거용(단독주택) 90㎡, 주거용(연립·다��대) 165㎡, 주거용(아파트) 60㎡, 상업용 150㎡, 공업용 330㎡ 이하`);
   } else if (land.landType === "농지") {
     appliedCriteria.push(`농지 면적 기준: 330㎡(약 100평) 이하이거나, 폭 5m 이하의 부정형으로서 농기계 진입·회전이 곤란한 경우`);
   } else if (land.landType === "산지") {
@@ -1022,7 +1022,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           <div className={`bg-background transition-all duration-300 overflow-hidden ${isResultsCollapsed ? "w-0" : "w-[280px]"}`}>
             {/* 검색 결과 헤더 */}
             <div className="flex items-center justify-between border-b bg-muted px-4 py-3">
-              <span className="text-base font-medium text-foreground">결과</span>
+              <span className="text-base font-medium text-foreground">결��</span>
               {searchResults.length > 0 && (
                 <span className="text-base text-muted-foreground">총 {searchResults.length}건</span>
               )}
@@ -1391,7 +1391,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           onClick={() => setIsCartOpen(true)}
           className="fixed bottom-6 right-6 z-50 flex h-14 items-center gap-2 rounded-full bg-primary px-5 text-white shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl"
         >
-          <ShoppingCart className="h-5 w-5" />
+          <ClipboardList className="h-5 w-5" />
           <span className="font-medium">신청 목록</span>
           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-sm font-bold text-primary">
             {cartItems.length}
@@ -1413,7 +1413,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             {/* 헤더 */}
             <div className="flex items-center justify-between border-b px-4 py-4">
               <div className="flex items-center gap-2">
-                <ShoppingCart className="h-5 w-5 text-primary" />
+                <ClipboardList className="h-5 w-5 text-primary" />
                 <h2 className="text-lg font-semibold">신청 목록</h2>
                 <Badge variant="secondary">{cartItems.length}건</Badge>
               </div>
@@ -1454,7 +1454,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 if (regions.length === 0) {
                   return (
                     <div className="flex h-full flex-col items-center justify-center text-muted-foreground">
-                      <ShoppingCart className="mb-2 h-12 w-12 opacity-30" />
+                      <ClipboardList className="mb-2 h-12 w-12 opacity-30" />
                       <p>신청 목록이 비어 있습니다</p>
                       <p className="mt-1 text-sm">토지를 검색하여 추가해 주세요</p>
                     </div>
