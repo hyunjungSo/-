@@ -48,6 +48,20 @@ export type FinalJudgmentResult = "매수" | "기각" | "심의위원회이관";
 // 판정 결과 (하위 호환용)
 export type JudgmentResult = FinalJudgmentResult;
 
+// 사업단 타입
+export type BusinessUnit = 
+  | "김포파주" 
+  | "수도권" 
+  | "양평이천" 
+  | "천안안성" 
+  | "세종천안" 
+  | "서산아산" 
+  | "새만금전주" 
+  | "강진광주" 
+  | "포항영덕" 
+  | "함양합천" 
+  | "합천창녕";
+
 // 토지 정보
 export interface LandInfo {
   id: string;
@@ -66,6 +80,8 @@ export interface LandInfo {
   ownerContact?: string; // 소유자 연락처
   hasIncludedLand: boolean; // 편입토지 존재 여부
   coordinates?: Array<{ lat: number; lng: number }>; // 필지 경계 좌표
+  businessUnit?: BusinessUnit; // 사업단
+  projectName?: string; // 사업명
 }
 
 // 일단지 판정 조건
@@ -139,13 +155,12 @@ export interface ApplicationCartItem {
   landInfo: LandInfo;
   aiResult: AIAnalysisResult;
   addedAt: string;
-  region: string; // 지역 그룹핑용 (시도 + 시군구)
+  businessUnit: BusinessUnit; // 사업단 그룹핑용
 }
 
-// 지역별 그룹핑된 신청 목록
-export interface RegionGroupedCart {
-  region: string;
-  regionDisplay: string; // 사용자에게 보여줄 지역명
+// 사업단별 그룹핑된 신청 목록
+export interface BusinessUnitGroupedCart {
+  businessUnit: BusinessUnit;
   items: ApplicationCartItem[];
 }
 

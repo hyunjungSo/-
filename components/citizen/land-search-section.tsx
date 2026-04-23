@@ -512,28 +512,11 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
       if (searchMode === "owner") {
         // 소유자 검색: 이름 + 주민번호 앞자리로 검색
         // 실제 구현에서는 API 호출, 여기서는 더미 데이터 시뮬레이션
-        // 홍길동이 경기도, 서울, 부산 3개 지역에 잔여지를 소유한 경우
+        // 홍길동이 3개 사업단(양평이천, 수도권, 천안안성)에 잔여지를 소유한 경우
         const ownerLandData = [
+          // 양평이천 사업단 - 2건
           {
             id: "owner-search-0",
-            address: "경기도 용인시 처인구 양지면 마성리 100-1",
-            coordinates: [
-              { lat: 37.2180, lng: 127.2950 },
-              { lat: 37.2185, lng: 127.2960 },
-              { lat: 37.2178, lng: 127.2965 },
-              { lat: 37.2173, lng: 127.2955 },
-            ],
-            originalArea: 1250,
-            incorporatedArea: 980,
-            remainingArea: 270,
-            remainingRatio: 21.6,
-            landType: "농지",
-            landCategory: "전",
-            incorporationDate: "2022-03-15",
-            projectName: "용인~양지 도로확장사업",
-          },
-          {
-            id: "owner-search-1",
             address: "경기도 이천시 마장면 덕평리 55-3",
             coordinates: [
               { lat: 37.2350, lng: 127.3800 },
@@ -547,35 +530,54 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             remainingRatio: 27.1,
             landType: "농지",
             landCategory: "답",
-            incorporationDate: "2021-11-20",
-            projectName: "이천~여주 국도확장사업",
+            businessUnit: "양평이천",
+            projectName: "이천-여주 국도확장사업",
           },
           {
-            id: "owner-search-2",
-            address: "서울특별시 강남구 수서동 712-5",
+            id: "owner-search-1",
+            address: "경기도 양평군 용문면 연수리 123-4",
             coordinates: [
-              { lat: 37.4890, lng: 127.1020 },
-              { lat: 37.4895, lng: 127.1028 },
-              { lat: 37.4892, lng: 127.1035 },
-              { lat: 37.4887, lng: 127.1027 },
+              { lat: 37.4850, lng: 127.5320 },
+              { lat: 37.4858, lng: 127.5332 },
+              { lat: 37.4852, lng: 127.5340 },
+              { lat: 37.4845, lng: 127.5328 },
             ],
-            originalArea: 520,
-            incorporatedArea: 380,
-            remainingArea: 140,
-            remainingRatio: 26.9,
-            landType: "대지",
-            landCategory: "대",
-            incorporationDate: "2023-06-10",
-            projectName: "수서~광주 고속철도사업",
+            originalArea: 1120,
+            incorporatedArea: 850,
+            remainingArea: 270,
+            remainingRatio: 24.1,
+            landType: "농지",
+            landCategory: "전",
+            businessUnit: "양평이천",
+            projectName: "양평-홍천 도로확장사업",
+          },
+          // 수도권 사업단 - 2건
+          {
+            id: "owner-search-2",
+            address: "경기도 용인시 처인구 양지면 마성리 100-1",
+            coordinates: [
+              { lat: 37.2180, lng: 127.2950 },
+              { lat: 37.2185, lng: 127.2960 },
+              { lat: 37.2178, lng: 127.2965 },
+              { lat: 37.2173, lng: 127.2955 },
+            ],
+            originalArea: 1250,
+            incorporatedArea: 980,
+            remainingArea: 270,
+            remainingRatio: 21.6,
+            landType: "농지",
+            landCategory: "전",
+            businessUnit: "수도권",
+            projectName: "용인-양지 도로확장사업",
           },
           {
             id: "owner-search-3",
-            address: "서울특별시 송파구 문정동 128-9",
+            address: "경기도 화성시 봉담읍 동화리 88-2",
             coordinates: [
-              { lat: 37.4780, lng: 127.1250 },
-              { lat: 37.4788, lng: 127.1260 },
-              { lat: 37.4783, lng: 127.1268 },
-              { lat: 37.4775, lng: 127.1258 },
+              { lat: 37.2120, lng: 126.9520 },
+              { lat: 37.2128, lng: 126.9532 },
+              { lat: 37.2122, lng: 126.9540 },
+              { lat: 37.2115, lng: 126.9528 },
             ],
             originalArea: 680,
             incorporatedArea: 520,
@@ -583,30 +585,31 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             remainingRatio: 23.5,
             landType: "대지",
             landCategory: "대",
-            incorporationDate: "2023-06-10",
-            projectName: "송파 도시개발사업",
+            businessUnit: "수도권",
+            projectName: "화성 동탄 도시개발사업",
           },
+          // 천안안성 사업단 - 1건
           {
             id: "owner-search-4",
-            address: "부산광역시 해운대구 우동 1450-2",
+            address: "충청남도 천안시 서북구 직산읍 삼은리 250-1",
             coordinates: [
-              { lat: 35.1620, lng: 129.1635 },
-              { lat: 35.1628, lng: 129.1645 },
-              { lat: 35.1622, lng: 129.1652 },
-              { lat: 35.1615, lng: 129.1642 },
+              { lat: 36.9120, lng: 127.0820 },
+              { lat: 36.9128, lng: 127.0832 },
+              { lat: 36.9122, lng: 127.0840 },
+              { lat: 36.9115, lng: 127.0828 },
             ],
             originalArea: 980,
             incorporatedArea: 750,
             remainingArea: 230,
             remainingRatio: 23.5,
-            landType: "대지",
-            landCategory: "대",
-            incorporationDate: "2022-09-05",
-            projectName: "해운대 도시재생사업",
+            landType: "농지",
+            landCategory: "답",
+            businessUnit: "천안안성",
+            projectName: "천안-아산 산업단지 조성사업",
           },
         ];
         
-        // 여러 필지를 소유한 경우 (3개 지역: 경기도 2건, 서울 2건, 부산 1건)
+        // 여러 필지를 소유한 경우 (3개 사업단: 양평이천 2건, 수도권 2건, 천안안성 1건)
         results = ownerLandData.map((landData) => ({
           ...dummyLandInfoList[0],
           ...landData,
@@ -1429,29 +1432,27 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             <div className="border-b bg-muted/30 px-4 py-3">
               <p className="text-sm text-muted-foreground">
                 <Info className="mr-1 inline h-4 w-4" />
-                같은 지역의 토지만 함께 신청할 수 있습니다. 서로 다른 지역의 토지는 별도로 신청해 주세요.
+                같은 사업단의 토지만 함께 신청할 수 있습니다. 서로 다른 사업단의 토지는 별도로 신청해 주세요.
               </p>
             </div>
 
-            {/* 지역별 그룹핑된 목록 */}
+            {/* 사업단별 그룹핑된 목록 */}
             <div className="flex-1 overflow-y-auto p-4">
               {(() => {
-                // 지역별로 그룹핑
-                const groupedByRegion = cartItems.reduce((acc, item) => {
-                  // 주소에서 시도+시군구 추출
-                  const addressParts = item.landInfo.address.split(" ");
-                  const region = addressParts.slice(0, 2).join(" ");
+                // 사업단별로 그룹핑
+                const groupedByBusinessUnit = cartItems.reduce((acc, item) => {
+                  const businessUnit = item.businessUnit || "수도권";
                   
-                  if (!acc[region]) {
-                    acc[region] = [];
+                  if (!acc[businessUnit]) {
+                    acc[businessUnit] = [];
                   }
-                  acc[region].push(item);
+                  acc[businessUnit].push(item);
                   return acc;
                 }, {} as Record<string, ApplicationCartItem[]>);
 
-                const regions = Object.keys(groupedByRegion);
+                const businessUnits = Object.keys(groupedByBusinessUnit);
 
-                if (regions.length === 0) {
+                if (businessUnits.length === 0) {
                   return (
                     <div className="flex h-full flex-col items-center justify-center text-muted-foreground">
                       <ClipboardList className="mb-2 h-12 w-12 opacity-30" />
@@ -1463,20 +1464,20 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
                 return (
                   <div className="space-y-4">
-                    {regions.map((region) => {
-                      const items = groupedByRegion[region];
-                      const selectedInRegion = items.filter(item => selectedCartItems.has(item.id));
-                      const allSelectedInRegion = items.every(item => selectedCartItems.has(item.id));
-                      const someSelectedInRegion = items.some(item => selectedCartItems.has(item.id));
+                    {businessUnits.map((businessUnit) => {
+                      const items = groupedByBusinessUnit[businessUnit];
+                      const selectedInUnit = items.filter(item => selectedCartItems.has(item.id));
+                      const allSelectedInUnit = items.every(item => selectedCartItems.has(item.id));
+                      const someSelectedInUnit = items.some(item => selectedCartItems.has(item.id));
                       
                       return (
-                        <div key={region} className="rounded-lg border bg-card">
-                          {/* 지역 헤더 */}
+                        <div key={businessUnit} className="rounded-lg border bg-card">
+                          {/* 사업단 헤더 */}
                           <div className="flex items-center justify-between border-b bg-muted/30 px-4 py-3">
                             <div className="flex items-center gap-3">
                               <Checkbox 
-                                id={`region-${region}`}
-                                checked={allSelectedInRegion}
+                                id={`unit-${businessUnit}`}
+                                checked={allSelectedInUnit}
                                 className="h-5 w-5"
                                 onCheckedChange={(checked) => {
                                   const newSelected = new Set(selectedCartItems);
@@ -1491,13 +1492,13 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                 }}
                               />
                               <div className="flex items-center gap-2">
-                                <MapPin className="h-4 w-4 text-primary" />
-                                <span className="font-medium">{region}</span>
+                                <FileText className="h-4 w-4 text-primary" />
+                                <span className="font-medium">{businessUnit} 사업단</span>
                                 <Badge variant="outline" className="text-xs">{items.length}필지</Badge>
                               </div>
                             </div>
-                            {someSelectedInRegion && (
-                              <span className="text-xs text-primary">{selectedInRegion.length}건 선택</span>
+                            {someSelectedInUnit && (
+                              <span className="text-xs text-primary">{selectedInUnit.length}건 선택</span>
                             )}
                           </div>
                           
@@ -1546,7 +1547,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             ))}
                           </div>
                           
-                          {/* 이 지역 선택 항목 신청하기 버튼 */}
+                          {/* 이 사업단 선택 항목 신청하기 버튼 */}
                           <div className="border-t p-3">
                             <Button 
                               onClick={() => {
@@ -1561,10 +1562,10 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                 }
                               }}
                               className="w-full"
-                              disabled={selectedInRegion.length === 0}
+                              disabled={selectedInUnit.length === 0}
                             >
-                              {selectedInRegion.length > 0 
-                                ? `선택한 ${selectedInRegion.length}건 신청하기` 
+                              {selectedInUnit.length > 0 
+                                ? `선택한 ${selectedInUnit.length}건 신청하기` 
                                 : "항목을 선택해 주세요"}
                               <ChevronRight className="ml-1 h-4 w-4" />
                             </Button>
@@ -1573,14 +1574,14 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       );
                     })}
 
-                    {/* 여러 지역이 있을 때 안내 */}
-                    {regions.length > 1 && (
+                    {/* 여러 사업단이 있을 때 안내 */}
+                    {businessUnits.length > 1 && (
                       <div className="rounded-lg border border-warning/50 bg-warning/5 p-3">
                         <p className="flex items-start gap-2 text-sm text-warning">
                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
                           <span>
-                            <strong>{regions.length}개 지역</strong>의 토지가 있습니다. 
-                            각 지역별로 별도 신청이 필요합니다.
+                            <strong>{businessUnits.length}개 사업단</strong>의 토지가 있습니다. 
+                            각 사업단별로 별도 신청이 필요합니다.
                           </span>
                         </p>
                       </div>

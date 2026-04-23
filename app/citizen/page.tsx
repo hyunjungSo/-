@@ -42,16 +42,12 @@ export default function CitizenPage() {
       return;
     }
     
-    // 주소에서 지역 추출 (시도 + 시군구)
-    const addressParts = land.address.split(" ");
-    const region = addressParts.slice(0, 2).join(" ");
-    
     const newItem: ApplicationCartItem = {
       id: land.id,
       landInfo: land,
       aiResult: result,
       addedAt: new Date().toISOString(),
-      region,
+      businessUnit: land.businessUnit || "수도권", // 사업단 기준 그룹핑
     };
     
     setCartItems(prev => [...prev, newItem]);
