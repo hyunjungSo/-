@@ -38,13 +38,19 @@ export default function HomePage() {
         {/* 컨텐츠 */}
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
           <div className="max-w-xl">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 backdrop-blur-sm">
+              <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-sm font-medium text-white">AI 기반 자동 판독 시스템</span>
+            </div>
             <h1 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-              잔여지 매수 신청 서비스
+              AI로 더 빠르고 정확한
+              <br />
+              잔여지 매수 판독
             </h1>
             <p className="mt-5 text-base leading-relaxed text-white/90 sm:text-lg">
-              도로 편입으로 발생한 잔여지의 매수 가능 여부를 확인하고
+              인공지능이 토지 형상, 면적, 법적 요건을 자동으로 분석하여
               <br />
-              온라인으로 간편하게 매수 신청을 진행하실 수 있습니다.
+              매수 가능 여부를 신속하게 판독해 드립니다.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg" className="h-[55px] px-8 text-lg font-semibold">
@@ -67,10 +73,10 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-[28px] font-bold text-foreground">
-              주요 기능
+              AI 기반 핵심 기능
             </h2>
             <p className="mt-2 text-[18px] text-muted-foreground">
-              편리한 잔여지 매수 신청을 위한 서비스를 제공합니다
+              인공지능이 복잡한 판독 업무를 자동화하여 신속하고 정확한 서비스를 제공합니다
             </p>
           </div>
 
