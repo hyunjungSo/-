@@ -454,7 +454,7 @@ function getUsageDifficultyDescription(landType: string, area: number, shape: st
 export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, onRemoveFromCart, onSubmitCart }: LandSearchSectionProps) {
   // 장바구니 패널 표시 상태
   const [isCartOpen, setIsCartOpen] = useState(false);
-  // 검색 방식 탭 (지번 / 소유자)
+  // 검색 방식 탭 (지�� / 소유자)
   const [searchMode, setSearchMode] = useState<"address" | "owner">("address");
   
   // 소유자 검색 상태 (이름 + 주민번호 앞자리)
@@ -764,6 +764,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               </div>
               <Button
                 onClick={handleSearch}
+                variant="secondary"
                 disabled={!ownerName || ownerBirthDate.length !== 6 || isSearching}
                 className="h-10 gap-2 px-6"
               >
@@ -893,6 +894,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           <div className="flex items-center gap-2">
             <Button 
               onClick={handleSearch} 
+              variant="secondary"
               className="gap-1.5 px-5"
               disabled={!selectedSigungu || isSearching}
             >
@@ -911,7 +913,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             {(selectedSido || searchResults.length > 0) && (
               <Button 
                 onClick={handleReset}
-                variant="outline"
+                variant="tertiary"
                 className="gap-1.5 px-4"
               >
                 <RotateCcw className="h-4 w-4" />

@@ -12,10 +12,12 @@ const buttonVariants = cva(
       variant: {
         // KRDS Primary: 채운 스타일 - 가장 높은 강조, 주요 행동 유도
         default: 'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80',
-        // KRDS Secondary: 윤곽선 스타일 - 중간 수준 강조
+        // KRDS Secondary: 채운 스타일 - 중간 수준 강조, 검색/조회 등 보조 액션
+        secondary: 'bg-[#222222] text-white hover:bg-[#333333] active:bg-[#111111]',
+        // KRDS Outline: 윤곽선 스타일 - 중간 수준 강조
         outline: 'border-2 border-primary bg-transparent text-primary hover:bg-primary/5 active:bg-primary/10',
         // KRDS Tertiary: 낮은 강조 수준
-        secondary: 'bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300',
+        tertiary: 'bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300',
         // KRDS Text: 텍스트 버튼 - 가장 낮은 강조
         ghost: 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 active:bg-gray-200',
         // 위험 동작용
