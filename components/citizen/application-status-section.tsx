@@ -26,26 +26,22 @@ import type { JudgmentRationale } from "@/lib/types";
 const adminStatusConfig: Record<AdminStatus, { 
   label: string; 
   icon: typeof Clock; 
-  variant: "text" | "outline" | "filled";
-  className: string;
+  variant: "outline" | "default" | "secondary" | "success" | "warning" | "info" | "primary-subtle";
 }> = {
   접수완료: { 
     label: "접수완료", 
     icon: Clock, 
     variant: "outline",
-    className: "border border-gray-400 bg-transparent text-gray-600 font-medium" 
   },
   진행중: { 
     label: "진행중", 
     icon: PlayCircle, 
-    variant: "outline",
-    className: "border border-primary bg-transparent text-primary font-medium" 
+    variant: "primary-subtle",
   },
   심사완료: { 
     label: "심사완료", 
     icon: CheckCircle2, 
-    variant: "filled",
-    className: "bg-primary text-white border-primary font-medium" 
+    variant: "default",
   },
 };
 
@@ -65,15 +61,12 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
               <Scale className="h-4 w-4 text-primary" />
               <span>AI 판단 근거 보기</span>
               {provisionalJudgment && (
-                <span className={`rounded-full px-2 py-0.5 text-base font-bold ${
-                  provisionalJudgment === "매수"
-                    ? "bg-primary text-white"
-                    : "bg-destructive text-white"
-                }`}>
-                  {provisionalJudgment === "매수" 
-                    ? "매수 가능" 
-                    : "기준 미충족"}
-                </span>
+                <Badge 
+                  variant={provisionalJudgment === "매수" ? "success" : "destructive"}
+                  size="sm"
+                >
+                  {provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
+                </Badge>
               )}
             </div>
             {isOpen ? (
@@ -341,22 +334,26 @@ export function ApplicationStatusSection() {
                       >
                         {/* 뱃지 영역 */}
                         <div className="mb-2 flex flex-wrap items-center gap-2">
-                          <Badge className={statusConfig.className}>
+                          <Badge variant={statusConfig.variant} size="sm">
+                            <statusConfig.icon className="h-3 w-3" />
                             {statusConfig.label}
                           </Badge>
                           {app.adminStatus === "심사완료" && app.finalJudgment && (
-                            <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-base font-semibold ${
-                              app.finalJudgment === "매수" 
-                                ? "bg-emerald-100 text-emerald-700" 
-                                : app.finalJudgment === "기각"
-                                  ? "bg-red-100 text-red-700"
-                                  : "bg-amber-100 text-amber-700"
-                            }`}>
+                            <Badge 
+                              variant={
+                                app.finalJudgment === "매수" 
+                                  ? "success-subtle" 
+                                  : app.finalJudgment === "기각"
+                                    ? "destructive-subtle"
+                                    : "warning-subtle"
+                              }
+                              size="sm"
+                            >
                               {app.finalJudgment === "매수" && <CheckCircle2 className="h-3 w-3" />}
                               {app.finalJudgment === "기각" && <AlertTriangle className="h-3 w-3" />}
                               {app.finalJudgment === "심의위원회이관" && <Info className="h-3 w-3" />}
                               {app.finalJudgment}
-                            </span>
+                            </Badge>
                           )}
                         </div>
 

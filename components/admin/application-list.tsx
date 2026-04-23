@@ -28,17 +28,17 @@ interface ApplicationListProps {
   onSelect: (application: Application) => void;
 }
 
-const statusConfig: Record<ProcessStatus, { label: string; className: string }> = {
-  접수완료: { label: "접수완료", className: "bg-gray-100 text-gray-700 border-gray-300" },
-  AI분석완료: { label: "AI 분석 완료", className: "bg-blue-100 text-blue-700 border-blue-300" },
-  검토중: { label: "검토 중", className: "bg-amber-100 text-amber-700 border-amber-300" },
-  처리완료: { label: "처리 완료", className: "bg-green-100 text-green-700 border-green-300" },
+const statusConfig: Record<ProcessStatus, { label: string; variant: "secondary" | "info" | "warning" | "success" }> = {
+  접수완료: { label: "접수완료", variant: "secondary" },
+  AI분석완료: { label: "AI 분석 완료", variant: "info" },
+  검토중: { label: "검토 중", variant: "warning" },
+  처리완료: { label: "처리 완료", variant: "success" },
 };
 
-const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
-  접수완료: { label: "접수완료", icon: Clock, color: "text-gray-500" },
-  진행중: { label: "진행중", icon: PlayCircle, color: "text-primary" },
-  심사완료: { label: "심사완료", icon: CheckCircle2, color: "text-primary" },
+const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; variant: "outline" | "primary-subtle" | "default" }> = {
+  접수완료: { label: "접수완료", icon: Clock, variant: "outline" },
+  진행중: { label: "진행중", icon: PlayCircle, variant: "primary-subtle" },
+  심사완료: { label: "심사완료", icon: CheckCircle2, variant: "default" },
 };
 
 export function ApplicationList({ applications, onSelect }: ApplicationListProps) {
@@ -227,10 +227,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                         const config = adminStatusConfig[app.adminStatus];
                         const Icon = config.icon;
                         return (
-                          <div className={`flex items-center gap-1 ${config.color}`}>
-                            <Icon className="h-4 w-4" />
-                            <span className="text-base font-medium">{config.label}</span>
-                          </div>
+                          <Badge variant={config.variant} size="sm">
+                            <Icon className="h-3 w-3" />
+                            {config.label}
+                          </Badge>
                         );
                       })()}
                     </TableCell>
@@ -256,7 +256,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     <span className="font-medium text-foreground">
                       {app.applicationNumber}
                     </span>
-                    <Badge className={`text-base ${statusConfig[app.status].className}`}>
+                    <Badge variant={statusConfig[app.status].variant} size="sm">
                       {statusConfig[app.status].label}
                     </Badge>
                     {app.additionalLands && app.additionalLands.length > 0 && (

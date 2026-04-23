@@ -12,16 +12,16 @@ interface ApplicationResultSectionProps {
 }
 
 const statusConfig = {
-  접수완료: { label: "접수완료", variant: "secondary" as const, icon: Clock },
-  AI분석완료: { label: "AI 분석 완료", variant: "secondary" as const, icon: Clock },
-  검토중: { label: "검토 중", variant: "secondary" as const, icon: Clock },
-  처리완료: { label: "처리 완료", variant: "default" as const, icon: CheckCircle2 },
+  접수완료: { label: "접수완료", variant: "outline" as const, icon: Clock },
+  AI분석완료: { label: "AI 분석 완료", variant: "info" as const, icon: Clock },
+  검토중: { label: "검토 중", variant: "warning" as const, icon: Clock },
+  처리완료: { label: "처리 완료", variant: "success" as const, icon: CheckCircle2 },
 };
 
 const judgmentConfig = {
-  매수: { label: "매수 결정", color: "bg-primary text-primary-foreground" },
-  기각: { label: "기각", color: "bg-destructive text-destructive-foreground" },
-  심의위원회이관: { label: "심의위원회 이관", color: "bg-amber-500 text-white" },
+  매수: { label: "매수 결정", variant: "success" as const },
+  기각: { label: "기각", variant: "destructive" as const },
+  심의위원회이관: { label: "심의위원회 이관", variant: "warning" as const },
 };
 
 export function ApplicationResultSection({ application, onNewApplication }: ApplicationResultSectionProps) {
@@ -98,11 +98,9 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
               <div className="flex items-center justify-between border-t border-border pt-4">
                 <dt className="text-muted-foreground">최종 판정</dt>
                 <dd>
-                  <span
-                    className={`inline-flex items-center rounded-full px-3 py-1 text-base font-medium ${judgmentConfig[application.finalJudgment].color}`}
-                  >
+                  <Badge variant={judgmentConfig[application.finalJudgment].variant} size="lg">
                     {judgmentConfig[application.finalJudgment].label}
-                  </span>
+                  </Badge>
                 </dd>
               </div>
             )}
