@@ -709,7 +709,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
                 searchMode === "address"
                   ? "bg-white text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-foreground hover:text-foreground"
               }`}
             >
               지번으로 검색
@@ -720,7 +720,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
                 searchMode === "owner"
                   ? "bg-white text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-foreground hover:text-foreground"
               }`}
             >
               소유자로 검색
