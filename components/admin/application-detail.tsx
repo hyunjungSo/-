@@ -644,7 +644,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
           {/* 저장 버튼 */}
           <div className="flex justify-end gap-3 border-t border-border pt-4">
-            <Button variant="outline" onClick={onBack}>
+            <Button onClick={onBack} className="bg-[#373b41] text-white hover:bg-[#4a4f56]">
               취소
             </Button>
             <Button onClick={handleSave} disabled={isSaving}>
