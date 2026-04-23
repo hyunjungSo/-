@@ -550,7 +550,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 setSearchResults([]);
               }}
             >
-              <SelectTrigger className="h-10 w-[140px] rounded border-border bg-background text-sm focus:border-primary focus:ring-2 focus:ring-primary/20">
+              <SelectTrigger className="w-[140px]">
                 <SelectValue placeholder="선택" />
               </SelectTrigger>
               <SelectContent>
@@ -574,7 +574,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               }}
               disabled={!selectedSido}
             >
-              <SelectTrigger className="h-10 w-[140px] rounded border-border bg-background text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-muted disabled:opacity-50">
+              <SelectTrigger className="w-[140px]">
                 <SelectValue placeholder="선택" />
               </SelectTrigger>
               <SelectContent>
@@ -597,7 +597,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               }}
               disabled={!selectedSigungu || eupmyeondongOptions.length === 0}
             >
-              <SelectTrigger className="h-10 w-[140px] rounded border-border bg-background text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-muted disabled:opacity-50">
+              <SelectTrigger className="w-[140px]">
                 <SelectValue placeholder={eupmyeondongOptions.length === 0 ? "해당없음" : "선택"} />
               </SelectTrigger>
               <SelectContent>
@@ -616,7 +616,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               onValueChange={setSelectedRi}
               disabled={!selectedEupmyeondong || riOptions.length === 0}
             >
-              <SelectTrigger className="h-10 w-[120px] rounded border-border bg-background text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-muted disabled:opacity-50">
+              <SelectTrigger className="w-[120px]">
                 <SelectValue placeholder={riOptions.length === 0 ? "해당없음" : "선택"} />
               </SelectTrigger>
               <SelectContent>
@@ -635,7 +635,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 placeholder="번지 입력" 
                 value={jibun}
                 onChange={(e) => setJibun(e.target.value)}
-                className="h-10 w-[120px] rounded border-border pr-8 text-sm focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="w-[120px] pr-8"
               />
               <Search className="absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             </div>
@@ -645,7 +645,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
           <div className="flex items-center gap-2">
             <Button 
               onClick={handleSearch} 
-              className="h-10 gap-1.5 rounded bg-primary px-5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+              className="gap-1.5 px-5"
               disabled={!selectedSigungu || isSearching}
             >
               {isSearching ? (
@@ -664,7 +664,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               <Button 
                 onClick={handleReset}
                 variant="outline"
-                className="h-10 gap-1.5 rounded border-border px-4 text-sm font-medium hover:bg-muted"
+                className="gap-1.5 px-4"
               >
                 <RotateCcw className="h-4 w-4" />
                 <span>초기화</span>

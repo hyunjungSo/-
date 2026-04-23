@@ -151,10 +151,39 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     placeholder="접수번호, 신청인명, 지번으로 검색"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="h-10 rounded border-border bg-background pr-10 text-sm focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    className="pr-10"
                   />
                   <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 </div>
+              </div>
+              
+              {/* 처리상태 필터 */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-foreground">처리상태</label>
+                <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as AdminStatus | "all")}>
+                  <SelectTrigger className="w-[150px]">
+                    <SelectValue placeholder="전체" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">전체 민원</SelectItem>
+                    <SelectItem value="접수완료">접수완료</SelectItem>
+                    <SelectItem value="진행중">진행중</SelectItem>
+                    <SelectItem value="심사완료">심사완료</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* 정렬 버튼 */}
+              <Button
+                variant="outline"
+                className="gap-1.5 px-4"
+                onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
+              >
+                <span>{sortOrder === "desc" ? "↓" : "↑"}</span>
+                <span>{sortOrder === "desc" ? "최신순" : "오래된순"}</span>
+              </Button>
+            </div>
+          </div>
               </div>
               
               {/* 처리상태 필터 */}
@@ -165,7 +194,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     <SelectValue placeholder="전체" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">전체 민원</SelectItem>
+                    <SelectItem value="all">��체 민원</SelectItem>
                     <SelectItem value="접수완료">접수완료</SelectItem>
                     <SelectItem value="진행중">진행중</SelectItem>
                     <SelectItem value="심사완료">심사완료</SelectItem>
