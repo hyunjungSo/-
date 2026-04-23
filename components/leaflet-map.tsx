@@ -503,9 +503,9 @@ export function LeafletMap({
             className="h-8 w-8 rounded-none p-0 hover:bg-gray-100"
             onClick={handleZoomIn}
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-4 w-4" style={{ color: "rgb(26, 26, 26)" }} />
           </Button>
-          <div className="border-t border-gray-200 px-1 py-1 text-center text-base font-medium text-gray-700">
+          <div className="border-t border-gray-200 px-1 py-1 text-center text-base font-medium" style={{ color: "rgb(26, 26, 26)" }}>
             {currentZoom}
           </div>
           <Button
@@ -514,7 +514,7 @@ export function LeafletMap({
             className="h-8 w-8 rounded-none border-t border-gray-200 p-0 hover:bg-gray-100"
             onClick={handleZoomOut}
           >
-            <Minus className="h-4 w-4" />
+            <Minus className="h-4 w-4" style={{ color: "rgb(26, 26, 26)" }} />
           </Button>
         </div>
         
