@@ -352,12 +352,13 @@ export function ApplicationStatusSection() {
                           </Badge>
                           {app.adminStatus === "심사완료" && app.finalJudgment && (
                             <Badge 
-                              variant={
+                              variant="outline"
+                              className={
                                 app.finalJudgment === "매수" 
-                                  ? "success-subtle" 
+                                  ? "border-emerald-600 text-emerald-700" 
                                   : app.finalJudgment === "기각"
-                                    ? "destructive-subtle"
-                                    : "warning-subtle"
+                                    ? "border-red-600 text-red-700"
+                                    : "border-amber-600 text-amber-700"
                               }
                             >
                               {app.finalJudgment === "매수" && <CheckCircle2 className="h-3.5 w-3.5" />}

@@ -41,9 +41,9 @@ interface ApplicationDetailProps {
 }
 
 const judgmentConfig = {
-  매수: { label: "매수", icon: CheckCircle2, color: "text-[#222222] border-[#222222]" },
-  기각: { label: "기각", icon: XCircle, color: "text-[#222222] border-[#222222]" },
-  심의위원회이관: { label: "심의위원회 이관", icon: AlertTriangle, color: "text-[#222222] border-[#222222]" },
+  매수: { label: "매수", icon: CheckCircle2, borderColor: "border-emerald-600", textColor: "text-emerald-700" },
+  기각: { label: "기각", icon: XCircle, borderColor: "border-red-600", textColor: "text-red-700" },
+  심의위원회이관: { label: "심의위원회 이관", icon: AlertTriangle, borderColor: "border-amber-600", textColor: "text-amber-700" },
 };
 
 const adminStatusConfig: Record<AdminStatus, { 
@@ -627,12 +627,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <Button
                     key={judgment}
                     type="button"
-                    variant={isSelected ? "default" : "outline"}
+                    variant="outline"
                     onClick={() =>
                       setReviewData((prev) => ({ ...prev, finalJudgment: judgment }))
                     }
                     disabled={isDisabled}
-                    className={`cursor-pointer border ${isSelected ? "bg-[#222222] hover:bg-[#333333]" : config.color} ${isDisabled ? "opacity-50" : ""}`}
+                    className={`cursor-pointer border-2 ${isSelected ? `${config.borderColor} ${config.textColor} bg-transparent` : "border-border text-foreground"} ${isDisabled ? "opacity-50" : ""}`}
                   >
                     <Icon className="mr-2 h-4 w-4" />
                     {config.label}
