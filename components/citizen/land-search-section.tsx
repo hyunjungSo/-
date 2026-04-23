@@ -1531,12 +1531,13 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
       {cartItems.length > 0 && !isCartOpen && (
         <button
           onClick={() => setIsCartOpen(true)}
-          className="fixed bottom-6 right-6 z-50 flex h-14 items-center gap-2 rounded-full bg-primary px-5 text-white shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl"
+          className="fixed bottom-6 right-6 z-50 flex h-14 animate-bounce items-center gap-2 rounded-full bg-primary px-5 text-white shadow-lg transition-all hover:animate-none hover:bg-primary/90 hover:shadow-xl"
         >
           <ClipboardList className="h-5 w-5" />
           <span className="font-medium">신청 목록</span>
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-sm font-bold text-primary">
+          <span className="relative flex h-6 w-6 items-center justify-center rounded-full bg-white text-sm font-bold text-primary">
             {cartItems.length}
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>
           </span>
         </button>
       )}
