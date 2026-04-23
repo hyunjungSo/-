@@ -213,11 +213,48 @@ function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale 
   );
 }
 
+// 택지 세부 유형별 면적 기준
+const LAND_SUB_TYPE_CRITERIA: Record<string, { label: string; maxArea: number }> = {
+  "residential-detached": { label: "주거용(단독주택)", maxArea: 90 },
+  "residential-multi": { label: "주거용(연립/다세대)", maxArea: 165 },
+  "residential-apartment": { label: "주거용(아파트)", maxArea: 60 },
+  "commercial": { label: "상업용", maxArea: 150 },
+  "industrial": { label: "공업용", maxArea: 330 },
+};
+
 // AI 분석 결과 시뮬레이션
-function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
+function simulateAIAnalysis(
+  land: LandInfo, 
+  landSubType?: "" | "residential-detached" | "residential-multi" | "residential-apartment" | "commercial" | "industrial"
+): AIAnalysisResult {
   const shapeIndexChange = land.remainingShapeIndex - land.originalShapeIndex;
   
+  // 택지(대지)인 경우 세부 유형에 따른 면적 기준 적용
+  let areaCriteriaLabel = "";
+  let areaCriteriaMet = false;
+  
+  if (land.landType === "대지" && landSubType && LAND_SUB_TYPE_CRITERIA[landSubType]) {
+    const criteria = LAND_SUB_TYPE_CRITERIA[landSubType];
+    areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (${criteria.label} 기준: ${criteria.maxArea}㎡ 이하)`;
+    areaCriteriaMet = land.remainingArea <= criteria.maxArea;
+  } else if (land.landType === "농지") {
+    areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (농지 기준: 330㎡ 이하)`;
+    areaCriteriaMet = land.remainingArea <= 330;
+  } else if (land.landType === "산지") {
+    areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (산지 기준: 990㎡ 이하)`;
+    areaCriteriaMet = land.remainingArea <= 990;
+  } else {
+    areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (그 밖의 토지 기준: 330㎡ 이하)`;
+    areaCriteriaMet = land.remainingArea <= 330;
+  }
+  
   const criteriaChecks = [
+    {
+      criteriaName: "잔여 면적 기준",
+      criteriaDescription: areaCriteriaLabel,
+      isMet: areaCriteriaMet,
+      autoDetected: true,
+    },
     {
       criteriaName: "잔여지 비율",
       criteriaDescription: `잔여 비율 ${land.remainingRatio}% (기준: 30% 이하)`,
@@ -279,7 +316,8 @@ function simulateAIAnalysis(land: LandInfo): AIAnalysisResult {
     metAutoCriteria,
     metCriteriaNames,
     manualCheckItems,
-    shapeIndexChange
+    shapeIndexChange,
+    landSubType
   );
   
   return {
@@ -304,7 +342,8 @@ function generateJudgmentRationale(
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],
-  shapeIndexChange: number
+  shapeIndexChange: number,
+  landSubType?: string
 ): JudgmentRationale {
   const legalBasis = "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조(잔여지의 매수청구 등) 및 동법 시행규칙 제34조(잔여지 등의 매수청구), 중앙토지수용위원회 잔여지 수용 및 가치하락 손실보상 참고기준";
   
@@ -313,8 +352,9 @@ function generateJudgmentRationale(
   const appliedCriteria: string[] = [];
 
   // 중앙토지수용위원회 기준에 따른 토지 유형별 판단 문장
-  if (land.landType === "대지") {
-    appliedCriteria.push(`택지(대지) 면적 기준: 주거용(단독주택) 90㎡, 주거용(연립·다세대) 165㎡, 주거용(아파트) 60㎡, 상업용 150㎡, 공업용 330㎡ 이하`);
+  if (land.landType === "대지" && landSubType && LAND_SUB_TYPE_CRITERIA[landSubType]) {
+    const criteria = LAND_SUB_TYPE_CRITERIA[landSubType];
+    appliedCriteria.push(`택지(대지) 면적 기준: ${criteria.label} ${criteria.maxArea}㎡ 이하`);
   } else if (land.landType === "농지") {
     appliedCriteria.push(`농지 면적 기준: 330㎡(약 100평) 이하이거나, 폭 5m 이하의 부정형으로서 농기계 진입·회전이 곤란한 경우`);
   } else if (land.landType === "산지") {
@@ -486,6 +526,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   
   // 편입토지 없음 상태
   const [noIncludedLand, setNoIncludedLand] = useState(false);
+  
+  // 택지 세부 유형 (대지인 경우에만 사용)
+  const [landSubType, setLandSubType] = useState<"" | "residential-detached" | "residential-multi" | "residential-apartment" | "commercial" | "industrial">("");
 
   // 현재 단계 계산
   // 1. 지번조회 = 필지 선택 전까지
@@ -709,6 +752,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setSelectedLand(land);
     setAiResult(null);
     setNoIncludedLand(false);
+    setLandSubType(""); // 택지 세부 유형 초기화
     
     // 기본정보 패널이 접혀 있으면 자동으로 펼침
     if (isBasicInfoCollapsed) {
@@ -724,11 +768,13 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   // AI 판독 실행
   const handleAIAnalysis = () => {
     if (!selectedLand || noIncludedLand) return;
+    // 택지인 경우 세부 유형이 필수
+    if (selectedLand.landType === "대지" && !landSubType) return;
     
     setAiAnalyzing(true);
     
     setTimeout(() => {
-      const result = simulateAIAnalysis(selectedLand);
+      const result = simulateAIAnalysis(selectedLand, landSubType);
       setAiResult(result);
       setAiAnalyzing(false);
     }, 1500);
@@ -1171,13 +1217,37 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   </div>
                 )}
 
+                {/* 택지(대지) 세부 유형 선택 */}
+                {!noIncludedLand && !aiResult && selectedLand.landType === "대지" && (
+                  <div className="rounded border border-border bg-muted/30 p-3">
+                    <Label htmlFor="landSubType" className="mb-2 block text-sm font-medium">
+                      택지 세부 유형 선택 <span className="text-destructive">*</span>
+                    </Label>
+                    <Select value={landSubType} onValueChange={(value) => setLandSubType(value as typeof landSubType)}>
+                      <SelectTrigger id="landSubType" className="h-10 w-full bg-background">
+                        <SelectValue placeholder="건축물 용도를 선택해 주세요" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
+                        <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
+                        <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
+                        <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
+                        <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="mt-1.5 text-xs text-muted-foreground">
+                      택지 유형에 따라 매수 기준 면적이 달라집니다.
+                    </p>
+                  </div>
+                )}
+
                 {/* AI 판독 버튼 */}
                 {!noIncludedLand && !aiResult && (
                   <Button 
                     onClick={handleAIAnalysis}
                     className="h-12 w-full cursor-pointer"
                     variant="default"
-                    disabled={aiAnalyzing}
+                    disabled={aiAnalyzing || (selectedLand.landType === "대지" && !landSubType)}
                   >
                     {aiAnalyzing ? (
                       <>
