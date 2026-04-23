@@ -46,10 +46,14 @@ const judgmentConfig = {
   심의위원회이관: { label: "심의위원회 이관", icon: AlertTriangle, color: "text-[#222222] border-[#222222]" },
 };
 
-const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; color: string }> = {
-  접수완료: { label: "접수완료", icon: Clock, color: "text-[#222222] border-[#222222]" },
-  진행중: { label: "진행중", icon: PlayCircle, color: "text-[#222222] border-[#222222]" },
-  심사완료: { label: "심사완료", icon: CheckCircle2, color: "text-[#222222] border-[#222222]" },
+const adminStatusConfig: Record<AdminStatus, { 
+  label: string; 
+  icon: typeof Clock; 
+  variant: "warning-subtle" | "info-subtle" | "success-subtle";
+}> = {
+  접수완료: { label: "접수완료", icon: Clock, variant: "warning-subtle" },
+  진행중: { label: "진행중", icon: PlayCircle, variant: "info-subtle" },
+  심사완료: { label: "심사완료", icon: CheckCircle2, variant: "success-subtle" },
 };
 
 // 담당자 목록 (실제로는 API에서 가져옴)
@@ -122,21 +126,21 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       {/* 민원 기본 정보 */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
               <CardTitle>민원 정보</CardTitle>
-              <CardDescription>접수번호: {application.applicationNumber}</CardDescription>
+              {(() => {
+                const config = adminStatusConfig[application.adminStatus];
+                const Icon = config.icon;
+                return (
+                  <Badge variant={config.variant}>
+                    <Icon className="h-3.5 w-3.5" />
+                    {config.label}
+                  </Badge>
+                );
+              })()}
             </div>
-            {(() => {
-              const config = adminStatusConfig[application.adminStatus];
-              const Icon = config.icon;
-              return (
-                <Badge variant="outline" className={config.color}>
-                  <Icon className="mr-1 h-3 w-3" />
-                  {config.label}
-                </Badge>
-              );
-            })()}
+            <CardDescription>접수번호: {application.applicationNumber}</CardDescription>
           </div>
         </CardHeader>
         <CardContent>
