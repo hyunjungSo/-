@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { LeafletMap } from "@/components/leaflet-map";
 import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult, JudgmentRationale, ApplicationCartItem } from "@/lib/types";
@@ -454,6 +455,8 @@ function getUsageDifficultyDescription(landType: string, area: number, shape: st
 export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, onRemoveFromCart, onSubmitCart }: LandSearchSectionProps) {
   // 장바구니 패널 표시 상태
   const [isCartOpen, setIsCartOpen] = useState(false);
+  // 장바구니 선택 항목
+  const [selectedCartItems, setSelectedCartItems] = useState<Set<string>>(new Set());
   // 검색 방식 탭 (지번 / 소유자)
   const [searchMode, setSearchMode] = useState<"address" | "owner">("address");
   
@@ -1462,21 +1465,63 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   <div className="space-y-4">
                     {regions.map((region) => {
                       const items = groupedByRegion[region];
+                      const selectedInRegion = items.filter(item => selectedCartItems.has(item.id));
+                      const allSelectedInRegion = items.every(item => selectedCartItems.has(item.id));
+                      const someSelectedInRegion = items.some(item => selectedCartItems.has(item.id));
+                      
                       return (
                         <div key={region} className="rounded-lg border bg-card">
                           {/* 지역 헤더 */}
                           <div className="flex items-center justify-between border-b bg-muted/30 px-4 py-3">
-                            <div className="flex items-center gap-2">
-                              <MapPin className="h-4 w-4 text-primary" />
-                              <span className="font-medium">{region}</span>
-                              <Badge variant="outline" className="text-xs">{items.length}필지</Badge>
+                            <div className="flex items-center gap-3">
+                              <Checkbox 
+                                id={`region-${region}`}
+                                checked={allSelectedInRegion}
+                                className="h-5 w-5"
+                                onCheckedChange={(checked) => {
+                                  const newSelected = new Set(selectedCartItems);
+                                  items.forEach(item => {
+                                    if (checked) {
+                                      newSelected.add(item.id);
+                                    } else {
+                                      newSelected.delete(item.id);
+                                    }
+                                  });
+                                  setSelectedCartItems(newSelected);
+                                }}
+                              />
+                              <div className="flex items-center gap-2">
+                                <MapPin className="h-4 w-4 text-primary" />
+                                <span className="font-medium">{region}</span>
+                                <Badge variant="outline" className="text-xs">{items.length}필지</Badge>
+                              </div>
                             </div>
+                            {someSelectedInRegion && (
+                              <span className="text-xs text-primary">{selectedInRegion.length}건 선택</span>
+                            )}
                           </div>
                           
                           {/* 해당 지역 토지 목록 */}
                           <div className="divide-y">
                             {items.map((item) => (
-                              <div key={item.id} className="flex items-start justify-between p-3">
+                              <div 
+                                key={item.id} 
+                                className={`flex items-start gap-3 p-3 transition-colors ${selectedCartItems.has(item.id) ? "bg-primary/5" : ""}`}
+                              >
+                                <Checkbox 
+                                  id={`item-${item.id}`}
+                                  checked={selectedCartItems.has(item.id)}
+                                  className="mt-0.5 h-5 w-5"
+                                  onCheckedChange={(checked) => {
+                                    const newSelected = new Set(selectedCartItems);
+                                    if (checked) {
+                                      newSelected.add(item.id);
+                                    } else {
+                                      newSelected.delete(item.id);
+                                    }
+                                    setSelectedCartItems(newSelected);
+                                  }}
+                                />
                                 <div className="flex-1">
                                   <p className="text-sm font-medium">{item.landInfo.address}</p>
                                   <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
@@ -1493,7 +1538,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                 </div>
                                 <button
                                   onClick={() => onRemoveFromCart(item.id)}
-                                  className="ml-2 rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+                                  className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </button>
@@ -1501,16 +1546,26 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             ))}
                           </div>
                           
-                          {/* 이 지역 신청하기 버튼 */}
+                          {/* 이 지역 선택 항목 신청하기 버튼 */}
                           <div className="border-t p-3">
                             <Button 
                               onClick={() => {
-                                onSubmitCart(items);
-                                setIsCartOpen(false);
+                                const selectedItems = items.filter(item => selectedCartItems.has(item.id));
+                                if (selectedItems.length > 0) {
+                                  onSubmitCart(selectedItems);
+                                  setIsCartOpen(false);
+                                  // 선택 초기화
+                                  const newSelected = new Set(selectedCartItems);
+                                  selectedItems.forEach(item => newSelected.delete(item.id));
+                                  setSelectedCartItems(newSelected);
+                                }
                               }}
                               className="w-full"
+                              disabled={selectedInRegion.length === 0}
                             >
-                              이 지역 {items.length}건 신청하기
+                              {selectedInRegion.length > 0 
+                                ? `선택한 ${selectedInRegion.length}건 신청하기` 
+                                : "항목을 선택해 주세요"}
                               <ChevronRight className="ml-1 h-4 w-4" />
                             </Button>
                           </div>
@@ -1539,10 +1594,27 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             {cartItems.length > 0 && (
               <div className="border-t bg-muted/30 px-4 py-4">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">총 {cartItems.length}필지</span>
+                  <div className="flex items-center gap-3">
+                    <Checkbox 
+                      id="select-all"
+                      checked={selectedCartItems.size === cartItems.length && cartItems.length > 0}
+                      className="h-5 w-5"
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedCartItems(new Set(cartItems.map(item => item.id)));
+                        } else {
+                          setSelectedCartItems(new Set());
+                        }
+                      }}
+                    />
+                    <label htmlFor="select-all" className="cursor-pointer text-muted-foreground">
+                      전체 선택 ({selectedCartItems.size}/{cartItems.length})
+                    </label>
+                  </div>
                   <button
                     onClick={() => {
                       cartItems.forEach(item => onRemoveFromCart(item.id));
+                      setSelectedCartItems(new Set());
                     }}
                     className="text-sm text-muted-foreground hover:text-destructive"
                   >
