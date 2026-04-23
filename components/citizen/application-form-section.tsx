@@ -456,7 +456,7 @@ export function ApplicationFormSection({
                           <div className={`rounded px-2 py-0.5 text-xs font-medium ${
                             result?.provisionalJudgment === "매수" 
                               ? "bg-primary/10 text-primary" 
-                              : "bg-amber-100 text-amber-700"
+                              : "bg-red-100 text-red-700"
                           }`}>
                             {result?.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
                           </div>

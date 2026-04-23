@@ -1660,7 +1660,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                     <span>|</span>
                                     <span>{item.landInfo.landType}</span>
                                     <Badge 
-                                      variant={item.aiResult.provisionalJudgment === "매수" ? "success" : "warning"}
+                                      variant={item.aiResult.provisionalJudgment === "매수" ? "success" : "destructive"}
                                       className="text-xs"
                                     >
                                       {item.aiResult.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
