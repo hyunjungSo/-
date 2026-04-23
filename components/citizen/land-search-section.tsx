@@ -15,90 +15,6 @@ import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, 
 interface LandSearchSectionProps {
   onLandSelect: (land: LandInfo, aiResult: AIAnalysisResult) => void;
 }
-
-// 사업단 데이터
-const businessUnitData = {
-  사업단: [
-    "김포파주",
-    "수도권", 
-    "양평이천",
-    "천안안성",
-    "세종천안",
-    "서산아산",
-    "새만금전주",
-    "강진광주",
-    "포항영덕",
-    "함양합천",
-    "합천창녕",
-  ],
-  // 사업단별 관할 시군구 매핑
-  관할시군구: {
-    "김포파주": ["김포시", "파주시"],
-    "수도권": ["고양시 덕양구", "고양시 일산동구", "고양시 일산서구", "부천시", "광명시", "시흥시", "안산시 단원구", "안산시 상록구", "화성시", "평택시", "오산시", "군포시", "의왕시", "안양시 동안구", "안양시 만안구", "과천시", "성남시 분당구", "성남시 수정구", "성남시 중원구", "수원시 권선구", "수원시 영통구", "수원시 장안구", "수원시 팔달구", "용인시 기흥구", "용인시 수지구", "용인시 처인구", "하남시", "광주시", "남양주시", "구리시", "양주시", "의정부시", "동두천시", "포천시", "가평군", "연천군"],
-    "양평이천": ["양평군", "이천시", "여주시"],
-    "천안안성": ["천안시 동남구", "천안시 서북구", "안성시"],
-    "세종천안": ["세종시", "청주시 상당구", "청주시 서원구", "청주시 청원구", "청주시 흥덕구", "충주시", "제천시", "진천군", "음성군", "괴산군", "증평군", "단양군", "보은군", "옥천군", "영동군"],
-    "서산아산": ["서산시", "아산시", "당진시", "예산군", "홍성군", "태안군", "보령시", "서천군", "청양군", "부여군", "공주시", "논산시", "계룡시", "금산군"],
-    "새만금전주": ["전주시 덕진구", "전주시 완산구", "군산시", "익산시", "김제시", "완주군", "부안군", "정읍시", "고창군", "순창군", "남원시", "임실군", "진안군", "무주군", "장수군"],
-    "강진광주": ["광산구", "남구", "동구", "북구", "서구", "나주시", "목포시", "무안군", "신안군", "영암군", "해남군", "진도군", "완도군", "강진군", "장흥군", "보성군", "고흥군", "순천시", "광양시", "여수시", "구례군", "곡성군", "담양군", "장성군", "영광군", "함평군", "화순군"],
-    "포항영덕": ["포항시 남구", "포항시 북구", "영덕군", "울진군", "울릉군", "영양군", "청송군", "영주시", "봉화군", "안동시", "예천군", "문경시", "상주시", "김천시", "구미시", "칠곡군", "군위군", "의성군", "경산시", "경주시", "영천시", "청도군", "고령군", "성주군"],
-    "함양합천": ["함양군", "합천군", "산청군", "거창군", "하동군"],
-    "합천창녕": ["창녕군", "밀양시", "창원시 마산합포구", "창원시 마산회원구", "창원시 성산구", "창원시 의창구", "창원시 진해구", "김해시", "양산시", "진주시", "의령군", "함안군", "고성군", "통영시", "거제시", "사천시", "남해군"],
-  },
-  // 시군구별 관할 시도 매핑
-  시군구별시도: {
-    "김포시": "경기도", "파주시": "경기도",
-    "고양시 덕양구": "경기도", "고양시 일산동구": "경기도", "고양시 일산서구": "경기도",
-    "부천시": "경기도", "광명시": "경기도", "시흥시": "경기도",
-    "안산시 단원구": "경기도", "안산시 상록구": "경기도",
-    "화성시": "경기도", "평택시": "경기도", "오산시": "경기도",
-    "군포시": "경기도", "의왕시": "경기도",
-    "안양시 동안구": "경기도", "안양시 만안구": "경기도", "과천시": "경기도",
-    "성남시 분당구": "경기도", "성남시 수정구": "경기도", "성남시 중원구": "경기도",
-    "수원시 권선구": "경기도", "수원시 영통구": "경기도", "수원시 장안구": "경기도", "수원시 팔달구": "경기도",
-    "용인시 기흥구": "경기도", "용인시 수지구": "경기도", "용인시 처인구": "경기도",
-    "하남시": "경기도", "광주시": "경기도", "남양주시": "경기도", "구리시": "경기도",
-    "양주시": "경기도", "의정부시": "경기도", "동두천시": "경기도", "포천시": "경기도",
-    "가평군": "경기도", "연천군": "경기도",
-    "양평군": "경기도", "이천시": "경기도", "여주시": "경기도",
-    "천안시 동남구": "충청남도", "천안시 서북구": "충청남도", "안성시": "경기도",
-    "세종시": "세종특별자치시",
-    "청주시 상당구": "충청북도", "청주시 서원구": "충청북도", "청주시 청원구": "충청북도", "청주시 흥덕구": "충청북도",
-    "충주시": "충청북도", "제천시": "충청북도", "진천군": "충청북도", "음성군": "충청북도",
-    "괴산군": "충청북도", "증평군": "충청북도", "단양군": "충청북도", "보은군": "충청북도",
-    "옥천군": "충청북도", "영동군": "충청북도",
-    "서산시": "충청남도", "아산시": "충청남도", "당진시": "충청남도", "예산군": "충청남도",
-    "홍성군": "충청남도", "태안군": "충청남도", "보령시": "충청남도", "서천군": "충청남도",
-    "청양군": "충청남도", "부여군": "충청남도", "공주시": "충청남도", "논산시": "충청남도",
-    "계룡시": "충청남도", "금산군": "충청남도",
-    "전주시 덕진구": "전북특별자치도", "전주시 완산구": "전북특별자치도",
-    "군산시": "전북특별자치도", "익산시": "전북특별자치도", "김제시": "전북특별자치도",
-    "완주군": "전북특별자치도", "부안군": "전북특별자치도", "정읍시": "전북특별자치도",
-    "고창군": "전북특별자치도", "순창군": "전북특별자치도", "남원시": "전북특별자치도",
-    "임실군": "전북특별자치도", "진안군": "전북특별자치도", "무주군": "전북특별자치도", "장수군": "전북특별자치도",
-    "광산구": "광주광역시", "남구": "광주광역시", "동구": "광주광역시", "북구": "광주광역시", "서구": "광주광역시",
-    "나주시": "전라남도", "목포시": "전라남도", "무안군": "전라남도", "신안군": "전라남도",
-    "영암군": "전라남도", "해남군": "전라남도", "진도군": "전라남도", "완도군": "전라남도",
-    "강진군": "전라남도", "장흥군": "전라남도", "보성군": "전라남도", "고흥군": "전라남도",
-    "순천시": "전라남도", "광양시": "전라남도", "여수시": "전라남도", "구례군": "전라남도",
-    "곡성군": "전라남도", "담양군": "전라남도", "장성군": "전라남도", "영광군": "전라남도",
-    "함평군": "전라남도", "화순군": "전라남도",
-    "포항시 남구": "경상북도", "포항시 북구": "경상북도", "영덕군": "경상북도",
-    "울진군": "경상북도", "울릉군": "경상북도", "영양군": "경상북도", "청송군": "경상북도",
-    "영주시": "경상북도", "봉화군": "경상북도", "안동시": "경상북도", "예천군": "경상북도",
-    "문경시": "경상북도", "상주시": "경상북도", "김천시": "경상북도", "구미시": "경상북도",
-    "칠곡군": "경상북도", "군위군": "경상북도", "의성군": "경상북도", "경산시": "경상북도",
-    "경주시": "경상북도", "영천시": "경상북도", "청도군": "경상북도", "고령군": "경상북도", "성주군": "경상북도",
-    "함양군": "경상남도", "합천군": "경상남도", "산청군": "경상남도", "거창군": "경상남도", "하동군": "경상남도",
-    "창녕군": "경상남도", "밀양시": "경상남도",
-    "창원시 마산합포구": "경상남도", "창원시 마산회원구": "경상남도", "창원시 성산구": "경상남도",
-    "창원시 의창구": "경상남도", "창원시 진해구": "경상남도",
-    "김해시": "경상남도", "양산시": "경상남도", "진주시": "경상남도", "의령군": "경상남도",
-    "함안군": "경상남도", "고성군": "경상남도", "통영시": "경상남도", "거제시": "경상남도",
-    "사천시": "경상남도", "남해군": "경상남도",
-  },
-} as const;
-
 // 행정구역 데이터 (전국 17개 시도)
 const regionData = {
   시도: [
@@ -131,7 +47,7 @@ const regionData = {
     // 경기도 - 용인시 처인구
     "용인시 처인구": ["양지면", "백암면", "원삼면", "이동읍", "남사읍", "포곡읍", "모현읍"],
     // 경기도 - 이천시
-    "이천시": ["마장면", "대월면", "모가면", "백사면", "설성면", "신둔면", "장호원읍", "호법면"],
+    "이천시": ["마장면", "대월면", "모가면", "백사면", "설성면", "신둔면", "장호원읍", "���법면"],
     // 경기도 - 광주시
     "광주시": ["곤지암읍", "도척면", "퇴촌면", "남종면", "남한산성면", "��촌읍", "오포읍", "초월읍"],
     // 경기도 - 화성시
@@ -538,9 +454,6 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
   const [ownerName, setOwnerName] = useState<string>("");
   const [ownerBirthDate, setOwnerBirthDate] = useState<string>(""); // YYMMDD
   
-  // 사업단 선택 상태
-  const [selectedBusinessUnit, setSelectedBusinessUnit] = useState<string>("");
-  
   // 행정구역 선택 상태
   const [selectedSido, setSelectedSido] = useState<string>("");
   const [selectedSigungu, setSelectedSigungu] = useState<string>("");
@@ -675,12 +588,10 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
             { lat: 37.2195, lng: 127.2995 },
           ],
         ];
-        // 시도 결정: 직접 선택 or 사업단 선택 시 시군구에서 추출
-        const displaySido = selectedSido || (selectedSigungu ? businessUnitData.시군구별시도[selectedSigungu as keyof typeof businessUnitData.시군구별시도] : "");
         results = dummyLandInfoList.slice(0, 5).map((land, idx) => ({
           ...land,
           id: `search-${idx}`,
-          address: `${displaySido} ${selectedSigungu}${selectedEupmyeondong ? ` ${selectedEupmyeondong}` : ""}${selectedRi ? ` ${selectedRi}` : ""} ${jibun || `${100 + idx}-${idx + 1}`}`,
+          address: `${selectedSido} ${selectedSigungu}${selectedEupmyeondong ? ` ${selectedEupmyeondong}` : ""}${selectedRi ? ` ${selectedRi}` : ""} ${jibun || `${100 + idx}-${idx + 1}`}`,
           coordinates: baseCoords[idx] || baseCoords[0],
         }));
       }
@@ -725,7 +636,6 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
     setSearchMode("address");
     setOwnerName("");
     setOwnerBirthDate("");
-    setSelectedBusinessUnit("");
     setSelectedSido("");
     setSelectedSigungu("");
     setSelectedEupmyeondong("");
@@ -738,18 +648,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
   };
 
   // 드롭다운 옵션
-  // 사업단 선택 시: 해당 사업단 관할 시군구만 표시
-  // 사업단 미선택 시: 선택된 시도의 전체 시군구 표시
-  const sigunguOptions = (() => {
-    if (selectedBusinessUnit) {
-      // 사업단이 선택된 경우: 해당 사업단 관할 시군구만 표시
-      return businessUnitData.관할시군구[selectedBusinessUnit as keyof typeof businessUnitData.관할시군구] || [];
-    } else if (selectedSido) {
-      // 사업단 미선택, 시도 선택된 경우: 해당 시도의 전체 시군구 표시
-      return regionData.시군구[selectedSido as keyof typeof regionData.시군구] || [];
-    }
-    return [];
-  })();
+  const sigunguOptions = selectedSido ? regionData.시군구[selectedSido as keyof typeof regionData.시군구] || [] : [];
   
   const eupmyeondongOptions = selectedSigungu ? regionData.읍면동[selectedSigungu as keyof typeof regionData.읍면동] || [] : [];
   const riOptions = selectedEupmyeondong ? regionData.리[selectedEupmyeondong as keyof typeof regionData.리] || [] : [];
@@ -876,32 +775,6 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
         ) : (
           /* 지번 검색 폼 */
           <div className="flex flex-wrap items-end gap-3">
-          {/* 사업단 */}
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-foreground">사업단</label>
-            <Select 
-              value={selectedBusinessUnit || "all"} 
-              onValueChange={(v) => {
-                setSelectedBusinessUnit(v === "all" ? "" : v);
-                setSelectedSido("");
-                setSelectedSigungu("");
-                setSelectedEupmyeondong("");
-                setSelectedRi("");
-                setSearchResults([]);
-              }}
-            >
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="전국" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">전국</SelectItem>
-                {businessUnitData.사업단.map((unit) => (
-                  <SelectItem key={unit} value={unit}>{unit}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
           {/* 시도 */}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-medium text-foreground">시도</label>
@@ -914,10 +787,9 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 setSelectedRi("");
                 setSearchResults([]);
               }}
-              disabled={!!selectedBusinessUnit}
             >
               <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder={selectedBusinessUnit ? "-" : "선택"} />
+                <SelectValue placeholder="선택" />
               </SelectTrigger>
               <SelectContent>
                 {regionData.시도.map((sido) => (
@@ -934,16 +806,11 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
               value={selectedSigungu} 
               onValueChange={(v) => {
                 setSelectedSigungu(v);
-                // 사업단 선택 시 시군구에서 시도 자동 설정
-                if (selectedBusinessUnit && v) {
-                  const sido = businessUnitData.시군구별시도[v as keyof typeof businessUnitData.시군구별시도];
-                  if (sido) setSelectedSido(sido);
-                }
                 setSelectedEupmyeondong("");
                 setSelectedRi("");
                 setSearchResults([]);
               }}
-              disabled={!selectedSido && !selectedBusinessUnit}
+              disabled={!selectedSido}
             >
               <SelectTrigger className="w-[160px]">
                 <SelectValue placeholder="선택" />
@@ -1031,7 +898,7 @@ export function LandSearchSection({ onLandSelect }: LandSearchSectionProps) {
                 </>
               )}
             </Button>
-            {(selectedBusinessUnit || selectedSido || searchResults.length > 0) && (
+            {(selectedSido || searchResults.length > 0) && (
               <Button 
                 onClick={handleReset}
                 variant="outline"
