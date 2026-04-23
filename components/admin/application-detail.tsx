@@ -330,16 +330,45 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             <CardTitle className="flex items-center gap-2">
               <MapIcon className="h-5 w-5" />
               지도 및 토지 정보
+              {isMultipleLands && (
+                <Badge variant="outline" className="ml-2">
+                  {allLands.length}필지
+                </Badge>
+              )}
             </CardTitle>
+            {isMultipleLands && (
+              <CardDescription>
+                필지를 선택하여 각 토지의 지적도/항공사진을 확인하세요.
+              </CardDescription>
+            )}
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* 복수 필지: 필지 선택 */}
+            {isMultipleLands && (
+              <Select
+                value={selectedLandIndex.toString()}
+                onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {allLands.map((land, index) => (
+                    <SelectItem key={land.id} value={index.toString()}>
+                      필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")} ({land.remainingArea.toLocaleString()}m2)
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+
             <Tabs defaultValue="cadastral">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="cadastral">지적도</TabsTrigger>
                 <TabsTrigger value="aerial">항공사진</TabsTrigger>
               </TabsList>
               <TabsContent value="cadastral" className="mt-4">
-                <LandMap landInfo={application.landInfo} showOverlay />
+                <LandMap landInfo={allLands[selectedLandIndex]} showOverlay />
               </TabsContent>
               <TabsContent value="aerial" className="mt-4">
                 <div className="flex h-[300px] items-center justify-center rounded-lg bg-muted sm:h-[400px]">
@@ -350,32 +379,45 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </TabsContent>
             </Tabs>
 
-            <div className="grid grid-cols-2 gap-4 rounded-lg border border-border p-4">
-              <div>
-                <p className="text-base text-muted-foreground">편입 전 면적</p>
-                <p className="text-lg font-semibold text-foreground">
-                  {application.landInfo.originalArea.toLocaleString()}㎡
-                </p>
-              </div>
-              <div>
-                <p className="text-base text-muted-foreground">편입 면적</p>
-                <p className="text-lg font-semibold text-destructive">
-                  {application.landInfo.includedArea.toLocaleString()}㎡
-                </p>
-              </div>
-              <div>
-                <p className="text-base text-muted-foreground">잔여 면적</p>
-                <p className="text-lg font-semibold text-primary">
-                  {application.landInfo.remainingArea.toLocaleString()}㎡
-                </p>
-              </div>
-              <div>
-                <p className="text-base text-muted-foreground">잔여 비율</p>
-                <p className="text-lg font-semibold text-foreground">
-                  {application.landInfo.remainingRatio}%
-                </p>
-              </div>
-            </div>
+            {/* 선택된 필지 토지 정보 */}
+            {(() => {
+              const displayLand = allLands[selectedLandIndex];
+              return (
+                <div className="space-y-3">
+                  {isMultipleLands && (
+                    <p className="text-sm font-medium text-muted-foreground">
+                      필지 {selectedLandIndex + 1}: {displayLand.address}
+                    </p>
+                  )}
+                  <div className="grid grid-cols-2 gap-4 rounded-lg border border-border p-4">
+                    <div>
+                      <p className="text-base text-muted-foreground">편입 전 면적</p>
+                      <p className="text-lg font-semibold text-foreground">
+                        {displayLand.originalArea.toLocaleString()}m2
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-base text-muted-foreground">편입 면적</p>
+                      <p className="text-lg font-semibold text-destructive">
+                        {displayLand.includedArea.toLocaleString()}m2
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-base text-muted-foreground">잔여 면적</p>
+                      <p className="text-lg font-semibold text-primary">
+                        {displayLand.remainingArea.toLocaleString()}m2
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-base text-muted-foreground">잔여 비율</p>
+                      <p className="text-lg font-semibold text-foreground">
+                        {displayLand.remainingRatio}%
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
           </CardContent>
         </Card>
 
@@ -948,9 +990,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         setReviewData((prev) => ({ ...prev, accessRoadLost: checked === true }))
                       }
                     />
-                    <Label htmlFor="accessRoadLost" className="text-base font-normal">
-                      접면도로 상실
-                    </Label>
+                    <Label htmlFor="accessRoadLost" className="text-base font-normal">접면도로 상실</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Checkbox
