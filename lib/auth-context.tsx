@@ -46,17 +46,21 @@ const dummyUsers: { userId: string; password: string; user: User }[] = [
   },
 ];
 
+// 기본 로그인 사용자 (로그인 화면 없이 바로 서비스 이용)
+const defaultUser: User = {
+  id: "citizen-1",
+  name: "홍길동",
+  email: "citizen@test.com",
+  role: "citizen",
+  contact: "010-1234-5678",
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(defaultUser);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // 세션 스토리지에서 사용자 정보 복원
-    const storedUser = sessionStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setIsLoading(false);
+    // 이미 기본 사용자로 로그인 되어 있으므로 추가 작업 불필요
   }, []);
 
   const login = async (userId: string, password: string): Promise<boolean> => {
