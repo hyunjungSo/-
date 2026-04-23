@@ -774,7 +774,7 @@ export function ApplicationFormSection({
                             <span className="text-sm font-semibold text-foreground">
                               필지 {index + 1}
                             </span>
-                            <p className="text-xs text-muted-foreground">{land.address}</p>
+                            <p className="text-base text-muted-foreground">{land.address}</p>
                           </div>
                           <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                             {land.remainingArea.toLocaleString()}m²
