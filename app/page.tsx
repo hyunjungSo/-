@@ -79,7 +79,7 @@ export default function HomePage() {
               <FileSearch className="h-8 w-8 text-primary" />
               <h3 className="mt-4 text-lg font-semibold text-foreground">간편한 토지 조회</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                지번을 몰라도 읍면동만 선택하면 해당 지역의 편입 토지 목록에서 내 땅을 찾을 수 있습니다.
+                지번으로 직접 검색하거나, 소유자 정보(이름, 주민번호 앞자리)를 입력하면 편입된 매수 대상 토지를 손쉽게 조회할 수 있습니다.
               </p>
             </div>
 
