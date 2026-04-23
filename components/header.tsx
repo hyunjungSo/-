@@ -53,8 +53,8 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white">
-      {/* 1. 최상단 유틸리티 바 (KRDS Primary 배경) */}
-      <div className="bg-primary">
+      {/* 1. 최상단 유틸리티 바 (KRDS Header 배경) */}
+      <div style={{ backgroundColor: '#23b59d' }}>
         <div className="mx-auto flex h-9 max-w-7xl items-center justify-between gap-1 px-4 text-sm text-white sm:px-6 lg:px-8">
           {/* 좌측: 화면 전환 토글 */}
           <div className="flex items-center gap-1 rounded-full bg-white/20 p-0.5">
