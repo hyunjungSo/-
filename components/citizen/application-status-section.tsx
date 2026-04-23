@@ -16,7 +16,8 @@ import {
   ChevronDown,
   ChevronUp,
   AlertTriangle,
-  Info
+  Info,
+  Layers
 } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { JudgmentRationale } from "@/lib/types";
@@ -273,29 +274,74 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
 
       {/* 토지 정보 요약 */}
       <div>
-        <h4 className="mb-4 text-base font-semibold text-foreground">토지 정보</h4>
-        <div className="grid grid-cols-4 gap-6">
-          <div>
-            <p className="text-sm text-muted-foreground">토지 유형</p>
-            <p className="mt-1.5 text-base font-semibold text-foreground">{application.landInfo.landType}</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">잔여 면적</p>
-            <p className="mt-1.5 text-base font-semibold text-primary">{application.landInfo.remainingArea.toLocaleString()}m²</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">잔여 비율</p>
-            <p className="mt-1.5 text-base font-semibold text-foreground">{application.landInfo.remainingRatio}%</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">AI 판정</p>
-            <p className={`mt-1.5 text-base font-semibold ${
-              application.aiResult?.provisionalJudgment === "매수" ? "text-primary" : "text-muted-foreground"
-            }`}>
-              {application.aiResult?.provisionalJudgment || "-"}
-            </p>
-          </div>
+        <div className="mb-4 flex items-center gap-2">
+          <h4 className="text-base font-semibold text-foreground">토지 정보</h4>
+          {application.additionalLands && application.additionalLands.length > 0 && (
+            <span className="flex items-center gap-1 rounded bg-violet-100 px-2 py-0.5 text-xs font-medium text-violet-700">
+              <Layers className="h-3 w-3" />
+              {1 + application.additionalLands.length}필지
+            </span>
+          )}
         </div>
+        
+        {/* 복수 필지일 경우 각 필지별로 표시 */}
+        {application.additionalLands && application.additionalLands.length > 0 ? (
+          <div className="space-y-3">
+            {[application.landInfo, ...application.additionalLands].map((land, index) => (
+              <div key={land.id} className="rounded-lg border border-border bg-background p-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-foreground">필지 {index + 1}</span>
+                    <span className="text-sm text-muted-foreground">{land.address}</span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-4 gap-4">
+                  <div>
+                    <p className="text-xs text-muted-foreground">토지 유형</p>
+                    <p className="mt-1 text-sm font-semibold text-foreground">{land.landType}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">잔여 면적</p>
+                    <p className="mt-1 text-sm font-semibold text-primary">{land.remainingArea.toLocaleString()}m²</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">잔여 비율</p>
+                    <p className="mt-1 text-sm font-semibold text-foreground">{land.remainingRatio}%</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">AI 판정</p>
+                    <p className="mt-1 text-sm font-semibold text-primary">
+                      {application.aiResult?.provisionalJudgment || "-"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-4 gap-6">
+            <div>
+              <p className="text-sm text-muted-foreground">토지 유형</p>
+              <p className="mt-1.5 text-base font-semibold text-foreground">{application.landInfo.landType}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">잔여 면적</p>
+              <p className="mt-1.5 text-base font-semibold text-primary">{application.landInfo.remainingArea.toLocaleString()}m²</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">잔여 비율</p>
+              <p className="mt-1.5 text-base font-semibold text-foreground">{application.landInfo.remainingRatio}%</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">AI 판정</p>
+              <p className={`mt-1.5 text-base font-semibold ${
+                application.aiResult?.provisionalJudgment === "매수" ? "text-primary" : "text-muted-foreground"
+              }`}>
+                {application.aiResult?.provisionalJudgment || "-"}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* AI 판단 근거 표시 */}
@@ -343,6 +389,8 @@ export function ApplicationStatusSection() {
                 {myApplications.map((app) => {
                   const statusConfig = adminStatusConfig[app.adminStatus];
                   const isSelected = displayedApplication?.id === app.id;
+                  const isMultipleLands = app.additionalLands && app.additionalLands.length > 0;
+                  const totalLandCount = isMultipleLands ? 1 + app.additionalLands.length : 1;
 
                   return (
                     <li key={app.id}>
@@ -354,7 +402,7 @@ export function ApplicationStatusSection() {
                             : "hover:bg-muted/50"
                         }`}
                       >
-                        {/* 상단: 상태 + 접수번호 */}
+                        {/* 상단: 상태 + 접수번호 + 복수필지 표시 */}
                         <div className="flex items-center gap-2">
                           <Badge variant={statusConfig.variant}>
                             {statusConfig.label}
@@ -362,11 +410,20 @@ export function ApplicationStatusSection() {
                           <span className={`text-base font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
                             {app.applicationNumber}
                           </span>
+                          {isMultipleLands && (
+                            <span className="flex items-center gap-1 rounded bg-violet-100 px-1.5 py-0.5 text-xs font-medium text-violet-700">
+                              <Layers className="h-3 w-3" />
+                              {totalLandCount}필지
+                            </span>
+                          )}
                         </div>
 
-                        {/* 주소 (1줄 말줄임) */}
+                        {/* 주소 (복수 필지일 경우 첫 번째 + 외 n건) */}
                         <p className="mt-2 truncate text-sm text-muted-foreground">
                           {app.landInfo.address}
+                          {isMultipleLands && (
+                            <span className="ml-1 text-violet-600">외 {app.additionalLands.length}건</span>
+                          )}
                         </p>
 
                         {/* 하단: 날짜 + 결과 */}
