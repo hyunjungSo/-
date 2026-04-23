@@ -179,19 +179,20 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
     <div className="space-y-5">
       {/* 상단: 접수번호 + 소재지 */}
       <div className="rounded-lg border border-border bg-background p-6">
-        <div className="flex items-start justify-between gap-6">
-          <div className="min-w-0 flex-1">
-            <p className="text-sm text-muted-foreground">접수번호</p>
-            <p className="mt-1 text-xl font-bold text-foreground">{application.applicationNumber}</p>
-          </div>
-          <div className="text-right">
-            <p className="text-sm text-muted-foreground">신청일</p>
-            <p className="mt-1 text-base font-medium text-foreground">{application.appliedAt}</p>
-          </div>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted-foreground">접수번호</span>
+          <span className="text-xl font-bold text-foreground">{application.applicationNumber}</span>
         </div>
-        <div className="mt-5 flex items-center gap-2 text-sm text-muted-foreground">
-          <MapPin className="h-4 w-4 shrink-0" />
-          <span>{application.landInfo.address}</span>
+        <div className="mt-4 flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <MapPin className="h-4 w-4 shrink-0" />
+            <span>{application.landInfo.address}</span>
+          </div>
+          <span className="text-gray-300">|</span>
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <span>신청일</span>
+            <span className="font-medium text-foreground">{application.appliedAt}</span>
+          </div>
         </div>
       </div>
 
