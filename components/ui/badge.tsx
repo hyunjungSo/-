@@ -5,30 +5,47 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const badgeVariants = cva(
-  // KRDS 뱃지 스타일: 작은 라운드, 적절한 패딩
-  'inline-flex items-center rounded px-2 py-0.5 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+  // KRDS v1.0.0 뱃지 스타일: 4px radius, 8px 단위 padding
+  'inline-flex items-center justify-center rounded gap-1 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
   {
     variants: {
       variant: {
-        // KRDS filled 스타일
+        // KRDS Primary Filled - #157161
         default:
-          'border-transparent bg-primary text-white',
-        // KRDS secondary 스타일
+          'border-transparent bg-primary text-primary-foreground',
+        // KRDS Secondary/Subtle - 연한 배경
         secondary:
-          'border-transparent bg-gray-100 text-gray-700',
-        // KRDS destructive 스타일
+          'border-transparent bg-secondary text-secondary-foreground',
+        // KRDS Destructive/Error - #D32F2F
         destructive:
-          'border-transparent bg-destructive text-white',
-        // KRDS outline 스타일
-        outline: 'border border-gray-300 bg-transparent text-gray-700',
-        // KRDS success 스타일
-        success: 'border-transparent bg-green-600 text-white',
-        // KRDS warning 스타일
-        warning: 'border-transparent bg-amber-500 text-white',
+          'border-transparent bg-destructive text-destructive-foreground',
+        // KRDS Outline - 테두리만
+        outline: 'border border-border bg-transparent text-foreground',
+        // KRDS Success - #2E7D32
+        success: 'border-transparent bg-success text-success-foreground',
+        // KRDS Warning - #ED6C02
+        warning: 'border-transparent bg-warning text-warning-foreground',
+        // KRDS Info - #0288D1
+        info: 'border-transparent bg-info text-info-foreground',
+        // KRDS Primary Subtle - 연한 primary 배경
+        'primary-subtle': 'border-transparent bg-accent text-primary',
+        // KRDS Success Subtle
+        'success-subtle': 'border-transparent bg-green-50 text-success',
+        // KRDS Warning Subtle
+        'warning-subtle': 'border-transparent bg-orange-50 text-warning',
+        // KRDS Destructive Subtle
+        'destructive-subtle': 'border-transparent bg-red-50 text-destructive',
+      },
+      size: {
+        // KRDS 뱃지 크기 (8px 단위)
+        sm: 'h-5 px-1.5 text-xs', // 20px height
+        default: 'h-6 px-2 text-xs', // 24px height
+        lg: 'h-7 px-2.5 text-sm', // 28px height
       },
     },
     defaultVariants: {
       variant: 'default',
+      size: 'default',
     },
   },
 )
@@ -36,6 +53,7 @@ const badgeVariants = cva(
 function Badge({
   className,
   variant,
+  size,
   asChild = false,
   ...props
 }: React.ComponentProps<'span'> &
@@ -45,7 +63,7 @@ function Badge({
   return (
     <Comp
       data-slot="badge"
-      className={cn(badgeVariants({ variant }), className)}
+      className={cn(badgeVariants({ variant, size }), className)}
       {...props}
     />
   )
