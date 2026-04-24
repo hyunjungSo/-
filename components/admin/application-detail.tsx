@@ -41,9 +41,10 @@ interface ApplicationDetailProps {
 }
 
 const judgmentConfig = {
-  매수: { label: "매수", icon: CheckCircle2, borderColor: "border-emerald-600", textColor: "text-emerald-700" },
-  기각: { label: "기각", icon: XCircle, borderColor: "border-red-600", textColor: "text-red-700" },
-  심의위원회이관: { label: "심의위원회 이관", icon: AlertTriangle, borderColor: "border-amber-600", textColor: "text-amber-700" },
+  매수: { label: "매수", icon: CheckCircle2, borderColor: "border-emerald-600", textColor: "text-emerald-700", color: "text-emerald-700" },
+  매수불가: { label: "매수불가", icon: XCircle, borderColor: "border-red-600", textColor: "text-red-700", color: "text-red-700" },
+  기각: { label: "기각", icon: XCircle, borderColor: "border-red-600", textColor: "text-red-700", color: "text-red-700" },
+  심의위원회이관: { label: "심의위원회 이관", icon: AlertTriangle, borderColor: "border-amber-600", textColor: "text-amber-700", color: "text-amber-700" },
 };
 
 const adminStatusConfig: Record<AdminStatus, { 
