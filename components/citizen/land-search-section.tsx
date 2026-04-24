@@ -1244,7 +1244,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     </Label>
                     <Select value={landSubType} onValueChange={(value) => setLandSubType(value as typeof landSubType)}>
                       <SelectTrigger id="landSubType" className="h-10 w-full bg-background">
-                        <SelectValue placeholder="건축물 용도를 선택해 주세요" />
+                        <SelectValue placeholder="건축물 용도��� 선택해 주세요" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
@@ -1275,7 +1275,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       </>
                     ) : (
                       <>
-                        <AIIcon className="mr-2 h-6 w-6" />
+                        <AIIcon className="mr-1.5 h-8 w-8" />
                         AI 판독 시작
                       </>
                     )}
