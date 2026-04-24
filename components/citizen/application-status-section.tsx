@@ -229,11 +229,8 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
     <div className="space-y-4 overflow-visible">
       {/* 신청 정보 테이블 */}
       <div className="overflow-hidden rounded-lg border border-border">
-        <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
+        <div className="border-b border-border bg-muted/50 px-4 py-2.5">
           <h4 className="font-semibold text-foreground">신청 정보</h4>
-          <Badge variant={adminStatusConfig[application.adminStatus].variant}>
-            {adminStatusConfig[application.adminStatus].label}
-          </Badge>
         </div>
         
         {/* 접수번호 행 */}
@@ -241,7 +238,10 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
             <span className="text-sm font-medium">접수번호</span>
           </div>
-          <div className="flex flex-1 items-center px-4 py-3">
+          <div className="flex flex-1 items-center gap-2 px-4 py-3">
+            <Badge variant={adminStatusConfig[application.adminStatus].variant}>
+              {adminStatusConfig[application.adminStatus].label}
+            </Badge>
             <span className="font-semibold text-foreground">{application.applicationNumber}</span>
           </div>
         </div>
