@@ -742,6 +742,7 @@ export function ApplicationFormSection({
               )}
 
               {/* 토지 정보 - 스택형 레이아웃 */}
+              <div className="pt-4" />
               {allLands.map((land, index) => {
                 const landData = landDataList[index];
                 const isAgricultural = land.landType === "농지" || landData.currentUsage === "답" || landData.currentUsage === "전";
@@ -773,8 +774,8 @@ export function ApplicationFormSection({
                       </p>
                     )}
                     
-                    {/* 활용 지목 */}
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    {/* 활용 지목 / 공부상 지목 / 토지 모양 - 한 열 정렬 */}
+                    <div className="grid gap-4 sm:grid-cols-3">
                       <div className="space-y-1.5">
                         <label className="text-sm font-medium">활용 지목 <span className="text-destructive">*</span></label>
                         <Select
@@ -796,30 +797,6 @@ export function ApplicationFormSection({
                           AI 판단: {land.landCategory} ({landCategories.find(c => c.value === land.landCategory)?.label || ""})
                         </p>
                       </div>
-                      
-                      {/* 택지(대지) 선택 시 세부 유형 */}
-                      {landData.currentUsage === "대" && (
-                        <div className="space-y-1.5">
-                          <label className="text-sm font-medium">택지 유형</label>
-                          <Select
-                            value={landData.landSubType}
-                            onValueChange={(value) => updateLandData(index, "landSubType", value as typeof landData.landSubType)}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="선택하세요" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="residential-detached">주거용 (기준 90㎡ 이하)</SelectItem>
-                              <SelectItem value="commercial">상업용 (기준 150㎡ 이하)</SelectItem>
-                              <SelectItem value="industrial">공업용 (기준 330㎡ 이하)</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* 공부상 지목 & 토지 모양 */}
-                    <div className="grid gap-4 sm:grid-cols-2">
                       <div className="space-y-1.5">
                         <label className="text-sm font-medium">공부상 지목</label>
                         <Select
@@ -860,6 +837,28 @@ export function ApplicationFormSection({
                         </Select>
                       </div>
                     </div>
+
+                    {/* 택지(대지) 선택 시 세부 유형 */}
+                    {landData.currentUsage === "대" && (
+                      <div className="grid gap-4 sm:grid-cols-3">
+                        <div className="space-y-1.5">
+                          <label className="text-sm font-medium">택지 유형</label>
+                          <Select
+                            value={landData.landSubType}
+                            onValueChange={(value) => updateLandData(index, "landSubType", value as typeof landData.landSubType)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="선택하세요" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="residential-detached">주거용 (기준 90㎡ 이하)</SelectItem>
+                              <SelectItem value="commercial">상업용 (기준 150㎡ 이하)</SelectItem>
+                              <SelectItem value="industrial">공업용 (기준 330㎡ 이하)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    )}
 
                     {/* 직접 확인 항목 */}
                     <div className="space-y-2">
