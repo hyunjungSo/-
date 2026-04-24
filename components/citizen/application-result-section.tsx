@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Application } from "@/lib/types";
 import { CheckCircle2, FileText, FilePlus, Printer } from "lucide-react";
-import { ProcessStatusBadge } from "@/components/ui/status-badge";
 
 interface ApplicationResultSectionProps {
   application: Application;
@@ -72,13 +71,6 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
               <dt className="text-muted-foreground">대상 토지</dt>
               <dd className="text-right font-medium text-foreground">
                 {application.landInfo.address}
-              </dd>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <dt className="text-muted-foreground">처리 상태</dt>
-              <dd>
-                <ProcessStatusBadge status={application.status} showIcon />
               </dd>
             </div>
 
