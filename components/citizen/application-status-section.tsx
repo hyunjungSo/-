@@ -85,20 +85,6 @@ function LandInfoSection({ application }: { application: Application }) {
           <span className="font-medium">{selectedLand.remainingRatio}%</span>
         </div>
       </div>
-      
-      {/* AI 판정 행 */}
-      <div className="flex">
-        <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
-          <span className="text-sm font-medium">AI 판정</span>
-        </div>
-        <div className="flex flex-1 items-center px-4 py-3">
-          <span className={`font-medium ${
-            application.aiResult?.provisionalJudgment === "매수" ? "text-primary" : "text-muted-foreground"
-          }`}>
-            {application.aiResult?.provisionalJudgment || "-"}
-          </span>
-        </div>
-      </div>
     </div>
   );
 }
