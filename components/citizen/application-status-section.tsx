@@ -8,9 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { dummyApplications } from "@/lib/dummy-data";
 import type { Application, AdminStatus } from "@/lib/types";
 import { 
-  Clock, 
-  PlayCircle, 
-  CheckCircle2, 
   FileText, 
   MapPin,
   Scale,
@@ -22,40 +19,7 @@ import {
 } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { JudgmentRationale } from "@/lib/types";
-
-const adminStatusConfig: Record<AdminStatus, { 
-  label: string; 
-  icon: typeof Clock; 
-  variant: "warning-subtle" | "info-subtle" | "success-subtle";
-  iconColor: string;
-  bgColor: string;
-  textColor: string;
-}> = {
-  접수완료: { 
-    label: "접수완료", 
-    icon: Clock, 
-    variant: "warning-subtle",  // 주황 solid-pastel
-    iconColor: "text-amber-700",
-    bgColor: "bg-amber-50",
-    textColor: "text-amber-700",
-  },
-  진행중: { 
-    label: "진행중", 
-    icon: PlayCircle, 
-    variant: "info-subtle",     // 파랑 solid-pastel
-    iconColor: "text-sky-700",
-    bgColor: "bg-sky-50",
-    textColor: "text-sky-700",
-  },
-  심사완료: { 
-    label: "심사완료", 
-    icon: CheckCircle2, 
-    variant: "success-subtle",  // 녹색 solid-pastel
-    iconColor: "text-emerald-700",
-    bgColor: "bg-emerald-50",
-    textColor: "text-emerald-700",
-  },
-};
+import { AdminStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 
 // 토지 정보 섹션 컴포넌트 (고용24 스타일 테이블 형태)
 function LandInfoSection({ application }: { application: Application }) {
@@ -422,7 +386,6 @@ export function ApplicationStatusSection() {
           ) : (
             <ul className="flex-1 divide-y divide-border overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent">
               {myApplications.map((app) => {
-                const statusConfig = adminStatusConfig[app.adminStatus];
                 const isSelected = displayedApplication?.id === app.id;
                 const isMultipleLands = app.additionalLands && app.additionalLands.length > 0;
 
@@ -438,9 +401,7 @@ export function ApplicationStatusSection() {
                     >
                       {/* 상단: 상태 + 접수번호 */}
                       <div className="flex items-center gap-2">
-                        <Badge variant={statusConfig.variant} className="text-xs">
-                          {statusConfig.label}
-                        </Badge>
+                        <AdminStatusBadge status={app.adminStatus} size="sm" />
                         <span className={`text-sm font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
                           {app.applicationNumber}
                         </span>

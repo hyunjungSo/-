@@ -4,7 +4,6 @@ import { useState, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -20,26 +19,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { Application, ProcessStatus, AdminStatus } from "@/lib/types";
+import type { Application, AdminStatus } from "@/lib/types";
 import { Search, Filter, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, Layers, AlertTriangle } from "lucide-react";
-
-interface ApplicationListProps {
-  applications: Application[];
-  onSelect: (application: Application) => void;
-}
-
-const statusConfig: Record<ProcessStatus, { label: string; variant: "secondary" | "info" | "warning" | "success" }> = {
-  접수완료: { label: "접수완료", variant: "secondary" },
-  AI분석완료: { label: "AI 분석 완료", variant: "info" },
-  검토중: { label: "검토 중", variant: "warning" },
-  처리완료: { label: "처리 완료", variant: "success" },
-};
-
-const adminStatusConfig: Record<AdminStatus, { label: string; icon: typeof Clock; variant: "warning-subtle" | "info-subtle" | "success-subtle" }> = {
-  접수완료: { label: "접수완료", icon: Clock, variant: "warning-subtle" },      // 주황 solid-pastel
-  진행중: { label: "진행중", icon: PlayCircle, variant: "info-subtle" },        // 파랑 solid-pastel
-  심사완료: { label: "심사완료", icon: CheckCircle2, variant: "success-subtle" }, // 녹색 solid-pastel
-};
+import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 
 export function ApplicationList({ applications, onSelect }: ApplicationListProps) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -232,14 +214,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       </span>
                     </TableCell>
                     <TableCell>
-                      {(() => {
-                        const config = adminStatusConfig[app.adminStatus];
-                        return (
-                          <Badge variant={config.variant}>
-                            {config.label}
-                          </Badge>
-                        );
-                      })()}
+                      <AdminStatusBadge status={app.adminStatus} />
                     </TableCell>
                     <TableCell>
                       <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -263,9 +238,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     <span className="font-medium text-foreground">
                       {app.applicationNumber}
                     </span>
-                    <Badge variant={statusConfig[app.status].variant}>
-                      {statusConfig[app.status].label}
-                    </Badge>
+                    <ProcessStatusBadge status={app.status} />
                     {app.additionalLands && app.additionalLands.length > 0 && (
                       <span className="flex items-center gap-0.5 rounded bg-primary/10 px-1.5 py-0.5 text-base text-primary">
                         <Layers className="h-3 w-3" />

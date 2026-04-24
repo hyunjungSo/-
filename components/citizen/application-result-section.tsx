@@ -4,19 +4,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Application } from "@/lib/types";
-import { CheckCircle2, Clock, FileText, FilePlus, Printer } from "lucide-react";
+import { CheckCircle2, FileText, FilePlus, Printer } from "lucide-react";
+import { ProcessStatusBadge } from "@/components/ui/status-badge";
 
 interface ApplicationResultSectionProps {
   application: Application;
   onNewApplication?: () => void;
 }
-
-const statusConfig = {
-  접수완료: { label: "접수완료", variant: "outline" as const, icon: Clock },
-  AI분석완료: { label: "AI 분석 완료", variant: "info" as const, icon: Clock },
-  검토중: { label: "검토 중", variant: "warning" as const, icon: Clock },
-  처리완료: { label: "처리 완료", variant: "success" as const, icon: CheckCircle2 },
-};
 
 const judgmentConfig = {
   매수: { label: "매수 결정", variant: "outline" as const, className: "border-emerald-600 text-emerald-700" },
@@ -25,9 +19,6 @@ const judgmentConfig = {
 };
 
 export function ApplicationResultSection({ application, onNewApplication }: ApplicationResultSectionProps) {
-  const status = statusConfig[application.status];
-  const StatusIcon = status.icon;
-
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       {/* 접수 완료 알림 */}
@@ -87,10 +78,7 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">처리 상태</dt>
               <dd>
-                <Badge variant={status.variant} className="flex w-fit items-center gap-1">
-                  <StatusIcon className="h-3 w-3" />
-                  {status.label}
-                </Badge>
+                <ProcessStatusBadge status={application.status} showIcon />
               </dd>
             </div>
 
