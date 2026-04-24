@@ -628,7 +628,7 @@ export function ApplicationFormSection({
                         value="owner"
                         checked={formData.applicantRelation === "owner"}
                         onChange={() => setFormData((prev) => ({ ...prev, applicantRelation: "owner" }))}
-                        className="h-4 w-4 accent-primary"
+                        className="h-4 w-4 accent-gray-900"
                       />
                       <span className="text-sm">본인 신청</span>
                     </label>
@@ -639,7 +639,7 @@ export function ApplicationFormSection({
                         value="agent"
                         checked={formData.applicantRelation === "agent"}
                         onChange={() => setFormData((prev) => ({ ...prev, applicantRelation: "agent" }))}
-                        className="h-4 w-4 accent-primary"
+                        className="h-4 w-4 accent-gray-900"
                       />
                       <span className="text-sm">대리인 신청</span>
                     </label>
