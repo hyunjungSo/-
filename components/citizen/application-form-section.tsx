@@ -799,7 +799,7 @@ export function ApplicationFormSection({
                   <div key={land.id} className="overflow-hidden rounded-lg border border-border">
                     <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
                       <h4 className="font-semibold text-foreground">
-                        {isMultipleLands ? `필지 ${index + 1} 토지 정보` : "토지 정보 (민원인 입력)"}
+                        {isMultipleLands ? `필지 ${index + 1} 토지 정보` : "토지 정보"}
                       </h4>
                       {isMultipleLands && (
                         <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
