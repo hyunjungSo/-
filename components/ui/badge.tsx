@@ -36,7 +36,7 @@ const badgeVariants = cva(
         // KRDS Info Solid-Pastel - 연한 파랑 배경 + 파랑 텍스트
         'info-subtle': 'border-transparent bg-sky-50 text-sky-700',
         // KRDS Destructive Solid-Pastel
-        'destructive-subtle': 'border-transparent bg-red-50 text-destructive',
+        'destructive-subtle': 'border-transparent bg-red-100 text-red-700',
       },
       size: {
         // KRDS 뱃지 크기 (8px 단위)
