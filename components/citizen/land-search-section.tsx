@@ -383,7 +383,7 @@ function generateJudgmentRationale(
     summary = `${shapeDescription} ${usageDescription} 수용할 수 있는 것으로 판단됩니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
-1. 분석 대상 토��
+1. 분석 대상 토지
 - 소재지: ${land.address}
 - 토지 유형: ${land.landType}
 - 지목: ${land.landCategory}

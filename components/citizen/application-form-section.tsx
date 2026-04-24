@@ -871,11 +871,9 @@ export function ApplicationFormSection({
                                 <SelectValue placeholder="선택하세요" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="residential-detached">주거용 - 단독주택 (90m²)</SelectItem>
-                                <SelectItem value="residential-multi">주거용 - 연립/다세대 (165m²)</SelectItem>
-                                <SelectItem value="residential-apartment">주거용 - 아파트 (60m²)</SelectItem>
-                                <SelectItem value="commercial">상업용 (150m²)</SelectItem>
-                                <SelectItem value="industrial">공업용 (330m²)</SelectItem>
+                                <SelectItem value="residential-detached">주거용 (기준 90㎡ 이하)</SelectItem>
+                                <SelectItem value="commercial">상업용 (기준 150㎡ 이하)</SelectItem>
+                                <SelectItem value="industrial">공업용 (기준 330㎡ 이하)</SelectItem>
                               </SelectContent>
                             </Select>
                           </>
