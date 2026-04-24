@@ -149,7 +149,7 @@ function AIResultDetailSection({ aiResult, landInfo }: { aiResult: AIAnalysisRes
 
   const summary = rationale?.summary || (aiResult.provisionalJudgment === "매수"
     ? `잔여지 비율 ${landInfo.remainingRatio}%로 기준 충족, 형상지수 +${shapeIndexChange.toFixed(1)} 상승으로 매수 대상 판정`
-    : `분석 결과 매수 기준에 충족하지 않아 기각 대상으로 판정되었습니다.`);
+    : `분석 결과 매수 기준에 충족하지 않아 매수불가로 판정되었습니다.`);
 
   const legalBasis = rationale?.legalBasis || "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조";
 

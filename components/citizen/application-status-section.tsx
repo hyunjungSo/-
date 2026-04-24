@@ -146,7 +146,7 @@ function LandInfoSection({ application }: { application: Application }) {
 }
 
 // 신청 현황용 판단 근거 컴포넌트 (land-search-section과 동일한 스타일)
-function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale: JudgmentRationale; provisionalJudgment?: "매수" | "기각" }) {
+function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale: JudgmentRationale; provisionalJudgment?: "매수" | "매수불가" }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

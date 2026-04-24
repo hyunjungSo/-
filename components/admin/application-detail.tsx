@@ -595,7 +595,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             </td>
                             <td className="px-3 py-2">{landData?.reportedShape || land.remainingShape}</td>
                             <td className="px-3 py-2">
-                              <Badge variant={aiJudgment === "매수" ? "default" : aiJudgment === "기각" ? "destructive" : "secondary"} className="text-xs">
+                              <Badge variant={aiJudgment === "매수" ? "default" : aiJudgment === "매수불가" ? "destructive" : "secondary"} className="text-xs">
                                 {aiJudgment}
                               </Badge>
                             </td>

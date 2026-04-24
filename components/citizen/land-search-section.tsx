@@ -307,13 +307,13 @@ function simulateAIAnalysis(
   const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
-  // AI 1차 판독: 매수 또는 기각만 판정
-  let provisionalJudgment: "매수" | "기각";
+  // AI 1차 판독: 매수 또는 매수불가만 판정
+  let provisionalJudgment: "매수" | "매수불가";
   
   if (metAutoCriteria >= 1) {
     provisionalJudgment = "매수";
   } else {
-    provisionalJudgment = "기각";
+    provisionalJudgment = "매수불가";
   }
 
   const judgmentRationale: JudgmentRationale = generateJudgmentRationale(
@@ -345,7 +345,7 @@ function simulateAIAnalysis(
 // 중앙토지수용위원회 기준 기반 판단 근거 설명 생성 함수
 function generateJudgmentRationale(
   land: LandInfo,
-  judgment: "매수" | "기각",
+  judgment: "매수" | "매수불가",
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],
@@ -405,7 +405,8 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 
 5. 판정 결과
 ${summary}`;
-  } else if (judgment === "기각") {
+  } else {
+    // 매수불가
     summary = `본 토지는 잔여지 면적 및 형상이 종래 목적대로 사용 가능한 것으로 판단되어 매수청구 대상에 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
@@ -1454,7 +1455,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     );
                   }
                   
-                  if (aiResult.provisionalJudgment !== "기각") {
+                  if (aiResult.provisionalJudgment !== "매수불가") {
                     return (
                       <div className="space-y-2">
                         <Button 
