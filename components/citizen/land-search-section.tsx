@@ -382,7 +382,7 @@ function generateJudgmentRationale(
 
   if (judgment === "매수") {
     summary = `${shapeDescription} ${usageDescription} 수용할 수 있는 것으로 판단됩니다.`;
-    detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
+    detailedExplanation = `[중앙���지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
 - 소재지: ${land.address}
@@ -1275,7 +1275,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       </>
                     ) : (
                       <>
-                        <AIIcon className="mr-2 h-5 w-5" />
+                        <AIIcon className="mr-2 h-6 w-6" />
                         AI 판독 시작
                       </>
                     )}
