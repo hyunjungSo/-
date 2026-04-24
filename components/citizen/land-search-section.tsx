@@ -383,7 +383,7 @@ function generateJudgmentRationale(
     summary = `${shapeDescription} ${usageDescription} 수용할 수 있는 것으로 판단됩니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
-1. 분석 대상 ��지
+1. 분��� 대상 ��지
 - 소재지: ${land.address}
 - 토지 유형: ${land.landType}
 - 지목: ${land.landCategory}
@@ -862,44 +862,35 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         </ol>
       </nav>
 
-      {/* 검색 필터 영역 - 박스 없이 플랫하게 */}
+      {/* 검색 필터 영역 */}
       <div className="mb-6 space-y-4">
-        {/* 검색 방식 토글 - 더 눈에 띄는 탭 스타일 */}
-        <div className="flex items-center justify-between border-b border-border">
-          <div className="flex">
+        {/* 검색 방식 세그먼트 컨트롤 - 상위 탭과 구분되는 subtle한 스타일 */}
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted-foreground">검색 방식</span>
+          <div className="inline-flex rounded-md border border-border p-0.5">
             <button
               type="button"
               onClick={() => setSearchMode("address")}
-              className={`relative px-5 py-3 text-sm font-medium transition-colors ${
+              className={`flex items-center gap-1.5 rounded px-3 py-1.5 text-xs font-medium transition-all ${
                 searchMode === "address"
-                  ? "text-primary"
+                  ? "bg-foreground text-background"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <span className="flex items-center gap-2">
-                <MapPin className="h-4 w-4" />
-                지번으로 검색
-              </span>
-              {searchMode === "address" && (
-                <span className="absolute bottom-0 left-0 h-0.5 w-full bg-primary" />
-              )}
+              <MapPin className="h-3.5 w-3.5" />
+              지번
             </button>
             <button
               type="button"
               onClick={() => setSearchMode("owner")}
-              className={`relative px-5 py-3 text-sm font-medium transition-colors ${
+              className={`flex items-center gap-1.5 rounded px-3 py-1.5 text-xs font-medium transition-all ${
                 searchMode === "owner"
-                  ? "text-primary"
+                  ? "bg-foreground text-background"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <span className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                소유자로 검색
-              </span>
-              {searchMode === "owner" && (
-                <span className="absolute bottom-0 left-0 h-0.5 w-full bg-primary" />
-              )}
+              <User className="h-3.5 w-3.5" />
+              소유자
             </button>
           </div>
         </div>
