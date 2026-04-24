@@ -57,7 +57,7 @@ const adminStatusConfig: Record<AdminStatus, {
   },
 };
 
-// 토지 정보 섹션 컴포넌트 (셀렉트박스로 필지 선택)
+// 토지 정보 섹션 컴포넌트 (고용24 스타일 테이블 형태)
 function LandInfoSection({ application }: { application: Application }) {
   const isMultipleLands = application.additionalLands && application.additionalLands.length > 0;
   const allLands = isMultipleLands 
@@ -68,9 +68,9 @@ function LandInfoSection({ application }: { application: Application }) {
   const selectedLand = allLands[selectedLandIndex];
 
   return (
-    <div>
-      <div className="mb-4 flex items-center gap-2">
-        <h4 className="text-base font-semibold text-foreground">토지 정보</h4>
+    <div className="overflow-hidden rounded-lg border border-border">
+      <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
+        <h4 className="font-semibold text-foreground">토지 정보</h4>
         {isMultipleLands && (
           <span className="flex items-center gap-1 rounded bg-violet-100 px-2 py-0.5 text-xs font-medium text-violet-700">
             <Layers className="h-3 w-3" />
@@ -81,46 +81,64 @@ function LandInfoSection({ application }: { application: Application }) {
       
       {/* 복수 필지일 경우 셀렉트박스 표시 */}
       {isMultipleLands && (
-        <div className="mb-4">
-          <Select
-            value={selectedLandIndex.toString()}
-            onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {allLands.map((land, index) => (
-                <SelectItem key={land.id} value={index.toString()}>
-                  필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")} ({land.remainingArea.toLocaleString()}m2)
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="flex border-b border-border">
+          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">필지 선택</span>
+          </div>
+          <div className="flex flex-1 items-center px-4 py-3">
+            <Select
+              value={selectedLandIndex.toString()}
+              onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
+            >
+              <SelectTrigger className="w-full max-w-md">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {allLands.map((land, index) => (
+                  <SelectItem key={land.id} value={index.toString()}>
+                    필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")} ({land.remainingArea.toLocaleString()}m²)
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       )}
       
-      {/* 선택된 필지 정보 표시 */}
-      <div className="grid grid-cols-4 gap-6">
-        <div>
-          <p className="text-sm text-muted-foreground">토지 유형</p>
-          <p className="mt-1.5 text-base font-semibold text-foreground">{selectedLand.landType}</p>
+      {/* 토지 유형 행 */}
+      <div className="flex border-b border-border">
+        <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+          <span className="text-sm font-medium">토지 유형</span>
         </div>
-        <div>
-          <p className="text-sm text-muted-foreground">잔여 면적</p>
-          <p className="mt-1.5 text-base font-semibold text-primary">{selectedLand.remainingArea.toLocaleString()}m2</p>
+        <div className="flex flex-1 items-center px-4 py-3">
+          <span className="text-sm">{selectedLand.landType}</span>
         </div>
-        <div>
-          <p className="text-sm text-muted-foreground">잔여 비율</p>
-          <p className="mt-1.5 text-base font-semibold text-foreground">{selectedLand.remainingRatio}%</p>
+      </div>
+      
+      {/* 잔여 면적 & 비율 행 */}
+      <div className="flex border-b border-border">
+        <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+          <span className="text-sm font-medium">잔여 면적</span>
         </div>
-        <div>
-          <p className="text-sm text-muted-foreground">AI 판정</p>
-          <p className={`mt-1.5 text-base font-semibold ${
+        <div className="flex flex-1 items-center gap-6 px-4 py-3">
+          <span className="font-medium text-primary">{selectedLand.remainingArea.toLocaleString()}m²</span>
+          <span className="text-sm text-muted-foreground">|</span>
+          <span className="text-sm text-muted-foreground">잔여 비율</span>
+          <span className="font-medium">{selectedLand.remainingRatio}%</span>
+        </div>
+      </div>
+      
+      {/* AI 판정 행 */}
+      <div className="flex">
+        <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+          <span className="text-sm font-medium">AI 판정</span>
+        </div>
+        <div className="flex flex-1 items-center px-4 py-3">
+          <span className={`font-medium ${
             application.aiResult?.provisionalJudgment === "매수" ? "text-primary" : "text-muted-foreground"
           }`}>
             {application.aiResult?.provisionalJudgment || "-"}
-          </p>
+          </span>
         </div>
       </div>
     </div>

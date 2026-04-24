@@ -609,14 +609,18 @@ export function ApplicationFormSection({
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* 신청인 정보 */}
-              <div className="space-y-4">
-                <h4 className="font-semibold text-foreground">신청인 정보</h4>
+              {/* 신청인 정보 - 고용24 스타일 테이블 형태 */}
+              <div className="overflow-hidden rounded-lg border border-border">
+                <div className="border-b border-border bg-muted/50 px-4 py-2.5">
+                  <h4 className="font-semibold text-foreground">신청인 정보</h4>
+                </div>
                 
-                {/* 신청인/대리인 선택 */}
-                <div className="space-y-2">
-                  <Label>신청 구분 *</Label>
-                  <div className="flex gap-4">
+                {/* 신청 구분 행 */}
+                <div className="flex border-b border-border">
+                  <div className="flex w-32 shrink-0 items-center bg-muted/30 px-4 py-3">
+                    <span className="text-sm font-medium">신청 구분 <span className="text-destructive">*</span></span>
+                  </div>
+                  <div className="flex flex-1 items-center gap-6 px-4 py-3">
                     <label className="flex cursor-pointer items-center gap-2">
                       <input
                         type="radio"
@@ -624,7 +628,7 @@ export function ApplicationFormSection({
                         value="owner"
                         checked={formData.applicantRelation === "owner"}
                         onChange={() => setFormData((prev) => ({ ...prev, applicantRelation: "owner" }))}
-                        className="h-4 w-4 text-primary"
+                        className="h-4 w-4 accent-primary"
                       />
                       <span className="text-sm">본인 신청</span>
                     </label>
@@ -635,7 +639,7 @@ export function ApplicationFormSection({
                         value="agent"
                         checked={formData.applicantRelation === "agent"}
                         onChange={() => setFormData((prev) => ({ ...prev, applicantRelation: "agent" }))}
-                        className="h-4 w-4 text-primary"
+                        className="h-4 w-4 accent-primary"
                       />
                       <span className="text-sm">대리인 신청</span>
                     </label>
@@ -644,89 +648,108 @@ export function ApplicationFormSection({
 
                 {/* 대리인 신청 시 안내 */}
                 {formData.applicantRelation === "agent" && (
-                  <div className="rounded-lg border border-warning/50 bg-warning/5 p-3">
-                    <p className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
-                      대리인 신청 시 위임장 및 대리인 신분증 사본을 첨부 서류에 추가해 주세요.
-                    </p>
+                  <div className="flex border-b border-border bg-warning/5">
+                    <div className="flex w-32 shrink-0 items-center bg-muted/30 px-4 py-2">
+                      <span className="text-sm font-medium">안내</span>
+                    </div>
+                    <div className="flex flex-1 items-center px-4 py-2">
+                      <p className="flex items-center gap-1.5 text-xs text-warning">
+                        <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+                        대리인 신청 시 위임장 및 대리인 신분증 사본을 첨부 서류에 추가해 주세요.
+                      </p>
+                    </div>
                   </div>
                 )}
 
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="applicantName">
-                      {formData.applicantRelation === "owner" ? "소유자 성명 *" : "소유자 성명 *"}
-                    </Label>
-                    <Input
-                      id="applicantName"
-                      value={formData.applicantName}
-                      onChange={(e) =>
-                        setFormData((prev) => ({ ...prev, applicantName: e.target.value }))
-                      }
-                      required
-                    />
+                {/* 소유자 정보 행 */}
+                <div className="flex border-b border-border">
+                  <div className="flex w-32 shrink-0 items-center bg-muted/30 px-4 py-3">
+                    <span className="text-sm font-medium">소유자 <span className="text-destructive">*</span></span>
                   </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="applicantContact">
-                      {formData.applicantRelation === "owner" ? "연락처 *" : "소유자 연락처 *"}
-                    </Label>
-                    <Input
-                      id="applicantContact"
-                      placeholder="010-0000-0000"
-                      value={formData.applicantContact}
-                      onChange={(e) =>
-                        setFormData((prev) => ({ ...prev, applicantContact: e.target.value }))
-                      }
-                      required
-                    />
+                  <div className="flex flex-1 flex-wrap items-center gap-4 px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">성명</span>
+                      <Input
+                        id="applicantName"
+                        value={formData.applicantName}
+                        onChange={(e) =>
+                          setFormData((prev) => ({ ...prev, applicantName: e.target.value }))
+                        }
+                        className="w-[140px]"
+                        required
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">연락처</span>
+                      <Input
+                        id="applicantContact"
+                        placeholder="010-0000-0000"
+                        value={formData.applicantContact}
+                        onChange={(e) =>
+                          setFormData((prev) => ({ ...prev, applicantContact: e.target.value }))
+                        }
+                        className="w-[150px]"
+                        required
+                      />
+                    </div>
                   </div>
                 </div>
 
                 {/* 대리인 정보 (대리인 신청 시만 표시) */}
                 {formData.applicantRelation === "agent" && (
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="agentName">대리인 성명 *</Label>
-                      <Input
-                        id="agentName"
-                        value={formData.agentName}
-                        onChange={(e) =>
-                          setFormData((prev) => ({ ...prev, agentName: e.target.value }))
-                        }
-                        required={formData.applicantRelation === "agent"}
-                      />
+                  <div className="flex border-b border-border">
+                    <div className="flex w-32 shrink-0 items-center bg-muted/30 px-4 py-3">
+                      <span className="text-sm font-medium">대리인 <span className="text-destructive">*</span></span>
                     </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="agentContact">대리인 연락처 *</Label>
-                      <Input
-                        id="agentContact"
-                        placeholder="010-0000-0000"
-                        value={formData.agentContact}
-                        onChange={(e) =>
-                          setFormData((prev) => ({ ...prev, agentContact: e.target.value }))
-                        }
-                        required={formData.applicantRelation === "agent"}
-                      />
+                    <div className="flex flex-1 flex-wrap items-center gap-4 px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">성명</span>
+                        <Input
+                          id="agentName"
+                          value={formData.agentName}
+                          onChange={(e) =>
+                            setFormData((prev) => ({ ...prev, agentName: e.target.value }))
+                          }
+                          className="w-[140px]"
+                          required={formData.applicantRelation === "agent"}
+                        />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">연락처</span>
+                        <Input
+                          id="agentContact"
+                          placeholder="010-0000-0000"
+                          value={formData.agentContact}
+                          onChange={(e) =>
+                            setFormData((prev) => ({ ...prev, agentContact: e.target.value }))
+                          }
+                          className="w-[150px]"
+                          required={formData.applicantRelation === "agent"}
+                        />
+                      </div>
                     </div>
                   </div>
                 )}
 
-                <div className="space-y-2">
-                  <Label>주소 *</Label>
-                  <div className="space-y-2">
+                {/* 주소 행 */}
+                <div className="flex">
+                  <div className="flex w-32 shrink-0 items-center bg-muted/30 px-4 py-3">
+                    <span className="text-sm font-medium">주소 <span className="text-destructive">*</span></span>
+                  </div>
+                  <div className="flex flex-1 flex-col gap-2 px-4 py-3">
                     <div className="flex gap-2">
                       <Input
                         id="postalCode"
                         placeholder="우편번호"
                         value={formData.postalCode}
                         readOnly
-                        className="h-10 w-28 bg-muted"
+                        className="h-9 w-24 bg-muted text-sm"
                       />
                       <Button
                         type="button"
-                        className="h-10 shrink-0 border-0 bg-[#222222] text-white hover:bg-[#333333] hover:text-white"
+                        variant="secondary"
+                        size="sm"
+                        className="h-9 shrink-0"
                         onClick={() => setIsAddressSearchOpen(true)}
                       >
                         주소 검색
@@ -737,7 +760,7 @@ export function ApplicationFormSection({
                       placeholder="기본주소"
                       value={formData.baseAddress}
                       readOnly
-                      className="bg-muted"
+                      className="bg-muted text-sm"
                     />
                     <Input
                       id="detailAddress"
@@ -746,9 +769,11 @@ export function ApplicationFormSection({
                       onChange={(e) =>
                         setFormData((prev) => ({ ...prev, detailAddress: e.target.value }))
                       }
+                      className="text-sm"
                     />
                   </div>
                 </div>
+              </div>
 
                 {/* 주소 검색 모달 */}
                 {isAddressSearchOpen && (
@@ -766,99 +791,113 @@ export function ApplicationFormSection({
                 )}
               </div>
 
-              {/* 토지 정보 - 토지별 개별 입력 */}
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-semibold text-foreground">
-                    토지 정보 (민원인 입력)
-                    {isMultipleLands && <span className="ml-2 text-sm font-normal text-muted-foreground">- 토지별로 입력해 주세요</span>}
-                  </h4>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지의 실제 활용 상황을 입력해 주세요.
-                  </p>
-                </div>
+              {/* 토지 정보 - 토지별 개별 입력 - 고용24 스타일 */}
+              {allLands.map((land, index) => {
+                const landData = landDataList[index];
+                const isAgricultural = land.landType === "농지" || landData.currentUsage === "답" || landData.currentUsage === "전";
                 
-                {allLands.map((land, index) => {
-                  const landData = landDataList[index];
-                  const isAgricultural = land.landType === "농지" || landData.currentUsage === "답" || landData.currentUsage === "전";
-                  
-                  return (
-                    <div 
-                      key={land.id} 
-                      className={`space-y-4 ${isMultipleLands ? "rounded-lg border border-border bg-muted/20 p-4" : ""}`}
-                    >
+                return (
+                  <div key={land.id} className="overflow-hidden rounded-lg border border-border">
+                    <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
+                      <h4 className="font-semibold text-foreground">
+                        {isMultipleLands ? `필지 ${index + 1} 토지 정보` : "토지 정보 (민원인 입력)"}
+                      </h4>
                       {isMultipleLands && (
-                        <div className="flex items-center justify-between border-b border-border pb-3">
-                          <div>
-                            <span className="text-base font-semibold text-foreground">
-                              필지 {index + 1}
-                            </span>
-                            <p className="text-base text-muted-foreground">{land.address}</p>
-                          </div>
-                          <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                            {land.remainingArea.toLocaleString()}m²
-                          </span>
-                        </div>
+                        <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                          {land.remainingArea.toLocaleString()}m²
+                        </span>
                       )}
-                      
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div className="space-y-2">
-                          <Label htmlFor={`currentUsage-${index}`}>현재 활용 지목 *</Label>
-                          <Select
-                            value={landData.currentUsage}
-                            onValueChange={(value) => updateLandData(index, "currentUsage", value as LandCategory)}
-                          >
-                            <SelectTrigger id={`currentUsage-${index}`}>
-                              <SelectValue placeholder="선택하세요" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {landCategories.map((cat) => (
-                                <SelectItem key={cat.value} value={cat.value}>
-                                  {cat.value} ({cat.label})
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                    </div>
+                    
+                    {isMultipleLands && (
+                      <div className="flex border-b border-border bg-muted/20">
+                        <div className="flex w-32 shrink-0 items-center bg-muted/30 px-4 py-2">
+                          <span className="text-sm font-medium">소재지</span>
+                        </div>
+                        <div className="flex flex-1 items-center px-4 py-2">
+                          <span className="text-sm">{land.address}</span>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* 안내 행 */}
+                    {index === 0 && (
+                      <div className="flex border-b border-border">
+                        <div className="flex w-32 shrink-0 items-center bg-muted/30 px-4 py-2">
+                          <span className="text-sm font-medium">안내</span>
+                        </div>
+                        <div className="flex flex-1 items-center px-4 py-2">
                           <p className="text-xs text-muted-foreground">
-                            AI가 판단한 지목: {land.landCategory} ({landCategories.find(c => c.value === land.landCategory)?.label || ""})
+                            AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지의 실제 활용 상황을 입력해 주세요.
                           </p>
                         </div>
-
-                        {/* 택지(대지) 선택 시 세부 유형 선택 */}
+                      </div>
+                    )}
+                    
+                    {/* 현재 활용 지목 행 */}
+                    <div className="flex border-b border-border">
+                      <div className="flex w-32 shrink-0 items-center bg-muted/30 px-4 py-3">
+                        <span className="text-sm font-medium">활용 지목 <span className="text-destructive">*</span></span>
+                      </div>
+                      <div className="flex flex-1 flex-wrap items-center gap-4 px-4 py-3">
+                        <Select
+                          value={landData.currentUsage}
+                          onValueChange={(value) => updateLandData(index, "currentUsage", value as LandCategory)}
+                        >
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="선택하세요" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {landCategories.map((cat) => (
+                              <SelectItem key={cat.value} value={cat.value}>
+                                {cat.value} ({cat.label})
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <span className="text-xs text-muted-foreground">
+                          AI 판단: {land.landCategory} ({landCategories.find(c => c.value === land.landCategory)?.label || ""})
+                        </span>
+                        
+                        {/* 택지(대지) 선택 시 세부 유형 */}
                         {landData.currentUsage === "대" && (
-                          <div className="space-y-2">
-                            <Label htmlFor={`landSubType-${index}`}>택지 세부 유형 *</Label>
+                          <>
+                            <span className="text-sm text-muted-foreground">|</span>
+                            <span className="text-sm text-muted-foreground">택지 유형</span>
                             <Select
                               value={landData.landSubType}
                               onValueChange={(value) => updateLandData(index, "landSubType", value as typeof landData.landSubType)}
                             >
-                              <SelectTrigger id={`landSubType-${index}`}>
+                              <SelectTrigger className="w-[220px]">
                                 <SelectValue placeholder="선택하세요" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90m²)</SelectItem>
-                                <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165m²)</SelectItem>
-                                <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60m²)</SelectItem>
-                                <SelectItem value="commercial">상업용 (기준: 150m²)</SelectItem>
-                                <SelectItem value="industrial">공업용 (기준: 330m²)</SelectItem>
+                                <SelectItem value="residential-detached">주거용 - 단독주택 (90m²)</SelectItem>
+                                <SelectItem value="residential-multi">주거용 - 연립/다세대 (165m²)</SelectItem>
+                                <SelectItem value="residential-apartment">주거용 - 아파트 (60m²)</SelectItem>
+                                <SelectItem value="commercial">상업용 (150m²)</SelectItem>
+                                <SelectItem value="industrial">공업용 (330m²)</SelectItem>
                               </SelectContent>
                             </Select>
-                            <p className="text-xs text-muted-foreground">
-                              택지 유형에 따라 매수 기준 면적이 다릅니다.
-                            </p>
-                          </div>
+                          </>
                         )}
                       </div>
+                    </div>
 
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div className="space-y-2">
-                          <Label htmlFor={`actualUsage-${index}`}>공부상 지목</Label>
+                    {/* 공부상 지목 & 토지 모양 행 */}
+                    <div className="flex border-b border-border">
+                      <div className="flex w-32 shrink-0 items-center bg-muted/30 px-4 py-3">
+                        <span className="text-sm font-medium">토지 상세</span>
+                      </div>
+                      <div className="flex flex-1 flex-wrap items-center gap-4 px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-muted-foreground">공부상 지목</span>
                           <Select
                             value={landData.actualUsage}
                             onValueChange={(value) => updateLandData(index, "actualUsage", value as LandCategory)}
                           >
-                            <SelectTrigger id={`actualUsage-${index}`}>
-                              <SelectValue placeholder="선택하세요" />
+                            <SelectTrigger className="w-[150px]">
+                              <SelectValue placeholder="선택" />
                             </SelectTrigger>
                             <SelectContent>
                               {landCategories.map((cat) => (
@@ -869,186 +908,177 @@ export function ApplicationFormSection({
                             </SelectContent>
                           </Select>
                         </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor={`reportedShape-${index}`}>토지 모양 *</Label>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-muted-foreground">토지 모양 <span className="text-destructive">*</span></span>
                           <Select
                             value={landData.reportedShape}
                             onValueChange={(value) => updateLandData(index, "reportedShape", value as LandShape)}
                           >
-                            <SelectTrigger id={`reportedShape-${index}`}>
-                              <SelectValue placeholder="선택하세요" />
+                            <SelectTrigger className="w-[150px]">
+                              <SelectValue placeholder="선택" />
                             </SelectTrigger>
                             <SelectContent>
-                              <div className="px-2 py-1 text-base font-semibold text-muted-foreground">
-                                정형
-                              </div>
+                              <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">정형</div>
                               {landShapes.regular.map((shape) => (
-                                <SelectItem key={shape.value} value={shape.value}>
-                                  {shape.label}
-                                </SelectItem>
+                                <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
                               ))}
-                              <div className="px-2 py-1 text-base font-semibold text-muted-foreground">
-                                비정형
-                              </div>
+                              <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">비정형</div>
                               {landShapes.irregular.map((shape) => (
-                                <SelectItem key={shape.value} value={shape.value}>
-                                  {shape.label}
-                                </SelectItem>
+                                <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
                         </div>
                       </div>
+                    </div>
 
-                      {/* 직접 확인 항목 (민원인 입력) */}
-                      <div className="rounded-lg border border-border bg-background p-4">
-                        <h5 className="mb-3 text-sm font-semibold text-foreground">직접 확인 항목 (해당 시 체크)</h5>
-                        <p className="mb-3 text-xs text-muted-foreground">
-                          아래 항목은 AI가 자동 판독할 수 없는 사항입니다. 해당되는 경우 체크해 주세요.
+                    {/* 직접 확인 항목 행 */}
+                    <div className="flex">
+                      <div className="flex w-32 shrink-0 bg-muted/30 px-4 py-3">
+                        <span className="text-sm font-medium">확인 항목</span>
+                      </div>
+                      <div className="flex flex-1 flex-col gap-2 px-4 py-3">
+                        <p className="text-xs text-muted-foreground">
+                          AI가 자동 판독할 수 없는 사항입니다. 해당되는 경우 체크해 주세요.
                         </p>
                         
-                        <div className="space-y-3">
-                          <div className="flex items-center space-x-2">
+                        <div className="flex flex-wrap gap-4">
+                          <label className="flex cursor-pointer items-center gap-2">
                             <Checkbox
                               id={`accessRoadLost-${index}`}
                               checked={landData.accessRoadLost}
                               onCheckedChange={(checked) => updateLandData(index, "accessRoadLost", checked === true)}
                             />
-                            <Label htmlFor={`accessRoadLost-${index}`} className="text-sm font-normal">
-                              접면도로 상실 (도로 편입으로 인해 건축허가 불가 또는 출입 불가)
-                            </Label>
-                          </div>
+                            <span className="text-sm">접면도로 상실</span>
+                          </label>
                           
                           {isAgricultural && (
                             <>
-                              <div className="flex items-center space-x-2">
+                              <label className="flex cursor-pointer items-center gap-2">
                                 <Checkbox
                                   id={`waterChannelLost-${index}`}
                                   checked={landData.waterChannelLost}
                                   onCheckedChange={(checked) => updateLandData(index, "waterChannelLost", checked === true)}
                                 />
-                                <Label htmlFor={`waterChannelLost-${index}`} className="text-sm font-normal">
-                                  관개수로 상실 (수로 편입으로 인해 농업용수 공급 불가)
-                                </Label>
-                              </div>
-                              <div className="flex items-center space-x-2">
+                                <span className="text-sm">관개수로 상실</span>
+                              </label>
+                              <label className="flex cursor-pointer items-center gap-2">
                                 <Checkbox
                                   id={`farmMachine-${index}`}
                                   checked={landData.farmMachineDifficulty}
                                   onCheckedChange={(checked) => updateLandData(index, "farmMachineDifficulty", checked === true)}
                                 />
-                                <Label htmlFor={`farmMachine-${index}`} className="text-sm font-normal">
-                                  농기계 진입 및 회전이 곤란합니다
-                                </Label>
-                              </div>
+                                <span className="text-sm">농기계 진입 곤란</span>
+                              </label>
                             </>
                           )}
                         </div>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                );
+              })}
 
-              {/* 신청 사유 */}
-              <div className="space-y-2">
-                <Label htmlFor="reason">신청 사유 (소유자 의견) *</Label>
-                <Textarea
-                  id="reason"
-                  placeholder="잔여지 매수를 신청하는 사유를 상세히 작성해주세요."
-                  rows={4}
-                  value={formData.reason}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, reason: e.target.value }))
-                  }
-                  required
-                />
-              </div>
-
-              {/* 첨부 서류 - KRDS 스타일 */}
-              <div className="space-y-4">
-                <Label>첨부 서류</Label>
-                <p className="text-base text-muted-foreground">
-                  토지 소유 증빙 서류, 사진 등을 첨부해주세요.
-                </p>
-                
-                {/* 드롭존 영역 */}
-                <div className="rounded-lg bg-gray-100 p-8">
-                  <div className="flex flex-col items-center justify-center text-center">
-                    <p className="mb-4 text-sm text-gray-600">
-                      첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 직접 선택해주세요.
-                    </p>
-                    <label className="cursor-pointer">
-                      <span className="inline-flex items-center gap-2 rounded-md bg-[#222222] px-4 py-2 text-base font-medium text-white hover:bg-[#333333]">
-                        <Upload className="h-4 w-4" />
-                        파일선택
-                      </span>
-                      <input
-                        type="file"
-                        multiple
-                        accept=".pdf,.jpg,.jpeg,.png"
-                        onChange={handleFileChange}
-                        className="sr-only"
-                      />
-                    </label>
+              {/* 신청 사유 - 고용24 스타일 */}
+              <div className="overflow-hidden rounded-lg border border-border">
+                <div className="flex">
+                  <div className="flex w-32 shrink-0 bg-muted/30 px-4 py-3">
+                    <span className="text-sm font-medium">신청 사유 <span className="text-destructive">*</span></span>
+                  </div>
+                  <div className="flex flex-1 px-4 py-3">
+                    <Textarea
+                      id="reason"
+                      placeholder="잔여지 매수를 신청하는 사유를 상세히 작성해주세요."
+                      rows={3}
+                      value={formData.reason}
+                      onChange={(e) =>
+                        setFormData((prev) => ({ ...prev, reason: e.target.value }))
+                      }
+                      className="w-full resize-none"
+                      required
+                    />
                   </div>
                 </div>
+              </div>
 
-                {/* 파일 개수 및 전체 삭제 */}
-                {formData.attachments.length > 0 && (
-                  <>
-                    <div className="flex items-center justify-between">
-                      <p className="text-base">
-                        <span className="font-semibold text-primary">{formData.attachments.length}개</span>
-                        <span className="text-muted-foreground"> / {MAX_FILES}개</span>
-                      </p>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={handleRemoveAllFiles}
-                        className="text-muted-foreground hover:text-foreground"
-                      >
-                        전체 파일 삭제
-                        <X className="ml-1 h-3 w-3" />
-                      </Button>
+              {/* 첨부 서류 - 고용24 스타일 */}
+              <div className="overflow-hidden rounded-lg border border-border">
+                <div className="border-b border-border bg-muted/50 px-4 py-2.5">
+                  <h4 className="font-semibold text-foreground">첨부 서류</h4>
+                </div>
+                <div className="flex">
+                  <div className="flex w-32 shrink-0 bg-muted/30 px-4 py-3">
+                    <span className="text-sm font-medium">파일 첨부</span>
+                  </div>
+                  <div className="flex flex-1 flex-col gap-3 px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      <label className="cursor-pointer">
+                        <span className="inline-flex items-center gap-2 rounded-md bg-[#222222] px-4 py-2 text-sm font-medium text-white hover:bg-[#333333]">
+                          <Upload className="h-4 w-4" />
+                          파일선택
+                        </span>
+                        <input
+                          type="file"
+                          multiple
+                          accept=".pdf,.jpg,.jpeg,.png"
+                          onChange={handleFileChange}
+                          className="sr-only"
+                        />
+                      </label>
+                      <span className="text-xs text-muted-foreground">
+                        PDF, JPG, PNG 파일 (최대 {MAX_FILES}개)
+                      </span>
                     </div>
 
                     {/* 파일 리스트 */}
-                    <ul className="space-y-2">
-                      {formData.attachments.map((file, index) => (
-                        <li
-                          key={index}
-                          className="flex items-center justify-between rounded-md border border-gray-200 bg-white px-4 py-3"
-                        >
-                          <span className="text-base text-foreground">
-                            {file.name} [{file.size}]
+                    {formData.attachments.length > 0 && (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-muted-foreground">
+                            첨부파일 {formData.attachments.length}개
                           </span>
-                          <div className="flex items-center gap-3">
-                            {file.status === "uploading" ? (
-                              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                            ) : (
-                              <>
-                                <button
-                                  type="button"
-                                  onClick={() => handleRemoveFile(index)}
-                                  className="flex items-center gap-1 text-base text-muted-foreground hover:text-destructive"
-                                >
-                                  삭제
-                                  <X className="h-3 w-3" />
-                                </button>
-                                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary">
-                                  <Check className="h-3 w-3 text-white" />
-                                </div>
-                              </>
-                            )}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleRemoveAllFiles}
+                            className="h-auto px-2 py-1 text-xs text-muted-foreground hover:text-foreground"
+                          >
+                            전체삭제
+                          </Button>
+                        </div>
+                        <ul className="space-y-1">
+                          {formData.attachments.map((file, index) => (
+                            <li
+                              key={index}
+                              className="flex items-center justify-between rounded border border-border bg-muted/30 px-3 py-2"
+                            >
+                              <span className="text-sm text-foreground">
+                                {file.name} <span className="text-muted-foreground">[{file.size}]</span>
+                              </span>
+                              <div className="flex items-center gap-2">
+                                {file.status === "uploading" ? (
+                                  <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                                ) : (
+                                  <>
+                                    <Check className="h-4 w-4 text-primary" />
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveFile(index)}
+                                      className="text-muted-foreground hover:text-destructive"
+                                    >
+                                      <X className="h-4 w-4" />
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
 
               {/* 제출 버튼 */}
