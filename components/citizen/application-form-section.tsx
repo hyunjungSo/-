@@ -701,7 +701,7 @@ export function ApplicationFormSection({
                         </div>
                         <div className="space-y-1.5">
                           <label className="text-sm font-medium">공부상 지목</label>
-                          <div className="flex h-10 w-full items-center rounded-md border border-input bg-muted px-3 text-sm text-muted-foreground">
+                          <div className="flex items-center justify-between rounded-md border border-gray-300 bg-background px-3 py-2 h-10 text-sm text-muted-foreground">
                             {land.landCategory} ({landCategories.find(c => c.value === land.landCategory)?.label || ""})
                           </div>
                         </div>
