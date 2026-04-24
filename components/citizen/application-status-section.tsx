@@ -27,7 +27,7 @@ function LandInfoSection({ application }: { application: Application }) {
 
   return (
     <div className="overflow-hidden rounded-lg border border-border">
-      <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
+      <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
         <h4 className="font-semibold text-foreground">토지 정보</h4>
         {isMultipleLands && (
           <span className="flex items-center gap-1 rounded bg-violet-100 px-2 py-0.5 text-xs font-medium text-violet-700">
