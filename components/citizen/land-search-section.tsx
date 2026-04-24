@@ -433,32 +433,6 @@ ${summary}`;
 
 5. 판정 결과
 ${summary}`;
-  } else {
-    summary = `본 토지는 자동 판독 기준 충족이 애매하여 담당자 검토가 필요한 「경계 사례」로 분류되었습니다.`;
-    detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
-
-1. 분석 대상 토지
-- 소재지: ${land.address}
-- 토지 유형: ${land.landType}
-- 지목: ${land.landCategory}
-
-2. 편입 현황
-- 편입 전 면적: ${land.originalArea.toLocaleString()}㎡
-- 편입 면적: ${land.includedArea.toLocaleString()}㎡
-- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡
-- 잔여 비율: ${land.remainingRatio}%
-
-3. 형상 분석
-- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
-- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
-- 형상지수 변화: +${shapeIndexChange.toFixed(1)}
-
-4. 경계 사례 판정 사유
-- 자동 판독 기준 일부만 충족
-- 직접 확인 필요 항목: ${manualCheckItems.join(", ")}
-
-5. 판정 결과
-${summary}`;
   }
 
   return {
