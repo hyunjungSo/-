@@ -584,7 +584,7 @@ export function ApplicationFormSection({
         {/* 신청서 양식 */}
         <Card className="lg:col-span-2 border-0 shadow-none">
           <CardHeader>
-            <CardTitle>매수 신청서 작성</CardTitle>
+            <CardTitle className="text-xl">매수 신청서 작성</CardTitle>
             <CardDescription>
               신청인 정보와 토지 관련 정보를 입력해주세요. * 표시는 필수 항목입니다.
             </CardDescription>
@@ -593,7 +593,7 @@ export function ApplicationFormSection({
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* 신청인 정보 - 깔끔한 스택형 레이아웃 */}
               <div className="space-y-5">
-                <h4 className="border-b border-border pb-2 font-semibold text-foreground">신청인 정보</h4>
+                <h4 className="border-b border-border pb-2 text-sm font-medium text-foreground">신청인 정보</h4>
                 
                 {/* 신청 구분 */}
                 <div className="space-y-2">
@@ -749,7 +749,7 @@ export function ApplicationFormSection({
                 return (
                   <div key={land.id} className="space-y-5">
                     <div className="flex items-center justify-between border-b border-border pb-2">
-                      <h4 className="font-semibold text-foreground">
+                      <h4 className="text-sm font-medium text-foreground">
                         {isMultipleLands ? `필지 ${index + 1} 토지 정보` : "토지 정보"}
                       </h4>
                       {isMultipleLands && (
@@ -921,7 +921,7 @@ export function ApplicationFormSection({
 
               {/* 첨부 서류 */}
               <div className="space-y-3">
-                <h4 className="border-b border-border pb-2 font-semibold text-foreground">첨부 서류</h4>
+                <h4 className="border-b border-border pb-2 text-sm font-medium text-foreground">첨부 서류</h4>
                 <div className="flex items-center gap-3">
                   <label className="cursor-pointer">
                     <span className="inline-flex items-center gap-2 rounded-md bg-[#222222] px-4 py-2 text-sm font-medium text-white hover:bg-[#333333]">
