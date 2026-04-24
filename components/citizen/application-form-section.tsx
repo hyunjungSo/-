@@ -651,12 +651,17 @@ export function ApplicationFormSection({
               )}
 
               {/* 토지 정보 - 아코디언 레이아웃 */}
-              <div className="pt-4 space-y-3">
-                {/* 안내 문구 (첫 번째 필지 위에 표시) */}
-                <p className="text-xs text-muted-foreground">
-                  AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지의 실제 활용 상황을 입력해 주세요.
-                </p>
+              <div className="pt-6 space-y-4">
+                {/* 토지 정보 타이틀 */}
+                <div className="border-b border-border pb-2">
+                  <h4 className="text-sm font-medium text-foreground">토지 정보</h4>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지의 실제 활용 상황을 입력해 주세요.
+                  </p>
+                </div>
                 
+                {/* 필지 목록 */}
+                <div className="space-y-2">
                 {allLands.map((land, index) => {
                   const landData = landDataList[index];
                   const isAgricultural = land.landType === "농지" || landData.currentUsage === "답" || landData.currentUsage === "전";
@@ -790,12 +795,12 @@ export function ApplicationFormSection({
                   if (isMultipleLands) {
                     return (
                       <Collapsible key={land.id} defaultOpen={index === 0}>
-                        <div className="rounded-lg border border-border">
-                          <CollapsibleTrigger className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-muted/50 transition-colors [&[data-state=open]>svg]:rotate-180">
+                        <div className="rounded-lg border border-border overflow-hidden">
+                          <CollapsibleTrigger className="flex w-full items-center justify-between bg-muted/30 px-4 py-3 text-left hover:bg-muted/50 transition-colors [&[data-state=open]>svg]:rotate-180">
                             <div className="flex items-center gap-3">
-                              <h4 className="text-sm font-medium text-foreground">
-                                필지 {index + 1} 토지 정보
-                              </h4>
+                              <span className="text-sm font-medium text-foreground">
+                                필지 {index + 1}
+                              </span>
                               <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                                 {land.remainingArea.toLocaleString()}m²
                               </span>
@@ -812,16 +817,14 @@ export function ApplicationFormSection({
                     );
                   }
 
-                  // 단일 필지: 기존 스타일
+                  // 단일 필지: 기존 스타일 (토지 정보 타이틀 제거, 상위에 이미 있음)
                   return (
                     <div key={land.id} className="space-y-5">
-                      <div className="border-b border-border pb-2">
-                        <h4 className="text-sm font-medium text-foreground">토지 정보</h4>
-                      </div>
                       {LandContent}
                     </div>
                   );
                 })}
+                </div>
               </div>
 
               {/* 신청 사유 */}
