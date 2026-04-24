@@ -338,9 +338,9 @@ export function ApplicationFormSection({
         토지 조회로 돌아가기
       </Button>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid items-start gap-6 lg:grid-cols-3">
         {/* 토지 정보 요약 */}
-        <Card className="lg:col-span-1 flex flex-col bg-white">
+        <Card className="lg:col-span-1 h-fit bg-white">
           <CardHeader>
             <CardTitle className="text-lg">
               신청 대상 토지
