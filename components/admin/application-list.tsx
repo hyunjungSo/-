@@ -168,22 +168,13 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
             </div>
 
-            {/* 오늘 접수 */}
-            {stats.todayCount > 0 && (
-              <div className="flex items-center gap-2 rounded-md border border-primary/20 bg-primary/5 px-3 py-2">
-                <TrendingUp className="h-4 w-4 text-primary" />
-                <span className="text-sm">오늘 접수</span>
-                <span className="ml-auto font-semibold text-primary">+{stats.todayCount}건</span>
+            {/* AI 분석률 */}
+            <div className="pt-2 border-t border-border">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">AI 분석 완료율</span>
+                <span className="font-medium">{stats.total > 0 ? Math.round((stats.aiAnalyzed / stats.total) * 100) : 0}%</span>
               </div>
-            )}
-
-            {/* 미처리 알림 */}
-            {stats.접수완료 > 0 && (
-              <div className="flex items-center gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2">
-                <AlertCircle className="h-4 w-4 text-amber-600" />
-                <span className="text-sm text-amber-700">처리 대기 {stats.접수완료}건</span>
-              </div>
-            )}
+            </div>
           </CardContent>
         </Card>
       </div>
