@@ -862,91 +862,87 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         </ol>
       </nav>
 
-      {/* KRDS 검색 필터 영역 */}
-      <div className="mb-3 rounded-lg border border-border bg-card p-4">
-        {/* 검색 방식 스위치 토글 (텍스트 내장형) */}
-        <div className="mb-4 flex items-center gap-3">
-          <div className="inline-flex rounded-lg bg-muted p-1">
-            <button
-              type="button"
-              onClick={() => setSearchMode("address")}
-              className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                searchMode === "address"
-                  ? "bg-white text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              지번으로 검색
-            </button>
-            <button
-              type="button"
-              onClick={() => setSearchMode("owner")}
-              className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                searchMode === "owner"
-                  ? "bg-white text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              소유자로 검색
-            </button>
+      {/* 검색 필터 영역 - 고용24 스타일 테이블 형태 */}
+      <div className="mb-4 overflow-hidden rounded-lg border border-border">
+        {/* 검색 방식 행 */}
+        <div className="flex border-b border-border">
+          <div className="flex w-28 shrink-0 items-center bg-muted/50 px-4 py-3">
+            <span className="text-sm font-medium text-foreground">검색방식</span>
+          </div>
+          <div className="flex flex-1 items-center gap-4 bg-background px-4 py-3">
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="radio"
+                name="searchMode"
+                checked={searchMode === "address"}
+                onChange={() => setSearchMode("address")}
+                className="h-4 w-4 accent-primary"
+              />
+              <span className="text-sm">지번으로 검색</span>
+            </label>
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="radio"
+                name="searchMode"
+                checked={searchMode === "owner"}
+                onChange={() => setSearchMode("owner")}
+                className="h-4 w-4 accent-primary"
+              />
+              <span className="text-sm">소유자로 검색</span>
+            </label>
           </div>
         </div>
 
-        {/* 검색 폼 */}
+        {/* 검색 조건 행 */}
         {searchMode === "owner" ? (
-          /* 소유자 검색 폼 */
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              토지 소유자 또는 대리인이 이름과 주민번호 앞자리로 해당 소유자의 모든 잔여지를 검색할 수 있습니다.
-            </p>
-            <div className="flex flex-wrap items-end gap-3">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-foreground">소유자 성명 *</label>
-                <Input
-                  placeholder="홍길동"
-                  value={ownerName}
-                  onChange={(e) => setOwnerName(e.target.value)}
-                  className="w-[160px]"
-                />
+          <>
+            <div className="flex border-b border-border">
+              <div className="flex w-28 shrink-0 items-center bg-muted/50 px-4 py-3">
+                <span className="text-sm font-medium text-foreground">소유자 정보</span>
               </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-foreground">주민번호 앞자리 *</label>
-                <Input
-                  placeholder="YYMMDD"
-                  value={ownerBirthDate}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, "").slice(0, 6);
-                    setOwnerBirthDate(value);
-                  }}
-                  maxLength={6}
-                  className="w-[120px]"
-                />
+              <div className="flex flex-1 flex-wrap items-center gap-4 bg-background px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">성명</span>
+                  <Input
+                    placeholder="홍길동"
+                    value={ownerName}
+                    onChange={(e) => setOwnerName(e.target.value)}
+                    className="w-[140px]"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">주민번호 앞자리</span>
+                  <Input
+                    placeholder="YYMMDD"
+                    value={ownerBirthDate}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "").slice(0, 6);
+                      setOwnerBirthDate(value);
+                    }}
+                    maxLength={6}
+                    className="w-[100px]"
+                  />
+                </div>
               </div>
-              <Button
-                onClick={handleSearch}
-                variant="secondary"
-                disabled={!ownerName || ownerBirthDate.length !== 6 || isSearching}
-                className="h-10 gap-2 px-6"
-              >
-                {isSearching ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Search className="h-4 w-4" />
-                )}
-                검색
-              </Button>
             </div>
-            <p className="flex items-start gap-2 text-sm text-muted-foreground">
-              <Info className="mt-0.5 h-4 w-4 shrink-0" />
-              대리 신청 시, 신청서 제출 단계에서 위임장 및 대리인 신분증 사본이 필요합니다.
-            </p>
-          </div>
+            <div className="flex border-b border-border">
+              <div className="flex w-28 shrink-0 items-center bg-muted/50 px-4 py-2">
+                <span className="text-sm font-medium text-foreground">안내</span>
+              </div>
+              <div className="flex flex-1 items-center bg-background px-4 py-2">
+                <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Info className="h-3.5 w-3.5 shrink-0" />
+                  대리 신청 시, 신청서 제출 단계에서 위임장 및 대리인 신분증 사본이 필요합니다.
+                </p>
+              </div>
+            </div>
+          </>
         ) : (
-          /* 지번 검색 폼 */
-          <div className="flex flex-wrap items-end gap-3">
-            {/* 시도 */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-foreground">시도</label>
+          <div className="flex border-b border-border">
+            <div className="flex w-28 shrink-0 items-center bg-muted/50 px-4 py-3">
+              <span className="text-sm font-medium text-foreground">지역</span>
+            </div>
+            <div className="flex flex-1 flex-wrap items-center gap-3 bg-background px-4 py-3">
               <Select 
                 value={selectedSido} 
                 onValueChange={(v) => {
@@ -957,8 +953,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   setSearchResults([]);
                 }}
               >
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="선택" />
+                <SelectTrigger className="w-[130px]">
+                  <SelectValue placeholder="시도 선택" />
                 </SelectTrigger>
                 <SelectContent>
                   {regionData.시도.map((sido) => (
@@ -966,11 +962,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   ))}
                 </SelectContent>
               </Select>
-            </div>
 
-            {/* 시군구 */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-foreground">시군구</label>
               <Select 
                 value={selectedSigungu} 
                 onValueChange={(v) => {
@@ -981,8 +973,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 }}
                 disabled={!selectedSido}
               >
-                <SelectTrigger className="w-[160px]">
-                  <SelectValue placeholder="선택" />
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="시군구 선택" />
                 </SelectTrigger>
                 <SelectContent>
                   {sigunguOptions.map((sigungu) => (
@@ -990,11 +982,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   ))}
                 </SelectContent>
               </Select>
-            </div>
 
-            {/* 읍면동 */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-foreground">읍면동</label>
               <Select 
                 value={selectedEupmyeondong} 
                 onValueChange={(v) => {
@@ -1004,8 +992,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 }}
                 disabled={!selectedSigungu}
               >
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="선택" />
+                <SelectTrigger className="w-[130px]">
+                  <SelectValue placeholder="읍면동 선택" />
                 </SelectTrigger>
                 <SelectContent>
                   {eupmyeondongOptions.map((eupmyeondong) => (
@@ -1013,18 +1001,14 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   ))}
                 </SelectContent>
               </Select>
-            </div>
 
-            {/* 리 */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-foreground">리</label>
               <Select 
                 value={selectedRi} 
                 onValueChange={setSelectedRi}
                 disabled={!selectedEupmyeondong || riOptions.length === 0}
               >
-                <SelectTrigger className="w-[120px]">
-                  <SelectValue placeholder={riOptions.length === 0 ? "해당없음" : "선택"} />
+                <SelectTrigger className="w-[110px]">
+                  <SelectValue placeholder={riOptions.length === 0 ? "해당없음" : "리 선택"} />
                 </SelectTrigger>
                 <SelectContent>
                   {riOptions.map((ri) => (
@@ -1032,55 +1016,51 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   ))}
                 </SelectContent>
               </Select>
-            </div>
 
-            {/* 지번 */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-foreground">지번</label>
-              <div className="relative">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">지번</span>
                 <Input 
-                  placeholder="번지 입력" 
+                  placeholder="번지" 
                   value={jibun}
                   onChange={(e) => setJibun(e.target.value)}
-                  className="w-[120px] pr-8"
+                  className="w-[100px]"
                 />
-                <Search className="absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               </div>
-            </div>
-
-            {/* 검색/초기화 버튼 */}
-            <div className="flex items-center gap-2">
-              <Button 
-                onClick={handleSearch} 
-                variant="secondary"
-                className="gap-1.5 px-5"
-                disabled={!selectedSigungu || isSearching}
-              >
-                {isSearching ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>조회 중</span>
-                  </>
-                ) : (
-                  <>
-                    <Search className="h-4 w-4" />
-                    <span>조회</span>
-                  </>
-                )}
-              </Button>
-              {(selectedSido || searchResults.length > 0) && (
-                <Button 
-                  onClick={handleReset}
-                  variant="tertiary"
-                  className="gap-1.5 px-4"
-                >
-                  <RotateCcw className="h-4 w-4" />
-                  <span>초기화</span>
-                </Button>
-              )}
             </div>
           </div>
         )}
+
+        {/* 검색 버튼 영역 */}
+        <div className="flex items-center justify-center gap-3 bg-muted/30 px-4 py-3">
+          {(selectedSido || searchResults.length > 0) && (
+            <Button 
+              onClick={handleReset}
+              variant="outline"
+              className="gap-1.5 px-5"
+            >
+              <RotateCcw className="h-4 w-4" />
+              초기화
+            </Button>
+          )}
+          <Button 
+            onClick={handleSearch} 
+            variant="default"
+            className="gap-1.5 px-8"
+            disabled={searchMode === "address" ? !selectedSigungu || isSearching : !ownerName || ownerBirthDate.length !== 6 || isSearching}
+          >
+            {isSearching ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>조회 중</span>
+              </>
+            ) : (
+              <>
+                <Search className="h-4 w-4" />
+                <span>검색</span>
+              </>
+            )}
+          </Button>
+        </div>
       </div>
 
       {/* 전체 화면 지도 컨테이너 */}
