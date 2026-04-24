@@ -130,7 +130,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
         </div>
         
         {/* 신청일 행 */}
-        <div className="flex">
+        <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
             <span className="text-sm font-medium">신청일</span>
           </div>
@@ -138,6 +138,31 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
             <span className="text-sm">{application.appliedAt}</span>
           </div>
         </div>
+        
+        {/* AI 판정 행 */}
+        {application.aiResult?.provisionalJudgment && (
+          <div className="flex">
+            <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+              <span className="text-sm font-medium">AI 판정</span>
+            </div>
+            <div className="flex flex-1 items-center gap-2 px-4 py-3">
+              <span className={`text-sm font-medium ${
+                application.aiResult.provisionalJudgment === "매수" 
+                  ? "text-primary" 
+                  : "text-destructive"
+              }`}>
+                {application.aiResult.provisionalJudgment}
+              </span>
+              {application.aiResult.judgmentRationale && (
+                <RationaleCard 
+                  rationale={application.aiResult.judgmentRationale} 
+                  provisionalJudgment={application.aiResult.provisionalJudgment}
+                  variant="modal-trigger"
+                />
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 처리 완료 시 결과 표시 */}
@@ -175,14 +200,6 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
 
       {/* 토지 정보 요약 - 셀렉트박스로 필지 선택 */}
       <LandInfoSection application={application} />
-
-      {/* AI 판단 근거 표시 */}
-      {application.aiResult?.judgmentRationale && (
-        <RationaleCard 
-          rationale={application.aiResult.judgmentRationale} 
-          provisionalJudgment={application.aiResult.provisionalJudgment}
-        />
-      )}
     </div>
   );
 }

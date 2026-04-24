@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import type { JudgmentRationale } from "@/lib/types";
-import { Scale, ChevronDown } from "lucide-react";
+import { Scale, ChevronDown, Info } from "lucide-react";
 
 interface RationaleCardProps {
   rationale: JudgmentRationale;
   provisionalJudgment?: "매수" | "매수불가";
   defaultOpen?: boolean;
-  variant?: "collapsible" | "expanded";
+  variant?: "collapsible" | "expanded" | "modal-trigger";
 }
 
 export function RationaleCard({ 
@@ -19,6 +21,7 @@ export function RationaleCard({
   variant = "collapsible"
 }: RationaleCardProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const content = (
     <div className="divide-y divide-border">
@@ -86,6 +89,28 @@ export function RationaleCard({
 
   if (variant === "expanded") {
     return content;
+  }
+
+  if (variant === "modal-trigger") {
+    return (
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogTrigger asChild>
+          <Button variant="ghost" size="sm" className="h-auto px-2 py-1 text-xs text-muted-foreground hover:text-foreground">
+            <Info className="mr-1 h-3 w-3" />
+            상세
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Scale className="h-4 w-4" />
+              AI 판단 근거
+            </DialogTitle>
+          </DialogHeader>
+          {content}
+        </DialogContent>
+      </Dialog>
+    );
   }
 
   return (
