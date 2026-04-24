@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { dummyApplications } from "@/lib/dummy-data";
 import type { Application, AdminStatus } from "@/lib/types";
 import { 
@@ -55,6 +56,76 @@ const adminStatusConfig: Record<AdminStatus, {
     textColor: "text-emerald-700",
   },
 };
+
+// 토지 정보 섹션 컴포넌트 (셀렉트박스로 필지 선택)
+function LandInfoSection({ application }: { application: Application }) {
+  const isMultipleLands = application.additionalLands && application.additionalLands.length > 0;
+  const allLands = isMultipleLands 
+    ? [application.landInfo, ...application.additionalLands] 
+    : [application.landInfo];
+  
+  const [selectedLandIndex, setSelectedLandIndex] = useState(0);
+  const selectedLand = allLands[selectedLandIndex];
+
+  return (
+    <div>
+      <div className="mb-4 flex items-center gap-2">
+        <h4 className="text-base font-semibold text-foreground">토지 정보</h4>
+        {isMultipleLands && (
+          <span className="flex items-center gap-1 rounded bg-violet-100 px-2 py-0.5 text-xs font-medium text-violet-700">
+            <Layers className="h-3 w-3" />
+            {allLands.length}필지
+          </span>
+        )}
+      </div>
+      
+      {/* 복수 필지일 경우 셀렉트박스 표시 */}
+      {isMultipleLands && (
+        <div className="mb-4">
+          <Select
+            value={selectedLandIndex.toString()}
+            onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {allLands.map((land, index) => (
+                <SelectItem key={land.id} value={index.toString()}>
+                  필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")} ({land.remainingArea.toLocaleString()}m2)
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+      
+      {/* 선택된 필지 정보 표시 */}
+      <div className="grid grid-cols-4 gap-6">
+        <div>
+          <p className="text-sm text-muted-foreground">토지 유형</p>
+          <p className="mt-1.5 text-base font-semibold text-foreground">{selectedLand.landType}</p>
+        </div>
+        <div>
+          <p className="text-sm text-muted-foreground">잔여 면적</p>
+          <p className="mt-1.5 text-base font-semibold text-primary">{selectedLand.remainingArea.toLocaleString()}m2</p>
+        </div>
+        <div>
+          <p className="text-sm text-muted-foreground">잔여 비율</p>
+          <p className="mt-1.5 text-base font-semibold text-foreground">{selectedLand.remainingRatio}%</p>
+        </div>
+        <div>
+          <p className="text-sm text-muted-foreground">AI 판정</p>
+          <p className={`mt-1.5 text-base font-semibold ${
+            application.aiResult?.provisionalJudgment === "매수" ? "text-primary" : "text-muted-foreground"
+          }`}>
+            {application.aiResult?.provisionalJudgment || "-"}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // 신청 현황용 판단 근거 컴포넌트
 function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale: JudgmentRationale; provisionalJudgment?: "매수" | "기각" }) {
@@ -272,42 +343,8 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
         </div>
       )}
 
-      {/* 토지 정보 요약 - 복수 필지도 단일 필지와 동일한 형태로 표시 */}
-      <div>
-        <div className="mb-4 flex items-center gap-2">
-          <h4 className="text-base font-semibold text-foreground">토지 정보</h4>
-          {application.additionalLands && application.additionalLands.length > 0 && (
-            <span className="flex items-center gap-1 rounded bg-violet-100 px-2 py-0.5 text-xs font-medium text-violet-700">
-              <Layers className="h-3 w-3" />
-              {1 + application.additionalLands.length}필지
-            </span>
-          )}
-        </div>
-        
-        {/* 대표 토지(첫 번째 필지) 정보만 표시 */}
-        <div className="grid grid-cols-4 gap-6">
-          <div>
-            <p className="text-sm text-muted-foreground">토지 유형</p>
-            <p className="mt-1.5 text-base font-semibold text-foreground">{application.landInfo.landType}</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">잔여 면적</p>
-            <p className="mt-1.5 text-base font-semibold text-primary">{application.landInfo.remainingArea.toLocaleString()}m2</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">잔여 비율</p>
-            <p className="mt-1.5 text-base font-semibold text-foreground">{application.landInfo.remainingRatio}%</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">AI 판정</p>
-            <p className={`mt-1.5 text-base font-semibold ${
-              application.aiResult?.provisionalJudgment === "매수" ? "text-primary" : "text-muted-foreground"
-            }`}>
-              {application.aiResult?.provisionalJudgment || "-"}
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* 토지 정보 요약 - 셀렉트박스로 필지 선택 */}
+      <LandInfoSection application={application} />
 
       {/* AI 판단 근거 표시 */}
       {application.aiResult?.judgmentRationale && (
