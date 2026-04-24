@@ -434,7 +434,7 @@ export function ApplicationStatusSection() {
               </p>
             </div>
           ) : (
-            <ul className="divide-y divide-border">
+            <ul className="max-h-[480px] divide-y divide-border overflow-y-auto">
               {myApplications.map((app) => {
                 const statusConfig = adminStatusConfig[app.adminStatus];
                 const isSelected = displayedApplication?.id === app.id;
