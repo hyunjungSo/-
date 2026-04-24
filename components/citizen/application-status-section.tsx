@@ -214,17 +214,6 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
 
 // 상세 정보 패널 컴포넌트 (고용24 스타일)
 function ApplicationDetailPanel({ application }: { application: Application }) {
-  const getStatusStep = (status: AdminStatus) => {
-    switch (status) {
-      case "접수완료": return 1;
-      case "진행중": return 2;
-      case "심사완료": return 3;
-      default: return 1;
-    }
-  };
-
-  const currentStep = getStatusStep(application.adminStatus);
-
   return (
     <div className="space-y-4 overflow-visible">
       {/* 신청 정보 테이블 */}
@@ -253,57 +242,6 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           </div>
           <div className="flex flex-1 items-center px-4 py-3">
             <span className="text-sm">{application.appliedAt}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* 진행 상태 테이블 */}
-      <div className="overflow-hidden rounded-lg border border-border">
-        <div className="border-b border-border bg-muted/50 px-4 py-2.5">
-          <h4 className="font-semibold text-foreground">진행 상태</h4>
-        </div>
-        <div className="px-4 py-5">
-          <div className="relative max-w-md">
-            {/* 배경 라인 */}
-            <div className="absolute left-0 right-0 top-5 h-0.5 bg-gray-200" />
-            {/* 진행 라인 */}
-            <div 
-              className="absolute left-0 top-5 h-0.5 bg-primary transition-all duration-500" 
-              style={{ width: `${((currentStep - 1) / 2) * 100}%` }}
-            />
-            
-            <ol className="relative flex justify-between">
-              {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status, idx) => {
-                const config = adminStatusConfig[status];
-                const stepNum = idx + 1;
-                const isCompleted = stepNum < currentStep;
-                const isCurrent = stepNum === currentStep;
-                const Icon = config.icon;
-
-                return (
-                  <li key={status} className="flex flex-col items-center">
-                    <span className={`relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all ${
-                      isCurrent 
-                        ? "border-primary bg-primary text-white" 
-                        : isCompleted 
-                          ? "border-primary bg-primary text-white"
-                          : "border-gray-300 bg-white text-gray-400"
-                    }`}>
-                      {isCompleted ? (
-                        <CheckCircle2 className="h-5 w-5" />
-                      ) : (
-                        <Icon className="h-5 w-5" />
-                      )}
-                    </span>
-                    <span className={`mt-3 text-sm font-medium ${
-                      isCurrent ? "text-primary" : isCompleted ? "text-foreground" : "text-gray-400"
-                    }`}>
-                      {config.label}
-                    </span>
-                  </li>
-                );
-              })}
-            </ol>
           </div>
         </div>
       </div>
