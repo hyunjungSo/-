@@ -862,35 +862,32 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         </ol>
       </nav>
 
-      {/* 검색 필터 영역 */}
-      <div className="mb-6 space-y-4">
-        {/* 검색 방식 세그먼트 컨트롤 - 상위 탭과 구분되는 subtle한 스타일 */}
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground">검색 방식</span>
-          <div className="inline-flex rounded-md border border-border p-0.5">
+      {/* KRDS 검색 필터 영역 */}
+      <div className="mb-3 rounded-lg border border-border bg-card p-4">
+        {/* 검색 방식 스위치 토글 (텍스트 내장형) */}
+        <div className="mb-4 flex items-center gap-3">
+          <div className="inline-flex rounded-lg bg-muted p-1">
             <button
               type="button"
               onClick={() => setSearchMode("address")}
-              className={`flex items-center gap-1.5 rounded px-3 py-1.5 text-xs font-medium transition-all ${
+              className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
                 searchMode === "address"
-                  ? "bg-foreground text-background"
+                  ? "bg-white text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <MapPin className="h-3.5 w-3.5" />
-              지번
+              지번으로 검색
             </button>
             <button
               type="button"
               onClick={() => setSearchMode("owner")}
-              className={`flex items-center gap-1.5 rounded px-3 py-1.5 text-xs font-medium transition-all ${
+              className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
                 searchMode === "owner"
-                  ? "bg-foreground text-background"
+                  ? "bg-white text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <User className="h-3.5 w-3.5" />
-              소유자
+              소유자로 검색
             </button>
           </div>
         </div>
