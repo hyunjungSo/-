@@ -442,8 +442,8 @@ export function ApplicationFormSection({
 
   return (
     <div className="space-y-6">
-      <Button variant="outline" onClick={onBack} className="mb-4 h-10">
-        <ArrowLeft className="mr-2 h-4 w-4" />
+      <Button variant="ghost" onClick={onBack} className="mb-4 h-auto px-0 text-muted-foreground hover:bg-transparent hover:text-foreground">
+        <ArrowLeft className="mr-1.5 h-4 w-4" />
         토지 조회로 돌아가기
       </Button>
 
