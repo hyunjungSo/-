@@ -1040,7 +1040,7 @@ export function ApplicationFormSection({
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
-                  "신청서 제출 ���..."
+                  "신청서 제출 중..."
                 ) : (
                   <>
                     <Send className="h-4 w-4" />
