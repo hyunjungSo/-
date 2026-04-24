@@ -95,8 +95,8 @@ export function RationaleCard({
     return (
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-auto px-2 py-1 text-xs text-muted-foreground hover:text-foreground">
-            <Info className="mr-1 h-3 w-3" />
+          <Button variant="ghost" size="sm" className="h-auto gap-0.5 px-1.5 py-0.5 text-xs text-muted-foreground hover:text-foreground">
+            <Info className="h-3 w-3" />
             상세
           </Button>
         </DialogTrigger>
