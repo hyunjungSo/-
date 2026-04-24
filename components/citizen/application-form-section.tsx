@@ -775,21 +775,20 @@ export function ApplicationFormSection({
                 </div>
               </div>
 
-                {/* 주소 검색 모달 */}
-                {isAddressSearchOpen && (
-                  <AddressSearchModal
-                    onSelect={(address) => {
-                      setFormData((prev) => ({
-                        ...prev,
-                        postalCode: address.postalCode,
-                        baseAddress: address.address,
-                      }));
-                      setIsAddressSearchOpen(false);
-                    }}
-                    onClose={() => setIsAddressSearchOpen(false)}
-                  />
-                )}
-              </div>
+              {/* 주소 검색 모달 */}
+              {isAddressSearchOpen && (
+                <AddressSearchModal
+                  onSelect={(address) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      postalCode: address.postalCode,
+                      baseAddress: address.address,
+                    }));
+                    setIsAddressSearchOpen(false);
+                  }}
+                  onClose={() => setIsAddressSearchOpen(false)}
+                />
+              )}
 
               {/* 토지 정보 - 토지별 개별 입력 - 고용24 스타일 */}
               {allLands.map((land, index) => {
