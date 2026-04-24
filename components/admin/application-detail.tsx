@@ -155,8 +155,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <Button variant="outline" onClick={onBack}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
+        <Button variant="ghost" onClick={onBack} className="h-auto px-0 text-muted-foreground hover:bg-transparent hover:text-foreground">
+          <ArrowLeft className="mr-1.5 h-4 w-4" />
           목록으로 돌아가기
         </Button>
         <div className="flex gap-2">

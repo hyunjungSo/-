@@ -363,7 +363,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               {application.finalJudgment === "기각" && <AlertTriangle className="h-5 w-5 text-red-600" />}
               {application.finalJudgment === "심의위원회이관" && <Info className="h-5 w-5 text-amber-600" />}
               <span className={`font-bold ${
-                application.finalJudgment === "매���" ? "text-emerald-700" : 
+                application.finalJudgment === "매수" ? "text-emerald-700" : 
                 application.finalJudgment === "기각" ? "text-red-700" : "text-amber-700"
               }`}>{application.finalJudgment}</span>
             </div>
