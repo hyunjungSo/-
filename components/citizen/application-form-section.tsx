@@ -388,7 +388,7 @@ export function ApplicationFormSection({
                         className={`rounded-lg border p-3 ${
                           result?.provisionalJudgment === "매수" 
                             ? "border-primary/30 bg-primary/5" 
-                            : "border-amber-500/30 bg-amber-50"
+                            : "border-red-300 bg-red-50"
                         }`}
                       >
                         <div className="flex items-start justify-between">
