@@ -906,70 +906,85 @@ export function ApplicationFormSection({
                 />
               </div>
 
-              {/* 첨부 서류 */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium">첨부 서류</label>
-                <label className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-8 transition-colors hover:border-gray-400 hover:bg-gray-100">
-                  <Upload className="mb-2 h-8 w-8 text-gray-400" />
-                  <span className="text-sm font-medium text-gray-600">파일을 선택하세요</span>
-                  <span className="mt-1 text-xs text-muted-foreground">
-                    PDF, JPG, PNG (최대 {MAX_FILES}개)
-                  </span>
-                  <input
-                    type="file"
-                    multiple
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    onChange={handleFileChange}
-                    className="sr-only"
-                  />
-                </label>
-
-                {/* 파일 리스트 */}
-                {formData.attachments.length > 0 && (
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">
-                        첨부파일 {formData.attachments.length}개
+              {/* 첨부 서류 - KRDS 스타일 */}
+              <div className="space-y-3">
+                <div>
+                  <label className="text-sm font-medium">첨부 서류</label>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    PDF, JPG, PNG 파일 (최대 {MAX_FILES}개, 파일당 20MB 이하)
+                  </p>
+                </div>
+                
+                {/* 드롭 영역 + 파일 선택 버튼 */}
+                <div className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-4">
+                  <p className="mb-3 text-center text-sm text-muted-foreground">
+                    첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 눌러 파일을 직접 선택해주세요.
+                  </p>
+                  <div className="flex items-center justify-center">
+                    <label className="cursor-pointer">
+                      <span className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-gray-50">
+                        <Upload className="h-4 w-4" />
+                        파일선택
                       </span>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={handleRemoveAllFiles}
-                        className="h-auto px-2 py-1 text-xs text-muted-foreground hover:text-foreground"
-                      >
-                        전체삭제
-                      </Button>
-                    </div>
-                    <ul className="space-y-1.5">
-                      {formData.attachments.map((file, index) => (
-                        <li
-                          key={index}
-                          className="flex items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2"
-                        >
-                          <span className="text-sm text-foreground">
-                            {file.name} <span className="text-muted-foreground">[{file.size}]</span>
-                          </span>
-                          <div className="flex items-center gap-2">
-                            {file.status === "uploading" ? (
-                              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                            ) : (
-                              <>
-                                <Check className="h-4 w-4 text-primary" />
-                                <button
-                                  type="button"
-                                  onClick={() => handleRemoveFile(index)}
-                                  className="text-muted-foreground hover:text-destructive"
-                                >
-                                  <X className="h-4 w-4" />
-                                </button>
-                              </>
-                            )}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
+                      <input
+                        type="file"
+                        multiple
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        onChange={handleFileChange}
+                        className="sr-only"
+                      />
+                    </label>
                   </div>
+                </div>
+
+                {/* 파일 카운터 + 전체 삭제 */}
+                {formData.attachments.length > 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      {formData.attachments.length}개 / {MAX_FILES}개
+                    </span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleRemoveAllFiles}
+                      className="h-auto px-2 py-1 text-xs text-muted-foreground hover:text-destructive"
+                    >
+                      전체 파일 삭제
+                    </Button>
+                  </div>
+                )}
+
+                {/* 파일 리스트 - KRDS 스타일 */}
+                {formData.attachments.length > 0 && (
+                  <ul className="space-y-2" role="list" aria-label="첨부된 파일 목록">
+                    {formData.attachments.map((file, index) => (
+                      <li
+                        key={index}
+                        className="group flex items-center justify-between rounded-md border border-gray-200 bg-white px-4 py-3"
+                        role="listitem"
+                      >
+                        <span className="truncate text-sm text-foreground" id={`file-${index}`}>
+                          {file.name} <span className="text-muted-foreground">[{file.size}]</span>
+                        </span>
+                        <div className="ml-3 flex shrink-0 items-center gap-2">
+                          {file.status === "uploading" ? (
+                            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" aria-label="업로드 중" />
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveFile(index)}
+                              className="rounded p-1 text-muted-foreground transition-colors hover:bg-gray-100 hover:text-destructive"
+                              aria-describedby={`file-${index}`}
+                              aria-label="삭제"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
 
