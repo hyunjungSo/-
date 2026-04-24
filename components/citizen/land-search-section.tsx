@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { LeafletMap } from "@/components/leaflet-map";
 import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult, JudgmentRationale, ApplicationCartItem } from "@/lib/types";
-import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ClipboardList, Plus, Trash2, X } from "lucide-react";
+import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ClipboardList, Plus, Trash2, X, User } from "lucide-react";
 
 
 interface LandSearchSectionProps {
@@ -63,7 +63,7 @@ const regionData = {
     // 충청북도 - 음성군
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍"],
     // 충청북도 - 진천군
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만���면", "백곡면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만����면", "백곡면", "이월면", "문백면"],
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
@@ -862,225 +862,236 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         </ol>
       </nav>
 
-      {/* KRDS 검색 필터 영역 */}
-      <div className="mb-3 rounded-lg bg-muted/30 p-4">
-        {/* 검색 방식 스위치 토글 (텍스트 내장형) */}
-        <div className="mb-4 flex items-center gap-3">
-              <div className="inline-flex rounded-lg bg-muted/40 p-1">
-                <button
-                  type="button"
-                  onClick={() => setSearchMode("address")}
-                  className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                    searchMode === "address"
-                      ? "bg-white text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  지번으로 검색
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSearchMode("owner")}
-                  className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                    searchMode === "owner"
-                      ? "bg-white text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  소유자로 검색
-                </button>
+      {/* 검색 필터 영역 - 박스 없이 플랫하게 */}
+      <div className="mb-6 space-y-4">
+        {/* 검색 방식 토글 - 더 눈에 띄는 탭 스타일 */}
+        <div className="flex items-center justify-between border-b border-border">
+          <div className="flex">
+            <button
+              type="button"
+              onClick={() => setSearchMode("address")}
+              className={`relative px-5 py-3 text-sm font-medium transition-colors ${
+                searchMode === "address"
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <span className="flex items-center gap-2">
+                <MapPin className="h-4 w-4" />
+                지번으로 검색
+              </span>
+              {searchMode === "address" && (
+                <span className="absolute bottom-0 left-0 h-0.5 w-full bg-primary" />
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setSearchMode("owner")}
+              className={`relative px-5 py-3 text-sm font-medium transition-colors ${
+                searchMode === "owner"
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <span className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                소유자로 검색
+              </span>
+              {searchMode === "owner" && (
+                <span className="absolute bottom-0 left-0 h-0.5 w-full bg-primary" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* 검색 폼 */}
+        {searchMode === "owner" ? (
+          /* 소유자 검색 폼 */
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              토지 소유자 또는 대리인이 이름과 주민번호 앞자리로 해당 소유자의 모든 잔여지를 검색할 수 있습니다.
+            </p>
+            <div className="flex flex-wrap items-end gap-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-foreground">소유자 성명 *</label>
+                <Input
+                  placeholder="홍길동"
+                  value={ownerName}
+                  onChange={(e) => setOwnerName(e.target.value)}
+                  className="w-[160px]"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-foreground">주민번호 앞자리 *</label>
+                <Input
+                  placeholder="YYMMDD"
+                  value={ownerBirthDate}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "").slice(0, 6);
+                    setOwnerBirthDate(value);
+                  }}
+                  maxLength={6}
+                  className="w-[120px]"
+                />
+              </div>
+              <Button
+                onClick={handleSearch}
+                variant="secondary"
+                disabled={!ownerName || ownerBirthDate.length !== 6 || isSearching}
+                className="h-10 gap-2 px-6"
+              >
+                {isSearching ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Search className="h-4 w-4" />
+                )}
+                검색
+              </Button>
+            </div>
+            <p className="flex items-start gap-2 text-sm text-muted-foreground">
+              <Info className="mt-0.5 h-4 w-4 shrink-0" />
+              대리 신청 시, 신청서 제출 단계에서 위임장 및 대리인 신분증 사본이 필요합니다.
+            </p>
+          </div>
+        ) : (
+          /* 지번 검색 폼 */
+          <div className="flex flex-wrap items-end gap-3">
+            {/* 시도 */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-foreground">시도</label>
+              <Select 
+                value={selectedSido} 
+                onValueChange={(v) => {
+                  setSelectedSido(v);
+                  setSelectedSigungu("");
+                  setSelectedEupmyeondong("");
+                  setSelectedRi("");
+                  setSearchResults([]);
+                }}
+              >
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="선택" />
+                </SelectTrigger>
+                <SelectContent>
+                  {regionData.시도.map((sido) => (
+                    <SelectItem key={sido} value={sido}>{sido}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* 시군구 */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-foreground">시군구</label>
+              <Select 
+                value={selectedSigungu} 
+                onValueChange={(v) => {
+                  setSelectedSigungu(v);
+                  setSelectedEupmyeondong("");
+                  setSelectedRi("");
+                  setSearchResults([]);
+                }}
+                disabled={!selectedSido}
+              >
+                <SelectTrigger className="w-[160px]">
+                  <SelectValue placeholder="선택" />
+                </SelectTrigger>
+                <SelectContent>
+                  {sigunguOptions.map((sigungu) => (
+                    <SelectItem key={sigungu} value={sigungu}>{sigungu}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* 읍면동 */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-foreground">읍면동</label>
+              <Select 
+                value={selectedEupmyeondong} 
+                onValueChange={(v) => {
+                  setSelectedEupmyeondong(v);
+                  setSelectedRi("");
+                  setSearchResults([]);
+                }}
+                disabled={!selectedSigungu}
+              >
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="선택" />
+                </SelectTrigger>
+                <SelectContent>
+                  {eupmyeondongOptions.map((eupmyeondong) => (
+                    <SelectItem key={eupmyeondong} value={eupmyeondong}>{eupmyeondong}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* 리 */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-foreground">리</label>
+              <Select 
+                value={selectedRi} 
+                onValueChange={setSelectedRi}
+                disabled={!selectedEupmyeondong || riOptions.length === 0}
+              >
+                <SelectTrigger className="w-[120px]">
+                  <SelectValue placeholder={riOptions.length === 0 ? "해당없음" : "선택"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {riOptions.map((ri) => (
+                    <SelectItem key={ri} value={ri}>{ri}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* 지번 */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-foreground">지번</label>
+              <div className="relative">
+                <Input 
+                  placeholder="번지 입력" 
+                  value={jibun}
+                  onChange={(e) => setJibun(e.target.value)}
+                  className="w-[120px] pr-8"
+                />
+                <Search className="absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               </div>
             </div>
 
-            {searchMode === "owner" ? (
-              /* 소유자 검색 폼 */
-              <div className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  토지 소유자 또는 대리인이 이름과 주민번호 앞자리로 해당 소유자의 모든 잔여지를 검색할 수 있습니다.
-                </p>
-                <div className="flex flex-wrap items-end gap-3">
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-foreground">소유자 성명 *</label>
-                    <Input
-                      placeholder="홍길동"
-                      value={ownerName}
-                      onChange={(e) => setOwnerName(e.target.value)}
-                      className="w-[160px]"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-foreground">주민번호 앞자리 *</label>
-                    <Input
-                      placeholder="YYMMDD"
-                      value={ownerBirthDate}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, "").slice(0, 6);
-                        setOwnerBirthDate(value);
-                      }}
-                      maxLength={6}
-                      className="w-[120px]"
-                    />
-                  </div>
-                  <Button
-                    onClick={handleSearch}
-                    variant="secondary"
-                    disabled={!ownerName || ownerBirthDate.length !== 6 || isSearching}
-                    className="h-10 gap-2 px-6"
-                  >
-                    {isSearching ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Search className="h-4 w-4" />
-                    )}
-                    검색
-                  </Button>
-                </div>
-                <div className="rounded-lg bg-muted/50 p-3">
-                  <p className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <Info className="mt-0.5 h-4 w-4 shrink-0" />
-                    대리 신청 시, 신청서 제출 단계에서 위임장 및 대리인 신분증 사본이 필요합니다.
-                  </p>
-                </div>
-              </div>
-            ) : (
-              /* 지번 검색 폼 */
-              <div className="flex flex-wrap items-end gap-3">
-                {/* 시도 */}
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-foreground">시도</label>
-                  <Select 
-                    value={selectedSido} 
-                    onValueChange={(v) => {
-                      setSelectedSido(v);
-                      setSelectedSigungu("");
-                      setSelectedEupmyeondong("");
-                      setSelectedRi("");
-                      setSearchResults([]);
-                    }}
-                  >
-                    <SelectTrigger className="w-[140px]">
-                      <SelectValue placeholder="선택" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {regionData.시도.map((sido) => (
-                        <SelectItem key={sido} value={sido}>{sido}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* 시군구 */}
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-foreground">시군구</label>
-                  <Select 
-                    value={selectedSigungu} 
-                    onValueChange={(v) => {
-                      setSelectedSigungu(v);
-                      setSelectedEupmyeondong("");
-                      setSelectedRi("");
-                      setSearchResults([]);
-                    }}
-                    disabled={!selectedSido}
-                  >
-                    <SelectTrigger className="w-[160px]">
-                      <SelectValue placeholder="선택" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {sigunguOptions.map((sigungu) => (
-                        <SelectItem key={sigungu} value={sigungu}>{sigungu}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* 읍면동 */}
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-foreground">읍면동</label>
-                  <Select 
-                    value={selectedEupmyeondong} 
-                    onValueChange={(v) => {
-                      setSelectedEupmyeondong(v);
-                      setSelectedRi("");
-                      setSearchResults([]);
-                    }}
-                    disabled={!selectedSigungu}
-                  >
-                    <SelectTrigger className="w-[140px]">
-                      <SelectValue placeholder="선택" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {eupmyeondongOptions.map((eupmyeondong) => (
-                        <SelectItem key={eupmyeondong} value={eupmyeondong}>{eupmyeondong}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* 리 */}
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-foreground">리</label>
-                  <Select 
-                    value={selectedRi} 
-                    onValueChange={setSelectedRi}
-                    disabled={!selectedEupmyeondong || riOptions.length === 0}
-                  >
-                    <SelectTrigger className="w-[120px]">
-                      <SelectValue placeholder={riOptions.length === 0 ? "해당없음" : "선택"} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {riOptions.map((ri) => (
-                        <SelectItem key={ri} value={ri}>{ri}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* 지번 */}
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-foreground">지번</label>
-                  <div className="relative">
-                    <Input 
-                      placeholder="번지 입력" 
-                      value={jibun}
-                      onChange={(e) => setJibun(e.target.value)}
-                      className="w-[120px] pr-8"
-                    />
-                    <Search className="absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  </div>
-                </div>
-
-                {/* 검색/초기화 버튼 */}
-                <div className="flex items-center gap-2">
-                  <Button 
-                    onClick={handleSearch} 
-                    variant="secondary"
-                    className="gap-1.5 px-5"
-                    disabled={!selectedSigungu || isSearching}
-                  >
-                    {isSearching ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>조회 중</span>
-                      </>
-                    ) : (
-                      <>
-                        <Search className="h-4 w-4" />
-                        <span>조회</span>
-                      </>
-                    )}
-                  </Button>
-                  {(selectedSido || searchResults.length > 0) && (
-                    <Button 
-                      onClick={handleReset}
-                      variant="tertiary"
-                      className="gap-1.5 px-4"
-                    >
-                      <RotateCcw className="h-4 w-4" />
-                      <span>초기화</span>
-                    </Button>
-                  )}
-                </div>
-              </div>
+            {/* 검색/초기화 버튼 */}
+            <div className="flex items-center gap-2">
+              <Button 
+                onClick={handleSearch} 
+                variant="secondary"
+                className="gap-1.5 px-5"
+                disabled={!selectedSigungu || isSearching}
+              >
+                {isSearching ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>조회 중</span>
+                  </>
+                ) : (
+                  <>
+                    <Search className="h-4 w-4" />
+                    <span>조회</span>
+                  </>
+                )}
+              </Button>
+              {(selectedSido || searchResults.length > 0) && (
+                <Button 
+                  onClick={handleReset}
+                  variant="tertiary"
+                  className="gap-1.5 px-4"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  <span>초기화</span>
+                </Button>
+              )}
+            </div>
+          </div>
         )}
       </div>
 
