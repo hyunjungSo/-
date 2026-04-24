@@ -419,14 +419,14 @@ export function ApplicationStatusSection() {
       {/* 2-column 레이아웃: 왼쪽 리스트 / 오른쪽 상세 */}
       <div className="grid grid-cols-[320px_1fr] gap-4">
         {/* 왼쪽: 신청 목록 - 고용24 스타일 */}
-        <div className="overflow-hidden rounded-lg border border-border">
-          <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
+        <div className="flex h-full max-h-[calc(100vh-200px)] flex-col overflow-hidden rounded-lg border border-border">
+          <div className="flex shrink-0 items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
             <h3 className="font-semibold text-foreground">신청 목록</h3>
             <span className="text-sm text-muted-foreground">{myApplications.length}건</span>
           </div>
           
           {myApplications.length === 0 ? (
-            <div className="flex h-48 flex-col items-center justify-center p-8 text-center">
+            <div className="flex flex-1 flex-col items-center justify-center p-8 text-center">
               <FileText className="h-10 w-10 text-muted-foreground" />
               <p className="mt-4 text-sm font-medium text-foreground">신청 내역이 없습니다</p>
               <p className="mt-1 text-xs text-muted-foreground">
@@ -434,7 +434,7 @@ export function ApplicationStatusSection() {
               </p>
             </div>
           ) : (
-            <ul className="max-h-[480px] divide-y divide-border overflow-y-auto">
+            <ul className="flex-1 divide-y divide-border overflow-y-auto">
               {myApplications.map((app) => {
                 const statusConfig = adminStatusConfig[app.adminStatus];
                 const isSelected = displayedApplication?.id === app.id;
