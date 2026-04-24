@@ -461,7 +461,26 @@ export function ApplicationFormSection({
             </CardTitle>
             {isMultipleLands && (
               <CardDescription>
-                {allLands[0].address.split(" ").slice(0, 2).join(" ")} 지역 토지 {allLands.length}건
+                {(() => {
+                  // 시군구 단위로 그룹핑 (예: "경기도 이천시", "경기도 양평군")
+                  const regionGroups = allLands.reduce((acc, land) => {
+                    const region = land.address.split(" ").slice(0, 2).join(" ");
+                    acc[region] = (acc[region] || 0) + 1;
+                    return acc;
+                  }, {} as Record<string, number>);
+                  const regionList = Object.entries(regionGroups);
+                  
+                  if (regionList.length === 1) {
+                    // 동일 지역인 경우
+                    return `${regionList[0][0]} 토지 ${regionList[0][1]}건`;
+                  } else if (regionList.length <= 2) {
+                    // 2개 지역인 경우 모두 표시
+                    return regionList.map(([region, count]) => `${region} ${count}건`).join(", ");
+                  } else {
+                    // 3개 이상 지역인 경우
+                    return `${regionList.length}개 지역 토지 ${allLands.length}건`;
+                  }
+                })()}
               </CardDescription>
             )}
           </CardHeader>
