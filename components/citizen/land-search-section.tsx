@@ -1580,16 +1580,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               </button>
             </div>
 
-            {/* 안내 문구 */}
-            <div className="border-b bg-muted/30 px-4 py-3">
-              <p className="text-sm text-muted-foreground">
-                <Info className="mr-1 inline h-4 w-4" />
-                같은 관할기관의 토지만 함께 신청할 수 있습니다. 서로 다른 관할기관의 토지는 별도로 신청해 주세요.
-              </p>
-            </div>
-
             {/* 관할기관별 그룹핑된 목록 */}
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 overflow-y-auto">
               {(() => {
                 // 관할기관별로 그룹핑
                 const groupedByBusinessUnit = cartItems.reduce((acc, item) => {
@@ -1603,6 +1595,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 }, {} as Record<string, ApplicationCartItem[]>);
 
                 const businessUnits = Object.keys(groupedByBusinessUnit);
+                const hasMultipleJurisdictions = businessUnits.length > 1;
 
                 if (businessUnits.length === 0) {
                   return (
@@ -1615,7 +1608,19 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 }
 
                 return (
-                  <div className="space-y-4">
+                  <div className="space-y-4 p-4">
+                    {/* 여러 관할기관이 있을 때 상단 안내 */}
+                    {hasMultipleJurisdictions && (
+                      <div className="rounded-lg border border-warning/50 bg-warning/5 p-3">
+                        <p className="flex items-start gap-2 text-sm text-warning">
+                          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                          <span>
+                            <strong>{businessUnits.length}개 관할기관</strong>의 토지가 있습니다.
+                            각 관할기관별로 별도 신청이 필요합니다.
+                          </span>
+                        </p>
+                      </div>
+                    )}
                     {businessUnits.map((businessUnit) => {
                       const items = groupedByBusinessUnit[businessUnit];
                       const selectedInUnit = items.filter(item => selectedCartItems.has(item.id));
@@ -1737,18 +1742,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       );
                     })}
 
-                    {/* 여러 관할기관이 있을 때 안내 */}
-                    {businessUnits.length > 1 && (
-                      <div className="rounded-lg border border-warning/50 bg-warning/5 p-3">
-                        <p className="flex items-start gap-2 text-sm text-warning">
-                          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-                          <span>
-                            <strong>{businessUnits.length}개 관할기관</strong>의 토지가 있습니다. 
-                            각 관할기관별로 별도 신청이 필요합니다.
-                          </span>
-                        </p>
-                      </div>
-                    )}
                   </div>
                 );
               })()}
