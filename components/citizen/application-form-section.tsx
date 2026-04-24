@@ -431,7 +431,7 @@ export function ApplicationFormSection({
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* 토지 정보 요약 */}
-        <Card className="lg:col-span-1 flex flex-col">
+        <Card className="lg:col-span-1 flex flex-col border-0 shadow-none">
           <CardHeader>
             <CardTitle className="text-lg">
               신청 대상 토지
@@ -582,7 +582,7 @@ export function ApplicationFormSection({
         </Card>
 
         {/* 신청서 양식 */}
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 border-0 shadow-none">
           <CardHeader>
             <CardTitle>매수 신청서 작성</CardTitle>
             <CardDescription>
