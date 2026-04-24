@@ -536,7 +536,7 @@ export function ApplicationFormSection({
                   {formData.applicantRelation === "agent" && (
                     <p className="flex items-center gap-1.5 rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-700">
                       <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-                      대리인 신청 시 위임장 및 대리인 신분증 사본을 첨부 서류에 추가해 주세요.
+                      대리인 신청 시 위임장 및 대리인 신분증 ���본을 첨부 서류에 추가해 주세요.
                     </p>
                   )}
                 </div>
@@ -702,8 +702,8 @@ export function ApplicationFormSection({
                           </p>
                         </div>
                         <div className="space-y-1.5">
-                          <label className="text-sm font-medium">공부상 지목</label>
-                          <div className="flex w-fit items-center whitespace-nowrap rounded-md border border-gray-300 bg-background px-3 py-2 h-10 text-sm text-muted-foreground">
+                          <label className="text-sm font-medium text-muted-foreground">공부상 지목</label>
+                          <div className="flex w-fit items-center whitespace-nowrap rounded-md border border-input bg-muted px-3 py-2 h-10 text-sm text-muted-foreground cursor-not-allowed opacity-70">
                             {land.landCategory} ({landCategories.find(c => c.value === land.landCategory)?.label || ""})
                           </div>
                         </div>
