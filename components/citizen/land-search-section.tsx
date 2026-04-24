@@ -1646,7 +1646,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                 }}
                               />
                               <div className="flex items-center gap-2">
-                                <FileText className="h-4 w-4 text-primary" />
                                 <span className="font-medium">{businessUnit} 관할기관</span>
                                 <Badge variant="outline" className="text-xs">{items.length}필지</Badge>
                               </div>
