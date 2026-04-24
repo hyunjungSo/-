@@ -71,6 +71,9 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
               <dt className="text-muted-foreground">대상 토지</dt>
               <dd className="text-right font-medium text-foreground">
                 {application.landInfo.address}
+                {application.additionalLands && application.additionalLands.length > 0 && (
+                  <span className="text-muted-foreground"> 외 {application.additionalLands.length}건</span>
+                )}
               </dd>
             </div>
 
