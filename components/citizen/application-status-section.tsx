@@ -439,7 +439,6 @@ export function ApplicationStatusSection() {
                 const statusConfig = adminStatusConfig[app.adminStatus];
                 const isSelected = displayedApplication?.id === app.id;
                 const isMultipleLands = app.additionalLands && app.additionalLands.length > 0;
-                const totalLandCount = isMultipleLands ? 1 + app.additionalLands.length : 1;
 
                 return (
                   <li key={app.id}>
@@ -459,18 +458,13 @@ export function ApplicationStatusSection() {
                         <span className={`text-sm font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
                           {app.applicationNumber}
                         </span>
-                        {isMultipleLands && (
-                          <span className="rounded bg-violet-100 px-1 py-0.5 text-xs text-violet-700">
-                            {totalLandCount}필지
-                          </span>
-                        )}
                       </div>
 
                       {/* 주소 */}
                       <p className="mt-1.5 truncate text-xs text-muted-foreground">
                         {app.landInfo.address}
                         {isMultipleLands && (
-                          <span className="ml-1 text-violet-600">외 {app.additionalLands.length}건</span>
+                          <span className="ml-1 font-medium text-violet-600">외 {app.additionalLands.length}필지</span>
                         )}
                       </p>
 
