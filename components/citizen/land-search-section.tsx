@@ -63,7 +63,7 @@ const regionData = {
     // 충청북도 - 음성군
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍"],
     // 충청북도 - 진천군
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만��면", "백곡면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만���면", "백곡면", "이월면", "문백면"],
     // 충청남도 - 천안시 동남구
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     // 충청남도 - 천안시 서북구
@@ -383,7 +383,7 @@ function generateJudgmentRationale(
     summary = `${shapeDescription} ${usageDescription} 수용할 수 있는 것으로 판단됩니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
-1. 분석 대상 토지
+1. 분석 대상 ��지
 - 소재지: ${land.address}
 - 토지 유형: ${land.landType}
 - 지목: ${land.landCategory}
@@ -873,7 +873,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
                     searchMode === "address"
                       ? "bg-white text-foreground shadow-sm"
-                      : "text-foreground hover:text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   지번으로 검색
@@ -884,7 +884,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
                     searchMode === "owner"
                       ? "bg-white text-foreground shadow-sm"
-                      : "text-foreground hover:text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   소유자로 검색
@@ -1610,7 +1610,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     <div className="flex h-full flex-col items-center justify-center text-muted-foreground">
                       <ClipboardList className="mb-2 h-12 w-12 opacity-30" />
                       <p>신청 목록이 비어 있습니다</p>
-                      <p className="mt-1 text-sm">토지를 검색하여 추가해 주세요</p>
+                      <p className="mt-1 text-sm">토���를 검색하여 추가해 주세요</p>
                     </div>
                   );
                 }
