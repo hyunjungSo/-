@@ -749,14 +749,21 @@ export function ApplicationFormSection({
                 
                 return (
                   <div key={land.id} className="space-y-5">
-                    <div className="flex items-center justify-between border-b border-border pb-2">
-                      <h4 className="text-sm font-medium text-foreground">
-                        {isMultipleLands ? `필지 ${index + 1} 토지 정보` : "토지 정보"}
-                      </h4>
-                      {isMultipleLands && (
-                        <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                          {land.remainingArea.toLocaleString()}m²
-                        </span>
+                    <div className="border-b border-border pb-2">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-sm font-medium text-foreground">
+                          {isMultipleLands ? `필지 ${index + 1} 토지 정보` : "토지 정보"}
+                        </h4>
+                        {isMultipleLands && (
+                          <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                            {land.remainingArea.toLocaleString()}m²
+                          </span>
+                        )}
+                      </div>
+                      {index === 0 && (
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지의 실제 활용 상황을 입력해 주세요.
+                        </p>
                       )}
                     </div>
                     
@@ -765,13 +772,6 @@ export function ApplicationFormSection({
                         <label className="text-sm font-medium">소재지</label>
                         <p className="text-sm text-muted-foreground">{land.address}</p>
                       </div>
-                    )}
-                    
-                    {/* 안내 */}
-                    {index === 0 && (
-                      <p className="rounded-md bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
-                        AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지의 실제 활용 상황을 입력해 주세요.
-                      </p>
                     )}
                     
                     {/* 활용 지목 / 공부상 지목 / 토지 모양 - 한 열 정렬 */}
