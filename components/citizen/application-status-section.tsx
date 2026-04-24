@@ -252,7 +252,7 @@ function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale:
   );
 }
 
-// 상세 정보 패널 컴포넌트
+// 상세 정보 패널 컴포넌트 (고용24 스타일)
 function ApplicationDetailPanel({ application }: { application: Application }) {
   const getStatusStep = (status: AdminStatus) => {
     switch (status) {
@@ -266,97 +266,127 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
   const currentStep = getStatusStep(application.adminStatus);
 
   return (
-    <div className="rounded-lg bg-gray-100 p-6 space-y-6 overflow-visible">
-      {/* 상단: 접수번호 + 소재지 */}
-      <div>
-        <div className="flex items-center gap-2">
+    <div className="space-y-4 overflow-visible">
+      {/* 신청 정보 테이블 */}
+      <div className="overflow-hidden rounded-lg border border-border">
+        <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
+          <h4 className="font-semibold text-foreground">신청 정보</h4>
           <Badge variant={adminStatusConfig[application.adminStatus].variant}>
             {adminStatusConfig[application.adminStatus].label}
           </Badge>
-          <span className="text-xl font-bold text-foreground">{application.applicationNumber}</span>
         </div>
-        <div className="mt-3 flex items-center gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <MapPin className="h-4 w-4 shrink-0" />
-            <span>{application.landInfo.address}</span>
+        
+        {/* 접수번호 행 */}
+        <div className="flex border-b border-border">
+          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">접수번호</span>
           </div>
-          <span className="text-gray-300">|</span>
-          <span>신청일 <span className="font-medium text-foreground">{application.appliedAt}</span></span>
+          <div className="flex flex-1 items-center px-4 py-3">
+            <span className="font-semibold text-foreground">{application.applicationNumber}</span>
+          </div>
+        </div>
+        
+        {/* 소재지 행 */}
+        <div className="flex border-b border-border">
+          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">소재지</span>
+          </div>
+          <div className="flex flex-1 items-center px-4 py-3">
+            <span className="text-sm">{application.landInfo.address}</span>
+          </div>
+        </div>
+        
+        {/* 신청일 행 */}
+        <div className="flex">
+          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">신청일</span>
+          </div>
+          <div className="flex flex-1 items-center px-4 py-3">
+            <span className="text-sm">{application.appliedAt}</span>
+          </div>
         </div>
       </div>
 
-      {/* 진행 상태 스텝 인디케이터 */}
-      <div>
-        <h4 className="mb-6 text-base font-semibold text-foreground">진행 상태</h4>
-        <div className="relative max-w-md">
-          {/* 배경 라인 */}
-          <div className="absolute left-0 right-0 top-5 h-0.5 bg-gray-200" />
-          {/* 진행 라인 */}
-          <div 
-            className="absolute left-0 top-5 h-0.5 bg-primary transition-all duration-500" 
-            style={{ width: `${((currentStep - 1) / 2) * 100}%` }}
-          />
-          
-          <ol className="relative flex justify-between">
-            {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status, idx) => {
-              const config = adminStatusConfig[status];
-              const stepNum = idx + 1;
-              const isCompleted = stepNum < currentStep;
-              const isCurrent = stepNum === currentStep;
-              const Icon = config.icon;
+      {/* 진행 상태 테이블 */}
+      <div className="overflow-hidden rounded-lg border border-border">
+        <div className="border-b border-border bg-muted/50 px-4 py-2.5">
+          <h4 className="font-semibold text-foreground">진행 상태</h4>
+        </div>
+        <div className="px-4 py-5">
+          <div className="relative max-w-md">
+            {/* 배경 라인 */}
+            <div className="absolute left-0 right-0 top-5 h-0.5 bg-gray-200" />
+            {/* 진행 라인 */}
+            <div 
+              className="absolute left-0 top-5 h-0.5 bg-primary transition-all duration-500" 
+              style={{ width: `${((currentStep - 1) / 2) * 100}%` }}
+            />
+            
+            <ol className="relative flex justify-between">
+              {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status, idx) => {
+                const config = adminStatusConfig[status];
+                const stepNum = idx + 1;
+                const isCompleted = stepNum < currentStep;
+                const isCurrent = stepNum === currentStep;
+                const Icon = config.icon;
 
-              return (
-                <li key={status} className="flex flex-col items-center">
-                  <span className={`relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all ${
-                    isCurrent 
-                      ? "border-primary bg-primary text-white" 
-                      : isCompleted 
-                        ? "border-primary bg-primary text-white"
-                        : "border-gray-300 bg-white text-gray-400"
-                  }`}>
-                    {isCompleted ? (
-                      <CheckCircle2 className="h-5 w-5" />
-                    ) : (
-                      <Icon className="h-5 w-5" />
-                    )}
-                  </span>
-                  <span className={`mt-3 text-sm font-medium ${
-                    isCurrent ? "text-primary" : isCompleted ? "text-foreground" : "text-gray-400"
-                  }`}>
-                    {config.label}
-                  </span>
-                </li>
-              );
-            })}
-          </ol>
+                return (
+                  <li key={status} className="flex flex-col items-center">
+                    <span className={`relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all ${
+                      isCurrent 
+                        ? "border-primary bg-primary text-white" 
+                        : isCompleted 
+                          ? "border-primary bg-primary text-white"
+                          : "border-gray-300 bg-white text-gray-400"
+                    }`}>
+                      {isCompleted ? (
+                        <CheckCircle2 className="h-5 w-5" />
+                      ) : (
+                        <Icon className="h-5 w-5" />
+                      )}
+                    </span>
+                    <span className={`mt-3 text-sm font-medium ${
+                      isCurrent ? "text-primary" : isCompleted ? "text-foreground" : "text-gray-400"
+                    }`}>
+                      {config.label}
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
         </div>
       </div>
 
       {/* 처리 완료 시 결과 표시 */}
       {application.adminStatus === "심사완료" && application.finalJudgment && (
-        <div className={`rounded-lg p-5 ${
-          application.finalJudgment === "매수" 
-            ? "bg-emerald-100" 
-            : application.finalJudgment === "기각"
-              ? "bg-red-100"
-              : "bg-amber-100"
-        }`}>
-          <div className="flex items-center gap-4">
-            {application.finalJudgment === "매수" && <CheckCircle2 className="h-7 w-7 text-emerald-600" />}
-            {application.finalJudgment === "기각" && <AlertTriangle className="h-7 w-7 text-red-600" />}
-            {application.finalJudgment === "심의위원회이관" && <Info className="h-7 w-7 text-amber-600" />}
-            <div>
-              <p className="text-sm text-muted-foreground">최종 심사 결과</p>
-              <p className={`text-xl font-bold ${
+        <div className="overflow-hidden rounded-lg border border-border">
+          <div className="border-b border-border bg-muted/50 px-4 py-2.5">
+            <h4 className="font-semibold text-foreground">심사 결과</h4>
+          </div>
+          <div className="flex">
+            <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-4">
+              <span className="text-sm font-medium">최종 판정</span>
+            </div>
+            <div className="flex flex-1 items-center gap-3 px-4 py-4">
+              {application.finalJudgment === "매수" && <CheckCircle2 className="h-5 w-5 text-emerald-600" />}
+              {application.finalJudgment === "기각" && <AlertTriangle className="h-5 w-5 text-red-600" />}
+              {application.finalJudgment === "심의위원회이관" && <Info className="h-5 w-5 text-amber-600" />}
+              <span className={`font-bold ${
                 application.finalJudgment === "매수" ? "text-emerald-700" : 
                 application.finalJudgment === "기각" ? "text-red-700" : "text-amber-700"
-              }`}>{application.finalJudgment}</p>
+              }`}>{application.finalJudgment}</span>
             </div>
           </div>
           {application.reviewerComment && (
-            <p className="mt-4 rounded-lg bg-white/60 p-4 text-sm text-muted-foreground">
-              {application.reviewerComment}
-            </p>
+            <div className="flex border-t border-border">
+              <div className="flex w-28 shrink-0 bg-muted/30 px-4 py-3">
+                <span className="text-sm font-medium">심사 의견</span>
+              </div>
+              <div className="flex flex-1 px-4 py-3">
+                <p className="text-sm text-muted-foreground">{application.reviewerComment}</p>
+              </div>
+            </div>
           )}
         </div>
       )}
@@ -387,97 +417,99 @@ export function ApplicationStatusSection() {
   return (
     <div>
       {/* 2-column 레이아웃: 왼쪽 리스트 / 오른쪽 상세 */}
-      <div className="grid grid-cols-[360px_1fr] gap-6">
-        {/* 왼쪽: 신청 목록 */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between px-1">
-            <h3 className="text-base font-semibold text-foreground">신청 목록</h3>
+      <div className="grid grid-cols-[320px_1fr] gap-4">
+        {/* 왼쪽: 신청 목록 - 고용24 스타일 */}
+        <div className="overflow-hidden rounded-lg border border-border">
+          <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
+            <h3 className="font-semibold text-foreground">신청 목록</h3>
             <span className="text-sm text-muted-foreground">{myApplications.length}건</span>
           </div>
           
-          <div className="rounded-lg border border-border bg-background">
-            {myApplications.length === 0 ? (
-              <div className="flex h-48 flex-col items-center justify-center p-8 text-center">
-                <FileText className="h-10 w-10 text-muted-foreground" />
-                <p className="mt-4 text-base font-medium text-foreground">신청 내역이 없습니다</p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  신규 신청 탭에서 잔여지 매수를 신청해 주세요.
-                </p>
-              </div>
-            ) : (
-              <ul className="divide-y divide-border">
-                {myApplications.map((app) => {
-                  const statusConfig = adminStatusConfig[app.adminStatus];
-                  const isSelected = displayedApplication?.id === app.id;
-                  const isMultipleLands = app.additionalLands && app.additionalLands.length > 0;
-                  const totalLandCount = isMultipleLands ? 1 + app.additionalLands.length : 1;
+          {myApplications.length === 0 ? (
+            <div className="flex h-48 flex-col items-center justify-center p-8 text-center">
+              <FileText className="h-10 w-10 text-muted-foreground" />
+              <p className="mt-4 text-sm font-medium text-foreground">신청 내역이 없습니다</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                신규 신청 탭에서 잔여지 매수를 신청해 주세요.
+              </p>
+            </div>
+          ) : (
+            <ul className="max-h-[600px] divide-y divide-border overflow-y-auto">
+              {myApplications.map((app) => {
+                const statusConfig = adminStatusConfig[app.adminStatus];
+                const isSelected = displayedApplication?.id === app.id;
+                const isMultipleLands = app.additionalLands && app.additionalLands.length > 0;
+                const totalLandCount = isMultipleLands ? 1 + app.additionalLands.length : 1;
 
-                  return (
-                    <li key={app.id}>
-                      <button
-                        onClick={() => setSelectedApplication(app)}
-                        className={`group w-full px-5 py-4 text-left transition-all ${
-                          isSelected 
-                            ? "border-l-3 border-l-primary bg-primary/5" 
-                            : "hover:bg-muted/50"
-                        }`}
-                      >
-                        {/* 상단: 상태 + 접수번호 + 복수필지 표시 */}
-                        <div className="flex items-center gap-2">
-                          <Badge variant={statusConfig.variant}>
-                            {statusConfig.label}
-                          </Badge>
-                          <span className={`text-base font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
-                            {app.applicationNumber}
+                return (
+                  <li key={app.id}>
+                    <button
+                      onClick={() => setSelectedApplication(app)}
+                      className={`group w-full px-4 py-3 text-left transition-all ${
+                        isSelected 
+                          ? "border-l-2 border-l-primary bg-primary/5" 
+                          : "hover:bg-muted/50"
+                      }`}
+                    >
+                      {/* 상단: 상태 + 접수번호 */}
+                      <div className="flex items-center gap-2">
+                        <Badge variant={statusConfig.variant} className="text-xs">
+                          {statusConfig.label}
+                        </Badge>
+                        <span className={`text-sm font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
+                          {app.applicationNumber}
+                        </span>
+                        {isMultipleLands && (
+                          <span className="rounded bg-violet-100 px-1 py-0.5 text-xs text-violet-700">
+                            {totalLandCount}필지
                           </span>
-                          {isMultipleLands && (
-                            <span className="flex items-center gap-1 rounded bg-violet-100 px-1.5 py-0.5 text-xs font-medium text-violet-700">
-                              <Layers className="h-3 w-3" />
-                              {totalLandCount}필지
-                            </span>
-                          )}
-                        </div>
+                        )}
+                      </div>
 
-                        {/* 주소 (복수 필지일 경우 첫 번째 + 외 n건) */}
-                        <p className="mt-2 truncate text-sm text-muted-foreground">
-                          {app.landInfo.address}
-                          {isMultipleLands && (
-                            <span className="ml-1 text-violet-600">외 {app.additionalLands.length}건</span>
-                          )}
-                        </p>
+                      {/* 주소 */}
+                      <p className="mt-1.5 truncate text-xs text-muted-foreground">
+                        {app.landInfo.address}
+                        {isMultipleLands && (
+                          <span className="ml-1 text-violet-600">외 {app.additionalLands.length}건</span>
+                        )}
+                      </p>
 
-                        {/* 하단: 날짜 + 결과 */}
-                        <div className="mt-3 flex items-center justify-between">
-                          <span className="text-sm text-gray-400">{app.appliedAt}</span>
-                          {app.adminStatus === "심사완료" && app.finalJudgment && (
-                            <span className={`text-sm font-medium ${
-                              app.finalJudgment === "매수" 
-                                ? "text-emerald-600" 
-                                : app.finalJudgment === "기각"
-                                  ? "text-red-600"
-                                  : "text-amber-600"
-                            }`}>
-                              {app.finalJudgment}
-                            </span>
-                          )}
-                        </div>
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </div>
+                      {/* 하단: 날짜 + 결과 */}
+                      <div className="mt-2 flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">{app.appliedAt}</span>
+                        {app.adminStatus === "심사완료" && app.finalJudgment && (
+                          <span className={`text-xs font-medium ${
+                            app.finalJudgment === "매수" 
+                              ? "text-emerald-600" 
+                              : app.finalJudgment === "기각"
+                                ? "text-red-600"
+                                : "text-amber-600"
+                          }`}>
+                            {app.finalJudgment}
+                          </span>
+                        )}
+                      </div>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
 
         {/* 오른쪽: 신청 상세 정보 */}
         {displayedApplication ? (
           <ApplicationDetailPanel application={displayedApplication} />
         ) : (
-          <div className="flex h-64 items-center justify-center rounded-lg border border-dashed border-border bg-muted/20">
-            <div className="text-center">
-              <FileText className="mx-auto h-10 w-10 text-muted-foreground" />
-              <p className="mt-3 text-base text-muted-foreground">신청 내역을 선택해주세요</p>
+          <div className="overflow-hidden rounded-lg border border-border">
+            <div className="border-b border-border bg-muted/50 px-4 py-2.5">
+              <h4 className="font-semibold text-foreground">상세 정보</h4>
+            </div>
+            <div className="flex h-48 items-center justify-center">
+              <div className="text-center">
+                <FileText className="mx-auto h-8 w-8 text-muted-foreground" />
+                <p className="mt-2 text-sm text-muted-foreground">신청 내역을 선택해주세요</p>
+              </div>
             </div>
           </div>
         )}
