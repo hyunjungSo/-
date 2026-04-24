@@ -273,6 +273,8 @@ export function ApplicationFormSection({
       adminStatus: "접수완료",
       appliedAt: new Date().toISOString().split("T")[0],
       aiResult: aiResult,
+      // 복수 필지일 경우 추가 토지 정보
+      additionalLands: isMultipleLands ? allLands.slice(1) : undefined,
       // 복수 필지일 경우 토지별 데이터 추가
       landDataList: isMultipleLands ? landDataList : undefined,
     };
