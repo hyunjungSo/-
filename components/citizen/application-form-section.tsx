@@ -920,26 +920,22 @@ export function ApplicationFormSection({
               </div>
 
               {/* 첨부 서류 */}
-              <div className="space-y-3">
-                <h4 className="border-b border-border pb-2 text-sm font-medium text-foreground">첨부 서류</h4>
-                <div className="flex items-center gap-3">
-                  <label className="cursor-pointer">
-                    <span className="inline-flex items-center gap-2 rounded-md bg-[#222222] px-4 py-2 text-sm font-medium text-white hover:bg-[#333333]">
-                      <Upload className="h-4 w-4" />
-                      파일선택
-                    </span>
-                    <input
-                      type="file"
-                      multiple
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      onChange={handleFileChange}
-                      className="sr-only"
-                    />
-                  </label>
-                  <span className="text-xs text-muted-foreground">
-                    PDF, JPG, PNG 파일 (최대 {MAX_FILES}개)
+              <div className="space-y-2">
+                <label className="text-sm font-medium">첨부 서류</label>
+                <label className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-8 transition-colors hover:border-gray-400 hover:bg-gray-100">
+                  <Upload className="mb-2 h-8 w-8 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-600">파일을 선택하세요</span>
+                  <span className="mt-1 text-xs text-muted-foreground">
+                    PDF, JPG, PNG (최대 {MAX_FILES}개)
                   </span>
-                </div>
+                  <input
+                    type="file"
+                    multiple
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    onChange={handleFileChange}
+                    className="sr-only"
+                  />
+                </label>
 
                 {/* 파일 리스트 */}
                 {formData.attachments.length > 0 && (
@@ -958,11 +954,11 @@ export function ApplicationFormSection({
                         전체삭제
                       </Button>
                     </div>
-                    <ul className="space-y-1">
+                    <ul className="space-y-1.5">
                       {formData.attachments.map((file, index) => (
                         <li
                           key={index}
-                          className="flex items-center justify-between rounded bg-muted/30 px-3 py-2"
+                          className="flex items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2"
                         >
                           <span className="text-sm text-foreground">
                             {file.name} <span className="text-muted-foreground">[{file.size}]</span>
