@@ -799,21 +799,9 @@ export function ApplicationFormSection({
                       </div>
                       <div className="space-y-1.5">
                         <label className="text-sm font-medium">공부상 지목</label>
-                        <Select
-                          value={landData.actualUsage}
-                          onValueChange={(value) => updateLandData(index, "actualUsage", value as LandCategory)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="선택" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {landCategories.map((cat) => (
-                              <SelectItem key={cat.value} value={cat.value}>
-                                {cat.value} ({cat.label})
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <div className="flex h-10 w-full items-center rounded-md border border-input bg-muted px-3 text-sm text-muted-foreground">
+                          {land.landCategory} ({landCategories.find(c => c.value === land.landCategory)?.label || ""})
+                        </div>
                       </div>
                       <div className="space-y-1.5">
                         <label className="text-sm font-medium">토지 모양 <span className="text-destructive">*</span></label>
