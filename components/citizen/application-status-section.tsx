@@ -434,7 +434,7 @@ export function ApplicationStatusSection() {
               </p>
             </div>
           ) : (
-            <ul className="flex-1 divide-y divide-border overflow-y-auto">
+            <ul className="flex-1 divide-y divide-border overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent">
               {myApplications.map((app) => {
                 const statusConfig = adminStatusConfig[app.adminStatus];
                 const isSelected = displayedApplication?.id === app.id;
