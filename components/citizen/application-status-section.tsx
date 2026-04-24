@@ -145,109 +145,105 @@ function LandInfoSection({ application }: { application: Application }) {
   );
 }
 
-// 신청 현황용 판단 근거 컴포넌트
+// 신청 현황용 판단 근거 컴포넌트 (land-search-section과 동일한 스타일)
 function StatusRationaleSection({ rationale, provisionalJudgment }: { rationale: JudgmentRationale; provisionalJudgment?: "매수" | "기각" }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <div className={`rounded-lg border ${isOpen ? "border-primary/30 bg-muted/20" : "border-border"}`}>
-        <CollapsibleTrigger asChild>
-          <Button 
-            variant="ghost" 
-            className={`h-12 w-full cursor-pointer justify-between rounded-b-none ${isOpen ? "border-b border-border" : ""}`}
-          >
-            <div className="flex items-center gap-2">
-              <Scale className="h-4 w-4 text-primary" />
-              <span>AI 판단 근거 보기</span>
-              {provisionalJudgment && (
-                <Badge 
-                  variant={provisionalJudgment === "매수" ? "success-subtle" : "destructive-subtle"}
-                >
-                  {provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
-                </Badge>
-              )}
-            </div>
-            {isOpen ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-          </Button>
-        </CollapsibleTrigger>
-        <CollapsibleContent className="space-y-4 overflow-visible p-4">
+      <CollapsibleTrigger asChild>
+        <Button 
+          variant="outline" 
+          className="w-full cursor-pointer justify-between"
+          size="sm"
+        >
+          <div className="flex items-center gap-2">
+            <Scale className="h-4 w-4 text-primary" />
+            <span>판단 근거 상세 보기</span>
+          </div>
+          {isOpen ? (
+            <ChevronUp className="h-4 w-4" />
+          ) : (
+            <ChevronDown className="h-4 w-4" />
+          )}
+        </Button>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="mt-3 space-y-3">
         {/* 판단 요약 */}
-        <div className="flex items-start gap-3">
-          <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-          <div>
-            <h4 className="text-base font-semibold text-foreground">판단 요약</h4>
-            <p className="mt-1 text-base leading-relaxed text-muted-foreground">{rationale.summary}</p>
+        <div className="rounded-lg border border-border bg-card p-4">
+          <div className="flex items-start gap-2">
+            <FileText className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+            <div>
+              <h4 className="font-semibold text-foreground">판단 요약</h4>
+              <p className="mt-1 text-base text-muted-foreground">{rationale.summary}</p>
+            </div>
           </div>
         </div>
 
         {/* 법적 근거 */}
-        <div className="flex items-start gap-3">
-          <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-          <div>
-            <h4 className="text-base font-semibold text-foreground">법적 근거</h4>
-            <p className="mt-1 text-base leading-relaxed text-muted-foreground">{rationale.legalBasis}</p>
+        <div className="rounded-lg border border-border bg-muted/30 p-4">
+          <div className="flex items-start gap-2">
+            <Scale className="mt-0.5 h-5 w-5 shrink-0 text-chart-3" />
+            <div>
+              <h4 className="font-semibold text-foreground">법적 근거</h4>
+              <p className="mt-1 text-base text-muted-foreground">{rationale.legalBasis}</p>
+            </div>
           </div>
         </div>
 
         {/* 적용 기준 */}
-        <div className="flex items-start gap-3">
-          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-          <div>
-            <h4 className="text-base font-semibold text-foreground">적용 기준</h4>
-            <ul className="mt-1 space-y-1">
-              {rationale.appliedCriteria.map((criteria, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-base text-muted-foreground">
-                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
-                  <span>{criteria}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div className="rounded-lg border border-border bg-card p-4">
+          <h4 className="mb-2 font-semibold text-foreground">적용 기준</h4>
+          <ul className="space-y-1.5">
+            {rationale.appliedCriteria.map((criteria, idx) => (
+              <li key={idx} className="flex items-start gap-2 text-base text-muted-foreground">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                <span>{criteria}</span>
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* 직접 확인 필요 항목 */}
         {rationale.manualCheckItems && rationale.manualCheckItems.length > 0 && (
-          <div className="flex items-start gap-3">
-            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-            <div>
-              <h4 className="text-base font-semibold text-foreground">직접 확인 항목</h4>
-              <ul className="mt-1 space-y-1">
-                {rationale.manualCheckItems.map((item, idx) => (
-                  <li key={idx} className="flex items-center gap-2 text-base text-muted-foreground">
-                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+          <div className="rounded-lg border border-warning/50 bg-warning/5 p-4">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
+              <div>
+                <h4 className="font-semibold text-foreground">직접 확인 필요 항목</h4>
+                <p className="mt-1 text-base text-muted-foreground">
+                  다음 항목은 AI 자동 판독이 불가하여 담당자가 현장 확인 후 판단합니다.
+                </p>
+                <ul className="mt-2 space-y-1">
+                  {rationale.manualCheckItems.map((item, idx) => (
+                    <li key={idx} className="flex items-center gap-2 text-base">
+                      <Info className="h-3 w-3 text-warning" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         )}
 
         {/* 상세 설명 */}
-        <div className="flex items-start gap-3">
-          <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
-          <div>
-            <h4 className="text-base font-semibold text-foreground">상세 분석</h4>
-            <pre className="mt-1 whitespace-pre-wrap text-base leading-relaxed text-muted-foreground">
-              {rationale.detailedExplanation}
-            </pre>
-          </div>
+        <div className="rounded-lg border border-border bg-card p-4">
+          <h4 className="mb-2 font-semibold text-foreground">상세 분석 내용</h4>
+          <pre className="whitespace-pre-wrap text-base leading-relaxed text-muted-foreground">
+            {rationale.detailedExplanation}
+          </pre>
         </div>
 
         {/* 안내 문구 */}
-        <div className="flex items-start gap-2 pt-2">
-          <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
+        <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p className="text-base text-muted-foreground">
-            AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+            본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
+            판단 근거에 이의가 있으시면 신청서 제출 시 의견을 기재해 주시기 바랍니다.
           </p>
         </div>
       </CollapsibleContent>
-      </div>
     </Collapsible>
   );
 }

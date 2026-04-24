@@ -139,44 +139,26 @@ function AddressSearchModal({
 function AIResultDetailSection({ aiResult, landInfo }: { aiResult: AIAnalysisResult; landInfo: LandInfo }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  // 판단 근거 생성
+  // aiResult에서 judgmentRationale 사용 (dummy-data.ts에서 생성)
+  const rationale = aiResult.judgmentRationale;
+
+  // rationale이 없는 경우 기본값 생성
   const shapeIndexChange = aiResult.shapeIndexChange || 0;
   const metCriteriaNames = aiResult.criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   const manualCheckItems = aiResult.criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
 
-  const appliedCriteria: string[] = [];
-  if (metCriteriaNames.includes("잔여지 비율")) {
-    appliedCriteria.push(`잔여지 비율 기준: 잔여 면적이 원 면적의 30% 이하 (현재 ${landInfo.remainingRatio}%)`);
-  }
-  if (metCriteriaNames.includes("형상지수 변화")) {
-    appliedCriteria.push(`형상지수 변화 기준: 편입 전 대비 1.0 이상 상승 시 형상 불량으로 판단`);
-  }
-  if (metCriteriaNames.includes("잔여지 형상")) {
-    appliedCriteria.push(`잔여지 형상 기준: 삼각형, 역삼각형, 자루형, 부정형 등 불규칙 형상`);
-  }
+  const summary = rationale?.summary || (aiResult.provisionalJudgment === "매수"
+    ? `잔여지 비율 ${landInfo.remainingRatio}%로 기준 충족, 형상지수 +${shapeIndexChange.toFixed(1)} 상승으로 매수 대상 판정`
+    : `분석 결과 매수 기준에 충족하지 않아 기각 대상으로 판정되었습니다.`);
 
-  const summary = aiResult.provisionalJudgment === "매수"
-    ? `잔여지 비율 ${landInfo.remainingRatio}%로 기준(30% 이하) 충족, 형상지수 +${shapeIndexChange.toFixed(1)} 상승으로 매수 대상 판정`
-    : `분석 결과 매수 기준에 충족하지 않아 기각 대상으로 판정되었습니다.`;
+  const legalBasis = rationale?.legalBasis || "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조";
 
-  const legalBasis = "공익사업을 위한 토지 등의 취득 및 보상에 관한 법률 제73조 (잔여지의 매수청구)";
+  const appliedCriteria = rationale?.appliedCriteria || [];
 
-  const detailedExplanation = `[토지 정보]
-- 소재지: ${landInfo.address}
-- 편입 전 면적: ${landInfo.originalArea.toLocaleString()}㎡
-- 편입 면적: ${landInfo.includedArea.toLocaleString()}㎡
-- 잔여 면적: ${landInfo.remainingArea.toLocaleString()}㎡
-- 잔여 비율: ${landInfo.remainingRatio}%
-
-[형상 분석]
-- 편입 전 형상지수: ${landInfo.originalShapeIndex.toFixed(2)}
-- 편입 후 형상지수: ${landInfo.remainingShapeIndex.toFixed(2)}
-- 형상지수 변화: +${shapeIndexChange.toFixed(2)}
-- 잔여지 형상: ${landInfo.remainingShape}
-
-[판정 결과]
-- 충족 기준: ${metCriteriaNames.join(", ") || "없음"}
-${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckItems.join(", ")}` : ""}`;
+  const detailedExplanation = rationale?.detailedExplanation || `소재지: ${landInfo.address}
+토지유형: ${landInfo.landType}, 지목: ${landInfo.landCategory}
+편입현황: ${landInfo.originalArea}㎡ → 잔여 ${landInfo.remainingArea}㎡ (잔여비율 ${landInfo.remainingRatio}%)
+형상변화: ${landInfo.originalShape} → ${landInfo.remainingShape} (지수 +${shapeIndexChange.toFixed(1)})`;
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="mt-4">
@@ -237,7 +219,7 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
         )}
 
         {/* 직접 확인 필요 항목 */}
-        {manualCheckItems.length > 0 && (
+        {(rationale?.manualCheckItems || manualCheckItems).length > 0 && (
           <div className="rounded-lg border border-warning/50 bg-warning/5 p-4">
             <div className="flex items-start gap-2">
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
@@ -247,7 +229,7 @@ ${manualCheckItems.length > 0 ? `- 직접 확인 필요 항목: ${manualCheckIte
                   다음 항목은 AI 자동 판독이 불가하여 담당자가 현장 확인 후 판단합니다.
                 </p>
                 <ul className="mt-2 space-y-1">
-                  {manualCheckItems.map((item, idx) => (
+                  {(rationale?.manualCheckItems || manualCheckItems).map((item, idx) => (
                     <li key={idx} className="flex items-center gap-2 text-base">
                       <Info className="h-3 w-3 text-warning" />
                       <span>{item}</span>
