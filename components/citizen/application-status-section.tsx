@@ -286,16 +286,6 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           </div>
         </div>
         
-        {/* 소재지 행 */}
-        <div className="flex border-b border-border">
-          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
-            <span className="text-sm font-medium">소재지</span>
-          </div>
-          <div className="flex flex-1 items-center px-4 py-3">
-            <span className="text-sm">{application.landInfo.address}</span>
-          </div>
-        </div>
-        
         {/* 신청일 행 */}
         <div className="flex">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
@@ -373,7 +363,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               {application.finalJudgment === "기각" && <AlertTriangle className="h-5 w-5 text-red-600" />}
               {application.finalJudgment === "심의위원회이관" && <Info className="h-5 w-5 text-amber-600" />}
               <span className={`font-bold ${
-                application.finalJudgment === "매수" ? "text-emerald-700" : 
+                application.finalJudgment === "매���" ? "text-emerald-700" : 
                 application.finalJudgment === "기각" ? "text-red-700" : "text-amber-700"
               }`}>{application.finalJudgment}</span>
             </div>
