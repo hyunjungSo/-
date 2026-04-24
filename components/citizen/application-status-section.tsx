@@ -80,7 +80,7 @@ function LandInfoSection({ application }: { application: Application }) {
         </div>
         <div className="flex flex-1 items-center px-4 py-3">
           <span className="font-medium text-primary">{selectedLand.remainingArea.toLocaleString()}m²</span>
-          <span className="ml-1.5 text-sm text-muted-foreground">({selectedLand.remainingRatio}%)</span>
+          <span className="ml-2 text-sm text-muted-foreground">(잔여 비율 {selectedLand.remainingRatio}%)</span>
         </div>
       </div>
     </div>
