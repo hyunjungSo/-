@@ -73,16 +73,14 @@ function LandInfoSection({ application }: { application: Application }) {
         </div>
       </div>
       
-      {/* 잔여 면적 & 비율 행 */}
+      {/* 잔여 면적 행 */}
       <div className="flex border-b border-border">
         <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
           <span className="text-sm font-medium">잔여 면적</span>
         </div>
-        <div className="flex flex-1 items-center gap-6 px-4 py-3">
+        <div className="flex flex-1 items-center px-4 py-3">
           <span className="font-medium text-primary">{selectedLand.remainingArea.toLocaleString()}m²</span>
-          <span className="text-sm text-muted-foreground">|</span>
-          <span className="text-sm text-muted-foreground">잔여 비율</span>
-          <span className="font-medium">{selectedLand.remainingRatio}%</span>
+          <span className="ml-1.5 text-sm text-muted-foreground">({selectedLand.remainingRatio}%)</span>
         </div>
       </div>
     </div>
