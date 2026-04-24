@@ -12,6 +12,7 @@ import { LeafletMap } from "@/components/leaflet-map";
 import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult, JudgmentRationale, ApplicationCartItem } from "@/lib/types";
 import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ClipboardList, Plus, Trash2, X, User } from "lucide-react";
+import { AIIcon } from "@/components/ui/ai-icon";
 
 
 interface LandSearchSectionProps {
@@ -1274,7 +1275,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       </>
                     ) : (
                       <>
-                        <Bot className="mr-2 h-5 w-5" />
+                        <AIIcon className="mr-2 h-5 w-5" />
                         AI 판독 시작
                       </>
                     )}
