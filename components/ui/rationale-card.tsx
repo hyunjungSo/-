@@ -5,7 +5,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import type { JudgmentRationale } from "@/lib/types";
-import { Scale, ChevronDown, Info } from "lucide-react";
+import { Scale, ChevronDown, Info, Bot } from "lucide-react";
 
 interface RationaleCardProps {
   rationale: JudgmentRationale;
@@ -103,7 +103,7 @@ export function RationaleCard({
         <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Scale className="h-4 w-4" />
+              <Bot className="h-4 w-4" />
               AI 판단 근거
             </DialogTitle>
           </DialogHeader>
