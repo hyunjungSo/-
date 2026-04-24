@@ -20,8 +20,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Application, AdminStatus } from "@/lib/types";
-import { Search, Filter, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, Layers, AlertTriangle } from "lucide-react";
+import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, Layers, TrendingUp, AlertCircle, Brain, FileCheck } from "lucide-react";
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
+import { Progress } from "@/components/ui/progress";
+
+interface ApplicationListProps {
+  applications: Application[];
+  onSelect: (application: Application) => void;
+}
 
 export function ApplicationList({ applications, onSelect }: ApplicationListProps) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -47,68 +53,137 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
 
   // 상태별 통계
   const stats = useMemo(() => {
+    const total = applications.length;
+    const 접수완료 = applications.filter((a) => a.adminStatus === "접수완료").length;
+    const 진행중 = applications.filter((a) => a.adminStatus === "진행중").length;
+    const 심사완료 = applications.filter((a) => a.adminStatus === "심사완료").length;
+    
+    // AI 판정 통계
+    const aiAnalyzed = applications.filter((a) => a.aiResult).length;
+    const aiPurchase = applications.filter((a) => a.aiResult?.provisionalJudgment === "매수").length;
+    const aiReject = applications.filter((a) => a.aiResult?.provisionalJudgment === "매수불가").length;
+    
+    // 처리 완료율
+    const completionRate = total > 0 ? Math.round((심사완료 / total) * 100) : 0;
+    
+    // 오늘 접수된 민원
+    const today = new Date().toISOString().split('T')[0];
+    const todayCount = applications.filter((a) => a.appliedAt === today).length;
+    
     return {
-      total: applications.length,
-      접수완료: applications.filter((a) => a.adminStatus === "접수완료").length,
-      진행중: applications.filter((a) => a.adminStatus === "진행중").length,
-      심사완료: applications.filter((a) => a.adminStatus === "심사완료").length,
+      total,
+      접수완료,
+      진행중,
+      심사완료,
+      aiAnalyzed,
+      aiPurchase,
+      aiReject,
+      completionRate,
+      todayCount,
     };
   }, [applications]);
 
   return (
     <div className="space-y-6">
-      {/* 통계 카드 */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                <Users className="h-5 w-5 text-primary" />
+      {/* 대시보드 요약 */}
+      <div className="grid gap-4 lg:grid-cols-3">
+        {/* 민원 진행 현황 카드 */}
+        <Card className="lg:col-span-2">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-medium">민원 진행 현황</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* 진행률 바 */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">전체 처리 완료율</span>
+                <span className="font-semibold text-primary">{stats.completionRate}%</span>
               </div>
-              <div>
-                <p className="text-2xl font-bold text-foreground">{stats.total}</p>
-                <p className="text-base text-muted-foreground">전체 민원</p>
+              <Progress value={stats.completionRate} className="h-2" />
+            </div>
+            
+            {/* 상태별 현황 그리드 */}
+            <div className="grid grid-cols-4 gap-3 pt-2">
+              <div className="flex flex-col items-center rounded-lg bg-muted/50 p-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+                  <Users className="h-4 w-4 text-primary" />
+                </div>
+                <span className="mt-2 text-xl font-bold text-foreground">{stats.total}</span>
+                <span className="text-xs text-muted-foreground">전체</span>
+              </div>
+              <div className="flex flex-col items-center rounded-lg bg-amber-50 p-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100">
+                  <Clock className="h-4 w-4 text-amber-700" />
+                </div>
+                <span className="mt-2 text-xl font-bold text-amber-700">{stats.접수완료}</span>
+                <span className="text-xs text-muted-foreground">접수완료</span>
+              </div>
+              <div className="flex flex-col items-center rounded-lg bg-sky-50 p-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-100">
+                  <PlayCircle className="h-4 w-4 text-sky-700" />
+                </div>
+                <span className="mt-2 text-xl font-bold text-sky-700">{stats.진행중}</span>
+                <span className="text-xs text-muted-foreground">진행중</span>
+              </div>
+              <div className="flex flex-col items-center rounded-lg bg-emerald-50 p-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-700" />
+                </div>
+                <span className="mt-2 text-xl font-bold text-emerald-700">{stats.심사완료}</span>
+                <span className="text-xs text-muted-foreground">심사완료</span>
               </div>
             </div>
           </CardContent>
         </Card>
+
+        {/* AI 분석 현황 카드 */}
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50">
-                <Clock className="h-5 w-5 text-amber-700" />
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-base font-medium">
+              <Brain className="h-4 w-4 text-primary" />
+              AI 분석 현황
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">분석 완료</span>
+              <span className="text-lg font-semibold">{stats.aiAnalyzed}건</span>
+            </div>
+            
+            {/* AI 판정 결과 분포 */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between rounded-md bg-emerald-50 px-3 py-2">
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 rounded-full bg-emerald-500" />
+                  <span className="text-sm">매수 판정</span>
+                </div>
+                <span className="font-semibold text-emerald-700">{stats.aiPurchase}건</span>
               </div>
-              <div>
-                <p className="text-2xl font-bold text-amber-700">{stats.접수완료}</p>
-                <p className="text-base text-muted-foreground">접수완료</p>
+              <div className="flex items-center justify-between rounded-md bg-red-50 px-3 py-2">
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 rounded-full bg-red-500" />
+                  <span className="text-sm">매수불가 판정</span>
+                </div>
+                <span className="font-semibold text-red-700">{stats.aiReject}건</span>
               </div>
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-50">
-                <PlayCircle className="h-5 w-5 text-sky-700" />
+
+            {/* 오늘 접수 */}
+            {stats.todayCount > 0 && (
+              <div className="flex items-center gap-2 rounded-md border border-primary/20 bg-primary/5 px-3 py-2">
+                <TrendingUp className="h-4 w-4 text-primary" />
+                <span className="text-sm">오늘 접수</span>
+                <span className="ml-auto font-semibold text-primary">+{stats.todayCount}건</span>
               </div>
-              <div>
-                <p className="text-2xl font-bold text-sky-700">{stats.진행중}</p>
-                <p className="text-base text-muted-foreground">진행중</p>
+            )}
+
+            {/* 미처리 알림 */}
+            {stats.접수완료 > 0 && (
+              <div className="flex items-center gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2">
+                <AlertCircle className="h-4 w-4 text-amber-600" />
+                <span className="text-sm text-amber-700">처리 대기 {stats.접수완료}건</span>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50">
-                <CheckCircle2 className="h-5 w-5 text-emerald-700" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-emerald-700">{stats.심사완료}</p>
-                <p className="text-base text-muted-foreground">심사완료</p>
-              </div>
-            </div>
+            )}
           </CardContent>
         </Card>
       </div>
