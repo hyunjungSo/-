@@ -158,7 +158,7 @@ const regionData = {
     "율면": ["고당리", "반룡리", "산양리", "월포리", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
-    // 경기도 - 광주시
+    // 경기도 - 이천시
     "곤지암읍": ["신리", "역동리", "삼리", "건업리", "연곡리", "오향리", "화촌리"],
     "도척면": ["진우리", "노곡리", "상림리", "도웅리", "유정리", "추곡리"],
     "퇴촌면": ["정지리", "영동리", "도수리", "관음리", "무수리", "원당리"],
@@ -399,6 +399,7 @@ function simulateAIAnalysis(
     areaCriteriaMet = land.remainingArea <= 330;
   }
   
+  // 공통 자동 판독 기준
   const criteriaChecks = [
     {
       criteriaName: "잔여 면적 기준",
@@ -408,32 +409,49 @@ function simulateAIAnalysis(
     },
     {
       criteriaName: "잔여지 비율",
-      criteriaDescription: `잔여 비율 ${land.remainingRatio}% (기준: 30% 이하)`,
-      isMet: land.remainingRatio <= 30,
+      criteriaDescription: `잔여 비율 ${land.remainingRatio}% (기준: 25% 이하 시 면적 기준 1.5배 완화)`,
+      isMet: land.remainingRatio <= 25,
       autoDetected: true,
     },
     {
       criteriaName: "형상지수 변화",
-      criteriaDescription: `형상지수 변화 +${shapeIndexChange.toFixed(1)} (기준: 1.0 이상)`,
+      criteriaDescription: `형상지수 변화 +${shapeIndexChange.toFixed(1)} (기준: 1.0 이상 상승)`,
       isMet: shapeIndexChange >= 1.0,
       autoDetected: true,
     },
     {
       criteriaName: "잔여지 형상",
-      criteriaDescription: `잔여지 형상: ${land.remainingShape}`,
+      criteriaDescription: `잔여지 형상: ${land.remainingShape} (사각형 폭 5m 이하 / 삼각형 한 변 11m 이하)`,
       isMet: ["부정형", "삼각형", "역삼각형", "자루형"].includes(land.remainingShape),
       autoDetected: true,
     },
-    {
-      criteriaName: "접면도로 상실",
-      criteriaDescription: "접면도로 상실로 건축허가 불가 또는 종래 목적 사용 곤란",
-      isMet: false,
-      autoDetected: false,
-    },
   ];
 
-  // 현재 활용 지목이 농지(전, 답)인 경우 추가 기준
+  // 토지 유형별 물리 조건 (PRD 기준)
+  // 대지(택지)인 경우
+  if (currentUsage === "대") {
+    criteriaChecks.push({
+      criteriaName: "접면도로 상실",
+      criteriaDescription: "접면도로 상태 변경으로 건축허가 불가",
+      isMet: false,
+      autoDetected: false,
+    });
+    criteriaChecks.push({
+      criteriaName: "형상 부정형 변경",
+      criteriaDescription: "형상 부정형으로 변경 (사각형 폭 5m 이하 / 삼각형 한 변 11m 이하)",
+      isMet: false,
+      autoDetected: false,
+    });
+  }
+  
+  // 농지(전, 답)인 경우
   if (currentUsage === "전" || currentUsage === "답") {
+    criteriaChecks.push({
+      criteriaName: "도로/수로 상실",
+      criteriaDescription: "도로 또는 수로 상실로 농지로서의 사용 불가",
+      isMet: false,
+      autoDetected: false,
+    });
     criteriaChecks.push({
       criteriaName: "농기계 진입/회전 곤란",
       criteriaDescription: "농기계 진입 및 회전이 곤란하여 영농이 불가능한 경우",
@@ -441,24 +459,40 @@ function simulateAIAnalysis(
       autoDetected: false,
     });
     criteriaChecks.push({
-      criteriaName: "수로 상실",
-      criteriaDescription: "관개수로 상실로 농업용수 공급이 불가능한 경우",
+      criteriaName: "축사부지 건축 불가",
+      criteriaDescription: "접면도로 상태 변경으로 축사부지 건축 불가",
       isMet: false,
       autoDetected: false,
     });
   }
   
-  // 현재 활용 지목이 임야(임)인 경우 추가 기준
+  // 산지(임)인 경우
   if (currentUsage === "임") {
     criteriaChecks.push({
-      criteriaName: "임도 접근 곤란",
-      criteriaDescription: "임도(산림 도로) 접근이 곤란하여 산림 경영이 불가능한 경우",
+      criteriaName: "접면도로 상실",
+      criteriaDescription: "공익사업으로 인해 접한 도로가 없어진 경우",
+      isMet: false,
+      autoDetected: false,
+    });
+  }
+  
+  // 그 밖의 토지인 경우
+  if (!["대", "전", "답", "임"].includes(currentUsage)) {
+    criteriaChecks.push({
+      criteriaName: "진입 곤란",
+      criteriaDescription: "절토 및 성토/옹벽 설치 등으로 진입 곤란",
       isMet: false,
       autoDetected: false,
     });
     criteriaChecks.push({
-      criteriaName: "경사도 급경사",
-      criteriaDescription: "경사도가 급하여 산림 작업이 곤란한 경우",
+      criteriaName: "토지 양분",
+      criteriaDescription: "일단의 토지가 양분되어 잔여지 발생",
+      isMet: false,
+      autoDetected: false,
+    });
+    criteriaChecks.push({
+      criteriaName: "형상 변경",
+      criteriaDescription: "정형: 잔여지 폭이 기준 이하로 변경 / 비정형: 형상지수 1.0 이상 상승",
       isMet: false,
       autoDetected: false,
     });
