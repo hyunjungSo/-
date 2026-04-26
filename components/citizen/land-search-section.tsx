@@ -101,7 +101,7 @@ const regionData = {
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
-    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "내덕동", "율량동"],
+    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "내덕��", "율량동"],
     "청주시 흥덕구": ["강내면", "옥산면", "오송읍", "가경동", "복대동", "봉명동", "송정동", "신봉동"],
     "충주시": ["가금면", "금가면", "노은면", "대소원면", "동량면", "산척면", "살미면", "소태면", "수안보면", "신니면", "앙성면", "엄정면", "이류면", "주덕읍", "중앙탑면"],
     "제천시": ["금성면", "덕산면", "백운면", "봉양읍", "송학면", "수산면", "청풍면", "한수면"],
@@ -601,7 +601,7 @@ function getShapeDescription(shape: string, area: number): string {
     case "자루형":
       return `잔여지의 형상이 자루형(세장형)으로서 폭이 좁아 정상적인 이용이 곤란하며,`;
     case "부정형":
-      return `잔여지의 형상이 사각형으로서 폭 ${width.toFixed(0)}미터 이하인 부정형으로 보이며,`;
+      return `잔여지의 형상이 사각형으로��� 폭 ${width.toFixed(0)}미터 이하인 부정형으로 보이며,`;
     default:
       return `잔여지의 형상이 ${shape}으로서,`;
   }
@@ -940,7 +940,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   };
 
   // 드롭다운 옵션
-  const sigunguOptions = selectedSido ? regionData.시군��[selectedSido as keyof typeof regionData.시군구] || [] : [];
+  const sigunguOptions = selectedSido ? regionData.시군구[selectedSido as keyof typeof regionData.시군구] || [] : [];
   
   const eupmyeondongOptions = selectedSigungu ? regionData.읍면동[selectedSigungu as keyof typeof regionData.읍면동] || [] : [];
   const riOptions = selectedEupmyeondong ? regionData.리[selectedEupmyeondong as keyof typeof regionData.리] || [] : [];
