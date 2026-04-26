@@ -101,7 +101,7 @@ const regionData = {
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
-    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "내덕��", "율량동"],
+    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "내덕동", "율량동"],
     "청주시 흥덕구": ["강내면", "옥산면", "오송읍", "가경동", "복대동", "봉명동", "송정동", "신봉동"],
     "충주시": ["가금면", "금가면", "노은면", "대소원면", "동량면", "산척면", "살미면", "소태면", "수안보면", "신니면", "앙성면", "엄정면", "이류면", "주덕읍", "중앙탑면"],
     "제천시": ["금성면", "덕산면", "백운면", "봉양읍", "송학면", "수산면", "청풍면", "한수면"],
@@ -527,7 +527,7 @@ function generateJudgmentRationale(
 
   if (judgment === "매수") {
     summary = `${shapeDescription} ${usageDescription} 수용할 수 있는 것으로 판단됩니다.`;
-    detailedExplanation = `[중앙�����지수용위원회 참고기준에 따른 분석]
+    detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
 - 소재지: ${land.address}
@@ -601,7 +601,7 @@ function getShapeDescription(shape: string, area: number): string {
     case "자루형":
       return `잔여지의 형상이 자루형(세장형)으로서 폭이 좁아 정상적인 이용이 곤란하며,`;
     case "부정형":
-      return `잔여지의 형상이 사각형으로��� 폭 ${width.toFixed(0)}미터 이하인 부정형으로 보이며,`;
+      return `잔여지의 형상이 사각형으로서 폭 ${width.toFixed(0)}미터 이하인 부정형으로 보이며,`;
     default:
       return `잔여지의 형상이 ${shape}으로서,`;
   }
@@ -1386,7 +1386,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     </Label>
                     <Select value={landSubType} onValueChange={(value) => setLandSubType(value as typeof landSubType)}>
                       <SelectTrigger id="landSubType" className="h-10 w-full bg-background">
-                        <SelectValue placeholder="건축물 용도��� 선택해 주세요" />
+                        <SelectValue placeholder="건축물 용도를 선택해 주세요" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
