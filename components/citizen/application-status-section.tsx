@@ -11,7 +11,8 @@ import {
   FileText, 
   MapPin,
   Layers,
-  CheckCircle2
+  CheckCircle2,
+  AlertTriangle
 } from "lucide-react";
 import { AdminStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 
