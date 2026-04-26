@@ -447,6 +447,22 @@ function simulateAIAnalysis(
       autoDetected: false,
     });
   }
+  
+  // 현재 활용 지목이 임야(임)인 경우 추가 기준
+  if (currentUsage === "임") {
+    criteriaChecks.push({
+      criteriaName: "임도 접근 곤란",
+      criteriaDescription: "임도(산림 도로) 접근이 곤란하여 산림 경영이 불가능한 경우",
+      isMet: false,
+      autoDetected: false,
+    });
+    criteriaChecks.push({
+      criteriaName: "경사도 급경사",
+      criteriaDescription: "경사도가 급하여 산림 작업이 곤란한 경우",
+      isMet: false,
+      autoDetected: false,
+    });
+  }
 
   const metAutoCriteria = criteriaChecks.filter(c => c.isMet && c.autoDetected).length;
   const hasManualCheckNeeded = criteriaChecks.some(c => !c.autoDetected);
