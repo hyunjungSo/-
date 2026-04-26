@@ -64,6 +64,16 @@ function LandInfoSection({ application }: { application: Application }) {
         </div>
       )}
       
+      {/* 필지 주소 행 */}
+      <div className="flex border-b border-border">
+        <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+          <span className="text-sm font-medium">필지 주소</span>
+        </div>
+        <div className="flex flex-1 items-center px-4 py-3">
+          <span className="text-sm">{selectedLand.address}</span>
+        </div>
+      </div>
+      
       {/* 토지 유형 행 */}
       <div className="flex border-b border-border">
         <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
