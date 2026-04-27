@@ -129,7 +129,7 @@ export function AIAnalysisFlowDialog({
             animate={{ opacity: animationStep >= 1 ? 1 : 0.3 }}
             className="text-center mb-4"
           >
-            <h3 className="text-sm font-bold text-gray-700 border-b border-gray-300 inline-block pb-1">
+            <h3 className="text-base font-bold text-gray-700 border-b border-gray-300 inline-block pb-1">
               토지 분류
             </h3>
           </motion.div>
@@ -285,7 +285,7 @@ export function AIAnalysisFlowDialog({
                       explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 330㎡`,
                       explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 330㎡` },
                     { label: "또는", value: "잔여 비율 50% 이하", isSelected: currentLandType === "그밖의토지" && remainingRatio <= 50, isMet: currentLandType === "그밖의토지" && remainingRatio <= 50,
-                      explanationMet: `잔여비율 ${remainingRatio.toFixed(1)}% ≤ 기준 50%`,
+                      explanationMet: `잔여비율 ${remainingRatio.toFixed(1)}% ≤ ���준 50%`,
                       explanationUnmet: `잔여비율 ${remainingRatio.toFixed(1)}% > 기준 50%` },
                   ],
                   showStep: 2,
@@ -396,18 +396,18 @@ export function AIAnalysisFlowDialog({
 
         {/* 푸터 - 현재 케이스 요약 */}
         <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">
-          <div className="flex items-center justify-between text-xs">
+          <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <span className="text-gray-500">토지 유형</span>
-                <span className="font-medium text-gray-700 bg-white px-1.5 py-0.5 rounded border text-xs">{currentLandType}</span>
+                <span className="font-medium text-gray-700 bg-white px-2 py-0.5 rounded border">{currentLandType}</span>
               </div>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <span className="text-gray-500">잔여 면적</span>
                 <span className="font-medium text-gray-700">{remainingArea.toLocaleString()}㎡</span>
                 <span className="text-gray-400">/ 기준 {effectiveThreshold}㎡ {isRatioRelaxed && "(완화)"}</span>
               </div>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <span className="text-gray-500">잔여 비율</span>
                 <span className="font-medium text-gray-700">{remainingRatio}%</span>
               </div>
@@ -480,10 +480,10 @@ function PathColumn({
     >
       {/* 경로 헤더 */}
       <div className={cn(
-        "flex items-center gap-1.5 mb-3 pb-2 border-b",
+        "flex items-center gap-2 mb-3 pb-2 border-b",
         showHighlight ? "border-green-200" : "border-gray-100"
       )}>
-        <Icon className={cn("h-4 w-4", showHighlight ? "text-green-600" : "text-gray-400")} />
+        <Icon className={cn("h-5 w-5", showHighlight ? "text-green-600" : "text-gray-400")} />
         <span className={cn("text-sm font-bold", showHighlight ? "text-green-800" : "text-gray-500")}>
           {type} 경로
         </span>
@@ -502,7 +502,7 @@ function PathColumn({
               "border border-dashed rounded p-2",
               showHighlight ? "border-green-300 bg-green-50/30" : "border-gray-200 bg-gray-50"
             )}>
-              <p className="text-xs text-gray-400 italic text-center">해당 없음</p>
+              <p className="text-sm text-gray-400 italic text-center">해당 없음</p>
             </div>
           ) : (
             <div className={cn(
@@ -512,14 +512,14 @@ function PathColumn({
               {/* 카드 타이틀 + 뱃지 */}
               <div className="flex items-center justify-between mb-1.5">
                 <p className={cn(
-                  "text-xs font-semibold",
+                  "text-sm font-semibold",
                   isActive && c.items.some(item => item.isMet) ? "text-green-700" : "text-gray-700"
                 )}>
                   {c.title}
                 </p>
                 {isActive && (
                   <span className={cn(
-                    "text-[10px] font-bold px-1.5 py-0.5 rounded",
+                    "text-sm font-bold px-2 py-0.5 rounded",
                     c.items.some(item => item.isMet) 
                       ? "bg-green-500 text-white" 
                       : "bg-red-500 text-white"
@@ -535,16 +535,16 @@ function PathColumn({
                   <div 
                     key={itemIdx}
                     className={cn(
-                      "flex items-start gap-1.5 text-xs py-0.5 rounded",
+                      "flex items-start gap-2 text-sm py-0.5 rounded",
                       showHighlight ? "bg-green-50/30" : "bg-transparent"
                     )}
                   >
                     {item.isSelected && (
                       <div className={cn(
-                        "flex-shrink-0 w-3.5 h-3.5 rounded-sm flex items-center justify-center mt-0.5",
+                        "flex-shrink-0 w-4 h-4 rounded-sm flex items-center justify-center mt-0.5",
                         item.isMet ? "bg-green-500" : "border border-gray-300 bg-white"
                       )}>
-                        {item.isMet && <Check className="h-2.5 w-2.5 text-white" />}
+                        {item.isMet && <Check className="h-3 w-3 text-white" />}
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
@@ -557,22 +557,22 @@ function PathColumn({
                           {item.label}
                         </span>
                         {item.value && (
-                          <span className="text-[10px] text-gray-400">
+                          <span className="text-sm text-gray-400">
                             {item.value}
                           </span>
                         )}
                       </div>
                       {item.subLabel && (
-                        <p className="text-[10px] text-gray-400 mt-0.5">{item.subLabel}</p>
+                        <p className="text-sm text-gray-400 mt-0.5">{item.subLabel}</p>
                       )}
                       {/* 충족/미충족 상세 설명 */}
                       {item.isSelected && item.isMet && item.explanationMet && (
-                        <p className="text-[10px] text-green-600 mt-0.5">
+                        <p className="text-sm text-green-600 mt-0.5">
                           {item.explanationMet}
                         </p>
                       )}
                       {item.isSelected && !item.isMet && item.explanationUnmet && (
-                        <p className="text-[10px] text-red-500 mt-0.5">
+                        <p className="text-sm text-red-500 mt-0.5">
                           {item.explanationUnmet}
                         </p>
                       )}
@@ -583,7 +583,7 @@ function PathColumn({
 
               {/* 참고 사항 */}
               {c.note && (
-                <p className="text-[10px] text-gray-400 mt-1.5">{c.note}</p>
+                <p className="text-sm text-gray-400 mt-1.5">{c.note}</p>
               )}
             </div>
           )}
@@ -594,7 +594,7 @@ function PathColumn({
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: animationStep >= 5 ? 1 : 0.4 }}
-        className="text-[11px] space-y-0.5 mb-3 py-2 border-t border-gray-100"
+        className="text-sm space-y-0.5 mb-3 py-2 border-t border-gray-100"
       >
         <p className={cn(
           conditionStatus === "충족" ? "text-green-600 font-medium" : "text-gray-400"
@@ -621,7 +621,7 @@ function PathColumn({
       >
         {conditionStatus ? (
           <span className={cn(
-            "px-4 py-1.5 rounded-full text-xs font-bold",
+            "px-4 py-1.5 rounded-full text-sm font-bold",
             conditionStatus === "충족" ? "bg-green-500 text-white" :
             conditionStatus === "미충족" ? "bg-red-500 text-white" :
             "bg-amber-500 text-white"
@@ -629,7 +629,7 @@ function PathColumn({
             {conditionStatus}
           </span>
         ) : (
-          <span className="px-4 py-1.5 rounded-full text-xs font-bold bg-gray-100 text-gray-400">
+          <span className="px-4 py-1.5 rounded-full text-sm font-bold bg-gray-100 text-gray-400">
             -
           </span>
         )}
