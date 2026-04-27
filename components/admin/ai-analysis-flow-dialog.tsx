@@ -116,20 +116,9 @@ export function AIAnalysisFlowDialog({
       >
         {/* 헤더 */}
         <DialogHeader className="px-6 pt-5 pb-4 bg-white sticky top-0 z-10 border-b border-gray-100">
-          <div className="flex items-center gap-4">
-            <span className="inline-flex items-center gap-2 rounded bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white">
-              AI 분석 프로세스
-            </span>
-            <div className="flex items-center gap-3">
-              <Layers className="h-5 w-5 text-gray-400" />
-              <span className="font-semibold text-gray-800">[공통] 일단의 토지</span>
-              <span className="text-sm text-gray-500">소유자 동일, 지반 연속, 용도의 일체성 확인</span>
-            </div>
-            <div className="ml-auto flex items-center gap-2 text-sm">
-              <CheckCircle2 className="h-4 w-4 text-green-500" />
-              <span className="text-gray-600">일단지 판정 시 병합 처리</span>
-            </div>
-          </div>
+          <DialogTitle className="text-lg font-semibold text-foreground">
+            AI 분석 프로세스
+          </DialogTitle>
         </DialogHeader>
 
         <div className="p-6">
