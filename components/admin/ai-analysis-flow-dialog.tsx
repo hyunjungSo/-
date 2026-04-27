@@ -474,8 +474,26 @@ function PathColumn({
   conditionStatus: string | null;
 }) {
   const showHighlight = isActive && animationStep >= 1;
-  // 부모 배경색 (on 상태일 때 green-50/30)
-  const parentBgClass = showHighlight ? "bg-green-50/30" : "bg-white";
+  // 충족/미충족 상태에 따른 색상 결정
+  const isMet = conditionStatus === "충족";
+  const isUnmet = conditionStatus === "미충족";
+  
+  // 색상 클래스 결정
+  const borderColor = showHighlight 
+    ? (isMet ? "border-green-500" : isUnmet ? "border-red-500" : "border-amber-500")
+    : "border-gray-200";
+  const bgColor = showHighlight 
+    ? (isMet ? "bg-green-50/30" : isUnmet ? "bg-red-50/30" : "bg-amber-50/30")
+    : "bg-white";
+  const headerBorderColor = showHighlight 
+    ? (isMet ? "border-green-200" : isUnmet ? "border-red-200" : "border-amber-200")
+    : "border-gray-100";
+  const iconColor = showHighlight 
+    ? (isMet ? "text-green-600" : isUnmet ? "text-red-600" : "text-amber-600")
+    : "text-gray-400";
+  const titleColor = showHighlight 
+    ? (isMet ? "text-green-800" : isUnmet ? "text-red-800" : "text-amber-800")
+    : "text-gray-500";
 
   return (
     <motion.div
@@ -483,16 +501,16 @@ function PathColumn({
       animate={{ opacity: animationStep >= 1 ? 1 : 0.5, y: 0 }}
       className={cn(
         "rounded-lg border p-3 transition-all",
-        showHighlight ? "border-green-500 bg-green-50/30" : "border-gray-200 bg-white"
+        borderColor, bgColor
       )}
     >
       {/* 경로 헤더 */}
       <div className={cn(
         "flex items-center gap-2 mb-3 pb-2 border-b",
-        showHighlight ? "border-green-200" : "border-gray-100"
+        headerBorderColor
       )}>
-        <Icon className={cn("h-5 w-5", showHighlight ? "text-green-600" : "text-gray-400")} />
-        <span className={cn("text-sm font-bold", showHighlight ? "text-green-800" : "text-gray-500")}>
+        <Icon className={cn("h-5 w-5", iconColor)} />
+        <span className={cn("text-sm font-bold", titleColor)}>
           {type} 경로
         </span>
       </div>
@@ -508,14 +526,16 @@ function PathColumn({
           {c.title === null ? (
             <div className={cn(
               "border border-dashed rounded p-2",
-              showHighlight ? "border-green-300 bg-green-50/30" : "border-gray-200 bg-gray-50"
+              showHighlight 
+                ? (isMet ? "border-green-300 bg-green-50/30" : isUnmet ? "border-red-300 bg-red-50/30" : "border-amber-300 bg-amber-50/30")
+                : "border-gray-200 bg-gray-50"
             )}>
               <p className="text-sm text-gray-400 italic text-center">해당 없음</p>
             </div>
           ) : (
             <div className={cn(
               "rounded p-2 transition-all",
-              showHighlight ? "bg-green-50/30" : "bg-white"
+              showHighlight ? bgColor : "bg-white"
             )}>
               {/* 카드 타이틀 + 체크박스 + 뱃지 */}
               <div className="flex items-center justify-between mb-1.5">
@@ -554,7 +574,7 @@ function PathColumn({
                     key={itemIdx}
                     className={cn(
                       "flex items-start gap-2 text-sm py-0.5 rounded",
-                      showHighlight ? "bg-green-50/30" : "bg-transparent"
+                      showHighlight ? bgColor : "bg-transparent"
                     )}
                   >
                     <div className="flex-1 min-w-0">
