@@ -131,19 +131,20 @@ export function AIAnalysisFlowDialog({
         </DialogHeader>
 
         <div className="p-4">
-          {/* 토지 분류 헤더 */}
+          {/* 토지 분류 섹션 */}
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: animationStep >= 1 ? 1 : 0.3 }}
-            className="text-center mb-4"
+            className="flex gap-4"
           >
-            <h3 className="text-base font-bold text-gray-700 border-b border-gray-300 inline-block pb-1">
-              토지 분류
-            </h3>
-          </motion.div>
-
-          {/* 4개 경로 컬럼 */}
-          <div className="grid grid-cols-4 gap-3">
+            {/* 타이틀 */}
+            <div className="w-24 flex-shrink-0 pt-2">
+              <h3 className="text-sm font-bold text-gray-700">
+                토지 분류
+              </h3>
+            </div>
+            {/* 4개 경로 컬럼 */}
+            <div className="flex-1 grid grid-cols-4 gap-3">
             {/* 대지 경로 */}
             <PathColumn
               type="대지"
@@ -322,7 +323,8 @@ export function AIAnalysisFlowDialog({
               ]}
               conditionStatus={currentLandType === "그밖의토지" ? conditionStatus : null}
             />
-          </div>
+            </div>
+          </motion.div>
 
           {/* 담당자 검토 섹션 */}
           <motion.div
@@ -330,8 +332,10 @@ export function AIAnalysisFlowDialog({
             animate={{ opacity: animationStep >= 6 ? 1 : 0.3, y: 0 }}
             className="mt-6 pt-4 border-t border-gray-200"
           >
-            <div className="flex items-center gap-6">
-              <h4 className="text-sm font-semibold text-gray-700 whitespace-nowrap w-20">담당자 검토</h4>
+            <div className="flex gap-4">
+              <div className="w-24 flex-shrink-0 pt-2">
+                <h4 className="text-sm font-bold text-gray-700">담당자 검토</h4>
+              </div>
               <div className="flex-1 grid grid-cols-3 gap-3">
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
@@ -361,8 +365,10 @@ export function AIAnalysisFlowDialog({
             animate={{ opacity: animationStep >= 7 ? 1 : 0.3, y: 0 }}
             className="mt-4"
           >
-            <div className="flex items-center gap-6">
-              <h4 className="text-sm font-semibold text-gray-700 whitespace-nowrap w-20">최종 결정</h4>
+            <div className="flex gap-4">
+              <div className="w-24 flex-shrink-0 pt-2">
+                <h4 className="text-sm font-bold text-gray-700">최종 결정</h4>
+              </div>
               <div className="flex-1 grid grid-cols-3 gap-3">
                 <motion.div 
                   animate={{ scale: finalJudgment === "매수" && animationStep >= 7 ? 1.02 : 1 }}
