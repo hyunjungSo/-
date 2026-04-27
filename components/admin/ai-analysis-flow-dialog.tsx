@@ -565,12 +565,6 @@ function PathColumn({
                     {c.title}
                   </p>
                 </div>
-                {/* 충족 뱃지만 표시 (미충족 뱃지 제거) */}
-                {isActive && conditionStatus && c.items.some(item => item.isMet) && (
-                  <span className="text-sm font-bold px-2 py-0.5 rounded bg-green-500 text-white">
-                    충족
-                  </span>
-                )}
               </div>
 
               {/* 기준 항목들 */}
@@ -647,13 +641,13 @@ function PathColumn({
         </motion.div>
       )}
 
-      {/* 결과 배지 */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: animationStep >= 5 ? 1 : 0.3, scale: animationStep >= 5 ? 1 : 0.9 }}
-        className="flex justify-center"
-      >
-        {conditionStatus ? (
+      {/* 결과 배지 - 선택된 경로에만 표시 */}
+      {isActive && conditionStatus && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: animationStep >= 5 ? 1 : 0.3, scale: animationStep >= 5 ? 1 : 0.9 }}
+          className="flex justify-center"
+        >
           <span className={cn(
             "px-4 py-1.5 rounded-full text-sm font-bold",
             conditionStatus === "충족" ? "bg-green-500 text-white" :
@@ -662,12 +656,8 @@ function PathColumn({
           )}>
             {conditionStatus}
           </span>
-        ) : (
-          <span className="px-4 py-1.5 rounded-full text-sm font-bold bg-gray-100 text-gray-400">
-            -
-          </span>
-        )}
-      </motion.div>
+        </motion.div>
+      )}
     </motion.div>
   );
 }
