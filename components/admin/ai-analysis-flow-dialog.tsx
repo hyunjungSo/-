@@ -94,7 +94,7 @@ export function AIAnalysisFlowDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[50vw] max-w-none max-h-[90vh] overflow-y-auto p-0 text-sm [&_*]:min-h-0" style={{ fontSize: '14px' }}>
+      <DialogContent className="max-h-[90vh] overflow-y-auto p-0" style={{ width: '60vw', maxWidth: '60vw', minWidth: '800px', fontSize: '14px' }}>
         <DialogHeader className="px-6 pt-6 pb-4 border-b bg-muted/30 sticky top-0 z-10">
           <DialogTitle className="flex items-center gap-3">
             <div className={cn("rounded-full p-2 text-white", color)}>
