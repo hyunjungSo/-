@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { Layers, Map as MapIcon, Plus, Minus, Info } from "lucide-react";
+import { Layers, Map as MapIcon, Plus, Minus, Info, Ruler, X, RotateCcw } from "lucide-react";
 import type { LandInfo } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -45,6 +45,17 @@ export function LandMap({
   
   // 레이어 가시화 여부
   const isLayerVisible = zoomLevel >= LAYER_MIN_ZOOM;
+  
+  // 거리 측정 모드
+  const [measureMode, setMeasureMode] = useState(false);
+  const [measurePoints, setMeasurePoints] = useState<{x: number; y: number}[]>([]);
+  const [totalDistance, setTotalDistance] = useState(0);
+  
+  // 픽셀당 미터 (줌 레벨에 따라 변경 - 가상 스케일)
+  const getPixelsPerMeter = () => {
+    const baseScale = 0.5; // 줌 14에서 1픽셀 = 2미터
+    return baseScale * Math.pow(1.5, zoomLevel - 14);
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -235,7 +246,115 @@ export function LandMap({
       const shortAddress = addressParts.slice(-1)[0];
       ctx.fillText(shortAddress, rect.width * 0.5, rect.height * 0.92);
     }
-  }, [landInfo, showOverlay, baseMap, layers, zoomLevel]);
+    
+    // 거리 측정 포인트 및 라인 그리기
+    if (measurePoints.length > 0) {
+      const pixelsPerMeter = getPixelsPerMeter();
+      
+      // 라인 그리기
+      if (measurePoints.length > 1) {
+        ctx.strokeStyle = "#f97316";
+        ctx.lineWidth = 2;
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.moveTo(measurePoints[0].x, measurePoints[0].y);
+        for (let i = 1; i < measurePoints.length; i++) {
+          ctx.lineTo(measurePoints[i].x, measurePoints[i].y);
+        }
+        ctx.stroke();
+        
+        // 각 구간 거리 표시
+        for (let i = 1; i < measurePoints.length; i++) {
+          const p1 = measurePoints[i - 1];
+          const p2 = measurePoints[i];
+          const midX = (p1.x + p2.x) / 2;
+          const midY = (p1.y + p2.y) / 2;
+          const distance = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)) / pixelsPerMeter;
+          
+          // 거리 라벨 배경
+          ctx.fillStyle = "rgba(249, 115, 22, 0.9)";
+          const label = `${distance.toFixed(1)}m`;
+          const labelWidth = ctx.measureText(label).width + 8;
+          ctx.fillRect(midX - labelWidth / 2, midY - 8, labelWidth, 16);
+          
+          // 거리 텍스트
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 11px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(label, midX, midY + 4);
+        }
+      }
+      
+      // 포인트 그리기
+      measurePoints.forEach((point, index) => {
+        // 외곽 원
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 8, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+        ctx.strokeStyle = "#f97316";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        // 내부 원
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = "#f97316";
+        ctx.fill();
+        
+        // 포인트 번호
+        if (measurePoints.length > 1) {
+          ctx.fillStyle = "#f97316";
+          ctx.font = "bold 10px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(`${index + 1}`, point.x, point.y - 14);
+        }
+      });
+    }
+  }, [landInfo, showOverlay, baseMap, layers, zoomLevel, measurePoints]);
+
+  // 캔버스 클릭 핸들러 (거리 측정)
+  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!measureMode) return;
+    
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const newPoints = [...measurePoints, { x, y }];
+    setMeasurePoints(newPoints);
+    
+    // 총 거리 계산
+    if (newPoints.length > 1) {
+      const pixelsPerMeter = getPixelsPerMeter();
+      let total = 0;
+      for (let i = 1; i < newPoints.length; i++) {
+        const p1 = newPoints[i - 1];
+        const p2 = newPoints[i];
+        total += Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)) / pixelsPerMeter;
+      }
+      setTotalDistance(total);
+    }
+  };
+  
+  // 측정 초기화
+  const resetMeasurement = () => {
+    setMeasurePoints([]);
+    setTotalDistance(0);
+  };
+  
+  // 측정 모드 토글
+  const toggleMeasureMode = () => {
+    if (measureMode) {
+      setMeasureMode(false);
+      resetMeasurement();
+    } else {
+      setMeasureMode(true);
+    }
+  };
 
   return (
     <div className="relative w-full overflow-hidden rounded-lg border border-border bg-muted">
@@ -270,6 +389,22 @@ export function LandMap({
             </div>
           </PopoverContent>
         </Popover>
+
+        {/* 거리 측정 */}
+        <Button 
+          variant={measureMode ? "default" : "outline"} 
+          size="sm" 
+          className={cn(
+            "h-8 gap-1.5 shadow-sm",
+            measureMode 
+              ? "bg-orange-500 text-white hover:bg-orange-600" 
+              : "border-gray-300 bg-white/95 text-[#222222] hover:bg-white"
+          )}
+          onClick={toggleMeasureMode}
+        >
+          <Ruler className="h-4 w-4" />
+          <span className="text-sm">거리 측정</span>
+        </Button>
 
         {/* 레이어 선택 */}
         <Popover>
@@ -350,11 +485,60 @@ export function LandMap({
         ref={canvasRef}
         className={cn(
           "h-[300px] w-full sm:h-[400px]",
-          interactive && "cursor-crosshair"
+          interactive && "cursor-crosshair",
+          measureMode && "cursor-crosshair"
         )}
         style={{ display: "block" }}
+        onClick={handleCanvasClick}
       />
-      {interactive && (
+      
+      {/* 거리 측정 모드 안내 및 결과 */}
+      {measureMode && (
+        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between rounded-lg bg-orange-500 px-4 py-2.5 text-white shadow-lg">
+          <div className="flex items-center gap-3">
+            <Ruler className="h-5 w-5" />
+            <div>
+              {measurePoints.length === 0 ? (
+                <span className="text-sm">지도를 클릭하여 측정을 시작하세요</span>
+              ) : (
+                <div className="flex items-center gap-4">
+                  <span className="text-sm">
+                    포인트: <strong>{measurePoints.length}개</strong>
+                  </span>
+                  {totalDistance > 0 && (
+                    <span className="text-sm">
+                      총 거리: <strong>{totalDistance.toFixed(1)}m</strong>
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {measurePoints.length > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 gap-1 px-2 text-white hover:bg-orange-600 hover:text-white"
+                onClick={resetMeasurement}
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                <span className="text-xs">초기화</span>
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 w-7 p-0 text-white hover:bg-orange-600 hover:text-white"
+              onClick={toggleMeasureMode}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
+      
+      {interactive && !measureMode && (
         <div className="absolute bottom-3 left-3 rounded bg-card/90 px-2 py-1 text-base text-muted-foreground">
           지도를 클릭하여 필지를 선택하세요
         </div>
