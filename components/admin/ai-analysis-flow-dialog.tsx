@@ -584,7 +584,7 @@ function PathColumn({
           "flex items-center gap-1",
           conditionStatus === "검토필요" ? "text-amber-600 font-semibold" : "text-gray-500"
         )}>
-          실측 및 추가 검토 필요시 <span className="text-amber-600">검토 필요</span>
+          실측 및 추가 검토 필요시 <span className="text-amber-600">검토필요</span>
         </p>
       </motion.div>
 
