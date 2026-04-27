@@ -470,15 +470,13 @@ function StepHeader({ step, title, active }: { step: number; title: string; acti
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: active ? 1 : 0.5, y: 0 }}
         className={cn(
-          "inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold transition-all duration-300",
-          active 
-            ? "bg-gray-900 text-white shadow-lg" 
-            : "bg-gray-200 text-gray-500"
+          "inline-flex items-center gap-2 text-sm font-semibold transition-all duration-300",
+          active ? "text-foreground" : "text-muted-foreground"
         )}
       >
         <span className={cn(
           "flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold",
-          active ? "bg-white text-gray-900" : "bg-gray-300 text-gray-500"
+          active ? "bg-green-500 text-white" : "bg-muted text-muted-foreground"
         )}>
           {step}
         </span>
@@ -577,7 +575,7 @@ function FlowConnector({ active }: { active: boolean }) {
   );
 }
 
-// 판정 카드 컴포넌트
+// ���정 카드 컴포넌트
 function JudgmentCard({
   label,
   subLabel,
