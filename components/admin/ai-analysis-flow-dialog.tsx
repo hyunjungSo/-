@@ -96,7 +96,7 @@ export function AIAnalysisFlowDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto p-0" style={{ width: '60vw', maxWidth: '60vw', minWidth: '800px', fontSize: '14px' }}>
-        <DialogHeader className="px-6 pt-6 pb-4 border-b bg-muted/30 sticky top-0 z-10">
+        <DialogHeader className="px-6 pt-6 pb-4 border-b bg-white sticky top-0 z-10">
           <DialogTitle className="flex items-center gap-3">
             <div className={cn("rounded-full p-2 text-white", color)}>
               <Icon className="h-5 w-5" />
@@ -447,9 +447,9 @@ export function AIAnalysisFlowDialog({
               <span>잔여 비율 <strong>{remainingRatio}%</strong></span>
             </div>
             <div className={cn(
-              "flex items-center gap-2 rounded-full px-3 py-1 font-semibold text-white",
+              "flex items-center gap-2 rounded-full px-4 py-1.5 font-semibold text-white",
               finalJudgment === "매수" ? "bg-green-500" :
-              finalJudgment === "매수불가" || finalJudgment === "기각" ? "bg-red-500" :
+              finalJudgment === "매수불가" || finalJudgment === "기각" ? "bg-red-600 ring-2 ring-red-300 animate-pulse" :
               "bg-amber-500"
             )}>
               {finalJudgment === "매수" && <CheckCircle2 className="h-4 w-4" />}
@@ -550,7 +550,7 @@ function JudgmentBox({
 }) {
   const colorClasses = {
     green: active ? "border-green-500 bg-green-500 text-white" : "border-green-200 bg-green-50 text-green-300",
-    red: active ? "border-red-500 bg-red-500 text-white" : "border-red-200 bg-red-50 text-red-300",
+    red: active ? "border-red-600 bg-red-600 text-white ring-4 ring-red-200" : "border-red-200 bg-red-50 text-red-300",
     amber: active ? "border-amber-500 bg-amber-500 text-white" : "border-amber-200 bg-amber-50 text-amber-300",
   };
 
@@ -559,7 +559,8 @@ function JudgmentBox({
       className={cn(
         "flex flex-col items-center gap-2 rounded-xl border-2 px-8 py-4 transition-all duration-500",
         colorClasses[color],
-        active && "scale-110 shadow-lg"
+        active && color === "red" && "scale-115 shadow-xl animate-pulse",
+        active && color !== "red" && "scale-110 shadow-lg"
       )}
     >
       <Icon className="h-8 w-8" />
