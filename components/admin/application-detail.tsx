@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { LandMap } from "@/components/land-map";
+import { AIAnalysisFlowDialog } from "@/components/admin/ai-analysis-flow-dialog";
 import { landShapes, landCategories } from "@/lib/dummy-data";
 import type { Application, JudgmentResult, LandShape, LandCategory, AdminStatus } from "@/lib/types";
 import {
@@ -127,6 +128,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   });
 
   const [isSaving, setIsSaving] = useState(false);
+  const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
 
   const handleSave = () => {
     setIsSaving(true);
@@ -408,6 +410,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* 분석 상세 보기 버튼 */}
+            <Button
+              variant="outline"
+              className="w-full gap-2"
+              onClick={() => setShowAnalysisFlow(true)}
+            >
+              <PlayCircle className="h-4 w-4" />
+              분석 프로세스 상세 보기
+            </Button>
+
             {/* 잠정 판정 */}
             {aiResult && (
               <div className="rounded-lg border border-border bg-muted/50 p-4">
@@ -1007,6 +1019,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
         </CardContent>
       </Card>
+
+      {/* AI 분석 프로세스 다이얼로그 */}
+      <AIAnalysisFlowDialog
+        open={showAnalysisFlow}
+        onOpenChange={setShowAnalysisFlow}
+        aiResult={aiResult}
+        landInfo={allLands[selectedLandIndex]}
+      />
     </div>
   );
 }
