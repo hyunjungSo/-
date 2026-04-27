@@ -191,25 +191,21 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div>
-              <p className="text-base text-muted-foreground">신청인</p>
+              <p className="text-sm text-muted-foreground">신청인</p>
               <p className="font-medium text-foreground">{application.applicantName}</p>
             </div>
             <div>
-              <p className="text-base text-muted-foreground">연락처</p>
+              <p className="text-sm text-muted-foreground">연락처</p>
               <p className="font-medium text-foreground">{application.applicantContact}</p>
             </div>
             <div>
-              <p className="text-base text-muted-foreground">신청일</p>
+              <p className="text-sm text-muted-foreground">신청일</p>
               <p className="font-medium text-foreground">{application.appliedAt}</p>
             </div>
             <div>
-              <p className="text-base text-muted-foreground">대상 지번</p>
-              <p className="font-medium text-foreground">{application.landInfo.address}</p>
-            </div>
-            <div>
-              <p className="mb-1 text-base text-muted-foreground">담당자</p>
+              <p className="mb-1 text-sm text-muted-foreground">담당자</p>
               <Select
                 value={reviewData.assigneeId}
                 onValueChange={(value) =>
