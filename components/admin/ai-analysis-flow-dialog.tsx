@@ -14,18 +14,18 @@ import {
   CheckCircle2,
   XCircle,
   AlertTriangle,
-  ArrowRight,
   Play,
   RotateCcw,
   Home,
   Wheat,
   TreePine,
   MapPin,
-  Layers,
   Bot,
-  User,
-  FileCheck,
+  ChevronDown,
+  ArrowDown,
+  Circle,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface CriteriaCheck {
   criteriaName: string;
@@ -50,6 +50,8 @@ interface LandInfo {
   remainingArea: number;
   remainingRatio: number;
   remainingShape: string;
+  originalShapeIndex?: number;
+  remainingShapeIndex?: number;
 }
 
 interface AIAnalysisFlowDialogProps {
@@ -59,29 +61,13 @@ interface AIAnalysisFlowDialogProps {
   landInfo: LandInfo;
 }
 
-type FlowStep = 
-  | "idle"
-  | "classify"
-  | "area-check"
-  | "condition-check-1"
-  | "condition-check-2"
-  | "condition-check-3"
-  | "review"
-  | "decision"
-  | "complete";
+type FlowStep = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
-const landTypeIcons: Record<string, React.ElementType> = {
-  "대지": Home,
-  "농지": Wheat,
-  "산지": TreePine,
-  "그밖의토지": MapPin,
-};
-
-const landTypeColors: Record<string, string> = {
-  "대지": "bg-blue-500",
-  "농지": "bg-green-500",
-  "산지": "bg-emerald-700",
-  "그밖의토지": "bg-amber-500",
+const landTypeConfig: Record<string, { icon: React.ElementType; color: string; bgColor: string }> = {
+  "대지": { icon: Home, color: "text-blue-600", bgColor: "bg-blue-500" },
+  "농지": { icon: Wheat, color: "text-green-600", bgColor: "bg-green-500" },
+  "산지": { icon: TreePine, color: "text-emerald-600", bgColor: "bg-emerald-600" },
+  "그밖의토지": { icon: MapPin, color: "text-amber-600", bgColor: "bg-amber-500" },
 };
 
 export function AIAnalysisFlowDialog({
@@ -90,112 +76,142 @@ export function AIAnalysisFlowDialog({
   aiResult,
   landInfo,
 }: AIAnalysisFlowDialogProps) {
-  const [currentStep, setCurrentStep] = useState<FlowStep>("idle");
+  const [currentStep, setCurrentStep] = useState<FlowStep>(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [completedSteps, setCompletedSteps] = useState<FlowStep[]>([]);
+  const [pathHistory, setPathHistory] = useState<string[]>([]);
 
-  // 토지 유형에 따른 조건 체크 항목 정의
-  const getConditionChecks = () => {
+  // 조건 체크 데이터 추출
+  const getConditionData = () => {
     const checks = aiResult?.criteriaChecks || [];
     const areaCheck = checks.find(c => c.criteriaName.includes("면적"));
     const ratioCheck = checks.find(c => c.criteriaName.includes("비율"));
-    const shapeCheck = checks.find(c => c.criteriaName.includes("형상"));
+    const shapeIndexCheck = checks.find(c => c.criteriaName.includes("형상지수"));
+    const shapeCheck = checks.find(c => c.criteriaName === "잔여지 형상");
     
-    // 토지 유형별 물리적 조건
     const physicalChecks = checks.filter(c => 
       !c.criteriaName.includes("면적") && 
       !c.criteriaName.includes("비율") &&
-      !c.criteriaName.includes("형상지수")
+      !c.criteriaName.includes("형상지수") &&
+      c.criteriaName !== "잔여지 형상"
     );
 
-    return { areaCheck, ratioCheck, shapeCheck, physicalChecks };
+    // 면적 기준 충족 여부 (25% 이하면 1.5배 완화 적용)
+    const ratioMet = landInfo.remainingRatio <= 25;
+    const areaMet = areaCheck?.isMet || false;
+    
+    // 형상 변화 (1.0 이상이면 매수 조건)
+    const shapeIndexChange = aiResult?.shapeIndexChange || 
+      ((landInfo.remainingShapeIndex || 0) - (landInfo.originalShapeIndex || 0));
+    const shapeChangeMet = shapeIndexChange >= 1.0;
+    
+    // 물리적 조건 (하나라도 충족되면 매수 가능성)
+    const physicalConditionMet = physicalChecks.some(c => c.isMet);
+
+    return {
+      areaCheck,
+      ratioCheck,
+      shapeIndexCheck,
+      shapeCheck,
+      physicalChecks,
+      areaMet,
+      ratioMet,
+      shapeChangeMet,
+      physicalConditionMet,
+      shapeIndexChange,
+    };
   };
 
-  const { areaCheck, ratioCheck, shapeCheck, physicalChecks } = getConditionChecks();
+  const conditionData = getConditionData();
+  const config = landTypeConfig[landInfo.landType] || landTypeConfig["그밖의토지"];
+  const LandIcon = config.icon;
 
-  // 애니메이션 스텝 진행
+  // 애니메이션 진행
   useEffect(() => {
     if (!isPlaying || !open) return;
 
-    const stepSequence: FlowStep[] = [
-      "classify",
-      "area-check",
-      "condition-check-1",
-      "condition-check-2",
-      "review",
-      "decision",
-      "complete",
-    ];
-
-    const currentIndex = stepSequence.indexOf(currentStep);
-    
-    if (currentIndex < stepSequence.length - 1) {
+    if (currentStep < 7) {
       const timer = setTimeout(() => {
-        const nextStep = stepSequence[currentIndex + 1];
+        const nextStep = (currentStep + 1) as FlowStep;
         setCurrentStep(nextStep);
-        setCompletedSteps(prev => [...prev, currentStep]);
-      }, 1200);
+        
+        // 경로 히스토리 업데이트
+        if (currentStep === 1) {
+          setPathHistory(prev => [...prev, landInfo.landType]);
+        } else if (currentStep === 2) {
+          setPathHistory(prev => [...prev, conditionData.areaMet ? "면적충족" : "면적미충족"]);
+        } else if (currentStep === 3) {
+          setPathHistory(prev => [...prev, conditionData.ratioMet ? "비율완화적용" : "비율초과"]);
+        } else if (currentStep === 4) {
+          setPathHistory(prev => [...prev, conditionData.physicalConditionMet ? "물리조건충족" : "물리조건미충족"]);
+        } else if (currentStep === 5) {
+          setPathHistory(prev => [...prev, conditionData.shapeChangeMet ? "형상변화충족" : "형상변화미충족"]);
+        }
+      }, 1000);
       return () => clearTimeout(timer);
     } else {
       setIsPlaying(false);
     }
-  }, [currentStep, isPlaying, open]);
+  }, [currentStep, isPlaying, open, landInfo.landType, conditionData]);
 
   const handlePlay = () => {
-    setCurrentStep("classify");
-    setCompletedSteps([]);
+    setCurrentStep(0);
+    setPathHistory([]);
     setIsPlaying(true);
+    setTimeout(() => setCurrentStep(1), 300);
   };
 
   const handleReset = () => {
-    setCurrentStep("idle");
-    setCompletedSteps([]);
+    setCurrentStep(0);
+    setPathHistory([]);
     setIsPlaying(false);
   };
 
-  const isStepActive = (step: FlowStep) => currentStep === step;
-  const isStepCompleted = (step: FlowStep) => completedSteps.includes(step);
-  const isStepPending = (step: FlowStep) => !isStepActive(step) && !isStepCompleted(step);
-
-  const getStepStyle = (step: FlowStep) => {
-    if (isStepActive(step)) return "ring-2 ring-primary ring-offset-2 bg-primary/10 scale-105";
-    if (isStepCompleted(step)) return "bg-green-50 border-green-300";
-    return "bg-muted/30 opacity-50";
-  };
-
-  const LandTypeIcon = landTypeIcons[landInfo.landType] || MapPin;
-  const landTypeColor = landTypeColors[landInfo.landType] || "bg-gray-500";
-
-  // 판정 결과 스타일
-  const getJudgmentStyle = () => {
-    if (!aiResult) return { bg: "bg-gray-100", text: "text-gray-700", icon: AlertTriangle };
-    switch (aiResult.provisionalJudgment) {
-      case "매수":
-        return { bg: "bg-green-100", text: "text-green-700", icon: CheckCircle2 };
-      case "기각":
-        return { bg: "bg-red-100", text: "text-red-700", icon: XCircle };
-      default:
-        return { bg: "bg-amber-100", text: "text-amber-700", icon: AlertTriangle };
+  // 노드 스타일
+  const getNodeStyle = (step: FlowStep, condition?: boolean) => {
+    const isActive = currentStep === step;
+    const isPassed = currentStep > step;
+    
+    if (isActive) {
+      return "ring-2 ring-primary ring-offset-2 scale-105 shadow-lg";
     }
+    if (isPassed) {
+      if (condition === undefined) return "opacity-100";
+      return condition ? "opacity-100" : "opacity-30";
+    }
+    return "opacity-40";
   };
 
-  const judgmentStyle = getJudgmentStyle();
+  // 라인 애니메이션 스타일
+  const getLineStyle = (fromStep: FlowStep, condition?: boolean) => {
+    const isPassed = currentStep > fromStep;
+    if (!isPassed) return "bg-gray-200";
+    if (condition === undefined) return "bg-primary";
+    return condition ? "bg-primary" : "bg-gray-300";
+  };
+
+  // 판정 결과
+  const judgment = aiResult?.provisionalJudgment || "검토필요";
+  const judgmentStyle = {
+    "매수": { bg: "bg-green-500", text: "text-white", icon: CheckCircle2 },
+    "기각": { bg: "bg-red-500", text: "text-white", icon: XCircle },
+    "검토필요": { bg: "bg-amber-500", text: "text-white", icon: AlertTriangle },
+  }[judgment];
   const JudgmentIcon = judgmentStyle.icon;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="max-w-5xl max-h-[95vh] overflow-y-auto p-0">
+        <DialogHeader className="p-6 pb-0">
           <DialogTitle className="flex items-center gap-2">
             <Bot className="h-5 w-5" />
-            AI 분석 프로세스
+            AI 분석 프로세스 - 사다리형 플로우
           </DialogTitle>
           <DialogDescription>
-            중앙토지수용위원회 기준에 따른 자동화 판독 과정을 확인합니다.
+            중앙토지수용위원회 기준에 따른 잔여지 매수 판독 과정입니다.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="p-6 pt-4 space-y-4">
           {/* 재생 컨트롤 */}
           <div className="flex items-center justify-center gap-3">
             <Button
@@ -206,13 +222,13 @@ export function AIAnalysisFlowDialog({
               className="gap-2"
             >
               <Play className="h-4 w-4" />
-              {currentStep === "idle" ? "분석 시작" : "다시 재생"}
+              {currentStep === 0 ? "분석 시작" : "다시 재생"}
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={handleReset}
-              disabled={currentStep === "idle"}
+              disabled={currentStep === 0}
               className="gap-2"
             >
               <RotateCcw className="h-4 w-4" />
@@ -220,308 +236,354 @@ export function AIAnalysisFlowDialog({
             </Button>
           </div>
 
-          {/* 프로세스 플로우 */}
-          <div className="relative">
-            {/* Step 1: 토지 분류 */}
-            <div className={`rounded-xl border p-4 transition-all duration-500 ${getStepStyle("classify")}`}>
-              <div className="flex items-center gap-3 mb-3">
-                <div className={`flex h-8 w-8 items-center justify-center rounded-full text-white ${landTypeColor}`}>
-                  <LandTypeIcon className="h-4 w-4" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">1. 토지 분류</h3>
-                  <p className="text-sm text-muted-foreground">토지 유형 판별</p>
-                </div>
-                {isStepCompleted("classify") && (
-                  <CheckCircle2 className="ml-auto h-5 w-5 text-green-600" />
-                )}
-              </div>
-              <div className={`transition-all duration-300 ${isStepActive("classify") || isStepCompleted("classify") ? "opacity-100" : "opacity-40"}`}>
-                <div className="flex items-center gap-2 rounded-lg bg-card p-3 border">
-                  <Badge className={`${landTypeColor} text-white`}>
-                    {landInfo.landType}
-                  </Badge>
-                  <span className="text-sm">
-                    지목: {landInfo.landCategory} | 잔여면적: {landInfo.remainingArea.toLocaleString()}m²
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Arrow */}
-            <div className="flex justify-center py-2">
-              <ArrowRight className={`h-5 w-5 rotate-90 transition-colors duration-300 ${isStepCompleted("classify") ? "text-green-600" : "text-muted-foreground"}`} />
-            </div>
-
-            {/* Step 2: 면적 기준 체크 */}
-            <div className={`rounded-xl border p-4 transition-all duration-500 ${getStepStyle("area-check")}`}>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-white">
-                  <Layers className="h-4 w-4" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">2. AI 정량 판독 - 면적 기준</h3>
-                  <p className="text-sm text-muted-foreground">면적 및 비율 기준 검토</p>
-                </div>
-                {isStepCompleted("area-check") && (
-                  <CheckCircle2 className="ml-auto h-5 w-5 text-green-600" />
-                )}
-              </div>
-              <div className={`space-y-2 transition-all duration-300 ${isStepActive("area-check") || isStepCompleted("area-check") ? "opacity-100" : "opacity-40"}`}>
-                {areaCheck && (
-                  <div className={`flex items-center gap-2 rounded-lg p-3 border ${areaCheck.isMet ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"}`}>
-                    {areaCheck.isMet ? (
-                      <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
-                    ) : (
-                      <XCircle className="h-4 w-4 text-red-600 shrink-0" />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{areaCheck.criteriaName}</p>
-                      <p className="text-xs text-muted-foreground truncate">{areaCheck.criteriaDescription}</p>
+          {/* 사다리형 플로우 다이어그램 */}
+          <div className="relative bg-gradient-to-b from-slate-50 to-slate-100 rounded-xl p-6 overflow-x-auto">
+            <div className="min-w-[700px] space-y-0">
+              
+              {/* Step 1: 시작점 - 토지 입력 */}
+              <div className="flex justify-center">
+                <div className={cn(
+                  "flex flex-col items-center transition-all duration-500",
+                  getNodeStyle(1)
+                )}>
+                  <div className="w-48 rounded-xl border-2 border-slate-300 bg-white p-4 text-center shadow-md">
+                    <div className="mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wide">Start</div>
+                    <div className="text-sm font-bold text-slate-800">잔여지 정보 입력</div>
+                    <div className="mt-2 text-xs text-slate-500">
+                      {landInfo.remainingArea.toLocaleString()}m² / {landInfo.remainingRatio}%
                     </div>
-                    <Badge variant={areaCheck.isMet ? "default" : "destructive"} className="shrink-0">
-                      {areaCheck.isMet ? "충족" : "미충족"}
-                    </Badge>
                   </div>
-                )}
-                {ratioCheck && (
-                  <div className={`flex items-center gap-2 rounded-lg p-3 border ${ratioCheck.isMet ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"}`}>
-                    {ratioCheck.isMet ? (
-                      <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
-                    ) : (
-                      <XCircle className="h-4 w-4 text-red-600 shrink-0" />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{ratioCheck.criteriaName}</p>
-                      <p className="text-xs text-muted-foreground truncate">{ratioCheck.criteriaDescription}</p>
+                </div>
+              </div>
+
+              {/* 연결선 */}
+              <div className="flex justify-center py-2">
+                <div className={cn("h-8 w-1 rounded transition-all duration-300", getLineStyle(1))} />
+              </div>
+
+              {/* Step 2: 토지 분류 분기 */}
+              <div className="flex justify-center">
+                <div className={cn(
+                  "flex flex-col items-center transition-all duration-500",
+                  getNodeStyle(2)
+                )}>
+                  <div className="relative w-64 rounded-xl border-2 border-blue-300 bg-blue-50 p-4 text-center shadow-md">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-blue-500 px-3 py-0.5 text-xs font-bold text-white">
+                      STEP 1
                     </div>
-                    <Badge variant={ratioCheck.isMet ? "default" : "destructive"} className="shrink-0">
-                      {ratioCheck.isMet ? "충족" : "미충족"}
-                    </Badge>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Arrow */}
-            <div className="flex justify-center py-2">
-              <ArrowRight className={`h-5 w-5 rotate-90 transition-colors duration-300 ${isStepCompleted("area-check") ? "text-green-600" : "text-muted-foreground"}`} />
-            </div>
-
-            {/* Step 3: 물리적 조건 체크 */}
-            <div className={`rounded-xl border p-4 transition-all duration-500 ${getStepStyle("condition-check-1")}`}>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-violet-500 text-white">
-                  <FileCheck className="h-4 w-4" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">3. AI 정량 판독 - 물리적 조건</h3>
-                  <p className="text-sm text-muted-foreground">토지 유형별 세부 조건 검토</p>
-                </div>
-                {isStepCompleted("condition-check-1") && (
-                  <CheckCircle2 className="ml-auto h-5 w-5 text-green-600" />
-                )}
-              </div>
-              <div className={`space-y-2 transition-all duration-300 ${isStepActive("condition-check-1") || isStepCompleted("condition-check-1") ? "opacity-100" : "opacity-40"}`}>
-                {physicalChecks.slice(0, 2).map((check, idx) => (
-                  <div 
-                    key={idx}
-                    className={`flex items-center gap-2 rounded-lg p-3 border ${check.isMet ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"}`}
-                  >
-                    {check.isMet ? (
-                      <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
-                    ) : (
-                      <XCircle className="h-4 w-4 text-red-600 shrink-0" />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{check.criteriaName}</p>
-                      <p className="text-xs text-muted-foreground truncate">{check.criteriaDescription}</p>
+                    <div className="mt-1 text-sm font-bold text-blue-800">토지 분류</div>
+                    <div className="mt-3 flex justify-center gap-2">
+                      {["대지", "농지", "산지", "그밖의토지"].map((type) => {
+                        const typeConfig = landTypeConfig[type];
+                        const TypeIcon = typeConfig.icon;
+                        const isSelected = landInfo.landType === type && currentStep >= 2;
+                        return (
+                          <div
+                            key={type}
+                            className={cn(
+                              "flex flex-col items-center rounded-lg border p-2 transition-all",
+                              isSelected
+                                ? `${typeConfig.bgColor} text-white border-transparent scale-110 shadow-md`
+                                : "bg-white border-slate-200 text-slate-400"
+                            )}
+                          >
+                            <TypeIcon className="h-5 w-5" />
+                            <span className="mt-1 text-[10px] font-medium">{type}</span>
+                          </div>
+                        );
+                      })}
                     </div>
-                    {!check.autoDetected && (
-                      <Badge variant="outline" className="shrink-0 text-xs">직접확인</Badge>
-                    )}
-                    <Badge variant={check.isMet ? "default" : "destructive"} className="shrink-0">
-                      {check.isMet ? "충족" : "미충족"}
-                    </Badge>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Arrow */}
-            <div className="flex justify-center py-2">
-              <ArrowRight className={`h-5 w-5 rotate-90 transition-colors duration-300 ${isStepCompleted("condition-check-1") ? "text-green-600" : "text-muted-foreground"}`} />
-            </div>
-
-            {/* Step 4: 형상 체크 */}
-            <div className={`rounded-xl border p-4 transition-all duration-500 ${getStepStyle("condition-check-2")}`}>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500 text-white">
-                  <FileCheck className="h-4 w-4" />
                 </div>
-                <div>
-                  <h3 className="font-semibold">4. AI 정량 판독 - 형상 분석</h3>
-                  <p className="text-sm text-muted-foreground">형상지수 변화 및 형상 부정형 여부</p>
-                </div>
-                {isStepCompleted("condition-check-2") && (
-                  <CheckCircle2 className="ml-auto h-5 w-5 text-green-600" />
-                )}
               </div>
-              <div className={`space-y-2 transition-all duration-300 ${isStepActive("condition-check-2") || isStepCompleted("condition-check-2") ? "opacity-100" : "opacity-40"}`}>
-                {shapeCheck && (
-                  <div className={`flex items-center gap-2 rounded-lg p-3 border ${shapeCheck.isMet ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"}`}>
-                    {shapeCheck.isMet ? (
-                      <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
-                    ) : (
-                      <XCircle className="h-4 w-4 text-red-600 shrink-0" />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{shapeCheck.criteriaName}</p>
-                      <p className="text-xs text-muted-foreground truncate">{shapeCheck.criteriaDescription}</p>
+
+              {/* 연결선 */}
+              <div className="flex justify-center py-2">
+                <div className={cn("h-8 w-1 rounded transition-all duration-300", getLineStyle(2))} />
+              </div>
+
+              {/* Step 3: 면적 기준 분기 */}
+              <div className="flex justify-center">
+                <div className={cn(
+                  "transition-all duration-500",
+                  getNodeStyle(3)
+                )}>
+                  <div className="relative w-80 rounded-xl border-2 border-emerald-300 bg-emerald-50 p-4 shadow-md">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald-500 px-3 py-0.5 text-xs font-bold text-white">
+                      STEP 2
                     </div>
-                    <Badge variant={shapeCheck.isMet ? "default" : "destructive"} className="shrink-0">
-                      {shapeCheck.isMet ? "충족" : "미충족"}
-                    </Badge>
-                  </div>
-                )}
-                {aiResult && (
-                  <div className="rounded-lg border bg-card p-3">
-                    <div className="grid grid-cols-3 gap-4 text-center text-sm">
-                      <div>
-                        <p className="text-muted-foreground text-xs">편입 전</p>
-                        <p className="font-semibold">{aiResult.originalShapeIndex.toFixed(1)}</p>
+                    <div className="mt-1 text-center text-sm font-bold text-emerald-800">면적 기준 검토</div>
+                    <div className="mt-3 flex items-center justify-center gap-6">
+                      {/* 충족 경로 */}
+                      <div className={cn(
+                        "flex flex-col items-center rounded-lg border-2 p-3 transition-all",
+                        currentStep >= 3 && conditionData.areaMet
+                          ? "border-green-500 bg-green-100 shadow-md"
+                          : "border-slate-200 bg-white"
+                      )}>
+                        <CheckCircle2 className={cn(
+                          "h-6 w-6",
+                          currentStep >= 3 && conditionData.areaMet ? "text-green-600" : "text-slate-300"
+                        )} />
+                        <span className="mt-1 text-xs font-semibold">충족</span>
+                        <span className="text-[10px] text-slate-500">기준 면적 이하</span>
                       </div>
-                      <div>
-                        <p className="text-muted-foreground text-xs">편입 후</p>
-                        <p className="font-semibold">{aiResult.remainingShapeIndex.toFixed(1)}</p>
+                      
+                      <div className="text-slate-300">
+                        <ChevronDown className="h-6 w-6 rotate-90" />
                       </div>
-                      <div>
-                        <p className="text-muted-foreground text-xs">변화량</p>
-                        <p className={`font-semibold ${aiResult.shapeIndexChange >= 1 ? "text-red-600" : ""}`}>
-                          +{aiResult.shapeIndexChange.toFixed(1)}
-                        </p>
+                      
+                      {/* 미충족 경로 */}
+                      <div className={cn(
+                        "flex flex-col items-center rounded-lg border-2 p-3 transition-all",
+                        currentStep >= 3 && !conditionData.areaMet
+                          ? "border-amber-500 bg-amber-100 shadow-md"
+                          : "border-slate-200 bg-white"
+                      )}>
+                        <AlertTriangle className={cn(
+                          "h-6 w-6",
+                          currentStep >= 3 && !conditionData.areaMet ? "text-amber-600" : "text-slate-300"
+                        )} />
+                        <span className="mt-1 text-xs font-semibold">초과</span>
+                        <span className="text-[10px] text-slate-500">추가 검토 필요</span>
                       </div>
                     </div>
                   </div>
-                )}
-              </div>
-            </div>
-
-            {/* Arrow */}
-            <div className="flex justify-center py-2">
-              <ArrowRight className={`h-5 w-5 rotate-90 transition-colors duration-300 ${isStepCompleted("condition-check-2") ? "text-green-600" : "text-muted-foreground"}`} />
-            </div>
-
-            {/* Step 5: 담당자 검토 */}
-            <div className={`rounded-xl border p-4 transition-all duration-500 ${getStepStyle("review")}`}>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500 text-white">
-                  <User className="h-4 w-4" />
                 </div>
-                <div>
-                  <h3 className="font-semibold">5. 담당자 검토</h3>
-                  <p className="text-sm text-muted-foreground">현장/정성 확인 및 직접 입력 항목 검토</p>
-                </div>
-                {isStepCompleted("review") && (
-                  <CheckCircle2 className="ml-auto h-5 w-5 text-green-600" />
-                )}
               </div>
-              <div className={`transition-all duration-300 ${isStepActive("review") || isStepCompleted("review") ? "opacity-100" : "opacity-40"}`}>
-                <div className="rounded-lg border bg-card p-3">
-                  <div className="flex flex-wrap gap-2">
-                    {physicalChecks.filter(c => !c.autoDetected).length > 0 ? (
-                      physicalChecks.filter(c => !c.autoDetected).map((check, idx) => (
-                        <Badge key={idx} variant="outline" className="gap-1">
-                          {check.isMet ? (
-                            <CheckCircle2 className="h-3 w-3 text-green-600" />
-                          ) : (
-                            <XCircle className="h-3 w-3 text-red-600" />
+
+              {/* 분기 라인 */}
+              <div className="flex justify-center">
+                <div className="relative w-80 h-12">
+                  {/* 왼쪽 분기선 (충족) */}
+                  <div className={cn(
+                    "absolute left-1/4 top-0 h-full w-1 rounded transition-all duration-300",
+                    currentStep > 3 && conditionData.areaMet ? "bg-green-500" : "bg-slate-200"
+                  )} />
+                  {/* 오른쪽 분기선 (미충족 - 완화조건으로) */}
+                  <div className={cn(
+                    "absolute right-1/4 top-0 h-full w-1 rounded transition-all duration-300",
+                    currentStep > 3 && !conditionData.areaMet ? "bg-amber-500" : "bg-slate-200"
+                  )} />
+                </div>
+              </div>
+
+              {/* Step 4: 잔여 비율 완화 조건 (면적 미충족 시) */}
+              <div className="flex justify-center gap-16">
+                {/* 좌측: 면적 충족 시 바로 물리 조건으로 */}
+                <div className={cn(
+                  "flex flex-col items-center transition-all duration-500",
+                  currentStep >= 4 && conditionData.areaMet ? "opacity-100" : "opacity-30"
+                )}>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500 text-white">
+                    <ArrowDown className="h-5 w-5" />
+                  </div>
+                  <span className="mt-1 text-[10px] text-green-600 font-medium">물리 조건으로</span>
+                </div>
+
+                {/* 우측: 비율 완화 조건 */}
+                <div className={cn(
+                  "transition-all duration-500",
+                  getNodeStyle(4, !conditionData.areaMet)
+                )}>
+                  <div className={cn(
+                    "w-48 rounded-xl border-2 p-3 text-center shadow-md",
+                    currentStep >= 4 && !conditionData.areaMet
+                      ? "border-violet-400 bg-violet-50"
+                      : "border-slate-200 bg-slate-50"
+                  )}>
+                    <div className="text-xs font-bold text-violet-700">비율 완화 조건</div>
+                    <div className="mt-2 text-[10px] text-slate-600">
+                      잔여비율 25% 이하 시<br/>면적기준 1.5배 완화
+                    </div>
+                    <div className={cn(
+                      "mt-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold",
+                      conditionData.ratioMet ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                    )}>
+                      {conditionData.ratioMet ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                      {landInfo.remainingRatio}% {conditionData.ratioMet ? "(적용)" : "(미적용)"}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 병합 라인 */}
+              <div className="flex justify-center py-2">
+                <div className={cn("h-8 w-1 rounded transition-all duration-300", getLineStyle(4))} />
+              </div>
+
+              {/* Step 5: 물리적 조건 */}
+              <div className="flex justify-center">
+                <div className={cn(
+                  "transition-all duration-500",
+                  getNodeStyle(5)
+                )}>
+                  <div className="relative w-96 rounded-xl border-2 border-orange-300 bg-orange-50 p-4 shadow-md">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-orange-500 px-3 py-0.5 text-xs font-bold text-white">
+                      STEP 3
+                    </div>
+                    <div className="mt-1 text-center text-sm font-bold text-orange-800">물리적 조건 검토</div>
+                    <div className="mt-2 text-center text-[10px] text-slate-500">
+                      토지유형: {landInfo.landType}
+                    </div>
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                      {conditionData.physicalChecks.slice(0, 4).map((check, idx) => (
+                        <div
+                          key={idx}
+                          className={cn(
+                            "flex items-center gap-2 rounded-lg border p-2 text-xs transition-all",
+                            currentStep >= 5
+                              ? check.isMet
+                                ? "border-green-400 bg-green-50"
+                                : "border-slate-200 bg-white"
+                              : "border-slate-200 bg-white opacity-50"
                           )}
-                          {check.criteriaName}
-                        </Badge>
-                      ))
-                    ) : (
-                      <span className="text-sm text-muted-foreground">직접 확인 항목 없음 - 자동 판독 완료</span>
+                        >
+                          {currentStep >= 5 ? (
+                            check.isMet ? (
+                              <CheckCircle2 className="h-4 w-4 shrink-0 text-green-600" />
+                            ) : (
+                              <Circle className="h-4 w-4 shrink-0 text-slate-300" />
+                            )
+                          ) : (
+                            <Circle className="h-4 w-4 shrink-0 text-slate-300" />
+                          )}
+                          <span className={cn(
+                            "truncate",
+                            currentStep >= 5 && check.isMet ? "font-medium text-green-800" : "text-slate-600"
+                          )}>
+                            {check.criteriaName}
+                          </span>
+                          {!check.autoDetected && (
+                            <Badge variant="outline" className="ml-auto shrink-0 text-[8px] px-1 py-0">
+                              직접
+                            </Badge>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 연결선 */}
+              <div className="flex justify-center py-2">
+                <div className={cn("h-8 w-1 rounded transition-all duration-300", getLineStyle(5))} />
+              </div>
+
+              {/* Step 6: 형상 분석 */}
+              <div className="flex justify-center">
+                <div className={cn(
+                  "transition-all duration-500",
+                  getNodeStyle(6)
+                )}>
+                  <div className="relative w-80 rounded-xl border-2 border-pink-300 bg-pink-50 p-4 shadow-md">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-pink-500 px-3 py-0.5 text-xs font-bold text-white">
+                      STEP 4
+                    </div>
+                    <div className="mt-1 text-center text-sm font-bold text-pink-800">형상 분석</div>
+                    <div className="mt-3 flex items-center justify-center gap-4">
+                      <div className="text-center">
+                        <div className="text-[10px] text-slate-500">편입 전</div>
+                        <div className="text-lg font-bold text-slate-700">
+                          {(landInfo.originalShapeIndex || aiResult?.originalShapeIndex || 4.0).toFixed(1)}
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <ArrowDown className="h-4 w-4 text-pink-500 rotate-[-90deg]" />
+                        <div className={cn(
+                          "mt-1 rounded-full px-3 py-1 text-xs font-bold",
+                          conditionData.shapeChangeMet ? "bg-red-500 text-white" : "bg-slate-200 text-slate-600"
+                        )}>
+                          +{conditionData.shapeIndexChange.toFixed(1)}
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-[10px] text-slate-500">편입 후</div>
+                        <div className="text-lg font-bold text-slate-700">
+                          {(landInfo.remainingShapeIndex || aiResult?.remainingShapeIndex || 5.0).toFixed(1)}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-3 text-center">
+                      <Badge variant={conditionData.shapeChangeMet ? "default" : "secondary"}>
+                        {conditionData.shapeChangeMet ? "형상지수 1.0 이상 상승" : "형상지수 변화 미미"}
+                      </Badge>
+                    </div>
+                    <div className="mt-2 text-center text-[10px] text-slate-500">
+                      잔여지 형상: <span className="font-semibold">{landInfo.remainingShape}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 연결선 */}
+              <div className="flex justify-center py-2">
+                <div className={cn("h-8 w-1 rounded transition-all duration-300", getLineStyle(6))} />
+              </div>
+
+              {/* Step 7: 최종 판정 */}
+              <div className="flex justify-center">
+                <div className={cn(
+                  "transition-all duration-500",
+                  getNodeStyle(7)
+                )}>
+                  <div className={cn(
+                    "relative w-64 rounded-xl border-2 p-5 text-center shadow-lg",
+                    currentStep >= 7 ? `${judgmentStyle.bg} border-transparent` : "border-slate-300 bg-white"
+                  )}>
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-slate-800 px-3 py-0.5 text-xs font-bold text-white">
+                      RESULT
+                    </div>
+                    <div className={cn(
+                      "mt-2 text-sm font-bold",
+                      currentStep >= 7 ? judgmentStyle.text : "text-slate-400"
+                    )}>
+                      AI 잠정 판정
+                    </div>
+                    <div className="mt-3 flex items-center justify-center gap-2">
+                      {currentStep >= 7 ? (
+                        <>
+                          <JudgmentIcon className={cn("h-8 w-8", judgmentStyle.text)} />
+                          <span className={cn("text-3xl font-black", judgmentStyle.text)}>
+                            {judgment}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-2xl text-slate-300">???</span>
+                      )}
+                    </div>
+                    {currentStep >= 7 && (
+                      <div className="mt-3 text-xs opacity-90">
+                        {judgment === "매수" && "매수 기준 충족"}
+                        {judgment === "기각" && "매수 기준 미충족"}
+                        {judgment === "검토필요" && "담당자 추가 검토 필요"}
+                      </div>
                     )}
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Arrow */}
-            <div className="flex justify-center py-2">
-              <ArrowRight className={`h-5 w-5 rotate-90 transition-colors duration-300 ${isStepCompleted("review") ? "text-green-600" : "text-muted-foreground"}`} />
             </div>
-
-            {/* Step 6: 최종 판정 */}
-            <div className={`rounded-xl border p-4 transition-all duration-500 ${getStepStyle("decision")}`}>
-              <div className="flex items-center gap-3 mb-3">
-                <div className={`flex h-8 w-8 items-center justify-center rounded-full ${judgmentStyle.bg} ${judgmentStyle.text}`}>
-                  <JudgmentIcon className="h-4 w-4" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">6. 의사결정</h3>
-                  <p className="text-sm text-muted-foreground">AI 잠정 판정 결과</p>
-                </div>
-                {isStepCompleted("decision") && (
-                  <CheckCircle2 className="ml-auto h-5 w-5 text-green-600" />
-                )}
-              </div>
-              <div className={`transition-all duration-300 ${isStepActive("decision") || isStepCompleted("decision") || currentStep === "complete" ? "opacity-100" : "opacity-40"}`}>
-                <div className={`rounded-lg p-4 ${judgmentStyle.bg}`}>
-                  <div className="flex items-center justify-center gap-3">
-                    <JudgmentIcon className={`h-8 w-8 ${judgmentStyle.text}`} />
-                    <span className={`text-2xl font-bold ${judgmentStyle.text}`}>
-                      {aiResult?.provisionalJudgment || "-"}
-                    </span>
-                  </div>
-                  {aiResult?.provisionalJudgment === "매수" && (
-                    <p className="mt-2 text-center text-sm text-green-700">
-                      수용 조건 충족 - 매수 대상입니다.
-                    </p>
-                  )}
-                  {aiResult?.provisionalJudgment === "기각" && (
-                    <p className="mt-2 text-center text-sm text-red-700">
-                      수용 조건 미충족 - 기각 대상입니다.
-                    </p>
-                  )}
-                  {aiResult?.provisionalJudgment === "검토필요" && (
-                    <p className="mt-2 text-center text-sm text-amber-700">
-                      추가 검토 필요 - 토지보상심의위원회 이관 검토
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* 완료 메시지 */}
-            {currentStep === "complete" && (
-              <div className="mt-4 rounded-xl border-2 border-primary bg-primary/5 p-4 text-center animate-in fade-in duration-500">
-                <CheckCircle2 className="mx-auto h-10 w-10 text-primary mb-2" />
-                <h3 className="font-semibold text-primary">분석 완료</h3>
-                <p className="text-sm text-muted-foreground">
-                  AI 자동화 판독 프로세스가 완료되었습니다.
-                </p>
-              </div>
-            )}
           </div>
 
           {/* 범례 */}
-          <div className="rounded-lg border bg-muted/30 p-3">
-            <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준</p>
-            <div className="flex flex-wrap gap-3 text-xs">
-              <div className="flex items-center gap-1">
-                <div className="h-3 w-3 rounded-full bg-green-500" />
-                <span>충족</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="h-3 w-3 rounded-full bg-red-500" />
-                <span>미충족</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Badge variant="outline" className="text-xs h-5">직접확인</Badge>
-                <span>담당자 확인 필요</span>
-              </div>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-muted-foreground border-t pt-4">
+            <div className="flex items-center gap-1.5">
+              <div className="h-3 w-3 rounded-full bg-green-500" />
+              <span>조건 충족</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="h-3 w-3 rounded-full bg-amber-500" />
+              <span>추가 검토 필요</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="h-3 w-3 rounded-full bg-red-500" />
+              <span>조건 미충족</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Badge variant="outline" className="text-[10px] px-1.5 py-0">직접</Badge>
+              <span>담당자 직접 확인 항목</span>
             </div>
           </div>
         </div>
