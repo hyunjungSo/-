@@ -253,40 +253,75 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardContent>
           {isMultipleLands ? (
             <div className="space-y-3">
-              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                {allLands.map((land, index) => {
-                  const isSelected = selectedLandIndex === index;
-                  const landData = application.landDataList?.[index];
-                  const aiJudgment = application.aiResult?.provisionalJudgment || "-";
-                  return (
-                    <button
-                      key={land.id}
-                      type="button"
-                      onClick={() => setSelectedLandIndex(index)}
-                      className={`flex flex-col items-start gap-1 rounded-lg border p-3 text-left transition-all ${
-                        isSelected 
-                          ? "border-primary bg-primary/5 ring-1 ring-primary" 
-                          : "border-border hover:border-primary/50 hover:bg-muted/30"
-                      }`}
+              {/* 필지가 5개 이상이면 셀렉트 박스, 4개 이하면 카드 그리드 */}
+              {allLands.length >= 5 ? (
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+                  <Select
+                    value={selectedLandIndex.toString()}
+                    onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
+                  >
+                    <SelectTrigger className="w-full sm:w-[280px]">
+                      <SelectValue placeholder="필지 선택" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {allLands.map((land, index) => (
+                        <SelectItem key={land.id} value={index.toString()}>
+                          필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <div className="flex flex-1 items-center justify-between rounded-lg border border-border p-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium">{allLands[selectedLandIndex].address}</p>
+                      <div className="mt-1 flex gap-3 text-sm">
+                        <span className="font-medium text-primary">{allLands[selectedLandIndex].remainingArea.toLocaleString()}m²</span>
+                        <span className="text-muted-foreground">잔여 {allLands[selectedLandIndex].remainingRatio}%</span>
+                      </div>
+                    </div>
+                    <Badge 
+                      variant={application.aiResult?.provisionalJudgment === "매수" ? "default" : application.aiResult?.provisionalJudgment === "매수불가" ? "destructive" : "secondary"} 
+                      className="ml-3 shrink-0"
                     >
-                      <div className="flex w-full items-center justify-between">
-                        <span className="text-sm font-medium">필지 {index + 1}</span>
-                        <Badge 
-                          variant={aiJudgment === "매수" ? "default" : aiJudgment === "매수불가" ? "destructive" : "secondary"} 
-                          className="text-xs"
-                        >
-                          {aiJudgment}
-                        </Badge>
-                      </div>
-                      <p className="text-xs text-muted-foreground line-clamp-1">{land.address}</p>
-                      <div className="flex gap-3 text-xs">
-                        <span className="text-primary font-medium">{land.remainingArea.toLocaleString()}m²</span>
-                        <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
+                      {application.aiResult?.provisionalJudgment || "-"}
+                    </Badge>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {allLands.map((land, index) => {
+                    const isSelected = selectedLandIndex === index;
+                    const aiJudgment = application.aiResult?.provisionalJudgment || "-";
+                    return (
+                      <button
+                        key={land.id}
+                        type="button"
+                        onClick={() => setSelectedLandIndex(index)}
+                        className={`flex flex-col items-start gap-1 rounded-lg border p-3 text-left transition-all ${
+                          isSelected 
+                            ? "border-primary bg-primary/5 ring-1 ring-primary" 
+                            : "border-border hover:border-primary/50 hover:bg-muted/30"
+                        }`}
+                      >
+                        <div className="flex w-full items-center justify-between">
+                          <span className="text-sm font-medium">필지 {index + 1}</span>
+                          <Badge 
+                            variant={aiJudgment === "매수" ? "default" : aiJudgment === "매수불가" ? "destructive" : "secondary"} 
+                            className="text-xs"
+                          >
+                            {aiJudgment}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground line-clamp-1">{land.address}</p>
+                        <div className="flex gap-3 text-xs">
+                          <span className="font-medium text-primary">{land.remainingArea.toLocaleString()}m²</span>
+                          <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
               <div className="flex items-center justify-between rounded-lg bg-muted px-4 py-2">
                 <span className="text-sm font-medium">합산 잔여 면적</span>
                 <span className="text-base font-bold text-primary">
@@ -300,7 +335,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 <div>
                   <p className="font-medium">{application.landInfo.address}</p>
                   <div className="mt-1 flex gap-4 text-sm">
-                    <span className="text-primary font-medium">{application.landInfo.remainingArea.toLocaleString()}m² 잔여</span>
+                    <span className="font-medium text-primary">{application.landInfo.remainingArea.toLocaleString()}m² 잔여</span>
                     <span className="text-muted-foreground">잔여 비율 {application.landInfo.remainingRatio}%</span>
                   </div>
                 </div>
