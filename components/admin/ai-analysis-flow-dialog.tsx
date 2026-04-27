@@ -123,10 +123,10 @@ export function AIAnalysisFlowDialog({
           </DialogTitle>
           <button
             onClick={() => onOpenChange(false)}
-            className="rounded-full p-1.5 hover:bg-gray-100 transition-colors"
+            className="transition-colors"
             aria-label="닫기"
           >
-            <X className="h-5 w-5 text-gray-500" />
+            <X className="h-8 w-8 text-gray-400 hover:text-gray-600" />
           </button>
         </DialogHeader>
 
