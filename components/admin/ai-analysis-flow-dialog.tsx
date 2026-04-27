@@ -187,11 +187,13 @@ export function AIAnalysisFlowDialog({
 
   // 판정 결과
   const judgment = aiResult?.provisionalJudgment || "검토필요";
-  const judgmentStyle = {
+  const judgmentStyles: Record<string, { bg: string; text: string; icon: typeof CheckCircle2 }> = {
     "매수": { bg: "bg-green-500", text: "text-white", icon: CheckCircle2 },
+    "매수불가": { bg: "bg-red-500", text: "text-white", icon: XCircle },
     "기각": { bg: "bg-red-500", text: "text-white", icon: XCircle },
     "검토필요": { bg: "bg-amber-500", text: "text-white", icon: AlertTriangle },
-  }[judgment];
+  };
+  const judgmentStyle = judgmentStyles[judgment] || judgmentStyles["검토필요"];
   const JudgmentIcon = judgmentStyle.icon;
 
   return (
