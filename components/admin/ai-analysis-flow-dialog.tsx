@@ -135,16 +135,16 @@ export function AIAnalysisFlowDialog({
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: animationStep >= 1 ? 1 : 0.3 }}
-            className="flex gap-4"
+            className="flex flex-col"
           >
             {/* 타이틀 */}
-            <div className="w-24 flex-shrink-0 pt-2">
+            <div className="flex justify-center mb-4">
               <h3 className="text-sm font-bold text-gray-700">
                 토지 분류
               </h3>
             </div>
             {/* 4개 경로 컬럼 */}
-            <div className="flex-1 grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-3">
             {/* 대지 경로 */}
             <PathColumn
               type="대지"
@@ -288,7 +288,7 @@ export function AIAnalysisFlowDialog({
               animationStep={animationStep}
               criteria={[
                 {
-                  title: "면적 기준 미달 여부",
+                  title: "면적 ���준 미달 여부",
                   items: [
                     { label: "기본 면적", value: "330㎡ 이하", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && areaMet,
                       explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 330㎡`,
@@ -332,11 +332,11 @@ export function AIAnalysisFlowDialog({
             animate={{ opacity: animationStep >= 6 ? 1 : 0.3, y: 0 }}
             className="mt-6 pt-4 border-t border-gray-200"
           >
-            <div className="flex gap-4">
-              <div className="w-24 flex-shrink-0 pt-2">
+            <div className="flex flex-col">
+              <div className="flex justify-center mb-3">
                 <h4 className="text-sm font-bold text-gray-700">담당자 검토</h4>
               </div>
-              <div className="flex-1 grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
                   finalJudgment === "매수" ? "border-green-500 bg-green-50" : "border-gray-200 bg-gray-50"
@@ -365,11 +365,11 @@ export function AIAnalysisFlowDialog({
             animate={{ opacity: animationStep >= 7 ? 1 : 0.3, y: 0 }}
             className="mt-4"
           >
-            <div className="flex gap-4">
-              <div className="w-24 flex-shrink-0 pt-2">
+            <div className="flex flex-col">
+              <div className="flex justify-center mb-3">
                 <h4 className="text-sm font-bold text-gray-700">최종 결정</h4>
               </div>
-              <div className="flex-1 grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <motion.div 
                   animate={{ scale: finalJudgment === "매수" && animationStep >= 7 ? 1.02 : 1 }}
                   className={cn(
