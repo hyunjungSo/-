@@ -542,29 +542,30 @@ function PathColumn({
               {/* 카드 타이틀 + 체크박스 + 뱃지 */}
               <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-2">
-                  {/* 체크박스 - 충족시에만 체크 표시 */}
+                  {/* 체크박스 - 충족시 체크, 미충족시 X 표시 */}
                   <div className={cn(
                     "flex-shrink-0 w-4 h-4 rounded-sm flex items-center justify-center border",
-                    isActive && c.items.some(item => item.isMet) 
+                    isActive && conditionStatus && c.items.some(item => item.isMet) 
                       ? "bg-green-500 border-green-500" 
-                      : "border-gray-300 bg-white"
+                      : isActive && conditionStatus && !c.items.some(item => item.isMet)
+                        ? "bg-red-500 border-red-500"
+                        : "border-gray-300 bg-white"
                   )}>
-                    {isActive && c.items.some(item => item.isMet) && (
+                    {isActive && conditionStatus && c.items.some(item => item.isMet) && (
                       <Check className="h-3 w-3 text-white" />
+                    )}
+                    {isActive && conditionStatus && !c.items.some(item => item.isMet) && (
+                      <X className="h-3 w-3 text-white" />
                     )}
                   </div>
                   <p className="text-sm font-semibold text-gray-700">
                     {c.title}
                   </p>
                 </div>
-                {isActive && conditionStatus && (
-                  <span className={cn(
-                    "text-sm font-bold px-2 py-0.5 rounded",
-                    c.items.some(item => item.isMet) 
-                      ? "bg-green-500 text-white" 
-                      : "bg-red-500 text-white"
-                  )}>
-                    {c.items.some(item => item.isMet) ? "충족" : "미충족"}
+                {/* 충족 뱃지만 표시 (미충족 뱃지 제거) */}
+                {isActive && conditionStatus && c.items.some(item => item.isMet) && (
+                  <span className="text-sm font-bold px-2 py-0.5 rounded bg-green-500 text-white">
+                    충족
                   </span>
                 )}
               </div>
