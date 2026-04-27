@@ -122,20 +122,20 @@ export function AIAnalysisFlowDialog({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="p-6">
+        <div className="p-4">
           {/* 토지 분류 헤더 */}
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: animationStep >= 1 ? 1 : 0.3 }}
-            className="text-center mb-6"
+            className="text-center mb-4"
           >
-            <h3 className="text-lg font-bold text-gray-800 border-b-2 border-gray-800 inline-block pb-1">
+            <h3 className="text-sm font-bold text-gray-700 border-b border-gray-300 inline-block pb-1">
               토지 분류
             </h3>
           </motion.div>
 
           {/* 4개 경로 컬럼 */}
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-4 gap-3">
             {/* 대지 경로 */}
             <PathColumn
               type="대지"
@@ -320,28 +320,28 @@ export function AIAnalysisFlowDialog({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: animationStep >= 6 ? 1 : 0.3, y: 0 }}
-            className="mt-8 pt-6 border-t-2 border-gray-200"
+            className="mt-6 pt-4 border-t border-gray-200"
           >
-            <div className="flex items-center gap-8">
-              <h4 className="text-lg font-bold text-gray-800 whitespace-nowrap">담당자 검토</h4>
-              <div className="flex-1 grid grid-cols-3 gap-4">
+            <div className="flex items-center gap-6">
+              <h4 className="text-sm font-semibold text-gray-700 whitespace-nowrap w-20">담당자 검토</h4>
+              <div className="flex-1 grid grid-cols-3 gap-3">
                 <div className={cn(
-                  "border rounded-lg p-4 text-center transition-all",
-                  finalJudgment === "매수" ? "border-green-500 bg-green-50" : "border-gray-200"
+                  "border rounded p-3 text-center transition-all",
+                  finalJudgment === "매수" ? "border-green-500 bg-green-50" : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className="font-semibold text-gray-800">매수 판단</p>
+                  <p className={cn("text-sm font-medium", finalJudgment === "매수" ? "text-green-700" : "text-gray-500")}>매수 판단</p>
                 </div>
                 <div className={cn(
-                  "border rounded-lg p-4 text-center transition-all",
-                  (finalJudgment === "매수불가" || finalJudgment === "기각") ? "border-red-500 bg-red-50" : "border-gray-200"
+                  "border rounded p-3 text-center transition-all",
+                  (finalJudgment === "매수불가" || finalJudgment === "기각") ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className="font-semibold text-gray-800">기각 판단</p>
+                  <p className={cn("text-sm font-medium", (finalJudgment === "매수불가" || finalJudgment === "기각") ? "text-red-700" : "text-gray-500")}>기각 판단</p>
                 </div>
                 <div className={cn(
-                  "border rounded-lg p-4 text-center transition-all",
-                  finalJudgment === "검토필요" ? "border-amber-500 bg-amber-50" : "border-gray-200"
+                  "border rounded p-3 text-center transition-all",
+                  finalJudgment === "검토필요" ? "border-amber-500 bg-amber-50" : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className="font-semibold text-gray-800">토지보상심의위원회 이관 판단</p>
+                  <p className={cn("text-sm font-medium", finalJudgment === "검토필요" ? "text-amber-700" : "text-gray-500")}>토지보상심의위원회 이관 판단</p>
                 </div>
               </div>
             </div>
@@ -351,14 +351,15 @@ export function AIAnalysisFlowDialog({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: animationStep >= 7 ? 1 : 0.3, y: 0 }}
+            className="mt-4"
           >
-            <div className="flex items-center gap-8">
-              <h4 className="text-sm font-semibold text-gray-700 whitespace-nowrap">최종 결정</h4>
-              <div className="flex-1 grid grid-cols-3 gap-4">
+            <div className="flex items-center gap-6">
+              <h4 className="text-sm font-semibold text-gray-700 whitespace-nowrap w-20">최종 결정</h4>
+              <div className="flex-1 grid grid-cols-3 gap-3">
                 <motion.div 
                   animate={{ scale: finalJudgment === "매수" && animationStep >= 7 ? 1.02 : 1 }}
                   className={cn(
-                    "rounded-lg p-4 text-center font-semibold border transition-all",
+                    "rounded p-3 text-center text-sm font-semibold border transition-all",
                     finalJudgment === "매수" 
                       ? "border-green-500 bg-green-500 text-white" 
                       : "border-gray-200 bg-gray-50 text-gray-400"
@@ -369,7 +370,7 @@ export function AIAnalysisFlowDialog({
                 <motion.div 
                   animate={{ scale: (finalJudgment === "매수불가" || finalJudgment === "기각") && animationStep >= 7 ? 1.02 : 1 }}
                   className={cn(
-                    "rounded-lg p-4 text-center font-semibold border transition-all",
+                    "rounded p-3 text-center text-sm font-semibold border transition-all",
                     (finalJudgment === "매수불가" || finalJudgment === "기각")
                       ? "border-red-500 bg-red-500 text-white" 
                       : "border-gray-200 bg-gray-50 text-gray-400"
@@ -380,7 +381,7 @@ export function AIAnalysisFlowDialog({
                 <motion.div 
                   animate={{ scale: finalJudgment === "검토필요" && animationStep >= 7 ? 1.02 : 1 }}
                   className={cn(
-                    "rounded-lg p-4 text-center font-semibold border transition-all",
+                    "rounded p-3 text-center text-sm font-semibold border transition-all",
                     finalJudgment === "검토필요"
                       ? "border-amber-500 bg-amber-500 text-white" 
                       : "border-gray-200 bg-gray-50 text-gray-400"
@@ -394,21 +395,21 @@ export function AIAnalysisFlowDialog({
         </div>
 
         {/* 푸터 - 현재 케이스 요약 */}
-        <div className="px-6 py-4 border-t border-gray-100 bg-gray-50">
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2">
+        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">
+          <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1.5">
                 <span className="text-gray-500">토지 유형</span>
-                <span className="font-semibold text-gray-800 bg-white px-2 py-0.5 rounded border">{currentLandType}</span>
+                <span className="font-medium text-gray-700 bg-white px-1.5 py-0.5 rounded border text-xs">{currentLandType}</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <span className="text-gray-500">잔여 면적</span>
-                <span className="font-semibold text-gray-800">{remainingArea.toLocaleString()}㎡</span>
+                <span className="font-medium text-gray-700">{remainingArea.toLocaleString()}㎡</span>
                 <span className="text-gray-400">/ 기준 {effectiveThreshold}㎡ {isRatioRelaxed && "(완화)"}</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <span className="text-gray-500">잔여 비율</span>
-                <span className="font-semibold text-gray-800">{remainingRatio}%</span>
+                <span className="font-medium text-gray-700">{remainingRatio}%</span>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -429,7 +430,7 @@ export function AIAnalysisFlowDialog({
   );
 }
 
-// 기준 아이템 타입
+// 기준 아이템 ���입
 interface CriteriaItem {
   label: string;
   value?: string;
@@ -465,26 +466,28 @@ function PathColumn({
   conditionStatus: string | null;
 }) {
   const showHighlight = isActive && animationStep >= 1;
+  // 부모 배경색 (on 상태일 때 green-50/30)
+  const parentBgClass = showHighlight ? "bg-green-50/30" : "bg-white";
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: animationStep >= 1 ? 1 : 0.5, y: 0 }}
       className={cn(
-        "rounded-lg border-2 p-4 transition-all",
+        "rounded-lg border p-3 transition-all",
         showHighlight ? "border-green-500 bg-green-50/30" : "border-gray-200 bg-white"
       )}
     >
-        {/* 경로 헤더 */}
-        <div className={cn(
-          "flex items-center gap-2 mb-4 pb-3 border-b",
-          showHighlight ? "border-green-200" : "border-gray-100"
-        )}>
-          <Icon className={cn("h-5 w-5", showHighlight ? "text-green-600" : "text-gray-400")} />
-          <span className={cn("font-bold", showHighlight ? "text-green-800" : "text-gray-500")}>
-            {type} 경로
-          </span>
-        </div>
+      {/* 경로 헤더 */}
+      <div className={cn(
+        "flex items-center gap-1.5 mb-3 pb-2 border-b",
+        showHighlight ? "border-green-200" : "border-gray-100"
+      )}>
+        <Icon className={cn("h-4 w-4", showHighlight ? "text-green-600" : "text-gray-400")} />
+        <span className={cn("text-sm font-bold", showHighlight ? "text-green-800" : "text-gray-500")}>
+          {type} 경로
+        </span>
+      </div>
 
       {/* 기준 카드들 */}
       {criteria.map((c, idx) => (
@@ -492,32 +495,31 @@ function PathColumn({
           key={idx}
           initial={{ opacity: 0 }}
           animate={{ opacity: animationStep >= c.showStep ? 1 : 0.4 }}
-          className="mb-3"
+          className="mb-2"
         >
           {c.title === null ? (
-            <div className="border border-dashed border-gray-200 rounded-lg p-3 bg-gray-50">
-              <p className="text-sm text-gray-400 italic text-center">해당 없음</p>
+            <div className={cn(
+              "border border-dashed rounded p-2",
+              showHighlight ? "border-green-300 bg-green-50/30" : "border-gray-200 bg-gray-50"
+            )}>
+              <p className="text-xs text-gray-400 italic text-center">해당 없음</p>
             </div>
           ) : (
             <div className={cn(
-              "border rounded-lg p-3 transition-all",
-              isActive && c.items.some(item => item.isMet)
-                ? "border-green-400 bg-green-50"
-                : isActive 
-                  ? "border-gray-300 bg-white"
-                  : "border-gray-200 bg-white"
+              "rounded p-2 transition-all",
+              showHighlight ? "bg-green-50/30" : "bg-white"
             )}>
               {/* 카드 타이틀 + 뱃지 */}
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-1.5">
                 <p className={cn(
-                  "text-sm font-semibold",
+                  "text-xs font-semibold",
                   isActive && c.items.some(item => item.isMet) ? "text-green-700" : "text-gray-700"
                 )}>
                   {c.title}
                 </p>
                 {isActive && (
                   <span className={cn(
-                    "text-xs font-bold px-2 py-0.5 rounded",
+                    "text-[10px] font-bold px-1.5 py-0.5 rounded",
                     c.items.some(item => item.isMet) 
                       ? "bg-green-500 text-white" 
                       : "bg-red-500 text-white"
@@ -528,47 +530,50 @@ function PathColumn({
               </div>
 
               {/* 기준 항목들 */}
-              <div className="space-y-1.5 pl-1">
+              <div className="space-y-1">
                 {c.items.map((item, itemIdx) => (
                   <div 
                     key={itemIdx}
-                    className="flex items-start gap-2 text-sm px-2 py-1"
+                    className={cn(
+                      "flex items-start gap-1.5 text-xs py-0.5 rounded",
+                      showHighlight ? "bg-green-50/30" : "bg-transparent"
+                    )}
                   >
                     {item.isSelected && (
                       <div className={cn(
-                        "flex-shrink-0 w-4 h-4 rounded-sm flex items-center justify-center mt-0.5",
-                        item.isMet ? "bg-green-500" : "border border-gray-300"
+                        "flex-shrink-0 w-3.5 h-3.5 rounded-sm flex items-center justify-center mt-0.5",
+                        item.isMet ? "bg-green-500" : "border border-gray-300 bg-white"
                       )}>
-                        {item.isMet && <Check className="h-3 w-3 text-white" />}
+                        {item.isMet && <Check className="h-2.5 w-2.5 text-white" />}
                       </div>
                     )}
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1 flex-wrap">
                         <span className={cn(
-                          "text-gray-700",
-                          item.isSelected && item.isMet && "text-green-700 font-semibold",
-                          item.isSelected && !item.isMet && "text-red-700 font-semibold"
+                          "text-gray-600",
+                          item.isSelected && item.isMet && "text-green-700 font-medium",
+                          item.isSelected && !item.isMet && "text-red-600 font-medium"
                         )}>
                           {item.label}
                         </span>
                         {item.value && (
-                          <span className="text-sm text-gray-500">
+                          <span className="text-[10px] text-gray-400">
                             {item.value}
                           </span>
                         )}
                       </div>
                       {item.subLabel && (
-                        <p className="text-xs text-gray-400 mt-0.5">{item.subLabel}</p>
+                        <p className="text-[10px] text-gray-400 mt-0.5">{item.subLabel}</p>
                       )}
                       {/* 충족/미충족 상세 설명 */}
                       {item.isSelected && item.isMet && item.explanationMet && (
-                        <p className="text-xs text-green-600 mt-1 font-medium">
-                          ✓ {item.explanationMet}
+                        <p className="text-[10px] text-green-600 mt-0.5">
+                          {item.explanationMet}
                         </p>
                       )}
                       {item.isSelected && !item.isMet && item.explanationUnmet && (
-                        <p className="text-xs text-red-600 mt-1 font-medium">
-                          ✗ {item.explanationUnmet}
+                        <p className="text-[10px] text-red-500 mt-0.5">
+                          {item.explanationUnmet}
                         </p>
                       )}
                     </div>
@@ -578,7 +583,7 @@ function PathColumn({
 
               {/* 참고 사항 */}
               {c.note && (
-                <p className="text-xs text-gray-500 mt-2 pl-1">{c.note}</p>
+                <p className="text-[10px] text-gray-400 mt-1.5">{c.note}</p>
               )}
             </div>
           )}
@@ -589,23 +594,20 @@ function PathColumn({
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: animationStep >= 5 ? 1 : 0.4 }}
-        className="text-sm space-y-1 mb-4 py-3 border-t border-gray-100"
+        className="text-[11px] space-y-0.5 mb-3 py-2 border-t border-gray-100"
       >
         <p className={cn(
-          "flex items-center gap-1",
-          conditionStatus === "충족" ? "text-green-600 font-semibold" : "text-gray-500"
+          conditionStatus === "충족" ? "text-green-600 font-medium" : "text-gray-400"
         )}>
           어느 하나라도 해당 시 조건 <span className="text-green-600">충족</span> → 수용
         </p>
         <p className={cn(
-          "flex items-center gap-1",
-          conditionStatus === "미충족" ? "text-red-600 font-semibold" : "text-gray-500"
+          conditionStatus === "미충족" ? "text-red-600 font-medium" : "text-gray-400"
         )}>
           전체 미해당 시 조건 <span className="text-red-600">미충족</span> → 수용
         </p>
         <p className={cn(
-          "flex items-center gap-1",
-          conditionStatus === "검토필요" ? "text-amber-600 font-semibold" : "text-gray-500"
+          conditionStatus === "검토필요" ? "text-amber-600 font-medium" : "text-gray-400"
         )}>
           실측 및 추가 검토 필요시 → <span className="text-amber-600">검토필요</span>
         </p>
@@ -619,15 +621,15 @@ function PathColumn({
       >
         {conditionStatus ? (
           <span className={cn(
-            "px-6 py-2 rounded-full text-sm font-bold",
-            conditionStatus === "충족" ? "bg-green-100 text-green-700" :
-            conditionStatus === "미충족" ? "bg-red-100 text-red-700" :
-            "bg-amber-100 text-amber-700"
+            "px-4 py-1.5 rounded-full text-xs font-bold",
+            conditionStatus === "충족" ? "bg-green-500 text-white" :
+            conditionStatus === "미충족" ? "bg-red-500 text-white" :
+            "bg-amber-500 text-white"
           )}>
             {conditionStatus}
           </span>
         ) : (
-          <span className="px-6 py-2 rounded-full text-sm font-bold bg-gray-100 text-gray-400">
+          <span className="px-4 py-1.5 rounded-full text-xs font-bold bg-gray-100 text-gray-400">
             -
           </span>
         )}
