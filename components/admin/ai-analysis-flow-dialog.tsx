@@ -271,11 +271,7 @@ export function AIAnalysisFlowDialog({
                   ],
                   showStep: 3,
                 },
-                {
-                  title: null, // 해당 없음
-                  items: [],
-                  showStep: 4,
-                },
+                
               ]}
               conditionStatus={currentLandType === "산지" ? conditionStatus : null}
             />
@@ -292,7 +288,7 @@ export function AIAnalysisFlowDialog({
                   items: [
                     { label: "기본 면적", value: "330㎡ 이하", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && areaMet,
                       explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 330㎡`,
-                      explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 330㎡` },
+                      explanationUnmet: `잔여면�� ${remainingArea.toLocaleString()}㎡ > 기준 330㎡` },
                     { label: "또는", value: "잔여 비율 50% 이하", isSelected: currentLandType === "그밖의토지" && remainingRatio <= 50, isMet: currentLandType === "그밖의토지" && remainingRatio <= 50,
                       explanationMet: `잔여비율 ${remainingRatio.toFixed(1)}% ≤ ���준 50%`,
                       explanationUnmet: `잔여비율 ${remainingRatio.toFixed(1)}% > 기준 50%` },
