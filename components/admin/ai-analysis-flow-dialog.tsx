@@ -347,11 +347,25 @@ export function AIAnalysisFlowDialog({
             </div>
           </motion.div>
 
+          {/* 담당자 검토에서 최종 결정으로 이어지는 흐름선 */}
+          <div className="flex justify-center my-3">
+            <div className="relative h-8 w-0.5 bg-gray-200 overflow-hidden">
+              {animationStep >= 7 && (
+                <motion.div
+                  className="absolute w-full bg-green-500"
+                  initial={{ height: 0, top: 0 }}
+                  animate={{ height: "100%" }}
+                  transition={{ duration: 0.4 }}
+                  style={{ boxShadow: "0 0 8px 2px rgba(34, 197, 94, 0.6)" }}
+                />
+              )}
+            </div>
+          </div>
+
           {/* 최종 결정 섹션 */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: animationStep >= 7 ? 1 : 0.3, y: 0 }}
-            className="mt-6"
           >
             <div className="flex items-center gap-8">
               <h4 className="text-sm font-semibold text-gray-700 whitespace-nowrap">최종 결정</h4>
@@ -449,6 +463,29 @@ interface Criteria {
   showStep: number;
 }
 
+// 흐르는 라인 컴포넌트
+function FlowingLine({ active, delay = 0 }: { active: boolean; delay?: number }) {
+  return (
+    <div className="relative h-8 flex justify-center">
+      <div className="w-0.5 h-full bg-gray-200 relative overflow-hidden">
+        {active && (
+          <motion.div
+            className="absolute w-full bg-green-500"
+            initial={{ top: "-100%", height: "100%" }}
+            animate={{ top: "100%" }}
+            transition={{ 
+              duration: 0.5, 
+              delay: delay,
+              ease: "easeInOut"
+            }}
+            style={{ boxShadow: "0 0 8px 2px rgba(34, 197, 94, 0.6)" }}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
 // 경로 컬럼 컴포넌트
 function PathColumn({
   type,
@@ -468,33 +505,54 @@ function PathColumn({
   const showHighlight = isActive && animationStep >= 1;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: animationStep >= 1 ? 1 : 0.5, y: 0 }}
-      className={cn(
-        "rounded-lg border-2 p-4 transition-all",
-        showHighlight ? "border-blue-500 bg-blue-50/50 shadow-lg" : "border-gray-200 bg-white"
+    <div className="relative">
+      {/* 상단에서 내려오는 연결선 */}
+      {isActive && animationStep >= 1 && (
+        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 h-6 w-0.5 overflow-hidden">
+          <motion.div
+            className="w-full bg-green-500"
+            initial={{ height: 0 }}
+            animate={{ height: "100%" }}
+            transition={{ duration: 0.3 }}
+            style={{ boxShadow: "0 0 8px 2px rgba(34, 197, 94, 0.6)" }}
+          />
+        </div>
       )}
-    >
-      {/* 경로 헤더 */}
-      <div className={cn(
-        "flex items-center gap-2 mb-4 pb-3 border-b",
-        showHighlight ? "border-blue-200" : "border-gray-100"
-      )}>
-        <Icon className={cn("h-5 w-5", showHighlight ? "text-blue-600" : "text-gray-400")} />
-        <span className={cn("font-bold", showHighlight ? "text-blue-800" : "text-gray-500")}>
-          {type} 경로
-        </span>
-      </div>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: animationStep >= 1 ? 1 : 0.5, y: 0 }}
+        className={cn(
+          "rounded-lg border-2 p-4 transition-all relative",
+          showHighlight ? "border-green-500 bg-green-50/30" : "border-gray-200 bg-white"
+        )}
+      >
+        {/* 경로 헤더 */}
+        <div className={cn(
+          "flex items-center gap-2 mb-4 pb-3 border-b",
+          showHighlight ? "border-green-200" : "border-gray-100"
+        )}>
+          <Icon className={cn("h-5 w-5", showHighlight ? "text-green-600" : "text-gray-400")} />
+          <span className={cn("font-bold", showHighlight ? "text-green-800" : "text-gray-500")}>
+            {type} 경로
+          </span>
+        </div>
 
       {/* 기준 카드들 */}
       {criteria.map((c, idx) => (
-        <motion.div
-          key={idx}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: animationStep >= c.showStep ? 1 : 0.4 }}
-          className="mb-3"
-        >
+        <div key={idx}>
+          {/* 카드 사이 연결선 */}
+          {idx > 0 && isActive && (
+            <FlowingLine 
+              active={animationStep >= c.showStep} 
+              delay={(c.showStep - 2) * 0.3}
+            />
+          )}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: animationStep >= c.showStep ? 1 : 0.4 }}
+            className="relative"
+          >
           {c.title === null ? (
             <div className="border border-dashed border-gray-200 rounded-lg p-3 bg-gray-50">
               <p className="text-sm text-gray-400 italic text-center">해당 없음</p>
@@ -505,7 +563,7 @@ function PathColumn({
               isActive && c.items.some(item => item.isMet)
                 ? "border-green-400 bg-green-50"
                 : isActive 
-                  ? "border-blue-300 bg-white"
+                  ? "border-gray-300 bg-white"
                   : "border-gray-200 bg-white"
             )}>
               {/* 카드 타이틀 + 뱃지 */}
@@ -584,7 +642,13 @@ function PathColumn({
             </div>
           )}
         </motion.div>
+        </div>
       ))}
+
+      {/* 판정 조건으로 연결선 */}
+      {isActive && (
+        <FlowingLine active={animationStep >= 5} delay={0.9} />
+      )}
 
       {/* 판정 조건 */}
       <motion.div
@@ -633,6 +697,21 @@ function PathColumn({
           </span>
         )}
       </motion.div>
-    </motion.div>
+      </motion.div>
+      
+      {/* 하단으로 이어지는 연결선 */}
+      {isActive && animationStep >= 6 && (
+        <div className="flex justify-center h-8 overflow-hidden">
+          <motion.div
+            className="w-0.5 bg-green-500"
+            initial={{ height: 0 }}
+            animate={{ height: "100%" }}
+            transition={{ duration: 0.3, delay: 0.3 }}
+            style={{ boxShadow: "0 0 8px 2px rgba(34, 197, 94, 0.6)" }}
+          />
+        </div>
+      )}
+      {!isActive && <div className="h-8" />}
+    </div>
   );
 }
