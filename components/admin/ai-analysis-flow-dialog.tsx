@@ -18,6 +18,7 @@ import {
   Star,
   Layers,
   Check,
+  X,
 } from "lucide-react";
 
 interface AIAnalysisFlowDialogProps {
@@ -116,10 +117,17 @@ export function AIAnalysisFlowDialog({
         style={{ width: '75vw', maxWidth: '1400px', minWidth: '1000px' }}
       >
         {/* 헤더 */}
-        <DialogHeader className="px-6 pt-5 pb-4 bg-white sticky top-0 z-10 border-b border-gray-100">
+        <DialogHeader className="px-6 pt-4 pb-4 bg-white sticky top-0 z-10 border-b border-gray-100 flex flex-row items-center justify-between">
           <DialogTitle className="text-lg font-semibold text-foreground">
             AI 분석 프로세스
           </DialogTitle>
+          <button
+            onClick={onClose}
+            className="rounded-full p-1.5 hover:bg-gray-100 transition-colors"
+            aria-label="닫기"
+          >
+            <X className="h-5 w-5 text-gray-500" />
+          </button>
         </DialogHeader>
 
         <div className="p-4">
