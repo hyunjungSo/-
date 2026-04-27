@@ -37,10 +37,10 @@ const landTypeIcons: Record<LandType, typeof Home> = {
 };
 
 const landTypeColors: Record<LandType, string> = {
-  "대지": "bg-blue-500",
+  "대지": "bg-green-500",
   "농지": "bg-green-500", 
-  "산지": "bg-emerald-600",
-  "그밖의토지": "bg-gray-500",
+  "산지": "bg-green-500",
+  "그밖의토지": "bg-green-500",
 };
 
 export function AIAnalysisFlowDialog({
@@ -116,7 +116,7 @@ export function AIAnalysisFlowDialog({
             animationStep >= 1 ? "opacity-100" : "opacity-30"
           )}>
             <div className="text-center mb-4">
-              <span className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground">
+              <span className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-4 py-1.5 text-sm font-semibold text-white">
                 STEP 1. 토지 분류
               </span>
             </div>
@@ -152,7 +152,7 @@ export function AIAnalysisFlowDialog({
                 <div key={type} className="flex justify-center">
                   <ChevronDown className={cn(
                     "h-5 w-5 transition-all duration-500",
-                    isActive ? "text-primary" : "text-border"
+                    isActive ? "text-green-500" : "text-border"
                   )} />
                 </div>
               );
@@ -165,7 +165,7 @@ export function AIAnalysisFlowDialog({
             animationStep >= 2 ? "opacity-100" : "opacity-30"
           )}>
             <div className="text-center mb-3">
-              <span className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground">
+              <span className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-4 py-1.5 text-sm font-semibold text-white">
                 STEP 2. 면적 기준 미달 여부
               </span>
             </div>
@@ -226,7 +226,7 @@ export function AIAnalysisFlowDialog({
                 <div key={type} className="flex justify-center">
                   <ChevronDown className={cn(
                     "h-5 w-5 transition-all duration-500",
-                    isActive ? "text-primary" : "text-border"
+                    isActive ? "text-green-500" : "text-border"
                   )} />
                 </div>
               );
@@ -239,7 +239,7 @@ export function AIAnalysisFlowDialog({
             animationStep >= 3 ? "opacity-100" : "opacity-30"
           )}>
             <div className="text-center mb-3">
-              <span className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground">
+              <span className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-4 py-1.5 text-sm font-semibold text-white">
                 STEP 3. 접면 도로/수로 상실 여부
               </span>
             </div>
@@ -295,7 +295,7 @@ export function AIAnalysisFlowDialog({
                 <div key={type} className="flex justify-center">
                   <ChevronDown className={cn(
                     "h-5 w-5 transition-all duration-500",
-                    isActive ? "text-primary" : "text-border"
+                    isActive ? "text-green-500" : "text-border"
                   )} />
                 </div>
               );
@@ -308,7 +308,7 @@ export function AIAnalysisFlowDialog({
             animationStep >= 4 ? "opacity-100" : "opacity-30"
           )}>
             <div className="text-center mb-3">
-              <span className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground">
+              <span className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-4 py-1.5 text-sm font-semibold text-white">
                 STEP 4. 형상 부정형으로 변경
               </span>
             </div>
@@ -365,7 +365,7 @@ export function AIAnalysisFlowDialog({
                 <div key={type} className="flex justify-center">
                   <ChevronDown className={cn(
                     "h-5 w-5 transition-all duration-500",
-                    isActive ? "text-primary" : "text-border"
+                    isActive ? "text-green-500" : "text-border"
                   )} />
                 </div>
               );
@@ -378,7 +378,7 @@ export function AIAnalysisFlowDialog({
             animationStep >= 5 ? "opacity-100" : "opacity-30"
           )}>
             <div className="text-center mb-3">
-              <span className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground">
+              <span className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-4 py-1.5 text-sm font-semibold text-white">
                 STEP 5. 판정 기준
               </span>
             </div>
@@ -489,7 +489,7 @@ function PathBox({
         active
           ? checked
             ? "border-green-500 bg-green-50"
-            : "border-primary bg-primary/5"
+            : "border-green-500 bg-green-50/30"
           : "border-border bg-muted/30",
         empty && "border-dashed"
       )}
