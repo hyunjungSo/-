@@ -44,13 +44,21 @@ export function AIAnalysisFlowDialog({
   const [animationStep, setAnimationStep] = useState(0);
 
   const currentLandType = (landInfo.landType || "그밖의토지") as LandType;
-  const remainingArea = landInfo.remainingArea;
-  const remainingRatio = landInfo.remainingRatio;
+  const remainingArea = landInfo.remainingArea || 0;
+  const originalArea = landInfo.originalArea || 0;
+  const includedArea = landInfo.includedArea || 0;
+  const remainingRatio = landInfo.remainingRatio || 0;
+  const originalShape = landInfo.originalShape || "정방형";
+  const remainingShape = landInfo.remainingShape || "정방형";
+  const originalShapeIndex = landInfo.originalShapeIndex || 4.0;
+  const remainingShapeIndex = landInfo.remainingShapeIndex || 4.0;
+  const shapeIndexChange = remainingShapeIndex - originalShapeIndex;
   
-  // 용도지역 추출 (주거/상업/공업)
-  const zoneType = landInfo.zoneType || "주거";
+  // 용도지역 추출 (기본값: 주거)
+  // 실제로는 landInfo에 별도 필드가 있어야 함. 현재는 임의로 "주거"로 설정
+  const zoneType = "주거";
   
-  // 면적 기준 계산
+  // 면적 기준 계산 (PRD 기준)
   const getAreaThreshold = (type: LandType, zone: string) => {
     if (type === "대지") {
       if (zone.includes("상업")) return { base: 150, relaxed: 225, label: "상업" };
@@ -67,10 +75,15 @@ export function AIAnalysisFlowDialog({
   const effectiveThreshold = isRatioRelaxed ? areaThreshold.relaxed : areaThreshold.base;
   const areaMet = remainingArea <= effectiveThreshold;
 
-  // 물리적 조건
-  const accessRoadLost = aiResult?.accessRoadConditionMet === false;
-  const shapeChanged = (landInfo.remainingShapeIndex || 0) - (landInfo.originalShapeIndex || 0) >= 1.0 ||
-    ["삼각형", "역삼각형", "자루형", "부정형"].includes(landInfo.remainingShape || "");
+  // 물리적 조건 (aiResult에서 가져오기)
+  const accessRoadLost = aiResult?.accessRoadLost || false;
+  const waterChannelLost = aiResult?.waterChannelLost || false;
+  const farmMachineDifficulty = aiResult?.farmMachineDifficulty || false;
+  const isBlindLand = aiResult?.isBlindLand || false;
+  
+  // 형상 변경 여부
+  const isIrregularShape = ["삼각형", "역삼각형", "자루형", "부정형"].includes(remainingShape);
+  const shapeChanged = shapeIndexChange >= 1.0 || isIrregularShape;
 
   // 최종 판정
   const finalJudgment = aiResult?.provisionalJudgment || "검토필요";
@@ -169,11 +182,11 @@ export function AIAnalysisFlowDialog({
                   title: "형상 부정형으로 변경",
                   items: [
                     { label: "사각형 폭: 5m 이하", isSelected: currentLandType === "대지", isMet: currentLandType === "대지" && shapeChanged,
-                      explanationMet: "형상 변경으로 사각형 폭 5m 이하 확인됨",
-                      explanationUnmet: "사각형 폭 5m 초과 - 형상 기준 미해당" },
+                      explanationMet: `형상 변경: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})`,
+                      explanationUnmet: `형상 유지: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})` },
                     { label: "삼각형 한 변: 11m 이하", isSelected: currentLandType === "대지", isMet: currentLandType === "대지" && shapeChanged,
-                      explanationMet: "형상 변경으로 삼각형 한 변 11m 이하 확인됨",
-                      explanationUnmet: "삼각형 한 변 11m 초과 - 형상 기준 미해당" },
+                      explanationMet: `비정형 형상(${remainingShape})으로 기준 충족`,
+                      explanationUnmet: `정형 형상(${remainingShape}) 유지 - 형상 기준 미해당` },
                   ],
                   showStep: 4,
                 },
@@ -203,27 +216,27 @@ export function AIAnalysisFlowDialog({
                 {
                   title: "접면 도로/수로 상실 여부",
                   items: [
-                    { label: "도로/수로 상실로 농지로서의 사용 불가", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && accessRoadLost,
-                      explanationMet: "도로/수로 상실로 농지 사용 불가 확인됨",
-                      explanationUnmet: "도로/수로 정상 - 농지로서 사용 가능" },
+                    { label: "도로/수로 상실로 농지로서의 사용 불가", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && (accessRoadLost || waterChannelLost),
+                      explanationMet: accessRoadLost ? "접면도로 상실 확인됨" : "관개수로 상실 확인됨",
+                      explanationUnmet: "도로/수로 정상 유지 - 농지로서 사용 가능" },
                     { label: "접면도로 상태변경으로 축사부지 건축불가", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && accessRoadLost,
-                      explanationMet: "접면도로 상태변경으로 축사 건축 불가 확인됨",
-                      explanationUnmet: "접면도로 정상 - 축사 건축 가능" },
+                      explanationMet: "접면도로 상태변경으로 축사부지 건축 불가",
+                      explanationUnmet: "접면도로 정상 - 축사부지 건축 가능" },
                   ],
                   showStep: 3,
                 },
                 {
                   title: "농기계 회전 곤란, 형상 부정형 변경",
                   items: [
-                    { label: "농기계 진입 및 회전 곤란", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && shapeChanged,
-                      explanationMet: "형상 변경으로 농기계 진입/회전 곤란 확인됨",
-                      explanationUnmet: "농기계 진입/회전 가능 - 형상 기준 미해당" },
+                    { label: "농기계 진입 및 회전 곤란", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && farmMachineDifficulty,
+                      explanationMet: "민원인 확인: 농기계 진입/회전 곤란 상태",
+                      explanationUnmet: "농기계 진입/회전 가능 상태" },
                     { label: "사각형 폭: 5m 이하", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && shapeChanged,
-                      explanationMet: "형상 변경으로 사각형 폭 5m 이하 확인됨",
-                      explanationUnmet: "사각형 폭 5m 초과 - 형상 기준 미해당" },
-                    { label: "삼각형 한 변: 11m 이하", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && shapeChanged,
-                      explanationMet: "형상 변경으로 삼각형 한 변 11m 이하 확인됨",
-                      explanationUnmet: "삼각형 한 변 11m 초과 - 형상 기준 미해당" },
+                      explanationMet: `형상 변경: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})`,
+                      explanationUnmet: `형상 유지: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})` },
+                    { label: "삼각형 한 변: 11m 이하", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && isIrregularShape,
+                      explanationMet: `비정형 형상(${remainingShape})으로 기준 충족`,
+                      explanationUnmet: `정형 형상(${remainingShape}) 유지 - 형상 기준 미해당` },
                   ],
                   showStep: 4,
                 },
@@ -299,12 +312,12 @@ export function AIAnalysisFlowDialog({
                 {
                   title: "양분된 토지 / 형상 변경",
                   items: [
-                    { label: "일단의 토지가 양분되어 잔여지 발생", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged,
-                      explanationMet: "토지 양분으로 잔여지 발생 확인됨",
-                      explanationUnmet: "토지 양분 없음 - 양분 기준 미해당" },
+                    { label: "일단의 토지가 양분되어 잔여지 발생", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && includedArea > 0,
+                      explanationMet: `편입면적 ${includedArea.toLocaleString()}㎡로 토지 양분됨`,
+                      explanationUnmet: "편입 없음 - 토지 양분 미발생" },
                     { label: "정형: 잔여지 폭이 기준 이하로 변경", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged, subLabel: "주거용 5m, 상업용 7m, 공업용/농지/산지 10m",
-                      explanationMet: "형상 변경으로 잔여지 폭 기준 이하 확인됨",
-                      explanationUnmet: "잔여지 폭 기준 초과 - 형상 기준 미해당" },
+                      explanationMet: `형상 변경: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})`,
+                      explanationUnmet: `형상 유지: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})` },
                   ],
                   showStep: 4,
                 },
