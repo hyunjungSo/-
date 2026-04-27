@@ -405,27 +405,27 @@ export function AIAnalysisFlowDialog({
         </div>
 
         {/* 푸터 - 현재 케이스 요약 */}
-        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-4">
+        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
-                <span className="text-gray-500">토지 유형</span>
-                <span className="font-medium text-gray-700 bg-white px-2 py-0.5 rounded border">{currentLandType}</span>
+                <span className="text-base text-gray-500">토지 유형</span>
+                <span className="text-base font-semibold text-gray-800 bg-white px-3 py-1 rounded border">{currentLandType}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-gray-500">잔여 면적</span>
-                <span className="font-medium text-gray-700">{remainingArea.toLocaleString()}㎡</span>
-                <span className="text-gray-400">/ 기준 {effectiveThreshold}㎡ {isRatioRelaxed && "(완화)"}</span>
+                <span className="text-base text-gray-500">잔여 면적</span>
+                <span className="text-base font-semibold text-gray-800">{remainingArea.toLocaleString()}㎡</span>
+                <span className="text-sm text-gray-400">/ 기준 {effectiveThreshold}㎡ {isRatioRelaxed && "(완화)"}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-gray-500">잔여 비율</span>
-                <span className="font-medium text-gray-700">{remainingRatio}%</span>
+                <span className="text-base text-gray-500">잔여 비율</span>
+                <span className="text-base font-semibold text-gray-800">{remainingRatio}%</span>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-gray-500">AI 잠정 판정:</span>
+            <div className="flex items-center gap-3">
+              <span className="text-base text-gray-500">AI 잠정 판정:</span>
               <span className={cn(
-                "font-bold px-3 py-1 rounded",
+                "text-base font-bold px-4 py-1.5 rounded",
                 finalJudgment === "매수" ? "bg-green-500 text-white" :
                 (finalJudgment === "매수불가" || finalJudgment === "기각") ? "bg-red-500 text-white" :
                 "bg-amber-500 text-white"
@@ -440,7 +440,7 @@ export function AIAnalysisFlowDialog({
   );
 }
 
-// 기준 아이템 ���입
+// 기준 아이템 타입
 interface CriteriaItem {
   label: string;
   value?: string;
