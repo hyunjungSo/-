@@ -122,7 +122,7 @@ export function AIAnalysisFlowDialog({
             AI 분석 프로세스
           </DialogTitle>
           <button
-            onClick={onClose}
+            onClick={() => onOpenChange(false)}
             className="rounded-full p-1.5 hover:bg-gray-100 transition-colors"
             aria-label="닫기"
           >
