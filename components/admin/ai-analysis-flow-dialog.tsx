@@ -557,7 +557,7 @@ function PathColumn({
                     {c.title}
                   </p>
                 </div>
-                {isActive && (
+                {isActive && conditionStatus && (
                   <span className={cn(
                     "text-sm font-bold px-2 py-0.5 rounded",
                     c.items.some(item => item.isMet) 
