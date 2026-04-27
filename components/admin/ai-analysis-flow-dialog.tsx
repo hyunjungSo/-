@@ -388,9 +388,9 @@ export function AIAnalysisFlowDialog({
             }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="text-center mb-4">
-              <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 px-5 py-2 text-sm font-semibold text-white shadow-lg">
-                <Sparkles className="h-4 w-4" />
+            <div className="mb-4">
+              <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground">
+                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-green-500 text-white text-xs font-bold">6</span>
                 AI 잠정 판정 결과
               </span>
             </div>
