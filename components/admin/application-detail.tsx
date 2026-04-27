@@ -232,6 +232,89 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
+      {/* 필지 선택 영역 (상위 레벨) */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2">
+            <Layers className="h-5 w-5" />
+            대상 필지
+            {isMultipleLands && (
+              <Badge variant="outline" className="ml-1">
+                {allLands.length}필지
+              </Badge>
+            )}
+          </CardTitle>
+          {isMultipleLands && (
+            <CardDescription>
+              필지를 선택하면 아래 모든 정보가 해당 필지 기준으로 표시됩니다.
+            </CardDescription>
+          )}
+        </CardHeader>
+        <CardContent>
+          {isMultipleLands ? (
+            <div className="space-y-3">
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {allLands.map((land, index) => {
+                  const isSelected = selectedLandIndex === index;
+                  const landData = application.landDataList?.[index];
+                  const aiJudgment = application.aiResult?.provisionalJudgment || "-";
+                  return (
+                    <button
+                      key={land.id}
+                      type="button"
+                      onClick={() => setSelectedLandIndex(index)}
+                      className={`flex flex-col items-start gap-1 rounded-lg border p-3 text-left transition-all ${
+                        isSelected 
+                          ? "border-primary bg-primary/5 ring-1 ring-primary" 
+                          : "border-border hover:border-primary/50 hover:bg-muted/30"
+                      }`}
+                    >
+                      <div className="flex w-full items-center justify-between">
+                        <span className="text-sm font-medium">필지 {index + 1}</span>
+                        <Badge 
+                          variant={aiJudgment === "매수" ? "default" : aiJudgment === "매수불가" ? "destructive" : "secondary"} 
+                          className="text-xs"
+                        >
+                          {aiJudgment}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-1">{land.address}</p>
+                      <div className="flex gap-3 text-xs">
+                        <span className="text-primary font-medium">{land.remainingArea.toLocaleString()}m²</span>
+                        <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="flex items-center justify-between rounded-lg bg-muted px-4 py-2">
+                <span className="text-sm font-medium">합산 잔여 면적</span>
+                <span className="text-base font-bold text-primary">
+                  {(application.landInfo.remainingArea + (application.additionalLands?.reduce((sum, l) => sum + l.remainingArea, 0) || 0)).toLocaleString()}m²
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-lg border border-border p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">{application.landInfo.address}</p>
+                  <div className="mt-1 flex gap-4 text-sm">
+                    <span className="text-primary font-medium">{application.landInfo.remainingArea.toLocaleString()}m² 잔여</span>
+                    <span className="text-muted-foreground">잔여 비율 {application.landInfo.remainingRatio}%</span>
+                  </div>
+                </div>
+                <Badge 
+                  variant={application.aiResult?.provisionalJudgment === "매수" ? "default" : "destructive"} 
+                >
+                  AI: {application.aiResult?.provisionalJudgment || "-"}
+                </Badge>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* 일단지 판정 (복수 필지가 있는 경우) */}
       {application.additionalLands && application.additionalLands.length > 0 && (
         <Card className="border-2 border-primary/30 bg-primary/5">
@@ -331,38 +414,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             <CardTitle className="flex items-center gap-2">
               <MapIcon className="h-5 w-5" />
               지도 및 토지 정보
-              {isMultipleLands && (
-                <Badge variant="outline" className="ml-2">
-                  {allLands.length}필지
-                </Badge>
-              )}
             </CardTitle>
             {isMultipleLands && (
               <CardDescription>
-                필지를 선택하여 각 토지의 지적도/항공사진을 확인하세요.
+                필지 {selectedLandIndex + 1}: {allLands[selectedLandIndex].address}
               </CardDescription>
             )}
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* 복수 필지: 필지 선택 */}
-            {isMultipleLands && (
-              <Select
-                value={selectedLandIndex.toString()}
-                onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {allLands.map((land, index) => (
-                    <SelectItem key={land.id} value={index.toString()}>
-                      필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")} ({land.remainingArea.toLocaleString()}m2)
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-
             <Tabs defaultValue="cadastral">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="cadastral">지적도</TabsTrigger>
@@ -385,11 +444,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               const displayLand = allLands[selectedLandIndex];
               return (
                 <div className="space-y-3">
-                  {isMultipleLands && (
-                    <p className="text-sm font-medium text-muted-foreground">
-                      필지 {selectedLandIndex + 1}: {displayLand.address}
-                    </p>
-                  )}
                   <div className="grid grid-cols-2 gap-4 rounded-lg border border-border p-4">
                     <div>
                       <p className="text-base text-muted-foreground">편입 전 면적</p>
@@ -430,7 +484,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               AI 분석 결과
             </CardTitle>
             <CardDescription>
-              토지 유형: {aiResult?.landTypePath || application.landInfo.landType}
+              {isMultipleLands && `필지 ${selectedLandIndex + 1} | `}토지 유형: {aiResult?.landTypePath || allLands[selectedLandIndex].landType}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -531,16 +585,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <CardTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
             담당자 검토
-            {isMultipleLands && (
-              <Badge variant="outline" className="ml-2">
-                <Layers className="mr-1 h-3 w-3" />
-                {allLands.length}필지
-              </Badge>
-            )}
           </CardTitle>
           <CardDescription>
             {isMultipleLands 
-              ? "각 필지별로 AI 분석 결과를 검토하고 필요 시 수정합니다."
+              ? `필지 ${selectedLandIndex + 1}: ${allLands[selectedLandIndex].address} | AI 분석 결과를 검토하고 필요 시 수정합니다.`
               : "AI 분석 결과를 검토하고 필요 시 수정합니다. 자동 판독 불가 항목은 수동으로 입력해주세요."
             }
           </CardDescription>
@@ -615,26 +663,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </tbody>
                   </table>
                 </div>
-              </div>
-
-              {/* 필지 선택 셀렉트박스 */}
-              <div className="flex items-center gap-4">
-                <Label className="shrink-0">상세 검토할 필지</Label>
-                <Select
-                  value={selectedLandIndex.toString()}
-                  onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
-                >
-                  <SelectTrigger className="w-[300px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {allLands.map((land, index) => (
-                      <SelectItem key={land.id} value={index.toString()}>
-                        필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")} ({land.remainingArea.toLocaleString()}m2)
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
               </div>
 
               {/* 선택된 필지 상세 정보: AI 분석 | 민원인 입력 2컬럼 */}
