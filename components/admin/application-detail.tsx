@@ -521,7 +521,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           {/* 복수 필지: 비교 테이블 + 셀렉트박스 + 상세 검토 */}
           {isMultipleLands ? (
             <div className="space-y-6">
-              {/* 선택된 필지 상세 정보: AI 분��� | 민원인 입력 2컬럼 */}
+              {/* 선택된 필지 상세 정보: AI 분석 | 민원인 입력 2컬럼 */}
               {(() => {
                 const selectedLand = allLands[selectedLandIndex];
                 const selectedLandData = application.landDataList?.[selectedLandIndex];
