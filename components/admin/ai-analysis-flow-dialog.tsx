@@ -138,7 +138,7 @@ export function AIAnalysisFlowDialog({
             className="flex flex-col"
           >
             {/* 타이틀 */}
-            <div className="flex justify-center mb-4">
+            <div className="mb-4">
               <h3 className="text-sm font-bold text-gray-700">
                 토지 분류
               </h3>
@@ -289,7 +289,7 @@ export function AIAnalysisFlowDialog({
                     { label: "기본 면적", value: "330㎡ 이하", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && areaMet,
                       explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 330㎡`,
                       explanationUnmet: `잔여면�� ${remainingArea.toLocaleString()}㎡ > 기준 330㎡` },
-                    { label: "또는", value: "잔여 비율 50% 이하", isSelected: currentLandType === "그밖의토지" && remainingRatio <= 50, isMet: currentLandType === "그밖의토지" && remainingRatio <= 50,
+                    { label: "또는", value: "잔여 비율 50% ���하", isSelected: currentLandType === "그밖의토지" && remainingRatio <= 50, isMet: currentLandType === "그밖의토지" && remainingRatio <= 50,
                       explanationMet: `잔여비율 ${remainingRatio.toFixed(1)}% ≤ ���준 50%`,
                       explanationUnmet: `잔여비율 ${remainingRatio.toFixed(1)}% > 기준 50%` },
                   ],
@@ -322,14 +322,14 @@ export function AIAnalysisFlowDialog({
             </div>
           </motion.div>
 
-          {/* 담당자 검토 섹션 */}
+          {/* 담��자 검토 섹션 */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: animationStep >= 6 ? 1 : 0.3, y: 0 }}
             className="mt-6 pt-4 border-t border-gray-200"
           >
             <div className="flex flex-col">
-              <div className="flex justify-center mb-3">
+              <div className="mb-3">
                 <h4 className="text-sm font-bold text-gray-700">담당자 검토</h4>
               </div>
               <div className="grid grid-cols-3 gap-3">
@@ -362,7 +362,7 @@ export function AIAnalysisFlowDialog({
             className="mt-4"
           >
             <div className="flex flex-col">
-              <div className="flex justify-center mb-3">
+              <div className="mb-3">
                 <h4 className="text-sm font-bold text-gray-700">최종 결정</h4>
               </div>
               <div className="grid grid-cols-3 gap-3">
