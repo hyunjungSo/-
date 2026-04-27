@@ -143,9 +143,15 @@ export function AIAnalysisFlowDialog({
                 {
                   title: "면적 기준 미달 여부",
                   items: [
-                    { label: "주거", value: "90㎡ 이하", isSelected: currentLandType === "대지" && areaThreshold.label === "주거", isMet: currentLandType === "대지" && areaThreshold.label === "주거" && areaMet },
-                    { label: "상업", value: "150㎡ 이하", isSelected: currentLandType === "대지" && areaThreshold.label === "상업", isMet: currentLandType === "대지" && areaThreshold.label === "상업" && areaMet },
-                    { label: "공업", value: "330㎡ 이하", isSelected: currentLandType === "대지" && areaThreshold.label === "공업", isMet: currentLandType === "대지" && areaThreshold.label === "공업" && areaMet },
+                    { label: "주거", value: "90㎡ 이하", isSelected: currentLandType === "대지" && areaThreshold.label === "주거", isMet: currentLandType === "대지" && areaThreshold.label === "주거" && areaMet, 
+                      explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}`,
+                      explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}` },
+                    { label: "상업", value: "150㎡ 이하", isSelected: currentLandType === "대지" && areaThreshold.label === "상업", isMet: currentLandType === "대지" && areaThreshold.label === "상업" && areaMet,
+                      explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}`,
+                      explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}` },
+                    { label: "공업", value: "330㎡ 이하", isSelected: currentLandType === "대지" && areaThreshold.label === "공업", isMet: currentLandType === "대지" && areaThreshold.label === "공업" && areaMet,
+                      explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}`,
+                      explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}` },
                   ],
                   note: "잔여 비율 25% 이하 시, 1.5배 완화 적용",
                   showStep: 2,
@@ -153,23 +159,26 @@ export function AIAnalysisFlowDialog({
                 {
                   title: "접면 도로 상태 변경",
                   items: [
-                    { label: "접면도로 상태 변경으로 건축허가 불가", isSelected: currentLandType === "대지", isMet: currentLandType === "대지" && accessRoadLost },
+                    { label: "접면도로 상태 변경으로 건축허가 불가", isSelected: currentLandType === "대지", isMet: currentLandType === "대지" && accessRoadLost,
+                      explanationMet: "접면도로 상태 변경으로 건축 불가 상태 확인됨",
+                      explanationUnmet: "접면도로 상태 변경 없음 - 건축 가능 상태" },
                   ],
                   showStep: 3,
                 },
                 {
                   title: "형상 부정형으로 변경",
                   items: [
-                    { label: "사각형 폭: 5m 이하", isSelected: currentLandType === "대지", isMet: currentLandType === "대지" && shapeChanged },
-                    { label: "삼각형 한 변: 11m 이하", isSelected: currentLandType === "대지", isMet: currentLandType === "대지" && shapeChanged },
+                    { label: "사각형 폭: 5m 이하", isSelected: currentLandType === "대지", isMet: currentLandType === "대지" && shapeChanged,
+                      explanationMet: "형상 변경으로 사각형 폭 5m 이하 확인됨",
+                      explanationUnmet: "사각형 폭 5m 초과 - 형상 기준 미해당" },
+                    { label: "삼각형 한 변: 11m 이하", isSelected: currentLandType === "대지", isMet: currentLandType === "대지" && shapeChanged,
+                      explanationMet: "형상 변경으로 삼각형 한 변 11m 이하 확인됨",
+                      explanationUnmet: "삼각형 한 변 11m 초과 - 형상 기준 미해당" },
                   ],
                   showStep: 4,
                 },
               ]}
               conditionStatus={currentLandType === "대지" ? conditionStatus : null}
-              remainingArea={remainingArea}
-              effectiveThreshold={effectiveThreshold}
-              isRatioRelaxed={isRatioRelaxed}
             />
 
             {/* 농지 경로 */}
@@ -182,33 +191,44 @@ export function AIAnalysisFlowDialog({
                 {
                   title: "면적 기준 미달 여부",
                   items: [
-                    { label: "기본 면적", value: "330㎡ 이하", isSelected: currentLandType === "농지" && !isRatioRelaxed, isMet: currentLandType === "농지" && !isRatioRelaxed && areaMet },
-                    { label: "잔여 비율 25% 이하", value: "495㎡ 이하 (완화)", isSelected: currentLandType === "농지" && isRatioRelaxed, isMet: currentLandType === "농지" && isRatioRelaxed && areaMet, highlight: true },
+                    { label: "기본 면적", value: "330㎡ 이하", isSelected: currentLandType === "농지" && !isRatioRelaxed, isMet: currentLandType === "농지" && !isRatioRelaxed && areaMet,
+                      explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 330㎡`,
+                      explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 330㎡` },
+                    { label: "잔여 비율 25% 이하", value: "495㎡ 이하 (완화)", isSelected: currentLandType === "농지" && isRatioRelaxed, isMet: currentLandType === "농지" && isRatioRelaxed && areaMet, highlight: true,
+                      explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 완화기준 495㎡`,
+                      explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 완화기준 495㎡` },
                   ],
                   showStep: 2,
                 },
                 {
                   title: "접면 도로/수로 상실 여부",
                   items: [
-                    { label: "도로/수로 상실로 농지로서의 사용 불가", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && accessRoadLost },
-                    { label: "접면도로 상태변경으로 축사부지 건축불가", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && accessRoadLost },
+                    { label: "도로/수로 상실로 농지로서의 사용 불가", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && accessRoadLost,
+                      explanationMet: "도로/수로 상실로 농지 사용 불가 확인됨",
+                      explanationUnmet: "도로/수로 정상 - 농지로서 사용 가능" },
+                    { label: "접면도로 상태변경으로 축사부지 건축불가", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && accessRoadLost,
+                      explanationMet: "접면도로 상태변경으로 축사 건축 불가 확인됨",
+                      explanationUnmet: "접면도로 정상 - 축사 건축 가능" },
                   ],
                   showStep: 3,
                 },
                 {
                   title: "농기계 회전 곤란, 형상 부정형 변경",
                   items: [
-                    { label: "농기계 진입 및 회전 곤란", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && shapeChanged },
-                    { label: "사각형 폭: 5m 이하", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && shapeChanged },
-                    { label: "삼각형 한 변: 11m 이하", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && shapeChanged },
+                    { label: "농기계 진입 및 회전 곤란", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && shapeChanged,
+                      explanationMet: "형상 변경으로 농기계 진입/회전 곤란 확인됨",
+                      explanationUnmet: "농기계 진입/회전 가능 - 형상 기준 미해당" },
+                    { label: "사각형 폭: 5m 이하", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && shapeChanged,
+                      explanationMet: "형상 변경으로 사각형 폭 5m 이하 확인됨",
+                      explanationUnmet: "사각형 폭 5m 초과 - 형상 기준 미해당" },
+                    { label: "삼각형 한 변: 11m 이하", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && shapeChanged,
+                      explanationMet: "형상 변경으로 삼각형 한 변 11m 이하 확인됨",
+                      explanationUnmet: "삼각형 한 변 11m 초과 - 형상 기준 미해당" },
                   ],
                   showStep: 4,
                 },
               ]}
               conditionStatus={currentLandType === "농지" ? conditionStatus : null}
-              remainingArea={remainingArea}
-              effectiveThreshold={effectiveThreshold}
-              isRatioRelaxed={isRatioRelaxed}
             />
 
             {/* 산지 경로 */}
@@ -221,15 +241,21 @@ export function AIAnalysisFlowDialog({
                 {
                   title: "면적 기준 미달 여부",
                   items: [
-                    { label: "기본 면적", value: "330㎡ 이하", isSelected: currentLandType === "산지" && !isRatioRelaxed, isMet: currentLandType === "산지" && !isRatioRelaxed && areaMet },
-                    { label: "잔여 비율 25% 이하", value: "495㎡ 이하 (완화)", isSelected: currentLandType === "산지" && isRatioRelaxed, isMet: currentLandType === "산지" && isRatioRelaxed && areaMet, highlight: true },
+                    { label: "기본 면적", value: "330㎡ 이하", isSelected: currentLandType === "산지" && !isRatioRelaxed, isMet: currentLandType === "산지" && !isRatioRelaxed && areaMet,
+                      explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 330㎡`,
+                      explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 330㎡` },
+                    { label: "잔여 비율 25% 이하", value: "495㎡ 이하 (완화)", isSelected: currentLandType === "산지" && isRatioRelaxed, isMet: currentLandType === "산지" && isRatioRelaxed && areaMet, highlight: true,
+                      explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 완화기준 495㎡`,
+                      explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 완화기준 495㎡` },
                   ],
                   showStep: 2,
                 },
                 {
                   title: "접면 도로 상실 여부",
                   items: [
-                    { label: "산지가 도로와 접하였다가 공익사업으로 인해 접한 도로가 없어진 경우", isSelected: currentLandType === "산지", isMet: currentLandType === "산지" && accessRoadLost },
+                    { label: "산지가 도로와 접하였다가 공익사업으로 인해 접한 도로가 없어진 경우", isSelected: currentLandType === "산지", isMet: currentLandType === "산지" && accessRoadLost,
+                      explanationMet: "공익사업으로 접면도로 상실 확인됨",
+                      explanationUnmet: "접면도로 정상 유지 - 도로 상실 기준 미해당" },
                   ],
                   showStep: 3,
                 },
@@ -240,9 +266,6 @@ export function AIAnalysisFlowDialog({
                 },
               ]}
               conditionStatus={currentLandType === "산지" ? conditionStatus : null}
-              remainingArea={remainingArea}
-              effectiveThreshold={effectiveThreshold}
-              isRatioRelaxed={isRatioRelaxed}
             />
 
             {/* 그밖의토지 경로 */}
@@ -255,31 +278,38 @@ export function AIAnalysisFlowDialog({
                 {
                   title: "면적 기준 미달 여부",
                   items: [
-                    { label: "기본 면적", value: "330㎡ 이하", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && areaMet },
-                    { label: "또는", value: "잔여 비율 50% 이하", isSelected: currentLandType === "그밖의토지" && remainingRatio <= 50, isMet: currentLandType === "그밖의토지" && remainingRatio <= 50 },
+                    { label: "기본 면적", value: "330㎡ 이하", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && areaMet,
+                      explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 330㎡`,
+                      explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 330㎡` },
+                    { label: "또는", value: "잔여 비율 50% 이하", isSelected: currentLandType === "그밖의토지" && remainingRatio <= 50, isMet: currentLandType === "그밖의토지" && remainingRatio <= 50,
+                      explanationMet: `잔여비율 ${remainingRatio.toFixed(1)}% ≤ 기준 50%`,
+                      explanationUnmet: `잔여비율 ${remainingRatio.toFixed(1)}% > 기준 50%` },
                   ],
                   showStep: 2,
                 },
                 {
                   title: "진입 곤란",
                   items: [
-                    { label: "절토 및 성토/옹벽 설치 등", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && accessRoadLost },
+                    { label: "절토 및 성토/옹벽 설치 등", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && accessRoadLost,
+                      explanationMet: "절토/성토/옹벽 설치로 진입 곤란 확인됨",
+                      explanationUnmet: "진입 가능 - 진입 곤란 기준 미해당" },
                   ],
                   showStep: 3,
                 },
                 {
                   title: "양분된 토지 / 형상 변경",
                   items: [
-                    { label: "일단의 토지가 양분되어 잔여지 발생", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged },
-                    { label: "정형: 잔여지 폭이 기준 이하로 변경", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged, subLabel: "주거용 5m, 상업용 7m, 공업용/농지/산지 10m" },
+                    { label: "일단의 토지가 양분되어 잔여지 발생", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged,
+                      explanationMet: "토지 양분으로 잔여지 발생 확인됨",
+                      explanationUnmet: "토지 양분 없음 - 양분 기준 미해당" },
+                    { label: "정형: 잔여지 폭이 기준 이하로 변경", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged, subLabel: "주거용 5m, 상업용 7m, 공업용/농지/산지 10m",
+                      explanationMet: "형상 변경으로 잔여지 폭 기준 이하 확인됨",
+                      explanationUnmet: "잔여지 폭 기준 초과 - 형상 기준 미해당" },
                   ],
                   showStep: 4,
                 },
               ]}
               conditionStatus={currentLandType === "그밖의토지" ? conditionStatus : null}
-              remainingArea={remainingArea}
-              effectiveThreshold={effectiveThreshold}
-              isRatioRelaxed={isRatioRelaxed}
             />
           </div>
 
@@ -401,10 +431,12 @@ export function AIAnalysisFlowDialog({
 interface CriteriaItem {
   label: string;
   value?: string;
+  subLabel?: string;
   isSelected: boolean;
   isMet: boolean;
   highlight?: boolean;
-  subLabel?: string;
+  explanationMet?: string;
+  explanationUnmet?: string;
 }
 
 interface Criteria {
@@ -422,9 +454,6 @@ function PathColumn({
   animationStep,
   criteria,
   conditionStatus,
-  remainingArea,
-  effectiveThreshold,
-  isRatioRelaxed,
 }: {
   type: LandType;
   icon: typeof Home;
@@ -432,9 +461,6 @@ function PathColumn({
   animationStep: number;
   criteria: Criteria[];
   conditionStatus: string | null;
-  remainingArea: number;
-  effectiveThreshold: number;
-  isRatioRelaxed: boolean;
 }) {
   const showHighlight = isActive && animationStep >= 1;
 
@@ -538,14 +564,14 @@ function PathColumn({
                         <p className="text-xs text-gray-400 mt-0.5">{item.subLabel}</p>
                       )}
                       {/* 충족/미충족 상세 설명 */}
-                      {item.isSelected && item.isMet && (
+                      {item.isSelected && item.isMet && item.explanationMet && (
                         <p className="text-xs text-green-600 mt-1 font-medium">
-                          ✓ 기준 충족: 잔여면적 {remainingArea.toLocaleString()}㎡ ≤ 기준 {effectiveThreshold.toLocaleString()}㎡ {isRatioRelaxed && "(완화적용)"}
+                          ✓ {item.explanationMet}
                         </p>
                       )}
-                      {item.isSelected && !item.isMet && (
+                      {item.isSelected && !item.isMet && item.explanationUnmet && (
                         <p className="text-xs text-red-600 mt-1 font-medium">
-                          ✗ 기준 미충족: 잔여면적 {remainingArea.toLocaleString()}㎡ {">"} 기준 {effectiveThreshold.toLocaleString()}㎡ {isRatioRelaxed && "(완화적용)"}
+                          ✗ {item.explanationUnmet}
                         </p>
                       )}
                     </div>
