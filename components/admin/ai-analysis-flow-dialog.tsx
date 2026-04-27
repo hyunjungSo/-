@@ -91,10 +91,13 @@ export function AIAnalysisFlowDialog({
   const finalJudgment = aiResult?.provisionalJudgment || "검토필요";
   const anyConditionMet = areaMet || accessRoadLost || shapeChanged;
 
-  // 조건 상태 결정
+  // 조건 상태 결정 (AI 판정 결과 우선 적용)
   const getConditionStatus = () => {
-    if (anyConditionMet) return "충족";
+    // AI 판정이 검토필요인 경우 검토필요 반환
     if (finalJudgment === "검토필요") return "검토필요";
+    // AI 판정이 매수인 경우 충족 반환
+    if (finalJudgment === "매수") return "충족";
+    // AI 판정이 매수불가/기각인 경우 미충족 반환
     return "미충족";
   };
   const conditionStatus = getConditionStatus();

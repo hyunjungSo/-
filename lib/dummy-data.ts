@@ -128,6 +128,32 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.2153, lng: 127.2955 },
     ],
   },
+  // 검토필요 케이스 (면적 기준 애매, 실측 필요)
+  {
+    id: "land-005-review",
+    address: "경기도 용인시 처인구 양지면 마성리 137",
+    originalArea: 500,
+    includedArea: 380,
+    remainingArea: 120,
+    remainingRatio: 24.0,
+    landType: "대지",
+    landCategory: "대",
+    originalShape: "정방형",
+    remainingShape: "자루형",
+    originalShapeIndex: 4.0,
+    remainingShapeIndex: 5.2,
+    ownerName: "박검토",
+    ownerContact: "010-9999-8888",
+    hasIncludedLand: true,
+    businessUnit: "수도권",
+    projectName: "용인-양지 도로확장사업",
+    coordinates: [
+      { lat: 37.2162, lng: 127.2952 },
+      { lat: 37.2167, lng: 127.2962 },
+      { lat: 37.2160, lng: 127.2967 },
+      { lat: 37.2155, lng: 127.2957 },
+    ],
+  },
   // 매수 불가 케이스 (잔여 비율 높음, 형상 변화 적음)
   {
     id: "land-005",
@@ -679,7 +705,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
       autoDetected: false,
     });
   } else {
-    // 그 밖의 토지: ① 진입 곤란 ② 토지 양분 ③ 형상 변경
+    // 그 밖의 토지: ① 진입 ��란 ② 토지 양분 ③ 형상 변경
     criteriaChecks.push({
       criteriaName: "진입 곤란",
       criteriaDescription: "절토/성토/옹벽 설치 등으로 진입 곤란",
@@ -961,6 +987,53 @@ export const dummyApplications: Application[] = [
     aiResult: generateAIResult(dummyLandInfoList[4]),
     adminName: "홍길동",
     statusUpdatedAt: "2026-04-21",
+  },
+  // 검토필요 케이스 - 실측 및 추가 검토 필요
+  {
+    id: "app-review-001",
+    applicationNumber: "2026-0421-001",
+    applicantName: "박검토",
+    applicantContact: "010-9999-8888",
+    applicantAddress: "경기도 용인시 처인구 양지면 마성리 137",
+    landInfo: dummyLandInfoList[5], // land-005-review (검토필요 케이스)
+    actualUsage: "대",
+    reportedShape: "자루형",
+    farmMachineDifficulty: false,
+    reason: "도로 편입으로 토지가 자루형으로 변형되었습니다. 면적 기준은 애매하여 실측이 필요합니다.",
+    attachments: ["토지대장.pdf", "지적도.pdf", "현황사진.jpg"],
+    status: "검토중",
+    adminStatus: "진행중",
+    appliedAt: "2026-04-21",
+    aiResult: {
+      landTypePath: "대지",
+      criteriaChecks: [
+        { criteriaName: "면적 기준", criteriaDescription: "택지(주거) 기준 90㎡ 이하 (완화: 135㎡)", isMet: true, autoDetected: true },
+        { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (자루형)", isMet: true, autoDetected: true },
+        { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
+        { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 불가", isMet: false, autoDetected: false },
+      ],
+      provisionalJudgment: "검토필요",
+      originalShapeIndex: 4.0,
+      remainingShapeIndex: 5.2,
+      shapeIndexChange: 1.2,
+      isBlindLand: true,
+      accessRoadLost: false,
+      waterChannelLost: false,
+      farmMachineDifficulty: false,
+      judgmentRationale: {
+        summary: "대지 수용 조건 일부 충족으로 「검토필요」 판정 - 실측 및 추가 검토 필요",
+        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
+        appliedCriteria: [
+          "택지 기준: 주거 90㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)",
+          "물리조건: 형상 부정형(자루형) 확인됨",
+          "면적 기준 경계선상으로 실측 필요",
+        ],
+        detailedExplanation: "소재지: 경기도 용인시 처인구 양지면 마성리 137\n토지유형: 대지, 지목: 대\n편입현황: 500㎡ → 잔여 120㎡ (잔여비율 24.0%)\n형상변화: 정방형 → 자루형 (형상지수 +1.2)\n\n※ 면적이 완화기준(135㎡) 근처로 실측 확인 필요",
+        manualCheckItems: ["접면도로 상실 여부 현장 확인"],
+      },
+    },
+    adminName: "홍길동",
+    statusUpdatedAt: "2026-04-22",
   },
   // 매수 불가 케이스 - 기각 처리됨
   {
