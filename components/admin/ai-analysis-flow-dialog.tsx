@@ -18,7 +18,7 @@ import {
   Wheat,
   TreePine,
   MapPin,
-  Sparkles,
+  ArrowDown,
 } from "lucide-react";
 
 interface AIAnalysisFlowDialogProps {
@@ -91,29 +91,17 @@ export function AIAnalysisFlowDialog({
         className="max-h-[90vh] overflow-y-auto p-0 border-0 shadow-2xl" 
         style={{ width: '65vw', maxWidth: '65vw', minWidth: '900px' }}
       >
-        {/* 헤더 - 글래스모피즘 스타일 */}
-        <DialogHeader className="px-8 pt-6 pb-5 bg-white sticky top-0 z-10">
-          <DialogTitle className="flex items-center gap-4">
-            <div className="relative">
-              <div className="rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 p-3 shadow-lg shadow-emerald-200">
-                <Sparkles className="h-6 w-6 text-white" />
-              </div>
-              <div className="absolute -bottom-1 -right-1 rounded-full bg-white p-1 shadow">
-                <Icon className="h-3.5 w-3.5 text-emerald-600" />
-              </div>
-            </div>
-            <div>
-              <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                AI 잔여지 매수 자동화 판독 프로세스
-              </span>
-              <p className="text-sm font-normal text-gray-500 mt-1">
-                {landInfo.address}
-              </p>
-            </div>
+        {/* 헤더 */}
+        <DialogHeader className="px-6 pt-6 pb-4 bg-white sticky top-0 z-10">
+          <DialogTitle className="text-lg font-semibold text-foreground">
+            AI 잔여지 매수 자동화 판독 프로세스
           </DialogTitle>
+          <p className="text-sm text-muted-foreground mt-1">
+            {landInfo.address}
+          </p>
         </DialogHeader>
 
-        <div className="p-8 bg-gradient-to-b from-gray-50/50 to-white">
+        <div className="px-6 pb-6">
           {/* STEP 1: 토지 분류 */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -424,7 +412,7 @@ export function AIAnalysisFlowDialog({
               />
               <JudgmentCard
                 label="검토필요"
-                subLabel="추가 ��인"
+                subLabel="추가 확인"
                 color="amber"
                 active={animationStep >= 6 && finalJudgment === "검토필요"}
                 icon={AlertTriangle}
@@ -517,21 +505,21 @@ function PathCard({
       initial={{ scale: 0.98 }}
       animate={{ scale: active ? 1 : 0.98 }}
       className={cn(
-        "relative rounded-2xl border-2 p-4 transition-all duration-500 min-h-[120px]",
+        "relative rounded-lg border p-4 transition-all duration-300 min-h-[100px]",
         active
           ? checked
-            ? "border-emerald-400 bg-gradient-to-br from-emerald-50 to-white shadow-lg shadow-emerald-100"
-            : "border-emerald-300 bg-gradient-to-br from-emerald-50/50 to-white shadow-md"
-          : "border-gray-100 bg-white",
-        empty && "border-dashed border-gray-200"
+            ? "border-green-500 bg-green-50"
+            : "border-green-400 bg-green-50/50"
+          : "border-border bg-muted/30",
+        empty && "border-dashed"
       )}
     >
       {active && checked && (
         <motion.div 
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 200 }}
-          className="absolute -top-2.5 -right-2.5 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 p-1 shadow-md"
+          className="absolute -top-2 -right-2 rounded-full bg-green-500 p-0.5"
         >
           <CheckCircle2 className="h-4 w-4 text-white" />
         </motion.div>
@@ -559,35 +547,32 @@ function FlowConnectorRow({ landType, active }: { landType: LandType; active: bo
 // 연결선 컴포넌트
 function FlowConnector({ active }: { active: boolean }) {
   return (
-    <div className="relative h-8 w-8 flex items-center justify-center">
+    <div className="relative h-6 w-6 flex items-center justify-center">
       {/* 배경 라인 */}
-      <div className="absolute h-full w-0.5 bg-gray-200 rounded-full" />
+      <div className="absolute h-full w-0.5 bg-border" />
       
-      {/* 활성화 시 글로우 라인 */}
+      {/* 활성화 시 라인 */}
       {active && (
         <motion.div
-          className="absolute w-1 rounded-full bg-gradient-to-b from-emerald-400 to-emerald-500"
+          className="absolute w-0.5 rounded-full bg-green-500"
           initial={{ height: 0, top: 0 }}
           animate={{ height: "100%", top: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          style={{
-            boxShadow: "0 0 12px 3px rgba(52, 211, 153, 0.5)",
-          }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
         />
       )}
       
-      {/* 하단 점 */}
+      {/* 하단 화살표 */}
       <motion.div
         className={cn(
-          "absolute bottom-0 w-2.5 h-2.5 rounded-full transition-all duration-300",
-          active 
-            ? "bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-200" 
-            : "bg-gray-200"
+          "absolute -bottom-1",
+          active ? "text-green-500" : "text-border"
         )}
-        initial={active ? { scale: 0 } : {}}
-        animate={active ? { scale: 1 } : {}}
-        transition={{ delay: 0.3, duration: 0.2 }}
-      />
+        initial={active ? { opacity: 0 } : {}}
+        animate={active ? { opacity: 1 } : {}}
+        transition={{ delay: 0.2 }}
+      >
+        <ArrowDown className="h-3 w-3" />
+      </motion.div>
     </div>
   );
 }
@@ -606,48 +591,34 @@ function JudgmentCard({
   active: boolean;
   icon: typeof CheckCircle2;
 }) {
-  const gradients = {
-    green: "from-emerald-400 to-emerald-600",
-    red: "from-red-500 to-red-600",
-    amber: "from-amber-400 to-amber-600",
+  const activeStyles = {
+    green: "border-green-500 bg-green-500 text-white",
+    red: "border-red-500 bg-red-500 text-white",
+    amber: "border-amber-500 bg-amber-500 text-white",
   };
   
-  const shadows = {
-    green: "shadow-emerald-200",
-    red: "shadow-red-200",
-    amber: "shadow-amber-200",
-  };
-  
-  const lightBgs = {
-    green: "bg-emerald-50 border-emerald-100",
-    red: "bg-red-50 border-red-100",
-    amber: "bg-amber-50 border-amber-100",
-  };
-  
-  const textColors = {
-    green: "text-emerald-300",
-    red: "text-red-300",
-    amber: "text-amber-300",
+  const inactiveStyles = {
+    green: "border-green-200 bg-green-50 text-green-300",
+    red: "border-red-200 bg-red-50 text-red-300",
+    amber: "border-amber-200 bg-amber-50 text-amber-300",
   };
 
   return (
     <motion.div
       initial={{ scale: 0.95, opacity: 0.5 }}
       animate={{ 
-        scale: active ? 1.05 : 1, 
+        scale: active ? 1.02 : 1, 
         opacity: active ? 1 : 0.6 
       }}
-      transition={{ type: "spring", stiffness: 200 }}
+      transition={{ duration: 0.3 }}
       className={cn(
-        "flex flex-col items-center gap-3 rounded-2xl border-2 px-10 py-6 transition-all duration-500",
-        active
-          ? `bg-gradient-to-br ${gradients[color]} text-white shadow-xl ${shadows[color]} border-transparent`
-          : `${lightBgs[color]} ${textColors[color]}`
+        "flex flex-col items-center gap-2 rounded-lg border-2 px-8 py-4 transition-all duration-300",
+        active ? activeStyles[color] : inactiveStyles[color]
       )}
     >
-      <Icon className={cn("h-10 w-10", active && color === "red" && "animate-pulse")} />
+      <Icon className={cn("h-8 w-8", active && color === "red" && "animate-pulse")} />
       <div className="text-center">
-        <p className="text-lg font-bold">{label}</p>
+        <p className="text-base font-semibold">{label}</p>
         <p className={cn("text-sm", active ? "text-white/80" : "opacity-60")}>{subLabel}</p>
       </div>
     </motion.div>
