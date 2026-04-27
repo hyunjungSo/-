@@ -6,20 +6,18 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import type { LandInfo, AIAnalysisResult } from "@/lib/types";
 import {
   CheckCircle2,
-  XCircle,
-  AlertTriangle,
   Home,
   Wheat,
   TreePine,
   Star,
   Layers,
   Check,
+  Square,
 } from "lucide-react";
 
 interface AIAnalysisFlowDialogProps {
@@ -49,16 +47,23 @@ export function AIAnalysisFlowDialog({
   const currentLandType = (landInfo.landType || "그밖의토지") as LandType;
   const remainingArea = landInfo.remainingArea;
   const remainingRatio = landInfo.remainingRatio;
-
+  
+  // 용도지역 추출 (주거/상업/공업)
+  const zoneType = landInfo.zoneType || "주거";
+  
   // 면적 기준 계산
-  const getAreaThreshold = (type: LandType) => {
-    if (type === "대지") return { base: 90, relaxed: 135 };
-    if (type === "농지") return { base: 330, relaxed: 495 };
-    if (type === "산지") return { base: 330, relaxed: 495 };
-    return { base: 330, relaxed: 330 };
+  const getAreaThreshold = (type: LandType, zone: string) => {
+    if (type === "대지") {
+      if (zone.includes("상업")) return { base: 150, relaxed: 225, label: "상업" };
+      if (zone.includes("공업")) return { base: 330, relaxed: 495, label: "공업" };
+      return { base: 90, relaxed: 135, label: "주거" };
+    }
+    if (type === "농지") return { base: 330, relaxed: 495, label: "농지" };
+    if (type === "산지") return { base: 330, relaxed: 495, label: "산지" };
+    return { base: 330, relaxed: 330, label: "그밖의토지" };
   };
 
-  const areaThreshold = getAreaThreshold(currentLandType);
+  const areaThreshold = getAreaThreshold(currentLandType, zoneType);
   const isRatioRelaxed = remainingRatio <= 25;
   const effectiveThreshold = isRatioRelaxed ? areaThreshold.relaxed : areaThreshold.base;
   const areaMet = remainingArea <= effectiveThreshold;
@@ -95,7 +100,7 @@ export function AIAnalysisFlowDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent 
         className="max-h-[95vh] overflow-y-auto p-0 border-0 shadow-2xl bg-white" 
-        style={{ width: '70vw', maxWidth: '1200px', minWidth: '900px' }}
+        style={{ width: '75vw', maxWidth: '1400px', minWidth: '1000px' }}
       >
         {/* 헤더 */}
         <DialogHeader className="px-6 pt-5 pb-4 bg-white sticky top-0 z-10 border-b border-gray-100">
@@ -130,128 +135,152 @@ export function AIAnalysisFlowDialog({
           {/* 4개 경로 컬럼 */}
           <div className="grid grid-cols-4 gap-4">
             {/* 대지 경로 */}
-            <LandPathColumn
+            <PathColumn
               type="대지"
               icon={Home}
               isActive={currentLandType === "대지"}
               animationStep={animationStep}
-              areaContent={
-                <>
-                  <div className="grid grid-cols-3 gap-2 text-center text-sm">
-                    <div><p className="font-semibold">주거</p><p className="text-gray-500">90㎡ 이하</p></div>
-                    <div><p className="font-semibold">상업</p><p className="text-gray-500">150㎡ 이하</p></div>
-                    <div><p className="font-semibold">공업</p><p className="text-gray-500">330㎡ 이하</p></div>
-                  </div>
-                  <p className="text-sm text-blue-600 mt-2">잔여 비율 25% 이하 시, 1.5배 완화 적용</p>
-                </>
-              }
-              roadContent={
-                <>
-                  <p className="text-sm text-gray-600">접면도로 상태 변경으로 건축허가 불가</p>
-                </>
-              }
-              shapeContent={
-                <>
-                  <p className="text-sm text-gray-600">사각형 폭: 5m 이하</p>
-                  <p className="text-sm text-gray-600">삼각형 한 변: 11m 이하</p>
-                </>
-              }
-              conditionStatus={conditionStatus}
-              areaMet={areaMet}
-              accessRoadLost={accessRoadLost}
-              shapeChanged={shapeChanged}
+              criteria={[
+                {
+                  title: "면적 기준 미달 여부",
+                  items: [
+                    { label: "주거", value: "90㎡ 이하", isSelected: currentLandType === "대지" && areaThreshold.label === "주거", isMet: currentLandType === "대지" && areaThreshold.label === "주거" && areaMet },
+                    { label: "상업", value: "150㎡ 이하", isSelected: currentLandType === "대지" && areaThreshold.label === "상업", isMet: currentLandType === "대지" && areaThreshold.label === "상업" && areaMet },
+                    { label: "공업", value: "330㎡ 이하", isSelected: currentLandType === "대지" && areaThreshold.label === "공업", isMet: currentLandType === "대지" && areaThreshold.label === "공업" && areaMet },
+                  ],
+                  note: "잔여 비율 25% 이하 시, 1.5배 완화 적용",
+                  showStep: 2,
+                },
+                {
+                  title: "접면 도로 상태 변경",
+                  items: [
+                    { label: "접면도로 상태 변경으로 건축허가 불가", isSelected: currentLandType === "대지", isMet: currentLandType === "대지" && accessRoadLost },
+                  ],
+                  showStep: 3,
+                },
+                {
+                  title: "형상 부정형으로 변경",
+                  items: [
+                    { label: "사각형 폭: 5m 이하", isSelected: currentLandType === "대지", isMet: currentLandType === "대지" && shapeChanged },
+                    { label: "삼각형 한 변: 11m 이하", isSelected: currentLandType === "대지", isMet: currentLandType === "대지" && shapeChanged },
+                  ],
+                  showStep: 4,
+                },
+              ]}
+              conditionStatus={currentLandType === "대지" ? conditionStatus : null}
+              remainingArea={remainingArea}
+              effectiveThreshold={effectiveThreshold}
+              isRatioRelaxed={isRatioRelaxed}
             />
 
             {/* 농지 경로 */}
-            <LandPathColumn
+            <PathColumn
               type="농지"
               icon={Wheat}
               isActive={currentLandType === "농지"}
               animationStep={animationStep}
-              areaContent={
-                <>
-                  <div className="flex justify-between text-sm">
-                    <div><p className="font-semibold">기본 면적</p><p className="text-gray-500">330㎡ 이하</p></div>
-                    <div className="text-right"><p className="font-semibold text-blue-600">잔여 비율 25% 이하</p><p className="text-blue-600">495㎡ 이하 (완화)</p></div>
-                  </div>
-                </>
-              }
-              roadContent={
-                <>
-                  <p className="text-sm text-gray-600">도로/수로 상실로 농지로서의 사용 불가</p>
-                  <p className="text-sm text-gray-600">접면도로 상태변경으로 축사부지 건축불가</p>
-                </>
-              }
-              shapeContent={
-                <>
-                  <p className="text-sm text-gray-600">농기계 진입 및 회전 곤란</p>
-                  <p className="text-sm text-gray-600">사각형 폭: 5m 이하</p>
-                  <p className="text-sm text-gray-600">삼각형 한 변: 11m 이하</p>
-                </>
-              }
-              conditionStatus={conditionStatus}
-              areaMet={areaMet}
-              accessRoadLost={accessRoadLost}
-              shapeChanged={shapeChanged}
+              criteria={[
+                {
+                  title: "면적 기준 미달 여부",
+                  items: [
+                    { label: "기본 면적", value: "330㎡ 이하", isSelected: currentLandType === "농지" && !isRatioRelaxed, isMet: currentLandType === "농지" && !isRatioRelaxed && areaMet },
+                    { label: "잔여 비율 25% 이하", value: "495㎡ 이하 (완화)", isSelected: currentLandType === "농지" && isRatioRelaxed, isMet: currentLandType === "농지" && isRatioRelaxed && areaMet, highlight: true },
+                  ],
+                  showStep: 2,
+                },
+                {
+                  title: "접면 도로/수로 상실 여부",
+                  items: [
+                    { label: "도로/수로 상실로 농지로서의 사용 불가", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && accessRoadLost },
+                    { label: "접면도로 상태변경으로 축사부지 건축불가", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && accessRoadLost },
+                  ],
+                  showStep: 3,
+                },
+                {
+                  title: "농기계 회전 곤란, 형상 부정형 변경",
+                  items: [
+                    { label: "농기계 진입 및 회전 곤란", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && shapeChanged },
+                    { label: "사각형 폭: 5m 이하", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && shapeChanged },
+                    { label: "삼각형 한 변: 11m 이하", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && shapeChanged },
+                  ],
+                  showStep: 4,
+                },
+              ]}
+              conditionStatus={currentLandType === "농지" ? conditionStatus : null}
+              remainingArea={remainingArea}
+              effectiveThreshold={effectiveThreshold}
+              isRatioRelaxed={isRatioRelaxed}
             />
 
             {/* 산지 경로 */}
-            <LandPathColumn
+            <PathColumn
               type="산지"
               icon={TreePine}
               isActive={currentLandType === "산지"}
               animationStep={animationStep}
-              areaContent={
-                <>
-                  <div className="flex justify-between text-sm">
-                    <div><p className="font-semibold">기본 면적</p><p className="text-gray-500">330㎡ 이하</p></div>
-                    <div className="text-right"><p className="font-semibold text-blue-600">잔여 비율 25% 이하</p><p className="text-blue-600">495㎡ 이하 (완화)</p></div>
-                  </div>
-                </>
-              }
-              roadContent={
-                <>
-                  <p className="text-sm text-gray-600">산지가 도로와 접하였다가</p>
-                  <p className="text-sm text-gray-600">공익사업으로 인해 접한 도로가 없어진 경우</p>
-                </>
-              }
-              shapeContent={null}
-              conditionStatus={conditionStatus}
-              areaMet={areaMet}
-              accessRoadLost={accessRoadLost}
-              shapeChanged={shapeChanged}
+              criteria={[
+                {
+                  title: "면적 기준 미달 여부",
+                  items: [
+                    { label: "기본 면적", value: "330㎡ 이하", isSelected: currentLandType === "산지" && !isRatioRelaxed, isMet: currentLandType === "산지" && !isRatioRelaxed && areaMet },
+                    { label: "잔여 비율 25% 이하", value: "495㎡ 이하 (완화)", isSelected: currentLandType === "산지" && isRatioRelaxed, isMet: currentLandType === "산지" && isRatioRelaxed && areaMet, highlight: true },
+                  ],
+                  showStep: 2,
+                },
+                {
+                  title: "접면 도로 상실 여부",
+                  items: [
+                    { label: "산지가 도로와 접하였다가 공익사업으로 인해 접한 도로가 없어진 경우", isSelected: currentLandType === "산지", isMet: currentLandType === "산지" && accessRoadLost },
+                  ],
+                  showStep: 3,
+                },
+                {
+                  title: null, // 해당 없음
+                  items: [],
+                  showStep: 4,
+                },
+              ]}
+              conditionStatus={currentLandType === "산지" ? conditionStatus : null}
+              remainingArea={remainingArea}
+              effectiveThreshold={effectiveThreshold}
+              isRatioRelaxed={isRatioRelaxed}
             />
 
             {/* 그밖의토지 경로 */}
-            <LandPathColumn
+            <PathColumn
               type="그밖의토지"
               icon={Star}
               isActive={currentLandType === "그밖의토지"}
               animationStep={animationStep}
-              areaContent={
-                <>
-                  <div className="flex justify-between text-sm">
-                    <div><p className="font-semibold">기본 면적</p><p className="text-gray-500">330㎡ 이하</p></div>
-                    <div className="text-right"><p className="font-semibold">또는</p><p className="text-gray-500">잔여 비율 50% 이하</p></div>
-                  </div>
-                </>
-              }
-              roadContent={
-                <>
-                  <p className="text-sm text-gray-600">절토 및 성토/옹벽 설치 등</p>
-                </>
-              }
-              shapeContent={
-                <>
-                  <p className="text-sm text-gray-600">일단의 토지가 양분되어 잔여지 발생</p>
-                  <p className="text-sm text-gray-600">정형: 잔여지 폭이 기준 이하로 변경</p>
-                  <p className="text-xs text-gray-400">주거용 5m, 상업용 7m, 공업용, 농지, 산지 10m</p>
-                </>
-              }
-              conditionStatus={conditionStatus}
-              areaMet={areaMet}
-              accessRoadLost={accessRoadLost}
-              shapeChanged={shapeChanged}
+              criteria={[
+                {
+                  title: "면적 기준 미달 여부",
+                  items: [
+                    { label: "기본 면적", value: "330㎡ 이하", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && areaMet },
+                    { label: "또는", value: "잔여 비율 50% 이하", isSelected: currentLandType === "그밖의토지" && remainingRatio <= 50, isMet: currentLandType === "그밖의토지" && remainingRatio <= 50 },
+                  ],
+                  showStep: 2,
+                },
+                {
+                  title: "진입 곤란",
+                  items: [
+                    { label: "절토 및 성토/옹벽 설치 등", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && accessRoadLost },
+                  ],
+                  showStep: 3,
+                },
+                {
+                  title: "양분된 토지 / 형상 변경",
+                  items: [
+                    { label: "일단의 토지가 양분되어 잔여지 발생", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged },
+                    { label: "정형: 잔여지 폭이 기준 이하로 변경", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged, subLabel: "주거용 5m, 상업용 7m, 공업용/농지/산지 10m" },
+                  ],
+                  showStep: 4,
+                },
+              ]}
+              conditionStatus={currentLandType === "그밖의토지" ? conditionStatus : null}
+              remainingArea={remainingArea}
+              effectiveThreshold={effectiveThreshold}
+              isRatioRelaxed={isRatioRelaxed}
             />
           </div>
 
@@ -344,6 +373,7 @@ export function AIAnalysisFlowDialog({
               <div className="flex items-center gap-2">
                 <span className="text-gray-500">잔여 면적</span>
                 <span className="font-semibold text-gray-800">{remainingArea.toLocaleString()}㎡</span>
+                <span className="text-gray-400">/ 기준 {effectiveThreshold}㎡ {isRatioRelaxed && "(완화)"}</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-gray-500">잔여 비율</span>
@@ -368,41 +398,54 @@ export function AIAnalysisFlowDialog({
   );
 }
 
+// 기준 아이템 타입
+interface CriteriaItem {
+  label: string;
+  value?: string;
+  isSelected: boolean;
+  isMet: boolean;
+  highlight?: boolean;
+  subLabel?: string;
+}
+
+interface Criteria {
+  title: string | null;
+  items: CriteriaItem[];
+  note?: string;
+  showStep: number;
+}
+
 // 경로 컬럼 컴포넌트
-function LandPathColumn({
+function PathColumn({
   type,
   icon: Icon,
   isActive,
   animationStep,
-  areaContent,
-  roadContent,
-  shapeContent,
+  criteria,
   conditionStatus,
-  areaMet,
-  accessRoadLost,
-  shapeChanged,
+  remainingArea,
+  effectiveThreshold,
+  isRatioRelaxed,
 }: {
   type: LandType;
   icon: typeof Home;
   isActive: boolean;
   animationStep: number;
-  areaContent: React.ReactNode;
-  roadContent: React.ReactNode;
-  shapeContent: React.ReactNode | null;
-  conditionStatus: string;
-  areaMet: boolean;
-  accessRoadLost: boolean;
-  shapeChanged: boolean;
+  criteria: Criteria[];
+  conditionStatus: string | null;
+  remainingArea: number;
+  effectiveThreshold: number;
+  isRatioRelaxed: boolean;
 }) {
   const showHighlight = isActive && animationStep >= 1;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: animationStep >= 1 ? 1 : 0.3, y: 0 }}
+      animate={{ opacity: animationStep >= 1 ? 1 : 0.5, y: 0 }}
       className={cn(
         "rounded-lg border-2 p-4 transition-all",
-        showHighlight ? "border-blue-400 bg-blue-50/30" : "border-gray-200 bg-white"
+        showHighlight ? "border-blue-500 bg-blue-50/50 shadow-lg" : "border-gray-200 bg-white"
       )}
     >
       {/* 경로 헤더 */}
@@ -411,67 +454,106 @@ function LandPathColumn({
         showHighlight ? "border-blue-200" : "border-gray-100"
       )}>
         <Icon className={cn("h-5 w-5", showHighlight ? "text-blue-600" : "text-gray-400")} />
-        <span className={cn("font-bold", showHighlight ? "text-blue-800" : "text-gray-600")}>
+        <span className={cn("font-bold", showHighlight ? "text-blue-800" : "text-gray-500")}>
           {type} 경로
         </span>
       </div>
 
-      {/* 면적 기준 미달 여부 */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: animationStep >= 2 ? 1 : 0.4 }}
-        className="mb-4"
-      >
-        <CriteriaCard
-          title="면적 기준 미달 여부"
-          isActive={isActive && animationStep >= 2}
-          isMet={isActive && areaMet}
-        >
-          {areaContent}
-        </CriteriaCard>
-      </motion.div>
-
-      {/* 접면 도로/수로 상실 여부 */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: animationStep >= 3 ? 1 : 0.4 }}
-        className="mb-4"
-      >
-        <CriteriaCard
-          title={type === "농지" ? "접면 도로/수로 상실 여부" : "접면 도로 상실 여부"}
-          isActive={isActive && animationStep >= 3}
-          isMet={isActive && accessRoadLost}
-        >
-          {roadContent}
-        </CriteriaCard>
-      </motion.div>
-
-      {/* 형상 변경 */}
-      {shapeContent ? (
+      {/* 기준 카드들 */}
+      {criteria.map((c, idx) => (
         <motion.div
+          key={idx}
           initial={{ opacity: 0 }}
-          animate={{ opacity: animationStep >= 4 ? 1 : 0.4 }}
-          className="mb-4"
+          animate={{ opacity: animationStep >= c.showStep ? 1 : 0.4 }}
+          className="mb-3"
         >
-          <CriteriaCard
-            title={type === "농지" ? "농기계 회전 곤란, 형상 부정형 변경" : type === "그밖의토지" ? "양분된 토지 / 형상 변경" : "형상 부정형으로 변경"}
-            isActive={isActive && animationStep >= 4}
-            isMet={isActive && shapeChanged}
-          >
-            {shapeContent}
-          </CriteriaCard>
+          {c.title === null ? (
+            <div className="border border-dashed border-gray-200 rounded-lg p-3 bg-gray-50">
+              <p className="text-sm text-gray-400 italic text-center">해당 없음</p>
+            </div>
+          ) : (
+            <div className={cn(
+              "border rounded-lg p-3 transition-all",
+              isActive && c.items.some(item => item.isMet)
+                ? "border-green-400 bg-green-50"
+                : isActive 
+                  ? "border-blue-300 bg-white"
+                  : "border-gray-200 bg-white"
+            )}>
+              {/* 카드 타이틀 */}
+              <div className="flex items-center gap-2 mb-2">
+                {isActive && c.items.some(item => item.isMet) ? (
+                  <div className="flex-shrink-0 w-5 h-5 rounded bg-red-500 flex items-center justify-center">
+                    <Check className="h-3 w-3 text-white" />
+                  </div>
+                ) : (
+                  <Square className="h-4 w-4 text-gray-300 flex-shrink-0" />
+                )}
+                <p className={cn(
+                  "text-sm font-semibold",
+                  isActive && c.items.some(item => item.isMet) ? "text-red-600" : "text-gray-700"
+                )}>
+                  {c.title}
+                </p>
+              </div>
+
+              {/* 기준 항목들 */}
+              <div className="space-y-1.5 pl-1">
+                {c.items.map((item, itemIdx) => (
+                  <div 
+                    key={itemIdx}
+                    className={cn(
+                      "flex items-start gap-2 text-sm rounded px-2 py-1 transition-all",
+                      item.isSelected && item.isMet ? "bg-green-100 border border-green-300" : 
+                      item.isSelected ? "bg-blue-50 border border-blue-200" : ""
+                    )}
+                  >
+                    {item.isSelected && (
+                      <div className={cn(
+                        "flex-shrink-0 w-4 h-4 rounded-sm flex items-center justify-center mt-0.5",
+                        item.isMet ? "bg-green-500" : "border border-gray-300"
+                      )}>
+                        {item.isMet && <Check className="h-3 w-3 text-white" />}
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className={cn(
+                          item.isSelected ? (item.isMet ? "text-green-700 font-semibold" : "text-blue-700") : "text-gray-600"
+                        )}>
+                          {item.label}
+                        </span>
+                        {item.value && (
+                          <span className={cn(
+                            "text-sm",
+                            item.highlight ? "text-blue-600 font-semibold" : "text-gray-500"
+                          )}>
+                            {item.value}
+                          </span>
+                        )}
+                      </div>
+                      {item.subLabel && (
+                        <p className="text-xs text-gray-400 mt-0.5">{item.subLabel}</p>
+                      )}
+                      {/* 충족 여부 상세 설명 */}
+                      {item.isSelected && item.isMet && (
+                        <p className="text-xs text-green-600 mt-1 font-medium">
+                          ✓ 기준 충족: 잔여면적 {remainingArea}㎡ ≤ 기준 {effectiveThreshold}㎡ {isRatioRelaxed && "(완화적용)"}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* 참고 사항 */}
+              {c.note && (
+                <p className="text-xs text-blue-600 mt-2 pl-1">{c.note}</p>
+              )}
+            </div>
+          )}
         </motion.div>
-      ) : (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: animationStep >= 4 ? 1 : 0.4 }}
-          className="mb-4"
-        >
-          <div className="border border-dashed border-gray-200 rounded-lg p-3 bg-gray-50">
-            <p className="text-sm text-gray-400 italic text-center">해당 없음</p>
-          </div>
-        </motion.div>
-      )}
+      ))}
 
       {/* 판정 조건 */}
       <motion.div
@@ -481,19 +563,19 @@ function LandPathColumn({
       >
         <p className={cn(
           "flex items-center gap-1",
-          isActive && conditionStatus === "충족" ? "text-green-600 font-semibold" : "text-gray-500"
+          conditionStatus === "충족" ? "text-green-600 font-semibold" : "text-gray-500"
         )}>
           어느 하나라도 해당 시 조건 <span className="text-green-600">충족</span> → 수용
         </p>
         <p className={cn(
           "flex items-center gap-1",
-          isActive && conditionStatus === "미충족" ? "text-red-600 font-semibold" : "text-gray-500"
+          conditionStatus === "미충족" ? "text-red-600 font-semibold" : "text-gray-500"
         )}>
           전체 미해당 시 조건 <span className="text-red-600">미충족</span> → 수용
         </p>
         <p className={cn(
           "flex items-center gap-1",
-          isActive && conditionStatus === "검토필요" ? "text-amber-600 font-semibold" : "text-gray-500"
+          conditionStatus === "검토필요" ? "text-amber-600 font-semibold" : "text-gray-500"
         )}>
           실측 및 추가 검토 필요시 <span className="text-amber-600">검토 필요</span>
         </p>
@@ -505,7 +587,7 @@ function LandPathColumn({
         animate={{ opacity: animationStep >= 5 ? 1 : 0.3, scale: animationStep >= 5 ? 1 : 0.9 }}
         className="flex justify-center"
       >
-        {isActive ? (
+        {conditionStatus ? (
           <span className={cn(
             "px-6 py-2 rounded-full text-sm font-bold",
             conditionStatus === "충족" ? "bg-green-100 text-green-700" :
@@ -521,46 +603,5 @@ function LandPathColumn({
         )}
       </motion.div>
     </motion.div>
-  );
-}
-
-// 기준 카드 컴포넌트
-function CriteriaCard({
-  title,
-  isActive,
-  isMet,
-  children,
-}: {
-  title: string;
-  isActive: boolean;
-  isMet: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className={cn(
-      "border rounded-lg p-3 transition-all",
-      isActive 
-        ? isMet 
-          ? "border-green-400 bg-green-50" 
-          : "border-blue-300 bg-blue-50/50"
-        : "border-gray-200 bg-white"
-    )}>
-      <div className="flex items-start gap-2 mb-2">
-        {isMet && (
-          <div className="flex-shrink-0 w-5 h-5 rounded bg-red-500 flex items-center justify-center mt-0.5">
-            <Check className="h-3 w-3 text-white" />
-          </div>
-        )}
-        <p className={cn(
-          "font-semibold text-sm",
-          isMet ? "text-red-600" : isActive ? "text-blue-700" : "text-gray-600"
-        )}>
-          {title}
-        </p>
-      </div>
-      <div className={cn(!isActive && "opacity-50")}>
-        {children}
-      </div>
-    </div>
   );
 }
