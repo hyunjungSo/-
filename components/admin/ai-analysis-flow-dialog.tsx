@@ -9,21 +9,15 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   CheckCircle2,
   XCircle,
   AlertTriangle,
-  Play,
-  RotateCcw,
   Home,
   Wheat,
   TreePine,
   MapPin,
   Bot,
-  ChevronDown,
-  ArrowDown,
-  Circle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -125,9 +119,24 @@ export function AIAnalysisFlowDialog({
   const config = landTypeConfig[landInfo.landType] || landTypeConfig["그밖의토지"];
   const LandIcon = config.icon;
 
+  // 다이얼로그 열릴 때 자동 재생 시작
+  useEffect(() => {
+    if (open) {
+      setCurrentStep(0);
+      setPathHistory([]);
+      setIsPlaying(true);
+      const timer = setTimeout(() => setCurrentStep(1), 500);
+      return () => clearTimeout(timer);
+    } else {
+      setCurrentStep(0);
+      setPathHistory([]);
+      setIsPlaying(false);
+    }
+  }, [open]);
+
   // 애니메이션 진행
   useEffect(() => {
-    if (!isPlaying || !open) return;
+    if (!isPlaying || !open || currentStep === 0) return;
 
     if (currentStep < 7) {
       const timer = setTimeout(() => {
@@ -152,19 +161,6 @@ export function AIAnalysisFlowDialog({
       setIsPlaying(false);
     }
   }, [currentStep, isPlaying, open, landInfo.landType, conditionData]);
-
-  const handlePlay = () => {
-    setCurrentStep(0);
-    setPathHistory([]);
-    setIsPlaying(true);
-    setTimeout(() => setCurrentStep(1), 300);
-  };
-
-  const handleReset = () => {
-    setCurrentStep(0);
-    setPathHistory([]);
-    setIsPlaying(false);
-  };
 
   // 노드 스타일
   const getNodeStyle = (step: FlowStep, condition?: boolean) => {
@@ -212,30 +208,6 @@ export function AIAnalysisFlowDialog({
         </DialogHeader>
 
         <div className="p-6 pt-4 space-y-4">
-          {/* 재생 컨트롤 */}
-          <div className="flex items-center justify-center gap-3">
-            <Button
-              variant="default"
-              size="sm"
-              onClick={handlePlay}
-              disabled={isPlaying}
-              className="gap-2"
-            >
-              <Play className="h-4 w-4" />
-              {currentStep === 0 ? "분석 시작" : "다시 재생"}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleReset}
-              disabled={currentStep === 0}
-              className="gap-2"
-            >
-              <RotateCcw className="h-4 w-4" />
-              초기화
-            </Button>
-          </div>
-
           {/* 사다리형 플로우 다이어그램 */}
           <div className="relative bg-gradient-to-b from-slate-50 to-slate-100 rounded-xl p-6 overflow-x-auto">
             <div className="min-w-[700px] space-y-0">
