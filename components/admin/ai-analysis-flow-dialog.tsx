@@ -618,28 +618,30 @@ function PathColumn({
         </motion.div>
       ))}
 
-      {/* 판정 조건 */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: animationStep >= 5 ? 1 : 0.4 }}
-        className="text-sm space-y-0.5 mb-3 py-2 border-t border-gray-100"
-      >
-        <p className={cn(
-          conditionStatus === "충족" ? "text-green-600 font-medium" : "text-gray-400"
-        )}>
-          어느 하나라도 해당 시 조건 <span className="text-green-600">충족</span> → 수용
-        </p>
-        <p className={cn(
-          conditionStatus === "미충족" ? "text-red-600 font-medium" : "text-gray-400"
-        )}>
-          전체 미해당 시 조건 <span className="text-red-600">미충족</span> → 수용
-        </p>
-        <p className={cn(
-          conditionStatus === "검토필요" ? "text-amber-600 font-medium" : "text-gray-400"
-        )}>
-          실측 및 추가 검토 필요시 → <span className="text-amber-600">검토필요</span>
-        </p>
-      </motion.div>
+      {/* 판정 조건 - isActive이고 conditionStatus가 있을 때만 표시 */}
+      {isActive && conditionStatus && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: animationStep >= 5 ? 1 : 0.4 }}
+          className="text-sm space-y-0.5 mb-3 py-2 border-t border-gray-100"
+        >
+          <p className={cn(
+            conditionStatus === "충족" ? "text-green-600 font-medium" : "text-gray-400"
+          )}>
+            어느 하나라도 해당 시 조건 <span className="text-green-600">충족</span> → 수용
+          </p>
+          <p className={cn(
+            conditionStatus === "미충족" ? "text-red-600 font-medium" : "text-gray-400"
+          )}>
+            전체 미해당 시 조건 <span className="text-red-600">미충족</span> → 수용
+          </p>
+          <p className={cn(
+            conditionStatus === "검토필요" ? "text-amber-600 font-medium" : "text-gray-400"
+          )}>
+            실측 및 추가 검토 필요시 → <span className="text-amber-600">검토필요</span>
+          </p>
+        </motion.div>
+      )}
 
       {/* 결과 배지 */}
       <motion.div
