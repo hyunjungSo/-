@@ -517,14 +517,24 @@ function PathColumn({
               "rounded p-2 transition-all",
               showHighlight ? "bg-green-50/30" : "bg-white"
             )}>
-              {/* 카드 타이틀 + 뱃지 */}
+              {/* 카드 타이틀 + 체크박스 + 뱃지 */}
               <div className="flex items-center justify-between mb-1.5">
-                <p className={cn(
-                  "text-sm font-semibold",
-                  isActive && c.items.some(item => item.isMet) ? "text-green-700" : "text-gray-700"
-                )}>
-                  {c.title}
-                </p>
+                <div className="flex items-center gap-2">
+                  {/* 체크박스 - 충족시에만 체크 표시 */}
+                  <div className={cn(
+                    "flex-shrink-0 w-4 h-4 rounded-sm flex items-center justify-center border",
+                    isActive && c.items.some(item => item.isMet) 
+                      ? "bg-green-500 border-green-500" 
+                      : "border-gray-300 bg-white"
+                  )}>
+                    {isActive && c.items.some(item => item.isMet) && (
+                      <Check className="h-3 w-3 text-white" />
+                    )}
+                  </div>
+                  <p className="text-sm font-semibold text-gray-700">
+                    {c.title}
+                  </p>
+                </div>
                 {isActive && (
                   <span className={cn(
                     "text-sm font-bold px-2 py-0.5 rounded",
@@ -538,7 +548,7 @@ function PathColumn({
               </div>
 
               {/* 기준 항목들 */}
-              <div className="space-y-1">
+              <div className="space-y-1 pl-6">
                 {c.items.map((item, itemIdx) => (
                   <div 
                     key={itemIdx}
@@ -547,21 +557,9 @@ function PathColumn({
                       showHighlight ? "bg-green-50/30" : "bg-transparent"
                     )}
                   >
-                    {item.isSelected && (
-                      <div className={cn(
-                        "flex-shrink-0 w-4 h-4 rounded-sm flex items-center justify-center mt-0.5",
-                        item.isMet ? "bg-green-500" : "border border-gray-300 bg-white"
-                      )}>
-                        {item.isMet && <Check className="h-3 w-3 text-white" />}
-                      </div>
-                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1 flex-wrap">
-                        <span className={cn(
-                          "text-gray-600",
-                          item.isSelected && item.isMet && "text-green-700 font-medium",
-                          item.isSelected && !item.isMet && "text-red-600 font-medium"
-                        )}>
+                        <span className="text-gray-700">
                           {item.label}
                         </span>
                         {item.value && (
@@ -573,7 +571,7 @@ function PathColumn({
                       {item.subLabel && (
                         <p className="text-sm text-gray-400 mt-0.5">{item.subLabel}</p>
                       )}
-                      {/* 충족/미충족 상세 설명 */}
+                      {/* 충족/미충족 상세 설명 - 여기에만 컬러 적용 */}
                       {item.isSelected && item.isMet && item.explanationMet && (
                         <p className="text-sm text-green-600 mt-0.5">
                           {item.explanationMet}
