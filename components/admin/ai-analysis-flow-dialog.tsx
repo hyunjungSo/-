@@ -18,6 +18,7 @@ import {
   TreePine,
   MapPin,
   Bot,
+  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
