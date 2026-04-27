@@ -348,11 +348,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <span className="text-muted-foreground">잔여 비율 {application.landInfo.remainingRatio}%</span>
                   </div>
                 </div>
-                <Badge 
-                  variant={application.aiResult?.provisionalJudgment === "매수" ? "default" : "destructive"} 
-                >
-                  AI: {application.aiResult?.provisionalJudgment || "-"}
-                </Badge>
               </div>
             </div>
           )}
@@ -970,7 +965,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <div className="space-y-2">
 <Label className={reviewData.adminStatus !== "심사완료" ? "text-muted-foreground" : ""}>
                   최종 판정
-{reviewData.adminStatus !== "심사완료" && (
+{reviewData.adminStatus !== "심사완��" && (
                     <span className="ml-2 text-base font-normal text-muted-foreground">
                     (진행상황을 &apos;심사완료&apos;로 설정하면 활성화됩니다)
                 </span>
