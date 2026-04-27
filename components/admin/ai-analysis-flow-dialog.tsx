@@ -354,15 +354,15 @@ export function AIAnalysisFlowDialog({
             className="mt-6"
           >
             <div className="flex items-center gap-8">
-              <h4 className="text-lg font-bold text-red-600 whitespace-nowrap border-l-4 border-red-600 pl-3">최종 결정</h4>
+              <h4 className="text-sm font-semibold text-gray-700 whitespace-nowrap">최종 결정</h4>
               <div className="flex-1 grid grid-cols-3 gap-4">
                 <motion.div 
                   animate={{ scale: finalJudgment === "매수" && animationStep >= 7 ? 1.02 : 1 }}
                   className={cn(
-                    "rounded-lg p-4 text-center font-bold transition-all",
+                    "rounded-lg p-4 text-center font-semibold border transition-all",
                     finalJudgment === "매수" 
-                      ? "bg-green-100 text-green-700 ring-2 ring-green-500" 
-                      : "bg-green-50 text-green-300"
+                      ? "border-green-500 bg-green-500 text-white" 
+                      : "border-gray-200 bg-gray-50 text-gray-400"
                   )}
                 >
                   매수
@@ -370,10 +370,10 @@ export function AIAnalysisFlowDialog({
                 <motion.div 
                   animate={{ scale: (finalJudgment === "매수불가" || finalJudgment === "기각") && animationStep >= 7 ? 1.02 : 1 }}
                   className={cn(
-                    "rounded-lg p-4 text-center font-bold border-2 transition-all",
+                    "rounded-lg p-4 text-center font-semibold border transition-all",
                     (finalJudgment === "매수불가" || finalJudgment === "기각")
-                      ? "border-red-500 text-red-600 bg-red-50 ring-2 ring-red-300" 
-                      : "border-red-200 text-red-300"
+                      ? "border-red-500 bg-red-500 text-white" 
+                      : "border-gray-200 bg-gray-50 text-gray-400"
                   )}
                 >
                   기각
@@ -381,10 +381,10 @@ export function AIAnalysisFlowDialog({
                 <motion.div 
                   animate={{ scale: finalJudgment === "검토필요" && animationStep >= 7 ? 1.02 : 1 }}
                   className={cn(
-                    "rounded-lg p-4 text-center font-bold border-2 transition-all",
+                    "rounded-lg p-4 text-center font-semibold border transition-all",
                     finalJudgment === "검토필요"
-                      ? "border-amber-500 text-amber-600 bg-amber-50 ring-2 ring-amber-300" 
-                      : "border-amber-200 text-amber-300"
+                      ? "border-amber-500 bg-amber-500 text-white" 
+                      : "border-gray-200 bg-gray-50 text-gray-400"
                   )}
                 >
                   토지보상심의위원회 이관
