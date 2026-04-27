@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Dialog,
   DialogContent,
@@ -17,7 +18,7 @@ import {
   Wheat,
   TreePine,
   MapPin,
-  ChevronDown,
+  ArrowDown,
 } from "lucide-react";
 
 interface AIAnalysisFlowDialogProps {
@@ -154,11 +155,8 @@ export function AIAnalysisFlowDialog({
             {(["대지", "농지", "산지", "그밖의토지"] as LandType[]).map((type) => {
               const isActive = type === currentLandType && animationStep >= 2;
               return (
-                <div key={type} className="flex justify-center">
-                  <ChevronDown className={cn(
-                    "h-5 w-5 transition-all duration-500",
-                    isActive ? "text-green-500" : "text-border"
-                  )} />
+                <div key={type} className="flex justify-center py-1">
+                  <FlowConnector active={isActive} />
                 </div>
               );
             })}
@@ -228,11 +226,8 @@ export function AIAnalysisFlowDialog({
             {(["대지", "농지", "산지", "그밖의토지"] as LandType[]).map((type) => {
               const isActive = type === currentLandType && animationStep >= 3;
               return (
-                <div key={type} className="flex justify-center">
-                  <ChevronDown className={cn(
-                    "h-5 w-5 transition-all duration-500",
-                    isActive ? "text-green-500" : "text-border"
-                  )} />
+                <div key={type} className="flex justify-center py-1">
+                  <FlowConnector active={isActive} />
                 </div>
               );
             })}
@@ -297,11 +292,8 @@ export function AIAnalysisFlowDialog({
             {(["대지", "농지", "산지", "그밖의토지"] as LandType[]).map((type) => {
               const isActive = type === currentLandType && animationStep >= 4;
               return (
-                <div key={type} className="flex justify-center">
-                  <ChevronDown className={cn(
-                    "h-5 w-5 transition-all duration-500",
-                    isActive ? "text-green-500" : "text-border"
-                  )} />
+                <div key={type} className="flex justify-center py-1">
+                  <FlowConnector active={isActive} />
                 </div>
               );
             })}
@@ -367,11 +359,8 @@ export function AIAnalysisFlowDialog({
             {(["대지", "농지", "산지", "그밖의토지"] as LandType[]).map((type) => {
               const isActive = type === currentLandType && animationStep >= 5;
               return (
-                <div key={type} className="flex justify-center">
-                  <ChevronDown className={cn(
-                    "h-5 w-5 transition-all duration-500",
-                    isActive ? "text-green-500" : "text-border"
-                  )} />
+                <div key={type} className="flex justify-center py-1">
+                  <FlowConnector active={isActive} />
                 </div>
               );
             })}
@@ -507,6 +496,42 @@ function PathBox({
       <div className={cn(!active && "text-muted-foreground")}>
         {children}
       </div>
+    </div>
+  );
+}
+
+// 흐르는 연결선 컴포넌트 (Framer Motion)
+function FlowConnector({ active }: { active: boolean }) {
+  return (
+    <div className="relative h-8 w-6 flex items-center justify-center">
+      {/* 배경 라인 */}
+      <div className="absolute h-full w-0.5 bg-border" />
+      
+      {/* 활성화 시 글로우 라인 */}
+      {active && (
+        <motion.div
+          className="absolute w-1 rounded-full bg-green-500"
+          initial={{ height: 0, top: 0 }}
+          animate={{ height: "100%", top: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          style={{
+            boxShadow: "0 0 8px 2px rgba(34, 197, 94, 0.6)",
+          }}
+        />
+      )}
+      
+      {/* 화살표 */}
+      <motion.div
+        className={cn(
+          "absolute bottom-0 transition-colors duration-300",
+          active ? "text-green-500" : "text-border"
+        )}
+        initial={active ? { y: -10, opacity: 0 } : {}}
+        animate={active ? { y: 0, opacity: 1 } : {}}
+        transition={{ delay: 0.2, duration: 0.3 }}
+      >
+        <ArrowDown className="h-4 w-4" />
+      </motion.div>
     </div>
   );
 }
