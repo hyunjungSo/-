@@ -92,7 +92,7 @@ export function AIAnalysisFlowDialog({
         style={{ width: '65vw', maxWidth: '65vw', minWidth: '900px' }}
       >
         {/* 헤더 - 글래스모피즘 스타일 */}
-        <DialogHeader className="px-8 pt-6 pb-5 border-b border-gray-100 bg-white sticky top-0 z-10">
+        <DialogHeader className="px-8 pt-6 pb-5 bg-white sticky top-0 z-10">
           <DialogTitle className="flex items-center gap-4">
             <div className="relative">
               <div className="rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 p-3 shadow-lg shadow-emerald-200">
