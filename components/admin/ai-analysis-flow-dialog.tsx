@@ -163,7 +163,7 @@ export function AIAnalysisFlowDialog({
                       explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}`,
                       explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}` },
                     { label: "공업", value: "330㎡ 이하", isSelected: currentLandType === "대지" && areaThreshold.label === "공업", isMet: currentLandType === "대지" && areaThreshold.label === "공업" && areaMet,
-                      explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}`,
+                      explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 ${effectiveThreshold.toLocaleString()}��${isRatioRelaxed ? " (완화적용)" : ""}`,
                       explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}` },
                   ],
                   note: "잔여 비율 25% 이하 시, 1.5배 완화 적용",
@@ -623,7 +623,7 @@ function PathColumn({
           "flex items-center gap-1",
           conditionStatus === "검토필요" ? "text-amber-600 font-semibold" : "text-gray-500"
         )}>
-          실측 및 추가 검토 필요시 <span className="text-amber-600">검토필요</span>
+          실측 및 추가 검토 필요시 → <span className="text-amber-600">검토필요</span>
         </p>
       </motion.div>
 
