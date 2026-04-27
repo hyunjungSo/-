@@ -201,7 +201,7 @@ export function AIAnalysisFlowDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl max-h-[95vh] overflow-y-auto p-0">
+      <DialogContent className="w-auto max-w-[90vw] max-h-[95vh] overflow-y-auto p-0">
         <DialogHeader className="p-6 pb-0">
           <DialogTitle className="flex items-center gap-2">
             <Bot className="h-5 w-5" />
