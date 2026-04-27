@@ -102,6 +102,32 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.2165, lng: 127.2960 },
     ],
   },
+  // 매수 충족 케이스 (면적 기준 충족 + 형상 비정형)
+  {
+    id: "land-005-met",
+    address: "경기도 용인시 처인구 양지면 마성리 133",
+    originalArea: 300,
+    includedArea: 230,
+    remainingArea: 70,
+    remainingRatio: 23.3,
+    landType: "대지",
+    landCategory: "대",
+    originalShape: "정방형",
+    remainingShape: "삼각형",
+    originalShapeIndex: 4.0,
+    remainingShapeIndex: 5.8,
+    ownerName: "이충족",
+    ownerContact: "010-1111-0000",
+    hasIncludedLand: true,
+    businessUnit: "수도권",
+    projectName: "용인-양지 도로확장사업",
+    coordinates: [
+      { lat: 37.2160, lng: 127.2950 },
+      { lat: 37.2165, lng: 127.2960 },
+      { lat: 37.2158, lng: 127.2965 },
+      { lat: 37.2153, lng: 127.2955 },
+    ],
+  },
   // 매수 불가 케이스 (잔여 비율 높음, 형상 변화 적음)
   {
     id: "land-005",
@@ -631,7 +657,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
       autoDetected: false,
     });
   } else if (landInfo.landType === "농지") {
-    // 농지: ① 도로/수로 상실 ② 농기계 진입/회전 곤란 ③ 축사부지 건축 불가
+    // 농지: ① 도로/수로 상실 ② 농기계 진입/��전 곤란 ③ 축사부지 건축 불가
     criteriaChecks.push({
       criteriaName: "도로/수로 상실",
       criteriaDescription: "도로/수로 상실로 농지로서의 사용 불가",
@@ -845,7 +871,7 @@ export const dummyApplications: Application[] = [
     appliedAt: "2026-04-04",
     aiResult: generateAIResult(dummyLandInfoList[3]),
     finalJudgment: "매수",
-    reviewerComment: "잔여지 형상 및 면적 기준 충족으로 매수 결정",
+    reviewerComment: "잔여지 형상 및 면적 기준 충족으로 매수 ��정",
     adminName: "홍길동",
     statusUpdatedAt: "2026-04-15",
   },
@@ -915,6 +941,26 @@ export const dummyApplications: Application[] = [
   appliedAt: "2026-04-06",
   aiResult: generateAIResult(dummyLandInfoList[8]),
   adminName: "최영호",
+  },
+  // 매수 충족 케이스 - 면적/형상 모두 충족
+  {
+    id: "app-met-001",
+    applicationNumber: "2026-0420-001",
+    applicantName: "이충족",
+    applicantContact: "010-1111-0000",
+    applicantAddress: "경기도 용인시 처인구 양지면 마성리 133",
+    landInfo: dummyLandInfoList[4], // land-005-met (충족 케이스)
+    actualUsage: "대",
+    reportedShape: "삼각형",
+    farmMachineDifficulty: false,
+    reason: "도로 편입으로 토지가 삼각형으로 변형되어 건축이 불가능합니다. 잔여면적 70㎡로 기준 이하입니다.",
+    attachments: ["토지대장.pdf", "지적도.pdf"],
+    status: "검토중",
+    adminStatus: "진행중",
+    appliedAt: "2026-04-20",
+    aiResult: generateAIResult(dummyLandInfoList[4]),
+    adminName: "홍길동",
+    statusUpdatedAt: "2026-04-21",
   },
   // 매수 불가 케이스 - 기각 처리됨
   {
