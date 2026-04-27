@@ -328,6 +328,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   {(application.landInfo.remainingArea + (application.additionalLands?.reduce((sum, l) => sum + l.remainingArea, 0) || 0)).toLocaleString()}m²
                 </span>
               </div>
+              
+              {/* 선택된 필지 기준 표시 안내 */}
+              <div className="flex items-center justify-center gap-2 pt-2 text-sm text-muted-foreground">
+                <div className="h-px flex-1 bg-border" />
+                <span className="flex items-center gap-1.5 px-2">
+                  <ChevronDown className="h-4 w-4" />
+                  아래 정보는 <Badge variant="secondary" className="mx-1">필지 {selectedLandIndex + 1}</Badge> 기준입니다
+                </span>
+                <div className="h-px flex-1 bg-border" />
+              </div>
             </div>
           ) : (
             <div className="rounded-lg border border-border p-4">
@@ -449,10 +459,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             <CardTitle className="flex items-center gap-2">
               <MapIcon className="h-5 w-5" />
               지도 및 토지 정보
+              {isMultipleLands && (
+                <Badge variant="outline" className="ml-auto font-normal">
+                  필지 {selectedLandIndex + 1}
+                </Badge>
+              )}
             </CardTitle>
             {isMultipleLands && (
               <CardDescription>
-                필지 {selectedLandIndex + 1}: {allLands[selectedLandIndex].address}
+                {allLands[selectedLandIndex].address}
               </CardDescription>
             )}
           </CardHeader>
@@ -517,9 +532,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             <CardTitle className="flex items-center gap-2">
               <Bot className="h-5 w-5" />
               AI 분석 결과
+              {isMultipleLands && (
+                <Badge variant="outline" className="ml-auto font-normal">
+                  필지 {selectedLandIndex + 1}
+                </Badge>
+              )}
             </CardTitle>
             <CardDescription>
-              {isMultipleLands && `필지 ${selectedLandIndex + 1} | `}토지 유형: {aiResult?.landTypePath || allLands[selectedLandIndex].landType}
+              토지 유형: {aiResult?.landTypePath || allLands[selectedLandIndex].landType}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -620,10 +640,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <CardTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
             담당자 검토
+            {isMultipleLands && (
+              <Badge variant="outline" className="ml-auto font-normal">
+                필지 {selectedLandIndex + 1}
+              </Badge>
+            )}
           </CardTitle>
           <CardDescription>
             {isMultipleLands 
-              ? `필지 ${selectedLandIndex + 1}: ${allLands[selectedLandIndex].address} | AI 분석 결과를 검토하고 필요 시 수정합니다.`
+              ? `${allLands[selectedLandIndex].address} | AI 분석 결과를 검토하고 필요 시 수정합니다.`
               : "AI 분석 결과를 검토하고 필요 시 수정합니다. 자동 판독 불가 항목은 수동으로 입력해주세요."
             }
           </CardDescription>
