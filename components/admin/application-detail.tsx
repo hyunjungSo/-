@@ -734,7 +734,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </div>
             </div>
           ) : (
-            /* 단일 필지 */}
+            /* 단일 필지 */
             <div className="space-y-5">
               {/* 민원인 입력 정보 */}
               {application.landDataList?.[0] && (
