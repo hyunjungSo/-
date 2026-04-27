@@ -394,11 +394,26 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             <CardTitle className="flex items-center gap-2">
               <Bot className="h-5 w-5" />
               AI 분석 결과
-              {isMultipleLands && (
-                <Badge variant="outline" className="ml-auto font-normal">
-                  필지 {selectedLandIndex + 1}
-                </Badge>
-              )}
+              <div className="ml-auto flex items-center gap-2">
+                {aiResult && (
+                  <Badge 
+                    className={
+                      aiResult.provisionalJudgment === "매수" 
+                        ? "bg-green-500 hover:bg-green-500 text-white" 
+                        : aiResult.provisionalJudgment === "매수불가" || aiResult.provisionalJudgment === "기각"
+                          ? "bg-red-500 hover:bg-red-500 text-white"
+                          : "bg-amber-500 hover:bg-amber-500 text-white"
+                    }
+                  >
+                    {aiResult.provisionalJudgment}
+                  </Badge>
+                )}
+                {isMultipleLands && (
+                  <Badge variant="outline" className="font-normal">
+                    필지 {selectedLandIndex + 1}
+                  </Badge>
+                )}
+              </div>
             </CardTitle>
             <CardDescription>
               토지 유형: {aiResult?.landTypePath || allLands[selectedLandIndex].landType}
@@ -414,29 +429,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <PlayCircle className="h-4 w-4" />
               분석 프로세스 상세 보기
             </Button>
-
-            {/* 잠정 판정 */}
-            {aiResult && (
-              <div className="rounded-lg border border-border bg-muted/50 p-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-base text-muted-foreground">잠정 판정</span>
-                  <div className="flex items-center gap-2">
-                    {(() => {
-                      const config = judgmentConfig[aiResult.provisionalJudgment];
-                      const Icon = config.icon;
-                      return (
-                        <>
-                          <Icon className={`h-5 w-5 ${config.color}`} />
-                          <span className={`font-semibold ${config.color}`}>
-                            {config.label}
-                          </span>
-                        </>
-                      );
-                    })()}
-                  </div>
-                </div>
-              </div>
-            )}
 
             {/* 기준 충족 여부 */}
             <div className="space-y-2">
@@ -529,7 +521,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           {/* 복수 필지: 비교 테이블 + 셀렉트박스 + 상세 검토 */}
           {isMultipleLands ? (
             <div className="space-y-6">
-              {/* 선택된 필지 상세 정보: AI 분석 | 민원인 입력 2컬럼 */}
+              {/* 선택된 필지 상세 정보: AI 분��� | 민원인 입력 2컬럼 */}
               {(() => {
                 const selectedLand = allLands[selectedLandIndex];
                 const selectedLandData = application.landDataList?.[selectedLandIndex];
