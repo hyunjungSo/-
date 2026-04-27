@@ -424,7 +424,7 @@ export function AIAnalysisFlowDialog({
               />
               <JudgmentCard
                 label="검토필요"
-                subLabel="추가 확인"
+                subLabel="추가 ��인"
                 color="amber"
                 active={animationStep >= 6 && finalJudgment === "검토필요"}
                 icon={AlertTriangle}
@@ -477,7 +477,7 @@ export function AIAnalysisFlowDialog({
 // STEP 헤더 컴포넌트
 function StepHeader({ step, title, active }: { step: number; title: string; active: boolean }) {
   return (
-    <div className="text-center mb-4">
+    <div className="mb-4">
       <motion.span 
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: active ? 1 : 0.5, y: 0 }}
