@@ -130,14 +130,19 @@ export function AIAnalysisFlowDialog({
                   <div
                     key={type}
                     className={cn(
-                      "flex flex-col items-center gap-1 rounded-lg border-2 p-3 transition-all duration-500",
+                      "relative flex flex-col items-center gap-1 rounded-lg border-2 p-3 transition-all duration-500",
                       isSelected
-                        ? `${landTypeColors[type]} text-white border-transparent shadow-lg scale-105`
+                        ? "border-green-500 bg-green-50"
                         : "border-border bg-muted/30 text-muted-foreground"
                     )}
                   >
-                    <TypeIcon className="h-5 w-5" />
-                    <span className="text-sm font-semibold">{type}</span>
+                    {isSelected && (
+                      <div className="absolute -top-2 -right-2 rounded-full bg-green-500 p-0.5">
+                        <CheckCircle2 className="h-4 w-4 text-white" />
+                      </div>
+                    )}
+                    <TypeIcon className={cn("h-5 w-5", isSelected ? "text-green-600" : "")} />
+                    <span className={cn("text-sm font-semibold", isSelected ? "text-green-700" : "")}>{type}</span>
                   </div>
                 );
               })}
@@ -177,10 +182,10 @@ export function AIAnalysisFlowDialog({
                 checked={currentLandType === "대지" && areaMet && animationStep >= 2}
               >
                 <p className="text-sm font-semibold mb-1">면적 기준</p>
-                <p className="text-[10px] text-muted-foreground">주거 90㎡ 이하</p>
-                <p className="text-[10px] text-muted-foreground">상업 150㎡ 이하</p>
-                <p className="text-[10px] text-muted-foreground">공업 330㎡ 이하</p>
-                <p className="text-[10px] text-primary mt-1">잔여비율 25% 이하 시 1.5배 완화</p>
+                <p className="text-sm text-muted-foreground">주거 90㎡ 이하</p>
+                <p className="text-sm text-muted-foreground">상업 150㎡ 이하</p>
+                <p className="text-sm text-muted-foreground">공업 330㎡ 이하</p>
+                <p className="text-sm text-primary mt-1">잔여비율 25% 이하 시 1.5배 완화</p>
               </PathBox>
 
               {/* 농지 */}
@@ -189,9 +194,9 @@ export function AIAnalysisFlowDialog({
                 checked={currentLandType === "농지" && areaMet && animationStep >= 2}
               >
                 <p className="text-sm font-semibold mb-1">면적 기준</p>
-                <p className="text-[10px] text-muted-foreground">기본 330㎡ 이하</p>
-                <p className="text-[10px] text-primary mt-1">잔여비율 25% 이하 시</p>
-                <p className="text-[10px] text-primary">495㎡ 이하 (완화)</p>
+                <p className="text-sm text-muted-foreground">기본 330㎡ 이하</p>
+                <p className="text-sm text-primary mt-1">잔여비율 25% 이하 시</p>
+                <p className="text-sm text-primary">495㎡ 이하 (완화)</p>
               </PathBox>
 
               {/* 산지 */}
@@ -200,9 +205,9 @@ export function AIAnalysisFlowDialog({
                 checked={currentLandType === "산지" && areaMet && animationStep >= 2}
               >
                 <p className="text-sm font-semibold mb-1">면적 기준</p>
-                <p className="text-[10px] text-muted-foreground">기본 330㎡ 이하</p>
-                <p className="text-[10px] text-primary mt-1">잔여비율 25% 이하 시</p>
-                <p className="text-[10px] text-primary">495㎡ 이하 (완화)</p>
+                <p className="text-sm text-muted-foreground">기본 330㎡ 이하</p>
+                <p className="text-sm text-primary mt-1">잔여비율 25% 이하 시</p>
+                <p className="text-sm text-primary">495㎡ 이하 (완화)</p>
               </PathBox>
 
               {/* 그밖의토지 */}
@@ -211,9 +216,9 @@ export function AIAnalysisFlowDialog({
                 checked={currentLandType === "그밖의토지" && areaMet && animationStep >= 2}
               >
                 <p className="text-sm font-semibold mb-1">면적 기준</p>
-                <p className="text-[10px] text-muted-foreground">기본 330㎡ 이하</p>
-                <p className="text-[10px] text-muted-foreground">또는</p>
-                <p className="text-[10px] text-muted-foreground">잔여비율 50% 이하</p>
+                <p className="text-sm text-muted-foreground">기본 330㎡ 이하</p>
+                <p className="text-sm text-muted-foreground">또는</p>
+                <p className="text-sm text-muted-foreground">잔여비율 50% 이하</p>
               </PathBox>
             </div>
           </div>
@@ -251,8 +256,8 @@ export function AIAnalysisFlowDialog({
                 checked={currentLandType === "대지" && accessRoadLost && animationStep >= 3}
               >
                 <p className="text-sm font-semibold mb-1">접면 도로 상태 변경</p>
-                <p className="text-[10px] text-muted-foreground">접면도로 상태 변경으로</p>
-                <p className="text-[10px] text-muted-foreground">건축허가 불가</p>
+                <p className="text-sm text-muted-foreground">접면도로 상태 변경으로</p>
+                <p className="text-sm text-muted-foreground">건축허가 불가</p>
               </PathBox>
 
               {/* 농지 */}
@@ -261,8 +266,8 @@ export function AIAnalysisFlowDialog({
                 checked={currentLandType === "농지" && accessRoadLost && animationStep >= 3}
               >
                 <p className="text-sm font-semibold mb-1">접면 도로/수로 상실</p>
-                <p className="text-[10px] text-muted-foreground">도로/수로 상실로</p>
-                <p className="text-[10px] text-muted-foreground">농지로서의 사용 불가</p>
+                <p className="text-sm text-muted-foreground">도로/수로 상실로</p>
+                <p className="text-sm text-muted-foreground">농지로서의 사용 불가</p>
               </PathBox>
 
               {/* 산지 */}
@@ -271,9 +276,9 @@ export function AIAnalysisFlowDialog({
                 checked={currentLandType === "산지" && accessRoadLost && animationStep >= 3}
               >
                 <p className="text-sm font-semibold mb-1">접면 도로 상실</p>
-                <p className="text-[10px] text-muted-foreground">산지가 도로와 접하였다가</p>
-                <p className="text-[10px] text-muted-foreground">공익사업으로 인해</p>
-                <p className="text-[10px] text-muted-foreground">접한 도로가 없어진 경우</p>
+                <p className="text-sm text-muted-foreground">산지가 도로와 접하였다가</p>
+                <p className="text-sm text-muted-foreground">공익사업으로 인해</p>
+                <p className="text-sm text-muted-foreground">접한 도로가 없어진 경우</p>
               </PathBox>
 
               {/* 그밖의토지 */}
@@ -282,7 +287,7 @@ export function AIAnalysisFlowDialog({
                 checked={currentLandType === "그밖의토지" && accessRoadLost && animationStep >= 3}
               >
                 <p className="text-sm font-semibold mb-1">진입 곤란</p>
-                <p className="text-[10px] text-muted-foreground">절토 및 성토/옹벽 설치 등</p>
+                <p className="text-sm text-muted-foreground">절토 및 성토/옹벽 설치 등</p>
               </PathBox>
             </div>
           </div>
@@ -320,8 +325,8 @@ export function AIAnalysisFlowDialog({
                 checked={currentLandType === "대지" && shapeChanged && animationStep >= 4}
               >
                 <p className="text-sm font-semibold mb-1">형상 부정형 변경</p>
-                <p className="text-[10px] text-muted-foreground">사각형 폭: 5m 이하</p>
-                <p className="text-[10px] text-muted-foreground">삼각형 한 변: 11m 이하</p>
+                <p className="text-sm text-muted-foreground">사각형 폭: 5m 이하</p>
+                <p className="text-sm text-muted-foreground">삼각형 한 변: 11m 이하</p>
               </PathBox>
 
               {/* 농지 */}
@@ -330,9 +335,9 @@ export function AIAnalysisFlowDialog({
                 checked={currentLandType === "농지" && shapeChanged && animationStep >= 4}
               >
                 <p className="text-sm font-semibold mb-1">농기계 회전 곤란, 형상 변경</p>
-                <p className="text-[10px] text-muted-foreground">농기계 진입 및 회전 곤란</p>
-                <p className="text-[10px] text-muted-foreground">사각형 폭: 5m 이하</p>
-                <p className="text-[10px] text-muted-foreground">삼각형 한 변: 11m 이하</p>
+                <p className="text-sm text-muted-foreground">농기계 진입 및 회전 곤란</p>
+                <p className="text-sm text-muted-foreground">사각형 폭: 5m 이하</p>
+                <p className="text-sm text-muted-foreground">삼각형 한 변: 11m 이하</p>
               </PathBox>
 
               {/* 산지 - 해당 없음 */}
@@ -350,9 +355,9 @@ export function AIAnalysisFlowDialog({
                 checked={currentLandType === "그밖의토지" && shapeChanged && animationStep >= 4}
               >
                 <p className="text-sm font-semibold mb-1">양분/형상 변경</p>
-                <p className="text-[10px] text-muted-foreground">일단의 토지가 양분</p>
-                <p className="text-[10px] text-muted-foreground">정형: 잔여지 폭 기준 이하</p>
-                <p className="text-[10px] text-muted-foreground">비정형: 형상지수 1.0↑ 상승</p>
+                <p className="text-sm text-muted-foreground">일단의 토지가 양분</p>
+                <p className="text-sm text-muted-foreground">정형: 잔여지 폭 기준 이하</p>
+                <p className="text-sm text-muted-foreground">비정형: 형상지수 1.0↑ 상승</p>
               </PathBox>
             </div>
           </div>
@@ -390,7 +395,7 @@ export function AIAnalysisFlowDialog({
                   <div
                     key={type}
                     className={cn(
-                      "rounded-lg border p-3 text-[10px] transition-all duration-500",
+                      "rounded-lg border p-3 text-sm transition-all duration-500",
                       isActive ? "border-primary bg-primary/5" : "border-border bg-muted/30 text-muted-foreground"
                     )}
                   >
