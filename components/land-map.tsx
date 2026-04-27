@@ -247,15 +247,18 @@ export function LandMap({
       ctx.fillText(shortAddress, rect.width * 0.5, rect.height * 0.92);
     }
     
-    // 거리 측정 포인트 및 라인 그리기
+    // 거리 측정 포인트 및 라인 그리기 (네이버 지도 스타일)
     if (measurePoints.length > 0) {
       const pixelsPerMeter = getPixelsPerMeter();
+      const NAVER_PINK = "#ff3478"; // 네이버 지도 핑크색
       
       // 라인 그리기
       if (measurePoints.length > 1) {
-        ctx.strokeStyle = "#f97316";
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = NAVER_PINK;
+        ctx.lineWidth = 3;
         ctx.setLineDash([]);
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
         ctx.beginPath();
         ctx.moveTo(measurePoints[0].x, measurePoints[0].y);
         for (let i = 1; i < measurePoints.length; i++) {
@@ -263,7 +266,7 @@ export function LandMap({
         }
         ctx.stroke();
         
-        // 각 구간 거리 표시
+        // 각 구간 중간에 거리 라벨 표시
         for (let i = 1; i < measurePoints.length; i++) {
           const p1 = measurePoints[i - 1];
           const p2 = measurePoints[i];
@@ -271,43 +274,47 @@ export function LandMap({
           const midY = (p1.y + p2.y) / 2;
           const distance = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)) / pixelsPerMeter;
           
-          // 거리 라벨 배경
-          ctx.fillStyle = "rgba(249, 115, 22, 0.9)";
-          const label = `${distance.toFixed(1)}m`;
-          const labelWidth = ctx.measureText(label).width + 8;
-          ctx.fillRect(midX - labelWidth / 2, midY - 8, labelWidth, 16);
+          // 거리 라벨 (네이버 스타일: 흰 배경 + 핑크 테두리)
+          ctx.font = "bold 12px sans-serif";
+          const label = distance >= 1000 ? `${(distance/1000).toFixed(1)}km` : `${distance.toFixed(0)}m`;
+          const labelWidth = ctx.measureText(label).width + 12;
+          
+          // 라벨 배경 (둥근 사각형)
+          ctx.fillStyle = "#ffffff";
+          ctx.strokeStyle = NAVER_PINK;
+          ctx.lineWidth = 1.5;
+          const labelHeight = 22;
+          const radius = 4;
+          ctx.beginPath();
+          ctx.roundRect(midX - labelWidth / 2, midY - labelHeight / 2, labelWidth, labelHeight, radius);
+          ctx.fill();
+          ctx.stroke();
           
           // 거리 텍스트
-          ctx.fillStyle = "#ffffff";
-          ctx.font = "bold 11px sans-serif";
+          ctx.fillStyle = NAVER_PINK;
           ctx.textAlign = "center";
-          ctx.fillText(label, midX, midY + 4);
+          ctx.textBaseline = "middle";
+          ctx.fillText(label, midX, midY);
         }
       }
       
-      // 포인트 그리기
+      // 포인트 그리기 (네이버 스타일: 흰색 원 + 핑크 테두리)
       measurePoints.forEach((point, index) => {
-        // 외곽 원
+        // 외곽 원 (핑크 테두리)
         ctx.beginPath();
-        ctx.arc(point.x, point.y, 8, 0, Math.PI * 2);
+        ctx.arc(point.x, point.y, 7, 0, Math.PI * 2);
         ctx.fillStyle = "#ffffff";
         ctx.fill();
-        ctx.strokeStyle = "#f97316";
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = NAVER_PINK;
+        ctx.lineWidth = 2.5;
         ctx.stroke();
         
-        // 내부 원
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, 4, 0, Math.PI * 2);
-        ctx.fillStyle = "#f97316";
-        ctx.fill();
-        
-        // 포인트 번호
-        if (measurePoints.length > 1) {
-          ctx.fillStyle = "#f97316";
-          ctx.font = "bold 10px sans-serif";
-          ctx.textAlign = "center";
-          ctx.fillText(`${index + 1}`, point.x, point.y - 14);
+        // 첫 번째 포인트는 내부에 작은 핑크 원
+        if (index === 0 && measurePoints.length > 1) {
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
+          ctx.fillStyle = NAVER_PINK;
+          ctx.fill();
         }
       });
     }
@@ -397,9 +404,10 @@ export function LandMap({
           className={cn(
             "h-8 gap-1.5 shadow-sm",
             measureMode 
-              ? "bg-orange-500 text-white hover:bg-orange-600" 
+              ? "text-white hover:opacity-90" 
               : "border-gray-300 bg-white/95 text-[#222222] hover:bg-white"
           )}
+          style={measureMode ? { backgroundColor: '#ff3478' } : undefined}
           onClick={toggleMeasureMode}
         >
           <Ruler className="h-4 w-4" />
@@ -492,49 +500,53 @@ export function LandMap({
         onClick={handleCanvasClick}
       />
       
-      {/* 거리 측정 모드 안내 및 결과 */}
+      {/* 거리 측정 모드 안내 및 결과 (네이버 지도 스타일) */}
       {measureMode && (
-        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between rounded-lg bg-orange-500 px-4 py-2.5 text-white shadow-lg">
-          <div className="flex items-center gap-3">
-            <Ruler className="h-5 w-5" />
-            <div>
-              {measurePoints.length === 0 ? (
-                <span className="text-sm">지도를 클릭하여 측정을 시작하세요</span>
-              ) : (
-                <div className="flex items-center gap-4">
-                  <span className="text-sm">
-                    포인트: <strong>{measurePoints.length}개</strong>
-                  </span>
-                  {totalDistance > 0 && (
-                    <span className="text-sm">
-                      총 거리: <strong>{totalDistance.toFixed(1)}m</strong>
-                    </span>
-                  )}
-                </div>
-              )}
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-lg bg-white shadow-lg border border-gray-200 overflow-hidden">
+          {measurePoints.length === 0 ? (
+            <div className="px-4 py-3 text-sm text-gray-600">
+              지도를 클릭하여 거리 측정을 시작하세요
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {measurePoints.length > 0 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 gap-1 px-2 text-white hover:bg-orange-600 hover:text-white"
-                onClick={resetMeasurement}
-              >
-                <RotateCcw className="h-3.5 w-3.5" />
-                <span className="text-xs">초기화</span>
-              </Button>
-            )}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 w-7 p-0 text-white hover:bg-orange-600 hover:text-white"
-              onClick={toggleMeasureMode}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
+          ) : (
+            <div className="min-w-[200px]">
+              {/* 거리 정보 테이블 */}
+              <div className="px-4 py-3 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-700">총거리</span>
+                  <span className="text-sm font-bold" style={{ color: '#ff3478' }}>
+                    {totalDistance >= 1000 
+                      ? `${(totalDistance/1000).toFixed(1)}km` 
+                      : `${totalDistance.toFixed(0)}m`}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-700">도보</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    {Math.ceil(totalDistance / 67)}분
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-700">자전거</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    {Math.ceil(totalDistance / 250)}분
+                  </span>
+                </div>
+              </div>
+              {/* 안내 문구 */}
+              <div className="px-4 py-2 bg-gray-50 border-t border-gray-100 text-xs text-gray-500">
+                우클릭 또는 ESC로 측정 종료
+              </div>
+            </div>
+          )}
+          {/* 닫기 버튼 */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-1 right-1 h-6 w-6 p-0 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+            onClick={toggleMeasureMode}
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </div>
       )}
       
