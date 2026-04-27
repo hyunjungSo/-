@@ -19,6 +19,8 @@ import {
   MapPin,
   Bot,
   ChevronDown,
+  ArrowDown,
+  Circle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
