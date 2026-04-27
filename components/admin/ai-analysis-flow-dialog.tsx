@@ -117,31 +117,17 @@ export function AIAnalysisFlowDialog({
                 return (
                   <motion.div
                     key={type}
-                    initial={{ scale: 0.95 }}
-                    animate={{ scale: isSelected ? 1.02 : 1 }}
+                    initial={{ scale: 0.98 }}
+                    animate={{ scale: isSelected ? 1 : 0.98 }}
                     className={cn(
-                      "relative flex flex-col items-center gap-2 rounded-2xl border-2 p-4 transition-all duration-500",
+                      "flex flex-col items-center gap-2 rounded-lg border p-4 transition-all duration-300",
                       isSelected
-                        ? "border-emerald-400 bg-gradient-to-br from-emerald-50 to-white shadow-lg shadow-emerald-100"
-                        : "border-gray-100 bg-white text-gray-400"
+                        ? "border-green-500 bg-green-50"
+                        : "border-border bg-muted/30"
                     )}
                   >
-                    {isSelected && (
-                      <motion.div 
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute -top-2.5 -right-2.5 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 p-1 shadow-md"
-                      >
-                        <CheckCircle2 className="h-4 w-4 text-white" />
-                      </motion.div>
-                    )}
-                    <div className={cn(
-                      "rounded-xl p-2.5 transition-all",
-                      isSelected ? "bg-emerald-100" : "bg-gray-50"
-                    )}>
-                      <TypeIcon className={cn("h-5 w-5", isSelected ? "text-emerald-600" : "text-gray-400")} />
-                    </div>
-                    <span className={cn("text-sm font-semibold", isSelected ? "text-emerald-700" : "text-gray-400")}>
+                    <TypeIcon className={cn("h-5 w-5", isSelected ? "text-green-600" : "text-muted-foreground")} />
+                    <span className={cn("text-sm font-semibold", isSelected ? "text-green-700" : "text-muted-foreground")}>
                       {type}
                     </span>
                   </motion.div>
@@ -164,7 +150,6 @@ export function AIAnalysisFlowDialog({
             <div className="grid grid-cols-4 gap-4 mb-3">
               <PathCard
                 active={currentLandType === "대지" && animationStep >= 2}
-                checked={currentLandType === "대지" && areaMet && animationStep >= 2}
               >
                 <p className="font-semibold text-gray-800 mb-2">면적 기준</p>
                 <div className="space-y-1 text-sm text-gray-500">
@@ -177,7 +162,6 @@ export function AIAnalysisFlowDialog({
 
               <PathCard
                 active={currentLandType === "농지" && animationStep >= 2}
-                checked={currentLandType === "농지" && areaMet && animationStep >= 2}
               >
                 <p className="font-semibold text-gray-800 mb-2">면적 기준</p>
                 <div className="space-y-1 text-sm text-gray-500">
@@ -188,7 +172,6 @@ export function AIAnalysisFlowDialog({
 
               <PathCard
                 active={currentLandType === "산지" && animationStep >= 2}
-                checked={currentLandType === "산지" && areaMet && animationStep >= 2}
               >
                 <p className="font-semibold text-gray-800 mb-2">면적 기준</p>
                 <div className="space-y-1 text-sm text-gray-500">
@@ -199,7 +182,6 @@ export function AIAnalysisFlowDialog({
 
               <PathCard
                 active={currentLandType === "그밖의토지" && animationStep >= 2}
-                checked={currentLandType === "그밖의토지" && areaMet && animationStep >= 2}
               >
                 <p className="font-semibold text-gray-800 mb-2">면적 기준</p>
                 <div className="space-y-1 text-sm text-gray-500">
@@ -222,10 +204,7 @@ export function AIAnalysisFlowDialog({
             <StepHeader step={3} title="접면 도로/수로 상실 여부" active={animationStep >= 3} />
 
             <div className="grid grid-cols-4 gap-4 mb-3">
-              <PathCard
-                active={currentLandType === "대지" && animationStep >= 3}
-                checked={currentLandType === "대지" && accessRoadLost && animationStep >= 3}
-              >
+              <PathCard active={currentLandType === "대지" && animationStep >= 3}>
                 <p className="font-semibold text-gray-800 mb-2">접면 도로 상태 변경</p>
                 <div className="space-y-1 text-sm text-gray-500">
                   <p>접면도로 상태 변경으로</p>
@@ -233,10 +212,7 @@ export function AIAnalysisFlowDialog({
                 </div>
               </PathCard>
 
-              <PathCard
-                active={currentLandType === "농지" && animationStep >= 3}
-                checked={currentLandType === "농지" && accessRoadLost && animationStep >= 3}
-              >
+              <PathCard active={currentLandType === "농지" && animationStep >= 3}>
                 <p className="font-semibold text-gray-800 mb-2">접면 도로/수로 상실</p>
                 <div className="space-y-1 text-sm text-gray-500">
                   <p>도로/수로 상실로</p>
@@ -244,10 +220,7 @@ export function AIAnalysisFlowDialog({
                 </div>
               </PathCard>
 
-              <PathCard
-                active={currentLandType === "산지" && animationStep >= 3}
-                checked={currentLandType === "산지" && accessRoadLost && animationStep >= 3}
-              >
+              <PathCard active={currentLandType === "산지" && animationStep >= 3}>
                 <p className="font-semibold text-gray-800 mb-2">접면 도로 상실</p>
                 <div className="space-y-1 text-sm text-gray-500">
                   <p>공익사업으로 인해</p>
@@ -255,10 +228,7 @@ export function AIAnalysisFlowDialog({
                 </div>
               </PathCard>
 
-              <PathCard
-                active={currentLandType === "그밖의토지" && animationStep >= 3}
-                checked={currentLandType === "그밖의토지" && accessRoadLost && animationStep >= 3}
-              >
+              <PathCard active={currentLandType === "그밖의토지" && animationStep >= 3}>
                 <p className="font-semibold text-gray-800 mb-2">진입 곤란</p>
                 <div className="space-y-1 text-sm text-gray-500">
                   <p>절토 및 성토</p>
@@ -280,10 +250,7 @@ export function AIAnalysisFlowDialog({
             <StepHeader step={4} title="형상 부정형으로 변경" active={animationStep >= 4} />
 
             <div className="grid grid-cols-4 gap-4 mb-3">
-              <PathCard
-                active={currentLandType === "대지" && animationStep >= 4}
-                checked={currentLandType === "대지" && shapeChanged && animationStep >= 4}
-              >
+              <PathCard active={currentLandType === "대지" && animationStep >= 4}>
                 <p className="font-semibold text-gray-800 mb-2">형상 부정형 변경</p>
                 <div className="space-y-1 text-sm text-gray-500">
                   <p>사각형 폭: 5m 이하</p>
@@ -291,10 +258,7 @@ export function AIAnalysisFlowDialog({
                 </div>
               </PathCard>
 
-              <PathCard
-                active={currentLandType === "농지" && animationStep >= 4}
-                checked={currentLandType === "농지" && shapeChanged && animationStep >= 4}
-              >
+              <PathCard active={currentLandType === "농지" && animationStep >= 4}>
                 <p className="font-semibold text-gray-800 mb-2">농기계 회전 곤란</p>
                 <div className="space-y-1 text-sm text-gray-500">
                   <p>농기계 진입/회전 곤란</p>
@@ -302,18 +266,11 @@ export function AIAnalysisFlowDialog({
                 </div>
               </PathCard>
 
-              <PathCard
-                active={currentLandType === "산지" && animationStep >= 4}
-                checked={false}
-                empty
-              >
+              <PathCard active={currentLandType === "산지" && animationStep >= 4} empty>
                 <p className="text-sm text-gray-400 italic">해당 없음</p>
               </PathCard>
 
-              <PathCard
-                active={currentLandType === "그밖의토지" && animationStep >= 4}
-                checked={currentLandType === "그밖의토지" && shapeChanged && animationStep >= 4}
-              >
+              <PathCard active={currentLandType === "그밖의토지" && animationStep >= 4}>
                 <p className="font-semibold text-gray-800 mb-2">양분/형상 변경</p>
                 <div className="space-y-1 text-sm text-gray-500">
                   <p>일단의 토지가 양분</p>
@@ -489,12 +446,10 @@ function StepHeader({ step, title, active }: { step: number; title: string; acti
 // 경로 카드 컴포넌트
 function PathCard({
   active,
-  checked,
   empty = false,
   children,
 }: {
   active: boolean;
-  checked: boolean;
   empty?: boolean;
   children: React.ReactNode;
 }) {
@@ -503,25 +458,13 @@ function PathCard({
       initial={{ scale: 0.98 }}
       animate={{ scale: active ? 1 : 0.98 }}
       className={cn(
-        "relative rounded-lg border p-4 transition-all duration-300 min-h-[100px]",
+        "rounded-lg border p-4 transition-all duration-300 min-h-[100px]",
         active
-          ? checked
-            ? "border-green-500 bg-green-50"
-            : "border-green-400 bg-green-50/50"
+          ? "border-green-500 bg-green-50"
           : "border-border bg-muted/30",
         empty && "border-dashed"
       )}
     >
-      {active && checked && (
-        <motion.div 
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 200 }}
-          className="absolute -top-2 -right-2 rounded-full bg-green-500 p-0.5"
-        >
-          <CheckCircle2 className="h-4 w-4 text-white" />
-        </motion.div>
-      )}
       <div className={cn(!active && "opacity-40")}>
         {children}
       </div>
