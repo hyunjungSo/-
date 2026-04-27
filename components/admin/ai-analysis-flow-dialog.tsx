@@ -17,7 +17,6 @@ import {
   Star,
   Layers,
   Check,
-  Square,
 } from "lucide-react";
 
 interface AIAnalysisFlowDialogProps {
@@ -480,21 +479,24 @@ function PathColumn({
                   ? "border-blue-300 bg-white"
                   : "border-gray-200 bg-white"
             )}>
-              {/* 카드 타이틀 */}
-              <div className="flex items-center gap-2 mb-2">
-                {isActive && c.items.some(item => item.isMet) ? (
-                  <div className="flex-shrink-0 w-5 h-5 rounded bg-red-500 flex items-center justify-center">
-                    <Check className="h-3 w-3 text-white" />
-                  </div>
-                ) : (
-                  <Square className="h-4 w-4 text-gray-300 flex-shrink-0" />
-                )}
+              {/* 카드 타이틀 + 뱃지 */}
+              <div className="flex items-center justify-between mb-2">
                 <p className={cn(
                   "text-sm font-semibold",
-                  isActive && c.items.some(item => item.isMet) ? "text-red-600" : "text-gray-700"
+                  isActive && c.items.some(item => item.isMet) ? "text-green-700" : "text-gray-700"
                 )}>
                   {c.title}
                 </p>
+                {isActive && (
+                  <span className={cn(
+                    "text-xs font-bold px-2 py-0.5 rounded",
+                    c.items.some(item => item.isMet) 
+                      ? "bg-green-500 text-white" 
+                      : "bg-red-500 text-white"
+                  )}>
+                    {c.items.some(item => item.isMet) ? "충족" : "미충족"}
+                  </span>
+                )}
               </div>
 
               {/* 기준 항목들 */}
@@ -535,10 +537,15 @@ function PathColumn({
                       {item.subLabel && (
                         <p className="text-xs text-gray-400 mt-0.5">{item.subLabel}</p>
                       )}
-                      {/* 충족 여부 상세 설명 */}
+                      {/* 충족/미충족 상세 설명 */}
                       {item.isSelected && item.isMet && (
                         <p className="text-xs text-green-600 mt-1 font-medium">
-                          ✓ 기준 충족: 잔여면적 {remainingArea}㎡ ≤ 기준 {effectiveThreshold}㎡ {isRatioRelaxed && "(완화적용)"}
+                          ✓ 기준 충족: 잔여면적 {remainingArea.toLocaleString()}㎡ ≤ 기준 {effectiveThreshold.toLocaleString()}㎡ {isRatioRelaxed && "(완화적용)"}
+                        </p>
+                      )}
+                      {item.isSelected && !item.isMet && (
+                        <p className="text-xs text-red-600 mt-1 font-medium">
+                          ✗ 기준 미충족: 잔여면적 {remainingArea.toLocaleString()}㎡ {">"} 기준 {effectiveThreshold.toLocaleString()}㎡ {isRatioRelaxed && "(완화적용)"}
                         </p>
                       )}
                     </div>
