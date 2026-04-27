@@ -533,11 +533,7 @@ function PathColumn({
                 {c.items.map((item, itemIdx) => (
                   <div 
                     key={itemIdx}
-                    className={cn(
-                      "flex items-start gap-2 text-sm rounded px-2 py-1 transition-all",
-                      item.isSelected && item.isMet ? "bg-green-100 border border-green-300" : 
-                      item.isSelected ? "bg-blue-50 border border-blue-200" : ""
-                    )}
+                    className="flex items-start gap-2 text-sm px-2 py-1"
                   >
                     {item.isSelected && (
                       <div className={cn(
@@ -550,15 +546,14 @@ function PathColumn({
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <span className={cn(
-                          item.isSelected ? (item.isMet ? "text-green-700 font-semibold" : "text-blue-700") : "text-gray-600"
+                          "text-gray-700",
+                          item.isSelected && item.isMet && "text-green-700 font-semibold",
+                          item.isSelected && !item.isMet && "text-red-700 font-semibold"
                         )}>
                           {item.label}
                         </span>
                         {item.value && (
-                          <span className={cn(
-                            "text-sm",
-                            item.highlight ? "text-blue-600 font-semibold" : "text-gray-500"
-                          )}>
+                          <span className="text-sm text-gray-500">
                             {item.value}
                           </span>
                         )}
@@ -584,7 +579,7 @@ function PathColumn({
 
               {/* 참고 사항 */}
               {c.note && (
-                <p className="text-xs text-blue-600 mt-2 pl-1">{c.note}</p>
+                <p className="text-xs text-gray-500 mt-2 pl-1">{c.note}</p>
               )}
             </div>
           )}
