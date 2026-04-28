@@ -118,12 +118,20 @@ export function AIAnalysisFlowDialog({
       <DialogContent 
         className="max-h-[95vh] overflow-y-auto p-0 border-0 shadow-2xl bg-white" 
         style={{ width: '75vw', maxWidth: '1400px', minWidth: '1000px' }}
+        showCloseButton={false}
       >
         {/* 헤더 */}
-        <DialogHeader className="px-6 pt-4 pb-4 bg-white sticky top-0 z-10 border-b border-gray-100">
+        <DialogHeader className="px-6 pt-4 pb-4 bg-white sticky top-0 z-10 border-b border-gray-100 flex flex-row items-center justify-between">
           <DialogTitle className="text-lg font-semibold text-foreground">
             AI 분석 프로세스
           </DialogTitle>
+          <button
+            onClick={() => onOpenChange(false)}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+            aria-label="닫기"
+          >
+            <X className="h-6 w-6" />
+          </button>
         </DialogHeader>
 
         <div className="p-4">
@@ -285,7 +293,7 @@ export function AIAnalysisFlowDialog({
                     { label: "기본 면적", value: "330㎡ 이하", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && areaMet,
                       explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 330㎡`,
                       explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 330㎡` },
-                    { label: "또는", value: "잔여 비율 50% 이하", isSelected: currentLandType === "그밖의토지" && remainingRatio <= 50, isMet: currentLandType === "그밖���토지" && remainingRatio <= 50,
+                    { label: "또는", value: "잔여 비율 50% 이하", isSelected: currentLandType === "그밖의토지" && remainingRatio <= 50, isMet: currentLandType === "���밖���토지" && remainingRatio <= 50,
                       explanationMet: `잔여비율 ${remainingRatio.toFixed(1)}% ≤ 기준 50%`,
                       explanationUnmet: `잔여비율 ${remainingRatio.toFixed(1)}% > 기준 50%` },
                   ],
