@@ -101,7 +101,7 @@ const regionData = {
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
-    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "강서동", "율량동"],
+    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "강서��", "율량동"],
     "청주시 흥덕구": ["강내면", "옥산면", "오송읍", "가경동", "복대동", "봉명동", "송정동", "신봉동"],
     "충주시": ["가금면", "금가면", "노은면", "대소원면", "동량면", "산척면", "살미면", "소태면", "수안보면", "신니면", "앙성면", "엄정면", "이류면", "주덕읍", "중앙탑면"],
     "제천시": ["금성면", "덕산면", "백운면", "봉양읍", "송학면", "수산면", "청풍면", "한수면"],
@@ -1357,25 +1357,13 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                               className="flex flex-1 cursor-pointer items-center justify-between text-left"
                             >
                               <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <span className={`text-sm ${
+                                <span className={`text-sm ${
                                     !(isOwned || (isFirstResult && !ownedParcels.size)) 
                                       ? "text-muted-foreground" 
                                       : ""
                                   }`}>
                                     {land.address}
                                   </span>
-                                  {(isOwned || (isFirstResult && !ownedParcels.size)) && (
-                                    <Badge variant="outline" className="text-xs text-green-600 border-green-300 bg-green-50">
-                                      본인 소유
-                                    </Badge>
-                                  )}
-                                  {!(isOwned || (isFirstResult && !ownedParcels.size)) && (
-                                    <Badge variant="outline" className="text-xs text-muted-foreground">
-                                      인접지
-                                    </Badge>
-                                  )}
-                                </div>
                                 <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
                                   <span>잔여 {land.remainingArea.toLocaleString()}㎡</span>
                                   <span>|</span>
@@ -1397,7 +1385,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     <div className="border-t bg-muted/30 px-3 py-2">
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-muted-foreground">
-                          본인 소유: {ownedParcels.size || 1}필지 / 인접지: {searchResults.length - (ownedParcels.size || 1)}필지
+                          선택: {ownedParcels.size || 1}필지
                         </span>
                         <span className="font-medium text-primary">
                           총 {searchResults.length}필지
@@ -1599,7 +1587,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         {aiResult.provisionalJudgment === "매수" 
                           ? "매수 가능" 
                           : aiResult.provisionalJudgment === "심의위원회이관"
-                            ? "경계 사례"
+                            ? "경계 사��"
                             : "기준 미충족"}
                       </Badge>
                     </div>
@@ -1961,7 +1949,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             })}
                           </div>
                           
-                          {/* 이 관할기관 선택 항목 신청하기 버튼 */}
+                          {/* 이 관���기관 선택 항목 신청하기 버튼 */}
                           <div className="border-t p-3">
                             <Button 
                               onClick={() => {
