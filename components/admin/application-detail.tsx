@@ -154,8 +154,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     }, 1000);
   };
 
-  const aiResult = application.aiResult;
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">

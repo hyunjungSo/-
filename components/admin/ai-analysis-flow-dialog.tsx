@@ -164,8 +164,8 @@ export function AIAnalysisFlowDialog({
                   note: "잔여 비율 25% 이하 시, 1.5배 완화 적용",
                   showStep: 2,
                 },
-                {
-                  title: "접면 도로 상태 변경",
+{
+                  title: "접면도로 상태 변경",
                   items: [
                     { label: "접면도로 상태 변경으로 건축허가 불가", isSelected: currentLandType === "대지", isMet: currentLandType === "대지" && accessRoadLost,
                       explanationMet: "접면도로 상태 변경으로 건축 불가 상태 확인됨",
@@ -284,9 +284,9 @@ export function AIAnalysisFlowDialog({
                   items: [
                     { label: "기본 면적", value: "330㎡ 이하", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && areaMet,
                       explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 330㎡`,
-                      explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 330㎡` },
-                    { label: "또는", value: "잔여 비율 50% 이하", isSelected: currentLandType === "그밖의토지" && remainingRatio <= 50, isMet: currentLandType === "그밖���토지" && remainingRatio <= 50,
-                      explanationMet: `잔여비율 ${remainingRatio.toFixed(1)}% ≤ 기준 50%`,
+explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 330㎡` },
+                    { label: "또는", value: "잔여 비율 50% 이하", isSelected: currentLandType === "그밖의토지" && remainingRatio <= 50, isMet: currentLandType === "그밖의토지" && remainingRatio <= 50,
+                      explanationMet: `잔여비율 ${remainingRatio.toFixed(1)}% <= 기준 50%`,
                       explanationUnmet: `잔여비율 ${remainingRatio.toFixed(1)}% > 기준 50%` },
                   ],
                   showStep: 2,
