@@ -101,7 +101,7 @@ const regionData = {
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
-    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "내덕동", "율량동"],
+    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "강서동", "율량동"],
     "청주시 흥덕구": ["강내면", "옥산면", "오송읍", "가경동", "복대동", "봉명동", "송정동", "신봉동"],
     "충주시": ["가금면", "금가면", "노은면", "대소원면", "동량면", "산척면", "살미면", "소태면", "수안보면", "신니면", "앙성면", "엄정면", "이류면", "주덕읍", "중앙탑면"],
     "제천시": ["금성면", "덕산면", "백운면", "봉양읍", "송학면", "수산면", "청풍면", "한수면"],
@@ -538,7 +538,7 @@ function simulateAIAnalysis(
   };
 }
 
-// 중앙토지수용위원회 기준 기반 판단 근거 설명 생성 함수
+// 중앙토지수용위원회 기준 기�� 판단 근거 설명 생성 함수
 function generateJudgmentRationale(
   land: LandInfo,
   judgment: "매수" | "매수불가",
@@ -593,7 +593,7 @@ function generateJudgmentRationale(
 
 3. 형상 분석
 - 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
-- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
+- 잔여지 형상: ${land.remainingShape} (형��지수 ${land.remainingShapeIndex})
 - 형상지수 변화: +${shapeIndexChange.toFixed(1)}
 
 4. 충족 기준
@@ -700,6 +700,22 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const [isResultsCollapsed, setIsResultsCollapsed] = useState(false);
   const [isBasicInfoCollapsed, setIsBasicInfoCollapsed] = useState(false);
   
+  // 본인 소유 필지 선택 상태 (인접지 중 본인 소유 확인용)
+  const [ownedParcels, setOwnedParcels] = useState<Set<string>>(new Set());
+  
+  // 본인 소유 필지 토글
+  const toggleOwnedParcel = (landId: string) => {
+    setOwnedParcels(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(landId)) {
+        newSet.delete(landId);
+      } else {
+        newSet.add(landId);
+      }
+      return newSet;
+    });
+  };
+  
   // AI 분석 상태
   const [aiResult, setAiResult] = useState<AIAnalysisResult | null>(null);
   const [aiAnalyzing, setAiAnalyzing] = useState(false);
@@ -731,6 +747,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setCurrentPage(1);
     setAiResult(null);
     setNoIncludedLand(false);
+    setOwnedParcels(new Set()); // 본인 소유 선택 초기화
     
     setTimeout(() => {
       let results: LandInfo[];
@@ -1290,23 +1307,105 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   )}
                 </div>
               ) : (
-                <ul>
-                  {searchResults.map((land) => (
-                    <li key={land.id} className="border-b border-border">
-                      <button
-                        onClick={() => handleLandSelect(land)}
-                        className={`flex w-full cursor-pointer items-center justify-between px-4 py-3 text-left transition-colors hover:bg-muted/50 ${
-                          selectedLand?.id === land.id ? "border-2 border-primary bg-primary/5" : ""
-                        }`}
-                      >
-                        {/* 주소 텍스트 */}
-                        <span className="flex-1 text-base">{land.address}</span>
-                        {/* 화살표 */}
-                        <ChevronRight className={`h-5 w-5 shrink-0 ${selectedLand?.id === land.id ? "text-primary" : "text-muted-foreground"}`} />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+                <>
+                  {/* 본인 소유 선택 안내 */}
+                  {searchResults.length > 1 && (
+                    <div className="border-b border-amber-200 bg-amber-50 px-3 py-2">
+                      <p className="flex items-center gap-1.5 text-xs text-amber-700">
+                        <Info className="h-3.5 w-3.5 shrink-0" />
+                        본인 소유 필지를 체크해 주세요. 인접지는 체크 해제된 상태로 유지됩니다.
+                      </p>
+                    </div>
+                  )}
+                  <ul>
+                    {searchResults.map((land, index) => {
+                      const isOwned = ownedParcels.has(land.id);
+                      const isFirstResult = index === 0; // 첫번째 결과는 기본적으로 본인 소유로 간주
+                      
+                      return (
+                        <li key={land.id} className="border-b border-border">
+                          <div
+                            className={`flex w-full items-center gap-2 px-3 py-3 transition-colors ${
+                              selectedLand?.id === land.id 
+                                ? "border-l-4 border-l-primary bg-primary/5" 
+                                : isOwned || (isFirstResult && !ownedParcels.size)
+                                  ? "bg-green-50/50"
+                                  : "hover:bg-muted/50"
+                            }`}
+                          >
+                            {/* 본인 소유 체크박스 */}
+                            <Checkbox
+                              checked={isOwned || (isFirstResult && ownedParcels.size === 0)}
+                              onCheckedChange={() => {
+                                if (isFirstResult && ownedParcels.size === 0) {
+                                  // 첫번째 필지 해제 시, 명시적으로 상태 관리 시작
+                                  const newSet = new Set<string>();
+                                  searchResults.forEach(l => {
+                                    if (l.id !== land.id) newSet.add(l.id);
+                                  });
+                                  setOwnedParcels(newSet);
+                                } else {
+                                  toggleOwnedParcel(land.id);
+                                }
+                              }}
+                              className="h-5 w-5 shrink-0"
+                            />
+                            
+                            {/* 필지 정보 버튼 */}
+                            <button
+                              onClick={() => handleLandSelect(land)}
+                              className="flex flex-1 cursor-pointer items-center justify-between text-left"
+                            >
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <span className={`text-sm ${
+                                    !(isOwned || (isFirstResult && !ownedParcels.size)) 
+                                      ? "text-muted-foreground" 
+                                      : ""
+                                  }`}>
+                                    {land.address}
+                                  </span>
+                                  {(isOwned || (isFirstResult && !ownedParcels.size)) && (
+                                    <Badge variant="outline" className="text-xs text-green-600 border-green-300 bg-green-50">
+                                      본인 소유
+                                    </Badge>
+                                  )}
+                                  {!(isOwned || (isFirstResult && !ownedParcels.size)) && (
+                                    <Badge variant="outline" className="text-xs text-muted-foreground">
+                                      인접지
+                                    </Badge>
+                                  )}
+                                </div>
+                                <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
+                                  <span>잔여 {land.remainingArea.toLocaleString()}㎡</span>
+                                  <span>|</span>
+                                  <span>{land.landType}</span>
+                                </div>
+                              </div>
+                              <ChevronRight className={`h-5 w-5 shrink-0 ${
+                                selectedLand?.id === land.id ? "text-primary" : "text-muted-foreground"
+                              }`} />
+                            </button>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  
+                  {/* 선택된 필지 요약 */}
+                  {searchResults.length > 1 && (
+                    <div className="border-t bg-muted/30 px-3 py-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-muted-foreground">
+                          본인 소유: {ownedParcels.size || 1}필지 / 인접지: {searchResults.length - (ownedParcels.size || 1)}필지
+                        </span>
+                        <span className="font-medium text-primary">
+                          총 {searchResults.length}필지
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
 
@@ -1368,7 +1467,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             <div className="flex-1 overflow-y-auto p-4">
               {selectedLand ? (
                 <div className="space-y-4">
-                {/* 토지 기본 정보 + 현재 활용 지목 통합 */}
+                {/* 토지 기본 정보 + 현재 활�� 지목 통합 */}
                 <div className="rounded border border-border bg-muted/30 p-3">
                   <div className="flex flex-col gap-3 text-sm">
                     <div className="flex justify-between">
@@ -1663,7 +1762,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
         </div>
 
-        {/* 사이드바 토글 버튼 - 결과 패널용 */}
+        {/* 사��드바 토글 버튼 - 결과 패널용 */}
         <button 
           onClick={() => setIsResultsCollapsed(!isResultsCollapsed)}
           className={`absolute top-1/2 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-r-md bg-background shadow-md transition-all duration-300 ${isResultsCollapsed ? "left-0" : "left-[280px]"}`}

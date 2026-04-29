@@ -1010,11 +1010,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <div className="space-y-2">
 <Label className={reviewData.adminStatus !== "심사완료" ? "text-muted-foreground" : ""}>
                   최종 판정
-{reviewData.adminStatus !== "심사완��" && (
+                  {reviewData.adminStatus !== "심사완료" && (
                     <span className="ml-2 text-base font-normal text-muted-foreground">
-                    (진행상황을 &apos;심사���료&apos;로 설정하면 활성화됩니다)
-                </span>
-              )}
+                      (진행상황을 &apos;심사완료&apos;로 설정하면 활성화됩니다)
+                    </span>
+                  )}
             </Label>
             <div className="flex flex-wrap gap-2">
               {(["매수", "기각", "심의위원회이관"] as JudgmentResult[]).map((judgment) => {
