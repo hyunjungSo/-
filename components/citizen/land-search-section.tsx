@@ -101,7 +101,7 @@ const regionData = {
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
-    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "강서동", "율량동"],
+    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "강서��", "율량동"],
     "청주시 흥덕구": ["강내면", "옥산면", "오송읍", "가경동", "복대동", "봉명동", "송정동", "신봉동"],
     "충주시": ["가금면", "금가면", "노은면", "대소원면", "동량면", "산척면", "살미면", "소태면", "수안보면", "신니면", "앙성면", "엄정면", "이류면", "주덕읍", "중앙탑면"],
     "제천시": ["금성면", "덕산면", "백운면", "봉양읍", "송학면", "수산면", "청풍면", "한수면"],
@@ -676,12 +676,17 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const [isCartOpen, setIsCartOpen] = useState(false);
   // 장바구니 선택 항목
   const [selectedCartItems, setSelectedCartItems] = useState<Set<string>>(new Set());
-  // 검색 방식 탭 (지번 / 소유자)
-  const [searchMode, setSearchMode] = useState<"address" | "owner">("address");
   
-  // 소유자 검색 상태 (이름 + 주민번호 앞자리)
+  // 검색 방식 탭 (지번 / 개인정보 / 법인정보)
+  const [searchMode, setSearchMode] = useState<"address" | "individual" | "corporation">("address");
+  
+  // 개인정보 검색 상태 (이름 + 주민번호 앞자리)
   const [ownerName, setOwnerName] = useState<string>("");
-  const [ownerBirthDate, setOwnerBirthDate] = useState<string>(""); // YYMMDD
+  const [ownerBirthDate, setOwnerBirthDate] = useState<string>(""); // YYMMDD (주민번호 앞 6자리)
+  
+  // 법인정보 검색 상태 (법인명 + 사업자번호)
+  const [corpName, setCorpName] = useState<string>("");
+  const [businessNumber, setBusinessNumber] = useState<string>("");
   
   // 행정구역 선택 상태
   const [selectedSido, setSelectedSido] = useState<string>("");
@@ -739,7 +744,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const handleSearch = () => {
     // 검색 모드에 따른 유효성 검사
     if (searchMode === "address" && !selectedSigungu) return;
-    if (searchMode === "owner" && (!ownerName || ownerBirthDate.length !== 6)) return;
+    if (searchMode === "individual" && (!ownerName || ownerBirthDate.length !== 6)) return;
+    if (searchMode === "corporation" && (!corpName || businessNumber.replace(/-/g, "").length !== 10)) return;
     
     setIsSearching(true);
     setHasSearched(true);
@@ -752,7 +758,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setTimeout(() => {
       let results: LandInfo[];
       
-      if (searchMode === "owner") {
+      if (searchMode === "individual" || searchMode === "corporation") {
         // 소유자 검색: 이름 + 주민번호 앞자리로 검색
         // 실제 구현에서는 API 호출, 여기서는 더미 데이터 시뮬레이션
         // 홍길동이 3개 관할기관(양평이천, 수도권, 천안안성)에 잔여지를 소유한 경우
@@ -1072,21 +1078,31 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               <input
                 type="radio"
                 name="searchMode"
-                checked={searchMode === "owner"}
-                onChange={() => setSearchMode("owner")}
+                checked={searchMode === "individual"}
+                onChange={() => setSearchMode("individual")}
                 className="h-4 w-4 accent-gray-900"
               />
-              <span className="text-sm">소유자로 검색</span>
+              <span className="text-sm">개인정보로 검색</span>
+            </label>
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="radio"
+                name="searchMode"
+                checked={searchMode === "corporation"}
+                onChange={() => setSearchMode("corporation")}
+                className="h-4 w-4 accent-gray-900"
+              />
+              <span className="text-sm">법인정보로 검색</span>
             </label>
           </div>
         </div>
 
         {/* 검색 조건 행 */}
-        {searchMode === "owner" ? (
+        {searchMode === "individual" ? (
           <>
             <div className="flex border-b border-border">
               <div className="flex w-28 shrink-0 items-center bg-muted/50 px-4 py-3">
-                <span className="text-sm font-medium text-foreground">소유자 정보</span>
+                <span className="text-sm font-medium text-foreground">개인정보</span>
               </div>
               <div className="flex flex-1 flex-wrap items-center gap-4 bg-background px-4 py-3">
                 <div className="flex items-center gap-2">
@@ -1099,9 +1115,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">주민번호 앞자리</span>
+                  <span className="text-sm text-muted-foreground">주민번호</span>
                   <Input
-                    placeholder="YYMMDD"
+                    placeholder="앞 6자리"
                     value={ownerBirthDate}
                     onChange={(e) => {
                       const value = e.target.value.replace(/\D/g, "").slice(0, 6);
@@ -1121,6 +1137,55 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <Info className="h-3.5 w-3.5 shrink-0" />
                   대리 신청 시, 신청서 제출 단계에서 위임장 및 대리인 신분증 사본이 필요합니다.
+                </p>
+              </div>
+            </div>
+          </>
+        ) : searchMode === "corporation" ? (
+          <>
+            <div className="flex border-b border-border">
+              <div className="flex w-28 shrink-0 items-center bg-muted/50 px-4 py-3">
+                <span className="text-sm font-medium text-foreground">법인정보</span>
+              </div>
+              <div className="flex flex-1 flex-wrap items-center gap-4 bg-background px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">법인명</span>
+                  <Input
+                    placeholder="주식회사 OO건설"
+                    value={corpName}
+                    onChange={(e) => setCorpName(e.target.value)}
+                    className="w-[180px]"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">사업자번호</span>
+                  <Input
+                    placeholder="000-00-00000"
+                    value={businessNumber}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                      if (value.length <= 3) {
+                        setBusinessNumber(value);
+                      } else if (value.length <= 5) {
+                        setBusinessNumber(`${value.slice(0, 3)}-${value.slice(3)}`);
+                      } else {
+                        setBusinessNumber(`${value.slice(0, 3)}-${value.slice(3, 5)}-${value.slice(5)}`);
+                      }
+                    }}
+                    maxLength={12}
+                    className="w-[140px]"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex border-b border-border">
+              <div className="flex w-28 shrink-0 items-center bg-muted/50 px-4 py-2">
+                <span className="text-sm font-medium text-foreground">안내</span>
+              </div>
+              <div className="flex flex-1 items-center bg-background px-4 py-2">
+                <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Info className="h-3.5 w-3.5 shrink-0" />
+                  법인 신청 시, 사업자등록증 및 법인인감증명서가 필요합니다.
                 </p>
               </div>
             </div>
@@ -1231,7 +1296,12 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             onClick={handleSearch} 
             variant="default"
             className="gap-1.5 px-8"
-            disabled={searchMode === "address" ? !selectedSigungu || isSearching : !ownerName || ownerBirthDate.length !== 6 || isSearching}
+            disabled={
+              isSearching ||
+              (searchMode === "address" && !selectedSigungu) ||
+              (searchMode === "individual" && (!ownerName || ownerBirthDate.length !== 6)) ||
+              (searchMode === "corporation" && (!corpName || businessNumber.replace(/-/g, "").length !== 10))
+            }
           >
             {isSearching ? (
               <>
@@ -1287,7 +1357,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               {searchResults.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center px-4 py-12 text-center">
                   <MapPin className="h-8 w-8 text-muted-foreground" />
-                  {hasSearched && searchMode === "owner" ? (
+                  {hasSearched && (searchMode === "individual" || searchMode === "corporation") ? (
                     <div className="mt-3">
                       <p className="text-base font-medium text-foreground">
                         일치하는 토지 정보가 없습니다
@@ -1300,7 +1370,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     </div>
                   ) : (
                     <p className="mt-2 text-base text-muted-foreground">
-                      {searchMode === "owner" 
+                      {(searchMode === "individual" || searchMode === "corporation") 
                         ? "소유자 정보를 입력하고\n검색 버튼을 클릭하세요."
                         : "행정구역을 선택하고\n검색 버튼을 클릭하세요."}
                     </p>
