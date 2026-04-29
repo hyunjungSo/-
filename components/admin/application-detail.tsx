@@ -400,6 +400,44 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </div>
               </TabsContent>
             </Tabs>
+            
+            {/* AI 판독 실행 버튼 */}
+            <div className="mt-4 pt-4 border-t border-border">
+              <Button
+                onClick={handleRunAIAnalysis}
+                disabled={isAIAnalyzing}
+                className="w-full gap-2 bg-primary hover:bg-primary/90"
+                size="lg"
+              >
+                {isAIAnalyzing ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    AI 판독 중...
+                  </>
+                ) : currentAIResult ? (
+                  <>
+                    <RotateCcw className="h-5 w-5" />
+                    AI 재판독 실행
+                  </>
+                ) : (
+                  <>
+                    <AIIcon className="h-5 w-5" />
+                    AI 판독 실행
+                  </>
+                )}
+              </Button>
+              {currentAIResult && (
+                <p className="mt-2 text-center text-sm text-muted-foreground">
+                  마지막 판독 결과: <span className={
+                    currentAIResult.provisionalJudgment === "매수" 
+                      ? "text-green-600 font-medium" 
+                      : currentAIResult.provisionalJudgment === "매수불가" || currentAIResult.provisionalJudgment === "기각"
+                        ? "text-red-600 font-medium"
+                        : "text-amber-600 font-medium"
+                  }>{currentAIResult.provisionalJudgment}</span>
+                </p>
+              )}
+            </div>
           </CardContent>
         </Card>
 
@@ -972,9 +1010,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <div className="space-y-2">
 <Label className={reviewData.adminStatus !== "심사완료" ? "text-muted-foreground" : ""}>
                   최종 판정
-{reviewData.adminStatus !== "심사완료" && (
+{reviewData.adminStatus !== "심사완��" && (
                     <span className="ml-2 text-base font-normal text-muted-foreground">
-                    (진행상황을 &apos;심사완료&apos;로 설정하면 활성화됩니다)
+                    (진행상황을 &apos;심사���료&apos;로 설정하면 활성화됩니다)
                 </span>
               )}
             </Label>
