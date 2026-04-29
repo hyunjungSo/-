@@ -143,6 +143,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 포함된 필지만 필터링
   const includedLands = allLands.filter(land => !excludedLands.has(land.id));
   const includedLandsArea = includedLands.reduce((sum, l) => sum + l.remainingArea, 0);
+  
+  // AI 분석 결과
+  const aiResult = application.aiResult;
 
   const handleSave = () => {
     setIsSaving(true);
