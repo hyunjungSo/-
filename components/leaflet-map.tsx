@@ -63,6 +63,7 @@ interface ParcelData {
   coordinates: Array<{ lat: number; lng: number }>;
   address: string;
   isIncluded: boolean;
+  isOwned?: boolean;
 }
 
 interface LeafletMapProps {
@@ -72,12 +73,14 @@ interface LeafletMapProps {
   onParcelClick?: (parcelId: string) => void;
   parcels?: ParcelData[];
   selectedParcelId?: string;
+  selectedParcelIds?: Set<string>; // 복수 선택 지원
 }
 
 type BaseMapType = "normal" | "satellite";
 
 export function LeafletMap({
   center = { lat: 37.2350, lng: 127.2850 },
+  selectedParcelIds = new Set(),
   zoom = 14,
   selectedRegion,
   onParcelClick,
@@ -297,15 +300,24 @@ export function LeafletMap({
     parcels.forEach((parcel) => {
       if (!parcel.coordinates || parcel.coordinates.length < 3) return;
 
-      const isSelected = parcel.id === selectedParcelId;
+      const isSelected = parcel.id === selectedParcelId || selectedParcelIds.has(parcel.id);
+      const isOwned = parcel.isOwned ?? selectedParcelIds.has(parcel.id);
       const latlngs = parcel.coordinates.map(coord => [coord.lat, coord.lng] as [number, number]);
 
-      // 폴리곤 스타일 (분홍색/마젠타 라인) - EXCO 스타일
+      // 폴리곤 스타일 - 선택됨(녹색), 미선택(회색)
+      let polygonColor = "#9e9e9e"; // 기본: 미선택 회색
+      let fillColor = "#e0e0e0";
+      
+      if (isSelected || isOwned) {
+        polygonColor = "#4caf50"; // 선택됨: 녹색
+        fillColor = "#c8e6c9";
+      }
+      
       const polygon = L.polygon(latlngs, {
-        color: "#ec407a", // 분홍/마젠타
-        weight: isSelected ? 4 : 3,
-        fillColor: isSelected ? "#f48fb1" : "#fce4ec",
-        fillOpacity: isSelected ? 0.4 : 0.1,
+        color: polygonColor,
+        weight: isSelected ? 4 : isOwned ? 3 : 2,
+        fillColor: fillColor,
+        fillOpacity: isSelected ? 0.5 : isOwned ? 0.35 : 0.15,
         opacity: 1,
       });
 

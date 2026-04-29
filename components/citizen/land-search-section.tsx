@@ -101,7 +101,7 @@ const regionData = {
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
-    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "강서��", "율량동"],
+    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "강서동", "율량동"],
     "청주시 흥덕구": ["강내면", "옥산면", "오송읍", "가경동", "복대동", "봉명동", "송정동", "신봉동"],
     "충주시": ["가금면", "금가면", "노은면", "대소원면", "동량면", "산척면", "살미면", "소태면", "수안보면", "신니면", "앙성면", "엄정면", "이류면", "주덕읍", "중앙탑면"],
     "제천시": ["금성면", "덕산면", "백운면", "봉양읍", "송학면", "수산면", "청풍면", "한수면"],
@@ -235,7 +235,7 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "밀두리", "신성리"],
-    "도고면": ["도고리", "시전리", "효자리", "금산리"],
+    "도고면": ["도고리", "시전리", "효자리", "금산��"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
@@ -593,7 +593,7 @@ function generateJudgmentRationale(
 
 3. 형상 분석
 - 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
-- 잔여지 형상: ${land.remainingShape} (형��지수 ${land.remainingShapeIndex})
+- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
 - 형상지수 변화: +${shapeIndexChange.toFixed(1)}
 
 4. 충족 기준
@@ -1326,17 +1326,23 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             selectedRegion={selectedRi || selectedEupmyeondong || selectedSigungu || selectedSido}
             onParcelClick={(id) => {
               const land = searchResults.find(l => l.id === id);
-              if (land) handleLandSelect(land);
+              if (land) {
+                handleLandSelect(land);
+                // 지도에서 클릭 시 본인 소유 토글 (복수 선택)
+                toggleOwnedParcel(land.id);
+              }
             }}
             parcels={searchResults
               .filter(land => land.coordinates && land.coordinates.length >= 3)
-              .map(land => ({
+              .map((land, index) => ({
                 id: land.id,
                 coordinates: land.coordinates!,
                 address: land.address,
                 isIncluded: land.includedArea > 0,
+                isOwned: ownedParcels.has(land.id) || (index === 0 && ownedParcels.size === 0),
               }))}
             selectedParcelId={selectedLand?.id}
+            selectedParcelIds={ownedParcels}
           />
         </div>
 
