@@ -2,19 +2,13 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { LandMap } from "@/components/land-map";
 import { AIAnalysisFlowDialog } from "@/components/admin/ai-analysis-flow-dialog";
 import { landShapes, landCategories } from "@/lib/dummy-data";
@@ -129,6 +123,26 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
   const [isSaving, setIsSaving] = useState(false);
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
+  
+  // 필지 포함/제외 상태 (민원인 소유 확인용)
+  const [excludedLands, setExcludedLands] = useState<Set<string>>(new Set());
+  
+  // 필지 포함/제외 토글
+  const toggleLandInclusion = (landId: string) => {
+    setExcludedLands(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(landId)) {
+        newSet.delete(landId);
+      } else {
+        newSet.add(landId);
+      }
+      return newSet;
+    });
+  };
+  
+  // 포함된 필지만 필터링
+  const includedLands = allLands.filter(land => !excludedLands.has(land.id));
+  const includedLandsArea = includedLands.reduce((sum, l) => sum + l.remainingArea, 0);
 
   const handleSave = () => {
     setIsSaving(true);
@@ -947,7 +961,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               })}
             </div>
             <p className="text-base text-muted-foreground">
-              민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다.
+              민원인이 신청 현황 조회 시 이 진행상황�� 표시됩니다.
             </p>
           </div>
 
@@ -957,7 +971,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   최종 판정
 {reviewData.adminStatus !== "심사완��" && (
                     <span className="ml-2 text-base font-normal text-muted-foreground">
-                    (진행상황을 &apos;심사완료&apos;로 설정하면 활성화됩니다)
+                    (진행상황을 &apos;심사���료&apos;로 설정하면 활성화됩니다)
                 </span>
               )}
             </Label>
