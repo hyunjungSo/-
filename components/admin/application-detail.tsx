@@ -756,7 +756,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
   
   
-  // 판독 결과 초���화
+  // 판독 결과 초�����화
   const handleResetAIResults = () => {
     setLandAIResults({});
     setUnifiedGroups({});
@@ -1368,16 +1368,65 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </>
                 )}
               </Button>
-              {currentAIResult && (
-                <p className="mt-2 text-center text-sm text-muted-foreground">
-                  마지막 판독 결과: <span className={
-                    currentAIResult.provisionalJudgment === "매수" 
-                      ? "text-green-600 font-medium" 
-                      : currentAIResult.provisionalJudgment === "매수불가" || currentAIResult.provisionalJudgment === "기각"
-                        ? "text-red-600 font-medium"
-                        : "text-amber-600 font-medium"
-                  }>{currentAIResult.provisionalJudgment}</span>
-                </p>
+              {/* 일단지 판정 결과 */}
+              {Object.keys(unifiedGroups).length > 0 && (
+                <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50/50 p-4">
+                  <h4 className="mb-3 font-medium text-emerald-800 flex items-center gap-2">
+                    <Layers className="h-4 w-4" />
+                    일단지 판정 결과
+                  </h4>
+                  <div className="space-y-2">
+                    {Object.entries(unifiedGroups).map(([groupId, group]) => {
+                      const groupLands = allLands.filter(l => group.landIds.includes(l.id));
+                      return (
+                        <div key={groupId} className="rounded-md bg-white/80 p-3 border border-emerald-100">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-medium text-emerald-700">{group.groupName}</span>
+                            <Badge className="bg-emerald-600 hover:bg-emerald-600">
+                              {group.judgment}
+                            </Badge>
+                          </div>
+                          <div className="text-sm text-muted-foreground space-y-1">
+                            <p>포함 필지: {groupLands.map((l, i) => String.fromCharCode(65 + allLands.findIndex(al => al.id === l.id))).join(", ")}</p>
+                            <p>합산 면적: {group.combinedArea.toLocaleString()}m²</p>
+                            <p className="text-xs text-emerald-600">
+                              소유자 동일 + 지반 연속 + 용도 일체성 충족
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  {/* 일단지 미포함 필지 안내 */}
+                  {(() => {
+                    const unifiedLandIds = Object.values(unifiedGroups).flatMap(g => g.landIds);
+                    const nonUnifiedChecked = checkedLandIds.filter(id => !unifiedLandIds.includes(id));
+                    if (nonUnifiedChecked.length === 0) return null;
+                    return (
+                      <div className="mt-3 pt-3 border-t border-emerald-200">
+                        <p className="text-sm text-amber-700">
+                          일단지 미해당: 필지 {nonUnifiedChecked.map(id => {
+                            const idx = allLands.findIndex(l => l.id === id);
+                            return String.fromCharCode(65 + idx);
+                          }).join(", ")} (개별 분석)
+                        </p>
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
+              
+              {/* 일단지 미판정 상태 안내 */}
+              {checkedLandIds.length >= 2 && Object.keys(unifiedGroups).length === 0 && Object.keys(landAIResults).length === 0 && (
+                <div className="mt-4 rounded-lg border border-muted bg-muted/30 p-4">
+                  <p className="text-sm text-muted-foreground text-center">
+                    AI 판독 실행 시 일단지 여부를 자동으로 판정합니다
+                  </p>
+                  <p className="text-xs text-muted-foreground text-center mt-1">
+                    (소유자 동일, 지반 연속, 용도 일체성 기준)
+                  </p>
+                </div>
               )}
             </div>
           </CardContent>
@@ -1946,7 +1995,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
               {/* 검토 의견 */}
               <div className="space-y-2">
-                <Label htmlFor="reviewerComment">검토 의견</Label>
+                <Label htmlFor="reviewerComment">���토 의견</Label>
                 <Textarea
                   id="reviewerComment"
                   placeholder="담당자 검토 의견을 작성하세요."
