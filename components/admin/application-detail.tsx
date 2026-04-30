@@ -756,7 +756,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
   
   
-  // 판독 결과 초���������화
+  // 판독 결과 초�����������화
   const handleResetAIResults = () => {
     setLandAIResults({});
     setUnifiedGroups({});
@@ -1068,7 +1068,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${isChecked ? "bg-primary text-primary-foreground" : "bg-emerald-600 text-white"}`}>
                                         {landLabel}
                                       </span>
-                                      <span className="text-sm font-medium">필지 {landLabel}</span>
+                                      <span className="text-sm font-medium">필�� {landLabel}</span>
                                     </div>
                                     <Badge variant="default" className="text-xs bg-emerald-600">
                                       {landResult?.provisionalJudgment || "매수"}
@@ -1364,7 +1364,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <Loader2 className="h-5 w-5 animate-spin" />
                     AI 판독 중... ({checkedLandIds.length}필지)
                   </>
-                ) : Object.keys(landAIResults).length > 0 ? (
+                ) : Object.keys(checkedLandAIResults).length > 0 ? (
                   <>
                     <RotateCcw className="h-5 w-5" />
                     선택 필지 AI 재판독 ({checkedLandIds.length}필지)
@@ -1426,7 +1426,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               )}
               
               {/* 일단지 미판정 상태 안내 */}
-              {checkedLandIds.length >= 2 && Object.keys(unifiedGroups).length === 0 && Object.keys(landAIResults).length === 0 && (
+              {checkedLandIds.length >= 2 && Object.keys(unifiedGroups).length === 0 && Object.keys(checkedLandAIResults).length === 0 && (
                 <div className="mt-4 rounded-lg border border-muted bg-muted/30 p-4">
                   <p className="text-sm text-muted-foreground text-center">
                     AI 판독 실행 시 일단지 여부를 자동으로 판정합니다
@@ -1826,199 +1826,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
       
-      {/* 기존 단일 필지 로직은 삭제 - 체크박스 기반으로 통합 */}
-      {false && (
-        <div className="hidden">
-          {application.landDataList?.[0] && (
-            <div className="rounded-lg border border-violet-200 bg-violet-50/30 p-4 space-y-3">
-              <h5 className="flex items-center gap-2 font-semibold text-violet-700">
-                <User className="h-4 w-4" />
-                민원인 입력 정보
-              </h5>
-                  <div className="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">현재 활용 지목</span>
-                      <span className="font-medium">
-                        {application.landDataList[0].currentUsage} ({landCategories.find(c => c.value === application.landDataList![0].currentUsage)?.label || ""})
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">공부상 지목</span>
-                      <span className="font-medium">
-                        {application.landDataList[0].actualUsage} ({landCategories.find(c => c.value === application.landDataList![0].actualUsage)?.label || ""})
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">토지 모양</span>
-                      <span className="font-medium">{application.landDataList[0].reportedShape}</span>
-                    </div>
-                    <div className="col-span-full flex flex-wrap gap-2 border-t border-violet-200 pt-2 mt-2">
-                      {application.landDataList[0].accessRoadLost && (
-                        <Badge variant="destructive-subtle" className="text-xs">접면도로 상실</Badge>
-                      )}
-                      {application.landDataList[0].waterChannelLost && (
-                        <Badge variant="destructive-subtle" className="text-xs">관개수로 상실</Badge>
-                      )}
-                      {application.landDataList[0].farmMachineDifficulty && (
-                        <Badge variant="destructive-subtle" className="text-xs">농기계 진입 곤란</Badge>
-                      )}
-                      {!application.landDataList[0].accessRoadLost && !application.landDataList[0].waterChannelLost && !application.landDataList[0].farmMachineDifficulty && (
-                        <span className="text-xs text-muted-foreground">직접 확인 항목 없음</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* 담당자 확인 */}
-              <div className="space-y-4">
-                <h5 className="font-semibold text-foreground">담당자 확인</h5>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                  <div className="space-y-2">
-                    <Label>실제 이용 상황</Label>
-                    <Select
-                      value={reviewData.actualUsage}
-                      onValueChange={(value) =>
-                        setReviewData((prev) => ({ ...prev, actualUsage: value as LandCategory }))
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {landCategories.map((cat) => (
-                          <SelectItem key={cat.value} value={cat.value}>
-                            {cat.value} ({cat.label})
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>토지 모양</Label>
-                    <Select
-                      value={reviewData.landShape}
-                      onValueChange={(value) =>
-                        setReviewData((prev) => ({ ...prev, landShape: value as LandShape }))
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <div className="px-2 py-1 text-base font-semibold text-muted-foreground">정형</div>
-                        {landShapes.regular.map((shape) => (
-                          <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
-                        ))}
-                        <div className="px-2 py-1 text-base font-semibold text-muted-foreground">비정형</div>
-                        {landShapes.irregular.map((shape) => (
-                          <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {(application.landInfo.landType === "농지" || reviewData.actualUsage === "답" || reviewData.actualUsage === "전") && (
-                    <div className="space-y-2">
-                      <Label>농기계 진입/회전 곤란</Label>
-                      <Select
-                        value={reviewData.farmMachineDifficulty}
-                        onValueChange={(value) =>
-                          setReviewData((prev) => ({
-                            ...prev,
-                            farmMachineDifficulty: value as "미입력" | "해당" | "해당없음",
-                          }))
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="미입력">미입력</SelectItem>
-                          <SelectItem value="해당">해당</SelectItem>
-                          <SelectItem value="해당없음">해당 없음</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-
-                  <div className="space-y-2">
-                    <Label>판정</Label>
-                    <Select
-                      value={reviewData.finalJudgment}
-                      onValueChange={(value) =>
-                        setReviewData((prev) => ({ ...prev, finalJudgment: value as JudgmentResult }))
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="판정 선택" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="매수">매수</SelectItem>
-                        <SelectItem value="기각">기각</SelectItem>
-                        <SelectItem value="심의위원회이관">심의위원회 이관</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                {/* 자동 판독 불가 항목 */}
-                <div className="space-y-2">
-                  <Label>자동 판독 불가 항목</Label>
-                  <div className="flex flex-wrap gap-4">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="accessRoadLost"
-                        checked={reviewData.accessRoadLost}
-                        onCheckedChange={(checked) =>
-                          setReviewData((prev) => ({ ...prev, accessRoadLost: checked === true }))
-                        }
-                      />
-                      <Label htmlFor="accessRoadLost" className="text-base font-normal">접면도로 상실</Label>
-                    </div>
-                    {(application.landInfo.landType === "농지" || reviewData.actualUsage === "답" || reviewData.actualUsage === "전") && (
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="waterChannelLost"
-                          checked={reviewData.waterChannelLost}
-                          onCheckedChange={(checked) =>
-                            setReviewData((prev) => ({ ...prev, waterChannelLost: checked === true }))
-                          }
-                        />
-                        <Label htmlFor="waterChannelLost" className="text-base font-normal">관개수로 상실</Label>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* 소유자 의견 */}
-              <div className="space-y-2">
-                <Label>소유�� 의견 (신청 사유)</Label>
-                <div className="rounded-lg border border-border bg-muted/50 p-3 text-base text-foreground">
-                  {application.reason}
-                </div>
-              </div>
-
-              {/* 검토 의견 */}
-              <div className="space-y-2">
-                <Label htmlFor="reviewerComment">���토 의견</Label>
-                <Textarea
-                  id="reviewerComment"
-                  placeholder="담당자 검토 의견을 작성하세요."
-                  rows={4}
-                  value={reviewData.reviewerComment}
-                  onChange={(e) =>
-                    setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))
-                  }
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-          {/* 진행상황 설정 */}
+      {/* 진행상황 설정 */}
           <div className="space-y-2">
             <Label>진행상황 설���</Label>
             <div className="flex flex-wrap gap-2">
@@ -2101,7 +1909,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* AI 분석 프로세스 ��이얼로그 */}
+      {/* AI 분석 프로세스 ��이��로그 */}
       <AIAnalysisFlowDialog
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
