@@ -2001,10 +2001,10 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 )}
               </div>
             )}
-          </div>
+            </div>
             
-          {/* 신청 목록 추가 버튼 - 하단 고정 */}
-          {selectedLand && aiResult && (
+            {/* 신청 목록 추가 버튼 - 하단 고정 */}
+            {aiResult && (
               <div className="shrink-0 border-t bg-background p-3">
                 {(() => {
                   const isAlreadyInCart = cartItems.some(item => item.landInfo.id === selectedLand.id);
