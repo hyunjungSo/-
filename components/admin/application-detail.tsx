@@ -1164,70 +1164,70 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         </div>
                       </div>
                       <div className="grid gap-2 sm:grid-cols-2">
-                      {allLands.map((land, index) => {
-                        const isSelected = selectedLandIndex === index;
-                        const isChecked = checkedLandIds.includes(land.id);
-                        const landResult = landAIResults[land.id];
-                        const landLabel = String.fromCharCode(65 + index); // A, B, C...
-                        return (
-                          <div
-                            key={land.id}
-                            className={`relative flex flex-col items-start gap-1.5 rounded-lg border-2 p-3 text-left transition-all cursor-pointer ${
-                              isChecked
-                                ? "border-primary bg-primary/5 ring-2 ring-primary"
-                                : isSelected 
-                                  ? "border-primary/50 bg-primary/5" 
-                                  : "border-border hover:border-primary/50 hover:bg-muted/30"
-                            }`}
-                            onClick={() => setSelectedLandIndex(index)}
-                          >
-                            <div className="flex w-full items-center justify-between">
-                              <div className="flex items-center gap-2">
-                                <input
-                                  type="checkbox"
-                                  checked={isChecked}
-                                  onChange={(e) => {
-                                    e.stopPropagation();
-                                    if (e.target.checked) {
-                                      setCheckedLandIds([...checkedLandIds, land.id]);
-                                    } else {
-                                      setCheckedLandIds(checkedLandIds.filter(id => id !== land.id));
-                                    }
-                                  }}
-                                  onClick={(e) => e.stopPropagation()}
-                                  className="h-4 w-4 rounded border-gray-300"
-                                />
-                                <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${isChecked ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
-                                  {landLabel}
-                                </span>
-                                <span className="text-sm font-medium">필지 {landLabel}</span>
+                        {allLands.map((land, index) => {
+                          const isSelected = selectedLandIndex === index;
+                          const isChecked = checkedLandIds.includes(land.id);
+                          const landResult = landAIResults[land.id];
+                          const landLabel = String.fromCharCode(65 + index);
+                          return (
+                            <div
+                              key={land.id}
+                              className={`relative flex flex-col items-start gap-1.5 rounded-lg border-2 p-3 text-left transition-all cursor-pointer ${
+                                isChecked
+                                  ? "border-primary bg-primary/5 ring-2 ring-primary"
+                                  : isSelected 
+                                    ? "border-primary/50 bg-primary/5" 
+                                    : "border-border hover:border-primary/50 hover:bg-muted/30"
+                              }`}
+                              onClick={() => setSelectedLandIndex(index)}
+                            >
+                              <div className="flex w-full items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <input
+                                    type="checkbox"
+                                    checked={isChecked}
+                                    onChange={(e) => {
+                                      e.stopPropagation();
+                                      if (e.target.checked) {
+                                        setCheckedLandIds([...checkedLandIds, land.id]);
+                                      } else {
+                                        setCheckedLandIds(checkedLandIds.filter(id => id !== land.id));
+                                      }
+                                    }}
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="h-4 w-4 rounded border-gray-300"
+                                  />
+                                  <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${isChecked ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
+                                    {landLabel}
+                                  </span>
+                                  <span className="text-sm font-medium">필지 {landLabel}</span>
+                                </div>
+                                {landResult ? (
+                                  <Badge 
+                                    variant={landResult.provisionalJudgment === "매수" ? "default" : landResult.provisionalJudgment === "미해당" ? "secondary" : "destructive"} 
+                                    className="text-xs"
+                                  >
+                                    {landResult.provisionalJudgment}
+                                  </Badge>
+                                ) : (
+                                  <Badge variant="outline" className="text-xs text-muted-foreground">
+                                    미판독
+                                  </Badge>
+                                )}
                               </div>
-                              {landResult ? (
-                                <Badge 
-                                  variant={landResult.provisionalJudgment === "매수" ? "default" : landResult.provisionalJudgment === "미해당" ? "secondary" : "destructive"} 
-                                  className="text-xs"
-                                >
-                                  {landResult.provisionalJudgment}
-                                </Badge>
-                              ) : (
-                                <Badge variant="outline" className="text-xs text-muted-foreground">
-                                  미판독
-                                </Badge>
+                              <p className="text-xs text-muted-foreground line-clamp-1 pl-6">{land.address}</p>
+                              <div className="flex gap-3 text-xs pl-6">
+                                <span className="font-medium text-primary">{land.remainingArea.toLocaleString()}m²</span>
+                                <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
+                              </div>
+                              {landResult?.analysisDate && (
+                                <p className="mt-1 text-xs text-muted-foreground pl-6">
+                                  판독: {landResult.analysisDate}
+                                </p>
                               )}
                             </div>
-                            <p className="text-xs text-muted-foreground line-clamp-1 pl-6">{land.address}</p>
-                            <div className="flex gap-3 text-xs pl-6">
-                              <span className="font-medium text-primary">{land.remainingArea.toLocaleString()}m²</span>
-                              <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
-                            </div>
-                            {landResult?.analysisDate && (
-                              <p className="mt-1 text-xs text-muted-foreground pl-6">
-                                판독: {landResult.analysisDate}
-                              </p>
-                            )}
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
                       </div>
                     </>
                   )}
