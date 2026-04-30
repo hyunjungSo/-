@@ -229,33 +229,6 @@ export function ApplicationFormSection({
   const [landDataList, setLandDataList] = useState<LandSpecificData[]>(
     allLands.map(createInitialLandData)
   );
-  
-  // 선택된 필지 ID 목록 (기본: 모든 필지 선택)
-  const [selectedLandIds, setSelectedLandIds] = useState<string[]>(allLands.map(l => l.id));
-  
-  // 선택된 필지들만 필터링
-  const selectedLands = allLands.filter(l => selectedLandIds.includes(l.id));
-  const selectedAiResults = allLands
-    .map((l, idx) => selectedLandIds.includes(l.id) ? allAiResults[idx] : null)
-    .filter((r): r is NonNullable<typeof r> => r !== null);
-  
-  // 필지 선택 토글
-  const handleToggleLand = (landId: string) => {
-    setSelectedLandIds(prev => 
-      prev.includes(landId) 
-        ? prev.filter(id => id !== landId)
-        : [...prev, landId]
-    );
-  };
-  
-  // 전체 선택/해제
-  const handleToggleAll = () => {
-    if (selectedLandIds.length === allLands.length) {
-      setSelectedLandIds([]);
-    } else {
-      setSelectedLandIds(allLands.map(l => l.id));
-    }
-  };
 
   // 토지별 데이터 업데이트 함수
   const updateLandData = (index: number, field: keyof LandSpecificData, value: LandSpecificData[keyof LandSpecificData]) => {
@@ -416,40 +389,19 @@ export function ApplicationFormSection({
                   </p>
                 </div>
                 
-                {/* 전체 선택 헤더 */}
-                <div className="flex items-center justify-between border-b pb-2">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <Checkbox 
-                      checked={selectedLandIds.length === allLands.length}
-                      onCheckedChange={handleToggleAll}
-                    />
-                    <span className="text-sm font-medium">전체 선택</span>
-                  </label>
-                  <span className="text-xs text-muted-foreground">
-                    {selectedLandIds.length}/{allLands.length}필지 선택
-                  </span>
-                </div>
-                
                 <div className="max-h-[300px] space-y-2 overflow-y-auto">
                   {allLands.map((land, index) => {
                     const result = allAiResults[index];
-                    const isSelected = selectedLandIds.includes(land.id);
                     return (
                       <div 
                         key={land.id} 
-                        className={`rounded-lg border p-3 transition-opacity ${
-                          !isSelected ? "opacity-50 border-muted" :
+                        className={`rounded-lg border p-3 ${
                           result?.provisionalJudgment === "매수" 
                             ? "border-primary/30 bg-primary/5" 
                             : "border-red-300 bg-red-50"
                         }`}
                       >
-                        <div className="flex items-start gap-3">
-                          <Checkbox 
-                            checked={isSelected}
-                            onCheckedChange={() => handleToggleLand(land.id)}
-                            className="mt-0.5"
-                          />
+                        <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <p className="text-sm font-medium">{land.address}</p>
                             <div className="mt-1 flex flex-wrap gap-2 text-xs text-muted-foreground">
@@ -473,32 +425,32 @@ export function ApplicationFormSection({
                   })}
                 </div>
                 
-                {/* 총계 (선택된 필지 기준) */}
+                {/* 총계 */}
                 <div className="rounded-lg bg-muted/50 p-3 space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">선택된 필지 수</span>
-                    <span className="font-medium">{selectedLands.length}필지</span>
+                    <span className="text-muted-foreground">총 필지 수</span>
+                    <span className="font-medium">{allLands.length}필지</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">선택 필지 잔여 면적</span>
+                    <span className="text-muted-foreground">총 잔여 면적</span>
                     <span className="font-medium text-primary">
-                      {selectedLands.reduce((sum, land) => sum + land.remainingArea, 0).toLocaleString()}㎡
+                      {allLands.reduce((sum, land) => sum + land.remainingArea, 0).toLocaleString()}㎡
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">매수 가능 필지</span>
                     <span className="font-medium text-primary">
-                      {selectedAiResults.filter(r => r?.provisionalJudgment === "매수").length}건
+                      {allAiResults.filter(r => r?.provisionalJudgment === "매수").length}건
                     </span>
                   </div>
                 </div>
                 
                 {/* AI 판독 결과 요약 (복수 필지) */}
-                {selectedLands.length > 0 && (
+                {allLands.length > 0 && (
                   <div className={`mt-4 rounded-lg border-2 p-4 ${
-                    selectedAiResults.every(r => r?.provisionalJudgment === "매수")
+                    allAiResults.every(r => r?.provisionalJudgment === "매수")
                       ? "border-primary bg-primary/5" 
-                      : selectedAiResults.some(r => r?.provisionalJudgment === "매수")
+                      : allAiResults.some(r => r?.provisionalJudgment === "매수")
                         ? "border-amber-500 bg-amber-50"
                         : "border-red-500 bg-red-50"
                   }`}>
@@ -506,12 +458,12 @@ export function ApplicationFormSection({
                       <span className="text-base font-semibold text-foreground">AI 판독 결과</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      {selectedAiResults.every(r => r?.provisionalJudgment === "매수") ? (
+                      {allAiResults.every(r => r?.provisionalJudgment === "매수") ? (
                         <>
                           <CheckCircle2 className="h-5 w-5 text-primary" />
                           <span className="text-base font-bold text-primary">전체 매수 가능</span>
                         </>
-                      ) : selectedAiResults.some(r => r?.provisionalJudgment === "매수") ? (
+                      ) : allAiResults.some(r => r?.provisionalJudgment === "매수") ? (
                         <>
                           <AlertTriangle className="h-5 w-5 text-amber-600" />
                           <span className="text-base font-bold text-amber-700">일부 매수 가능</span>
@@ -524,14 +476,14 @@ export function ApplicationFormSection({
                       )}
                     </div>
                     <p className="mt-2 text-sm text-muted-foreground">
-                      선택된 {selectedLands.length}필지 중 {selectedAiResults.filter(r => r?.provisionalJudgment === "매수").length}필지 매수 가능
+                      총 {allLands.length}필지 중 {allAiResults.filter(r => r?.provisionalJudgment === "매수").length}필지 매수 가능
                     </p>
                   </div>
                 )}
                 
-                {/* 판단 근거 상세 보기 (첫 번째 선택 필지 기준) */}
-                {selectedLands.length > 0 && selectedAiResults[0] && (
-                  <AIResultDetailSection aiResult={selectedAiResults[0]} landInfo={selectedLands[0]} />
+                {/* 판단 근거 상세 보기 (첫 번째 필지 기준) */}
+                {allLands.length > 0 && allAiResults[0] && (
+                  <AIResultDetailSection aiResult={allAiResults[0]} landInfo={allLands[0]} />
                 )}
               </div>
             ) : (
