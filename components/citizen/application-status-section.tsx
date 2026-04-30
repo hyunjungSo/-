@@ -32,11 +32,6 @@ function LandInfoSection({ application }: { application: Application }) {
   
   // selectedLand가 없으면 렌더링 안함
   if (!selectedLand) return null;
-  
-  // 필지별 판정 결과 가져오기
-  const landJudgment = application.aiResult?.landJudgments?.find(
-    j => j.landId === selectedLand.id
-  );
 
   return (
     <div className="overflow-hidden rounded-lg border border-border">
@@ -65,24 +60,11 @@ function LandInfoSection({ application }: { application: Application }) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {allLands.map((land, index) => {
-                  const judgment = application.aiResult?.landJudgments?.find(j => j.landId === land.id);
-                  return (
-                    <SelectItem key={land.id} value={index.toString()}>
-                      <span className="flex items-center gap-2">
-                        필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")} ({land.remainingArea.toLocaleString()}m²)
-                        {judgment && (
-                          <Badge 
-                            variant={judgment.judgment === "매수" ? "default" : "secondary"} 
-                            className="ml-1 text-xs"
-                          >
-                            {judgment.judgment}
-                          </Badge>
-                        )}
-                      </span>
-                    </SelectItem>
-                  );
-                })}
+                {allLands.map((land, index) => (
+                  <SelectItem key={land.id} value={index.toString()}>
+                    필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")} ({land.remainingArea.toLocaleString()}m²)
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -120,33 +102,7 @@ function LandInfoSection({ application }: { application: Application }) {
         </div>
       </div>
       
-      {/* 필지별 판정 결과 행 (있는 경우) */}
-      {landJudgment && (
-        <div className="flex">
-          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
-            <span className="text-sm font-medium">AI 판정</span>
-          </div>
-          <div className="flex flex-1 items-center gap-2 px-4 py-3">
-            <Badge 
-              className={
-                landJudgment.judgment === "매수" 
-                  ? "bg-emerald-600 hover:bg-emerald-600" 
-                  : landJudgment.judgment === "미해당"
-                    ? "bg-amber-500 hover:bg-amber-500"
-                    : "bg-red-500 hover:bg-red-500"
-              }
-            >
-              {landJudgment.judgment}
-            </Badge>
-            {landJudgment.unifiedGroupId && (
-              <span className="text-xs text-emerald-600">일단지 포함</span>
-            )}
-            {landJudgment.reason && (
-              <span className="text-xs text-muted-foreground">{landJudgment.reason}</span>
-            )}
-          </div>
-        </div>
-      )}
+      
     </div>
   );
 }
