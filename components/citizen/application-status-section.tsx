@@ -13,186 +13,9 @@ import {
   Layers,
   CheckCircle2,
   AlertTriangle,
-  Info,
-  Link2,
-  User,
-  MapPinned
+  Info
 } from "lucide-react";
 import { AdminStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
-
-// 일단지 판정 정보 섹션 컴포넌트
-function UnifiedParcelSection({ application }: { application: Application }) {
-  const isMultipleLands = application.additionalLands && application.additionalLands.length > 0;
-  const landJudgments = application.aiResult?.landJudgments;
-  
-  // 복수 필지가 아니면 표시 안함
-  if (!isMultipleLands) return null;
-  
-  const allLands = [application.landInfo, ...(application.additionalLands || [])];
-  const totalArea = allLands.reduce((sum, land) => sum + land.remainingArea, 0);
-  
-  // 일단지 그룹별로 필지 분류
-  const unifiedGroups: Record<string, { lands: typeof allLands; area: number }> = {};
-  const individualLands: typeof allLands = [];
-  const notApplicableLands: typeof allLands = [];
-  
-  if (landJudgments && landJudgments.length > 0) {
-    allLands.forEach((land) => {
-      const judgment = landJudgments.find(j => j.landId === land.id);
-      if (judgment?.unifiedGroupId) {
-        if (!unifiedGroups[judgment.unifiedGroupId]) {
-          unifiedGroups[judgment.unifiedGroupId] = { lands: [], area: 0 };
-        }
-        unifiedGroups[judgment.unifiedGroupId].lands.push(land);
-        unifiedGroups[judgment.unifiedGroupId].area += land.remainingArea;
-      } else if (judgment?.judgment === "매수") {
-        individualLands.push(land);
-      } else {
-        notApplicableLands.push(land);
-      }
-    });
-  }
-  
-  const hasUnifiedGroups = Object.keys(unifiedGroups).length > 0;
-  const hasIndividualLands = individualLands.length > 0;
-  const hasNotApplicable = notApplicableLands.length > 0;
-  
-  return (
-    <div className="space-y-3">
-      {/* 일단지 그룹 */}
-      {hasUnifiedGroups && Object.entries(unifiedGroups).map(([groupId, group], idx) => (
-        <div key={groupId} className="overflow-hidden rounded-lg border border-emerald-200 bg-emerald-50/30">
-          <div className="flex items-center justify-between border-b border-emerald-200 bg-emerald-100/50 px-4 py-2.5">
-            <h4 className="flex items-center gap-2 font-semibold text-emerald-800">
-              <Link2 className="h-4 w-4" />
-              일단지 그룹 {idx + 1}
-            </h4>
-            <div className="flex items-center gap-2">
-              <Badge className="bg-emerald-600 hover:bg-emerald-600 text-white">
-                일단지 매수
-              </Badge>
-              <span className="text-sm font-medium text-emerald-700">
-                {group.lands.length}필지
-              </span>
-            </div>
-          </div>
-          <div className="p-4 space-y-2">
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {group.lands.map((land) => {
-                const overallIdx = allLands.findIndex(l => l.id === land.id);
-                const label = String.fromCharCode(65 + overallIdx);
-                return (
-                  <div key={land.id} className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-white p-2">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white">
-                      {label}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{land.address.split(" ").slice(-2).join(" ")}</p>
-                      <p className="text-xs text-muted-foreground">{land.remainingArea.toLocaleString()}m² | {land.landType}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="flex items-center justify-between rounded-lg bg-emerald-100/50 px-3 py-2 mt-2">
-              <span className="text-sm text-emerald-700">합산 면적</span>
-              <span className="font-bold text-emerald-800">{group.area.toLocaleString()}m²</span>
-            </div>
-          </div>
-        </div>
-      ))}
-      
-      {/* 개별 매수 필지 */}
-      {hasIndividualLands && (
-        <div className="overflow-hidden rounded-lg border border-blue-200 bg-blue-50/30">
-          <div className="flex items-center justify-between border-b border-blue-200 bg-blue-100/50 px-4 py-2.5">
-            <h4 className="flex items-center gap-2 font-semibold text-blue-800">
-              <CheckCircle2 className="h-4 w-4" />
-              개별 매수 대상
-            </h4>
-            <div className="flex items-center gap-2">
-              <Badge className="bg-blue-600 hover:bg-blue-600 text-white">
-                개별 매수
-              </Badge>
-              <span className="text-sm font-medium text-blue-700">
-                {individualLands.length}필지
-              </span>
-            </div>
-          </div>
-          <div className="p-4">
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {individualLands.map((land) => {
-                const overallIdx = allLands.findIndex(l => l.id === land.id);
-                const label = String.fromCharCode(65 + overallIdx);
-                const judgment = landJudgments?.find(j => j.landId === land.id);
-                return (
-                  <div key={land.id} className="flex items-center gap-2 rounded-lg border border-blue-200 bg-white p-2">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
-                      {label}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{land.address.split(" ").slice(-2).join(" ")}</p>
-                      <p className="text-xs text-muted-foreground">{land.remainingArea.toLocaleString()}m² | {land.landType}</p>
-                      {judgment?.reason && (
-                        <p className="text-xs text-blue-600 truncate">{judgment.reason}</p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-      
-      {/* 미해당 필지 */}
-      {hasNotApplicable && (
-        <div className="overflow-hidden rounded-lg border border-amber-200 bg-amber-50/30">
-          <div className="flex items-center justify-between border-b border-amber-200 bg-amber-100/50 px-4 py-2.5">
-            <h4 className="flex items-center gap-2 font-semibold text-amber-800">
-              <AlertTriangle className="h-4 w-4" />
-              기준 미충족
-            </h4>
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="bg-amber-200 text-amber-800">
-                미해당
-              </Badge>
-              <span className="text-sm font-medium text-amber-700">
-                {notApplicableLands.length}필지
-              </span>
-            </div>
-          </div>
-          <div className="p-4">
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {notApplicableLands.map((land) => {
-                const overallIdx = allLands.findIndex(l => l.id === land.id);
-                const label = String.fromCharCode(65 + overallIdx);
-                const judgment = landJudgments?.find(j => j.landId === land.id);
-                return (
-                  <div key={land.id} className="flex items-center gap-2 rounded-lg border border-amber-200 bg-white p-2">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-xs font-bold text-white">
-                      {label}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{land.address.split(" ").slice(-2).join(" ")}</p>
-                      <p className="text-xs text-muted-foreground">{land.remainingArea.toLocaleString()}m² | {land.landType}</p>
-                      {judgment?.reason && (
-                        <p className="text-xs text-amber-600 truncate">{judgment.reason}</p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-      
-      {/* AI 분석 결과가 없으면 일단지 판정 섹션 미표시 */}
-      {!landJudgments && !hasUnifiedGroups && !hasIndividualLands && !hasNotApplicable && null}
-    </div>
-  );
-}
 
 // 토지 정보 섹션 컴포넌트 (고용24 스타일 테이블 형태)
 function LandInfoSection({ application }: { application: Application }) {
@@ -383,6 +206,8 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                   rationale={application.aiResult.judgmentRationale} 
                   provisionalJudgment={application.aiResult.provisionalJudgment}
                   variant="modal-trigger"
+                  landJudgments={application.aiResult.landJudgments}
+                  allLands={application.additionalLands ? [application.landInfo, ...application.additionalLands] : [application.landInfo]}
                 />
               )}
             </div>
@@ -423,10 +248,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
         </div>
       )}
 
-{/* 일단지 판정 정보 (복수 필지인 경우) */}
-      <UnifiedParcelSection application={application} />
-      
-      {/* 토지 정보 요약 - 셀렉트박스로 필지 선택 */}
+{/* 토지 정보 요약 - 셀렉트박스로 필지 선택 */}
       <LandInfoSection application={application} />
     </div>
   );
