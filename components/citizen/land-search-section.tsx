@@ -241,7 +241,7 @@ const regionData = {
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
-    "소정면": ["고등���", "대곡리", "소정리", "운담리"],
+    "소정면": ["고등�����", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -603,7 +603,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 ${summary}`;
   } else {
     // 매수불가
-    summary = `본 토지는 잔여지 면적 및 형상상 종래 목적대로 사용 가능한 것으로 판단되어 매수청구 대상�� 해당하지 않습니다.`;
+    summary = `본 토지는 잔여지 면적 및 형상상 종래 목적대로 사용 가능한 것으로 판단되어 매수청구 ��상�� 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -1092,6 +1092,23 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setNoIncludedLand(false);
     setHasSearched(false);
   };
+  
+  // 검색 방식 변경 시 필지 목록 및 기본 정보 초기화
+  const handleSearchModeChange = (mode: "address" | "individual" | "corporation") => {
+    setSearchMode(mode);
+    setOwnerName("");
+    setOwnerBirthDate("");
+    setSelectedSido("");
+    setSelectedSigungu("");
+    setSelectedEupmyeondong("");
+    setSelectedRi("");
+    setJibun("");
+    setSearchResults([]);
+    setSelectedLand(null);
+    setAiResult(null);
+    setNoIncludedLand(false);
+    setHasSearched(false);
+  };
 
   // 드롭다운 옵션
   const sigunguOptions = selectedSido ? regionData.시군구[selectedSido as keyof typeof regionData.시군구] || [] : [];
@@ -1150,7 +1167,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 type="radio"
                 name="searchMode"
                 checked={searchMode === "address"}
-                onChange={() => setSearchMode("address")}
+                onChange={() => handleSearchModeChange("address")}
                 className="h-4 w-4 accent-gray-900"
               />
               <span className="text-sm">지번으로 검색</span>
@@ -1160,7 +1177,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 type="radio"
                 name="searchMode"
                 checked={searchMode === "individual"}
-                onChange={() => setSearchMode("individual")}
+                onChange={() => handleSearchModeChange("individual")}
                 className="h-4 w-4 accent-gray-900"
               />
               <span className="text-sm">개인정보로 검색</span>
@@ -1170,7 +1187,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 type="radio"
                 name="searchMode"
                 checked={searchMode === "corporation"}
-                onChange={() => setSearchMode("corporation")}
+                onChange={() => handleSearchModeChange("corporation")}
                 className="h-4 w-4 accent-gray-900"
               />
               <span className="text-sm">법인정보로 검색</span>
@@ -2203,7 +2220,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                 checked={allSelectedInUnit}
                                 className="h-5 w-5"
                                 onCheckedChange={(checked) => {
-                                  // 다른 관할기관 선택 해제하고 현재 관할기관만 선택
+                                  // 다른 ���할기관 선택 해제하고 현재 관할기관만 선택
                                   const newSelected = new Set<string>();
                                   if (checked) {
                                     items.forEach(item => newSelected.add(item.id));
