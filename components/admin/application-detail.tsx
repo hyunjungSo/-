@@ -463,7 +463,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <Layers className="h-5 w-5" />
               대상 필지
               {isMultipleLands && (
-                <Badge variant="outline" className="ml-1">
+                <Badge variant="secondary" className="ml-1">
                   {allLands.length}필지
                 </Badge>
               )}
@@ -754,7 +754,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 <div className="h-px flex-1 bg-border" />
                 <span className="flex items-center gap-1.5 px-2">
                   <ChevronDown className="h-4 w-4" />
-                  아래 정보는 <Badge variant="secondary" className="mx-1">필지 {selectedLandIndex + 1}</Badge> 기준입니다
+                  아래 정보는 <Badge variant="outline" className="mx-1">필지 {selectedLandIndex + 1}</Badge> 기준입니다
                 </span>
                 <div className="h-px flex-1 bg-border" />
               </div>
