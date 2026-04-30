@@ -241,7 +241,7 @@ const regionData = {
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
-    "소정면": ["고등�������", "대곡리", "소정리", "운담리"],
+    "소정면": ["고등���������", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -593,7 +593,7 @@ function generateJudgmentRationale(
 
 3. 형상 분석
 - 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
-- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
+- 잔여지 ��상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
 - 형상지수 변화: +${shapeIndexChange.toFixed(1)}
 
 4. 충족 기준
@@ -1305,7 +1305,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 }}
               >
                 <SelectTrigger className="w-[130px]">
-                  <SelectValue placeholder="시도 선택" />
+                  <SelectValue placeholder="시��� 선택" />
                 </SelectTrigger>
                 <SelectContent>
                   {regionData.시도.map((sido) => (
@@ -1610,10 +1610,10 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     })}
                   </ul>
                   
-                  {/* 선택된 필지 요약 + AI 판독 버튼 */}
+                  {/* 선택된 필지 요약 */}
                   {searchResults.length > 0 && (
                     <div className="border-t bg-muted/30 px-3 py-3">
-                      <div className="mb-2 flex items-center justify-between text-xs">
+                      <div className="flex items-center justify-between text-xs">
                         <span className="text-muted-foreground">
                           선택: {ownedParcels.size || 1}필지
                         </span>
@@ -1621,30 +1621,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           총 {searchResults.length}필지
                         </span>
                       </div>
-                      {/* AI 판독 버튼 */}
-                      <Button 
-                        onClick={handleAIAnalysis}
-                        className="h-10 w-full gap-2 text-sm"
-                        variant="default"
-                        disabled={aiAnalyzing || !currentUsage || (currentUsage === "대" && !landSubType) || noIncludedLand}
-                      >
-                        {aiAnalyzing ? (
-                          <>
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            {ownedParcels.size || 1}개 필지 판독 중...
-                          </>
-                        ) : (
-                          <>
-                            <AIIcon className="h-5 w-5" />
-                            선택 필지 AI 판독 ({ownedParcels.size || 1}건)
-                          </>
-                        )}
-                      </Button>
-                      {(!currentUsage || (currentUsage === "대" && !landSubType)) && (
-                        <p className="mt-1.5 text-center text-[11px] text-muted-foreground">
-                          기본정보에서 활용 지목을 선택하세요
-                        </p>
-                      )}
                     </div>
                   )}
                 </>
@@ -1790,6 +1766,28 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       택지 유형에 따라 매수 기준 면적이 달라집니다.
                     </p>
                   </div>
+                )}
+
+                {/* AI 판독 버튼 */}
+                {!noIncludedLand && !aiResult && (
+                  <Button 
+                    onClick={handleAIAnalysis}
+                    className="h-11 w-full gap-2"
+                    variant="default"
+                    disabled={aiAnalyzing || !currentUsage || (currentUsage === "대" && !landSubType)}
+                  >
+                    {aiAnalyzing ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        {ownedParcels.size || 1}개 필지 판독 중...
+                      </>
+                    ) : (
+                      <>
+                        <AIIcon className="h-5 w-5" />
+                        선택 필지 AI 판독 ({ownedParcels.size || 1}건)
+                      </>
+                    )}
+                  </Button>
                 )}
 
                 {/* AI 판독 결과 - 복수 필지 통합 뷰 */}
