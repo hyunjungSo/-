@@ -28,6 +28,8 @@ import {
   Info,
   ChevronDown,
   Map as MapIcon,
+  Loader2,
+  RotateCcw,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -124,6 +126,25 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
   const [isSaving, setIsSaving] = useState(false);
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
+  const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
+  const [currentAIResult, setCurrentAIResult] = useState(application.aiResult || null);
+
+  // AI 판독 실행 핸들러
+  const handleRunAIAnalysis = () => {
+    setIsAIAnalyzing(true);
+    // 시뮬레이션: 2초 후 AI 분석 결과 업데이트
+    setTimeout(() => {
+      setCurrentAIResult({
+        provisionalJudgment: "매수",
+        landTypePath: allLands[selectedLandIndex].landType,
+        accessRoadLost: false,
+        waterChannelLost: false,
+        confidence: 0.92,
+        analysisDate: new Date().toISOString().split("T")[0],
+      });
+      setIsAIAnalyzing(false);
+    }, 2000);
+  };
   
   // 필지 포함/제외 상태 (민원인 소유 확인용)
   const [excludedLands, setExcludedLands] = useState<Set<string>>(new Set());
@@ -177,7 +198,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       <div className="flex items-center justify-between">
         <Button variant="ghost" onClick={onBack} className="h-auto px-0 text-muted-foreground hover:bg-transparent hover:text-foreground">
           <ArrowLeft className="mr-1.5 h-4 w-4" />
-          목록으로 돌아가기
+          목록으�� 돌아가기
         </Button>
         <div className="flex gap-2">
           <Button variant="secondary" asChild>
@@ -422,7 +443,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </>
                 ) : (
                   <>
-                    <AIIcon className="h-5 w-5" />
+                    <Bot className="h-5 w-5" />
                     AI 판독 실행
                   </>
                 )}

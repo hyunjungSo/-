@@ -50,7 +50,8 @@ export function Footer() {
               alt="한국도로공사 토지정보"
               width={140}
               height={28}
-              className="h-7 w-auto"
+              className="h-7"
+              style={{ width: "auto", height: "auto" }}
             />
             <div className="border-l border-gray-200 pl-4">
               <p className="text-xs text-gray-500">

@@ -59,7 +59,8 @@ export default function LoginPage() {
             alt="한국도로공사 토지정보 토지보상"
             width={200}
             height={40}
-            className="h-10 w-auto"
+            className="h-10"
+            style={{ width: "auto", height: "auto" }}
             priority
           />
         </div>

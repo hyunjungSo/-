@@ -124,7 +124,8 @@ export function Header() {
               alt="한국도로공사 토지정보"
               width={200}
               height={40}
-              className="h-10 w-auto object-contain"
+              className="h-10 object-contain"
+              style={{ width: "auto", height: "auto" }}
               priority
             />
           </Link>
