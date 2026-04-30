@@ -128,6 +128,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
   
+  // 체크박스로 선택된 필지 ID 목록
+  const [checkedLandIds, setCheckedLandIds] = useState<string[]>([]);
+  
   // 필지별 AI 판독 결과 상태 (landId -> AIResult)
   const [landAIResults, setLandAIResults] = useState<Record<string, {
     provisionalJudgment: string;
@@ -554,8 +557,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     };
   };
 
-  // AI 판독 실행 핸들러 (2단계 프로세스)
+  // AI 판독 실행 핸들러 (2단계 프로세스) - 체크박스 선택된 필지만 분석
   const handleRunAIAnalysis = () => {
+    // 선택된 필지가 없으면 알림
+    if (checkedLandIds.length === 0) {
+      alert("AI 판독할 필지를 선택해주세요.");
+      return;
+    }
+    
     setIsAIAnalyzing(true);
     setLandAIResults({});
     setUnifiedGroups({});
@@ -564,13 +573,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       const newResults: typeof landAIResults = {};
       const newGroups: typeof unifiedGroups = {};
       
+      // 선택된 필지들만 분석 대상으로 설정
+      const selectedLands = allLands.filter(l => checkedLandIds.includes(l.id));
+      
       // ===== [1단계] 일단지 판정 =====
       // 소유자 동일, 지반 연속, 용도 일체성 확인하여 일단지 그룹 형성
-      const unifiedLandGroups = allLands.length >= 2 ? findUnifiedGroups(allLands) : [[allLands[0]?.id]];
+      const unifiedLandGroups = selectedLands.length >= 2 ? findUnifiedGroups(selectedLands) : selectedLands.length === 1 ? [[selectedLands[0].id]] : [];
       let groupIndex = 0;
       
       unifiedLandGroups.forEach((groupLandIds) => {
-        const groupLands = allLands.filter(l => groupLandIds.includes(l.id));
+        const groupLands = selectedLands.filter(l => groupLandIds.includes(l.id));
         const isUnified = groupLandIds.length >= 2;
         
         if (isUnified) {
@@ -1131,25 +1143,60 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </>
                   ) : (
                     /* 일단지 그룹 없음 - 기본 그리드 표시 (AI 판독 전) */
+                    <div className="mb-2 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={checkedLandIds.length === allLands.length}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setCheckedLandIds(allLands.map(l => l.id));
+                            } else {
+                              setCheckedLandIds([]);
+                            }
+                          }}
+                          className="h-4 w-4 rounded border-gray-300"
+                        />
+                        <span className="text-sm text-muted-foreground">
+                          전체 선택 ({checkedLandIds.length}/{allLands.length})
+                        </span>
+                      </div>
+                    </div>
                     <div className="grid gap-2 sm:grid-cols-2">
                       {allLands.map((land, index) => {
                         const isSelected = selectedLandIndex === index;
+                        const isChecked = checkedLandIds.includes(land.id);
                         const landResult = landAIResults[land.id];
                         const landLabel = String.fromCharCode(65 + index); // A, B, C...
                         return (
-                          <button
+                          <div
                             key={land.id}
-                            type="button"
-                            onClick={() => setSelectedLandIndex(index)}
-                            className={`flex flex-col items-start gap-1.5 rounded-lg border-2 p-3 text-left transition-all ${
-                              isSelected 
-                                ? "border-primary bg-primary/5 ring-2 ring-primary" 
-                                : "border-border hover:border-primary/50 hover:bg-muted/30"
+                            className={`relative flex flex-col items-start gap-1.5 rounded-lg border-2 p-3 text-left transition-all cursor-pointer ${
+                              isChecked
+                                ? "border-primary bg-primary/5 ring-2 ring-primary"
+                                : isSelected 
+                                  ? "border-primary/50 bg-primary/5" 
+                                  : "border-border hover:border-primary/50 hover:bg-muted/30"
                             }`}
+                            onClick={() => setSelectedLandIndex(index)}
                           >
                             <div className="flex w-full items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-bold">
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={(e) => {
+                                    e.stopPropagation();
+                                    if (e.target.checked) {
+                                      setCheckedLandIds([...checkedLandIds, land.id]);
+                                    } else {
+                                      setCheckedLandIds(checkedLandIds.filter(id => id !== land.id));
+                                    }
+                                  }}
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="h-4 w-4 rounded border-gray-300"
+                                />
+                                <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${isChecked ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
                                   {landLabel}
                                 </span>
                                 <span className="text-sm font-medium">필지 {landLabel}</span>
@@ -1167,17 +1214,17 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </Badge>
                               )}
                             </div>
-                            <p className="text-xs text-muted-foreground line-clamp-1">{land.address}</p>
-                            <div className="flex gap-3 text-xs">
+                            <p className="text-xs text-muted-foreground line-clamp-1 pl-6">{land.address}</p>
+                            <div className="flex gap-3 text-xs pl-6">
                               <span className="font-medium text-primary">{land.remainingArea.toLocaleString()}m²</span>
                               <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
                             </div>
                             {landResult?.analysisDate && (
-                              <p className="mt-1 text-xs text-muted-foreground">
+                              <p className="mt-1 text-xs text-muted-foreground pl-6">
                                 판독: {landResult.analysisDate}
                               </p>
                             )}
-                          </button>
+                          </div>
                         );
                       })}
                     </div>
@@ -1196,7 +1243,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 <div className="h-px flex-1 bg-border" />
                 <span className="flex items-center gap-1.5 px-2">
                   <ChevronDown className="h-4 w-4" />
-                  아래 정보는 <Badge variant="outline" className="mx-1">필지 {String.fromCharCode(65 + selectedLandIndex)}</Badge> 기준입니다
+                  {checkedLandIds.length > 0 ? (
+                    <>
+                      아래 정보는 <Badge variant="default" className="mx-1">{checkedLandIds.length}필지 선택됨</Badge> 기준입니다
+                    </>
+                  ) : (
+                    <>
+                      아래 정보는 <Badge variant="outline" className="mx-1">필지 {String.fromCharCode(65 + selectedLandIndex)}</Badge> 기준입니다
+                    </>
+                  )}
                 </span>
                 <div className="h-px flex-1 bg-border" />
               </div>
@@ -1253,24 +1308,24 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             <div className="mt-4 pt-4 border-t border-border">
               <Button
                 onClick={handleRunAIAnalysis}
-                disabled={isAIAnalyzing}
+                disabled={isAIAnalyzing || checkedLandIds.length === 0}
                 className="w-full gap-2 bg-primary hover:bg-primary/90"
                 size="lg"
               >
                 {isAIAnalyzing ? (
                   <>
                     <Loader2 className="h-5 w-5 animate-spin" />
-                    AI 판독 중...
+                    AI 판독 중... ({checkedLandIds.length}필지)
                   </>
-                ) : currentAIResult ? (
+                ) : Object.keys(landAIResults).length > 0 ? (
                   <>
                     <RotateCcw className="h-5 w-5" />
-                    AI 재판독 실���
+                    선택 필지 AI 재판독 ({checkedLandIds.length}필지)
                   </>
                 ) : (
                   <>
                     <Bot className="h-5 w-5" />
-                    AI 판독 실행
+                    선택 필지 AI 판독 ({checkedLandIds.length}필지)
                   </>
                 )}
               </Button>
