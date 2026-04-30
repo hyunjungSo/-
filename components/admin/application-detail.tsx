@@ -27,6 +27,7 @@ import {
   Layers,
   Info,
   ChevronDown,
+  Map as MapIcon,
 } from "lucide-react";
 import Link from "next/link";
 
