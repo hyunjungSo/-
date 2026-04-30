@@ -756,7 +756,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
   
   
-  // 판독 결과 초�����������화
+  // 판독 결과 초�������������화
   const handleResetAIResults = () => {
     setLandAIResults({});
     setUnifiedGroups({});
@@ -1823,10 +1823,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </p>
             </div>
           )}
-        </CardContent>
-      </Card>
-      
-      {/* 진행상황 설정 */}
+          
+          {/* 진행상황 설정 */}
           <div className="space-y-2">
             <Label>진행상황 설���</Label>
             <div className="flex flex-wrap gap-2">
