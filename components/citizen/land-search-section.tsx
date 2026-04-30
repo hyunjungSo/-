@@ -136,7 +136,7 @@ const regionData = {
     "양산시": ["동면", "물금읍", "상북면", "웅상읍", "원동면", "하북면"],
     // 제주특별자치도
     "제주시": ["구좌읍", "애월읍", "우도면", "조천읍", "추자면", "한경면", "한림읍", "아라동", "건입동", "노형동", "봉개동", "삼도동", "연동", "오라동", "외도동", "용담동", "이도동", "이호동", "일도동", "화북동"],
-    "서귀포시": ["남원읍", "대정읍", "성산읍", "안덕면", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "보목동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
+    "서귀포시": ["남원읍", "대정읍", "성산읍", "안덕면", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "���목동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
   },
   리: {
     // 경기도 - 용인시 처인구
@@ -241,7 +241,7 @@ const regionData = {
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
-    "�����정면": ["고등�����������", "대곡리", "소정리", "운담리"],
+    "�������정면": ["고등�����������", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -592,7 +592,7 @@ function generateJudgmentRationale(
 - 잔여 비율: ${land.remainingRatio}%
 
 3. 형상 분석
-- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
+- 편입 전 형상: ${land.originalShape} (형���지수 ${land.originalShapeIndex})
 - 잔여지 ����상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
 - 형상지수 변화: +${shapeIndexChange.toFixed(1)}
 
@@ -603,7 +603,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 ${summary}`;
   } else {
     // 매수불가
-    summary = `본 토지는 잔여지 면적 및 형상상 종래 목���대��� 사용 ��능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
+    summary = `본 토지는 잔여지 면적 및 형상상 ��래 목���대��� 사용 ��능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -915,7 +915,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return true;
       });
       
-      // 검색 결과가 없으면 해당 지역의 더미 데이터 생성 (좌표 포함)
+      // 검색 결과가 없으면 해당 지역의 더미 데이터 생성 (��표 포함)
       if (results.length === 0) {
         const baseCoords = [
           [
@@ -1432,9 +1432,15 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 // 지도에서 클릭 시 본인 소유 토글 (복수 선택)
                 const isFirstResult = landIndex === 0;
                 if (isFirstResult && ownedParcels.size === 0) {
-                  // 첫번째 필지 해제 시 (기본 선택 상태에서), 명시적으로 상태 관리 시작
-                  // 첫번째 필지만 해제되고 나머지는 그대로
+                  // 첫번째 필지 해제 시 - 빈 Set으로 (아무것도 선택 안함)
                   setOwnedParcels(new Set());
+                } else if (!isFirstResult && ownedParcels.size === 0) {
+                  // 초기 상태에서 첫번째가 아닌 다른 필지 선택 시
+                  // 첫번째 필지(기본 선택)와 함께 선택
+                  const newSet = new Set<string>();
+                  newSet.add(searchResults[0].id); // 첫번째 필지 유지
+                  newSet.add(land.id); // 새로 선택한 필지 추가
+                  setOwnedParcels(newSet);
                 } else {
                   toggleOwnedParcel(land.id);
                 }
@@ -1961,7 +1967,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           </Badge>
                         </div>
 
-                    {/* 내용 - 신청현황조회와 동일한 순서 */}
+                    {/* 내용 - 신청���황조회와 동일한 순서 */}
                     <div className="space-y-4">
                       {/* 판단 요약 */}
                       {aiResult.judgmentRationale && (
@@ -2266,7 +2272,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             ))}
                           </div>
                           
-                          {/* 이 관할기관 필지 신청하기 버튼 */}
+                          {/* 이 관할기�� 필지 신청하기 버튼 */}
                           <div className="border-t p-3">
                             <Button 
                               onClick={() => {
