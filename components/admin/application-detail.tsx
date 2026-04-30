@@ -128,8 +128,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
   
-  // 체크박스로 선택된 필지 ID 목록
-  const [checkedLandIds, setCheckedLandIds] = useState<string[]>([]);
+  // 체크박스로 선택된 필지 ID 목록 (초기값: 모든 필지 선택)
+  const [checkedLandIds, setCheckedLandIds] = useState<string[]>(() => allLands.map(l => l.id));
   
   // 체크박스 선택 변경 핸들러 (판독 결과 초기화 포함)
   const handleCheckLand = (landId: string, checked: boolean) => {
@@ -756,7 +756,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
   
   
-  // 판독 결과 초���������������화
+  // 판독 결과 초�����������������화
   const handleResetAIResults = () => {
     setLandAIResults({});
     setUnifiedGroups({});
