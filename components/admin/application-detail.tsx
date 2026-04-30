@@ -563,7 +563,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           return (
                             <SelectItem key={land.id} value={index.toString()}>
                               <span className="flex items-center gap-2">
-                                필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")}
+                                필��� {index + 1} - {land.address.split(" ").slice(-2).join(" ")}
                                 {group && <span className="text-emerald-600 text-xs">({group.groupName})</span>}
                                 {landResult && !group && <span className="text-muted-foreground text-xs">(미해당)</span>}
                               </span>
@@ -655,6 +655,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       {landResult.reason}
                                     </p>
                                   )}
+                                  {landResult?.analysisDate && (
+                                    <p className="mt-1 text-xs text-muted-foreground">
+                                      판독완료: {landResult.analysisDate}
+                                    </p>
+                                  )}
                                 </button>
                               );
                             })}
@@ -712,6 +717,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         {landResult.reason}
                                       </p>
                                     )}
+                                    {landResult?.analysisDate && (
+                                      <p className="mt-1 text-xs text-muted-foreground">
+                                        판독완료: {landResult.analysisDate}
+                                      </p>
+                                    )}
                                   </button>
                                 );
                               })}
@@ -757,6 +767,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <span className="font-medium text-primary">{land.remainingArea.toLocaleString()}m²</span>
                               <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
                             </div>
+                            {landResult?.analysisDate && (
+                              <p className="mt-1 text-xs text-muted-foreground">
+                                판독완료: {landResult.analysisDate}
+                              </p>
+                            )}
                           </button>
                         );
                       })}
