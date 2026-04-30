@@ -756,7 +756,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
   
   
-  // 판독 결과 초기화
+  // 판독 결과 초���화
   const handleResetAIResults = () => {
     setLandAIResults({});
     setUnifiedGroups({});
@@ -1318,9 +1318,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             <CardTitle className="flex items-center gap-2">
               <MapIcon className="h-5 w-5" />
               지적도
-              {isMultipleLands && (
+              {checkedLandIds.length > 0 && (
                 <Badge variant="outline" className="ml-auto font-normal">
-                  필지 {selectedLandIndex + 1}
+                  {checkedLandIds.length}필지 선택
                 </Badge>
               )}
             </CardTitle>
@@ -1499,28 +1499,32 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <CardTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
             담당자 검토
-            {isMultipleLands && (
+            {checkedLandIds.length > 0 && (
               <Badge variant="outline" className="ml-auto font-normal">
-                필지 {selectedLandIndex + 1}
+                {checkedLandIds.length}필지 선택
               </Badge>
             )}
           </CardTitle>
           <CardDescription>
-            {isMultipleLands 
-              ? `${allLands[selectedLandIndex].address} | AI 분석 결과를 검토하고 필요 시 수정합니다.`
-              : "AI 분석 결과를 검토하고 필요 시 수정합니다. 자동 판독 불가 항목은 수동으로 입력해주세요."
+            {checkedLandIds.length > 0 
+              ? `선택된 ${checkedLandIds.length}개 필지에 대한 AI 분석 결과를 검토합니다.`
+              : "필지를 선택하고 AI 판독을 실행해주세요."
             }
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* 복수 필지: 비교 테이블 + 셀렉트박스 + 상세 검토 */}
-          {isMultipleLands ? (
+          {/* 체크된 필지가 있는 경우 */}
+          {checkedLandIds.length > 0 ? (
             <div className="space-y-6">
-              {/* 선택된 필지 상세 정보: AI 분석 | 민원인 입력 2컬럼 */}
-              {(() => {
-                const selectedLand = allLands[selectedLandIndex];
-                const selectedLandData = application.landDataList?.[selectedLandIndex];
-                const selectedLandReview = landReviewDataList[selectedLandIndex];
+              {/* 선택된 필지별 상세 정보 */}
+              {checkedLandIds.map((landId) => {
+                const landIndex = allLands.findIndex(l => l.id === landId);
+                const selectedLand = allLands[landIndex];
+                const selectedLandData = application.landDataList?.[landIndex];
+                const selectedLandReview = landReviewDataList[landIndex];
+                const landLabel = String.fromCharCode(65 + landIndex);
+                const landResult = landAIResults[landId];
+                if (!selectedLand) return null;
                 const isAgricultural = selectedLand.landType === "농지" || selectedLandReview?.actualUsage === "답" || selectedLandReview?.actualUsage === "전";
                 
                 const landSubTypeLabels: Record<string, string> = {
@@ -1532,7 +1536,30 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 };
 
                 return (
-                  <div className="space-y-5">
+                  <div key={landId} className="space-y-4 rounded-lg border p-4">
+                    {/* 필지 헤더 */}
+                    <div className="flex items-center justify-between border-b pb-3">
+                      <div className="flex items-center gap-2">
+                        <span className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold ${
+                          landResult?.provisionalJudgment === "매수" ? "bg-green-600 text-white" : 
+                          landResult?.provisionalJudgment === "매수불가" ? "bg-red-500 text-white" : "bg-muted"
+                        }`}>
+                          {landLabel}
+                        </span>
+                        <div>
+                          <p className="font-medium">필지 {landLabel}</p>
+                          <p className="text-sm text-muted-foreground">{selectedLand.address}</p>
+                        </div>
+                      </div>
+                      {landResult && (
+                        <Badge className={
+                          landResult.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"
+                        }>
+                          {landResult.provisionalJudgment}
+                        </Badge>
+                      )}
+                    </div>
+                    
                     {/* 민원인 입력 정보 */}
                     <div className="rounded-lg border border-violet-200 bg-violet-50/30 p-4 space-y-3">
                       <h5 className="flex items-center gap-2 font-semibold text-violet-700">
@@ -1591,7 +1618,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           <Label>실제 이용 상황</Label>
                           <Select
                             value={selectedLandReview?.actualUsage || ""}
-                            onValueChange={(value) => updateLandReviewData(selectedLandIndex, "actualUsage", value as LandCategory)}
+                            onValueChange={(value) => updateLandReviewData(landIndex, "actualUsage", value as LandCategory)}
                           >
                             <SelectTrigger>
                               <SelectValue />
@@ -1610,7 +1637,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           <Label>토지 모양</Label>
                           <Select
                             value={selectedLandReview?.landShape || ""}
-                            onValueChange={(value) => updateLandReviewData(selectedLandIndex, "landShape", value as LandShape)}
+                            onValueChange={(value) => updateLandReviewData(landIndex, "landShape", value as LandShape)}
                           >
                             <SelectTrigger>
                               <SelectValue />
@@ -1633,7 +1660,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             <Label>농기계 진입/회전 곤란</Label>
                             <Select
                               value={selectedLandReview?.farmMachineDifficulty || "미입력"}
-                              onValueChange={(value) => updateLandReviewData(selectedLandIndex, "farmMachineDifficulty", value as "미입력" | "해당" | "해당없음")}
+                              onValueChange={(value) => updateLandReviewData(landIndex, "farmMachineDifficulty", value as "미입력" | "해당" | "해당없음")}
                             >
                               <SelectTrigger>
                                 <SelectValue />
@@ -1651,7 +1678,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           <Label>필지별 판정</Label>
                           <Select
                             value={selectedLandReview?.landJudgment || ""}
-                            onValueChange={(value) => updateLandReviewData(selectedLandIndex, "landJudgment", value as JudgmentResult)}
+                            onValueChange={(value) => updateLandReviewData(landIndex, "landJudgment", value as JudgmentResult)}
                           >
                             <SelectTrigger>
                               <SelectValue placeholder="판정 선택" />
@@ -1673,7 +1700,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             <Checkbox
                               id={`accessRoadLost-${selectedLandIndex}`}
                               checked={selectedLandReview?.accessRoadLost || false}
-                              onCheckedChange={(checked) => updateLandReviewData(selectedLandIndex, "accessRoadLost", checked === true)}
+                              onCheckedChange={(checked) => updateLandReviewData(landIndex, "accessRoadLost", checked === true)}
                             />
                             <Label htmlFor={`accessRoadLost-${selectedLandIndex}`} className="text-base font-normal">
                               접면도로 상실
@@ -1684,7 +1711,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <Checkbox
                                 id={`waterChannelLost-${selectedLandIndex}`}
                                 checked={selectedLandReview?.waterChannelLost || false}
-                                onCheckedChange={(checked) => updateLandReviewData(selectedLandIndex, "waterChannelLost", checked === true)}
+                                onCheckedChange={(checked) => updateLandReviewData(landIndex, "waterChannelLost", checked === true)}
                               />
                               <Label htmlFor={`waterChannelLost-${selectedLandIndex}`} className="text-base font-normal">
                                 관개수로 상실
@@ -1696,7 +1723,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                   </div>
                 );
-              })()}
+              })}
 
               {/* 소유자 의견 */}
               <div className="space-y-2">
@@ -1728,15 +1755,29 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </div>
             </div>
           ) : (
-            /* 단일 필지 */
-            <div className="space-y-5">
-              {/* 민원인 입력 정보 */}
-              {application.landDataList?.[0] && (
-                <div className="rounded-lg border border-violet-200 bg-violet-50/30 p-4 space-y-3">
-                  <h5 className="flex items-center gap-2 font-semibold text-violet-700">
-                    <User className="h-4 w-4" />
-                    민원인 입력 정보
-                  </h5>
+            /* 필지 선택 안내 */
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <User className="h-12 w-12 text-muted-foreground/50 mb-4" />
+              <p className="text-lg font-medium text-muted-foreground mb-2">
+                필지를 선택해주세요
+              </p>
+              <p className="text-sm text-muted-foreground">
+                필지 목록에서 체크박스로 필지를 선택하고 AI 판독을 실행하세요.
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+      
+      {/* 기존 단일 필지 로직은 삭제 - 체크박스 기반으로 통합 */}
+      {false && (
+        <div className="hidden">
+          {application.landDataList?.[0] && (
+            <div className="rounded-lg border border-violet-200 bg-violet-50/30 p-4 space-y-3">
+              <h5 className="flex items-center gap-2 font-semibold text-violet-700">
+                <User className="h-4 w-4" />
+                민원인 입력 정보
+              </h5>
                   <div className="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">현재 활용 지목</span>
@@ -1917,7 +1958,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 />
               </div>
             </div>
-          )}
+          </div>
+        )}
 
           {/* 진행상황 설정 */}
           <div className="space-y-2">
