@@ -12,9 +12,107 @@ import {
   MapPin,
   Layers,
   CheckCircle2,
-  AlertTriangle
+  AlertTriangle,
+  Info,
+  Link2,
+  User,
+  MapPinned
 } from "lucide-react";
 import { AdminStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
+
+// 일단지 판정 정보 섹션 컴포넌트
+function UnifiedParcelSection({ application }: { application: Application }) {
+  const isMultipleLands = application.additionalLands && application.additionalLands.length > 0;
+  const unifiedAnalysis = application.aiResult?.unifiedParcelAnalysis;
+  const conditions = application.unifiedParcelCondition || unifiedAnalysis?.conditions;
+  
+  // 복수 필지가 아니면 표시 안함
+  if (!isMultipleLands) return null;
+  
+  const allLands = [application.landInfo, ...(application.additionalLands || [])];
+  const totalArea = allLands.reduce((sum, land) => sum + land.remainingArea, 0);
+  
+  return (
+    <div className="overflow-hidden rounded-lg border border-emerald-200 bg-emerald-50/30">
+      <div className="flex items-center justify-between border-b border-emerald-200 bg-emerald-100/50 px-4 py-2.5">
+        <h4 className="flex items-center gap-2 font-semibold text-emerald-800">
+          <Link2 className="h-4 w-4" />
+          일단지 판정 정보
+        </h4>
+        {unifiedAnalysis?.isUnifiedParcel && (
+          <Badge className="bg-emerald-600 hover:bg-emerald-600 text-white">
+            일단지 인정
+          </Badge>
+        )}
+      </div>
+      
+      {/* 일단지 판정 조건 */}
+      <div className="p-4 space-y-3">
+        {/* 판정 조건 체크리스트 */}
+        <div className="grid gap-2 sm:grid-cols-3">
+          <div className={`flex items-center gap-2 rounded-lg border p-3 ${
+            conditions?.sameOwner ? "border-emerald-200 bg-emerald-50" : "border-border bg-muted/30"
+          }`}>
+            <User className={`h-4 w-4 ${conditions?.sameOwner ? "text-emerald-600" : "text-muted-foreground"}`} />
+            <div>
+              <p className="text-xs text-muted-foreground">소유자 동일성</p>
+              <p className={`text-sm font-medium ${conditions?.sameOwner ? "text-emerald-700" : "text-muted-foreground"}`}>
+                {conditions?.sameOwner ? "충족" : "미확인"}
+              </p>
+            </div>
+          </div>
+          
+          <div className={`flex items-center gap-2 rounded-lg border p-3 ${
+            conditions?.continuous ? "border-emerald-200 bg-emerald-50" : "border-border bg-muted/30"
+          }`}>
+            <MapPinned className={`h-4 w-4 ${conditions?.continuous ? "text-emerald-600" : "text-muted-foreground"}`} />
+            <div>
+              <p className="text-xs text-muted-foreground">지반 연속성</p>
+              <p className={`text-sm font-medium ${conditions?.continuous ? "text-emerald-700" : "text-muted-foreground"}`}>
+                {conditions?.continuous ? "충족" : "미확인"}
+              </p>
+            </div>
+          </div>
+          
+          <div className={`flex items-center gap-2 rounded-lg border p-3 ${
+            conditions?.sameUsage ? "border-emerald-200 bg-emerald-50" : "border-border bg-muted/30"
+          }`}>
+            <Layers className={`h-4 w-4 ${conditions?.sameUsage ? "text-emerald-600" : "text-muted-foreground"}`} />
+            <div>
+              <p className="text-xs text-muted-foreground">용도 일체성</p>
+              <p className={`text-sm font-medium ${conditions?.sameUsage ? "text-emerald-700" : "text-muted-foreground"}`}>
+                {conditions?.sameUsage ? "충족" : "미확인"}
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        {/* 합산 면적 정보 */}
+        <div className="flex items-center justify-between rounded-lg bg-emerald-100/50 px-4 py-3">
+          <div>
+            <p className="text-sm text-emerald-700">총 {allLands.length}필지 합산 면적</p>
+            {unifiedAnalysis?.explanation && (
+              <p className="mt-1 text-xs text-emerald-600">{unifiedAnalysis.explanation}</p>
+            )}
+          </div>
+          <span className="text-lg font-bold text-emerald-800">
+            {(unifiedAnalysis?.combinedArea || totalArea).toLocaleString()}m²
+          </span>
+        </div>
+        
+        {/* 일단지 미인정 시 안내 */}
+        {unifiedAnalysis && !unifiedAnalysis.isUnifiedParcel && (
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+            <p className="text-sm text-amber-800">
+              <AlertTriangle className="mr-1.5 inline-block h-4 w-4" />
+              일단지 조건 미충족으로 개별 필지로 심사됩니다.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 // 토지 정보 섹션 컴포넌트 (고용24 스타일 테이블 형태)
 function LandInfoSection({ application }: { application: Application }) {
@@ -25,6 +123,11 @@ function LandInfoSection({ application }: { application: Application }) {
   
   const [selectedLandIndex, setSelectedLandIndex] = useState(0);
   const selectedLand = allLands[selectedLandIndex];
+  
+  // 필지별 판정 결과 가져오기
+  const landJudgment = application.aiResult?.landJudgments?.find(
+    j => j.landId === selectedLand.id
+  );
 
   return (
     <div className="overflow-hidden rounded-lg border border-border">
@@ -53,11 +156,24 @@ function LandInfoSection({ application }: { application: Application }) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {allLands.map((land, index) => (
-                  <SelectItem key={land.id} value={index.toString()}>
-                    필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")} ({land.remainingArea.toLocaleString()}m²)
-                  </SelectItem>
-                ))}
+                {allLands.map((land, index) => {
+                  const judgment = application.aiResult?.landJudgments?.find(j => j.landId === land.id);
+                  return (
+                    <SelectItem key={land.id} value={index.toString()}>
+                      <span className="flex items-center gap-2">
+                        필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")} ({land.remainingArea.toLocaleString()}m²)
+                        {judgment && (
+                          <Badge 
+                            variant={judgment.judgment === "매수" ? "default" : "secondary"} 
+                            className="ml-1 text-xs"
+                          >
+                            {judgment.judgment}
+                          </Badge>
+                        )}
+                      </span>
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </div>
@@ -94,6 +210,34 @@ function LandInfoSection({ application }: { application: Application }) {
           <span className="ml-2 text-sm text-muted-foreground">(잔여 비율 {selectedLand.remainingRatio}%)</span>
         </div>
       </div>
+      
+      {/* 필지별 판정 결과 행 (있는 경우) */}
+      {landJudgment && (
+        <div className="flex">
+          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">AI 판정</span>
+          </div>
+          <div className="flex flex-1 items-center gap-2 px-4 py-3">
+            <Badge 
+              className={
+                landJudgment.judgment === "매수" 
+                  ? "bg-emerald-600 hover:bg-emerald-600" 
+                  : landJudgment.judgment === "미해당"
+                    ? "bg-amber-500 hover:bg-amber-500"
+                    : "bg-red-500 hover:bg-red-500"
+              }
+            >
+              {landJudgment.judgment}
+            </Badge>
+            {landJudgment.unifiedGroupId && (
+              <span className="text-xs text-emerald-600">일단지 포함</span>
+            )}
+            {landJudgment.reason && (
+              <span className="text-xs text-muted-foreground">{landJudgment.reason}</span>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -193,6 +337,9 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
         </div>
       )}
 
+{/* 일단지 판정 정보 (복수 필지인 경우) */}
+      <UnifiedParcelSection application={application} />
+      
       {/* 토지 정보 요약 - 셀렉트박스로 필지 선택 */}
       <LandInfoSection application={application} />
     </div>
