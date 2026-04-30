@@ -492,6 +492,47 @@ export function ApplicationFormSection({
                     </span>
                   </div>
                 </div>
+                
+                {/* AI 판독 결과 요약 (복수 필지) */}
+                {selectedLands.length > 0 && (
+                  <div className={`mt-4 rounded-lg border-2 p-4 ${
+                    selectedAiResults.every(r => r?.provisionalJudgment === "매수")
+                      ? "border-primary bg-primary/5" 
+                      : selectedAiResults.some(r => r?.provisionalJudgment === "매수")
+                        ? "border-amber-500 bg-amber-50"
+                        : "border-red-500 bg-red-50"
+                  }`}>
+                    <div className="mb-2">
+                      <span className="text-base font-semibold text-foreground">AI 판독 결과</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {selectedAiResults.every(r => r?.provisionalJudgment === "매수") ? (
+                        <>
+                          <CheckCircle2 className="h-5 w-5 text-primary" />
+                          <span className="text-base font-bold text-primary">전체 매수 가능</span>
+                        </>
+                      ) : selectedAiResults.some(r => r?.provisionalJudgment === "매수") ? (
+                        <>
+                          <AlertTriangle className="h-5 w-5 text-amber-600" />
+                          <span className="text-base font-bold text-amber-700">일부 매수 가능</span>
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="h-5 w-5 text-red-600" />
+                          <span className="text-base font-bold text-red-600">전체 기준 미충족</span>
+                        </>
+                      )}
+                    </div>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      선택된 {selectedLands.length}필지 중 {selectedAiResults.filter(r => r?.provisionalJudgment === "매수").length}필지 매수 가능
+                    </p>
+                  </div>
+                )}
+                
+                {/* 판단 근거 상세 보기 (첫 번째 선택 필지 기준) */}
+                {selectedLands.length > 0 && selectedAiResults[0] && (
+                  <AIResultDetailSection aiResult={selectedAiResults[0]} landInfo={selectedLands[0]} />
+                )}
               </div>
             ) : (
               <>
