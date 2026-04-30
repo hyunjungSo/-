@@ -183,6 +183,32 @@ export function ApplicationFormSection({
   const isMultipleLands = landInfoList && landInfoList.length > 1;
   const allLands = landInfoList || [landInfo];
   const allAiResults = aiResultList || [aiResult];
+  
+  // 일단지 그룹 ID를 번호로 매핑 (모든 AI 결과에서 landJudgments 수집)
+  const unifiedGroupNumbers: Record<string, number> = {};
+  const landToGroupId: Record<string, string | null> = {};
+  
+  allAiResults.forEach(result => {
+    if (result?.landJudgments) {
+      result.landJudgments.forEach(j => {
+        if (j.unifiedGroupId) {
+          if (!unifiedGroupNumbers[j.unifiedGroupId]) {
+            unifiedGroupNumbers[j.unifiedGroupId] = Object.keys(unifiedGroupNumbers).length + 1;
+          }
+          landToGroupId[j.landId] = j.unifiedGroupId;
+        }
+      });
+    }
+  });
+  
+  // 필지의 일단지 그룹 번호 가져오기
+  const getUnifiedGroupNumber = (landId: string): number | null => {
+    const groupId = landToGroupId[landId];
+    if (groupId) {
+      return unifiedGroupNumbers[groupId] || null;
+    }
+    return null;
+  };
   interface FileItem {
     name: string;
     size: string;
@@ -384,18 +410,28 @@ export function ApplicationFormSection({
                 <div className="max-h-[300px] space-y-2 overflow-y-auto">
                   {allLands.map((land, index) => {
                     const result = allAiResults[index];
+                    const unifiedGroupNum = getUnifiedGroupNumber(land.id);
                     return (
                       <div 
                         key={land.id} 
                         className={`rounded-lg border p-3 ${
-                          result?.provisionalJudgment === "매수" 
-                            ? "border-primary/30 bg-primary/5" 
-                            : "border-red-300 bg-red-50"
+                          unifiedGroupNum 
+                            ? "border-emerald-300 bg-emerald-50/50"
+                            : result?.provisionalJudgment === "매수" 
+                              ? "border-primary/30 bg-primary/5" 
+                              : "border-red-300 bg-red-50"
                         }`}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <p className="text-sm font-medium">{land.address}</p>
+                            <div className="flex items-center gap-2">
+                              <p className="text-sm font-medium">{land.address}</p>
+                              {unifiedGroupNum && (
+                                <span className="rounded bg-emerald-600 px-1.5 py-0.5 text-xs font-medium text-white">
+                                  일단지{unifiedGroupNum}
+                                </span>
+                              )}
+                            </div>
                             <div className="mt-1 flex flex-wrap gap-2 text-xs text-muted-foreground">
                               <span>잔여: {land.remainingArea.toLocaleString()}㎡</span>
                               <span>|</span>
@@ -403,11 +439,13 @@ export function ApplicationFormSection({
                             </div>
                           </div>
                           <div className={`rounded px-2 py-0.5 text-xs font-medium ${
-                            result?.provisionalJudgment === "매수" 
-                              ? "bg-primary/10 text-primary" 
-                              : "bg-red-100 text-red-700"
+                            unifiedGroupNum
+                              ? "bg-emerald-100 text-emerald-700"
+                              : result?.provisionalJudgment === "매수" 
+                                ? "bg-primary/10 text-primary" 
+                                : "bg-red-100 text-red-700"
                           }`}>
-                            {result?.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
+                            {unifiedGroupNum ? "일단지 매수" : result?.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
                           </div>
                         </div>
                       </div>
