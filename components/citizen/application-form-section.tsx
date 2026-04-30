@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { LandMap } from "@/components/land-map";
+
 import { landCategories, landShapes } from "@/lib/dummy-data";
 import type { LandInfo, Application, LandCategory, LandShape, AIAnalysisResult } from "@/lib/types";
 import { ArrowLeft, Upload, Send, Bot, CheckCircle2, XCircle, X, Loader2, ChevronDown, AlertTriangle } from "lucide-react";
@@ -487,29 +487,59 @@ export function ApplicationFormSection({
                 )}
               </div>
             ) : (
-              <>
-                <LandMap landInfo={landInfo} showOverlay />
-                
-                <div className="space-y-2 text-base">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">지번</span>
-                    <span className="font-medium text-foreground">{landInfo.address.split(" ").slice(-2).join(" ")}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">잔여 면적</span>
-                    <span className="font-medium text-primary">{landInfo.remainingArea.toLocaleString()}㎡</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">잔여 비율</span>
-                    <span className="font-medium text-foreground">{landInfo.remainingRatio}%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">토지 유형</span>
-                    <span className="font-medium text-foreground">{landInfo.landType}</span>
+              <div className="space-y-3">
+                {/* 단일 필지 목록 (복수 필지와 동일한 형태) */}
+                <div className="max-h-[300px] space-y-2 overflow-y-auto">
+                  <div 
+                    className={`rounded-lg border p-3 ${
+                      aiResult?.provisionalJudgment === "매수" 
+                        ? "border-primary/30 bg-primary/5" 
+                        : "border-red-300 bg-red-50"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">{landInfo.address}</p>
+                        <div className="mt-1 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                          <span>잔여: {landInfo.remainingArea.toLocaleString()}㎡</span>
+                          <span>|</span>
+                          <span>{landInfo.landType}</span>
+                          <span>|</span>
+                          <span>{landInfo.ownerName}</span>
+                        </div>
+                      </div>
+                      <div className={`shrink-0 rounded px-2 py-0.5 text-xs font-medium ${
+                        aiResult?.provisionalJudgment === "매수" 
+                          ? "bg-primary/10 text-primary" 
+                          : "bg-red-100 text-red-700"
+                      }`}>
+                        {aiResult?.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-                {/* AI 판독 결과 요약 */}
+                
+                {/* 총계 */}
+                <div className="rounded-lg bg-muted/50 p-3 space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">총 필지 수</span>
+                    <span className="font-medium">1필지</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">총 잔여 면적</span>
+                    <span className="font-medium text-primary">
+                      {landInfo.remainingArea.toLocaleString()}㎡
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">매수 가능 필지</span>
+                    <span className="font-medium text-primary">
+                      {aiResult?.provisionalJudgment === "매수" ? "1건" : "0건"}
+                    </span>
+                  </div>
+                </div>
+                
+                {/* AI 판독 결과 요약 (단일 필지도 복수 필지와 동일한 형태) */}
                 <div className={`mt-4 rounded-lg border-2 p-4 ${
                   aiResult.provisionalJudgment === "매수" 
                     ? "border-primary bg-primary/5" 
@@ -522,23 +552,23 @@ export function ApplicationFormSection({
                     {aiResult.provisionalJudgment === "매수" ? (
                       <>
                         <CheckCircle2 className="h-5 w-5 text-primary" />
-                        <span className="text-base font-bold text-primary">매수 가능성 높음</span>
+                        <span className="text-base font-bold text-primary">매수 가능</span>
                       </>
                     ) : (
                       <>
                         <XCircle className="h-5 w-5 text-red-600" />
-                        <span className="rounded-full bg-red-600 px-3 py-1 text-base font-bold text-white">기준 미충족</span>
+                        <span className="text-base font-bold text-red-600">기준 미충족</span>
                       </>
                     )}
                   </div>
-                  <p className="mt-2 text-base text-muted-foreground">
-                    {aiResult.criteriaChecks.filter(c => c.isMet).length}/{aiResult.criteriaChecks.length}개 기준 충족
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    총 1필지 중 {aiResult?.provisionalJudgment === "매수" ? "1" : "0"}필지 매수 가능
                   </p>
                 </div>
 
                 {/* 판단 근거 상세 보기 */}
                 <AIResultDetailSection aiResult={aiResult} landInfo={landInfo} />
-              </>
+              </div>
             )}
           </CardContent>
         </Card>
