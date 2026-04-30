@@ -241,7 +241,7 @@ const regionData = {
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
-    "소정면": ["고등�����", "대곡리", "소정리", "운담리"],
+    "소정면": ["고등�������", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -675,7 +675,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   // 장바구니 패널 표시 상태
   const [isCartOpen, setIsCartOpen] = useState(false);
   // 장바구니 선택 항목
-  const [selectedCartItems, setSelectedCartItems] = useState<Set<string>>(new Set());
+  
   
   // 검색 방식 탭 (지번 / 개인정보 / 법인정보)
   const [searchMode, setSearchMode] = useState<"address" | "individual" | "corporation">("address");
@@ -1900,7 +1900,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                               >
                                 {result.provisionalJudgment === "매수" 
                                   ? "매수" 
-                                  : result.provisionalJudgment === "심의위원회이관"
+                                  : result.provisionalJudgment === "심의위원���이관"
                                     ? "심의이관"
                                     : "미충족"}
                               </Badge>
@@ -2206,117 +2206,62 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     )}
                     {businessUnits.map((businessUnit) => {
                       const items = groupedByBusinessUnit[businessUnit];
-                      const selectedInUnit = items.filter(item => selectedCartItems.has(item.id));
-                      const allSelectedInUnit = items.every(item => selectedCartItems.has(item.id));
-                      const someSelectedInUnit = items.some(item => selectedCartItems.has(item.id));
                       
                       return (
                         <div key={businessUnit} className="rounded-lg border bg-card">
                           {/* 관할기관 헤더 */}
                           <div className="flex items-center justify-between border-b bg-muted/30 px-4 py-3">
-                            <div className="flex items-center gap-3">
-                              <Checkbox 
-                                id={`unit-${businessUnit}`}
-                                checked={allSelectedInUnit}
-                                className="h-5 w-5"
-                                onCheckedChange={(checked) => {
-                                  // 다른 ���할기관 선택 해제하고 현재 관할기관만 선택
-                                  const newSelected = new Set<string>();
-                                  if (checked) {
-                                    items.forEach(item => newSelected.add(item.id));
-                                  }
-                                  setSelectedCartItems(newSelected);
-                                }}
-                              />
-                              <div className="flex items-center gap-2">
-                                <span className="font-medium">{businessUnit} 관할기관</span>
-                                <Badge variant="outline" className="text-xs">{items.length}필지</Badge>
-                              </div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium">{businessUnit} 관할기관</span>
+                              <Badge variant="outline" className="text-xs">{items.length}필지</Badge>
                             </div>
-                            {someSelectedInUnit && (
-                              <span className="text-xs text-primary">{selectedInUnit.length}건 선택</span>
-                            )}
                           </div>
                           
                           {/* 해당 지역 토지 목록 */}
                           <div className="divide-y">
-                            {items.map((item) => {
-                              const handleSelect = () => {
-                                const currentUnitItemIds = items.map(i => i.id);
-                                const newSelected = new Set(
-                                  Array.from(selectedCartItems).filter(id => currentUnitItemIds.includes(id))
-                                );
-                                if (!selectedCartItems.has(item.id)) {
-                                  newSelected.add(item.id);
-                                } else {
-                                  newSelected.delete(item.id);
-                                }
-                                setSelectedCartItems(newSelected);
-                              };
-                              
-                              return (
+                            {items.map((item) => (
                               <div 
                                 key={item.id} 
-                                className={`flex items-start p-3 transition-colors ${selectedCartItems.has(item.id) ? "bg-primary/5" : ""}`}
+                                className="flex items-start justify-between p-3"
                               >
-                                {/* 클릭 가능한 선택 영역 (60%) */}
-                                <div 
-                                  className="flex flex-[3] cursor-pointer items-start gap-3"
-                                  onClick={handleSelect}
-                                >
-                                  <Checkbox 
-                                    id={`item-${item.id}`}
-                                    checked={selectedCartItems.has(item.id)}
-                                    className="mt-0.5 h-5 w-5"
-                                    onCheckedChange={() => handleSelect()}
-                                  />
-                                  <div className="flex-1">
-                                    <p className="text-sm font-medium">{item.landInfo.address}</p>
-                                    <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                                      <span>잔여: {item.landInfo.remainingArea.toLocaleString()}㎡</span>
-                                      <span>|</span>
-                                      <span>{item.landInfo.landType}</span>
-                                      <Badge 
-                                        variant={item.aiResult.provisionalJudgment === "매수" ? "success" : "destructive"}
-                                        className="text-xs"
-                                      >
-                                        {item.aiResult.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
-                                      </Badge>
-                                    </div>
+                                <div className="flex-1">
+                                  <p className="text-sm font-medium">{item.landInfo.address}</p>
+                                  <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                                    <span>잔여: {item.landInfo.remainingArea.toLocaleString()}㎡</span>
+                                    <span>|</span>
+                                    <span>{item.landInfo.landType}</span>
+                                    <Badge 
+                                      variant={item.aiResult.provisionalJudgment === "매수" ? "success" : "destructive"}
+                                      className="text-xs"
+                                    >
+                                      {item.aiResult.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
+                                    </Badge>
                                   </div>
                                 </div>
-                                {/* 삭제 버튼 영역 (분리) */}
+                                {/* 삭제 버튼 */}
                                 <button
                                   onClick={() => onRemoveFromCart(item.id)}
-                                  className="ml-2 shrink-0 rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+                                  className="shrink-0 rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </button>
                               </div>
-                              );
-                            })}
+                            ))}
                           </div>
                           
-                          {/* 이 관할기관 선택 항목 신청하기 버튼 */}
+                          {/* 이 관할기관 필지 신청하기 버튼 */}
                           <div className="border-t p-3">
                             <Button 
                               onClick={() => {
-                                const selectedItems = items.filter(item => selectedCartItems.has(item.id));
-                                if (selectedItems.length > 0) {
-                                  onSubmitCart(selectedItems);
+                                if (items.length > 0) {
+                                  onSubmitCart(items);
                                   setIsCartOpen(false);
-                                  // 선택 초기화
-                                  const newSelected = new Set(selectedCartItems);
-                                  selectedItems.forEach(item => newSelected.delete(item.id));
-                                  setSelectedCartItems(newSelected);
                                 }
                               }}
                               className="w-full"
-                              disabled={selectedInUnit.length === 0}
+                              disabled={items.length === 0}
                             >
-                              {selectedInUnit.length > 0 
-                                ? `선택한 ${selectedInUnit.length}건 신청하기` 
-                                : "항목을 선택해 주세요"}
+                              {items.length}건 신청하기
                               <ChevronRight className="ml-1 h-4 w-4" />
                             </Button>
                           </div>
@@ -2334,12 +2279,11 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               <div className="border-t bg-muted/30 px-4 py-4">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">
-                    총 {cartItems.length}필지 {selectedCartItems.size > 0 && `(${selectedCartItems.size}건 선택)`}
+                    총 {cartItems.length}필지
                   </span>
                   <button
                     onClick={() => {
                       cartItems.forEach(item => onRemoveFromCart(item.id));
-                      setSelectedCartItems(new Set());
                     }}
                     className="text-sm text-muted-foreground hover:text-destructive"
                   >
