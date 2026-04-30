@@ -60,7 +60,7 @@ const regionData = {
     "광진구": ["광장동", "구의동", "군자동", "능동", "자양동", "중곡동", "화양동"],
     "구로구": ["가리봉동", "개봉동", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
     "금천구": ["가산동", "독산동", "시흥동"],
-    "노원���": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
+    "노원구": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
     "도봉구": ["도봉동", "방학동", "쌍문동", "창동"],
     "동대문구": ["답십리동", "신설동", "용두동", "이문동", "장안동", "전농동", "제기동", "청량리동", "회기동", "휘경동"],
     "동작구": ["노량진동", "대방동", "동작동", "본동", "사당동", "상도동", "신대방동", "흑석동"],
@@ -80,7 +80,7 @@ const regionData = {
     // 부산광역시
     "해운대구": ["반송동", "반여동", "석대동", "송정동", "우동", "좌동", "재송동", "중동"],
     "기장군": ["기장읍", "장안읍", "정관읍", "일광면", "철마면"],
-    "금정구": ["구서동", "금사동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "��두구동", "오륜동", "장전동", "청룡동", "회동동"],
+    "금정구": ["구서동", "금사동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
     // 경기도
     "용인시 처인구": ["양지면", "백암면", "원삼면", "이동읍", "남사읍", "포곡읍", "모현읍"],
     "용인시 기흥구": ["구갈동", "마북동", "보라동", "상갈동", "상하동", "서농동", "신갈동", "언남동", "영덕동", "중동", "지곡동", "청덕동", "하갈동"],
@@ -98,10 +98,10 @@ const regionData = {
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백�����������면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
-    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "�������", "율량동"],
+    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "내덕동", "율량동"],
     "청주시 흥덕구": ["강내면", "옥산면", "오송읍", "가경동", "복대동", "봉명동", "송정동", "신봉동"],
     "충주시": ["가금면", "금가면", "노은면", "대소원면", "동량면", "산척면", "살미면", "소태면", "수안보면", "신니면", "앙성면", "엄정면", "이류면", "주덕읍", "중앙탑면"],
     "제천시": ["금성면", "덕산면", "백운면", "봉양읍", "송학면", "수산면", "청풍면", "한수면"],
@@ -157,8 +157,8 @@ const regionData = {
     "장호원읍": ["나래리", "노탑리", "선읍리", "송산리", "와현리", "장왕리", "진암리", "풍계리"],
     "율면": ["고당리", "반룡리", "산양리", "월포리", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
-    "부발읍": ["가좌리", "고���리", "신하리", "아미리", "응암리"],
-    // 경기��� - 광주시
+    "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
+    // 경기도 - 광주시
     "곤지암읍": ["신리", "역동리", "삼리", "건업리", "연곡리", "오향리", "화촌리"],
     "도척면": ["진우리", "노곡리", "상림리", "도웅리", "유정리", "추곡리"],
     "퇴촌면": ["정지리", "영동리", "도수리", "관음리", "무수리", "원당리"],
@@ -178,8 +178,8 @@ const regionData = {
     "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "음양리"],
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
     "향남읍": ["구문천리", "도이리", "발안리", "상신리", "제암리", "평리", "행정리"],
-    "매송면": ["송라리", "숙곡리", "야��리", "����천리", "원리", "천천리"],
-    "���봉면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
+    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "천천리"],
+    "비봉면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
     "마도면": ["백곡리", "송정리", "쌍송리", "청원리", "해문리"],
     "남양읍": ["남양리", "문호리", "북양리", "송림리", "신남리"],
     // 경기도 - 평택시
@@ -213,7 +213,7 @@ const regionData = {
     "문백면": ["도하리", "봉죽리", "사양리", "은탄리", "장월리", "평산리"],
     // 충청남도 - 천안시
     "성환읍": ["대홍리", "수향리", "매주리", "봉양리", "왕림리", "송정리"],
-    "성거읍": ["요방리", "신월리", "천흥리", "��전리", "송남리", "소정리"],
+    "성거읍": ["요방리", "신월리", "천흥리", "모전리", "송남리", "소정리"],
     "직산읍": ["군동리", "삼은리", "마정리", "모시리", "신갈리", "삼곡리"],
     "입장면": ["가산리", "도하리", "시장리", "양대리", "용정리", "유리", "호당리"],
     "광덕면": ["광덕리", "매당리", "보산원리", "신덕리", "원덕리"],
@@ -234,13 +234,13 @@ const regionData = {
     "신창면": ["가덕리", "궁화리", "남성리", "읍내리", "학정리", "황산리"],
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
-    "인주면": ["걸매리", "냉정리", "대음리", "문방리", "��두����", "������"],
-    "���고���": ["도고리", "시전리", "효자리", "금����"],
+    "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
+    "도고면": ["도고리", "시전리", "효자리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
-    "부강면": ["���산리", "노��리", "등곡���", "문��리", "산��리"],
+    "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
     "소정면": ["고등리", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
@@ -390,8 +390,8 @@ function simulateAIAnalysis(
     areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (농지 기준: 330㎡ 이하)`;
     areaCriteriaMet = land.remainingArea <= 330;
   } else if (currentUsage === "임") {
-    // 현재 활용 지목이 "임"(임야)인 경우 산지 ��준
-    areaCriteriaLabel = `��여 면��� ${land.remainingArea}㎡ (���지 ���준: 990㎡ ��하)`;
+    // 현재 활용 지목이 "임"(임야)인 경우 산지 기준
+    areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (산지 기준: 990㎡ 이하)`;
     areaCriteriaMet = land.remainingArea <= 990;
   } else {
     // 그 밖의 지목 (잡종지 등)
@@ -538,7 +538,7 @@ function simulateAIAnalysis(
   };
 }
 
-// 중앙토지수용위원회 기준 기�� 판단 근거 설명 생성 함수
+// 중앙토지수용위원회 기준 기반 판단 근거 설명 생성 함수
 function generateJudgmentRationale(
   land: LandInfo,
   judgment: "매수" | "매수불가",
@@ -549,7 +549,7 @@ function generateJudgmentRationale(
   currentUsage: string, // 현재 활용 지목
   landSubType?: string
 ): JudgmentRationale {
-  const legalBasis = "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74���(잔여지의 매수청구 등) 및 동법 시행규칙 제34조(잔여지 등의 매수청구), 중앙토지수용위원회 잔여지 수용 및 가치하락 손실보상 참고기준";
+  const legalBasis = "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조(잔여지의 매수청구 등) 및 동법 시행규칙 제34조(잔여지 등의 매수청구), 중앙토지수용위원회 잔여지 수용 및 가치하락 손실보상 참고기준";
   
   let summary: string;
   let detailedExplanation: string;
@@ -592,8 +592,8 @@ function generateJudgmentRationale(
 - 잔여 비율: ${land.remainingRatio}%
 
 3. 형상 분석
-- ��입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
-- 잔여지 형상: ${land.remainingShape} (���상지수 ${land.remainingShapeIndex})
+- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
+- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
 - 형상지수 변화: +${shapeIndexChange.toFixed(1)}
 
 4. 충족 기준
@@ -602,8 +602,8 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 5. 판정 결과
 ${summary}`;
   } else {
-    // 매수불���
-    summary = `본 ��지는 잔여��� 면적 및 �����상��� 종래 목��대로 ���용 가능한 것으로 판단되어 ��수청구 대상에 해당하지 않습니다.`;
+    // 매수불가
+    summary = `본 토지는 잔여지 면적 및 형상상 종래 목적대로 사용 가능한 것으로 판단되어 매수청구 대상에 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -695,7 +695,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const [selectedRi, setSelectedRi] = useState<string>("");
   const [jibun, setJibun] = useState<string>("");
   
-  // 검색 결과 ���태
+  // 검색 결과 상태
   const [searchResults, setSearchResults] = useState<LandInfo[]>([]);
   const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -773,7 +773,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           // 양평이천 관할기관 - 2건
           {
             id: "owner-search-0",
-            address: "��기도 이천시 ���장면 ���평리 55-3",
+            address: "경기도 이천시 마장면 덕평리 55-3",
             coordinates: [
               { lat: 37.2350, lng: 127.3800 },
               { lat: 37.2358, lng: 127.3812 },
@@ -991,15 +991,15 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     }
   };
 
-  // AI 판독 실행 (선택된 모든 필지 한번에 ��독)
+  // AI 판독 실행 (선택된 모든 필지 한번에 판독)
   const handleAIAnalysis = () => {
     if (noIncludedLand) return;
-    // 현재 활��� 지목 필수
+    // 현재 활용 지목 필수
     if (!currentUsage) return;
     // 현재 활용 지목이 "대"(택지)인 경우 세부 유형이 필수
     if (currentUsage === "대" && !landSubType) return;
     
-    // ����된 필지들 가져오기 (체크된 필지들)
+    // 선택된 필지들 가져오기 (체크된 필지들)
     const selectedParcels = searchResults.filter((land, index) => 
       ownedParcels.has(land.id) || (index === 0 && ownedParcels.size === 0)
     );
@@ -1173,7 +1173,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 onChange={() => setSearchMode("corporation")}
                 className="h-4 w-4 accent-gray-900"
               />
-              <span className="text-sm">��인정보로 검��</span>
+              <span className="text-sm">법인정보로 검색</span>
             </label>
           </div>
         </div>
@@ -1352,7 +1352,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               </Select>
 
               <Input 
-                placeholder="지번 ��력" 
+                placeholder="지번 입력" 
                 value={jibun}
                 onChange={(e) => setJibun(e.target.value)}
                 className="w-[100px]"
@@ -1460,7 +1460,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         일치하는 토지 정보가 없습니다
                       </p>
                       <p className="mt-2 text-sm text-muted-foreground">
-                        입력하신 성명�� 주민번호 앞자리로<br />
+                        입력하신 성명과 주민번호 앞자리로<br />
                         등록된 편입 토지를 찾을 수 없습니다.<br />
                         정보를 다시 확인해 주세요.
                       </p>
@@ -1480,7 +1480,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     <div className="border-b border-amber-200 bg-amber-50 px-3 py-2">
                       <p className="flex items-center gap-1.5 text-xs text-amber-700">
                         <Info className="h-3.5 w-3.5 shrink-0" />
-                        본인 소유 필지를 체크�� 주세요.
+                        본인 소유 필지를 체크해 주세요.
                       </p>
                     </div>
                   )}
@@ -1674,7 +1674,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             {/* 컨텐츠 */}
             <div className="flex-1 overflow-y-auto p-4">
               <div className="space-y-4">
-                {/* 토지 기본 정보 + 현재 활�� 지목 통합 */}
+                {/* 토지 기본 정보 + 현재 활용 지목 통합 */}
                 <div className="rounded border border-border bg-muted/30 p-3">
                   <div className="flex flex-col gap-3 text-sm">
                     <div className="flex justify-between">
@@ -1734,7 +1734,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   </div>
                 )}
 
-                {/* 택지(대지) 세부 유형 선택 - 현재 활용 지목�� "대"인 경우 */}
+                {/* 택지(대지) 세부 유형 선택 - 현재 활용 지목이 "대"인 경우 */}
                 {!noIncludedLand && !aiResult && currentUsage === "대" && (
                   <div className="rounded border border-border bg-muted/30 p-3">
                     <Label htmlFor="landSubType" className="mb-2 block text-sm font-medium">
@@ -2064,7 +2064,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
         </div>
 
-        {/* 사��드바 토글 버튼 - 결과 패널용 */}
+        {/* 사이드바 토글 버튼 - 결과 패널용 */}
         <button 
           onClick={() => setIsResultsCollapsed(!isResultsCollapsed)}
           className={`absolute top-1/2 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-r-md bg-background shadow-md transition-all duration-300 ${isResultsCollapsed ? "left-0" : "left-[280px]"}`}
@@ -2186,7 +2186,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                 checked={allSelectedInUnit}
                                 className="h-5 w-5"
                                 onCheckedChange={(checked) => {
-                                  // 다른 ��할기관 선택 해제하고 현재 관할기관만 선택
+                                  // 다른 관할기관 선택 해제하고 현재 관할기관만 선택
                                   const newSelected = new Set<string>();
                                   if (checked) {
                                     items.forEach(item => newSelected.add(item.id));
@@ -2196,7 +2196,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                               />
                               <div className="flex items-center gap-2">
                                 <span className="font-medium">{businessUnit} 관할기관</span>
-                                <Badge variant="outline" className="text-xs">{items.length}필���</Badge>
+                                <Badge variant="outline" className="text-xs">{items.length}필지</Badge>
                               </div>
                             </div>
                             {someSelectedInUnit && (

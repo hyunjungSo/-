@@ -198,7 +198,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       <div className="flex items-center justify-between">
         <Button variant="ghost" onClick={onBack} className="h-auto px-0 text-muted-foreground hover:bg-transparent hover:text-foreground">
           <ArrowLeft className="mr-1.5 h-4 w-4" />
-          목록으�� 돌아가기
+          목록으로 돌아가기
         </Button>
         <div className="flex gap-2">
           <Button variant="secondary" asChild>
@@ -1024,7 +1024,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               })}
             </div>
             <p className="text-base text-muted-foreground">
-              민원인이 신청 현황 조회 시 이 진행상황�� 표시됩니다.
+              민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다.
             </p>
           </div>
 

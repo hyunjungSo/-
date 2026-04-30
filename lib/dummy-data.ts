@@ -835,7 +835,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
       autoDetected: false,
     });
   } else if (landInfo.landType === "농지") {
-    // 농지: ① 도로/수로 상실 ② 농기계 진입/��전 곤란 ③ 축사부지 건축 불가
+    // 농지: ① 도로/수로 상실 ② 농기계 진입/회전 곤란 ③ 축사부지 건축 불가
     criteriaChecks.push({
       criteriaName: "도로/수로 상실",
       criteriaDescription: "도로/수로 상실로 농지로서의 사용 불가",
@@ -857,7 +857,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
       autoDetected: false,
     });
   } else {
-    // 그 밖의 토지: ① 진입 ��란 ② 토지 양분 ③ 형상 변경
+    // 그 밖의 토지: ① 진입 곤란 ② 토지 양분 ③ 형상 변경
     criteriaChecks.push({
       criteriaName: "진입 곤란",
       criteriaDescription: "절토/성토/옹벽 설치 등으로 진입 곤란",
@@ -1049,7 +1049,7 @@ export const dummyApplications: Application[] = [
     appliedAt: "2026-04-04",
     aiResult: generateAIResult(dummyLandInfoList[3]),
     finalJudgment: "매수",
-    reviewerComment: "잔여지 형상 및 면적 기준 충족으로 매수 ��정",
+    reviewerComment: "잔여지 형상 및 면적 기준 충족으로 매수 판정",
     adminName: "홍길동",
     statusUpdatedAt: "2026-04-15",
   },

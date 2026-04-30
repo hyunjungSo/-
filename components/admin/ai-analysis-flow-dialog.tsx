@@ -158,7 +158,7 @@ export function AIAnalysisFlowDialog({
                       explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}`,
                       explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}` },
                     { label: "공업", value: "330㎡ 이하", isSelected: currentLandType === "대지" && areaThreshold.label === "공업", isMet: currentLandType === "대지" && areaThreshold.label === "공업" && areaMet,
-                      explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 ${effectiveThreshold.toLocaleString()}��${isRatioRelaxed ? " (완화적용)" : ""}`,
+                      explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}`,
                       explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}` },
                   ],
                   note: "잔여 비율 25% 이하 시, 1.5배 완화 적용",
@@ -318,7 +318,7 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
             </div>
           </motion.div>
 
-          {/* 담��자 검토 섹션 */}
+          {/* 담당자 검토 섹션 */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: animationStep >= 6 ? 1 : 0.3, y: 0 }}
