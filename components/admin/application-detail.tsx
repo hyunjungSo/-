@@ -579,11 +579,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setSelectedLandIndex(0)}
+                  onClick={() => {
+                    setSelectedLandIndex(0);
+                    setLandAIResults({});
+                    setUnifiedGroups({});
+                  }}
                   className="text-muted-foreground"
                 >
                   <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
-                  선택 초기화
+                  초기화
                 </Button>
               )}
             </div>
@@ -989,7 +993,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 ) : currentAIResult ? (
                   <>
                     <RotateCcw className="h-5 w-5" />
-                    AI 재판독 실행
+                    AI 재판독 실���
                   </>
                 ) : (
                   <>
