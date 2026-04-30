@@ -23,8 +23,7 @@ import { AdminStatusBadge, adminStatusConfig } from "@/components/ui/status-badg
 // 일단지 판정 정보 섹션 컴포넌트
 function UnifiedParcelSection({ application }: { application: Application }) {
   const isMultipleLands = application.additionalLands && application.additionalLands.length > 0;
-  const unifiedAnalysis = application.aiResult?.unifiedParcelAnalysis;
-  const conditions = application.unifiedParcelCondition || unifiedAnalysis?.conditions;
+  const landJudgments = application.aiResult?.landJudgments;
   
   // 복수 필지가 아니면 표시 안함
   if (!isMultipleLands) return null;
@@ -32,84 +31,184 @@ function UnifiedParcelSection({ application }: { application: Application }) {
   const allLands = [application.landInfo, ...(application.additionalLands || [])];
   const totalArea = allLands.reduce((sum, land) => sum + land.remainingArea, 0);
   
+  // 일단지 그룹별로 필지 분류
+  const unifiedGroups: Record<string, { lands: typeof allLands; area: number }> = {};
+  const individualLands: typeof allLands = [];
+  const notApplicableLands: typeof allLands = [];
+  
+  if (landJudgments && landJudgments.length > 0) {
+    allLands.forEach((land) => {
+      const judgment = landJudgments.find(j => j.landId === land.id);
+      if (judgment?.unifiedGroupId) {
+        if (!unifiedGroups[judgment.unifiedGroupId]) {
+          unifiedGroups[judgment.unifiedGroupId] = { lands: [], area: 0 };
+        }
+        unifiedGroups[judgment.unifiedGroupId].lands.push(land);
+        unifiedGroups[judgment.unifiedGroupId].area += land.remainingArea;
+      } else if (judgment?.judgment === "매수") {
+        individualLands.push(land);
+      } else {
+        notApplicableLands.push(land);
+      }
+    });
+  }
+  
+  const hasUnifiedGroups = Object.keys(unifiedGroups).length > 0;
+  const hasIndividualLands = individualLands.length > 0;
+  const hasNotApplicable = notApplicableLands.length > 0;
+  
   return (
-    <div className="overflow-hidden rounded-lg border border-emerald-200 bg-emerald-50/30">
-      <div className="flex items-center justify-between border-b border-emerald-200 bg-emerald-100/50 px-4 py-2.5">
-        <h4 className="flex items-center gap-2 font-semibold text-emerald-800">
-          <Link2 className="h-4 w-4" />
-          일단지 판정 정보
-        </h4>
-        {unifiedAnalysis?.isUnifiedParcel && (
-          <Badge className="bg-emerald-600 hover:bg-emerald-600 text-white">
-            일단지 인정
-          </Badge>
-        )}
-      </div>
+    <div className="space-y-3">
+      {/* 일단지 그룹 */}
+      {hasUnifiedGroups && Object.entries(unifiedGroups).map(([groupId, group], idx) => (
+        <div key={groupId} className="overflow-hidden rounded-lg border border-emerald-200 bg-emerald-50/30">
+          <div className="flex items-center justify-between border-b border-emerald-200 bg-emerald-100/50 px-4 py-2.5">
+            <h4 className="flex items-center gap-2 font-semibold text-emerald-800">
+              <Link2 className="h-4 w-4" />
+              일단지 그룹 {idx + 1}
+            </h4>
+            <div className="flex items-center gap-2">
+              <Badge className="bg-emerald-600 hover:bg-emerald-600 text-white">
+                일단지 매수
+              </Badge>
+              <span className="text-sm font-medium text-emerald-700">
+                {group.lands.length}필지
+              </span>
+            </div>
+          </div>
+          <div className="p-4 space-y-2">
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {group.lands.map((land) => {
+                const overallIdx = allLands.findIndex(l => l.id === land.id);
+                const label = String.fromCharCode(65 + overallIdx);
+                return (
+                  <div key={land.id} className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-white p-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white">
+                      {label}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{land.address.split(" ").slice(-2).join(" ")}</p>
+                      <p className="text-xs text-muted-foreground">{land.remainingArea.toLocaleString()}m² | {land.landType}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="flex items-center justify-between rounded-lg bg-emerald-100/50 px-3 py-2 mt-2">
+              <span className="text-sm text-emerald-700">합산 면적</span>
+              <span className="font-bold text-emerald-800">{group.area.toLocaleString()}m²</span>
+            </div>
+          </div>
+        </div>
+      ))}
       
-      {/* 일단지 판정 조건 */}
-      <div className="p-4 space-y-3">
-        {/* 판정 조건 체크리스트 */}
-        <div className="grid gap-2 sm:grid-cols-3">
-          <div className={`flex items-center gap-2 rounded-lg border p-3 ${
-            conditions?.sameOwner ? "border-emerald-200 bg-emerald-50" : "border-border bg-muted/30"
-          }`}>
-            <User className={`h-4 w-4 ${conditions?.sameOwner ? "text-emerald-600" : "text-muted-foreground"}`} />
-            <div>
-              <p className="text-xs text-muted-foreground">소유자 동일성</p>
-              <p className={`text-sm font-medium ${conditions?.sameOwner ? "text-emerald-700" : "text-muted-foreground"}`}>
-                {conditions?.sameOwner ? "충족" : "미확인"}
-              </p>
+      {/* 개별 매수 필지 */}
+      {hasIndividualLands && (
+        <div className="overflow-hidden rounded-lg border border-blue-200 bg-blue-50/30">
+          <div className="flex items-center justify-between border-b border-blue-200 bg-blue-100/50 px-4 py-2.5">
+            <h4 className="flex items-center gap-2 font-semibold text-blue-800">
+              <CheckCircle2 className="h-4 w-4" />
+              개별 매수 대상
+            </h4>
+            <div className="flex items-center gap-2">
+              <Badge className="bg-blue-600 hover:bg-blue-600 text-white">
+                개별 매수
+              </Badge>
+              <span className="text-sm font-medium text-blue-700">
+                {individualLands.length}필지
+              </span>
             </div>
           </div>
-          
-          <div className={`flex items-center gap-2 rounded-lg border p-3 ${
-            conditions?.continuous ? "border-emerald-200 bg-emerald-50" : "border-border bg-muted/30"
-          }`}>
-            <MapPinned className={`h-4 w-4 ${conditions?.continuous ? "text-emerald-600" : "text-muted-foreground"}`} />
-            <div>
-              <p className="text-xs text-muted-foreground">지반 연속성</p>
-              <p className={`text-sm font-medium ${conditions?.continuous ? "text-emerald-700" : "text-muted-foreground"}`}>
-                {conditions?.continuous ? "충족" : "미확인"}
-              </p>
-            </div>
-          </div>
-          
-          <div className={`flex items-center gap-2 rounded-lg border p-3 ${
-            conditions?.sameUsage ? "border-emerald-200 bg-emerald-50" : "border-border bg-muted/30"
-          }`}>
-            <Layers className={`h-4 w-4 ${conditions?.sameUsage ? "text-emerald-600" : "text-muted-foreground"}`} />
-            <div>
-              <p className="text-xs text-muted-foreground">용도 일체성</p>
-              <p className={`text-sm font-medium ${conditions?.sameUsage ? "text-emerald-700" : "text-muted-foreground"}`}>
-                {conditions?.sameUsage ? "충족" : "미확인"}
-              </p>
+          <div className="p-4">
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {individualLands.map((land) => {
+                const overallIdx = allLands.findIndex(l => l.id === land.id);
+                const label = String.fromCharCode(65 + overallIdx);
+                const judgment = landJudgments?.find(j => j.landId === land.id);
+                return (
+                  <div key={land.id} className="flex items-center gap-2 rounded-lg border border-blue-200 bg-white p-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
+                      {label}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{land.address.split(" ").slice(-2).join(" ")}</p>
+                      <p className="text-xs text-muted-foreground">{land.remainingArea.toLocaleString()}m² | {land.landType}</p>
+                      {judgment?.reason && (
+                        <p className="text-xs text-blue-600 truncate">{judgment.reason}</p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
-        
-        {/* 합산 면적 정보 */}
-        <div className="flex items-center justify-between rounded-lg bg-emerald-100/50 px-4 py-3">
-          <div>
-            <p className="text-sm text-emerald-700">총 {allLands.length}필지 합산 면적</p>
-            {unifiedAnalysis?.explanation && (
-              <p className="mt-1 text-xs text-emerald-600">{unifiedAnalysis.explanation}</p>
-            )}
+      )}
+      
+      {/* 미해당 필지 */}
+      {hasNotApplicable && (
+        <div className="overflow-hidden rounded-lg border border-amber-200 bg-amber-50/30">
+          <div className="flex items-center justify-between border-b border-amber-200 bg-amber-100/50 px-4 py-2.5">
+            <h4 className="flex items-center gap-2 font-semibold text-amber-800">
+              <AlertTriangle className="h-4 w-4" />
+              기준 미충족
+            </h4>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="bg-amber-200 text-amber-800">
+                미해당
+              </Badge>
+              <span className="text-sm font-medium text-amber-700">
+                {notApplicableLands.length}필지
+              </span>
+            </div>
           </div>
-          <span className="text-lg font-bold text-emerald-800">
-            {(unifiedAnalysis?.combinedArea || totalArea).toLocaleString()}m²
-          </span>
+          <div className="p-4">
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {notApplicableLands.map((land) => {
+                const overallIdx = allLands.findIndex(l => l.id === land.id);
+                const label = String.fromCharCode(65 + overallIdx);
+                const judgment = landJudgments?.find(j => j.landId === land.id);
+                return (
+                  <div key={land.id} className="flex items-center gap-2 rounded-lg border border-amber-200 bg-white p-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-xs font-bold text-white">
+                      {label}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{land.address.split(" ").slice(-2).join(" ")}</p>
+                      <p className="text-xs text-muted-foreground">{land.remainingArea.toLocaleString()}m² | {land.landType}</p>
+                      {judgment?.reason && (
+                        <p className="text-xs text-amber-600 truncate">{judgment.reason}</p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
-        
-        {/* 일단지 미인정 시 안내 */}
-        {unifiedAnalysis && !unifiedAnalysis.isUnifiedParcel && (
-          <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
-            <p className="text-sm text-amber-800">
-              <AlertTriangle className="mr-1.5 inline-block h-4 w-4" />
-              일단지 조건 미충족으로 개별 필지로 심사됩니다.
+      )}
+      
+      {/* AI 분석 미완료 시 기본 정보 표시 */}
+      {!landJudgments && (
+        <div className="overflow-hidden rounded-lg border border-muted bg-muted/30">
+          <div className="flex items-center justify-between border-b border-muted px-4 py-2.5">
+            <h4 className="flex items-center gap-2 font-semibold text-muted-foreground">
+              <Info className="h-4 w-4" />
+              일단지 판정 대기
+            </h4>
+            <span className="text-sm text-muted-foreground">{allLands.length}필지</span>
+          </div>
+          <div className="p-4">
+            <p className="text-sm text-muted-foreground">
+              AI 분석 완료 후 일단지 여부 및 필지별 판정 결과가 표시됩니다.
             </p>
+            <div className="mt-2 flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2">
+              <span className="text-sm">총 신청 면적</span>
+              <span className="font-bold">{totalArea.toLocaleString()}m²</span>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -122,7 +221,13 @@ function LandInfoSection({ application }: { application: Application }) {
     : [application.landInfo];
   
   const [selectedLandIndex, setSelectedLandIndex] = useState(0);
-  const selectedLand = allLands[selectedLandIndex];
+  
+  // 인덱스 범위 안전 처리
+  const safeIndex = Math.min(selectedLandIndex, allLands.length - 1);
+  const selectedLand = allLands[safeIndex];
+  
+  // selectedLand가 없으면 렌더링 안함
+  if (!selectedLand) return null;
   
   // 필지별 판정 결과 가져오기
   const landJudgment = application.aiResult?.landJudgments?.find(
@@ -369,7 +474,7 @@ export function ApplicationStatusSection() {
           {myApplications.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center p-8 text-center">
               <FileText className="h-10 w-10 text-muted-foreground" />
-              <p className="mt-4 text-sm font-medium text-foreground">신청 내역이 없습니다</p>
+              <p className="mt-4 text-sm font-medium text-foreground">신청 내���이 없습니다</p>
               <p className="mt-1 text-xs text-muted-foreground">
                 신규 신청 탭에서 잔여지 매수를 신청해 주세요.
               </p>

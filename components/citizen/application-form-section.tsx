@@ -434,6 +434,38 @@ export function ApplicationFormSection({
                     </span>
                   </div>
                 </div>
+                
+                {/* 일단지 판정 안내 */}
+                {allLands.length >= 2 && (
+                  <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-3">
+                    <div className="flex items-start gap-2">
+                      <div className="mt-0.5 rounded-full bg-emerald-100 p-1">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-emerald-800">일단지 판정 안내</p>
+                        <p className="mt-1 text-xs text-emerald-700">
+                          복수 필지 신청 시 소유자 동일성, 지반 연속성, 용도 일체성 조건을 충족하면 
+                          <span className="font-medium"> 일단지로 합산</span>되어 심사됩니다.
+                        </p>
+                        <ul className="mt-2 space-y-1 text-xs text-emerald-600">
+                          <li className="flex items-center gap-1.5">
+                            <span className="h-1 w-1 rounded-full bg-emerald-500" />
+                            일부 필지만 일단지 조건 충족 시 해당 필지만 합산
+                          </li>
+                          <li className="flex items-center gap-1.5">
+                            <span className="h-1 w-1 rounded-full bg-emerald-500" />
+                            개별 기준 충족 필지는 별도 판정
+                          </li>
+                          <li className="flex items-center gap-1.5">
+                            <span className="h-1 w-1 rounded-full bg-emerald-500" />
+                            AI 분석 후 상세 판정 결과 확인 가능
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <>

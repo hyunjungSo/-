@@ -536,6 +536,30 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.2078, lng: 127.0825 },
     ],
   },
+  {
+    id: "land-019",
+    address: "경기도 화성시 동탄면 신리 201-8",
+    originalArea: 450,
+    includedArea: 290,
+    remainingArea: 160,
+    remainingRatio: 35.6,
+    landType: "그밖의토지",
+    landCategory: "잡",
+    originalShape: "세로장방형",
+    remainingShape: "삼각형",
+    originalShapeIndex: 4.3,
+    remainingShapeIndex: 5.4,
+    ownerName: "김대현",
+    ownerContact: "010-1234-0001",
+    hasIncludedLand: true,
+    businessUnit: "수도권",
+    projectName: "동탄2 도시개발사업",
+    coordinates: [
+      { lat: 37.2095, lng: 127.0840 },
+      { lat: 37.2088, lng: 127.0845 },
+      { lat: 37.2083, lng: 127.0835 },
+    ],
+  },
   // ===== 일단지 해당 케이스 =====
   // 일단지 해당: 3필지 농지 (동일 소유자, 연속된 농지)
   {
@@ -758,7 +782,7 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerContact: "010-1234-5678",
     hasIncludedLand: true,
     businessUnit: "양평이천",
-    projectName: "용인-안성 고속도로 확장",
+    projectName: "용인-���성 고속도로 확장",
     coordinates: [
       { lat: 37.2355, lng: 127.2860 },
       { lat: 37.2360, lng: 127.2870 },
@@ -1351,7 +1375,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "도로 편입으로 인접한 2개 필지가 모두 불규칙한 형태로 남아 건축이 불가능합니다. 일단지로 판정하여 병합 처리를 요청드립니다.",
+    reason: "도로 편입으로 인접한 2개 필지가 모두 불규칙한 형태로 남아 건축이 불가능합니다. ���단지로 판정하여 병합 처리를 요청드립니다.",
     // 토지별 민원인 입력 데이터
     landDataList: [
       {
@@ -1800,7 +1824,7 @@ export const dummyApplications: Application[] = [
           sameUsage: true,
         },
         combinedArea: 570,
-        explanation: "동일 소유자(박일단)의 연속된 3필지 농지로, 일체적으로 농업에 이용해 왔으므로 일단지로 판정합니다. 도로 편입으로 관개수로가 단절되고 각 필지가 비정형으로 변경되어 농업 활동이 불가능합니다.",
+        explanation: "동일 소유자(박일단)의 연속된 3필지 농지로, 일체적으로 농업에 ��용해 왔으므로 일단지로 판정합니다. 도로 편입으로 관개수로가 단절되고 각 필지가 비정형으로 변경되어 농업 활동이 불가능합니다.",
       },
     },
     finalJudgment: "매수",
@@ -2007,7 +2031,7 @@ export const dummyApplications: Application[] = [
     },
     finalJudgment: "매수",
     reviewerComment: "개별 면적 기준 미달이나 일단지 합산 시 맹지 판정으로 매수 인정. 현장 확인 결과 양 필지 모두 접면도로 상실 확인.",
-    finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2필지 대지입니다. 각 필지의 잔여면적(80㎡, 60㎡)은 개별적으로는 대지 면적 기준(90㎡)을 초과하여 매수 대상이 아니나, 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 일단지로 합산하여 검토한 결과, 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
+    finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2필지 대지입니다. 각 필지의 잔여면적(80㎡, 60㎡)은 개별적으로는 대지 면적 기준(90㎡)을 초과하여 매수 대상이 아니나, 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 일���지로 합산하여 검토한 결과, 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
     adminName: "김철수",
     statusUpdatedAt: "2026-04-29",
   },
@@ -2084,7 +2108,7 @@ export const dummyApplications: Application[] = [
     aiResult: {
       landTypePath: "산지",
       criteriaChecks: [
-        { criteriaName: "면적 기준 (개별)", criteriaDescription: "개별 필지 면적 기준 미달 (각 500~1500㎡ > 990㎡ 기준)", isMet: false, autoDetected: true },
+        { criteriaName: "면적 기준 (개별)", criteriaDescription: "개별 ���지 면적 기준 미달 (각 500~1500㎡ > 990㎡ 기준)", isMet: false, autoDetected: true },
         { criteriaName: "일단지 합산 면적", criteriaDescription: "합산 잔여면적 4,100㎡로 조림지 분단", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },

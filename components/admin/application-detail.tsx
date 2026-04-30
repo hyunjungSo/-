@@ -756,7 +756,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
   
   
-  // 판독 결과 초�������������화
+  // 판독 결과 초���������������화
   const handleResetAIResults = () => {
     setLandAIResults({});
     setUnifiedGroups({});
@@ -1364,7 +1364,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <Loader2 className="h-5 w-5 animate-spin" />
                     AI 판독 중... ({checkedLandIds.length}필지)
                   </>
-                ) : Object.keys(checkedLandAIResults).length > 0 ? (
+                ) : Object.keys(landAIResults).length > 0 ? (
                   <>
                     <RotateCcw className="h-5 w-5" />
                     선택 필지 AI 재판독 ({checkedLandIds.length}필지)
@@ -1426,7 +1426,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               )}
               
               {/* 일단지 미판정 상태 안내 */}
-              {checkedLandIds.length >= 2 && Object.keys(unifiedGroups).length === 0 && Object.keys(checkedLandAIResults).length === 0 && (
+              {checkedLandIds.length >= 2 && Object.keys(unifiedGroups).length === 0 && Object.keys(landAIResults).length === 0 && (
                 <div className="mt-4 rounded-lg border border-muted bg-muted/30 p-4">
                   <p className="text-sm text-muted-foreground text-center">
                     AI 판독 실행 시 일단지 여부를 자동으로 판정합니다
