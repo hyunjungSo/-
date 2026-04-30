@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { LeafletMap } from "@/components/leaflet-map";
 import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult, JudgmentRationale, ApplicationCartItem } from "@/lib/types";
-import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ClipboardList, Plus, Trash2, X, User, Layers } from "lucide-react";
+import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ClipboardList, Plus, Trash2, X, User } from "lucide-react";
 import { AIIcon } from "@/components/ui/ai-icon";
 
 
@@ -241,7 +241,7 @@ const regionData = {
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
-    "소정면": ["고등���������", "대곡리", "소정리", "운담리"],
+    "소정면": ["고등�����������", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -593,7 +593,7 @@ function generateJudgmentRationale(
 
 3. 형상 분석
 - 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
-- 잔여지 ��상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
+- 잔여지 ����상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
 - 형상지수 변화: +${shapeIndexChange.toFixed(1)}
 
 4. 충족 기준
@@ -603,7 +603,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 ${summary}`;
   } else {
     // 매수불가
-    summary = `본 토지는 잔여지 면적 및 형상상 종래 목적대로 사용 가능한 것으로 판단되어 매수청구 ��상�� 해당하지 않습니다.`;
+    summary = `본 토지는 잔여지 면적 및 형상상 종래 목적대로 사용 가능한 것으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -1495,7 +1495,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       </p>
                       <p className="mt-2 text-sm text-muted-foreground">
                         입력하신 성명과 주민번호 앞자리로<br />
-                        등록된 편입 토지를 찾을 수 없습니다.<br />
+                        등록된 편입 토지를 찾을 수 없���니다.<br />
                         정보를 다시 확인해 주세요.
                       </p>
                     </div>
@@ -1793,72 +1793,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 {/* AI 판독 결과 - 복수 필지 통합 뷰 */}
                 {parcelAiResults.size > 0 && (
                   <div className="space-y-4">
-                    {/* 일단지 판정 (복수 필지 선택 시 상단에 표시) */}
-                    {aiResult?.unifiedParcelAnalysis && (ownedParcels.size >= 2 || (ownedParcels.size === 0 && searchResults.length >= 2)) && (
-                      <div className={`rounded-lg border-2 p-4 ${
-                        aiResult.unifiedParcelAnalysis.isUnifiedParcel 
-                          ? "border-blue-300 bg-blue-50" 
-                          : "border-gray-300 bg-gray-50"
-                      }`}>
-                        <div className="flex items-center gap-2 mb-3">
-                          <Layers className={`h-5 w-5 ${
-                            aiResult.unifiedParcelAnalysis.isUnifiedParcel 
-                              ? "text-blue-600" 
-                              : "text-gray-500"
-                          }`} />
-                          <span className="text-base font-semibold">일단지 판정</span>
-                          <Badge 
-                            variant={aiResult.unifiedParcelAnalysis.isUnifiedParcel ? "default" : "secondary"}
-                            className={aiResult.unifiedParcelAnalysis.isUnifiedParcel 
-                              ? "bg-blue-100 text-blue-700 border-blue-200" 
-                              : ""
-                            }
-                          >
-                            {aiResult.unifiedParcelAnalysis.isUnifiedParcel ? "일단지 인정" : "일단지 미해당"}
-                          </Badge>
-                          {aiResult.unifiedParcelAnalysis.isMergedApplication && (
-                            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                              병합 처리
-                            </Badge>
-                          )}
-                        </div>
-                        
-                        <div className="space-y-2 text-sm">
-                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground">
-                            <span>본인 소유: <strong className="text-foreground">{aiResult.unifiedParcelAnalysis.ownedParcels}필지</strong></span>
-                            <span>인접지: <strong className="text-foreground">{aiResult.unifiedParcelAnalysis.adjacentParcels}필지</strong></span>
-                            <span>합산 잔여면적: <strong className="text-foreground">{aiResult.unifiedParcelAnalysis.combinedArea.toLocaleString()}㎡</strong></span>
-                            {aiResult.unifiedParcelAnalysis.combinedIncludedArea !== undefined && aiResult.unifiedParcelAnalysis.combinedIncludedArea > 0 && (
-                              <span>합산 편입면적: <strong className="text-foreground">{aiResult.unifiedParcelAnalysis.combinedIncludedArea.toLocaleString()}㎡</strong></span>
-                            )}
-                          </div>
-                          
-                          <div className="flex flex-wrap items-center gap-3">
-                            <span className={`inline-flex items-center gap-1 text-xs ${
-                              aiResult.unifiedParcelAnalysis.conditions.sameOwner ? "text-green-600" : "text-gray-400"
-                            }`}>
-                              {aiResult.unifiedParcelAnalysis.conditions.sameOwner ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                              소유자 동일성
-                            </span>
-                            <span className={`inline-flex items-center gap-1 text-xs ${
-                              aiResult.unifiedParcelAnalysis.conditions.continuous ? "text-green-600" : "text-gray-400"
-                            }`}>
-                              {aiResult.unifiedParcelAnalysis.conditions.continuous ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                              지반 연속성
-                            </span>
-                            <span className={`inline-flex items-center gap-1 text-xs ${
-                              aiResult.unifiedParcelAnalysis.conditions.sameUsage ? "text-green-600" : "text-gray-400"
-                            }`}>
-                              {aiResult.unifiedParcelAnalysis.conditions.sameUsage ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                              용도 일체성
-                            </span>
-                          </div>
-                          
-                          <p className="text-muted-foreground whitespace-pre-line">{aiResult.unifiedParcelAnalysis.explanation}</p>
-                        </div>
-                      </div>
-                    )}
-
                     {/* 필지별 판독 결과 요약 리스트 */}
                     <div className="rounded-lg border bg-background">
                       <div className="border-b bg-muted/50 px-4 py-2">
@@ -1955,7 +1889,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         </div>
                       )}
 
-                      {/* 법적 근거 */}
+                      {/* 법적 ��거 */}
                       {aiResult.judgmentRationale && (
                         <div className="flex items-start gap-2">
                           <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
