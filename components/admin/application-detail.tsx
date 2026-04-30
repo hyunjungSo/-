@@ -577,7 +577,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       const selectedLands = allLands.filter(l => checkedLandIds.includes(l.id));
       
       // ===== [1단계] 일단지 판정 =====
-      // ��유자 동일, 지반 연속, 용도 일체성 확인하여 일단지 그룹 형성
+      // ���유자 동일, 지반 연속, 용도 일체성 확인하여 일단지 그룹 형성
       const unifiedLandGroups = selectedLands.length >= 2 ? findUnifiedGroups(selectedLands) : selectedLands.length === 1 ? [[selectedLands[0].id]] : [];
       let groupIndex = 0;
       
@@ -1150,6 +1150,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             type="checkbox"
                             checked={checkedLandIds.length === allLands.length}
                             onChange={(e) => {
+                              // 선택 변경 시 기존 판독 결과 초기화
+                              setLandAIResults({});
+                              setUnifiedGroups({});
                               if (e.target.checked) {
                                 setCheckedLandIds(allLands.map(l => l.id));
                               } else {
@@ -1188,6 +1191,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     checked={isChecked}
                                     onChange={(e) => {
                                       e.stopPropagation();
+                                      // 선택 변경 시 기존 판독 결과 초기화
+                                      setLandAIResults({});
+                                      setUnifiedGroups({});
                                       if (e.target.checked) {
                                         setCheckedLandIds([...checkedLandIds, land.id]);
                                       } else {
@@ -1680,7 +1686,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </p>
                 <Textarea
                   id="finalReviewOpinion"
-                  placeholder="복수 필지에 대한 종합 검토 의견을 작성하세요. (예: 해당 토지들은 동일 소유자 소유로 연접해 있으며, 도로 편입으로 인해 모두 불규칙한 형태로 남아 건축 및 영농이 곤란한 상태입니다.)"
+                  placeholder="복수 필지에 대한 종합 검토 의견을 작성하세요. (예: 해당 토지들은 동일 소유자 소유로 연접해 있으며, 도�� 편입으로 인해 모두 불규칙한 형태로 남아 건축 및 영농이 곤란한 상태입니다.)"
                   rows={5}
                   value={reviewData.finalReviewOpinion}
                   onChange={(e) =>
