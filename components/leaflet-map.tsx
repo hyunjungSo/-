@@ -291,6 +291,9 @@ export function LeafletMap({
   // Set을 직렬화하여 의존성 비교용으로 사용
   const selectedParcelIdsKey = Array.from(selectedParcelIds).sort().join(",");
   
+  // parcels의 isOwned 상태를 직렬화하여 의존성 비교용으로 사용
+  const parcelsOwnedKey = parcels.map(p => `${p.id}:${p.isOwned ? 1 : 0}`).join(",");
+  
   // 필지 폴리곤 렌더링
   useEffect(() => {
     if (!mapInstanceRef.current || !polygonLayerRef.current || !isMapReady) return;
@@ -409,7 +412,7 @@ export function LeafletMap({
         mapInstanceRef.current.setView([centerLat, centerLng], 18, { animate: true });
       }
     }
-  }, [parcels, selectedParcelId, selectedParcelIdsKey, hoveredParcelId, onParcelClick, onParcelHover, isMapReady]);
+  }, [parcels, selectedParcelId, selectedParcelIdsKey, parcelsOwnedKey, hoveredParcelId, onParcelClick, onParcelHover, isMapReady]);
 
   // 줌 컨트롤
   const handleZoomIn = () => {
