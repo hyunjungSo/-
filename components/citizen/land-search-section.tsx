@@ -241,7 +241,7 @@ const regionData = {
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
-    "소정면": ["고등리", "대곡리", "소정리", "운담리"],
+    "소정면": ["고등���", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -603,7 +603,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 ${summary}`;
   } else {
     // 매수불가
-    summary = `본 토지는 잔여지 면적 및 형상상 종래 목적대로 사용 가능한 것으로 판단되어 매수청구 대상에 해당하지 않습니다.`;
+    summary = `본 토지는 잔여지 면적 및 형상상 종래 목적대로 사용 가능한 것으로 판단되어 매수청구 대상�� 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -1445,7 +1445,24 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             <div className="flex items-center justify-between border-b bg-muted px-4 py-3">
               <span className="text-base font-medium text-foreground">필지 목록</span>
               {searchResults.length > 0 && (
-                <span className="text-base text-muted-foreground">총 {searchResults.length}건</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    // 검색 결과 초기화
+                    setSearchResults([]);
+                    setSearchMode("region");
+                    setSelectedRegion("");
+                    setSelectedDistrict("");
+                    setSelectedSubDistrict("");
+                    setOwnerName("");
+                    setOwnerContact("");
+                    setHasSearched(false);
+                  }}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                </Button>
               )}
             </div>
             
