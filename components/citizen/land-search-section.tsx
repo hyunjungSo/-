@@ -235,7 +235,7 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["도고리", "시전리", "��자��", "��산리"],
+    "도고면": ["도고리", "시��리", "��자��", "��산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
@@ -603,7 +603,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 ${summary}`;
   } else {
     // 매수불가
-    summary = `본 토지는 잔여지 면적 및 형상상 ��래 목���대��� 사용 ��능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
+    summary = `본 토지는 잔여지 면�� 및 형상상 ��래 목���대��� 사용 ��능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -1430,20 +1430,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               if (land) {
                 handleLandSelect(land);
                 // 지도에서 클릭 시 본인 소유 토글 (복수 선택)
-                const isFirstResult = landIndex === 0;
-                if (isFirstResult && ownedParcels.size === 0) {
-                  // 첫번째 필지 해제 시 - 빈 Set으로 (아무것도 선택 안함)
-                  setOwnedParcels(new Set());
-                } else if (!isFirstResult && ownedParcels.size === 0) {
-                  // 초기 상태에서 첫번째가 아닌 다른 필지 선택 시
-                  // 첫번째 필지(기본 선택)와 함께 선택
-                  const newSet = new Set<string>();
-                  newSet.add(searchResults[0].id); // 첫번째 필지 유지
-                  newSet.add(land.id); // 새로 선택한 필지 추가
-                  setOwnedParcels(newSet);
-                } else {
-                  toggleOwnedParcel(land.id);
-                }
+                toggleOwnedParcel(land.id);
               }
             }}
             parcels={searchResults
@@ -1545,25 +1532,16 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                 ? "border-l-4 border-l-blue-500 bg-blue-50"
                                 : selectedLand?.id === land.id 
                                   ? "border-l-4 border-l-primary bg-primary/5" 
-                                  : isOwned || (isFirstResult && !ownedParcels.size)
+                                  : isOwned
                                     ? "bg-green-50/50"
                                     : "hover:bg-muted/50"
                             }`}
                           >
                             {/* 본인 소유 체크박스 */}
                             <Checkbox
-                              checked={isOwned || (isFirstResult && ownedParcels.size === 0)}
+                              checked={isOwned}
                               onCheckedChange={() => {
-                                if (isFirstResult && ownedParcels.size === 0) {
-                                  // 첫번째 필지 해제 시, 명시적으로 상태 관리 시작
-                                  const newSet = new Set<string>();
-                                  searchResults.forEach(l => {
-                                    if (l.id !== land.id) newSet.add(l.id);
-                                  });
-                                  setOwnedParcels(newSet);
-                                } else {
-                                  toggleOwnedParcel(land.id);
-                                }
+                                toggleOwnedParcel(land.id);
                               }}
                               className="h-5 w-5 shrink-0"
                             />
@@ -2222,7 +2200,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
                           <span>
                             <strong>{businessUnits.length}개 관할기관</strong>의 토지가 있습니다.
-                            각 관할기관별로 별도 신청이 필요합니다.
+                            각 관할기관별�� 별도 신청이 필요합니다.
                           </span>
                         </p>
                       </div>
