@@ -298,15 +298,28 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       {/* 필지 선택 영역 (상위 레벨) */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2">
-            <Layers className="h-5 w-5" />
-            대상 필지
-            {isMultipleLands && (
-              <Badge variant="outline" className="ml-1">
-                {allLands.length}필지
-              </Badge>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <Layers className="h-5 w-5" />
+              대상 필지
+              {isMultipleLands && (
+                <Badge variant="outline" className="ml-1">
+                  {allLands.length}필지
+                </Badge>
+              )}
+            </CardTitle>
+            {Object.keys(landAIResults).length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setLandAIResults({})}
+                className="text-muted-foreground"
+              >
+                <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
+                판독 초기화
+              </Button>
             )}
-          </CardTitle>
+          </div>
           {isMultipleLands && (
             <CardDescription>
               필지를 선택하면 아래 모든 정보가 해당 필지 기준으로 표시됩니다.
