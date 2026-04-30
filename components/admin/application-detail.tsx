@@ -756,7 +756,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
   
   
-  // 판독 결과 초�����화
+  // 판독 결과 초�������화
   const handleResetAIResults = () => {
     setLandAIResults({});
     setUnifiedGroups({});
@@ -1271,9 +1271,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </div>
               )}
               <div className="flex items-center justify-between rounded-lg bg-muted px-4 py-2">
-                <span className="text-sm font-medium">합산 잔여 면적</span>
+                <span className="text-sm font-medium">
+                  {checkedLandIds.length > 0 ? `선택 필지 합산 (${checkedLandIds.length}필지)` : "합산 잔여 면적"}
+                </span>
                 <span className="text-base font-bold text-primary">
-                  {(application.landInfo.remainingArea + (application.additionalLands?.reduce((sum, l) => sum + l.remainingArea, 0) || 0)).toLocaleString()}m²
+                  {checkedLandIds.length > 0 
+                    ? allLands.filter(l => checkedLandIds.includes(l.id)).reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()
+                    : (application.landInfo.remainingArea + (application.additionalLands?.reduce((sum, l) => sum + l.remainingArea, 0) || 0)).toLocaleString()
+                  }m²
                 </span>
               </div>
               
@@ -1332,7 +1337,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 <TabsTrigger value="aerial">항공사진</TabsTrigger>
               </TabsList>
               <TabsContent value="cadastral" className="mt-4">
-                <LandMap landInfo={allLands[selectedLandIndex]} showOverlay />
+                {checkedLandIds.length > 0 ? (
+                  <LandMap landInfo={allLands.find(l => l.id === checkedLandIds[0])!} showOverlay />
+                ) : (
+                  <LandMap landInfo={allLands[selectedLandIndex]} showOverlay />
+                )}
               </TabsContent>
               <TabsContent value="aerial" className="mt-4">
                 <div className="flex h-[300px] items-center justify-center rounded-lg bg-muted sm:h-[400px]">
