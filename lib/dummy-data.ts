@@ -257,6 +257,112 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.4108, lng: 127.1280 },
     ],
   },
+  // ========== 강남 지역 필지들 (일단지 판정 테스트용) ==========
+  // 강남 필지 1: 김대현 소유 (일단지 그룹 1)
+  {
+    id: "land-gangnam-001",
+    address: "서울특별시 강남구 역삼동 123-1",
+    originalArea: 500,
+    includedArea: 350,
+    remainingArea: 150,
+    remainingRatio: 30.0,
+    landType: "대지",
+    landCategory: "대",
+    originalShape: "정방형",
+    remainingShape: "삼각형",
+    originalShapeIndex: 4.0,
+    remainingShapeIndex: 5.5,
+    ownerName: "김대현",
+    ownerContact: "010-1234-5678",
+    hasIncludedLand: true,
+    businessUnit: "강남",
+    projectName: "강남역 주변 도시정비사업",
+    coordinates: [
+      { lat: 37.5010, lng: 127.0360 },
+      { lat: 37.5015, lng: 127.0370 },
+      { lat: 37.5008, lng: 127.0375 },
+      { lat: 37.5003, lng: 127.0365 },
+    ],
+  },
+  // 강남 필지 2: 김대현 소유 (일단지 그룹 1 - 동일 소유자, 동일 지목)
+  {
+    id: "land-gangnam-002",
+    address: "서울특별시 강남구 역삼동 123-2",
+    originalArea: 400,
+    includedArea: 280,
+    remainingArea: 120,
+    remainingRatio: 30.0,
+    landType: "대지",
+    landCategory: "대",
+    originalShape: "가로장방형",
+    remainingShape: "부정형",
+    originalShapeIndex: 4.2,
+    remainingShapeIndex: 5.8,
+    ownerName: "김대현",
+    ownerContact: "010-1234-5678",
+    hasIncludedLand: true,
+    businessUnit: "강남",
+    projectName: "강남역 주변 도시정비사업",
+    coordinates: [
+      { lat: 37.5015, lng: 127.0370 },
+      { lat: 37.5020, lng: 127.0380 },
+      { lat: 37.5013, lng: 127.0385 },
+      { lat: 37.5008, lng: 127.0375 },
+    ],
+  },
+  // 강남 필지 3: 이서현 소유 (일단지 미해당 - 다른 소유자)
+  {
+    id: "land-gangnam-003",
+    address: "서울특별시 강남구 역삼동 125-1",
+    originalArea: 600,
+    includedArea: 450,
+    remainingArea: 150,
+    remainingRatio: 25.0,
+    landType: "대지",
+    landCategory: "대",
+    originalShape: "세로장방형",
+    remainingShape: "자루형",
+    originalShapeIndex: 4.5,
+    remainingShapeIndex: 6.2,
+    ownerName: "이서현",
+    ownerContact: "010-9876-5432",
+    hasIncludedLand: true,
+    businessUnit: "강남",
+    projectName: "강남역 주변 도시정비사업",
+    coordinates: [
+      { lat: 37.5020, lng: 127.0380 },
+      { lat: 37.5025, lng: 127.0390 },
+      { lat: 37.5018, lng: 127.0395 },
+      { lat: 37.5013, lng: 127.0385 },
+    ],
+  },
+  // 강남 필지 4: 박준혁 소유 (일단지 미해당 - 다른 소유자)
+  {
+    id: "land-gangnam-004",
+    address: "서울특별시 강남구 역삼동 127-3",
+    originalArea: 450,
+    includedArea: 300,
+    remainingArea: 150,
+    remainingRatio: 33.3,
+    landType: "대지",
+    landCategory: "대",
+    originalShape: "정방형",
+    remainingShape: "역삼각형",
+    originalShapeIndex: 4.0,
+    remainingShapeIndex: 5.3,
+    ownerName: "박준혁",
+    ownerContact: "010-5555-6666",
+    hasIncludedLand: true,
+    businessUnit: "강남",
+    projectName: "강남역 주변 도시정비사업",
+    coordinates: [
+      { lat: 37.5025, lng: 127.0390 },
+      { lat: 37.5030, lng: 127.0400 },
+      { lat: 37.5023, lng: 127.0405 },
+      { lat: 37.5018, lng: 127.0395 },
+    ],
+  },
+  
   // 동일 소유자 복수 필지 - 인접 필지 1
   {
     id: "land-008",
@@ -1020,7 +1126,7 @@ export const dummyLandInfoList: LandInfo[] = [
   },
 ];
 
-// 토지분류별 면적 기준 (PRD v2.0 기준 - 중앙토지수용위원회 참고기준)
+// 토지분류별 면적 ��준 (PRD v2.0 기준 - 중앙토지수용위원회 참고기준)
 // 잔여비율 25% 이하 시 면적 기준 1.5배 완화 적용
 const LAND_TYPE_CRITERIA = {
   // 대지(택지): 주거 90㎡ / 상업 150㎡ / 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)
@@ -2026,7 +2132,7 @@ export const dummyApplications: Application[] = [
           sameUsage: true,
         },
         combinedArea: 140,
-        explanation: "동일 소유자(김인정)의 연속된 2필지 대지로, 일체적으로 주거용으로 사용해 왔습니다. 개별 필지는 면적 기준을 초과하나, 고속도로 편입으로 양 필지 모두 맹지가 되어 일단지 합산 시 매수가 인정됩니다.",
+        explanation: "동일 소유자(김인정)의 연속된 2필지 대지로, 일체적으로 주거용으로 사용해 왔습니���. 개별 필지는 면적 기준을 초과하나, 고속도로 편입으로 양 필지 모두 맹지가 되어 일단지 합산 시 매수가 인정됩니다.",
       },
     },
     finalJudgment: "매수",
@@ -2153,7 +2259,7 @@ export const dummyApplications: Application[] = [
     statusUpdatedAt: "2026-04-29",
   },
   // ===== 혼합 케이스: 일부 일단지 해당 + 일부 미해당 =====
-  // 정혼합 - 4필지 중 2필지만 일단지 판정 (내기리 200-1, 200-2), 나머지 2필지는 미해당 (만호리 55-1, 55-2)
+  // 정혼합 - 4필��� 중 2필지만 일단지 판정 (내기리 200-1, 200-2), 나머지 2필지는 미해당 (만호리 55-1, 55-2)
   {
     id: "app-mixed-001",
     applicationNumber: "2026-0429-001",

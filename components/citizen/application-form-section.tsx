@@ -184,22 +184,41 @@ export function ApplicationFormSection({
   const allLands = landInfoList || [landInfo];
   const allAiResults = aiResultList || [aiResult];
   
-  // 일단지 판정 여부 확인 (unifiedParcelAnalysis 기반)
-  // 복수 필지 중 연접 필지들이 일단지로 판정되면 표시
-  const isUnifiedParcel = isMultipleLands && allAiResults.some(r => r?.unifiedParcelAnalysis?.isUnifiedParcel);
+  // landJudgments에서 일단지 그룹 정보 추출
+  const landJudgments = allAiResults[0]?.landJudgments || [];
   
-  // 일단지 그룹 번호 가져오기 (현재는 단순히 일단지 여부만 표시)
-  // 실제로는 연접 필지 분석을 통해 그룹을 구분해야 함
-  const getUnifiedGroupNumber = (landId: string, index: number): number | null => {
-    if (!isUnifiedParcel) return null;
-    
-    // 현재 필지의 AI 결과에서 일단지 분석 확인
-    const result = allAiResults[index];
-    if (result?.unifiedParcelAnalysis?.isUnifiedParcel) {
-      return 1; // 일단지로 판정된 경우 그룹 1로 표시
+  // 일단지 그룹 ID를 번호로 매핑
+  const unifiedGroupMap: Record<string, number> = {};
+  let groupCounter = 1;
+  landJudgments.forEach(j => {
+    if (j.unifiedGroupId && !unifiedGroupMap[j.unifiedGroupId]) {
+      unifiedGroupMap[j.unifiedGroupId] = groupCounter++;
+    }
+  });
+  
+  // 일단지 그룹 번호 가져오기
+  const getUnifiedGroupNumber = (landId: string): number | null => {
+    const judgment = landJudgments.find(j => j.landId === landId);
+    if (judgment?.unifiedGroupId) {
+      return unifiedGroupMap[judgment.unifiedGroupId] || null;
     }
     return null;
   };
+  
+  // 필지별 판정 사유 가져오기
+  const getLandJudgmentReason = (landId: string): string | null => {
+    const judgment = landJudgments.find(j => j.landId === landId);
+    return judgment?.reason || null;
+  };
+  
+  // 일단지 그룹 수
+  const unifiedGroupCount = Object.keys(unifiedGroupMap).length;
+  
+  // 일단지 해당 필지 수
+  const unifiedLandCount = landJudgments.filter(j => j.unifiedGroupId).length;
+  
+  // 개별 매수 필지 수 (일단지 미해당이지만 매수 가능)
+  const individualLandCount = landJudgments.filter(j => !j.unifiedGroupId && j.judgment === "매수").length;
   interface FileItem {
     name: string;
     size: string;
@@ -442,7 +461,8 @@ export function ApplicationFormSection({
                 <div className="max-h-[300px] space-y-2 overflow-y-auto">
                   {allLands.map((land, index) => {
                     const result = allAiResults[index];
-                    const unifiedGroupNum = getUnifiedGroupNumber(land.id, index);
+                    const unifiedGroupNum = getUnifiedGroupNumber(land.id);
+                    const judgmentReason = getLandJudgmentReason(land.id);
                     const isSelected = selectedLandIds.includes(land.id);
                     return (
                       <div 
@@ -452,8 +472,8 @@ export function ApplicationFormSection({
                           unifiedGroupNum 
                             ? "border-emerald-300 bg-emerald-50/50"
                             : result?.provisionalJudgment === "매수" 
-                              ? "border-primary/30 bg-primary/5" 
-                              : "border-red-300 bg-red-50"
+                              ? "border-blue-300 bg-blue-50/50" 
+                              : "border-amber-300 bg-amber-50/50"
                         }`}
                       >
                         <div className="flex items-start gap-3">
@@ -475,16 +495,21 @@ export function ApplicationFormSection({
                               <span>잔여: {land.remainingArea.toLocaleString()}㎡</span>
                               <span>|</span>
                               <span>{land.landType}</span>
+                              <span>|</span>
+                              <span>{land.ownerName}</span>
                             </div>
+                            {judgmentReason && (
+                              <p className="mt-1 text-xs text-muted-foreground">{judgmentReason}</p>
+                            )}
                           </div>
-                          <div className={`rounded px-2 py-0.5 text-xs font-medium ${
+                          <div className={`shrink-0 rounded px-2 py-0.5 text-xs font-medium ${
                             unifiedGroupNum
                               ? "bg-emerald-100 text-emerald-700"
                               : result?.provisionalJudgment === "매수" 
-                                ? "bg-primary/10 text-primary" 
-                                : "bg-red-100 text-red-700"
+                                ? "bg-blue-100 text-blue-700" 
+                                : "bg-amber-100 text-amber-700"
                           }`}>
-                            {unifiedGroupNum ? "일단지 매수" : result?.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
+                            {unifiedGroupNum ? "일단지" : result?.provisionalJudgment === "매수" ? "개별 매수" : "미해당"}
                           </div>
                         </div>
                       </div>
@@ -493,23 +518,55 @@ export function ApplicationFormSection({
                 </div>
                 
                 {/* 총계 (선택된 필지 기준) */}
-                <div className="rounded-lg bg-muted/50 p-3">
+                <div className="rounded-lg bg-muted/50 p-3 space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">선택된 필지 수</span>
                     <span className="font-medium">{selectedLands.length}필지</span>
                   </div>
-                  <div className="mt-1 flex justify-between text-sm">
+                  <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">선택 필지 잔여 면적</span>
                     <span className="font-medium text-primary">
                       {selectedLands.reduce((sum, land) => sum + land.remainingArea, 0).toLocaleString()}㎡
                     </span>
                   </div>
-                  <div className="mt-1 flex justify-between text-sm">
-                    <span className="text-muted-foreground">매수 가능 필지</span>
-                    <span className="font-medium text-primary">
-                      {selectedAiResults.filter(r => r?.provisionalJudgment === "매수").length}건
-                    </span>
-                  </div>
+                  
+                  {/* 일단지 판정 결과 요약 */}
+                  {landJudgments.length > 0 && (
+                    <div className="border-t pt-2 mt-2 space-y-1">
+                      <p className="text-xs font-medium text-muted-foreground mb-1">AI 판정 결과</p>
+                      {unifiedGroupCount > 0 && (
+                        <div className="flex justify-between text-sm">
+                          <span className="flex items-center gap-1.5">
+                            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                            <span className="text-emerald-700">일단지 해당</span>
+                          </span>
+                          <span className="font-medium text-emerald-700">
+                            {unifiedLandCount}필지 ({unifiedGroupCount}그룹)
+                          </span>
+                        </div>
+                      )}
+                      {individualLandCount > 0 && (
+                        <div className="flex justify-between text-sm">
+                          <span className="flex items-center gap-1.5">
+                            <span className="h-2 w-2 rounded-full bg-blue-500" />
+                            <span className="text-blue-700">개별 매수</span>
+                          </span>
+                          <span className="font-medium text-blue-700">{individualLandCount}필지</span>
+                        </div>
+                      )}
+                      {allLands.length - unifiedLandCount - individualLandCount > 0 && (
+                        <div className="flex justify-between text-sm">
+                          <span className="flex items-center gap-1.5">
+                            <span className="h-2 w-2 rounded-full bg-amber-500" />
+                            <span className="text-amber-700">미해당</span>
+                          </span>
+                          <span className="font-medium text-amber-700">
+                            {allLands.length - unifiedLandCount - individualLandCount}필지
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
                 
                 {/* 일단지 판정 안내 */}

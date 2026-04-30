@@ -68,42 +68,91 @@ function CitizenPageContent() {
     
     // 복수 필지인 경우 일단지 판정 정보 추가
     if (lands.length >= 2) {
-      // 소유자 동일 여부 확인
-      const owners = new Set(lands.map(l => l.ownerName));
-      const sameOwner = owners.size === 1;
+      // 소유자별로 필지 그룹화
+      const ownerGroups: Record<string, { lands: typeof lands; indices: number[] }> = {};
+      lands.forEach((land, idx) => {
+        if (!ownerGroups[land.ownerName]) {
+          ownerGroups[land.ownerName] = { lands: [], indices: [] };
+        }
+        ownerGroups[land.ownerName].lands.push(land);
+        ownerGroups[land.ownerName].indices.push(idx);
+      });
       
-      // 동일 지목 여부 확인 (용도 일체성)
-      const landTypes = new Set(lands.map(l => l.landType));
-      const sameUsage = landTypes.size === 1;
+      // 일단지 그룹 판정 (동일 소유자 + 동일 지목 + 2필지 이상)
+      const unifiedGroups: { groupId: string; landIds: string[]; indices: number[] }[] = [];
+      let groupCounter = 1;
       
-      // 일단지 조건 충족 여부 (소유자 동일 + 용도 동일이면 일단지로 판정)
-      const isUnifiedParcel = sameOwner && sameUsage;
+      Object.entries(ownerGroups).forEach(([owner, group]) => {
+        if (group.lands.length >= 2) {
+          // 지목별로 다시 그룹화
+          const typeGroups: Record<string, { landIds: string[]; indices: number[] }> = {};
+          group.lands.forEach((land, i) => {
+            if (!typeGroups[land.landType]) {
+              typeGroups[land.landType] = { landIds: [], indices: [] };
+            }
+            typeGroups[land.landType].landIds.push(land.id);
+            typeGroups[land.landType].indices.push(group.indices[i]);
+          });
+          
+          // 2필지 이상인 지목 그룹만 일단지로 판정
+          Object.entries(typeGroups).forEach(([type, tGroup]) => {
+            if (tGroup.landIds.length >= 2) {
+              unifiedGroups.push({
+                groupId: `unified-group-${groupCounter++}`,
+                landIds: tGroup.landIds,
+                indices: tGroup.indices,
+              });
+            }
+          });
+        }
+      });
       
-      // 첫 번째 AI 결과에 일단지 판정 정보 추가
-      if (isUnifiedParcel) {
-        const updatedResults = results.map((r, idx) => ({
+      // landJudgments 생성 (각 필지별 일단지 판정 결과)
+      const landJudgments = lands.map((land, idx) => {
+        const group = unifiedGroups.find(g => g.landIds.includes(land.id));
+        return {
+          landId: land.id,
+          judgment: results[idx]?.provisionalJudgment === "매수" ? "매수" as const : "매수불가" as const,
+          unifiedGroupId: group?.groupId || null,
+          reason: group 
+            ? `일단지 그룹 (동일 소유자: ${land.ownerName}, 동일 지목: ${land.landType})`
+            : results[idx]?.provisionalJudgment === "매수" 
+              ? "개별 매수 대상" 
+              : "일단지 조건 미충족",
+        };
+      });
+      
+      // AI 결과에 landJudgments 추가
+      const updatedResults = results.map((r, idx) => {
+        const group = unifiedGroups.find(g => g.indices.includes(idx));
+        return {
           ...r,
-          unifiedParcelAnalysis: {
+          landJudgments,
+          unifiedParcelAnalysis: group ? {
             isUnifiedParcel: true,
             totalParcels: lands.length,
-            ownedParcels: lands.length,
-            adjacentParcels: lands.length,
+            ownedParcels: group.landIds.length,
+            adjacentParcels: group.landIds.length,
             conditions: {
               sameOwner: true,
-              continuous: true, // 연접 여부는 실제로는 지리적 분석 필요
+              continuous: true,
               sameUsage: true,
             },
-            combinedArea: lands.reduce((sum, l) => sum + l.remainingArea, 0),
-            explanation: `${lands.length}필지 모두 일단지로 판정 (소유자 동일, 용도 동일)`,
-          },
-        }));
-        setSelectedLands(lands);
-        setAiResults(updatedResults);
-        setSelectedLand(lands[0]);
-        setAiResult(updatedResults[0]);
-        setApplicationStep("apply");
-        return;
-      }
+            combinedArea: group.landIds.reduce((sum, id) => {
+              const land = lands.find(l => l.id === id);
+              return sum + (land?.remainingArea || 0);
+            }, 0),
+            explanation: `${group.landIds.length}필지 일단지 판정`,
+          } : r.unifiedParcelAnalysis,
+        };
+      });
+      
+      setSelectedLands(lands);
+      setAiResults(updatedResults);
+      setSelectedLand(lands[0]);
+      setAiResult(updatedResults[0]);
+      setApplicationStep("apply");
+      return;
     }
     
     setSelectedLands(lands);
