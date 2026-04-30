@@ -251,9 +251,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     return null;
   };
 
-  // AI 판독 실행 핸들러 (전체 필지 일괄 판독)
+  // AI 판독 실행 핸들러 (전체 필지 일괄 판독 - 재판독 시 기존 결과 완전 교체)
   const handleRunAIAnalysis = () => {
     setIsAIAnalyzing(true);
+    
+    // 재판독 시 기존 결과 초기화
+    setLandAIResults({});
+    setUnifiedGroups({});
     
     // 시뮬레이션: 2초 후 AI 분석 결과 업데이트
     // 복수 필지인 경우 일부는 일단지 그룹으로, 일부는 미해당으로 판정
@@ -261,8 +265,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (allLands.length >= 2) {
         // 복수 필지: 일단지 그룹과 미해당 분류
         const groupId = `group-${Date.now()}`;
-        const unifiedLandIds = allLands.slice(0, Math.ceil(allLands.length * 0.6)).map(l => l.id); // 60%는 일단지
-        const nonUnifiedLandIds = allLands.slice(Math.ceil(allLands.length * 0.6)).map(l => l.id); // 40%는 미해당
+        // 랜덤하게 일단지 비율 결정 (50~80%)
+        const unifiedRatio = 0.5 + Math.random() * 0.3;
+        const unifiedCount = Math.max(1, Math.ceil(allLands.length * unifiedRatio));
+        
+        // 랜덤하게 일단지 필지 선택
+        const shuffledIndices = [...Array(allLands.length).keys()].sort(() => Math.random() - 0.5);
+        const unifiedLandIds = shuffledIndices.slice(0, unifiedCount).map(i => allLands[i].id);
+        const nonUnifiedLandIds = shuffledIndices.slice(unifiedCount).map(i => allLands[i].id);
         
         const newResults: typeof landAIResults = {};
         
@@ -273,55 +283,64 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             provisionalJudgment: "매수",
             landTypePath: land.landType,
             accessRoadLost: true,
-            waterChannelLost: false,
-            confidence: 0.88 + Math.random() * 0.1,
+            waterChannelLost: Math.random() > 0.5,
+            confidence: 0.85 + Math.random() * 0.1,
             analysisDate: new Date().toISOString().split("T")[0],
             unifiedGroupId: groupId,
+            reason: `일단지 A (연접 필지, 면적/형상 기준 충족)`,
           };
         });
         
         // 미해당 필지들
         nonUnifiedLandIds.forEach(landId => {
           const land = allLands.find(l => l.id === landId)!;
+          const reasons = [
+            `면적 기준 미충족 (${land.remainingArea}㎡ > 기준)`,
+            `형상 양호, 종래 사용 가능`,
+            `비연접 필지로 일단지 미해당`,
+          ];
           newResults[landId] = {
             provisionalJudgment: "미해당",
             landTypePath: land.landType,
             accessRoadLost: false,
             waterChannelLost: false,
-            confidence: 0.75 + Math.random() * 0.1,
+            confidence: 0.7 + Math.random() * 0.15,
             analysisDate: new Date().toISOString().split("T")[0],
             unifiedGroupId: undefined,
+            reason: reasons[Math.floor(Math.random() * reasons.length)],
           };
         });
         
-        // 일단지 그룹 정보 생성
+        // 일단지 그룹 정보 생성 (기존 그룹 완전 교체)
         const unifiedLands = allLands.filter(l => unifiedLandIds.includes(l.id));
-        setUnifiedGroups(prev => ({
-          ...prev,
+        const newGroups = {
           [groupId]: {
             landIds: unifiedLandIds,
-            groupName: `일단지 ${String.fromCharCode(65 + Object.keys(prev).length)}`,
+            groupName: "일단지 A",
             combinedArea: unifiedLands.reduce((sum, l) => sum + l.remainingArea, 0),
             judgment: "매수",
           }
-        }));
+        };
         
+        setUnifiedGroups(newGroups);
         setLandAIResults(newResults);
       } else {
         // 단일 필지
         const currentLandId = allLands[selectedLandIndex].id;
+        const isBuy = Math.random() > 0.3;
         const newResult = {
-          provisionalJudgment: Math.random() > 0.3 ? "매수" : "매수불가",
+          provisionalJudgment: isBuy ? "매수" : "매수불가",
           landTypePath: allLands[selectedLandIndex].landType,
           accessRoadLost: Math.random() > 0.5,
           waterChannelLost: Math.random() > 0.5,
           confidence: 0.85 + Math.random() * 0.1,
           analysisDate: new Date().toISOString().split("T")[0],
+          reason: isBuy ? "면적/형상 기준 충족" : "면적 기준 미충족",
         };
-        setLandAIResults(prev => ({
-          ...prev,
+        setLandAIResults({
           [currentLandId]: newResult,
-        }));
+        });
+        setUnifiedGroups({});
       }
       setIsAIAnalyzing(false);
     }, 2000);
