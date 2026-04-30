@@ -577,7 +577,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       const selectedLands = allLands.filter(l => checkedLandIds.includes(l.id));
       
       // ===== [1단계] 일단지 판정 =====
-      // 소유자 동일, 지반 연속, 용도 일체성 확인하여 일단지 그룹 형성
+      // ��유자 동일, 지반 연속, 용도 일체성 확인하여 일단지 그룹 형성
       const unifiedLandGroups = selectedLands.length >= 2 ? findUnifiedGroups(selectedLands) : selectedLands.length === 1 ? [[selectedLands[0].id]] : [];
       let groupIndex = 0;
       
@@ -1143,26 +1143,27 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </>
                   ) : (
                     /* 일단지 그룹 없음 - 기본 그리드 표시 (AI 판독 전) */
-                    <div className="mb-2 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={checkedLandIds.length === allLands.length}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setCheckedLandIds(allLands.map(l => l.id));
-                            } else {
-                              setCheckedLandIds([]);
-                            }
-                          }}
-                          className="h-4 w-4 rounded border-gray-300"
-                        />
-                        <span className="text-sm text-muted-foreground">
-                          전체 선택 ({checkedLandIds.length}/{allLands.length})
-                        </span>
+                    <>
+                      <div className="mb-2 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={checkedLandIds.length === allLands.length}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setCheckedLandIds(allLands.map(l => l.id));
+                              } else {
+                                setCheckedLandIds([]);
+                              }
+                            }}
+                            className="h-4 w-4 rounded border-gray-300"
+                          />
+                          <span className="text-sm text-muted-foreground">
+                            전체 선택 ({checkedLandIds.length}/{allLands.length})
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="grid gap-2 sm:grid-cols-2">
+                      <div className="grid gap-2 sm:grid-cols-2">
                       {allLands.map((land, index) => {
                         const isSelected = selectedLandIndex === index;
                         const isChecked = checkedLandIds.includes(land.id);
@@ -1227,7 +1228,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           </div>
                         );
                       })}
-                    </div>
+                      </div>
+                    </>
                   )}
                 </div>
               )}
@@ -1963,7 +1965,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* AI 분석 프로세스 다이얼로그 */}
+      {/* AI 분석 프로세스 ��이얼로그 */}
       <AIAnalysisFlowDialog
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
