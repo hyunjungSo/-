@@ -128,14 +128,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
   
-  // 체크박스로 선택된 필지 ID 목록 (초기값: 모든 필지 선택)
-  const [checkedLandIds, setCheckedLandIds] = useState<string[]>(() => allLands.map(l => l.id));
+  // 체크박스로 선택된 필지 ID 목록 (초기값: 미체크)
+  const [checkedLandIds, setCheckedLandIds] = useState<string[]>([]);
   
-  // 체크박스 선택 변경 핸들러 (판독 결과 초기화 포함)
+  // 체크박스 선택 변경 핸들러
   const handleCheckLand = (landId: string, checked: boolean) => {
-    // 선택 변경 시 기존 판독 결과 초기화
-    setLandAIResults({});
-    setUnifiedGroups({});
     if (checked) {
       setCheckedLandIds(prev => [...prev, landId]);
     } else {
@@ -145,8 +142,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
   // 전체 선택 핸들러
   const handleCheckAll = (checked: boolean) => {
-    setLandAIResults({});
-    setUnifiedGroups({});
     if (checked) {
       setCheckedLandIds(allLands.map(l => l.id));
     } else {
@@ -1176,7 +1171,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     )}
                                     {landResult?.analysisDate && (
                                       <p className="text-xs text-muted-foreground pl-6">
-                                        판독: {landResult.analysisDate}
+                                        판���: {landResult.analysisDate}
                                       </p>
                                     )}
                                   </div>
