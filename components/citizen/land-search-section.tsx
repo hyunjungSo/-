@@ -98,7 +98,7 @@ const regionData = {
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백�����면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백�������면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
     "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "�������", "율량동"],
@@ -240,7 +240,7 @@ const regionData = {
     // 세종특별자치시
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
-    "부강면": ["갈산리", "노호리", "등곡리", "문��리", "산��리"],
+    "부강면": ["갈산리", "노호리", "등곡��", "문��리", "산��리"],
     "소정면": ["고등리", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
@@ -391,7 +391,7 @@ function simulateAIAnalysis(
     areaCriteriaMet = land.remainingArea <= 330;
   } else if (currentUsage === "임") {
     // 현재 활용 지목이 "임"(임야)인 경우 산지 기준
-    areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (산지 ���준: 990㎡ ��하)`;
+    areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (���지 ���준: 990㎡ ��하)`;
     areaCriteriaMet = land.remainingArea <= 990;
   } else {
     // 그 밖의 지목 (잡종지 등)
@@ -603,7 +603,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 ${summary}`;
   } else {
     // 매수불가
-    summary = `본 토지는 잔여지 면적 및 ���상��� 종래 목��대로 ���용 가능한 것으로 판단되어 ��수청구 대상에 해당하지 않습니다.`;
+    summary = `본 토지는 잔여지 면적 및 �����상��� 종래 목��대로 ���용 가능한 것으로 판단되어 ��수청구 대상에 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -695,7 +695,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const [selectedRi, setSelectedRi] = useState<string>("");
   const [jibun, setJibun] = useState<string>("");
   
-  // 검색 결과 상태
+  // 검색 결과 ���태
   const [searchResults, setSearchResults] = useState<LandInfo[]>([]);
   const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -1173,7 +1173,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 onChange={() => setSearchMode("corporation")}
                 className="h-4 w-4 accent-gray-900"
               />
-              <span className="text-sm">법인정보로 검색</span>
+              <span className="text-sm">법인정보로 검��</span>
             </label>
           </div>
         </div>
@@ -1994,15 +1994,11 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     </div>
                   </div>
                 )}
-                  </div>
-                ) : (
-                  <div className="flex h-full items-center justify-center text-muted-foreground">
-                    정보 제공 대상 필지가 아닙니다.
-                  </div>
-                )}
               </div>
+            </div>
+          </div>
             
-              {/* 신청 목록 추가 버튼 - 하단 고정 */}
+            {/* 신청 목록 추가 버튼 - 하단 고정 */}
             {selectedLand && aiResult && (
               <div className="shrink-0 border-t bg-background p-3">
                 {(() => {
