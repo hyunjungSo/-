@@ -509,11 +509,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         {/* 일단지 판정 요약 (최상단 표시) */}
         {Object.keys(unifiedGroups).length > 0 && (
           <div className="mx-6 mb-4 rounded-lg border-2 border-emerald-500/50 bg-emerald-50/50 p-4 dark:bg-emerald-950/30">
-            <div className="mb-3 flex items-center gap-2">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">
-                <CheckCircle2 className="h-4 w-4" />
+            <div className="mb-3 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">
+                  <CheckCircle2 className="h-4 w-4" />
+                </div>
+                <span className="font-semibold text-emerald-700 dark:text-emerald-400">일단지 판정 결과</span>
               </div>
-              <span className="font-semibold text-emerald-700 dark:text-emerald-400">일단지 판정 결과</span>
+              <Badge variant="secondary" className="text-xs">
+                총 {allLands.length}필지 중 {Object.values(unifiedGroups).flatMap(g => g.landIds).length}필지 해당
+              </Badge>
             </div>
             <div className="flex flex-wrap gap-3">
               {Object.entries(unifiedGroups).map(([groupId, group]) => (
@@ -521,7 +526,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <Badge className="bg-emerald-600 hover:bg-emerald-700">
                     {group.groupName}
                   </Badge>
-                  <span className="text-sm font-medium">{group.landIds.length}필지</span>
+                  <span className="text-sm font-medium">인접 {group.landIds.length}필지</span>
                   <span className="text-sm text-muted-foreground">|</span>
                   <span className="text-sm text-muted-foreground">합산 {group.combinedArea.toLocaleString()}m²</span>
                   <Badge variant="default">{group.judgment}</Badge>
@@ -563,7 +568,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           return (
                             <SelectItem key={land.id} value={index.toString()}>
                               <span className="flex items-center gap-2">
-                                필��� {index + 1} - {land.address.split(" ").slice(-2).join(" ")}
+                                필����� {index + 1} - {land.address.split(" ").slice(-2).join(" ")}
                                 {group && <span className="text-emerald-600 text-xs">({group.groupName})</span>}
                                 {landResult && !group && <span className="text-muted-foreground text-xs">(미해당)</span>}
                               </span>
