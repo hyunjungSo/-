@@ -127,21 +127,48 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [isSaving, setIsSaving] = useState(false);
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
-  const [currentAIResult, setCurrentAIResult] = useState(application.aiResult || null);
+  
+  // 필지별 AI 판독 결과 상태 (landId -> AIResult)
+  const [landAIResults, setLandAIResults] = useState<Record<string, {
+    provisionalJudgment: string;
+    landTypePath: string;
+    accessRoadLost: boolean;
+    waterChannelLost: boolean;
+    confidence: number;
+    analysisDate: string;
+  }>>(() => {
+    // 기존 application.aiResult가 있으면 모든 필지에 초기값으로 설정
+    if (application.aiResult) {
+      const initial: Record<string, typeof application.aiResult> = {};
+      allLands.forEach(land => {
+        initial[land.id] = application.aiResult!;
+      });
+      return initial;
+    }
+    return {};
+  });
+  
+  // 현재 선택된 필지의 AI 결과
+  const currentAIResult = landAIResults[allLands[selectedLandIndex]?.id] || null;
 
   // AI 판독 실행 핸들러
   const handleRunAIAnalysis = () => {
     setIsAIAnalyzing(true);
+    const currentLandId = allLands[selectedLandIndex].id;
     // 시뮬레이션: 2초 후 AI 분석 결과 업데이트
     setTimeout(() => {
-      setCurrentAIResult({
-        provisionalJudgment: "매수",
+      const newResult = {
+        provisionalJudgment: Math.random() > 0.3 ? "매수" : "매수불가",
         landTypePath: allLands[selectedLandIndex].landType,
-        accessRoadLost: false,
-        waterChannelLost: false,
-        confidence: 0.92,
+        accessRoadLost: Math.random() > 0.5,
+        waterChannelLost: Math.random() > 0.5,
+        confidence: 0.85 + Math.random() * 0.1,
         analysisDate: new Date().toISOString().split("T")[0],
-      });
+      };
+      setLandAIResults(prev => ({
+        ...prev,
+        [currentLandId]: newResult,
+      }));
       setIsAIAnalyzing(false);
     }, 2000);
   };
@@ -315,12 +342,21 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         <span className="text-muted-foreground">잔여 {allLands[selectedLandIndex].remainingRatio}%</span>
                       </div>
                     </div>
+                    {landAIResults[allLands[selectedLandIndex].id] && (
+                      <Badge 
+                        variant={landAIResults[allLands[selectedLandIndex].id].provisionalJudgment === "매수" ? "default" : "destructive"} 
+                        className="ml-3 shrink-0"
+                      >
+                        {landAIResults[allLands[selectedLandIndex].id].provisionalJudgment}
+                      </Badge>
+                    )}
                   </div>
                 </div>
               ) : (
                 <div className="grid gap-2 sm:grid-cols-2">
                   {allLands.map((land, index) => {
                     const isSelected = selectedLandIndex === index;
+                    const landResult = landAIResults[land.id];
                     return (
                       <button
                         key={land.id}
@@ -332,7 +368,21 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             : "border-border hover:border-primary/50 hover:bg-muted/30"
                         }`}
                       >
-                        <span className="text-sm font-medium">필지 {index + 1}</span>
+                        <div className="flex w-full items-center justify-between">
+                          <span className="text-sm font-medium">필지 {index + 1}</span>
+                          {landResult ? (
+                            <Badge 
+                              variant={landResult.provisionalJudgment === "매수" ? "default" : "destructive"} 
+                              className="text-xs"
+                            >
+                              {landResult.provisionalJudgment}
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-xs text-muted-foreground">
+                              미판독
+                            </Badge>
+                          )}
+                        </div>
                         <p className="text-xs text-muted-foreground line-clamp-1">{land.address}</p>
                         <div className="flex gap-3 text-xs">
                           <span className="font-medium text-primary">{land.remainingArea.toLocaleString()}m²</span>
@@ -986,7 +1036,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
           {/* 진행상황 설정 */}
           <div className="space-y-2">
-            <Label>진행상황 설정</Label>
+            <Label>진행상황 설���</Label>
             <div className="flex flex-wrap gap-2">
               {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
                 const config = adminStatusConfig[status];
