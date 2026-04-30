@@ -574,7 +574,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         const isUnified = groupLandIds.length >= 2;
         
         if (isUnified) {
-          // ===== 일단지 병합 처리 =====
+          // ===== 일단지 병�� 처리 =====
           const groupId = `group-${Date.now()}-${groupIndex}`;
           const combinedArea = groupLands.reduce((sum, l) => sum + l.remainingArea, 0);
           const combinedOriginalArea = groupLands.reduce((sum, l) => sum + l.originalArea, 0);
@@ -862,34 +862,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </Badge>
               )}
             </CardTitle>
-            <div className="flex items-center gap-2">
-              {Object.keys(landAIResults).length > 0 && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleResetAIResults}
-                  className="text-muted-foreground"
-                >
-                  <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
-                  판독 초기화
-                </Button>
-              )}
-              {isMultipleLands && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    setSelectedLandIndex(0);
-                    setLandAIResults({});
-                    setUnifiedGroups({});
-                  }}
-                  className="text-muted-foreground"
-                >
-                  <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
-                  초기화
-                </Button>
-              )}
-            </div>
+            
           </div>
           {isMultipleLands && (
             <CardDescription>
