@@ -602,7 +602,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 5. 판정 결과
 ${summary}`;
   } else {
-    // 매수불가
+    // 매수불��
     summary = `본 ��지는 잔여��� 면적 및 �����상��� 종래 목��대로 ���용 가능한 것으로 판단되어 ��수청구 대상에 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
@@ -999,7 +999,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     // 현재 활용 지목이 "대"(택지)인 경우 세부 유형이 필수
     if (currentUsage === "대" && !landSubType) return;
     
-    // 선택된 필지들 가져오기 (체크된 필지들)
+    // 선��된 필지들 가져오기 (체크된 필지들)
     const selectedParcels = searchResults.filter((land, index) => 
       ownedParcels.has(land.id) || (index === 0 && ownedParcels.size === 0)
     );
@@ -1994,7 +1994,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     </div>
                   </div>
                 )}
-              </div>
+                </div>
               ) : (
                 <div className="flex h-full items-center justify-center text-muted-foreground">
                   필지를 선택해 주세요.
