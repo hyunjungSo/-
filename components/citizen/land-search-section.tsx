@@ -158,7 +158,7 @@ const regionData = {
     "율면": ["고당리", "반룡리", "산양리", "월포리", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
-    // 경���도 - 광주시
+    // ������도 - 광주시
     "곤지암읍": ["신리", "역동리", "삼리", "건업리", "연곡리", "오향리", "화촌리"],
     "도척면": ["진우리", "노곡리", "상림리", "도웅리", "유정리", "추곡리"],
     "퇴촌면": ["정지리", "영동리", "도수리", "관음리", "무수리", "원당리"],
@@ -235,7 +235,7 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["도고리", "시전리", "효자리", "��산리"],
+    "도고면": ["도고리", "시전리", "효자��", "��산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
@@ -603,7 +603,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 ${summary}`;
   } else {
     // 매수불가
-    summary = `본 토지는 잔여지 면적 및 형상상 종래 목적대로 사용 가능한 것으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
+    summary = `본 토지는 잔여지 면적 및 형상상 종래 목적대로 사용 가능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -994,7 +994,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   // AI 판독 실행 (선택된 모든 필지 한번에 판독)
   const handleAIAnalysis = () => {
     if (noIncludedLand) return;
-    // 현재 활용 지목 필수
+    // 현재 활용 지목 필��
     if (!currentUsage) return;
     // 현재 활용 지목이 "대"(택지)인 경우 세부 유형이 필수
     if (currentUsage === "대" && !landSubType) return;
@@ -1793,12 +1793,107 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 {/* AI 판독 결과 - 복수 필지 통합 뷰 */}
                 {parcelAiResults.size > 0 && (
                   <div className="space-y-4">
-                    {/* 필지별 판독 결과 요약 리스트 */}
+{/* 필지별 판독 결과 요약 리스트 */}
                     <div className="rounded-lg border bg-background">
                       <div className="border-b bg-muted/50 px-4 py-2">
                         <span className="text-sm font-semibold">필지별 AI 판독 결과</span>
                         <span className="ml-2 text-xs text-muted-foreground">({parcelAiResults.size}건)</span>
                       </div>
+                      <div className="divide-y">
+                        {Array.from(parcelAiResults.entries()).map(([parcelId, result]) => {
+                          const land = searchResults.find(l => l.id === parcelId);
+                          if (!land) return null;
+                          const isInCart = cartItems.some(item => item.landInfo.id === parcelId);
+                          return (
+                            <div 
+                              key={parcelId}
+                              onClick={() => {
+                                setSelectedLand(land);
+                                setAiResult(result);
+                              }}
+                              className={`flex cursor-pointer items-center justify-between px-4 py-3 transition-colors hover:bg-muted/50 ${
+                                selectedLand?.id === parcelId ? "bg-primary/5 border-l-4 border-l-primary" : ""
+                              }`}
+                            >
+                              <div className="flex-1 min-w-0">
+                                <p className="truncate text-sm font-medium">{land.address}</p>
+                                <p className="text-xs text-muted-foreground">
+                                  잔여 {land.remainingArea.toLocaleString()}㎡ | {land.landType}
+                                </p>
+                              </div>
+                              <div className="ml-2 flex items-center gap-2">
+                                {isInCart && (
+                                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                                )}
+                                <Badge 
+                                  variant={
+                                    result.provisionalJudgment === "매수" 
+                                      ? "success" 
+                                      : result.provisionalJudgment === "심의위원회이관"
+                                        ? "warning"
+                                        : "destructive"
+                                  }
+                                  className="shrink-0"
+                                >
+                                  {result.provisionalJudgment === "매수" 
+                                    ? "매수" 
+                                    : result.provisionalJudgment === "심의위원회이관"
+                                      ? "심의이관"
+                                      : "미충족"}
+                                </Badge>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      
+                      {/* 매수 가능 필지 일괄 추가 버튼 */}
+                      {(() => {
+                        const purchasableItems = Array.from(parcelAiResults.entries())
+                          .filter(([_, result]) => result.provisionalJudgment !== "매수불가")
+                          .map(([parcelId, result]) => ({
+                            land: searchResults.find(l => l.id === parcelId)!,
+                            result
+                          }))
+                          .filter(item => item.land && !cartItems.some(c => c.landInfo.id === item.land.id));
+                        
+                        if (purchasableItems.length > 0) {
+                          return (
+                            <div className="border-t p-3">
+                              <Button 
+                                onClick={() => {
+                                  purchasableItems.forEach(item => {
+                                    onAddToCart(item.land, item.result);
+                                  });
+                                }}
+                                className="h-10 w-full"
+                                variant="default"
+                              >
+                                <Plus className="mr-2 h-4 w-4" />
+                                매수 가능 {purchasableItems.length}건 신청 목록에 추가
+                              </Button>
+                            </div>
+                          );
+                        }
+                        
+                        const allInCart = Array.from(parcelAiResults.entries())
+                          .filter(([_, result]) => result.provisionalJudgment !== "매수불가")
+                          .every(([parcelId]) => cartItems.some(c => c.landInfo.id === parcelId));
+                        
+                        if (allInCart && parcelAiResults.size > 0) {
+                          return (
+                            <div className="border-t p-3">
+                              <div className="flex items-center justify-center gap-2 rounded-lg bg-primary/10 p-3">
+                                <CheckCircle2 className="h-5 w-5 text-primary" />
+                                <span className="text-sm font-medium text-primary">모든 매수 가능 필지가 신청 목록에 추가됨</span>
+                              </div>
+                            </div>
+                          );
+                        }
+                        
+                        return null;
+                      })()}
+                    </div>
                       <div className="divide-y">
                         {Array.from(parcelAiResults.entries()).map(([parcelId, result]) => {
                           const land = searchResults.find(l => l.id === parcelId);
