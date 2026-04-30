@@ -241,7 +241,7 @@ const regionData = {
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
-    "���정면": ["고등�����������", "대곡리", "소정리", "운담리"],
+    "�����정면": ["고등�����������", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -391,7 +391,7 @@ function simulateAIAnalysis(
     areaCriteriaMet = land.remainingArea <= 330;
   } else if (currentUsage === "임") {
     // 현재 활용 지목이 "임"(임야)인 경우 산지 기준
-    areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (산지 기준: 990㎡ ��하)`;
+    areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (산지 ��준: 990㎡ ��하)`;
     areaCriteriaMet = land.remainingArea <= 990;
   } else {
     // 그 밖의 지목 (잡종지 등)
@@ -603,7 +603,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 ${summary}`;
   } else {
     // 매수불가
-    summary = `본 토지는 잔여지 면적 및 형상상 종래 목적대��� 사용 ��능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
+    summary = `본 토지는 잔여지 면적 및 형상상 종래 목���대��� 사용 ��능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -675,7 +675,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   // 장바구니 패널 표시 상태
   const [isCartOpen, setIsCartOpen] = useState(false);
   // 장바구니 선택 항목
-  
+  const [selectedCartItems, setSelectedCartItems] = useState<Set<string>>(new Set());
+  // AI 판독 결과에서 신청 목록에 추가할 필지 선택
+  const [checkedParcelsForCart, setCheckedParcelsForCart] = useState<Set<string>>(new Set());
   
   // 검색 방식 탭 (지번 / 개인정보 / 법인정보)
   const [searchMode, setSearchMode] = useState<"address" | "individual" | "corporation">("address");
@@ -1806,27 +1808,51 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           const land = searchResults.find(l => l.id === parcelId);
                           if (!land) return null;
                           const isInCart = cartItems.some(item => item.landInfo.id === parcelId);
+                          const isChecked = checkedParcelsForCart.has(parcelId);
+                          const canAddToCart = result.provisionalJudgment !== "매수불가" && !isInCart;
+                          
                           return (
                             <div 
                               key={parcelId}
-                              onClick={() => {
-                                setSelectedLand(land);
-                                setAiResult(result);
-                              }}
-                              className={`flex cursor-pointer items-center justify-between px-4 py-3 transition-colors hover:bg-muted/50 ${
+                              className={`flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/50 ${
                                 selectedLand?.id === parcelId ? "bg-primary/5 border-l-4 border-l-primary" : ""
                               }`}
                             >
-                              <div className="flex-1 min-w-0">
-                                <p className="truncate text-sm font-medium">{land.address}</p>
-                                <p className="text-xs text-muted-foreground">
-                                  잔여 {land.remainingArea.toLocaleString()}㎡ | {land.landType}
-                                </p>
-                              </div>
-                              <div className="ml-2 flex items-center gap-2">
-                                {isInCart && (
-                                  <CheckCircle2 className="h-4 w-4 text-primary" />
-                                )}
+                              {/* 체크박스 */}
+                              {canAddToCart ? (
+                                <Checkbox
+                                  checked={isChecked}
+                                  onCheckedChange={(checked) => {
+                                    const newChecked = new Set(checkedParcelsForCart);
+                                    if (checked) {
+                                      newChecked.add(parcelId);
+                                    } else {
+                                      newChecked.delete(parcelId);
+                                    }
+                                    setCheckedParcelsForCart(newChecked);
+                                  }}
+                                  className="h-5 w-5 shrink-0"
+                                />
+                              ) : (
+                                <div className="h-5 w-5 shrink-0 flex items-center justify-center">
+                                  {isInCart && <CheckCircle2 className="h-4 w-4 text-primary" />}
+                                </div>
+                              )}
+                              
+                              {/* 필지 정보 (클릭 시 상세보기) */}
+                              <div 
+                                className="flex flex-1 cursor-pointer items-center justify-between min-w-0"
+                                onClick={() => {
+                                  setSelectedLand(land);
+                                  setAiResult(result);
+                                }}
+                              >
+                                <div className="flex-1 min-w-0">
+                                  <p className="truncate text-sm font-medium">{land.address}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    잔여 {land.remainingArea.toLocaleString()}㎡ | {land.landType}
+                                  </p>
+                                </div>
                                 <Badge 
                                   variant={
                                     result.provisionalJudgment === "매수" 
@@ -1835,13 +1861,15 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                         ? "warning"
                                         : "destructive"
                                   }
-                                  className="shrink-0"
+                                  className="ml-2 shrink-0"
                                 >
-                                  {result.provisionalJudgment === "매수" 
-                                    ? "매수" 
-                                    : result.provisionalJudgment === "심의위원회이관"
-                                      ? "심의이관"
-                                      : "미충족"}
+                                  {isInCart 
+                                    ? "추가됨"
+                                    : result.provisionalJudgment === "매수" 
+                                      ? "매수" 
+                                      : result.provisionalJudgment === "심의위원회이관"
+                                        ? "심의이관"
+                                        : "미충족"}
                                 </Badge>
                               </div>
                             </div>
@@ -1849,40 +1877,17 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         })}
                       </div>
                       
-                      {/* 매수 가능 필지 일괄 추가 버튼 */}
+                      {/* 선택 필지 신청 목록에 추가 버튼 */}
                       {(() => {
-                        const purchasableItems = Array.from(parcelAiResults.entries())
-                          .filter(([_, result]) => result.provisionalJudgment !== "매수불가")
-                          .map(([parcelId, result]) => ({
-                            land: searchResults.find(l => l.id === parcelId)!,
-                            result
-                          }))
-                          .filter(item => item.land && !cartItems.some(c => c.landInfo.id === item.land.id));
-                        
-                        if (purchasableItems.length > 0) {
-                          return (
-                            <div className="border-t p-3">
-                              <Button 
-                                onClick={() => {
-                                  purchasableItems.forEach(item => {
-                                    onAddToCart(item.land, item.result);
-                                  });
-                                }}
-                                className="h-10 w-full"
-                                variant="default"
-                              >
-                                <Plus className="mr-2 h-4 w-4" />
-                                매수 가능 {purchasableItems.length}건 신청 목록에 추가
-                              </Button>
-                            </div>
+                        const addableItems = Array.from(parcelAiResults.entries())
+                          .filter(([parcelId, result]) => 
+                            result.provisionalJudgment !== "매수불가" && 
+                            !cartItems.some(c => c.landInfo.id === parcelId)
                           );
-                        }
                         
-                        const allInCart = Array.from(parcelAiResults.entries())
-                          .filter(([_, result]) => result.provisionalJudgment !== "매수불가")
-                          .every(([parcelId]) => cartItems.some(c => c.landInfo.id === parcelId));
+                        const allInCart = addableItems.length === 0 && parcelAiResults.size > 0;
                         
-                        if (allInCart && parcelAiResults.size > 0) {
+                        if (allInCart) {
                           return (
                             <div className="border-t p-3">
                               <div className="flex items-center justify-center gap-2 rounded-lg bg-primary/10 p-3">
@@ -1893,7 +1898,32 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           );
                         }
                         
-                        return null;
+                        const checkedCount = Array.from(checkedParcelsForCart).filter(id => 
+                          addableItems.some(([parcelId]) => parcelId === id)
+                        ).length;
+                        
+                        return (
+                          <div className="border-t p-3">
+                            <Button 
+                              onClick={() => {
+                                checkedParcelsForCart.forEach(parcelId => {
+                                  const land = searchResults.find(l => l.id === parcelId);
+                                  const result = parcelAiResults.get(parcelId);
+                                  if (land && result && result.provisionalJudgment !== "매수불가" && !cartItems.some(c => c.landInfo.id === parcelId)) {
+                                    onAddToCart(land, result);
+                                  }
+                                });
+                                setCheckedParcelsForCart(new Set());
+                              }}
+                              className="h-10 w-full"
+                              variant="default"
+                              disabled={checkedCount === 0}
+                            >
+                              <Plus className="mr-2 h-4 w-4" />
+                              신청 목록에 추가 ({checkedCount}건)
+                            </Button>
+                          </div>
+                        );
                       })()}
                     </div>
 
