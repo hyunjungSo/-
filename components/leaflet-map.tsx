@@ -288,6 +288,9 @@ export function LeafletMap({
     }
   }, [layers, isMapReady]);
 
+  // Set을 직렬화하여 의존성 비교용으로 사용
+  const selectedParcelIdsKey = Array.from(selectedParcelIds).sort().join(",");
+  
   // 필지 폴리곤 렌더링
   useEffect(() => {
     if (!mapInstanceRef.current || !polygonLayerRef.current || !isMapReady) return;
@@ -406,7 +409,7 @@ export function LeafletMap({
         mapInstanceRef.current.setView([centerLat, centerLng], 18, { animate: true });
       }
     }
-  }, [parcels, selectedParcelId, selectedParcelIds, hoveredParcelId, onParcelClick, onParcelHover, isMapReady]);
+  }, [parcels, selectedParcelId, selectedParcelIdsKey, hoveredParcelId, onParcelClick, onParcelHover, isMapReady]);
 
   // 줌 컨트롤
   const handleZoomIn = () => {
