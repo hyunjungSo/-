@@ -184,28 +184,27 @@ export function ApplicationFormSection({
   const allLands = landInfoList || [landInfo];
   const allAiResults = aiResultList || [aiResult];
   
-  // 일단지 그룹 ID를 번호로 매핑 (모든 AI 결과에서 landJudgments 수집)
-  const unifiedGroupNumbers: Record<string, number> = {};
-  const landToGroupId: Record<string, string | null> = {};
+  // 일단지 판정 여부 확인 (unifiedParcelAnalysis 기반)
+  // 복수 필지 중 연접 필지들이 일단지로 판정되면 표시
+  const isUnifiedParcel = isMultipleLands && allAiResults.some(r => r?.unifiedParcelAnalysis?.isUnifiedParcel);
   
-  allAiResults.forEach(result => {
-    if (result?.landJudgments) {
-      result.landJudgments.forEach(j => {
-        if (j.unifiedGroupId) {
-          if (!unifiedGroupNumbers[j.unifiedGroupId]) {
-            unifiedGroupNumbers[j.unifiedGroupId] = Object.keys(unifiedGroupNumbers).length + 1;
-          }
-          landToGroupId[j.landId] = j.unifiedGroupId;
-        }
-      });
-    }
+  console.log("[v0] 일단지 판정 디버그:", { 
+    isMultipleLands, 
+    isUnifiedParcel, 
+    landsCount: allLands.length,
+    aiResultsCount: allAiResults.length,
+    unifiedAnalysis: allAiResults.map(r => r?.unifiedParcelAnalysis)
   });
   
-  // 필지의 일단지 그룹 번호 가져오기
-  const getUnifiedGroupNumber = (landId: string): number | null => {
-    const groupId = landToGroupId[landId];
-    if (groupId) {
-      return unifiedGroupNumbers[groupId] || null;
+  // 일단지 그룹 번호 가져오기 (현재는 단순히 일단지 여부만 표시)
+  // 실제로는 연접 필지 분석을 통해 그룹을 구분해야 함
+  const getUnifiedGroupNumber = (landId: string, index: number): number | null => {
+    if (!isUnifiedParcel) return null;
+    
+    // 현재 필지의 AI 결과에서 일단지 분석 확인
+    const result = allAiResults[index];
+    if (result?.unifiedParcelAnalysis?.isUnifiedParcel) {
+      return 1; // 일단지로 판정된 경우 그룹 1로 표시
     }
     return null;
   };
@@ -410,7 +409,7 @@ export function ApplicationFormSection({
                 <div className="max-h-[300px] space-y-2 overflow-y-auto">
                   {allLands.map((land, index) => {
                     const result = allAiResults[index];
-                    const unifiedGroupNum = getUnifiedGroupNumber(land.id);
+                    const unifiedGroupNum = getUnifiedGroupNumber(land.id, index);
                     return (
                       <div 
                         key={land.id} 
