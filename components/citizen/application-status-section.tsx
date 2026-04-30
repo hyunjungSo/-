@@ -162,8 +162,6 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                   rationale={application.aiResult.judgmentRationale} 
                   provisionalJudgment={application.aiResult.provisionalJudgment}
                   variant="modal-trigger"
-                  landJudgments={application.aiResult.landJudgments}
-                  allLands={application.additionalLands ? [application.landInfo, ...application.additionalLands] : [application.landInfo]}
                 />
               )}
             </div>
