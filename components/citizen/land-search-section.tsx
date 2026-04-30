@@ -101,7 +101,7 @@ const regionData = {
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
-    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "강서��", "율량동"],
+    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "강서동", "율량동"],
     "청주시 흥덕구": ["강내면", "옥산면", "오송읍", "가경동", "복대동", "봉명동", "송정동", "신봉동"],
     "충주시": ["가금면", "금가면", "노은면", "대소원면", "동량면", "산척면", "살미면", "소태면", "수안보면", "신니면", "앙성면", "엄정면", "이류면", "주덕읍", "중앙탑면"],
     "제천시": ["금성면", "덕산면", "백운면", "봉양읍", "송학면", "수산면", "청풍면", "한수면"],
@@ -158,7 +158,7 @@ const regionData = {
     "율면": ["고당리", "반룡리", "산양리", "월포리", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
-    // 경기도 - 광주시
+    // ��기도 - 광주시
     "곤지암읍": ["신리", "역동리", "삼리", "건업리", "연곡리", "오향리", "화촌리"],
     "도척면": ["진우리", "노곡리", "상림리", "도웅리", "유정리", "추곡리"],
     "퇴촌면": ["정지리", "영동리", "도수리", "관음리", "무수리", "원당리"],
@@ -707,6 +707,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   
   // 본인 소유 필지 선택 상태 (인접지 중 본인 소유 확인용)
   const [ownedParcels, setOwnedParcels] = useState<Set<string>>(new Set());
+  
+  // 지도-목록 호버 연동 상태
+  const [hoveredParcelId, setHoveredParcelId] = useState<string | null>(null);
   
   // 본인 소유 필지 토글
   const toggleOwnedParcel = (landId: string) => {
@@ -1376,6 +1379,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               }))}
             selectedParcelId={selectedLand?.id}
             selectedParcelIds={ownedParcels}
+            hoveredParcelId={hoveredParcelId}
+            onParcelHover={setHoveredParcelId}
           />
         </div>
 
@@ -1433,15 +1438,21 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       const hasAiResult = parcelAiResults.has(land.id);
                       const landAiResult = parcelAiResults.get(land.id);
                       
+                      const isHovered = land.id === hoveredParcelId;
+                      
                       return (
                         <li key={land.id} className="border-b border-border">
                           <div
-                            className={`flex w-full items-center gap-2 px-3 py-3 transition-colors ${
-                              selectedLand?.id === land.id 
-                                ? "border-l-4 border-l-primary bg-primary/5" 
-                                : isOwned || (isFirstResult && !ownedParcels.size)
-                                  ? "bg-green-50/50"
-                                  : "hover:bg-muted/50"
+                            onMouseEnter={() => setHoveredParcelId(land.id)}
+                            onMouseLeave={() => setHoveredParcelId(null)}
+                            className={`flex w-full items-center gap-2 px-3 py-3 transition-all duration-150 ${
+                              isHovered
+                                ? "border-l-4 border-l-blue-500 bg-blue-50"
+                                : selectedLand?.id === land.id 
+                                  ? "border-l-4 border-l-primary bg-primary/5" 
+                                  : isOwned || (isFirstResult && !ownedParcels.size)
+                                    ? "bg-green-50/50"
+                                    : "hover:bg-muted/50"
                             }`}
                           >
                             {/* 본인 소유 체크박스 */}

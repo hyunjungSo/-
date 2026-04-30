@@ -71,9 +71,11 @@ interface LeafletMapProps {
   zoom?: number;
   selectedRegion?: string;
   onParcelClick?: (parcelId: string) => void;
+  onParcelHover?: (parcelId: string | null) => void; // 호버 이벤트
   parcels?: ParcelData[];
   selectedParcelId?: string;
   selectedParcelIds?: Set<string>; // 복수 선택 지원
+  hoveredParcelId?: string | null; // 호버된 필지 ID
 }
 
 type BaseMapType = "normal" | "satellite";
@@ -84,8 +86,10 @@ export function LeafletMap({
   zoom = 14,
   selectedRegion,
   onParcelClick,
+  onParcelHover,
   parcels = [],
   selectedParcelId,
+  hoveredParcelId,
 }: LeafletMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -302,23 +306,46 @@ export function LeafletMap({
 
       const isSelected = parcel.id === selectedParcelId || selectedParcelIds.has(parcel.id);
       const isOwned = parcel.isOwned ?? selectedParcelIds.has(parcel.id);
+      const isHovered = parcel.id === hoveredParcelId;
       const latlngs = parcel.coordinates.map(coord => [coord.lat, coord.lng] as [number, number]);
 
-      // 폴리곤 스타일 - 선택됨(녹색), 미선택(회색)
+      // 폴리곤 스타일 - 호버(파란색), 선택됨(녹색), 미선택(회색)
       let polygonColor = "#9e9e9e"; // 기본: 미선택 회색
       let fillColor = "#e0e0e0";
+      let weight = 2;
+      let fillOpacity = 0.15;
       
-      if (isSelected || isOwned) {
+      if (isHovered) {
+        polygonColor = "#2196f3"; // 호버: 파란색
+        fillColor = "#bbdefb";
+        weight = 4;
+        fillOpacity = 0.45;
+      } else if (isSelected || isOwned) {
         polygonColor = "#4caf50"; // 선택됨: 녹색
         fillColor = "#c8e6c9";
+        weight = isSelected ? 4 : 3;
+        fillOpacity = isSelected ? 0.5 : 0.35;
       }
       
       const polygon = L.polygon(latlngs, {
         color: polygonColor,
-        weight: isSelected ? 4 : isOwned ? 3 : 2,
+        weight: weight,
         fillColor: fillColor,
-        fillOpacity: isSelected ? 0.5 : isOwned ? 0.35 : 0.15,
+        fillOpacity: fillOpacity,
         opacity: 1,
+      });
+
+      // 호버 이벤트
+      polygon.on("mouseover", () => {
+        if (onParcelHover) {
+          onParcelHover(parcel.id);
+        }
+      });
+      
+      polygon.on("mouseout", () => {
+        if (onParcelHover) {
+          onParcelHover(null);
+        }
       });
 
       // 클릭 이벤트
@@ -379,7 +406,7 @@ export function LeafletMap({
         mapInstanceRef.current.setView([centerLat, centerLng], 18, { animate: true });
       }
     }
-  }, [parcels, selectedParcelId, onParcelClick, isMapReady]);
+  }, [parcels, selectedParcelId, selectedParcelIds, hoveredParcelId, onParcelClick, onParcelHover, isMapReady]);
 
   // 줌 컨트롤
   const handleZoomIn = () => {
