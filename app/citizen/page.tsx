@@ -72,12 +72,6 @@ function CitizenPageContent() {
       const owners = new Set(lands.map(l => l.ownerName));
       const sameOwner = owners.size === 1;
       
-      console.log("[v0] 복수 필지 일단지 판정:", { 
-        landsCount: lands.length, 
-        owners: Array.from(owners), 
-        sameOwner 
-      });
-      
       // 동일 지목 여부 확인 (용도 일체성)
       const landTypes = new Set(lands.map(l => l.landType));
       const sameUsage = landTypes.size === 1;
