@@ -251,7 +251,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     return null;
   };
 
-// 주소에서 리/동 및 지번 정보 추출
+// ===== [1단계] 일단지 판정 로직 =====
+  // 주소에서 리/동 및 지번 정보 추출
   const parseAddress = (address: string) => {
     const parts = address.split(" ");
     const lastPart = parts[parts.length - 1];
@@ -262,32 +263,75 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     return { district, lotNumber, subNumber: subNumber || "0" };
   };
   
-  // 두 필지가 인접한지 판단
-  const isAdjacent = (land1: typeof allLands[0], land2: typeof allLands[0]) => {
+  // 소유자 동일 여부 확인
+  const checkSameOwner = (land1: typeof allLands[0], land2: typeof allLands[0]) => {
+    // 실제로는 소유자 정보 비교, 여기서는 동일 신청서 내 필지이므로 동일 소유자로 가정
+    return true;
+  };
+  
+  // 지반 연속 여부 확인 (인접 필지)
+  const checkContinuousGround = (land1: typeof allLands[0], land2: typeof allLands[0]) => {
     const addr1 = parseAddress(land1.address);
     const addr2 = parseAddress(land2.address);
+    
+    // 1. 같은 리/동이 아니면 연속 불가
     if (addr1.district !== addr2.district) return false;
+    
+    // 2. 같은 본번이면 연속 (예: 200-1, 200-2)
     if (addr1.lotNumber === addr2.lotNumber) return true;
+    
+    // 3. 본번이 연속이면 연속 (예: 200, 201)
     const lot1 = parseInt(addr1.lotNumber);
     const lot2 = parseInt(addr2.lotNumber);
     if (Math.abs(lot1 - lot2) <= 1) return true;
+    
     return false;
   };
   
-  // 인접 필지 그룹 찾기 (BFS)
-  const findAdjacentGroups = (lands: typeof allLands) => {
+  // 용도 일체성 확인 (동일 지목 또는 유사 용도)
+  const checkUsageUnity = (land1: typeof allLands[0], land2: typeof allLands[0]) => {
+    // 동일 지목이면 일체
+    if (land1.landType === land2.landType) return true;
+    
+    // 유사 용도 그룹 (택지류, 농지류 등)
+    const residentialTypes = ["대지", "주택용지"];
+    const agriculturalTypes = ["농지", "전", "답", "과수원"];
+    const forestTypes = ["산지", "임야"];
+    
+    const getGroup = (type: string) => {
+      if (residentialTypes.includes(type)) return "택지";
+      if (agriculturalTypes.includes(type)) return "농지";
+      if (forestTypes.includes(type)) return "산지";
+      return "기타";
+    };
+    
+    return getGroup(land1.landType) === getGroup(land2.landType);
+  };
+  
+  // 일단지 여부 종합 판단 (소유자 동일 + 지반 연속 + 용도 일체성)
+  const isUnifiedLand = (land1: typeof allLands[0], land2: typeof allLands[0]) => {
+    return checkSameOwner(land1, land2) && 
+           checkContinuousGround(land1, land2) && 
+           checkUsageUnity(land1, land2);
+  };
+  
+  // 일단지 그룹 찾기 (BFS)
+  const findUnifiedGroups = (lands: typeof allLands) => {
     const groups: string[][] = [];
     const visited = new Set<string>();
+    
     for (let i = 0; i < lands.length; i++) {
       if (visited.has(lands[i].id)) continue;
+      
       const group: string[] = [lands[i].id];
       visited.add(lands[i].id);
+      
       const queue = [i];
       while (queue.length > 0) {
         const current = queue.shift()!;
         for (let j = 0; j < lands.length; j++) {
           if (visited.has(lands[j].id)) continue;
-          if (isAdjacent(lands[current], lands[j])) {
+          if (isUnifiedLand(lands[current], lands[j])) {
             group.push(lands[j].id);
             visited.add(lands[j].id);
             queue.push(j);
@@ -299,7 +343,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     return groups;
   };
 
-  // ===== AI 판독 기준 (중앙토지수용위원회 기준) =====
+  // ===== [2단계] 대상 토지 상세 분석 (중앙토지수용위원회 기준) =====
+  
+  // 편입 전 면적 기준 (㎡) - 초과 시 토지유형별 경로, 이하 시 소규모 토지 경로
+  const AREA_THRESHOLD = {
+    residential: { detached: 90, apartment: 330, commercial: 150, industrial: 330 },
+    agricultural: 330,
+    forest: 330,
+    other: 330,
+  };
+  
   // 토지 유형별 면적 기준 (㎡)
   const getAreaCriteria = (land: typeof allLands[0], landData?: typeof application.landDataList[0]) => {
     const landType = land.landType;
@@ -501,132 +554,172 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     };
   };
 
-  // AI 판독 실행 핸들러
+  // AI 판독 실행 핸들러 (2단계 프로세스)
   const handleRunAIAnalysis = () => {
     setIsAIAnalyzing(true);
     setLandAIResults({});
     setUnifiedGroups({});
     
     setTimeout(() => {
-      if (allLands.length >= 2) {
-        const adjacentGroups = findAdjacentGroups(allLands);
-        const newResults: typeof landAIResults = {};
-        const newGroups: typeof unifiedGroups = {};
-        let groupIndex = 0;
+      const newResults: typeof landAIResults = {};
+      const newGroups: typeof unifiedGroups = {};
+      
+      // ===== [1단계] 일단지 판정 =====
+      // 소유자 동일, 지반 연속, 용도 일체성 확인하여 일단지 그룹 형성
+      const unifiedLandGroups = allLands.length >= 2 ? findUnifiedGroups(allLands) : [[allLands[0]?.id]];
+      let groupIndex = 0;
+      
+      unifiedLandGroups.forEach((groupLandIds) => {
+        const groupLands = allLands.filter(l => groupLandIds.includes(l.id));
+        const isUnified = groupLandIds.length >= 2;
         
-        adjacentGroups.forEach((groupLandIds) => {
-          if (groupLandIds.length >= 2) {
-            // 일단지: 2필지 이상 인접
-            const groupId = `group-${Date.now()}-${groupIndex}`;
-            const groupLands = allLands.filter(l => groupLandIds.includes(l.id));
-            const combinedArea = groupLands.reduce((sum, l) => sum + l.remainingArea, 0);
-            
-            // 일단지 합산 면적으로 판정
-            const primaryLand = groupLands[0];
-            const landData = application.landDataList?.[allLands.findIndex(l => l.id === primaryLand.id)];
-            const criteria = getAreaCriteria(primaryLand, landData);
-            const combinedLimit = criteria.relaxed * groupLandIds.length;
-            
-            let groupJudgment: "매수" | "매수불가" | "검토필요" = "매수불가";
-            const groupReasons: string[] = [];
-            
-            // 일단지 합산 면적 기준 (모든 필지 합산)
-            if (combinedArea <= combinedLimit) {
-              groupJudgment = "매수";
-              groupReasons.push(`일단지 합산 ${combinedArea}㎡ ≤ ${combinedLimit}㎡`);
-            }
-            
-            // 추가 조건 검토 (도로/수로 상실, 농기계 곤란 등)
-            const hasRoadLoss = groupLands.some((l, i) => {
-              const data = application.landDataList?.[allLands.findIndex(al => al.id === l.id)];
-              return data?.accessRoadLost || l.remainingRatio < 30;
-            });
-            const hasWaterLoss = groupLands.some((l, i) => {
-              const data = application.landDataList?.[allLands.findIndex(al => al.id === l.id)];
-              return data?.waterChannelLost;
-            });
-            const hasFarmDifficulty = groupLands.some((l, i) => {
-              const data = application.landDataList?.[allLands.findIndex(al => al.id === l.id)];
-              return data?.farmMachineDifficulty || l.remainingArea < 200;
+        if (isUnified) {
+          // ===== 일단지 병합 처리 =====
+          const groupId = `group-${Date.now()}-${groupIndex}`;
+          const combinedArea = groupLands.reduce((sum, l) => sum + l.remainingArea, 0);
+          const combinedOriginalArea = groupLands.reduce((sum, l) => sum + l.originalArea, 0);
+          const primaryLand = groupLands[0];
+          
+          // 일단지 판정 사유 기록
+          const unificationReasons = [
+            "소유자 동일",
+            `지반 연속 (${parseAddress(primaryLand.address).district})`,
+            `용도 일체 (${primaryLand.landType})`
+          ];
+          
+          // ===== [2단계] 일단지 합산 기준으로 대상 토지 분석 =====
+          // 편입 전 면적 기준 (합산) 확인
+          const landData = application.landDataList?.[allLands.findIndex(l => l.id === primaryLand.id)];
+          const criteria = getAreaCriteria(primaryLand, landData);
+          const isSmallScale = combinedOriginalArea <= 330; // 합산 기준 소규모 여부
+          
+          let groupJudgment: "매수" | "매수불가" | "검토필요" = "매수불가";
+          const analysisReasons: string[] = [];
+          
+          if (isSmallScale) {
+            // 소규모 토지 경로 (합산 편입전 330㎡ 이하)
+            const meetsAreaCriteria = combinedArea <= 330 || groupLands.some(l => l.remainingRatio <= 50);
+            const hasAccessDifficulty = groupLands.some(l => l.remainingRatio < 30);
+            const hasDividedLand = groupLands.some(l => l.remainingRatio < 50);
+            const hasShapeChange = groupLands.some(l => {
+              const check = checkShapeCriteria(l);
+              return check.met;
             });
             
-            if (hasRoadLoss) groupReasons.push("접면도로 상실");
-            if (hasWaterLoss) groupReasons.push("관개수로 상실");
-            if (hasFarmDifficulty && primaryLand.landType === "농지") groupReasons.push("농기계 진입 곤란");
+            if (meetsAreaCriteria) analysisReasons.push(`소규모 합산 ${combinedArea}㎡`);
+            if (hasAccessDifficulty) analysisReasons.push("진입 곤란");
+            if (hasDividedLand) analysisReasons.push("양분된 토지");
+            if (hasShapeChange) analysisReasons.push("형상 변경");
             
-            if (groupReasons.length > 0 && groupJudgment === "매수불가") {
-              groupJudgment = "매수";
-            }
-            
-            groupLandIds.forEach(landId => {
-              const land = allLands.find(l => l.id === landId)!;
-              const addr = parseAddress(land.address);
-              newResults[landId] = {
-                provisionalJudgment: groupJudgment === "검토필요" ? "매수불가" : groupJudgment,
-                landTypePath: land.landType,
-                accessRoadLost: hasRoadLoss,
-                waterChannelLost: hasWaterLoss,
-                confidence: 0.88 + Math.random() * 0.08,
-                analysisDate: new Date().toISOString().split("T")[0],
-                unifiedGroupId: groupId,
-                reason: `일단지 ${String.fromCharCode(65 + groupIndex)} (${groupReasons.join(", ")})`,
-              };
-            });
-            
-            newGroups[groupId] = {
-              landIds: groupLandIds,
-              groupName: `일단지 ${String.fromCharCode(65 + groupIndex)}`,
-              combinedArea,
-              judgment: groupJudgment === "검토필요" ? "검토필요" : groupJudgment,
-            };
-            groupIndex++;
+            groupJudgment = analysisReasons.length > 0 ? "매수" : "검토필요";
             
           } else {
-            // 단독 필지: 개별 분석
-            const landId = groupLandIds[0];
-            const land = allLands.find(l => l.id === landId)!;
-            const landIndex = allLands.findIndex(l => l.id === landId);
-            const landData = application.landDataList?.[landIndex];
-            const analysis = analyzeSingleLand(land, landData);
-            const addr = parseAddress(land.address);
+            // 토지유형별 경로 (합산 편입전 330㎡ 초과)
+            const landType = primaryLand.landType;
             
-            newResults[landId] = {
-              provisionalJudgment: analysis.judgment === "검토필요" ? "매수불가" : analysis.judgment,
-              landTypePath: analysis.landTypePath,
-              accessRoadLost: analysis.accessRoadLost,
-              waterChannelLost: analysis.waterChannelLost,
-              confidence: analysis.confidence,
-              analysisDate: new Date().toISOString().split("T")[0],
-              unifiedGroupId: undefined,
-              reason: `${addr.district} 단독 (${analysis.reasons.join(", ")})`,
-            };
+            // 합산 면적 기준 충족 여부
+            const effectiveLimit = criteria.relaxed * groupLandIds.length;
+            const meetsAreaCriteria = combinedArea <= effectiveLimit;
+            if (meetsAreaCriteria) {
+              analysisReasons.push(`합산 면적 ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
+            }
+            
+            // 토지유형별 추가 조건 검토
+            if (landType === "대지") {
+              // 택지 경로
+              const hasRoadLoss = groupLands.some(l => l.remainingRatio < 30);
+              const hasShapeChange = groupLands.some(l => checkShapeCriteria(l).met);
+              if (hasRoadLoss) analysisReasons.push("접면도로 상실");
+              if (hasShapeChange) analysisReasons.push("형상 부정형 변경");
+              
+            } else if (landType === "농지") {
+              // 농지 경로
+              const hasRoadLoss = groupLands.some(l => {
+                const data = application.landDataList?.[allLands.findIndex(al => al.id === l.id)];
+                return data?.accessRoadLost || l.remainingRatio < 30;
+              });
+              const hasWaterLoss = groupLands.some(l => {
+                const data = application.landDataList?.[allLands.findIndex(al => al.id === l.id)];
+                return data?.waterChannelLost;
+              });
+              const hasFarmDifficulty = groupLands.some(l => l.remainingArea < 200);
+              const hasShapeChange = groupLands.some(l => checkShapeCriteria(l).met);
+              
+              if (hasRoadLoss) analysisReasons.push("접면도로 상실");
+              if (hasWaterLoss) analysisReasons.push("관개수로 상실");
+              if (hasFarmDifficulty) analysisReasons.push("농기계 진입/회전 곤란");
+              if (hasShapeChange) analysisReasons.push("형상 부정형 변경");
+              
+            } else if (landType === "산지") {
+              // 산지 경로
+              const hasRoadLoss = groupLands.some(l => l.remainingRatio < 25);
+              if (hasRoadLoss) analysisReasons.push("접면도로 상실 (접근 불가)");
+              
+            } else {
+              // 그 밖의 토지
+              const hasUsageDifficulty = groupLands.some(l => l.remainingRatio < 40 || checkShapeCriteria(l).met);
+              if (hasUsageDifficulty) analysisReasons.push("종래 목적 사용 곤란");
+            }
+            
+            // 하나라도 해당 시 충족, 전체 미해당 시 미충족
+            groupJudgment = analysisReasons.length > 0 ? "매수" : "매수불가";
           }
-        });
-        
-        setUnifiedGroups(newGroups);
-        setLandAIResults(newResults);
-      } else {
-        // 단일 필지
-        const land = allLands[selectedLandIndex];
-        const landData = application.landDataList?.[selectedLandIndex];
-        const analysis = analyzeSingleLand(land, landData);
-        
-        setLandAIResults({
-          [land.id]: {
+          
+          // 각 필지별 결과 저장
+          groupLandIds.forEach(landId => {
+            const land = allLands.find(l => l.id === landId)!;
+            newResults[landId] = {
+              provisionalJudgment: groupJudgment === "검토필요" ? "매수불가" : groupJudgment,
+              landTypePath: land.landType,
+              accessRoadLost: land.remainingRatio < 30,
+              waterChannelLost: false,
+              confidence: 0.88 + Math.random() * 0.08,
+              analysisDate: new Date().toISOString().split("T")[0],
+              unifiedGroupId: groupId,
+              reason: `[일단지 ${String.fromCharCode(65 + groupIndex)}] ${analysisReasons.join(", ")}`,
+            };
+          });
+          
+          // 일단지 그룹 정보 저장
+          newGroups[groupId] = {
+            landIds: groupLandIds,
+            groupName: `일단지 ${String.fromCharCode(65 + groupIndex)}`,
+            combinedArea,
+            judgment: groupJudgment,
+          };
+          groupIndex++;
+          
+        } else {
+          // ===== 단독 필지 (일단지 미해당) =====
+          const landId = groupLandIds[0];
+          const land = allLands.find(l => l.id === landId)!;
+          const landIndex = allLands.findIndex(l => l.id === landId);
+          const landData = application.landDataList?.[landIndex];
+          
+          // [2단계] 개별 필지 상세 분석
+          const analysis = analyzeSingleLand(land, landData);
+          const addr = parseAddress(land.address);
+          
+          newResults[landId] = {
             provisionalJudgment: analysis.judgment === "검토필요" ? "매수불가" : analysis.judgment,
             landTypePath: analysis.landTypePath,
             accessRoadLost: analysis.accessRoadLost,
             waterChannelLost: analysis.waterChannelLost,
             confidence: analysis.confidence,
             analysisDate: new Date().toISOString().split("T")[0],
-            reason: analysis.reasons.join(", "),
-          },
-        });
-        setUnifiedGroups({});
-      }
+            unifiedGroupId: undefined,
+            reason: `[단독] ${analysis.reasons.join(", ")}`,
+          };
+        }
+      });
+      
+      setUnifiedGroups(newGroups);
+      setLandAIResults(newResults);
       setIsAIAnalyzing(false);
     }, 2000);
   };
+  
+  
   
   // 판독 결과 초기화
   const handleResetAIResults = () => {
