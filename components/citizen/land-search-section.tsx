@@ -240,7 +240,7 @@ const regionData = {
     // 세종특별자치시
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
-    "부강면": ["갈산리", "노��리", "등곡���", "문��리", "산��리"],
+    "부강면": ["��산리", "노��리", "등곡���", "문��리", "산��리"],
     "소정면": ["고등리", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
@@ -773,7 +773,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           // 양평이천 관할기관 - 2건
           {
             id: "owner-search-0",
-            address: "경기도 이천시 마장면 ���평리 55-3",
+            address: "경기도 이천시 ���장면 ���평리 55-3",
             coordinates: [
               { lat: 37.2350, lng: 127.3800 },
               { lat: 37.2358, lng: 127.3812 },
@@ -1673,7 +1673,12 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             
             {/* 컨텐츠 */}
             <div className="flex-1 overflow-y-auto p-4">
-              {selectedLand ? (
+              {!selectedLand && (
+                <div className="flex h-full items-center justify-center text-muted-foreground">
+                  필지를 선택해 주세요.
+                </div>
+              )}
+              {selectedLand && (
                 <div className="space-y-4">
                 {/* 토지 기본 정보 + 현재 활�� 지목 통합 */}
                 <div className="rounded border border-border bg-muted/30 p-3">
@@ -1994,10 +1999,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     </div>
                   </div>
                 )}
-              </div>
-            ) : (
-              <div className="flex h-full items-center justify-center text-muted-foreground">
-                필지를 선택해 주세요.
               </div>
             )}
           </div>
