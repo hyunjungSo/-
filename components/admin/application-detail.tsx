@@ -131,6 +131,29 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 체크박스로 선택된 필지 ID 목록
   const [checkedLandIds, setCheckedLandIds] = useState<string[]>([]);
   
+  // 체크박스 선택 변경 핸들러 (판독 결과 초기화 포함)
+  const handleCheckLand = (landId: string, checked: boolean) => {
+    // 선택 변경 시 기존 판독 결과 초기화
+    setLandAIResults({});
+    setUnifiedGroups({});
+    if (checked) {
+      setCheckedLandIds(prev => [...prev, landId]);
+    } else {
+      setCheckedLandIds(prev => prev.filter(id => id !== landId));
+    }
+  };
+  
+  // 전체 선택 핸들러
+  const handleCheckAll = (checked: boolean) => {
+    setLandAIResults({});
+    setUnifiedGroups({});
+    if (checked) {
+      setCheckedLandIds(allLands.map(l => l.id));
+    } else {
+      setCheckedLandIds([]);
+    }
+  };
+  
   // 필지별 AI 판독 결과 상태 (landId -> AIResult)
   const [landAIResults, setLandAIResults] = useState<Record<string, {
     provisionalJudgment: string;
@@ -1016,22 +1039,34 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             {allLands.filter(l => group.landIds.includes(l.id)).map((land) => {
                               const index = allLands.findIndex(l => l.id === land.id);
                               const isSelected = selectedLandIndex === index;
+                              const isChecked = checkedLandIds.includes(land.id);
                               const landResult = landAIResults[land.id];
-                              const landLabel = String.fromCharCode(65 + index); // A, B, C...
+                              const landLabel = String.fromCharCode(65 + index);
                               return (
-                                <button
+                                <div
                                   key={land.id}
-                                  type="button"
                                   onClick={() => setSelectedLandIndex(index)}
-                                  className={`flex flex-col items-start gap-1.5 rounded-lg border-2 p-3 text-left transition-all ${
-                                    isSelected 
+                                  className={`flex flex-col items-start gap-1.5 rounded-lg border-2 p-3 text-left transition-all cursor-pointer ${
+                                    isChecked
                                       ? "border-primary bg-white ring-2 ring-primary dark:bg-background" 
-                                      : "border-emerald-300 bg-white/90 hover:border-emerald-400 dark:border-emerald-700 dark:bg-emerald-900/20"
+                                      : isSelected 
+                                        ? "border-emerald-400 bg-white dark:bg-emerald-900/30" 
+                                        : "border-emerald-300 bg-white/90 hover:border-emerald-400 dark:border-emerald-700 dark:bg-emerald-900/20"
                                   }`}
                                 >
                                   <div className="flex w-full items-center justify-between">
                                     <div className="flex items-center gap-2">
-                                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white">
+                                      <input
+                                        type="checkbox"
+                                        checked={isChecked}
+                                        onChange={(e) => {
+                                          e.stopPropagation();
+                                          handleCheckLand(land.id, e.target.checked);
+                                        }}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="h-4 w-4 rounded border-gray-300"
+                                      />
+                                      <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${isChecked ? "bg-primary text-primary-foreground" : "bg-emerald-600 text-white"}`}>
                                         {landLabel}
                                       </span>
                                       <span className="text-sm font-medium">필지 {landLabel}</span>
@@ -1040,22 +1075,22 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       {landResult?.provisionalJudgment || "매수"}
                                     </Badge>
                                   </div>
-                                  <p className="text-xs text-muted-foreground line-clamp-1">{land.address}</p>
-                                  <div className="flex gap-3 text-xs">
+                                  <p className="text-xs text-muted-foreground line-clamp-1 pl-6">{land.address}</p>
+                                  <div className="flex gap-3 text-xs pl-6">
                                     <span className="font-medium text-emerald-700 dark:text-emerald-400">{land.remainingArea.toLocaleString()}m²</span>
                                     <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
                                   </div>
                                   {landResult?.reason && (
-                                    <p className="mt-0.5 text-xs text-emerald-600 dark:text-emerald-400 line-clamp-1">
+                                    <p className="mt-0.5 text-xs text-emerald-600 dark:text-emerald-400 line-clamp-1 pl-6">
                                       {landResult.reason}
                                     </p>
                                   )}
                                   {landResult?.analysisDate && (
-                                    <p className="text-xs text-muted-foreground">
+                                    <p className="text-xs text-muted-foreground pl-6">
                                       판독: {landResult.analysisDate}
                                     </p>
                                   )}
-                                </button>
+                                </div>
                               );
                             })}
                           </div>
@@ -1085,7 +1120,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </Badge>
                                   </div>
                                   <span className="text-xs text-muted-foreground">
-                                    비연접 또는 기준 미충족 {nonUnifiedLands.length}필지
+                                    ���연접 또는 기준 미충족 {nonUnifiedLands.length}필지
                                   </span>
                                 </div>
                               </div>
@@ -1094,22 +1129,34 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               {nonUnifiedLands.map((land) => {
                                 const index = allLands.findIndex(l => l.id === land.id);
                                 const isSelected = selectedLandIndex === index;
+                                const isChecked = checkedLandIds.includes(land.id);
                                 const landResult = landAIResults[land.id];
-                                const landLabel = String.fromCharCode(65 + index); // A, B, C...
+                                const landLabel = String.fromCharCode(65 + index);
                                 return (
-                                  <button
+                                  <div
                                     key={land.id}
-                                    type="button"
                                     onClick={() => setSelectedLandIndex(index)}
-                                    className={`flex flex-col items-start gap-1.5 rounded-lg border-2 p-3 text-left transition-all ${
-                                      isSelected 
+                                    className={`flex flex-col items-start gap-1.5 rounded-lg border-2 p-3 text-left transition-all cursor-pointer ${
+                                      isChecked
                                         ? "border-primary bg-white ring-2 ring-primary dark:bg-background" 
-                                        : "border-amber-300 bg-white/90 hover:border-amber-400 dark:border-amber-700 dark:bg-amber-900/20"
+                                        : isSelected 
+                                          ? "border-amber-400 bg-white dark:bg-amber-900/30" 
+                                          : "border-amber-300 bg-white/90 hover:border-amber-400 dark:border-amber-700 dark:bg-amber-900/20"
                                     }`}
                                   >
                                     <div className="flex w-full items-center justify-between">
                                       <div className="flex items-center gap-2">
-                                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-xs font-bold text-white">
+                                        <input
+                                          type="checkbox"
+                                          checked={isChecked}
+                                          onChange={(e) => {
+                                            e.stopPropagation();
+                                            handleCheckLand(land.id, e.target.checked);
+                                          }}
+                                          onClick={(e) => e.stopPropagation()}
+                                          className="h-4 w-4 rounded border-gray-300"
+                                        />
+                                        <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${isChecked ? "bg-primary text-primary-foreground" : "bg-amber-500 text-white"}`}>
                                           {landLabel}
                                         </span>
                                         <span className="text-sm font-medium">필지 {landLabel}</span>
@@ -1118,22 +1165,22 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         {landResult?.provisionalJudgment || "미해당"}
                                       </Badge>
                                     </div>
-                                    <p className="text-xs text-muted-foreground line-clamp-1">{land.address}</p>
-                                    <div className="flex gap-3 text-xs">
+                                    <p className="text-xs text-muted-foreground line-clamp-1 pl-6">{land.address}</p>
+                                    <div className="flex gap-3 text-xs pl-6">
                                       <span className="font-medium text-amber-700 dark:text-amber-400">{land.remainingArea.toLocaleString()}m²</span>
                                       <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
                                     </div>
                                     {landResult?.reason && (
-                                      <p className="mt-0.5 text-xs text-amber-600 dark:text-amber-400 line-clamp-1">
+                                      <p className="mt-0.5 text-xs text-amber-600 dark:text-amber-400 line-clamp-1 pl-6">
                                         {landResult.reason}
                                       </p>
                                     )}
                                     {landResult?.analysisDate && (
-                                      <p className="text-xs text-muted-foreground">
+                                      <p className="text-xs text-muted-foreground pl-6">
                                         판독: {landResult.analysisDate}
                                       </p>
                                     )}
-                                  </button>
+                                  </div>
                                 );
                               })}
                             </div>
@@ -1149,16 +1196,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           <input
                             type="checkbox"
                             checked={checkedLandIds.length === allLands.length}
-                            onChange={(e) => {
-                              // 선택 변경 시 기존 판독 결과 초기화
-                              setLandAIResults({});
-                              setUnifiedGroups({});
-                              if (e.target.checked) {
-                                setCheckedLandIds(allLands.map(l => l.id));
-                              } else {
-                                setCheckedLandIds([]);
-                              }
-                            }}
+                            onChange={(e) => handleCheckAll(e.target.checked)}
                             className="h-4 w-4 rounded border-gray-300"
                           />
                           <span className="text-sm text-muted-foreground">
@@ -1191,14 +1229,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     checked={isChecked}
                                     onChange={(e) => {
                                       e.stopPropagation();
-                                      // 선택 변경 시 기존 판독 결과 초기화
-                                      setLandAIResults({});
-                                      setUnifiedGroups({});
-                                      if (e.target.checked) {
-                                        setCheckedLandIds([...checkedLandIds, land.id]);
-                                      } else {
-                                        setCheckedLandIds(checkedLandIds.filter(id => id !== land.id));
-                                      }
+                                      handleCheckLand(land.id, e.target.checked);
                                     }}
                                     onClick={(e) => e.stopPropagation()}
                                     className="h-4 w-4 rounded border-gray-300"
@@ -1952,7 +1983,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </div>
           </div>
 
-          {/* 저장 버튼 */}
+          {/* 저장 버�� */}
           <div className="flex justify-end gap-3 border-t border-border pt-4">
             <Button variant="outline" onClick={onBack}>
               취소
