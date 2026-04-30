@@ -756,7 +756,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
   
   
-  // 판독 결과 초�������화
+  // 판독 결과 초���������화
   const handleResetAIResults = () => {
     setLandAIResults({});
     setUnifiedGroups({});
@@ -897,7 +897,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </Badge>
               )}
             </CardTitle>
-            
           </div>
           {isMultipleLands && (
             <CardDescription>
