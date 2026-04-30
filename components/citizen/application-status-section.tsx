@@ -24,6 +24,28 @@ function LandInfoSection({ application }: { application: Application }) {
     ? [application.landInfo, ...application.additionalLands] 
     : [application.landInfo];
   
+  const landJudgments = application.aiResult?.landJudgments;
+  
+  // 일단지 그룹 ID를 번호로 매핑
+  const unifiedGroupNumbers: Record<string, number> = {};
+  if (landJudgments) {
+    let groupNum = 1;
+    landJudgments.forEach(j => {
+      if (j.unifiedGroupId && !unifiedGroupNumbers[j.unifiedGroupId]) {
+        unifiedGroupNumbers[j.unifiedGroupId] = groupNum++;
+      }
+    });
+  }
+  
+  // 필지의 일단지 그룹 번호 가져오기
+  const getUnifiedGroupNumber = (landId: string): number | null => {
+    const judgment = landJudgments?.find(j => j.landId === landId);
+    if (judgment?.unifiedGroupId) {
+      return unifiedGroupNumbers[judgment.unifiedGroupId] || null;
+    }
+    return null;
+  };
+  
   const [selectedLandIndex, setSelectedLandIndex] = useState(0);
   
   // 인덱스 범위 안전 처리
@@ -32,11 +54,21 @@ function LandInfoSection({ application }: { application: Application }) {
   
   // selectedLand가 없으면 렌더링 안함
   if (!selectedLand) return null;
+  
+  // 현재 선택된 필지의 일단지 그룹 번호
+  const selectedUnifiedGroupNum = getUnifiedGroupNumber(selectedLand.id);
 
   return (
     <div className="overflow-hidden rounded-lg border border-border">
       <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
-        <h4 className="font-semibold text-foreground">토지 정보</h4>
+        <h4 className="flex items-center gap-2 font-semibold text-foreground">
+          토지 정보
+          {selectedUnifiedGroupNum && (
+            <Badge className="bg-emerald-600 hover:bg-emerald-600 text-xs">
+              일단지{selectedUnifiedGroupNum}
+            </Badge>
+          )}
+        </h4>
         {isMultipleLands && (
           <span className="flex items-center gap-1 rounded bg-violet-100 px-2 py-0.5 text-xs font-medium text-violet-700">
             <Layers className="h-3 w-3" />
@@ -60,11 +92,21 @@ function LandInfoSection({ application }: { application: Application }) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {allLands.map((land, index) => (
-                  <SelectItem key={land.id} value={index.toString()}>
-                    필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")} ({land.remainingArea.toLocaleString()}m²)
-                  </SelectItem>
-                ))}
+                {allLands.map((land, index) => {
+                  const groupNum = getUnifiedGroupNumber(land.id);
+                  return (
+                    <SelectItem key={land.id} value={index.toString()}>
+                      <span className="flex items-center gap-2">
+                        필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")} ({land.remainingArea.toLocaleString()}m²)
+                        {groupNum && (
+                          <Badge className="bg-emerald-600 hover:bg-emerald-600 text-xs ml-1">
+                            일단지{groupNum}
+                          </Badge>
+                        )}
+                      </span>
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </div>
