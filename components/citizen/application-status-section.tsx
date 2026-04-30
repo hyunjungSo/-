@@ -171,6 +171,9 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
         )}
       </div>
 
+      {/* 토지 정보 요약 - 셀렉트박스로 필지 선택 */}
+      <LandInfoSection application={application} />
+
       {/* 처리 완료 시 결과 표시 */}
       {application.adminStatus === "심사완료" && application.finalJudgment && (
         <div className="overflow-hidden rounded-lg border border-border">
@@ -203,9 +206,6 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           )}
         </div>
       )}
-
-{/* 토지 정보 요약 - 셀렉트박스로 필지 선택 */}
-      <LandInfoSection application={application} />
     </div>
   );
 }
