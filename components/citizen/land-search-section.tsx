@@ -235,7 +235,7 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["도고리", "시��리", "��자��", "��산리"],
+    "도고면": ["도고리", "시���리", "��자��", "��산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
@@ -772,7 +772,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         // 실제 구현에서는 API 호출, 여기서는 더미 데이터 시뮬레이션
         // 홍길동이 3개 관할기관(양평이천, 수도권, 천안안성)에 잔여지를 소유한 경우
         const ownerLandData = [
-          // 양평이천 관할기관 - 2건
+          // 양평이천 관할���관 - 2건
           {
             id: "owner-search-0",
             address: "경기도 이천시 마장면 덕평리 55-3",
@@ -998,7 +998,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     if (noIncludedLand) return;
     // 현재 활용 지목 필��
     if (!currentUsage) return;
-    // 현재 활용 지목이 "대"(택지)��� 경우 세부 유형이 필수
+    // 현재 활용 지목이 "대"(��지)��� 경우 세부 유형이 필수
     if (currentUsage === "대" && !landSubType) return;
     
     // 선택된 필지들 가져오기 (체크된 필지들)
@@ -2036,14 +2036,14 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   if (aiResult.provisionalJudgment !== "매수불가") {
                     return (
                       <div className="space-y-2">
-                        <Button 
-                          onClick={() => onAddToCart(selectedLand, aiResult!)}
-                          className="h-12 w-full cursor-pointer text-base"
-                          variant="default"
-                        >
-                          <Plus className="mr-2 h-4 w-4" />
-                          신청 목록에 추가
-                        </Button>
+                  <Button
+                    onClick={() => onAddToCart(selectedLand, aiResult!)}
+                    className="h-12 w-full cursor-pointer text-base"
+                    variant="default"
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    신청 목록에 추가 (1건)
+                  </Button>
                         <p className="text-center text-xs text-muted-foreground">
                           여러 필지를 한번에 신청할 수 있습니다
                         </p>
