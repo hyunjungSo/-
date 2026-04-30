@@ -251,7 +251,71 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     return null;
   };
 
-  // AI 판독 실행 핸들러 (전체 필지 일괄 판독 - 재판독 시 기존 결과 완전 교체)
+// 주소에서 리/동 및 지번 정보 추출
+  const parseAddress = (address: string) => {
+    // 예: "경기도 평택시 포승읍 내기리 200-1" -> { district: "내기리", lotNumber: "200", subNumber: "1" }
+    const parts = address.split(" ");
+    const lastPart = parts[parts.length - 1]; // 지번 (예: "200-1")
+    const district = parts[parts.length - 2]; // 리/동 (예: "내기리")
+    
+    const [lotNumber, subNumber] = lastPart.includes("-") 
+      ? lastPart.split("-") 
+      : [lastPart, "0"];
+    
+    return { district, lotNumber, subNumber: subNumber || "0" };
+  };
+  
+  // 두 필지가 인접한지 판단 (같은 리/동 + 지번이 연속적)
+  const isAdjacent = (land1: typeof allLands[0], land2: typeof allLands[0]) => {
+    const addr1 = parseAddress(land1.address);
+    const addr2 = parseAddress(land2.address);
+    
+    // 다른 리/동이면 인접 불가
+    if (addr1.district !== addr2.district) return false;
+    
+    // 같은 본번이면 인접 (예: 200-1, 200-2)
+    if (addr1.lotNumber === addr2.lotNumber) return true;
+    
+    // 본번이 연속적이면 인접 (예: 200, 201)
+    const lot1 = parseInt(addr1.lotNumber);
+    const lot2 = parseInt(addr2.lotNumber);
+    if (Math.abs(lot1 - lot2) <= 1) return true;
+    
+    return false;
+  };
+  
+  // 인접 필지 그룹 찾기 (Union-Find 방식)
+  const findAdjacentGroups = (lands: typeof allLands) => {
+    const groups: string[][] = [];
+    const visited = new Set<string>();
+    
+    for (let i = 0; i < lands.length; i++) {
+      if (visited.has(lands[i].id)) continue;
+      
+      const group: string[] = [lands[i].id];
+      visited.add(lands[i].id);
+      
+      // BFS로 인접 필지 찾기
+      const queue = [i];
+      while (queue.length > 0) {
+        const current = queue.shift()!;
+        for (let j = 0; j < lands.length; j++) {
+          if (visited.has(lands[j].id)) continue;
+          if (isAdjacent(lands[current], lands[j])) {
+            group.push(lands[j].id);
+            visited.add(lands[j].id);
+            queue.push(j);
+          }
+        }
+      }
+      
+      groups.push(group);
+    }
+    
+    return groups;
+  };
+
+  // AI 판독 실행 핸들러 (전체 필지 일괄 판독 - 실제 인접 여부 기반)
   const handleRunAIAnalysis = () => {
     setIsAIAnalyzing(true);
     
@@ -260,35 +324,103 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     setUnifiedGroups({});
     
     // 시뮬레이션: 2초 후 AI 분석 결과 업데이트
-    // 복수 필지인 경우 일부는 일단지 그룹으로, 일부는 미해당으로 판정
     setTimeout(() => {
       if (allLands.length >= 2) {
-        // 복수 필지: 일단지 그룹과 미해당 분류
-        const groupId = `group-${Date.now()}`;
-        // 랜덤하게 일단지 비율 결정 (50~80%)
-        const unifiedRatio = 0.5 + Math.random() * 0.3;
-        const unifiedCount = Math.max(1, Math.ceil(allLands.length * unifiedRatio));
-        
-        // 랜덤하게 일단지 필지 선택
-        const shuffledIndices = [...Array(allLands.length).keys()].sort(() => Math.random() - 0.5);
-        const unifiedLandIds = shuffledIndices.slice(0, unifiedCount).map(i => allLands[i].id);
-        const nonUnifiedLandIds = shuffledIndices.slice(unifiedCount).map(i => allLands[i].id);
+        // 실제 인접 관계 기반으로 그룹 분류
+        const adjacentGroups = findAdjacentGroups(allLands);
         
         const newResults: typeof landAIResults = {};
+        const newGroups: typeof unifiedGroups = {};
+        let groupIndex = 0;
         
-        // 일단지 그룹 필지들
-        unifiedLandIds.forEach(landId => {
-          const land = allLands.find(l => l.id === landId)!;
-          newResults[landId] = {
-            provisionalJudgment: "매수",
-            landTypePath: land.landType,
-            accessRoadLost: true,
-            waterChannelLost: Math.random() > 0.5,
-            confidence: 0.85 + Math.random() * 0.1,
-            analysisDate: new Date().toISOString().split("T")[0],
-            unifiedGroupId: groupId,
-            reason: `일단지 A (연접 필지, 면적/형상 기준 충족)`,
-          };
+        adjacentGroups.forEach((groupLandIds) => {
+          if (groupLandIds.length >= 2) {
+            // 2필지 이상 인접 그룹 -> 일단지
+            const groupId = `group-${Date.now()}-${groupIndex}`;
+            const groupLands = allLands.filter(l => groupLandIds.includes(l.id));
+            const combinedArea = groupLands.reduce((sum, l) => sum + l.remainingArea, 0);
+            
+            // 일단지 기준 충족 여부 확인 (합산 면적 기준)
+            const landType = groupLands[0].landType;
+            const areaLimit = landType === "농지" ? 330 : landType === "대지" ? 60 : 200;
+            const meetsAreaCriteria = combinedArea <= areaLimit * groupLandIds.length;
+            
+            groupLandIds.forEach(landId => {
+              const land = allLands.find(l => l.id === landId)!;
+              const addr = parseAddress(land.address);
+              newResults[landId] = {
+                provisionalJudgment: meetsAreaCriteria ? "매수" : "매수불가",
+                landTypePath: land.landType,
+                accessRoadLost: true,
+                waterChannelLost: land.landType === "농지",
+                confidence: 0.88 + Math.random() * 0.08,
+                analysisDate: new Date().toISOString().split("T")[0],
+                unifiedGroupId: groupId,
+                reason: `${addr.district} ${addr.lotNumber}번지 인접 필지 (일단지 ${String.fromCharCode(65 + groupIndex)})`,
+              };
+            });
+            
+            newGroups[groupId] = {
+              landIds: groupLandIds,
+              groupName: `일단지 ${String.fromCharCode(65 + groupIndex)}`,
+              combinedArea,
+              judgment: meetsAreaCriteria ? "매수" : "매수불가",
+            };
+            
+            groupIndex++;
+          } else {
+            // 단독 필지 -> 개별 판정 (미해당 또는 개별 매수)
+            const landId = groupLandIds[0];
+            const land = allLands.find(l => l.id === landId)!;
+            const addr = parseAddress(land.address);
+            
+            // 개별 필지 면적 기준 확인
+            const landType = land.landType;
+            const areaLimit = landType === "농지" ? 330 : landType === "대지" ? 60 : 200;
+            const meetsAreaCriteria = land.remainingArea <= areaLimit;
+            
+            newResults[landId] = {
+              provisionalJudgment: meetsAreaCriteria ? "미해당" : "미해당",
+              landTypePath: land.landType,
+              accessRoadLost: false,
+              waterChannelLost: false,
+              confidence: 0.75 + Math.random() * 0.1,
+              analysisDate: new Date().toISOString().split("T")[0],
+              unifiedGroupId: undefined,
+              reason: `${addr.district} 단독 필지 - 인접지 없음 (일단지 미해당)`,
+            };
+          }
+        });
+        
+        setUnifiedGroups(newGroups);
+        setLandAIResults(newResults);
+      } else {
+        // 단일 필지
+        const currentLandId = allLands[selectedLandIndex].id;
+        const land = allLands[selectedLandIndex];
+        const landType = land.landType;
+        const areaLimit = landType === "농지" ? 330 : landType === "대지" ? 60 : 200;
+        const meetsAreaCriteria = land.remainingArea <= areaLimit;
+        
+        const newResult = {
+          provisionalJudgment: meetsAreaCriteria ? "매수" : "매수불가",
+          landTypePath: land.landType,
+          accessRoadLost: land.remainingRatio < 50,
+          waterChannelLost: land.landType === "농지" && land.remainingRatio < 40,
+          confidence: 0.85 + Math.random() * 0.1,
+          analysisDate: new Date().toISOString().split("T")[0],
+          reason: meetsAreaCriteria 
+            ? `잔여면적 ${land.remainingArea}㎡ ≤ ${areaLimit}㎡ (기준 충족)` 
+            : `잔여면적 ${land.remainingArea}㎡ > ${areaLimit}㎡ (기준 미충족)`,
+        };
+        setLandAIResults({
+          [currentLandId]: newResult,
+        });
+        setUnifiedGroups({});
+      }
+      setIsAIAnalyzing(false);
+    }, 2000);
+  };
         });
         
         // 미해당 필지들
@@ -296,7 +428,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           const land = allLands.find(l => l.id === landId)!;
           const reasons = [
             `면적 기준 미충족 (${land.remainingArea}㎡ > 기준)`,
-            `형상 양호, 종래 사용 가능`,
+            `형상 양���, 종래 사용 가능`,
             `비연접 필지로 일단지 미해당`,
           ];
           newResults[landId] = {
