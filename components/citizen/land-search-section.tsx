@@ -391,7 +391,7 @@ function simulateAIAnalysis(
     areaCriteriaMet = land.remainingArea <= 330;
   } else if (currentUsage === "임") {
     // 현재 활용 지목이 "임"(임야)인 경우 산지 기준
-    areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (산지 기준: 990㎡ 이하)`;
+    areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (산지 기준: 990㎡ ��하)`;
     areaCriteriaMet = land.remainingArea <= 990;
   } else {
     // 그 밖의 지목 (잡종지 등)
@@ -603,7 +603,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 ${summary}`;
   } else {
     // 매수불가
-    summary = `본 토지는 잔여지 면적 및 형상상 종래 목적대로 사용 가능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
+    summary = `본 토지는 잔여지 면적 및 형상상 종래 목적대로 사용 ��능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -1891,50 +1891,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           );
                         }
                         
-                        return null;
+return null;
                       })()}
-                    </div>
-                      <div className="divide-y">
-                        {Array.from(parcelAiResults.entries()).map(([parcelId, result]) => {
-                          const land = searchResults.find(l => l.id === parcelId);
-                          if (!land) return null;
-                          return (
-                            <div 
-                              key={parcelId}
-                              onClick={() => {
-                                setSelectedLand(land);
-                                setAiResult(result);
-                              }}
-                              className={`flex cursor-pointer items-center justify-between px-4 py-3 transition-colors hover:bg-muted/50 ${
-                                selectedLand?.id === parcelId ? "bg-primary/5 border-l-4 border-l-primary" : ""
-                              }`}
-                            >
-                              <div className="flex-1 min-w-0">
-                                <p className="truncate text-sm font-medium">{land.address}</p>
-                                <p className="text-xs text-muted-foreground">
-                                  잔여 {land.remainingArea.toLocaleString()}㎡ | {land.landType}
-                                </p>
-                              </div>
-                              <Badge 
-                                variant={
-                                  result.provisionalJudgment === "매수" 
-                                    ? "success" 
-                                    : result.provisionalJudgment === "심의위원회이관"
-                                      ? "warning"
-                                      : "destructive"
-                                }
-                                className="ml-2 shrink-0"
-                              >
-                                {result.provisionalJudgment === "매수" 
-                                  ? "매수" 
-                                  : result.provisionalJudgment === "심의위원���이관"
-                                    ? "심의이관"
-                                    : "미충족"}
-                              </Badge>
-                            </div>
-                          );
-                        })}
-                      </div>
                     </div>
 
                     {/* 선택된 필지 상세 결과 */}
