@@ -60,7 +60,7 @@ const regionData = {
     "광진구": ["광장동", "구의동", "군자동", "능동", "자양동", "중곡동", "화양동"],
     "구로구": ["가리봉동", "개봉동", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
     "금천구": ["가산동", "독산동", "시흥동"],
-    "노원���": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
+    "노원구": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
     "도봉구": ["도봉동", "방학동", "쌍문동", "창동"],
     "동대문구": ["답십리동", "신설동", "용두동", "이문동", "장안동", "전농동", "제기동", "청량리동", "회기동", "휘경동"],
     "동작구": ["노량진동", "대방동", "동작동", "본동", "사당동", "상도동", "신대방동", "흑석동"],
@@ -80,7 +80,7 @@ const regionData = {
     // 부산광역시
     "해운대구": ["반송동", "반여동", "석대동", "송정동", "우동", "좌동", "재송동", "중동"],
     "기장군": ["기장읍", "장안읍", "정관읍", "일광면", "철마면"],
-    "금정구": ["구서동", "금사동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
+    "금정구": ["구서동", "금사동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "��두구동", "오륜동", "장전동", "청룡동", "회동동"],
     // 경기도
     "용인시 처인구": ["양지면", "백암면", "원삼면", "이동읍", "남사읍", "포곡읍", "모현읍"],
     "용인시 기흥구": ["구갈동", "마북동", "보라동", "상갈동", "상하동", "서농동", "신갈동", "언남동", "영덕동", "중동", "지곡동", "청덕동", "하갈동"],
@@ -101,7 +101,7 @@ const regionData = {
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
-    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "강서��", "율량동"],
+    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "��서��", "율량동"],
     "청주시 흥덕구": ["강내면", "옥산면", "오송읍", "가경동", "복대동", "봉명동", "송정동", "신봉동"],
     "충주시": ["가금면", "금가면", "노은면", "대소원면", "동량면", "산척면", "살미면", "소태면", "수안보면", "신니면", "앙성면", "엄정면", "이류면", "주덕읍", "중앙탑면"],
     "제천시": ["금성면", "덕산면", "백운면", "봉양읍", "송학면", "수산면", "청풍면", "한수면"],
@@ -158,7 +158,7 @@ const regionData = {
     "율면": ["고당리", "반룡리", "산양리", "월포리", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
-    // 경기도 - ���천시
+    // 경기도 - 광주시
     "곤지암읍": ["신리", "역동리", "삼리", "건업리", "연곡리", "오향리", "화촌리"],
     "도척면": ["진우리", "노곡리", "상림리", "도웅리", "유정리", "추곡리"],
     "퇴촌면": ["정지리", "영동리", "도수리", "관음리", "무수리", "원당리"],
@@ -725,6 +725,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const [aiResult, setAiResult] = useState<AIAnalysisResult | null>(null);
   const [aiAnalyzing, setAiAnalyzing] = useState(false);
   
+  // 필지별 AI 판독 결과 저장 (복수 선택 지원)
+  const [parcelAiResults, setParcelAiResults] = useState<Map<string, AIAnalysisResult>>(new Map());
+  
   // 편입토지 없음 상태
   const [noIncludedLand, setNoIncludedLand] = useState(false);
   
@@ -754,6 +757,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setAiResult(null);
     setNoIncludedLand(false);
     setOwnedParcels(new Set()); // 본인 소유 선택 초기화
+    setParcelAiResults(new Map()); // AI 판독 결과 초기화
     
     setTimeout(() => {
       let results: LandInfo[];
@@ -962,10 +966,16 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   // 필지 선택
   const handleLandSelect = (land: LandInfo) => {
     setSelectedLand(land);
-    setAiResult(null);
     setNoIncludedLand(false);
     setCurrentUsage(land.landCategory); // 공부상 지목을 기본값으로 설정
     setLandSubType(""); // 택지 세부 유형 초기화
+    
+    // 해당 필지에 AI 판독 결과가 있으면 표시
+    if (parcelAiResults.has(land.id)) {
+      setAiResult(parcelAiResults.get(land.id)!);
+    } else {
+      setAiResult(null);
+    }
     
     // 기본정보 패널이 접혀 있으면 자동으로 펼침
     if (isBasicInfoCollapsed) {
@@ -978,19 +988,42 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     }
   };
 
-  // AI 판독 실행
+  // AI 판독 실행 (선택된 모든 필지 한번에 판독)
   const handleAIAnalysis = () => {
-    if (!selectedLand || noIncludedLand) return;
+    if (noIncludedLand) return;
     // 현재 활용 지목 필수
     if (!currentUsage) return;
     // 현재 활용 지목이 "대"(택지)인 경우 세부 유형이 필수
     if (currentUsage === "대" && !landSubType) return;
     
+    // 선택된 필지들 가져오기 (체크된 필지들)
+    const selectedParcels = searchResults.filter((land, index) => 
+      ownedParcels.has(land.id) || (index === 0 && ownedParcels.size === 0)
+    );
+    
+    if (selectedParcels.length === 0) return;
+    
     setAiAnalyzing(true);
     
     setTimeout(() => {
-      const result = simulateAIAnalysis(selectedLand, currentUsage, landSubType);
-      setAiResult(result);
+      const newResults = new Map(parcelAiResults);
+      
+      // 선택된 모든 필지에 대해 AI 분석 실행
+      selectedParcels.forEach(land => {
+        const result = simulateAIAnalysis(land, currentUsage, landSubType);
+        newResults.set(land.id, result);
+      });
+      
+      setParcelAiResults(newResults);
+      
+      // 현재 선택된 필지의 결과를 aiResult에도 설정 (상세 보기용)
+      if (selectedLand && newResults.has(selectedLand.id)) {
+        setAiResult(newResults.get(selectedLand.id)!);
+      } else if (selectedParcels.length > 0) {
+        setAiResult(newResults.get(selectedParcels[0].id)!);
+        setSelectedLand(selectedParcels[0]);
+      }
+      
       setAiAnalyzing(false);
     }, 1500);
   };
@@ -1369,7 +1402,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         일치하는 토지 정보가 없습니다
                       </p>
                       <p className="mt-2 text-sm text-muted-foreground">
-                        입력하신 성명과 주민번호 앞자리로<br />
+                        입력하신 성명�� 주민번호 앞자리로<br />
                         등록된 편입 토지를 찾을 수 없습니다.<br />
                         정보를 다시 확인해 주세요.
                       </p>
@@ -1397,6 +1430,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     {searchResults.map((land, index) => {
                       const isOwned = ownedParcels.has(land.id);
                       const isFirstResult = index === 0; // 첫번째 결과는 기본적으로 본인 소유로 간주
+                      const hasAiResult = parcelAiResults.has(land.id);
+                      const landAiResult = parcelAiResults.get(land.id);
                       
                       return (
                         <li key={land.id} className="border-b border-border">
@@ -1433,13 +1468,34 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                               className="flex flex-1 cursor-pointer items-center justify-between text-left"
                             >
                               <div className="flex-1">
-                                <span className={`text-sm ${
-                                    !(isOwned || (isFirstResult && !ownedParcels.size)) 
-                                      ? "text-muted-foreground" 
-                                      : ""
-                                  }`}>
-                                    {land.address}
-                                  </span>
+                                <div className="flex items-center gap-2">
+                                  <span className={`text-sm ${
+                                      !(isOwned || (isFirstResult && !ownedParcels.size)) 
+                                        ? "text-muted-foreground" 
+                                        : ""
+                                    }`}>
+                                      {land.address}
+                                    </span>
+                                  {/* AI 판독 완료 뱃지 */}
+                                  {hasAiResult && (
+                                    <Badge 
+                                      variant={landAiResult?.provisionalJudgment === "매수" ? "default" : "secondary"}
+                                      className={`text-[10px] px-1.5 py-0 ${
+                                        landAiResult?.provisionalJudgment === "매수" 
+                                          ? "bg-green-100 text-green-700 border-green-200" 
+                                          : landAiResult?.provisionalJudgment === "매수불가"
+                                            ? "bg-red-100 text-red-700 border-red-200"
+                                            : "bg-amber-100 text-amber-700 border-amber-200"
+                                      }`}
+                                    >
+                                      {landAiResult?.provisionalJudgment === "매수" 
+                                        ? "판독완료" 
+                                        : landAiResult?.provisionalJudgment === "매수불가"
+                                          ? "미충족"
+                                          : "심의이관"}
+                                    </Badge>
+                                  )}
+                                </div>
                                 <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
                                   <span>잔여 {land.remainingArea.toLocaleString()}㎡</span>
                                   <span>|</span>
@@ -1626,12 +1682,12 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     {aiAnalyzing ? (
                       <>
                         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        AI 판독 중...
+                        선택된 {ownedParcels.size || 1}개 필지 판독 중...
                       </>
                     ) : (
                       <>
                         <AIIcon className="mr-1.5 h-8 w-8" />
-                        AI 판독 시작
+                        선택된 {ownedParcels.size || 1}개 필지 AI 판독 시작
                       </>
                     )}
                   </Button>
