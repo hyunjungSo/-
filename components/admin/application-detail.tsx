@@ -419,63 +419,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         setUnifiedGroups({});
       }
       setIsAIAnalyzing(false);
-    }, 2000);
-  };
-        });
-        
-        // 미해당 필지들
-        nonUnifiedLandIds.forEach(landId => {
-          const land = allLands.find(l => l.id === landId)!;
-          const reasons = [
-            `면적 기준 미충족 (${land.remainingArea}㎡ > 기준)`,
-            `형상 양���, 종래 사용 가능`,
-            `비연접 필지로 일단지 미해당`,
-          ];
-          newResults[landId] = {
-            provisionalJudgment: "미해당",
-            landTypePath: land.landType,
-            accessRoadLost: false,
-            waterChannelLost: false,
-            confidence: 0.7 + Math.random() * 0.15,
-            analysisDate: new Date().toISOString().split("T")[0],
-            unifiedGroupId: undefined,
-            reason: reasons[Math.floor(Math.random() * reasons.length)],
-          };
-        });
-        
-        // 일단지 그룹 정보 생성 (기존 그룹 완전 교체)
-        const unifiedLands = allLands.filter(l => unifiedLandIds.includes(l.id));
-        const newGroups = {
-          [groupId]: {
-            landIds: unifiedLandIds,
-            groupName: "일단지 A",
-            combinedArea: unifiedLands.reduce((sum, l) => sum + l.remainingArea, 0),
-            judgment: "매수",
-          }
-        };
-        
-        setUnifiedGroups(newGroups);
-        setLandAIResults(newResults);
-      } else {
-        // 단일 필지
-        const currentLandId = allLands[selectedLandIndex].id;
-        const isBuy = Math.random() > 0.3;
-        const newResult = {
-          provisionalJudgment: isBuy ? "매수" : "매수불가",
-          landTypePath: allLands[selectedLandIndex].landType,
-          accessRoadLost: Math.random() > 0.5,
-          waterChannelLost: Math.random() > 0.5,
-          confidence: 0.85 + Math.random() * 0.1,
-          analysisDate: new Date().toISOString().split("T")[0],
-          reason: isBuy ? "면적/형상 기준 충족" : "면적 기준 미충족",
-        };
-        setLandAIResults({
-          [currentLandId]: newResult,
-        });
-        setUnifiedGroups({});
-      }
-      setIsAIAnalyzing(false);
-    }, 2000);
+}, 2000);
   };
   
   // 판독 결과 초기화
