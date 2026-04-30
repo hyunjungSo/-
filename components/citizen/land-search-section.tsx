@@ -98,7 +98,7 @@ const regionData = {
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백���������면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백�����������면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
     "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "�������", "율량동"],
@@ -178,7 +178,7 @@ const regionData = {
     "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "음양리"],
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
     "향남읍": ["구문천리", "도이리", "발안리", "상신리", "제암리", "평리", "행정리"],
-    "매송면": ["송라리", "숙곡리", "야목리", "���천리", "원리", "천천리"],
+    "매송면": ["송라리", "숙곡리", "야목리", "����천리", "원리", "천천리"],
     "���봉면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
     "마도면": ["백곡리", "송정리", "쌍송리", "청원리", "해문리"],
     "남양읍": ["남양리", "문호리", "북양리", "송림리", "신남리"],
@@ -234,7 +234,7 @@ const regionData = {
     "신창면": ["가덕리", "궁화리", "남성리", "읍내리", "학정리", "황산리"],
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
-    "인주면": ["걸매리", "냉정리", "대음리", "문방리", "밀두리", "신����"],
+    "인주면": ["걸매리", "냉정리", "대음리", "문방리", "밀두리", "������"],
     "���고���": ["도고리", "시전리", "효자리", "금����"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
@@ -391,7 +391,7 @@ function simulateAIAnalysis(
     areaCriteriaMet = land.remainingArea <= 330;
   } else if (currentUsage === "임") {
     // 현재 활용 지목이 "임"(임야)인 경우 산지 기준
-    areaCriteriaLabel = `잔여 면��� ${land.remainingArea}㎡ (���지 ���준: 990㎡ ��하)`;
+    areaCriteriaLabel = `��여 면��� ${land.remainingArea}㎡ (���지 ���준: 990㎡ ��하)`;
     areaCriteriaMet = land.remainingArea <= 990;
   } else {
     // 그 밖의 지목 (잡종지 등)
@@ -602,7 +602,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 5. 판정 결과
 ${summary}`;
   } else {
-    // 매수불��
+    // 매수불���
     summary = `본 ��지는 잔여��� 면적 및 �����상��� 종래 목��대로 ���용 가능한 것으로 판단되어 ��수청구 대상에 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
@@ -773,7 +773,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           // 양평이천 관할기관 - 2건
           {
             id: "owner-search-0",
-            address: "경기도 이천시 마장면 덕평리 55-3",
+            address: "경기도 이천시 마장면 ���평리 55-3",
             coordinates: [
               { lat: 37.2350, lng: 127.3800 },
               { lat: 37.2358, lng: 127.3812 },
@@ -999,7 +999,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     // 현재 활용 지목이 "대"(택지)인 경우 세부 유형이 필수
     if (currentUsage === "대" && !landSubType) return;
     
-    // 선��된 필지들 가져오기 (체크된 필지들)
+    // ����된 필지들 가져오기 (체크된 필지들)
     const selectedParcels = searchResults.filter((land, index) => 
       ownedParcels.has(land.id) || (index === 0 && ownedParcels.size === 0)
     );
@@ -1994,14 +1994,14 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     </div>
                   </div>
                 )}
-                </div>
-              ) : (
-                <div className="flex h-full items-center justify-center text-muted-foreground">
-                  필지를 선택해 주세요.
-                </div>
-              )}
-            </div>
+              </div>
+            ) : (
+              <div className="flex h-full items-center justify-center text-muted-foreground">
+                필지를 선택해 주세요.
+              </div>
+            )}
           </div>
+        </div>
             
             {/* 신청 목록 추가 버튼 - 하단 고정 */}
             {selectedLand && aiResult && (
