@@ -60,7 +60,7 @@ const regionData = {
     "광진구": ["광장동", "구의동", "군자동", "능동", "자양동", "중곡동", "화양동"],
     "구로구": ["가리봉동", "개봉동", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
     "금천구": ["가산동", "독산동", "시흥동"],
-    "노원구": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
+    "노원���": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
     "도봉구": ["도봉동", "방학동", "쌍문동", "창동"],
     "동대문구": ["답십리동", "신설동", "용두동", "이문동", "장안동", "전농동", "제기동", "청량리동", "회기동", "휘경동"],
     "동작구": ["노량진동", "대방동", "동작동", "본동", "사당동", "상도동", "신대방동", "흑석동"],
@@ -101,7 +101,7 @@ const regionData = {
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
-    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "��서��", "율량동"],
+    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "������", "율량동"],
     "청주시 흥덕구": ["강내면", "옥산면", "오송읍", "가경동", "복대동", "봉명동", "송정동", "신봉동"],
     "충주시": ["가금면", "금가면", "노은면", "대소원면", "동량면", "산척면", "살미면", "소태면", "수안보면", "신니면", "앙성면", "엄정면", "이류면", "주덕읍", "중앙탑면"],
     "제천시": ["금성면", "덕산면", "백운면", "봉양읍", "송학면", "수산면", "청풍면", "한수면"],
@@ -158,7 +158,7 @@ const regionData = {
     "율면": ["고당리", "반룡리", "산양리", "월포리", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
-    // 경기도 - 광주시
+    // 경기��� - 광주시
     "곤지암읍": ["신리", "역동리", "삼리", "건업리", "연곡리", "오향리", "화촌리"],
     "도척면": ["진우리", "노곡리", "상림리", "도웅리", "유정리", "추곡리"],
     "퇴촌면": ["정지리", "영동리", "도수리", "관음리", "무수리", "원당리"],
@@ -235,7 +235,7 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "밀두리", "신성리"],
-    "도고면": ["도고리", "시전리", "효자리", "금산��"],
+    "도고면": ["도고리", "시전리", "효자리", "금����"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
@@ -593,7 +593,7 @@ function generateJudgmentRationale(
 
 3. 형상 분석
 - 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
-- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
+- 잔여지 형상: ${land.remainingShape} (���상지수 ${land.remainingShapeIndex})
 - 형상지수 변화: +${shapeIndexChange.toFixed(1)}
 
 4. 충족 기준
@@ -994,7 +994,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   // AI 판독 실행 (선택된 모든 필지 한번에 판독)
   const handleAIAnalysis = () => {
     if (noIncludedLand) return;
-    // 현재 활용 지목 필수
+    // 현재 활��� 지목 필수
     if (!currentUsage) return;
     // 현재 활용 지목이 "대"(택지)인 경우 세부 유형이 필수
     if (currentUsage === "대" && !landSubType) return;
@@ -1877,36 +1877,44 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           
                           <div className="space-y-2 text-sm">
                             {/* 필지 현황 */}
-                            <div className="flex items-center gap-4 text-muted-foreground">
+                            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground">
                               <span>본인 소유: <strong className="text-foreground">{aiResult.unifiedParcelAnalysis.ownedParcels}필지</strong></span>
                               <span>인접지: <strong className="text-foreground">{aiResult.unifiedParcelAnalysis.adjacentParcels}필지</strong></span>
-                              <span>합산 면적: <strong className="text-foreground">{aiResult.unifiedParcelAnalysis.combinedArea.toLocaleString()}㎡</strong></span>
+                              <span>합산 잔여면적: <strong className="text-foreground">{aiResult.unifiedParcelAnalysis.combinedArea.toLocaleString()}㎡</strong></span>
+                              {aiResult.unifiedParcelAnalysis.combinedIncludedArea !== undefined && aiResult.unifiedParcelAnalysis.combinedIncludedArea > 0 && (
+                                <span>합산 편입면적: <strong className="text-foreground">{aiResult.unifiedParcelAnalysis.combinedIncludedArea.toLocaleString()}㎡</strong></span>
+                              )}
                             </div>
                             
-                            {/* 조건 체크 */}
-                            <div className="flex flex-wrap gap-2">
+                            {/* 일단지 3대 조건 + 병합 처리 */}
+                            <div className="flex flex-wrap items-center gap-3">
                               <span className={`inline-flex items-center gap-1 text-xs ${
                                 aiResult.unifiedParcelAnalysis.conditions.sameOwner ? "text-green-600" : "text-gray-400"
                               }`}>
                                 {aiResult.unifiedParcelAnalysis.conditions.sameOwner ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                                소유자 동일
+                                소유자 동일성
                               </span>
                               <span className={`inline-flex items-center gap-1 text-xs ${
                                 aiResult.unifiedParcelAnalysis.conditions.continuous ? "text-green-600" : "text-gray-400"
                               }`}>
                                 {aiResult.unifiedParcelAnalysis.conditions.continuous ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                                지반 연속
+                                지반 연속성
                               </span>
                               <span className={`inline-flex items-center gap-1 text-xs ${
                                 aiResult.unifiedParcelAnalysis.conditions.sameUsage ? "text-green-600" : "text-gray-400"
                               }`}>
                                 {aiResult.unifiedParcelAnalysis.conditions.sameUsage ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                                용도 일체
+                                용도 일체성
                               </span>
+                              {aiResult.unifiedParcelAnalysis.isMergedApplication && (
+                                <Badge variant="outline" className="ml-2 bg-green-50 text-green-700 border-green-200 text-xs">
+                                  복수 신청 병합 처리
+                                </Badge>
+                              )}
                             </div>
                             
                             {/* 판정 설명 */}
-                            <p className="text-muted-foreground">{aiResult.unifiedParcelAnalysis.explanation}</p>
+                            <p className="text-muted-foreground whitespace-pre-line">{aiResult.unifiedParcelAnalysis.explanation}</p>
                           </div>
                         </div>
                       )}
@@ -2141,7 +2149,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                               />
                               <div className="flex items-center gap-2">
                                 <span className="font-medium">{businessUnit} 관할기관</span>
-                                <Badge variant="outline" className="text-xs">{items.length}필지</Badge>
+                                <Badge variant="outline" className="text-xs">{items.length}필���</Badge>
                               </div>
                             </div>
                             {someSelectedInUnit && (
