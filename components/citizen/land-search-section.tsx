@@ -351,7 +351,7 @@ function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale 
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p className="text-base text-muted-foreground">
             본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
-            판단 근거에 이의가 있으시면 신청서 제출 시 의견을 기재해 주시기 바랍니다.
+            판단 근거에 이의가 있으��면 신청서 제출 시 의견을 기재해 주시기 바랍니다.
           </p>
         </div>
       </CollapsibleContent>
@@ -603,7 +603,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 ${summary}`;
   } else {
     // 매수불가
-    summary = `본 토지는 잔여지 면�� 및 형상상 ��래 목���대��� 사용 ��능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
+    summary = `본 토지는 잔여지 ���� 및 형상상 ��래 목���대��� 사용 ��능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -998,7 +998,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     if (noIncludedLand) return;
     // 현재 활용 지목 필��
     if (!currentUsage) return;
-    // 현재 활용 지목이 "대"(택지)인 경우 세부 유형이 필수
+    // 현재 활용 지목이 "대"(택지)��� 경우 세부 유형이 필수
     if (currentUsage === "대" && !landSubType) return;
     
     // 선택된 필지들 가져오기 (체크된 필지들)
@@ -1882,32 +1882,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           );
                         }
                         
-                        const checkedCount = Array.from(checkedParcelsForCart).filter(id => 
-                          addableItems.some(([parcelId]) => parcelId === id)
-                        ).length;
-                        
-                        return (
-                          <div className="border-t p-3">
-                            <Button 
-                              onClick={() => {
-                                checkedParcelsForCart.forEach(parcelId => {
-                                  const land = searchResults.find(l => l.id === parcelId);
-                                  const result = parcelAiResults.get(parcelId);
-                                  if (land && result && result.provisionalJudgment !== "매수불가" && !cartItems.some(c => c.landInfo.id === parcelId)) {
-                                    onAddToCart(land, result);
-                                  }
-                                });
-                                setCheckedParcelsForCart(new Set());
-                              }}
-                              className="h-10 w-full"
-                              variant="default"
-                              disabled={checkedCount === 0}
-                            >
-                              <Plus className="mr-2 h-4 w-4" />
-                              신청 목록에 추가 ({checkedCount}건)
-                            </Button>
-                          </div>
-                        );
+                        return null;
                       })()}
                     </div>
 
