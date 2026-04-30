@@ -1778,8 +1778,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   </div>
                 )}
 
-                {/* AI 판독 결과 - 복수 필지 통합 뷰 */}
-                {parcelAiResults.size > 0 && (
+                {/* AI 판독 결과 - 복수 필지 통합 뷰 (선택된 필지가 AI 판독된 경우에만 표시) */}
+                {parcelAiResults.size > 0 && aiResult && (
                   <div className="space-y-4">
 {/* 필지별 판독 결과 요약 리스트 */}
                     <div className="rounded-lg border bg-background">
