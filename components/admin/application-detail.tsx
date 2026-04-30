@@ -487,17 +487,30 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </Badge>
               )}
             </CardTitle>
-            {Object.keys(landAIResults).length > 0 && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleResetAIResults}
-                className="text-muted-foreground"
-              >
-                <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
-                판독 초기화
-              </Button>
-            )}
+            <div className="flex items-center gap-2">
+              {Object.keys(landAIResults).length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleResetAIResults}
+                  className="text-muted-foreground"
+                >
+                  <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
+                  판독 초기화
+                </Button>
+              )}
+              {isMultipleLands && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedLandIndex(0)}
+                  className="text-muted-foreground"
+                >
+                  <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
+                  선택 초기화
+                </Button>
+              )}
+            </div>
           </div>
           {isMultipleLands && (
             <CardDescription>
