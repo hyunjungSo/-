@@ -614,55 +614,68 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <>
                       {/* 일단지 그룹들 */}
                       {Object.entries(unifiedGroups).map(([groupId, group]) => (
-                        <div key={groupId} className="rounded-lg border-2 border-emerald-500/50 bg-emerald-50/30 p-3 dark:bg-emerald-950/20">
-                          <div className="mb-2 flex items-center justify-between">
+                        <div key={groupId} className="rounded-lg border-2 border-emerald-500 bg-emerald-50/50 p-4 dark:bg-emerald-950/30">
+                          <div className="mb-3 flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <Badge className="bg-emerald-600 hover:bg-emerald-700">
-                                {group.groupName}
-                              </Badge>
-                              <span className="text-xs text-muted-foreground">
-                                {group.landIds.length}필지 | 합산 {group.combinedArea.toLocaleString()}m²
-                              </span>
+                              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-600 text-white text-xs font-bold">
+                                {group.landIds.length}
+                              </div>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-semibold text-emerald-700 dark:text-emerald-400">
+                                    {group.groupName}
+                                  </span>
+                                  <Badge variant="default" className="text-xs">
+                                    {group.judgment}
+                                  </Badge>
+                                </div>
+                                <span className="text-xs text-muted-foreground">
+                                  인접 {group.landIds.length}필지 | 합산 {group.combinedArea.toLocaleString()}m²
+                                </span>
+                              </div>
                             </div>
-                            <Badge variant="default" className="text-xs">
-                              {group.judgment}
-                            </Badge>
                           </div>
                           <div className="grid gap-2 sm:grid-cols-2">
                             {allLands.filter(l => group.landIds.includes(l.id)).map((land) => {
                               const index = allLands.findIndex(l => l.id === land.id);
                               const isSelected = selectedLandIndex === index;
                               const landResult = landAIResults[land.id];
+                              const landLabel = String.fromCharCode(65 + index); // A, B, C...
                               return (
                                 <button
                                   key={land.id}
                                   type="button"
                                   onClick={() => setSelectedLandIndex(index)}
-                                  className={`flex flex-col items-start gap-1 rounded-lg border p-2.5 text-left transition-all ${
+                                  className={`flex flex-col items-start gap-1.5 rounded-lg border-2 p-3 text-left transition-all ${
                                     isSelected 
-                                      ? "border-primary bg-background ring-1 ring-primary" 
-                                      : "border-emerald-200 bg-background/80 hover:border-primary/50 dark:border-emerald-800"
+                                      ? "border-primary bg-white ring-2 ring-primary dark:bg-background" 
+                                      : "border-emerald-300 bg-white/90 hover:border-emerald-400 dark:border-emerald-700 dark:bg-emerald-900/20"
                                   }`}
                                 >
                                   <div className="flex w-full items-center justify-between">
-                                    <span className="text-sm font-medium">필지 {index + 1}</span>
-                                    <Badge variant="default" className="text-xs">
+                                    <div className="flex items-center gap-2">
+                                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white">
+                                        {landLabel}
+                                      </span>
+                                      <span className="text-sm font-medium">필지 {landLabel}</span>
+                                    </div>
+                                    <Badge variant="default" className="text-xs bg-emerald-600">
                                       {landResult?.provisionalJudgment || "매수"}
                                     </Badge>
                                   </div>
                                   <p className="text-xs text-muted-foreground line-clamp-1">{land.address}</p>
                                   <div className="flex gap-3 text-xs">
-                                    <span className="font-medium text-primary">{land.remainingArea.toLocaleString()}m²</span>
+                                    <span className="font-medium text-emerald-700 dark:text-emerald-400">{land.remainingArea.toLocaleString()}m²</span>
                                     <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
                                   </div>
                                   {landResult?.reason && (
-                                    <p className="mt-1 text-xs text-emerald-600 dark:text-emerald-400 line-clamp-1">
+                                    <p className="mt-0.5 text-xs text-emerald-600 dark:text-emerald-400 line-clamp-1">
                                       {landResult.reason}
                                     </p>
                                   )}
                                   {landResult?.analysisDate && (
-                                    <p className="mt-1 text-xs text-muted-foreground">
-                                      판독완료: {landResult.analysisDate}
+                                    <p className="text-xs text-muted-foreground">
+                                      판독: {landResult.analysisDate}
                                     </p>
                                   )}
                                 </button>
@@ -679,15 +692,25 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         if (nonUnifiedLands.length === 0) return null;
                         
                         return (
-                          <div className="rounded-lg border border-dashed border-muted-foreground/30 bg-muted/20 p-3">
-                            <div className="mb-2 flex items-center justify-between">
+                          <div className="rounded-lg border-2 border-dashed border-amber-400/50 bg-amber-50/30 p-4 dark:bg-amber-950/20">
+                            <div className="mb-3 flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <Badge variant="outline" className="text-muted-foreground">
-                                  일단지 미해당
-                                </Badge>
-                                <span className="text-xs text-muted-foreground">
-                                  {nonUnifiedLands.length}필지
-                                </span>
+                                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-500 text-white text-xs font-bold">
+                                  {nonUnifiedLands.length}
+                                </div>
+                                <div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-semibold text-amber-700 dark:text-amber-400">
+                                      일단지 미해당
+                                    </span>
+                                    <Badge variant="secondary" className="text-xs">
+                                      개별 검토
+                                    </Badge>
+                                  </div>
+                                  <span className="text-xs text-muted-foreground">
+                                    비연접 또는 기준 미충족 {nonUnifiedLands.length}필지
+                                  </span>
+                                </div>
                               </div>
                             </div>
                             <div className="grid gap-2 sm:grid-cols-2">
@@ -695,36 +718,42 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 const index = allLands.findIndex(l => l.id === land.id);
                                 const isSelected = selectedLandIndex === index;
                                 const landResult = landAIResults[land.id];
+                                const landLabel = String.fromCharCode(65 + index); // A, B, C...
                                 return (
                                   <button
                                     key={land.id}
                                     type="button"
                                     onClick={() => setSelectedLandIndex(index)}
-                                    className={`flex flex-col items-start gap-1 rounded-lg border p-2.5 text-left transition-all ${
+                                    className={`flex flex-col items-start gap-1.5 rounded-lg border-2 p-3 text-left transition-all ${
                                       isSelected 
-                                        ? "border-primary bg-background ring-1 ring-primary" 
-                                        : "border-border bg-background/80 hover:border-primary/50"
+                                        ? "border-primary bg-white ring-2 ring-primary dark:bg-background" 
+                                        : "border-amber-300 bg-white/90 hover:border-amber-400 dark:border-amber-700 dark:bg-amber-900/20"
                                     }`}
                                   >
                                     <div className="flex w-full items-center justify-between">
-                                      <span className="text-sm font-medium">필지 {index + 1}</span>
-                                      <Badge variant="secondary" className="text-xs text-muted-foreground">
+                                      <div className="flex items-center gap-2">
+                                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-xs font-bold text-white">
+                                          {landLabel}
+                                        </span>
+                                        <span className="text-sm font-medium">필지 {landLabel}</span>
+                                      </div>
+                                      <Badge variant="secondary" className="text-xs">
                                         {landResult?.provisionalJudgment || "미해당"}
                                       </Badge>
                                     </div>
                                     <p className="text-xs text-muted-foreground line-clamp-1">{land.address}</p>
                                     <div className="flex gap-3 text-xs">
-                                      <span className="font-medium text-primary">{land.remainingArea.toLocaleString()}m²</span>
+                                      <span className="font-medium text-amber-700 dark:text-amber-400">{land.remainingArea.toLocaleString()}m²</span>
                                       <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
                                     </div>
                                     {landResult?.reason && (
-                                      <p className="mt-1 text-xs text-amber-600 dark:text-amber-400 line-clamp-1">
+                                      <p className="mt-0.5 text-xs text-amber-600 dark:text-amber-400 line-clamp-1">
                                         {landResult.reason}
                                       </p>
                                     )}
                                     {landResult?.analysisDate && (
-                                      <p className="mt-1 text-xs text-muted-foreground">
-                                        판독완료: {landResult.analysisDate}
+                                      <p className="text-xs text-muted-foreground">
+                                        판독: {landResult.analysisDate}
                                       </p>
                                     )}
                                   </button>
@@ -736,24 +765,30 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       })()}
                     </>
                   ) : (
-                    /* 일단지 그룹 없음 - 기본 그리드 표시 */
+                    /* 일단지 그룹 없음 - 기본 그리드 표시 (AI 판독 전) */
                     <div className="grid gap-2 sm:grid-cols-2">
                       {allLands.map((land, index) => {
                         const isSelected = selectedLandIndex === index;
                         const landResult = landAIResults[land.id];
+                        const landLabel = String.fromCharCode(65 + index); // A, B, C...
                         return (
                           <button
                             key={land.id}
                             type="button"
                             onClick={() => setSelectedLandIndex(index)}
-                            className={`flex flex-col items-start gap-1 rounded-lg border p-3 text-left transition-all ${
+                            className={`flex flex-col items-start gap-1.5 rounded-lg border-2 p-3 text-left transition-all ${
                               isSelected 
-                                ? "border-primary bg-primary/5 ring-1 ring-primary" 
+                                ? "border-primary bg-primary/5 ring-2 ring-primary" 
                                 : "border-border hover:border-primary/50 hover:bg-muted/30"
                             }`}
                           >
                             <div className="flex w-full items-center justify-between">
-                              <span className="text-sm font-medium">필지 {index + 1}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-bold">
+                                  {landLabel}
+                                </span>
+                                <span className="text-sm font-medium">필지 {landLabel}</span>
+                              </div>
                               {landResult ? (
                                 <Badge 
                                   variant={landResult.provisionalJudgment === "매수" ? "default" : landResult.provisionalJudgment === "미해당" ? "secondary" : "destructive"} 
@@ -774,7 +809,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             </div>
                             {landResult?.analysisDate && (
                               <p className="mt-1 text-xs text-muted-foreground">
-                                판독완료: {landResult.analysisDate}
+                                판독: {landResult.analysisDate}
                               </p>
                             )}
                           </button>
@@ -796,7 +831,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 <div className="h-px flex-1 bg-border" />
                 <span className="flex items-center gap-1.5 px-2">
                   <ChevronDown className="h-4 w-4" />
-                  아래 정보는 <Badge variant="outline" className="mx-1">필지 {selectedLandIndex + 1}</Badge> 기준입니다
+                  아래 정보는 <Badge variant="outline" className="mx-1">필지 {String.fromCharCode(65 + selectedLandIndex)}</Badge> 기준입니다
                 </span>
                 <div className="h-px flex-1 bg-border" />
               </div>
