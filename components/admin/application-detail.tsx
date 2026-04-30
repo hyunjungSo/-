@@ -137,17 +137,53 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     confidence: number;
     analysisDate: string;
     unifiedGroupId?: string; // 일단지 그룹 ID (있으면 일단지로 묶임)
+    reason?: string; // 판정 사유
   }>>(() => {
-    // 기존 application.aiResult가 있으면 모든 필지에 초기값으로 설정
+    // 기존 application.aiResult가 있으면 초기값으로 설정
     if (application.aiResult) {
-      const initial: Record<string, typeof application.aiResult & { unifiedGroupId?: string }> = {};
-      const hasUnifiedAnalysis = application.aiResult.unifiedParcelAnalysis?.isUnifiedParcel;
-      allLands.forEach(land => {
-        initial[land.id] = {
-          ...application.aiResult!,
-          unifiedGroupId: hasUnifiedAnalysis ? "group-initial" : undefined,
-        };
-      });
+      const initial: Record<string, {
+        provisionalJudgment: string;
+        landTypePath: string;
+        accessRoadLost: boolean;
+        waterChannelLost: boolean;
+        confidence: number;
+        analysisDate: string;
+        unifiedGroupId?: string;
+        reason?: string;
+      }> = {};
+      
+      // landJudgments가 있으면 필지별 판정 정보 사용 (혼합 케이스)
+      if (application.aiResult.landJudgments && application.aiResult.landJudgments.length > 0) {
+        application.aiResult.landJudgments.forEach(lj => {
+          const land = allLands.find(l => l.id === lj.landId);
+          if (land) {
+            initial[lj.landId] = {
+              provisionalJudgment: lj.judgment,
+              landTypePath: land.landType,
+              accessRoadLost: application.aiResult!.accessRoadLost,
+              waterChannelLost: application.aiResult!.waterChannelLost,
+              confidence: 0.9,
+              analysisDate: new Date().toISOString().split("T")[0],
+              unifiedGroupId: lj.unifiedGroupId || undefined,
+              reason: lj.reason,
+            };
+          }
+        });
+      } else {
+        // 기존 로직: 전체 일단지 또는 개별
+        const hasUnifiedAnalysis = application.aiResult.unifiedParcelAnalysis?.isUnifiedParcel;
+        allLands.forEach(land => {
+          initial[land.id] = {
+            provisionalJudgment: application.aiResult!.provisionalJudgment,
+            landTypePath: land.landType,
+            accessRoadLost: application.aiResult!.accessRoadLost,
+            waterChannelLost: application.aiResult!.waterChannelLost,
+            confidence: 0.9,
+            analysisDate: new Date().toISOString().split("T")[0],
+            unifiedGroupId: hasUnifiedAnalysis ? "group-initial" : undefined,
+          };
+        });
+      }
       return initial;
     }
     return {};
@@ -160,6 +196,36 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     combinedArea: number;
     judgment: string;
   }>>(() => {
+    // landJudgments가 있으면 그룹 정보 추출
+    if (application.aiResult?.landJudgments && application.aiResult.landJudgments.length > 0) {
+      const groups: Record<string, { landIds: string[]; groupName: string; combinedArea: number; judgment: string }> = {};
+      const groupIdSet = new Set<string>();
+      
+      application.aiResult.landJudgments.forEach(lj => {
+        if (lj.unifiedGroupId) {
+          groupIdSet.add(lj.unifiedGroupId);
+        }
+      });
+      
+      let groupIndex = 0;
+      groupIdSet.forEach(groupId => {
+        const landsInGroup = application.aiResult!.landJudgments!.filter(lj => lj.unifiedGroupId === groupId);
+        const landIdsInGroup = landsInGroup.map(lj => lj.landId);
+        const landsData = allLands.filter(l => landIdsInGroup.includes(l.id));
+        
+        groups[groupId] = {
+          landIds: landIdsInGroup,
+          groupName: `일단지 ${String.fromCharCode(65 + groupIndex)}`,
+          combinedArea: landsData.reduce((sum, l) => sum + l.remainingArea, 0),
+          judgment: landsInGroup[0]?.judgment || "매수",
+        };
+        groupIndex++;
+      });
+      
+      return groups;
+    }
+    
+    // 기존 로직: 전체 일단지
     if (application.aiResult?.unifiedParcelAnalysis?.isUnifiedParcel) {
       return {
         "group-initial": {
@@ -539,6 +605,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             {allLands.filter(l => group.landIds.includes(l.id)).map((land) => {
                               const index = allLands.findIndex(l => l.id === land.id);
                               const isSelected = selectedLandIndex === index;
+                              const landResult = landAIResults[land.id];
                               return (
                                 <button
                                   key={land.id}
@@ -552,12 +619,20 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 >
                                   <div className="flex w-full items-center justify-between">
                                     <span className="text-sm font-medium">필지 {index + 1}</span>
+                                    <Badge variant="default" className="text-xs">
+                                      {landResult?.provisionalJudgment || "매수"}
+                                    </Badge>
                                   </div>
                                   <p className="text-xs text-muted-foreground line-clamp-1">{land.address}</p>
                                   <div className="flex gap-3 text-xs">
                                     <span className="font-medium text-primary">{land.remainingArea.toLocaleString()}m²</span>
                                     <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
                                   </div>
+                                  {landResult?.reason && (
+                                    <p className="mt-1 text-xs text-emerald-600 dark:text-emerald-400 line-clamp-1">
+                                      {landResult.reason}
+                                    </p>
+                                  )}
                                 </button>
                               );
                             })}
@@ -610,6 +685,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <span className="font-medium text-primary">{land.remainingArea.toLocaleString()}m²</span>
                                       <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
                                     </div>
+                                    {landResult?.reason && (
+                                      <p className="mt-1 text-xs text-amber-600 dark:text-amber-400 line-clamp-1">
+                                        {landResult.reason}
+                                      </p>
+                                    )}
                                   </button>
                                 );
                               })}

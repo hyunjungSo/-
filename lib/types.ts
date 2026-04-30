@@ -170,6 +170,15 @@ export interface AIAnalysisResult {
   farmMachineDifficulty: boolean; // 농기계 진입/회전 곤란 (직접확인)
   judgmentRationale: JudgmentRationale; // 판단 근거 설명
   unifiedParcelAnalysis?: UnifiedParcelAnalysis; // 일단지 판정 결과
+  landJudgments?: LandJudgment[]; // 필지별 판정 결과 (혼합 케이스용)
+}
+
+// 필지별 판정 결과 (일부 일단지 + 일부 미해당 혼합 케이스)
+export interface LandJudgment {
+  landId: string; // 토지 ID
+  judgment: "매수" | "매수불가" | "미해당" | "부분매수"; // 판정 결과
+  unifiedGroupId: string | null; // 일단지 그룹 ID (null이면 미해당)
+  reason: string; // 판정 사유
 }
 
 // 일단지 판정 분석 결과
