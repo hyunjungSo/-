@@ -169,6 +169,22 @@ export interface AIAnalysisResult {
   waterChannelLost: boolean; // 수로 상실 (직접확인)
   farmMachineDifficulty: boolean; // 농기계 진입/회전 곤란 (직접확인)
   judgmentRationale: JudgmentRationale; // 판단 근거 설명
+  unifiedParcelAnalysis?: UnifiedParcelAnalysis; // 일단지 판정 결과
+}
+
+// 일단지 판정 분석 결과
+export interface UnifiedParcelAnalysis {
+  isUnifiedParcel: boolean; // 일단지 여부
+  totalParcels: number; // 총 필지 수
+  ownedParcels: number; // 본인 소유 필지 수
+  adjacentParcels: number; // 인접지 필지 수
+  conditions: {
+    sameOwner: boolean; // 소유자 동일성 (본인 체크 기준)
+    continuous: boolean; // 지반 연속성 (인접 여부)
+    sameUsage: boolean; // 용도 일체성
+  };
+  combinedArea: number; // 합산 면적
+  explanation: string; // 일단지 판정 설명
 }
 
 // 판단 근거 설명

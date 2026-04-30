@@ -60,7 +60,7 @@ const regionData = {
     "광진구": ["광장동", "구의동", "군자동", "능동", "자양동", "중곡동", "화양동"],
     "구로구": ["가리봉동", "개봉동", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
     "금천구": ["가산동", "독산동", "시흥동"],
-    "노원���": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
+    "노원구": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
     "도봉구": ["도봉동", "방학동", "쌍문동", "창동"],
     "동대문구": ["답십리동", "신설동", "용두동", "이문동", "장안동", "전농동", "제기동", "청량리동", "회기동", "휘경동"],
     "동작구": ["노량진동", "대방동", "동작동", "본동", "사당동", "상도동", "신대방동", "흑석동"],
@@ -101,7 +101,7 @@ const regionData = {
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
-    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "강서��", "율량동"],
+    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "��서��", "율량동"],
     "청주시 흥덕구": ["강내면", "옥산면", "오송읍", "가경동", "복대동", "봉명동", "송정동", "신봉동"],
     "충주시": ["가금면", "금가면", "노은면", "대소원면", "동량면", "산척면", "살미면", "소태면", "수안보면", "신니면", "앙성면", "엄정면", "이류면", "주덕읍", "중앙탑면"],
     "제천시": ["금성면", "덕산면", "백운면", "봉양읍", "송학면", "수산면", "청풍면", "한수면"],
@@ -158,7 +158,7 @@ const regionData = {
     "율면": ["고당리", "반룡리", "산양리", "월포리", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
-    // ��기도 - 광주시
+    // 경기도 - 광주시
     "곤지암읍": ["신리", "역동리", "삼리", "건업리", "연곡리", "오향리", "화촌리"],
     "도척면": ["진우리", "노곡리", "상림리", "도웅리", "유정리", "추곡리"],
     "퇴촌면": ["정지리", "영동리", "도수리", "관음리", "무수리", "원당리"],
@@ -1011,9 +1011,54 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setTimeout(() => {
       const newResults = new Map(parcelAiResults);
       
-      // 선택된 모든 필지에 대해 AI 분석 실행
+      // 일단지 판정을 위한 정보 수집
+      const ownedParcelsList = selectedParcels;
+      const adjacentParcelsList = searchResults.filter((land, index) => 
+        !ownedParcels.has(land.id) && !(index === 0 && ownedParcels.size === 0)
+      );
+      
+      // 일단지 판정 로직
+      const totalParcels = searchResults.length;
+      const ownedCount = ownedParcelsList.length;
+      const adjacentCount = adjacentParcelsList.length;
+      const combinedArea = ownedParcelsList.reduce((sum, land) => sum + land.remainingArea, 0);
+      
+      // 일단지 조건 체크 (시뮬레이션)
+      const sameOwner = ownedCount > 0; // 본인 소유 필지가 체크됨
+      const continuous = totalParcels > 1; // 복수 필지가 존재 (인접 가정)
+      const sameUsage = ownedParcelsList.every(land => land.landCategory === ownedParcelsList[0]?.landCategory);
+      const isUnifiedParcel = sameOwner && continuous && sameUsage && ownedCount >= 2;
+      
+      let unifiedExplanation = "";
+      if (isUnifiedParcel) {
+        unifiedExplanation = `선택된 ${ownedCount}개 필지가 동일 소유자의 인접 토지로서, 동일 용도(${ownedParcelsList[0]?.landCategory || "동일"})로 일체 이용되고 있어 일단지로 인정됩니다. 합산 면적: ${combinedArea.toLocaleString()}㎡`;
+      } else if (ownedCount === 1) {
+        unifiedExplanation = "단일 필지로 일단지 판정 대상이 아닙니다.";
+      } else if (!sameUsage) {
+        unifiedExplanation = "선택된 필지들의 용도가 상이하여 일단지로 인정되지 않습니다.";
+      } else {
+        unifiedExplanation = "일단지 요건(소유자 동일, 지반 연속, 용도 일체)을 충족하지 않습니다.";
+      }
+      
+      const unifiedParcelAnalysis = {
+        isUnifiedParcel,
+        totalParcels,
+        ownedParcels: ownedCount,
+        adjacentParcels: adjacentCount,
+        conditions: {
+          sameOwner,
+          continuous,
+          sameUsage,
+        },
+        combinedArea,
+        explanation: unifiedExplanation,
+      };
+      
+      // 선택된 모든 필지에 대해 AI 분석 실행 (일단지 정보 포함)
       selectedParcels.forEach(land => {
         const result = simulateAIAnalysis(land, currentUsage, landSubType);
+        // 일단지 분석 결과 추가
+        result.unifiedParcelAnalysis = unifiedParcelAnalysis;
         newResults.set(land.id, result);
       });
       
@@ -1801,6 +1846,67 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                 </li>
                               ))}
                             </ul>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 일단지 판정 결과 */}
+                      {aiResult.unifiedParcelAnalysis && (
+                        <div className={`rounded-lg border p-3 ${
+                          aiResult.unifiedParcelAnalysis.isUnifiedParcel 
+                            ? "border-blue-200 bg-blue-50" 
+                            : "border-gray-200 bg-gray-50"
+                        }`}>
+                          <div className="flex items-center gap-2 mb-2">
+                            <Layers className={`h-4 w-4 ${
+                              aiResult.unifiedParcelAnalysis.isUnifiedParcel 
+                                ? "text-blue-600" 
+                                : "text-gray-500"
+                            }`} />
+                            <h4 className="text-base font-semibold text-foreground">일단지 판정</h4>
+                            <Badge 
+                              variant={aiResult.unifiedParcelAnalysis.isUnifiedParcel ? "default" : "secondary"}
+                              className={aiResult.unifiedParcelAnalysis.isUnifiedParcel 
+                                ? "bg-blue-100 text-blue-700 border-blue-200" 
+                                : ""
+                              }
+                            >
+                              {aiResult.unifiedParcelAnalysis.isUnifiedParcel ? "일단지 인정" : "일단지 미해당"}
+                            </Badge>
+                          </div>
+                          
+                          <div className="space-y-2 text-sm">
+                            {/* 필지 현황 */}
+                            <div className="flex items-center gap-4 text-muted-foreground">
+                              <span>본인 소유: <strong className="text-foreground">{aiResult.unifiedParcelAnalysis.ownedParcels}필지</strong></span>
+                              <span>인접지: <strong className="text-foreground">{aiResult.unifiedParcelAnalysis.adjacentParcels}필지</strong></span>
+                              <span>합산 면적: <strong className="text-foreground">{aiResult.unifiedParcelAnalysis.combinedArea.toLocaleString()}㎡</strong></span>
+                            </div>
+                            
+                            {/* 조건 체크 */}
+                            <div className="flex flex-wrap gap-2">
+                              <span className={`inline-flex items-center gap-1 text-xs ${
+                                aiResult.unifiedParcelAnalysis.conditions.sameOwner ? "text-green-600" : "text-gray-400"
+                              }`}>
+                                {aiResult.unifiedParcelAnalysis.conditions.sameOwner ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                                소유자 동일
+                              </span>
+                              <span className={`inline-flex items-center gap-1 text-xs ${
+                                aiResult.unifiedParcelAnalysis.conditions.continuous ? "text-green-600" : "text-gray-400"
+                              }`}>
+                                {aiResult.unifiedParcelAnalysis.conditions.continuous ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                                지반 연속
+                              </span>
+                              <span className={`inline-flex items-center gap-1 text-xs ${
+                                aiResult.unifiedParcelAnalysis.conditions.sameUsage ? "text-green-600" : "text-gray-400"
+                              }`}>
+                                {aiResult.unifiedParcelAnalysis.conditions.sameUsage ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                                용도 일체
+                              </span>
+                            </div>
+                            
+                            {/* 판정 설명 */}
+                            <p className="text-muted-foreground">{aiResult.unifiedParcelAnalysis.explanation}</p>
                           </div>
                         </div>
                       )}
