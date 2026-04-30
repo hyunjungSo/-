@@ -315,19 +315,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         <span className="text-muted-foreground">잔여 {allLands[selectedLandIndex].remainingRatio}%</span>
                       </div>
                     </div>
-                    <Badge 
-                      variant={application.aiResult?.provisionalJudgment === "매수" ? "default" : application.aiResult?.provisionalJudgment === "매수불가" ? "destructive" : "secondary"} 
-                      className="ml-3 shrink-0"
-                    >
-                      {application.aiResult?.provisionalJudgment || "-"}
-                    </Badge>
                   </div>
                 </div>
               ) : (
                 <div className="grid gap-2 sm:grid-cols-2">
                   {allLands.map((land, index) => {
                     const isSelected = selectedLandIndex === index;
-                    const aiJudgment = application.aiResult?.provisionalJudgment || "-";
                     return (
                       <button
                         key={land.id}
@@ -339,15 +332,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             : "border-border hover:border-primary/50 hover:bg-muted/30"
                         }`}
                       >
-                        <div className="flex w-full items-center justify-between">
-                          <span className="text-sm font-medium">필지 {index + 1}</span>
-                          <Badge 
-                            variant={aiJudgment === "매수" ? "default" : aiJudgment === "매수불가" ? "destructive" : "secondary"} 
-                            className="text-xs"
-                          >
-                            {aiJudgment}
-                          </Badge>
-                        </div>
+                        <span className="text-sm font-medium">필지 {index + 1}</span>
                         <p className="text-xs text-muted-foreground line-clamp-1">{land.address}</p>
                         <div className="flex gap-3 text-xs">
                           <span className="font-medium text-primary">{land.remainingArea.toLocaleString()}m²</span>
@@ -977,7 +962,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
               {/* 소유자 의견 */}
               <div className="space-y-2">
-                <Label>소유자 의견 (신청 사유)</Label>
+                <Label>소유�� 의견 (신청 사유)</Label>
                 <div className="rounded-lg border border-border bg-muted/50 p-3 text-base text-foreground">
                   {application.reason}
                 </div>
