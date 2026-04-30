@@ -240,7 +240,7 @@ const regionData = {
     // 세종특별자치시
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
-    "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산���리"],
+    "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산�����리"],
     "�������정면": ["고등�����������", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
@@ -603,7 +603,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 ${summary}`;
   } else {
     // 매수불가
-    summary = `본 토지는 잔여지 ���� 및 형상상 ��래 목���대��� 사용 ��능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
+    summary = `본 토���는 잔여지 ���� 및 형상상 ��래 목���대��� 사용 ��능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -915,7 +915,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return true;
       });
       
-      // 검색 결과가 없으면 ��당 지역의 더미 데이터 생성 (��표 포함)
+      // 검색 결���가 없으면 ��당 지역의 더미 데이터 생성 (��표 포함)
       if (results.length === 0) {
         const baseCoords = [
           [
@@ -998,7 +998,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     if (noIncludedLand) return;
     // 현재 활용 지목 필��
     if (!currentUsage) return;
-    // 현재 활용 지목이 "대"(��지)��� 경우 세부 유형이 필수
+    // 현��� 활용 지목이 "대"(��지)��� 경우 세부 유형이 필수
     if (currentUsage === "대" && !landSubType) return;
     
     // 선택된 필지들 가져오기 (체크된 필지들)
@@ -1490,7 +1490,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       </p>
                       <p className="mt-2 text-sm text-muted-foreground">
                         입력하신 성명과 주민번호 앞자리로<br />
-                        등록된 편입 토지를 찾을 수 없���니���.<br />
+                        등록된 편입 토지를 찾��� 수 없���니���.<br />
                         정보를 다시 확인해 주세요.
                       </p>
                     </div>
@@ -1683,7 +1683,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
           </div>
 
-          {/* 기본정보 패널 (선택된 토지 ���보) - 슬라이드 */}
+          {/* 기본정보 패널 (선택된 ��지 ���보) - 슬라이드 */}
           {selectedLand && (
           <div className={`flex h-full flex-col border-l bg-background transition-all duration-300 overflow-hidden ${isBasicInfoCollapsed ? "w-0 border-l-0" : "w-[320px]"}`}>
             {/* 헤더 */}
@@ -2194,31 +2194,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
 // 전체 선택 여부 계산
                 const allSelected = cartItems.length > 0 && cartItems.every(item => selectedCartItems.has(item.id));
-                const totalSelectedCount = selectedCartItems.size;
-
                 return (
                   <div className="space-y-4 p-4">
-                    {/* 전체 선택 */}
-                    <div className="flex items-center justify-between rounded-lg border bg-muted/30 px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <Checkbox
-                          checked={allSelected}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setSelectedCartItems(new Set(cartItems.map(item => item.id)));
-                            } else {
-                              setSelectedCartItems(new Set());
-                            }
-                          }}
-                          className="h-5 w-5"
-                        />
-                        <span className="font-medium">전체 선택</span>
-                      </div>
-                      {totalSelectedCount > 0 && (
-                        <span className="text-sm text-primary">{totalSelectedCount}건 선택</span>
-                      )}
-                    </div>
-
                     {/* 여러 관할기관이 있을 때 상단 안내 */}
                     {hasMultipleJurisdictions && (
                       <div className="rounded-lg border border-warning/50 bg-warning/5 p-3">
@@ -2348,7 +2325,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               <div className="border-t bg-muted/30 px-4 py-4">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">
-                    총 {cartItems.length}필지 {selectedCartItems.size > 0 && `(${selectedCartItems.size}건 선택)`}
+                    총 {cartItems.length}필지
                   </span>
                   <button
                     onClick={() => {
