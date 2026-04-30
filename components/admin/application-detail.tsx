@@ -486,46 +486,49 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </CardDescription>
           )}
         </CardHeader>
+        
+        {/* 일단지 판정 요약 (최상단 표시) */}
+        {Object.keys(unifiedGroups).length > 0 && (
+          <div className="mx-6 mb-4 rounded-lg border-2 border-emerald-500/50 bg-emerald-50/50 p-4 dark:bg-emerald-950/30">
+            <div className="mb-3 flex items-center gap-2">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">
+                <CheckCircle2 className="h-4 w-4" />
+              </div>
+              <span className="font-semibold text-emerald-700 dark:text-emerald-400">일단지 판정 결과</span>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {Object.entries(unifiedGroups).map(([groupId, group]) => (
+                <div key={groupId} className="flex items-center gap-2 rounded-lg bg-white/80 px-3 py-2 shadow-sm dark:bg-emerald-900/30">
+                  <Badge className="bg-emerald-600 hover:bg-emerald-700">
+                    {group.groupName}
+                  </Badge>
+                  <span className="text-sm font-medium">{group.landIds.length}필지</span>
+                  <span className="text-sm text-muted-foreground">|</span>
+                  <span className="text-sm text-muted-foreground">합산 {group.combinedArea.toLocaleString()}m²</span>
+                  <Badge variant="default">{group.judgment}</Badge>
+                </div>
+              ))}
+              {(() => {
+                const unifiedLandIds = Object.values(unifiedGroups).flatMap(g => g.landIds);
+                const nonUnifiedLands = allLands.filter(l => !unifiedLandIds.includes(l.id));
+                if (nonUnifiedLands.length === 0) return null;
+                return (
+                  <div className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2">
+                    <Badge variant="outline" className="text-muted-foreground">미해당</Badge>
+                    <span className="text-sm font-medium">{nonUnifiedLands.length}필지</span>
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        )}
+        
         <CardContent>
           {isMultipleLands ? (
             <div className="space-y-3">
               {/* 필지가 5개 이상이면 셀렉트 박스 + 요약, 4개 이하면 카드 그리드 */}
               {allLands.length >= 5 ? (
                 <div className="space-y-3">
-                  {/* 일단지 그룹 요약 (있는 경우) */}
-                  {Object.keys(unifiedGroups).length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {Object.entries(unifiedGroups).map(([groupId, group]) => (
-                        <div key={groupId} className="flex items-center gap-2 rounded-lg border-2 border-emerald-500/50 bg-emerald-50/30 px-3 py-1.5 dark:bg-emerald-950/20">
-                          <Badge className="bg-emerald-600 hover:bg-emerald-700 text-xs">
-                            {group.groupName}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">
-                            {group.landIds.length}필지
-                          </span>
-                          <Badge variant="default" className="text-xs">
-                            {group.judgment}
-                          </Badge>
-                        </div>
-                      ))}
-                      {(() => {
-                        const unifiedLandIds = Object.values(unifiedGroups).flatMap(g => g.landIds);
-                        const nonUnifiedCount = allLands.filter(l => !unifiedLandIds.includes(l.id)).length;
-                        if (nonUnifiedCount === 0) return null;
-                        return (
-                          <div className="flex items-center gap-2 rounded-lg border border-dashed border-muted-foreground/30 bg-muted/20 px-3 py-1.5">
-                            <Badge variant="outline" className="text-xs text-muted-foreground">
-                              미해당
-                            </Badge>
-                            <span className="text-xs text-muted-foreground">
-                              {nonUnifiedCount}필지
-                            </span>
-                          </div>
-                        );
-                      })()}
-                    </div>
-                  )}
-                  
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
                     <Select
                       value={selectedLandIndex.toString()}
