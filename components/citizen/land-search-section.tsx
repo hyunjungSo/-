@@ -101,7 +101,7 @@ const regionData = {
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
-    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "강서동", "율량동"],
+    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "강서��", "율량동"],
     "청주시 흥덕구": ["강내면", "옥산면", "오송읍", "가경동", "복대동", "봉명동", "송정동", "신봉동"],
     "충주시": ["가금면", "금가면", "노은면", "대소원면", "동량면", "산척면", "살미면", "소태면", "수안보면", "신니면", "앙성면", "엄정면", "이류면", "주덕읍", "중앙탑면"],
     "제천시": ["금성면", "덕산면", "백운면", "봉양읍", "송학면", "수산면", "청풍면", "한수면"],
@@ -1422,7 +1422,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     <div className="border-b border-amber-200 bg-amber-50 px-3 py-2">
                       <p className="flex items-center gap-1.5 text-xs text-amber-700">
                         <Info className="h-3.5 w-3.5 shrink-0" />
-                        본인 소유 필지를 체크해 주세요. 인접지는 체크 해제된 상태로 유지됩니다.
+                        본인 소유 필지를 체크해 주세요.
                       </p>
                     </div>
                   )}
@@ -1671,7 +1671,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   </div>
                 )}
 
-                {/* 택지(대지) 세부 유형 선택 - 현재 활용 지목이 "대"인 경우 */}
+                {/* 택지(대지) 세부 유형 선택 - 현재 활용 지목�� "대"인 경우 */}
                 {!noIncludedLand && !aiResult && currentUsage === "대" && (
                   <div className="rounded border border-border bg-muted/30 p-3">
                     <Label htmlFor="landSubType" className="mb-2 block text-sm font-medium">
