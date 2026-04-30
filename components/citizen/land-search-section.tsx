@@ -391,7 +391,7 @@ function simulateAIAnalysis(
     areaCriteriaMet = land.remainingArea <= 330;
   } else if (currentUsage === "임") {
     // 현재 활용 지목이 "임"(임야)인 경우 산지 기준
-    areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (산지 기준: 990㎡ ��하)`;
+    areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (산지 ���준: 990㎡ ��하)`;
     areaCriteriaMet = land.remainingArea <= 990;
   } else {
     // 그 밖의 지목 (잡종지 등)
@@ -603,7 +603,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 ${summary}`;
   } else {
     // 매수불가
-    summary = `본 토지는 잔여지 면적 및 형상이 종래 목��대로 ���용 가능한 것으로 판단되어 ��수청구 대상에 해당하지 않습니다.`;
+    summary = `본 토지는 잔여지 면적 및 ���상��� 종래 목��대로 ���용 가능한 것으로 판단되어 ��수청구 대상에 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -991,7 +991,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     }
   };
 
-  // AI 판독 실행 (선택된 모든 필지 한번에 판독)
+  // AI 판독 실행 (선택된 모든 필지 한번에 ��독)
   const handleAIAnalysis = () => {
     if (noIncludedLand) return;
     // 현재 활��� 지목 필수
@@ -1591,18 +1591,13 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       <Button 
                         onClick={handleAIAnalysis}
                         className="h-10 w-full gap-2 text-sm"
-                        variant={parcelAiResults.size > 0 ? "outline" : "default"}
+                        variant="default"
                         disabled={aiAnalyzing || !currentUsage || (currentUsage === "대" && !landSubType) || noIncludedLand}
                       >
                         {aiAnalyzing ? (
                           <>
                             <Loader2 className="h-4 w-4 animate-spin" />
                             {ownedParcels.size || 1}개 필지 판독 중...
-                          </>
-                        ) : parcelAiResults.size > 0 ? (
-                          <>
-                            <RotateCcw className="h-4 w-4" />
-                            선택 필지 재판독 ({ownedParcels.size || 1}건)
                           </>
                         ) : (
                           <>
@@ -1999,10 +1994,15 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     </div>
                   </div>
                 )}
+                  </div>
+                ) : (
+                  <div className="flex h-full items-center justify-center text-muted-foreground">
+                    정보 제공 대상 필지가 아닙니다.
+                  </div>
+                )}
               </div>
-          </div>
             
-            {/* 신청 목록 추가 버튼 - 하단 고정 */}
+              {/* 신청 목록 추가 버튼 - 하단 고정 */}
             {selectedLand && aiResult && (
               <div className="shrink-0 border-t bg-background p-3">
                 {(() => {
