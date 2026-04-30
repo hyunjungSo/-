@@ -1576,7 +1576,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                         ? "판독완료" 
                                         : landAiResult?.provisionalJudgment === "매수불가"
                                           ? "미충족"
-                                          : "심의이관"}
+                                          : "심의이���"}
                                     </Badge>
                                   )}
                                 </div>
@@ -2034,18 +2034,46 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   }
                   
                   if (aiResult.provisionalJudgment !== "매수불가") {
+                    // 체크된 필지 중 신청 가능한 필지 필터링
+                    const checkedAddableItems = Array.from(checkedParcelsForCart)
+                      .map(id => ({
+                        land: searchResults.find(l => l.id === id),
+                        result: parcelAiResults.get(id)
+                      }))
+                      .filter(item => 
+                        item.land && 
+                        item.result && 
+                        item.result.provisionalJudgment !== "매수불가" && 
+                        !cartItems.some(c => c.landInfo.id === item.land!.id)
+                      );
+                    
+                    const checkedCount = checkedAddableItems.length;
+                    
                     return (
                       <div className="space-y-2">
-                  <Button
-                    onClick={() => onAddToCart(selectedLand, aiResult!)}
-                    className="h-12 w-full cursor-pointer text-base"
-                    variant="default"
-                  >
-                    <Plus className="mr-2 h-4 w-4" />
-                    신청 목록에 추가 (1건)
-                  </Button>
+                        <Button
+                          onClick={() => {
+                            if (checkedCount > 0) {
+                              checkedAddableItems.forEach(item => {
+                                if (item.land && item.result) {
+                                  onAddToCart(item.land, item.result);
+                                }
+                              });
+                              setCheckedParcelsForCart(new Set());
+                            } else {
+                              // 체크된 게 없으면 현재 선택된 필지만 추가
+                              onAddToCart(selectedLand, aiResult!);
+                            }
+                          }}
+                          className="h-12 w-full cursor-pointer text-base"
+                          variant="default"
+                          disabled={checkedCount === 0}
+                        >
+                          <Plus className="mr-2 h-4 w-4" />
+                          신청 목록에 추가 ({checkedCount}건)
+                        </Button>
                         <p className="text-center text-xs text-muted-foreground">
-                          여러 필지를 한번에 신청할 수 있습니다
+                          위 목록에서 추가할 필지를 선택하세요
                         </p>
                       </div>
                     );
