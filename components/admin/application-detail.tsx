@@ -253,49 +253,35 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
 // 주소에서 리/동 및 지번 정보 추출
   const parseAddress = (address: string) => {
-    // 예: "경기도 평택시 포승읍 내기리 200-1" -> { district: "내기리", lotNumber: "200", subNumber: "1" }
     const parts = address.split(" ");
-    const lastPart = parts[parts.length - 1]; // 지번 (예: "200-1")
-    const district = parts[parts.length - 2]; // 리/동 (예: "내기리")
-    
+    const lastPart = parts[parts.length - 1];
+    const district = parts[parts.length - 2];
     const [lotNumber, subNumber] = lastPart.includes("-") 
       ? lastPart.split("-") 
       : [lastPart, "0"];
-    
     return { district, lotNumber, subNumber: subNumber || "0" };
   };
   
-  // 두 필지가 인접한지 판단 (같은 리/동 + 지번이 연속적)
+  // 두 필지가 인접한지 판단
   const isAdjacent = (land1: typeof allLands[0], land2: typeof allLands[0]) => {
     const addr1 = parseAddress(land1.address);
     const addr2 = parseAddress(land2.address);
-    
-    // 다른 리/동이면 인접 불가
     if (addr1.district !== addr2.district) return false;
-    
-    // 같은 본번이면 인접 (예: 200-1, 200-2)
     if (addr1.lotNumber === addr2.lotNumber) return true;
-    
-    // 본번이 연속적이면 인접 (예: 200, 201)
     const lot1 = parseInt(addr1.lotNumber);
     const lot2 = parseInt(addr2.lotNumber);
     if (Math.abs(lot1 - lot2) <= 1) return true;
-    
     return false;
   };
   
-  // 인접 필지 그룹 찾기 (Union-Find 방식)
+  // 인접 필지 그룹 찾기 (BFS)
   const findAdjacentGroups = (lands: typeof allLands) => {
     const groups: string[][] = [];
     const visited = new Set<string>();
-    
     for (let i = 0; i < lands.length; i++) {
       if (visited.has(lands[i].id)) continue;
-      
       const group: string[] = [lands[i].id];
       visited.add(lands[i].id);
-      
-      // BFS로 인접 필지 찾기
       const queue = [i];
       while (queue.length > 0) {
         const current = queue.shift()!;
@@ -308,55 +294,282 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         }
       }
-      
       groups.push(group);
     }
-    
     return groups;
   };
 
-  // AI 판독 실행 핸들러 (전체 필지 일괄 판독 - 실제 인접 여부 기반)
+  // ===== AI 판독 기준 (중앙토지수용위원회 기준) =====
+  // 토지 유형별 면적 기준 (㎡)
+  const getAreaCriteria = (land: typeof allLands[0], landData?: typeof application.landDataList[0]) => {
+    const landType = land.landType;
+    const subType = landData?.landSubType || "";
+    const remainingRatio = land.remainingRatio;
+    
+    if (landType === "대지") {
+      // 택지 경로: 세부 유형별 기준
+      switch (subType) {
+        case "residential-detached": // 단독·다세대주택
+          return { base: 90, relaxed: remainingRatio <= 25 ? 112.5 : 90 }; // 25% 이하 시 1.25배 완화
+        case "residential-apartment": // 아파트 (1,000㎡ 이하)
+          return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
+        case "commercial": // 상업용
+          return { base: 150, relaxed: remainingRatio <= 25 ? 187.5 : 150 };
+        case "industrial": // 공업용
+          return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
+        default:
+          return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
+      }
+    } else if (landType === "농지") {
+      // 농지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
+      return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
+    } else if (landType === "산지") {
+      // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
+      return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
+    } else {
+      // 그 밖의 토지: 택지/농지/산지 중 유사 용도 기준 적용, 기본 330㎡
+      return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
+    }
+  };
+  
+  // 소규모 토지 여부 판단 (편입 전 면적 330㎡ 이하 또는 잔여비율 50% 이하)
+  const isSmallScaleLand = (land: typeof allLands[0]) => {
+    return land.originalArea <= 330 || land.remainingRatio <= 50;
+  };
+  
+  // 형상 기준 충족 여부 (폭 기준)
+  const checkShapeCriteria = (land: typeof allLands[0]) => {
+    const shape = land.remainingShape;
+    // 사각형 폭: 5m 이하, 삼각형 한 변: 11m 이하
+    // 형상지수 변화로 간접 판단 (실제 폭 데이터 없음)
+    const shapeIndexChange = land.remainingShapeIndex - land.originalShapeIndex;
+    
+    if (shape === "삼각형" || shape === "역삼각형") {
+      return { met: shapeIndexChange >= 0.5, description: "삼각형 형상 (한 변 11m 이하 기준)" };
+    } else if (shape === "부정형" || shape === "자루형") {
+      return { met: shapeIndexChange >= 0.3, description: "부정형 형상 (폭 5m 이하 기준)" };
+    } else {
+      return { met: shapeIndexChange >= 0.8, description: "형상 변경 (사각형 폭 5m 이하 기준)" };
+    }
+  };
+  
+  // 개별 필지 AI 분석
+  const analyzeSingleLand = (land: typeof allLands[0], landData?: typeof application.landDataList[0]) => {
+    const criteria = getAreaCriteria(land, landData);
+    const isSmall = isSmallScaleLand(land);
+    const shapeCriteria = checkShapeCriteria(land);
+    const addr = parseAddress(land.address);
+    
+    const criteriaChecks: Array<{ name: string; met: boolean; description: string }> = [];
+    let judgment: "매수" | "매수불가" | "검토필요" = "매수불가";
+    let reasons: string[] = [];
+    
+    // 1. 면적 기준 미달 여부
+    const effectiveLimit = criteria.relaxed;
+    const areaCheckMet = land.remainingArea <= effectiveLimit;
+    criteriaChecks.push({
+      name: "면적 기준",
+      met: areaCheckMet,
+      description: `잔여 ${land.remainingArea}㎡ ${areaCheckMet ? "≤" : ">"} ${effectiveLimit}㎡`
+    });
+    
+    if (land.landType === "대지") {
+      // 택지 경로
+      // 2. 접면도로 상태 변경
+      const roadLost = landData?.accessRoadLost || land.remainingRatio < 30;
+      criteriaChecks.push({
+        name: "접면도로 상태",
+        met: roadLost,
+        description: roadLost ? "접면도로 상실로 건축 불가" : "접면도로 유지"
+      });
+      
+      // 3. 형상 부정형 변경
+      criteriaChecks.push({
+        name: "형상 변경",
+        met: shapeCriteria.met,
+        description: shapeCriteria.description
+      });
+      
+      // 하나라도 해당 시 → 충족(매수), 전체 미해당 시 → 미충족(기각)
+      if (areaCheckMet || roadLost || shapeCriteria.met) {
+        judgment = "매수";
+        if (areaCheckMet) reasons.push("면적 기준 충족");
+        if (roadLost) reasons.push("접면도로 상실");
+        if (shapeCriteria.met) reasons.push("형상 부정형 변경");
+      } else {
+        judgment = "매수불가";
+        reasons.push("모든 기준 미충족");
+      }
+      
+    } else if (land.landType === "농지") {
+      // 농지 경로
+      // 2. 접면 도로/수로 상실 여부
+      const waterLost = landData?.waterChannelLost || false;
+      const roadLost = landData?.accessRoadLost || false;
+      criteriaChecks.push({
+        name: "도로/수로 상실",
+        met: waterLost || roadLost,
+        description: waterLost ? "관개수로 상실로 농지 사용 불가" : (roadLost ? "접면도로 상실" : "도로/수로 유지")
+      });
+      
+      // 3. 농기계 회전 곤란, 형상 부정형 변경
+      const farmDifficulty = landData?.farmMachineDifficulty || land.remainingArea < 200;
+      criteriaChecks.push({
+        name: "농기계 진입/회전",
+        met: farmDifficulty,
+        description: farmDifficulty ? "농기계 진입/회전 곤란" : "농기계 사용 가능"
+      });
+      
+      criteriaChecks.push({
+        name: "형상 변경",
+        met: shapeCriteria.met,
+        description: shapeCriteria.description
+      });
+      
+      if (areaCheckMet || waterLost || roadLost || farmDifficulty || shapeCriteria.met) {
+        judgment = "매수";
+        if (areaCheckMet) reasons.push("면적 기준 충족");
+        if (waterLost) reasons.push("관개수로 상실");
+        if (roadLost) reasons.push("접면도로 상실");
+        if (farmDifficulty) reasons.push("농기계 진입 곤란");
+        if (shapeCriteria.met) reasons.push("형상 부정형 변경");
+      } else {
+        judgment = "매수불가";
+        reasons.push("모든 기준 미충족");
+      }
+      
+    } else if (land.landType === "산지") {
+      // 산지 경로
+      // 2. 접면 도로 상실 여부
+      const roadLost = landData?.accessRoadLost || land.remainingRatio < 25;
+      criteriaChecks.push({
+        name: "접면도로 상실",
+        met: roadLost,
+        description: roadLost ? "도로 접하지 않아 접근 불가" : "접면도로 유지"
+      });
+      
+      if (areaCheckMet || roadLost) {
+        judgment = "매수";
+        if (areaCheckMet) reasons.push("면적 기준 충족");
+        if (roadLost) reasons.push("접면도로 상실");
+      } else {
+        judgment = "매수불가";
+        reasons.push("모든 기준 미충족");
+      }
+      
+    } else {
+      // 그 밖의 토지
+      // 종래 목적 사용 곤란 여부 (위치, 형상, 접근 상태 고려)
+      const usageDifficulty = land.remainingRatio < 40 || shapeCriteria.met;
+      criteriaChecks.push({
+        name: "종래 사용 곤란",
+        met: usageDifficulty,
+        description: usageDifficulty ? "위치/형상/접근 상태로 종래 사용 곤란" : "종래 사용 가능"
+      });
+      
+      if (areaCheckMet || usageDifficulty) {
+        judgment = "매수";
+        if (areaCheckMet) reasons.push("면적 기준 충족");
+        if (usageDifficulty) reasons.push("종래 사용 곤란");
+      } else {
+        judgment = "매수불가";
+        reasons.push("모든 기준 미충족");
+      }
+    }
+    
+    // 소규모 토지 추가 검토
+    if (isSmall) {
+      criteriaChecks.push({
+        name: "소규모 토지",
+        met: true,
+        description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규모 해당)`
+      });
+      if (judgment === "매수불가") {
+        judgment = "검토필요";
+        reasons.push("소규모 토지로 추가 검토 필요");
+      }
+    }
+    
+    return {
+      judgment,
+      criteriaChecks,
+      reasons,
+      landTypePath: land.landType,
+      accessRoadLost: landData?.accessRoadLost || land.remainingRatio < 30,
+      waterChannelLost: landData?.waterChannelLost || false,
+      confidence: 0.85 + Math.random() * 0.1,
+    };
+  };
+
+  // AI 판독 실행 핸들러
   const handleRunAIAnalysis = () => {
     setIsAIAnalyzing(true);
-    
-    // 재판독 시 기존 결과 초기화
     setLandAIResults({});
     setUnifiedGroups({});
     
-    // 시뮬레이션: 2초 후 AI 분석 결과 업데이트
     setTimeout(() => {
       if (allLands.length >= 2) {
-        // 실제 인접 관계 기반으로 그룹 분류
         const adjacentGroups = findAdjacentGroups(allLands);
-        
         const newResults: typeof landAIResults = {};
         const newGroups: typeof unifiedGroups = {};
         let groupIndex = 0;
         
         adjacentGroups.forEach((groupLandIds) => {
           if (groupLandIds.length >= 2) {
-            // 2필지 이상 인접 그룹 -> 일단지
+            // 일단지: 2필지 이상 인접
             const groupId = `group-${Date.now()}-${groupIndex}`;
             const groupLands = allLands.filter(l => groupLandIds.includes(l.id));
             const combinedArea = groupLands.reduce((sum, l) => sum + l.remainingArea, 0);
             
-            // 일단지 기준 충족 여부 확인 (합산 면적 기준)
-            const landType = groupLands[0].landType;
-            const areaLimit = landType === "농지" ? 330 : landType === "대지" ? 60 : 200;
-            const meetsAreaCriteria = combinedArea <= areaLimit * groupLandIds.length;
+            // 일단지 합산 면적으로 판정
+            const primaryLand = groupLands[0];
+            const landData = application.landDataList?.[allLands.findIndex(l => l.id === primaryLand.id)];
+            const criteria = getAreaCriteria(primaryLand, landData);
+            const combinedLimit = criteria.relaxed * groupLandIds.length;
+            
+            let groupJudgment: "매수" | "매수불가" | "검토필요" = "매수불가";
+            const groupReasons: string[] = [];
+            
+            // 일단지 합산 면적 기준 (모든 필지 합산)
+            if (combinedArea <= combinedLimit) {
+              groupJudgment = "매수";
+              groupReasons.push(`일단지 합산 ${combinedArea}㎡ ≤ ${combinedLimit}㎡`);
+            }
+            
+            // 추가 조건 검토 (도로/수로 상실, 농기계 곤란 등)
+            const hasRoadLoss = groupLands.some((l, i) => {
+              const data = application.landDataList?.[allLands.findIndex(al => al.id === l.id)];
+              return data?.accessRoadLost || l.remainingRatio < 30;
+            });
+            const hasWaterLoss = groupLands.some((l, i) => {
+              const data = application.landDataList?.[allLands.findIndex(al => al.id === l.id)];
+              return data?.waterChannelLost;
+            });
+            const hasFarmDifficulty = groupLands.some((l, i) => {
+              const data = application.landDataList?.[allLands.findIndex(al => al.id === l.id)];
+              return data?.farmMachineDifficulty || l.remainingArea < 200;
+            });
+            
+            if (hasRoadLoss) groupReasons.push("접면도로 상실");
+            if (hasWaterLoss) groupReasons.push("관개수로 상실");
+            if (hasFarmDifficulty && primaryLand.landType === "농지") groupReasons.push("농기계 진입 곤란");
+            
+            if (groupReasons.length > 0 && groupJudgment === "매수불가") {
+              groupJudgment = "매수";
+            }
             
             groupLandIds.forEach(landId => {
               const land = allLands.find(l => l.id === landId)!;
               const addr = parseAddress(land.address);
               newResults[landId] = {
-                provisionalJudgment: meetsAreaCriteria ? "매수" : "매수불가",
+                provisionalJudgment: groupJudgment === "검토필요" ? "매수불가" : groupJudgment,
                 landTypePath: land.landType,
-                accessRoadLost: true,
-                waterChannelLost: land.landType === "농지",
+                accessRoadLost: hasRoadLoss,
+                waterChannelLost: hasWaterLoss,
                 confidence: 0.88 + Math.random() * 0.08,
                 analysisDate: new Date().toISOString().split("T")[0],
                 unifiedGroupId: groupId,
-                reason: `${addr.district} ${addr.lotNumber}번지 인접 필지 (일단지 ${String.fromCharCode(65 + groupIndex)})`,
+                reason: `일단지 ${String.fromCharCode(65 + groupIndex)} (${groupReasons.join(", ")})`,
               };
             });
             
@@ -364,30 +577,28 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               landIds: groupLandIds,
               groupName: `일단지 ${String.fromCharCode(65 + groupIndex)}`,
               combinedArea,
-              judgment: meetsAreaCriteria ? "매수" : "매수불가",
+              judgment: groupJudgment === "검토필요" ? "검토필요" : groupJudgment,
             };
-            
             groupIndex++;
+            
           } else {
-            // 단독 필지 -> 개별 판정 (미해당 또는 개별 매수)
+            // 단독 필지: 개별 분석
             const landId = groupLandIds[0];
             const land = allLands.find(l => l.id === landId)!;
+            const landIndex = allLands.findIndex(l => l.id === landId);
+            const landData = application.landDataList?.[landIndex];
+            const analysis = analyzeSingleLand(land, landData);
             const addr = parseAddress(land.address);
             
-            // 개별 필지 면적 기준 확인
-            const landType = land.landType;
-            const areaLimit = landType === "농지" ? 330 : landType === "대지" ? 60 : 200;
-            const meetsAreaCriteria = land.remainingArea <= areaLimit;
-            
             newResults[landId] = {
-              provisionalJudgment: meetsAreaCriteria ? "미해당" : "미해당",
-              landTypePath: land.landType,
-              accessRoadLost: false,
-              waterChannelLost: false,
-              confidence: 0.75 + Math.random() * 0.1,
+              provisionalJudgment: analysis.judgment === "검토필요" ? "매수불가" : analysis.judgment,
+              landTypePath: analysis.landTypePath,
+              accessRoadLost: analysis.accessRoadLost,
+              waterChannelLost: analysis.waterChannelLost,
+              confidence: analysis.confidence,
               analysisDate: new Date().toISOString().split("T")[0],
               unifiedGroupId: undefined,
-              reason: `${addr.district} 단독 필지 - 인접지 없음 (일단지 미해당)`,
+              reason: `${addr.district} 단독 (${analysis.reasons.join(", ")})`,
             };
           }
         });
@@ -396,30 +607,25 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         setLandAIResults(newResults);
       } else {
         // 단일 필지
-        const currentLandId = allLands[selectedLandIndex].id;
         const land = allLands[selectedLandIndex];
-        const landType = land.landType;
-        const areaLimit = landType === "농지" ? 330 : landType === "대지" ? 60 : 200;
-        const meetsAreaCriteria = land.remainingArea <= areaLimit;
+        const landData = application.landDataList?.[selectedLandIndex];
+        const analysis = analyzeSingleLand(land, landData);
         
-        const newResult = {
-          provisionalJudgment: meetsAreaCriteria ? "매수" : "매수불가",
-          landTypePath: land.landType,
-          accessRoadLost: land.remainingRatio < 50,
-          waterChannelLost: land.landType === "농지" && land.remainingRatio < 40,
-          confidence: 0.85 + Math.random() * 0.1,
-          analysisDate: new Date().toISOString().split("T")[0],
-          reason: meetsAreaCriteria 
-            ? `잔여면적 ${land.remainingArea}㎡ ≤ ${areaLimit}㎡ (기준 충족)` 
-            : `잔여면적 ${land.remainingArea}㎡ > ${areaLimit}㎡ (기준 미충족)`,
-        };
         setLandAIResults({
-          [currentLandId]: newResult,
+          [land.id]: {
+            provisionalJudgment: analysis.judgment === "검토필요" ? "매수불가" : analysis.judgment,
+            landTypePath: analysis.landTypePath,
+            accessRoadLost: analysis.accessRoadLost,
+            waterChannelLost: analysis.waterChannelLost,
+            confidence: analysis.confidence,
+            analysisDate: new Date().toISOString().split("T")[0],
+            reason: analysis.reasons.join(", "),
+          },
         });
         setUnifiedGroups({});
       }
       setIsAIAnalyzing(false);
-}, 2000);
+    }, 2000);
   };
   
   // 판독 결과 초기화
@@ -1347,7 +1553,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <Label className="text-base font-semibold text-primary">최종 검토 의견</Label>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  복수 필지 신청건에 대한 종합적인 검토 의견을 작성하세요. 이 내용은 심의서의 &quot;현지상황 및 검토의견&quot;에 자동 입력됩니다.
+                  복수 필��� 신청건에 대한 종합적인 검토 의견을 작성하세요. 이 내용은 심의서의 &quot;현지상황 및 검토의견&quot;에 자동 입력됩니다.
                 </p>
                 <Textarea
                   id="finalReviewOpinion"
