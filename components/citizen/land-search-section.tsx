@@ -234,7 +234,7 @@ const regionData = {
     "신창면": ["가덕리", "궁화리", "남성리", "읍내리", "학정리", "황산리"],
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
-    "인주면": ["걸매리", "냉정리", "대음리", "문방리", "밀두��", "������"],
+    "인주면": ["걸매리", "냉정리", "대음리", "문방리", "밀두����", "������"],
     "���고���": ["도고리", "시전리", "효자리", "금����"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
@@ -1673,13 +1673,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             
             {/* 컨텐츠 */}
             <div className="flex-1 overflow-y-auto p-4">
-              {!selectedLand && (
-                <div className="flex h-full items-center justify-center text-muted-foreground">
-                  필지를 선택해 주세요.
-                </div>
-              )}
-              {selectedLand && (
-                <div className="space-y-4">
+              <div className="space-y-4">
                 {/* 토지 기본 정보 + 현재 활�� 지목 통합 */}
                 <div className="rounded border border-border bg-muted/30 p-3">
                   <div className="flex flex-col gap-3 text-sm">
@@ -2000,7 +1994,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   </div>
                 )}
               </div>
-            )}
             </div>
             
             {/* 신청 목록 추가 버튼 - 하단 고정 */}
