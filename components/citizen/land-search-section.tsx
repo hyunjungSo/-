@@ -178,7 +178,7 @@ const regionData = {
     "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "음양리"],
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
     "향남읍": ["구문천리", "도이리", "발안리", "상신리", "제암리", "평리", "행정리"],
-    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "천천리"],
+    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "천천���"],
     "비봉면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
     "마도면": ["백곡리", "송정리", "쌍송리", "청원리", "해문리"],
     "남양읍": ["남양리", "문호리", "북양리", "송림리", "신남리"],
@@ -772,7 +772,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         // 실제 구현에서는 API 호출, 여기서는 더미 데이터 시뮬레이션
         // 홍길동이 3개 관할기관(양평이천, 수도권, 천안안성)에 잔여지를 소유한 경우
         const ownerLandData = [
-          // 양평이천 관할���관 - 2건
+          // 양평이천 관������관 - 2건
           {
             id: "owner-search-0",
             address: "경기도 이천시 마장면 덕평리 55-3",
@@ -915,7 +915,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return true;
       });
       
-      // 검색 결과가 없으면 해당 지역의 더미 데이터 생성 (��표 포함)
+      // 검색 결과가 없으면 ��당 지역의 더미 데이터 생성 (��표 포함)
       if (results.length === 0) {
         const baseCoords = [
           [
@@ -1490,7 +1490,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       </p>
                       <p className="mt-2 text-sm text-muted-foreground">
                         입력하신 성명과 주민번호 앞자리로<br />
-                        등록된 편입 토지를 찾을 수 없���니다.<br />
+                        등록된 편입 토지를 찾을 수 없���니���.<br />
                         정보를 다시 확인해 주세요.
                       </p>
                     </div>
@@ -1847,13 +1847,11 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                   }
                                   className="ml-2 shrink-0"
                                 >
-                                  {isInCart 
-                                    ? "추가됨"
-                                    : result.provisionalJudgment === "매수" 
-                                      ? "매수" 
-                                      : result.provisionalJudgment === "심의위원회이관"
-                                        ? "심의이관"
-                                        : "미충족"}
+                                  {result.provisionalJudgment === "매수" 
+                                    ? "매수" 
+                                    : result.provisionalJudgment === "심의위원회이관"
+                                      ? "심의이관"
+                                      : "미충족"}
                                 </Badge>
                               </div>
                             </div>
