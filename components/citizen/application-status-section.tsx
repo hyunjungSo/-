@@ -188,27 +188,8 @@ function UnifiedParcelSection({ application }: { application: Application }) {
         </div>
       )}
       
-      {/* AI 분석 미완료 시 기본 정보 표시 */}
-      {!landJudgments && (
-        <div className="overflow-hidden rounded-lg border border-muted bg-muted/30">
-          <div className="flex items-center justify-between border-b border-muted px-4 py-2.5">
-            <h4 className="flex items-center gap-2 font-semibold text-muted-foreground">
-              <Info className="h-4 w-4" />
-              일단지 판정 대기
-            </h4>
-            <span className="text-sm text-muted-foreground">{allLands.length}필지</span>
-          </div>
-          <div className="p-4">
-            <p className="text-sm text-muted-foreground">
-              AI 분석 완료 후 일단지 여부 및 필지별 판정 결과가 표시됩니다.
-            </p>
-            <div className="mt-2 flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2">
-              <span className="text-sm">총 신청 면적</span>
-              <span className="font-bold">{totalArea.toLocaleString()}m²</span>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* AI 분석 결과가 없으면 일단지 판정 섹션 미표시 */}
+      {!landJudgments && !hasUnifiedGroups && !hasIndividualLands && !hasNotApplicable && null}
     </div>
   );
 }
