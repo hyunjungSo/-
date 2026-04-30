@@ -136,41 +136,135 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     waterChannelLost: boolean;
     confidence: number;
     analysisDate: string;
+    unifiedGroupId?: string; // 일단지 그룹 ID (있으면 일단지로 묶임)
   }>>(() => {
     // 기존 application.aiResult가 있으면 모든 필지에 초기값으로 설정
     if (application.aiResult) {
-      const initial: Record<string, typeof application.aiResult> = {};
+      const initial: Record<string, typeof application.aiResult & { unifiedGroupId?: string }> = {};
+      const hasUnifiedAnalysis = application.aiResult.unifiedParcelAnalysis?.isUnifiedParcel;
       allLands.forEach(land => {
-        initial[land.id] = application.aiResult!;
+        initial[land.id] = {
+          ...application.aiResult!,
+          unifiedGroupId: hasUnifiedAnalysis ? "group-initial" : undefined,
+        };
       });
       return initial;
     }
     return {};
   });
   
+  // 일단지 그룹 정보 (groupId -> 그룹 정보)
+  const [unifiedGroups, setUnifiedGroups] = useState<Record<string, {
+    landIds: string[];
+    groupName: string;
+    combinedArea: number;
+    judgment: string;
+  }>>(() => {
+    if (application.aiResult?.unifiedParcelAnalysis?.isUnifiedParcel) {
+      return {
+        "group-initial": {
+          landIds: allLands.map(l => l.id),
+          groupName: "일단지 A",
+          combinedArea: allLands.reduce((sum, l) => sum + l.remainingArea, 0),
+          judgment: application.aiResult.provisionalJudgment || "매수",
+        }
+      };
+    }
+    return {};
+  });
+  
   // 현재 선택된 필지의 AI 결과
   const currentAIResult = landAIResults[allLands[selectedLandIndex]?.id] || null;
+  
+  // 필지가 속한 일단지 그룹 찾기
+  const getLandGroup = (landId: string) => {
+    const result = landAIResults[landId];
+    if (result?.unifiedGroupId) {
+      return unifiedGroups[result.unifiedGroupId];
+    }
+    return null;
+  };
 
-  // AI 판독 실행 핸들러
+  // AI 판독 실행 핸들러 (전체 필지 일괄 판독)
   const handleRunAIAnalysis = () => {
     setIsAIAnalyzing(true);
-    const currentLandId = allLands[selectedLandIndex].id;
+    
     // 시뮬레이션: 2초 후 AI 분석 결과 업데이트
+    // 복수 필지인 경우 일부는 일단지 그룹으로, 일부는 미해당으로 판정
     setTimeout(() => {
-      const newResult = {
-        provisionalJudgment: Math.random() > 0.3 ? "매수" : "매수불가",
-        landTypePath: allLands[selectedLandIndex].landType,
-        accessRoadLost: Math.random() > 0.5,
-        waterChannelLost: Math.random() > 0.5,
-        confidence: 0.85 + Math.random() * 0.1,
-        analysisDate: new Date().toISOString().split("T")[0],
-      };
-      setLandAIResults(prev => ({
-        ...prev,
-        [currentLandId]: newResult,
-      }));
+      if (allLands.length >= 2) {
+        // 복수 필지: 일단지 그룹과 미해당 분류
+        const groupId = `group-${Date.now()}`;
+        const unifiedLandIds = allLands.slice(0, Math.ceil(allLands.length * 0.6)).map(l => l.id); // 60%는 일단지
+        const nonUnifiedLandIds = allLands.slice(Math.ceil(allLands.length * 0.6)).map(l => l.id); // 40%는 미해당
+        
+        const newResults: typeof landAIResults = {};
+        
+        // 일단지 그룹 필지들
+        unifiedLandIds.forEach(landId => {
+          const land = allLands.find(l => l.id === landId)!;
+          newResults[landId] = {
+            provisionalJudgment: "매수",
+            landTypePath: land.landType,
+            accessRoadLost: true,
+            waterChannelLost: false,
+            confidence: 0.88 + Math.random() * 0.1,
+            analysisDate: new Date().toISOString().split("T")[0],
+            unifiedGroupId: groupId,
+          };
+        });
+        
+        // 미해당 필지들
+        nonUnifiedLandIds.forEach(landId => {
+          const land = allLands.find(l => l.id === landId)!;
+          newResults[landId] = {
+            provisionalJudgment: "미해당",
+            landTypePath: land.landType,
+            accessRoadLost: false,
+            waterChannelLost: false,
+            confidence: 0.75 + Math.random() * 0.1,
+            analysisDate: new Date().toISOString().split("T")[0],
+            unifiedGroupId: undefined,
+          };
+        });
+        
+        // 일단지 그룹 정보 생성
+        const unifiedLands = allLands.filter(l => unifiedLandIds.includes(l.id));
+        setUnifiedGroups(prev => ({
+          ...prev,
+          [groupId]: {
+            landIds: unifiedLandIds,
+            groupName: `일단지 ${String.fromCharCode(65 + Object.keys(prev).length)}`,
+            combinedArea: unifiedLands.reduce((sum, l) => sum + l.remainingArea, 0),
+            judgment: "매수",
+          }
+        }));
+        
+        setLandAIResults(newResults);
+      } else {
+        // 단일 필지
+        const currentLandId = allLands[selectedLandIndex].id;
+        const newResult = {
+          provisionalJudgment: Math.random() > 0.3 ? "매수" : "매수불가",
+          landTypePath: allLands[selectedLandIndex].landType,
+          accessRoadLost: Math.random() > 0.5,
+          waterChannelLost: Math.random() > 0.5,
+          confidence: 0.85 + Math.random() * 0.1,
+          analysisDate: new Date().toISOString().split("T")[0],
+        };
+        setLandAIResults(prev => ({
+          ...prev,
+          [currentLandId]: newResult,
+        }));
+      }
       setIsAIAnalyzing(false);
     }, 2000);
+  };
+  
+  // 판독 결과 초기화
+  const handleResetAIResults = () => {
+    setLandAIResults({});
+    setUnifiedGroups({});
   };
   
   // 필지 포함/제외 상태 (민원인 소유 확인용)
@@ -312,7 +406,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setLandAIResults({})}
+                onClick={handleResetAIResults}
                 className="text-muted-foreground"
               >
                 <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
@@ -329,81 +423,243 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardContent>
           {isMultipleLands ? (
             <div className="space-y-3">
-              {/* 필지가 5개 이상이면 셀렉트 박스, 4개 이하면 카드 그리드 */}
+              {/* 필지가 5개 이상이면 셀렉트 박스 + 요약, 4개 이하면 카드 그리드 */}
               {allLands.length >= 5 ? (
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
-                  <Select
-                    value={selectedLandIndex.toString()}
-                    onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
-                  >
-                    <SelectTrigger className="w-full sm:w-[280px]">
-                      <SelectValue placeholder="필지 선택" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {allLands.map((land, index) => (
-                        <SelectItem key={land.id} value={index.toString()}>
-                          필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")}
-                        </SelectItem>
+                <div className="space-y-3">
+                  {/* 일단지 그룹 요약 (있는 경우) */}
+                  {Object.keys(unifiedGroups).length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {Object.entries(unifiedGroups).map(([groupId, group]) => (
+                        <div key={groupId} className="flex items-center gap-2 rounded-lg border-2 border-emerald-500/50 bg-emerald-50/30 px-3 py-1.5 dark:bg-emerald-950/20">
+                          <Badge className="bg-emerald-600 hover:bg-emerald-700 text-xs">
+                            {group.groupName}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">
+                            {group.landIds.length}필지
+                          </span>
+                          <Badge variant="default" className="text-xs">
+                            {group.judgment}
+                          </Badge>
+                        </div>
                       ))}
-                    </SelectContent>
-                  </Select>
-                  <div className="flex flex-1 items-center justify-between rounded-lg border border-border p-3">
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">{allLands[selectedLandIndex].address}</p>
-                      <div className="mt-1 flex gap-3 text-sm">
-                        <span className="font-medium text-primary">{allLands[selectedLandIndex].remainingArea.toLocaleString()}m²</span>
-                        <span className="text-muted-foreground">잔여 {allLands[selectedLandIndex].remainingRatio}%</span>
-                      </div>
-                    </div>
-                    {landAIResults[allLands[selectedLandIndex].id] && (
-                      <Badge 
-                        variant={landAIResults[allLands[selectedLandIndex].id].provisionalJudgment === "매수" ? "default" : "destructive"} 
-                        className="ml-3 shrink-0"
-                      >
-                        {landAIResults[allLands[selectedLandIndex].id].provisionalJudgment}
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="grid gap-2 sm:grid-cols-2">
-                  {allLands.map((land, index) => {
-                    const isSelected = selectedLandIndex === index;
-                    const landResult = landAIResults[land.id];
-                    return (
-                      <button
-                        key={land.id}
-                        type="button"
-                        onClick={() => setSelectedLandIndex(index)}
-                        className={`flex flex-col items-start gap-1 rounded-lg border p-3 text-left transition-all ${
-                          isSelected 
-                            ? "border-primary bg-primary/5 ring-1 ring-primary" 
-                            : "border-border hover:border-primary/50 hover:bg-muted/30"
-                        }`}
-                      >
-                        <div className="flex w-full items-center justify-between">
-                          <span className="text-sm font-medium">필지 {index + 1}</span>
-                          {landResult ? (
-                            <Badge 
-                              variant={landResult.provisionalJudgment === "매수" ? "default" : "destructive"} 
-                              className="text-xs"
-                            >
-                              {landResult.provisionalJudgment}
-                            </Badge>
-                          ) : (
+                      {(() => {
+                        const unifiedLandIds = Object.values(unifiedGroups).flatMap(g => g.landIds);
+                        const nonUnifiedCount = allLands.filter(l => !unifiedLandIds.includes(l.id)).length;
+                        if (nonUnifiedCount === 0) return null;
+                        return (
+                          <div className="flex items-center gap-2 rounded-lg border border-dashed border-muted-foreground/30 bg-muted/20 px-3 py-1.5">
                             <Badge variant="outline" className="text-xs text-muted-foreground">
-                              미판독
+                              미해당
+                            </Badge>
+                            <span className="text-xs text-muted-foreground">
+                              {nonUnifiedCount}필지
+                            </span>
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  )}
+                  
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+                    <Select
+                      value={selectedLandIndex.toString()}
+                      onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
+                    >
+                      <SelectTrigger className="w-full sm:w-[280px]">
+                        <SelectValue placeholder="필지 선택" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {allLands.map((land, index) => {
+                          const landResult = landAIResults[land.id];
+                          const group = getLandGroup(land.id);
+                          return (
+                            <SelectItem key={land.id} value={index.toString()}>
+                              <span className="flex items-center gap-2">
+                                필지 {index + 1} - {land.address.split(" ").slice(-2).join(" ")}
+                                {group && <span className="text-emerald-600 text-xs">({group.groupName})</span>}
+                                {landResult && !group && <span className="text-muted-foreground text-xs">(미해당)</span>}
+                              </span>
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                    <div className={`flex flex-1 items-center justify-between rounded-lg border p-3 ${
+                      getLandGroup(allLands[selectedLandIndex].id) 
+                        ? "border-emerald-500/50 bg-emerald-50/30 dark:bg-emerald-950/20" 
+                        : "border-border"
+                    }`}>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="truncate text-sm font-medium">{allLands[selectedLandIndex].address}</p>
+                          {getLandGroup(allLands[selectedLandIndex].id) && (
+                            <Badge className="bg-emerald-600 hover:bg-emerald-700 text-xs shrink-0">
+                              {getLandGroup(allLands[selectedLandIndex].id)?.groupName}
                             </Badge>
                           )}
                         </div>
-                        <p className="text-xs text-muted-foreground line-clamp-1">{land.address}</p>
-                        <div className="flex gap-3 text-xs">
-                          <span className="font-medium text-primary">{land.remainingArea.toLocaleString()}m²</span>
-                          <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
+                        <div className="mt-1 flex gap-3 text-sm">
+                          <span className="font-medium text-primary">{allLands[selectedLandIndex].remainingArea.toLocaleString()}m²</span>
+                          <span className="text-muted-foreground">잔여 {allLands[selectedLandIndex].remainingRatio}%</span>
                         </div>
-                      </button>
-                    );
-                  })}
+                      </div>
+                      {landAIResults[allLands[selectedLandIndex].id] && (
+                        <Badge 
+                          variant={landAIResults[allLands[selectedLandIndex].id].provisionalJudgment === "매수" ? "default" : landAIResults[allLands[selectedLandIndex].id].provisionalJudgment === "미해당" ? "secondary" : "destructive"} 
+                          className="ml-3 shrink-0"
+                        >
+                          {landAIResults[allLands[selectedLandIndex].id].provisionalJudgment}
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {/* 일단지 그룹이 있는 경우 그룹별로 표시 */}
+                  {Object.keys(unifiedGroups).length > 0 ? (
+                    <>
+                      {/* 일단지 그룹들 */}
+                      {Object.entries(unifiedGroups).map(([groupId, group]) => (
+                        <div key={groupId} className="rounded-lg border-2 border-emerald-500/50 bg-emerald-50/30 p-3 dark:bg-emerald-950/20">
+                          <div className="mb-2 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <Badge className="bg-emerald-600 hover:bg-emerald-700">
+                                {group.groupName}
+                              </Badge>
+                              <span className="text-xs text-muted-foreground">
+                                {group.landIds.length}필지 | 합산 {group.combinedArea.toLocaleString()}m²
+                              </span>
+                            </div>
+                            <Badge variant="default" className="text-xs">
+                              {group.judgment}
+                            </Badge>
+                          </div>
+                          <div className="grid gap-2 sm:grid-cols-2">
+                            {allLands.filter(l => group.landIds.includes(l.id)).map((land) => {
+                              const index = allLands.findIndex(l => l.id === land.id);
+                              const isSelected = selectedLandIndex === index;
+                              return (
+                                <button
+                                  key={land.id}
+                                  type="button"
+                                  onClick={() => setSelectedLandIndex(index)}
+                                  className={`flex flex-col items-start gap-1 rounded-lg border p-2.5 text-left transition-all ${
+                                    isSelected 
+                                      ? "border-primary bg-background ring-1 ring-primary" 
+                                      : "border-emerald-200 bg-background/80 hover:border-primary/50 dark:border-emerald-800"
+                                  }`}
+                                >
+                                  <div className="flex w-full items-center justify-between">
+                                    <span className="text-sm font-medium">필지 {index + 1}</span>
+                                  </div>
+                                  <p className="text-xs text-muted-foreground line-clamp-1">{land.address}</p>
+                                  <div className="flex gap-3 text-xs">
+                                    <span className="font-medium text-primary">{land.remainingArea.toLocaleString()}m²</span>
+                                    <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {/* 미해당 필지들 */}
+                      {(() => {
+                        const unifiedLandIds = Object.values(unifiedGroups).flatMap(g => g.landIds);
+                        const nonUnifiedLands = allLands.filter(l => !unifiedLandIds.includes(l.id));
+                        if (nonUnifiedLands.length === 0) return null;
+                        
+                        return (
+                          <div className="rounded-lg border border-dashed border-muted-foreground/30 bg-muted/20 p-3">
+                            <div className="mb-2 flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline" className="text-muted-foreground">
+                                  일단지 미해당
+                                </Badge>
+                                <span className="text-xs text-muted-foreground">
+                                  {nonUnifiedLands.length}필지
+                                </span>
+                              </div>
+                            </div>
+                            <div className="grid gap-2 sm:grid-cols-2">
+                              {nonUnifiedLands.map((land) => {
+                                const index = allLands.findIndex(l => l.id === land.id);
+                                const isSelected = selectedLandIndex === index;
+                                const landResult = landAIResults[land.id];
+                                return (
+                                  <button
+                                    key={land.id}
+                                    type="button"
+                                    onClick={() => setSelectedLandIndex(index)}
+                                    className={`flex flex-col items-start gap-1 rounded-lg border p-2.5 text-left transition-all ${
+                                      isSelected 
+                                        ? "border-primary bg-background ring-1 ring-primary" 
+                                        : "border-border bg-background/80 hover:border-primary/50"
+                                    }`}
+                                  >
+                                    <div className="flex w-full items-center justify-between">
+                                      <span className="text-sm font-medium">필지 {index + 1}</span>
+                                      <Badge variant="secondary" className="text-xs text-muted-foreground">
+                                        {landResult?.provisionalJudgment || "미해당"}
+                                      </Badge>
+                                    </div>
+                                    <p className="text-xs text-muted-foreground line-clamp-1">{land.address}</p>
+                                    <div className="flex gap-3 text-xs">
+                                      <span className="font-medium text-primary">{land.remainingArea.toLocaleString()}m²</span>
+                                      <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
+                                    </div>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })()}
+                    </>
+                  ) : (
+                    /* 일단지 그룹 없음 - 기본 그리드 표시 */
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {allLands.map((land, index) => {
+                        const isSelected = selectedLandIndex === index;
+                        const landResult = landAIResults[land.id];
+                        return (
+                          <button
+                            key={land.id}
+                            type="button"
+                            onClick={() => setSelectedLandIndex(index)}
+                            className={`flex flex-col items-start gap-1 rounded-lg border p-3 text-left transition-all ${
+                              isSelected 
+                                ? "border-primary bg-primary/5 ring-1 ring-primary" 
+                                : "border-border hover:border-primary/50 hover:bg-muted/30"
+                            }`}
+                          >
+                            <div className="flex w-full items-center justify-between">
+                              <span className="text-sm font-medium">필지 {index + 1}</span>
+                              {landResult ? (
+                                <Badge 
+                                  variant={landResult.provisionalJudgment === "매수" ? "default" : landResult.provisionalJudgment === "미해당" ? "secondary" : "destructive"} 
+                                  className="text-xs"
+                                >
+                                  {landResult.provisionalJudgment}
+                                </Badge>
+                              ) : (
+                                <Badge variant="outline" className="text-xs text-muted-foreground">
+                                  미판독
+                                </Badge>
+                              )}
+                            </div>
+                            <p className="text-xs text-muted-foreground line-clamp-1">{land.address}</p>
+                            <div className="flex gap-3 text-xs">
+                              <span className="font-medium text-primary">{land.remainingArea.toLocaleString()}m²</span>
+                              <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               )}
               <div className="flex items-center justify-between rounded-lg bg-muted px-4 py-2">
