@@ -158,7 +158,7 @@ const regionData = {
     "율면": ["고당리", "반룡리", "산양리", "월포리", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
-    // ������도 - 광주시
+    // ��������도 - 광주시
     "곤지암읍": ["신리", "역동리", "삼리", "건업리", "연곡리", "오향리", "화촌리"],
     "도척면": ["진우리", "노곡리", "상림리", "도웅리", "유정리", "추곡리"],
     "퇴촌면": ["정지리", "영동리", "도수리", "관음리", "무수리", "원당리"],
@@ -235,7 +235,7 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["도고리", "시전리", "효자��", "��산리"],
+    "도고면": ["도고리", "시전리", "��자��", "��산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
@@ -1204,7 +1204,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               </div>
               <div className="flex flex-1 flex-wrap items-center gap-4 bg-background px-4 py-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">성명</span>
+                  <span className="text-sm text-muted-foreground">��명</span>
                   <Input
                     placeholder="홍길동"
                     value={ownerName}
@@ -1891,7 +1891,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           );
                         }
                         
-return null;
+                        return null;
                       })()}
                     </div>
 
