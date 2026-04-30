@@ -80,7 +80,7 @@ const regionData = {
     // 부산광역시
     "해운대구": ["반송동", "반여동", "석대동", "송정동", "우동", "좌동", "재송동", "중동"],
     "기장군": ["기장읍", "장안읍", "정관읍", "일광면", "철마면"],
-    "금정구": ["구서동", "금사동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "��두구동", "오륜동", "장전동", "청룡동", "회동동"],
+    "금정구": ["구서동", "금사동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
     // 경기도
     "용인시 처인구": ["양지면", "백암면", "원삼면", "이동읍", "남사읍", "포곡읍", "모현읍"],
     "용인시 기흥구": ["구갈동", "마북동", "보라동", "상갈동", "상하동", "서농동", "신갈동", "언남동", "영덕동", "중동", "지곡동", "청덕동", "하갈동"],
@@ -101,7 +101,7 @@ const regionData = {
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
-    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "��서��", "율량동"],
+    "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "강서동", "율량동"],
     "청주시 흥덕구": ["강내면", "옥산면", "오송읍", "가경동", "복대동", "봉명동", "송정동", "신봉동"],
     "충주시": ["가금면", "금가면", "노은면", "대소원면", "동량면", "산척면", "살미면", "소태면", "수안보면", "신니면", "앙성면", "엄정면", "이류면", "주덕읍", "중앙탑면"],
     "제천시": ["금성면", "덕산면", "백운면", "봉양읍", "송학면", "수산면", "청풍면", "한수면"],
@@ -206,7 +206,7 @@ const regionData = {
     "진천읍": ["성석리", "연곡리", "읍내리", "벽암리", "행정리", "신정리"],
     "덕산면": ["용몽리", "구산리", "합목리", "두촌리", "산수리", "석장리"],
     "초평면": ["용정리", "화산리", "영구리", "금곡리", "오갑리", "용곡리"],
-    "광혜원면": ["광혜원리", "실원리", "죽현리", "회안리", "상산리"],
+    "광혜원면": ["광혜원리", "도원리", "죽현리", "회안리", "상산리"],
     "만승면": ["봉죽리", "삼덕리", "신척리", "월성리", "효청리", "하비리"],
     "백곡면": ["갈월리", "구수리", "대문리", "사송리", "석현리", "명암리"],
     "이월면": ["노원리", "삼용리", "송림리", "사곡리", "신월리", "중척리"],
@@ -1379,13 +1379,13 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           />
         </div>
 
-        {/* 좌측 사이드바 - 결과 + 기본정보 패널 */}
+        {/* 좌측 사이드바 - 필지 목록 + 기본정보 패널 */}
         <div className="absolute bottom-0 left-0 top-0 z-10 flex">
-          {/* 결과 패널 */}
+          {/* 필지 목록 패널 */}
           <div className={`bg-background transition-all duration-300 overflow-hidden ${isResultsCollapsed ? "w-0" : "w-[280px]"}`}>
-            {/* 검색 결과 헤더 */}
+            {/* 필지 목록 헤더 */}
             <div className="flex items-center justify-between border-b bg-muted px-4 py-3">
-              <span className="text-base font-medium text-foreground">결과</span>
+              <span className="text-base font-medium text-foreground">필지 목록</span>
               {searchResults.length > 0 && (
                 <span className="text-base text-muted-foreground">총 {searchResults.length}건</span>
               )}
@@ -1512,10 +1512,10 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     })}
                   </ul>
                   
-                  {/* 선택된 필지 요약 */}
-                  {searchResults.length > 1 && (
-                    <div className="border-t bg-muted/30 px-3 py-2">
-                      <div className="flex items-center justify-between text-xs">
+                  {/* 선택된 필지 요약 + AI 판독 버튼 */}
+                  {searchResults.length > 0 && (
+                    <div className="border-t bg-muted/30 px-3 py-3">
+                      <div className="mb-2 flex items-center justify-between text-xs">
                         <span className="text-muted-foreground">
                           선택: {ownedParcels.size || 1}필지
                         </span>
@@ -1523,6 +1523,30 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           총 {searchResults.length}필지
                         </span>
                       </div>
+                      {/* AI 판독 버튼 */}
+                      <Button 
+                        onClick={handleAIAnalysis}
+                        className="h-10 w-full gap-2 text-sm"
+                        variant="default"
+                        disabled={aiAnalyzing || !currentUsage || (currentUsage === "대" && !landSubType) || noIncludedLand}
+                      >
+                        {aiAnalyzing ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            {ownedParcels.size || 1}개 필지 판독 중...
+                          </>
+                        ) : (
+                          <>
+                            <AIIcon className="h-5 w-5" />
+                            선택 필지 AI 판독 ({ownedParcels.size || 1}건)
+                          </>
+                        )}
+                      </Button>
+                      {(!currentUsage || (currentUsage === "대" && !landSubType)) && (
+                        <p className="mt-1.5 text-center text-[11px] text-muted-foreground">
+                          기본정보에서 활용 지목을 선택하세요
+                        </p>
+                      )}
                     </div>
                   )}
                 </>
@@ -1669,28 +1693,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       택지 유형에 따라 매수 기준 면적이 달라집니다.
                     </p>
                   </div>
-                )}
-
-                {/* AI 판독 버튼 */}
-                {!noIncludedLand && !aiResult && (
-                  <Button 
-                    onClick={handleAIAnalysis}
-                    className="h-12 w-full cursor-pointer text-base"
-                    variant="default"
-                    disabled={aiAnalyzing || !currentUsage || (currentUsage === "대" && !landSubType)}
-                  >
-                    {aiAnalyzing ? (
-                      <>
-                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        선택된 {ownedParcels.size || 1}개 필지 판독 중...
-                      </>
-                    ) : (
-                      <>
-                        <AIIcon className="mr-1.5 h-8 w-8" />
-                        선택된 {ownedParcels.size || 1}개 필지 AI 판독 시작
-                      </>
-                    )}
-                  </Button>
                 )}
 
                 {/* AI 판독 결과 */}
