@@ -288,7 +288,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     unifiedGroupId?: string; // 일단지 그룹 ID (있으면 일단지로 묶임)
     reason?: string; // 판정 사유
     shapeIndexChange?: number; // 형상지수 변화
-    criteriaChecks?: Array<{ criteriaName: string; isMet: boolean }>; // 판정 기준
+    criteriaChecks?: Array<{ criteriaName: string; isMet: boolean }>; // 판정 ���준
     judgmentRationale?: { // 판단 근거 설명
       summary: string;
       legalBasis: string;
@@ -940,6 +940,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       setAdminLandAIResults(adminResults);
       setAiResultViewMode("admin"); // 관리자 결과 탭으로 자동 전환
       setIsAIAnalyzing(false);
+    };
+    
+    // 2초 후 분석 실행
+    setTimeout(() => {
+      analyzeSequentially();
     }, 2000);
   };
   
