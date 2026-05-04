@@ -1539,21 +1539,21 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   />
                 </div>
                 {/* 지도 범례 */}
-                <div className="mt-2 flex flex-wrap items-center justify-center gap-3 text-xs text-muted-foreground">
+                <div className="mt-3 flex flex-wrap items-center justify-center gap-4 text-xs text-muted-foreground">
                   <div className="flex items-center gap-1.5">
-                    <div className="h-3 w-3 rounded-sm border-2 border-[#4caf50] bg-[#c8e6c9]" />
+                    <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
                     <span>선택된 신청 필지</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <div className="h-3 w-3 rounded-sm border-2 border-[#9e9e9e] bg-[#e0e0e0]" />
+                    <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
                     <span>미선택 신청 필지</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <div className="h-3 w-3 rounded-sm border-2 border-[#ff9800] bg-[#ffe0b2]" />
+                    <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
                     <span>인접 필지</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <div className="h-3 w-3 rounded-sm border-2 border-[#2196f3] bg-[#bbdefb]" />
+                    <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
                     <span>호버 중</span>
                   </div>
                 </div>

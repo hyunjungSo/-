@@ -316,27 +316,41 @@ export function LeafletMap({
       const isAdjacentParcel = !parcel.isIncluded; // 인접 필지 여부
       const latlngs = parcel.coordinates.map(coord => [coord.lat, coord.lng] as [number, number]);
 
-      // 폴리곤 스타일 - 호버(파란색), 선택됨(녹색), 인접(주황), 미선택(회색)
-      let polygonColor = "#9e9e9e"; // 기본: 미선택 회색
-      let fillColor = "#e0e0e0";
-      let weight = 2;
-      let fillOpacity = 0.15;
+      // 폴리곤 스타일 - 신청필지(녹색/회색), 인접필지(점선/반투명), 호버(파란색)
+      let polygonColor = "#6b7280"; // 기본: 미선택 신청필지 (진한 회색)
+      let fillColor = "#f3f4f6";
+      let weight = 3;
+      let fillOpacity = 0.3;
+      let dashArray: string | undefined = undefined;
       
-      if (isHovered) {
-        polygonColor = "#2196f3"; // 호버: 파란색
-        fillColor = "#bbdefb";
+      if (isAdjacentParcel) {
+        // 인접 필지: 연한 갈색 점선 테두리로 명확히 구분
+        polygonColor = "#d97706"; // 진한 주황/갈색
+        fillColor = "#fef3c7"; // 연한 노란색 배경
+        weight = 2;
+        fillOpacity = 0.15;
+        dashArray = "6, 4"; // 점선 스타일
+      } else if (isSelected || isOwned) {
+        // 선택된 신청 필지: 진한 녹색 실선
+        polygonColor = "#16a34a"; // 진한 녹색
+        fillColor = "#bbf7d0"; // 연한 녹색 배경
         weight = 4;
         fillOpacity = 0.45;
-      } else if (isSelected || isOwned) {
-        polygonColor = "#4caf50"; // 선택됨: 녹색
-        fillColor = "#c8e6c9";
-        weight = isSelected ? 4 : 3;
-        fillOpacity = isSelected ? 0.5 : 0.35;
-      } else if (isAdjacentParcel) {
-        polygonColor = "#ff9800"; // 인접 필지: 주황색
-        fillColor = "#ffe0b2";
-        weight = 2;
-        fillOpacity = 0.25;
+      }
+      
+      // 호버 시 스타일 오버라이드 (신청 필지만)
+      if (isHovered && !isAdjacentParcel) {
+        polygonColor = "#2563eb"; // 파란색
+        fillColor = "#dbeafe";
+        weight = 4;
+        fillOpacity = 0.5;
+        dashArray = undefined;
+      } else if (isHovered && isAdjacentParcel) {
+        // 인접 필지 호버 시 약간 강조
+        polygonColor = "#b45309";
+        fillColor = "#fde68a";
+        weight = 3;
+        fillOpacity = 0.3;
       }
       
       const polygon = L.polygon(latlngs, {
@@ -345,6 +359,7 @@ export function LeafletMap({
         fillColor: fillColor,
         fillOpacity: fillOpacity,
         opacity: 1,
+        dashArray: dashArray,
       });
 
       // 호버 이벤트
