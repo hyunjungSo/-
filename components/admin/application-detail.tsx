@@ -1919,30 +1919,56 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </CardContent>
         </Card>
 
-        {/* AI 분석 결과 비교 (Dual View) */}
+        {/* AI 분석 결과 - 상태에 따라 동적 변경 */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Scale className="h-5 w-5" />
-              AI 분석 결과 비교
-            </CardTitle>
-            <CardDescription>
-              민원인 신청 시 결과와 관리자 재판독 결과를 나란히 비교합니다
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Bot className="h-5 w-5" />
+                  {Object.keys(adminLandAIResults).length > 0 ? "AI 분석 결과 비교" : "민원인 신청 AI 분석 결과"}
+                </CardTitle>
+                <CardDescription>
+                  {Object.keys(adminLandAIResults).length > 0 
+                    ? "민원인 신청 시 결과와 관리자 재판독 결과를 나란히 비교합니다"
+                    : "민원인이 신청 시 선택한 필지 기준 AI 분석 결과입니다"}
+                </CardDescription>
+              </div>
+              {/* 관리자 재분석 실행 후에만 뷰 전환 탭 표시 */}
+              {Object.keys(adminLandAIResults).length > 0 && (
+                <div className="flex items-center gap-1 rounded-lg border bg-muted/50 p-1">
+                  <Button
+                    variant={aiResultViewMode === "citizen" ? "default" : "ghost"}
+                    size="sm"
+                    className="h-7 text-xs"
+                    onClick={() => setAiResultViewMode("citizen")}
+                  >
+                    민원인 결과
+                  </Button>
+                  <Button
+                    variant={aiResultViewMode === "admin" ? "default" : "ghost"}
+                    size="sm"
+                    className="h-7 text-xs"
+                    onClick={() => setAiResultViewMode("admin")}
+                  >
+                    비교 보기
+                  </Button>
+                </div>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
-            {/* Dual View 레이아웃 */}
-            <div className="grid gap-4 lg:grid-cols-2">
-              {/* 좌측: 민원인 분석 결과 (읽기 전용) */}
-              <div className="rounded-xl border-2 border-violet-200 bg-gradient-to-b from-violet-50/80 to-white p-4">
+            {/* 관리자 재분석 전: 민원인 결과만 표시 */}
+            {Object.keys(adminLandAIResults).length === 0 ? (
+              <div className="rounded-xl border-2 border-slate-200 bg-gradient-to-b from-slate-50/80 to-white p-5">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-violet-100">
-                      <History className="h-4 w-4 text-violet-600" />
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100">
+                      <FileText className="h-4 w-4 text-slate-600" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-violet-800">민원인 신청 결과</h4>
-                      <p className="text-xs text-violet-600">수정 불가 (히스토리)</p>
+                      <h4 className="font-semibold text-slate-800">민원인 신청 기준 분석</h4>
+                      <p className="text-xs text-slate-500">선택 필지: {allLands.length}필지</p>
                     </div>
                   </div>
                   {aiResult && (
@@ -1960,65 +1986,221 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   )}
                 </div>
                 
-                {/* 민원인 결과 상세 */}
+                {/* 민원인 결과 상세 - 복수 필지인 경우 모든 필지 표시 */}
                 {aiResult ? (
-                  <div className="space-y-3">
-                    {/* 토지 유형 */}
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">토지 유형</span>
-                      <span className="font-medium">{aiResult.landTypePath || allLands[selectedLandIndex].landType}</span>
-                    </div>
-                    
-                    {/* 주요 수치 */}
-                    <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div className="rounded-lg bg-violet-100/50 p-2">
-                        <p className="text-xs text-violet-600">잔여 면적</p>
-                        <p className="font-semibold text-violet-800">{allLands[selectedLandIndex].remainingArea.toLocaleString()}m²</p>
+                  <div className="space-y-4">
+                    {/* 필지별 결과 요약 */}
+                    {isMultipleLands ? (
+                      <div className="space-y-2 max-h-64 overflow-y-auto">
+                        {allLands.map((land, idx) => {
+                          const landResult = landAIResults[land.id];
+                          return (
+                            <div 
+                              key={land.id}
+                              className={`rounded-lg border p-3 ${
+                                landResult?.provisionalJudgment === "매수"
+                                  ? "border-green-200 bg-green-50/50"
+                                  : landResult?.provisionalJudgment === "매수불가"
+                                    ? "border-red-200 bg-red-50/50"
+                                    : "border-slate-200 bg-slate-50/50"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white ${
+                                    landResult?.provisionalJudgment === "매수" ? "bg-green-600" : 
+                                    landResult?.provisionalJudgment === "매수불가" ? "bg-red-500" : "bg-slate-400"
+                                  }`}>
+                                    {String.fromCharCode(65 + idx)}
+                                  </span>
+                                  <div>
+                                    <p className="text-sm font-medium truncate max-w-[180px]">{land.address.split(" ").slice(-2).join(" ")}</p>
+                                    <p className="text-xs text-muted-foreground">잔여 {land.remainingArea.toLocaleString()}m² | {land.landType}</p>
+                                  </div>
+                                </div>
+                                {landResult && (
+                                  <Badge className={`text-xs ${
+                                    landResult.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"
+                                  }`}>
+                                    {landResult.provisionalJudgment}
+                                  </Badge>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
-                      <div className="rounded-lg bg-violet-100/50 p-2">
-                        <p className="text-xs text-violet-600">잔여 비율</p>
-                        <p className="font-semibold text-violet-800">{allLands[selectedLandIndex].remainingRatio}%</p>
-                      </div>
-                    </div>
-                    
-                    {/* 형상지수 */}
-                    <div className="rounded-lg border border-violet-200 bg-white p-3">
-                      <p className="text-xs text-muted-foreground mb-2">형상지수 변화</p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">{aiResult.originalShapeIndex.toFixed(1)}</span>
-                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">{aiResult.remainingShapeIndex.toFixed(1)}</span>
-                        <Badge variant="outline" className={aiResult.shapeIndexChange >= 1 ? "border-red-300 text-red-600" : ""}>
-                          +{aiResult.shapeIndexChange.toFixed(1)}
-                        </Badge>
-                      </div>
-                    </div>
-                    
-                    {/* 기준 충족 요약 */}
-                    <div className="space-y-1">
-                      <p className="text-xs text-muted-foreground">기준 충족 여부</p>
-                      {aiResult.criteriaChecks.slice(0, 3).map((check, idx) => (
-                        <div key={idx} className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground truncate">{check.criteriaName}</span>
-                          <Badge variant={check.isMet ? "default" : "destructive"} className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}>
-                            {check.isMet ? "충족" : "미충족"}
-                          </Badge>
+                    ) : (
+                      /* 단일 필지 상세 */
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">토지 유형</span>
+                          <span className="font-medium">{aiResult.landTypePath || allLands[selectedLandIndex].landType}</span>
                         </div>
-                      ))}
-                      {aiResult.criteriaChecks.length > 3 && (
-                        <p className="text-xs text-muted-foreground">외 {aiResult.criteriaChecks.length - 3}개 항목</p>
-                      )}
-                    </div>
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div className="rounded-lg bg-slate-100 p-2">
+                            <p className="text-xs text-slate-600">잔여 면적</p>
+                            <p className="font-semibold text-slate-800">{allLands[selectedLandIndex].remainingArea.toLocaleString()}m²</p>
+                          </div>
+                          <div className="rounded-lg bg-slate-100 p-2">
+                            <p className="text-xs text-slate-600">잔여 비율</p>
+                            <p className="font-semibold text-slate-800">{allLands[selectedLandIndex].remainingRatio}%</p>
+                          </div>
+                        </div>
+                        <div className="rounded-lg border border-slate-200 bg-white p-3">
+                          <p className="text-xs text-muted-foreground mb-2">형상지수 변화</p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm">{aiResult.originalShapeIndex.toFixed(1)}</span>
+                            <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm">{aiResult.remainingShapeIndex.toFixed(1)}</span>
+                            <Badge variant="outline" className={aiResult.shapeIndexChange >= 1 ? "border-red-300 text-red-600" : ""}>
+                              +{aiResult.shapeIndexChange.toFixed(1)}
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-xs text-muted-foreground">기준 충족 여부</p>
+                          {aiResult.criteriaChecks.map((check, idx) => (
+                            <div key={idx} className="flex items-center justify-between text-sm">
+                              <span className="text-muted-foreground truncate">{check.criteriaName}</span>
+                              <Badge variant={check.isMet ? "default" : "destructive"} className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}>
+                                {check.isMet ? "충족" : "미충족"}
+                              </Badge>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* 일단지 판정 정보 (있는 경우) */}
+                    {Object.keys(unifiedGroups).length > 0 && (
+                      <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-3 mt-3">
+                        <p className="text-xs font-medium text-emerald-700 mb-2 flex items-center gap-1">
+                          <Layers className="h-3 w-3" />
+                          일단지 판정
+                        </p>
+                        {Object.values(unifiedGroups).map((group, idx) => (
+                          <div key={idx} className="flex items-center justify-between text-sm">
+                            <span className="text-emerald-700">{group.groupName}</span>
+                            <span className="font-medium">합산 {group.combinedArea.toLocaleString()}m²</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-8 text-center">
-                    <Info className="h-8 w-8 text-violet-300 mb-2" />
+                    <Info className="h-8 w-8 text-slate-300 mb-2" />
                     <p className="text-sm text-muted-foreground">민원인 분석 결과 없음</p>
                   </div>
                 )}
               </div>
+            ) : aiResultViewMode === "citizen" ? (
+              /* 관리자 재분석 후 - 민원인 결과만 보기 */
+              <div className="rounded-xl border-2 border-violet-200 bg-gradient-to-b from-violet-50/80 to-white p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-violet-100">
+                      <History className="h-4 w-4 text-violet-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-violet-800">민원인 신청 결과</h4>
+                      <p className="text-xs text-violet-600">수정 불가 (히스토리)</p>
+                    </div>
+                  </div>
+                  {aiResult && (
+                    <Badge 
+                      className={
+                        aiResult.provisionalJudgment === "매수" 
+                          ? "bg-green-600 hover:bg-green-600" 
+                          : "bg-red-500 hover:bg-red-500"
+                      }
+                    >
+                      {aiResult.provisionalJudgment}
+                    </Badge>
+                  )}
+                </div>
+                {/* 복수 필지 결과 목록 */}
+                <div className="space-y-2 max-h-80 overflow-y-auto">
+                  {allLands.map((land, idx) => {
+                    const landResult = landAIResults[land.id];
+                    return (
+                      <div 
+                        key={land.id}
+                        className={`rounded-lg border p-3 ${
+                          landResult?.provisionalJudgment === "매수"
+                            ? "border-green-200 bg-green-50/50"
+                            : "border-red-200 bg-red-50/50"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white ${
+                              landResult?.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"
+                            }`}>
+                              {String.fromCharCode(65 + idx)}
+                            </span>
+                            <div>
+                              <p className="text-sm font-medium">{land.address.split(" ").slice(-2).join(" ")}</p>
+                              <p className="text-xs text-muted-foreground">잔여 {land.remainingArea.toLocaleString()}m² | {land.landType}</p>
+                            </div>
+                          </div>
+                          {landResult && (
+                            <Badge className={`text-xs ${landResult.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"}`}>
+                              {landResult.provisionalJudgment}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              /* 관리자 재분석 후 - Dual View 비교 */
+              <div className="grid gap-4 lg:grid-cols-2">
+                {/* 좌측: 민원인 분석 결과 (읽기 전용) */}
+                <div className="rounded-xl border-2 border-violet-200 bg-gradient-to-b from-violet-50/80 to-white p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-violet-100">
+                        <History className="h-4 w-4 text-violet-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-violet-800">민원인 신청 결과</h4>
+                        <p className="text-xs text-violet-600">수정 불가</p>
+                      </div>
+                    </div>
+                    {aiResult && (
+                      <Badge className={aiResult.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"}>
+                        {aiResult.provisionalJudgment}
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {allLands.slice(0, 4).map((land, idx) => {
+                      const landResult = landAIResults[land.id];
+                      return (
+                        <div key={land.id} className={`rounded-lg p-2 text-sm ${
+                          landResult?.provisionalJudgment === "매수" ? "bg-green-100/80" : "bg-red-100/80"
+                        }`}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <span className={`flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white ${
+                                landResult?.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"
+                              }`}>{String.fromCharCode(65 + idx)}</span>
+                              <span className="text-muted-foreground truncate max-w-[100px]">{land.address.split(" ").slice(-2).join(" ")}</span>
+                            </div>
+                            {landResult && <Badge className={`text-xs ${landResult.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"}`}>{landResult.provisionalJudgment}</Badge>}
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {allLands.length > 4 && <p className="text-xs text-center text-muted-foreground">외 {allLands.length - 4}필지</p>}
+                  </div>
+                </div>
               
-              {/* 우측: 관리자 재분석 결과 (실시간 업데이트) */}
+              {/* 우측: 관리자 재분석 결과 */}
               <div className="rounded-xl border-2 border-emerald-200 bg-gradient-to-b from-emerald-50/80 to-white p-4">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
@@ -2143,6 +2325,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 )}
               </div>
             </div>
+            )}
             
             {/* 관리자 전용 정밀 재분석 기능 */}
             <div className="mt-6 rounded-xl border-2 border-blue-200 bg-gradient-to-b from-blue-50/80 to-white p-5">
