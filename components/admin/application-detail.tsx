@@ -197,6 +197,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     }));
   };
   
+  // 필지별 현재 활용 지목 상태
+  const [adminCurrentUsagePerLand, setAdminCurrentUsagePerLand] = useState<Record<string, string>>({});
+  
+  // 필지별 건축물 용도 상태
+  const [adminLandSubTypePerLand, setAdminLandSubTypePerLand] = useState<Record<string, string>>({});
+  
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
   const [aiResultViewMode, setAiResultViewMode] = useState<"citizen" | "admin">("citizen");
   
@@ -757,7 +763,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           
           // 일단지 판정 사유 기록
           const unificationReasons = [
-            "소유���� 동���",
+            "소유����� 동���",
             `지반 연속 (${parseAddress(primaryLand.address).district})`,
             `용도 일체 (${primaryLand.landType})`
           ];
@@ -1583,34 +1589,91 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               )}
                             </div>
                             
-                            {/* 하단: 현장확인 옵션 (선택된 필지만 표시) */}
+                            {/* 하단: 필지 상세 옵션 (선택된 필지만 표시) */}
                             {isSelected && (
-                              <div className="mt-3 ml-7 flex items-center gap-4 flex-wrap">
-                                <span className="text-xs text-muted-foreground font-medium">현장확인:</span>
-                                <label className="flex items-center gap-2 cursor-pointer" onClick={(e) => e.stopPropagation()}>
-                                  <Checkbox 
-                                    checked={landOptions.farmMachineDifficulty}
-                                    onCheckedChange={(checked) => updateLandOption(land.id, 'farmMachineDifficulty', checked === true)}
-                                    className="h-[18px] w-[18px]"
-                                  />
-                                  <span className="text-xs">농기계 곤란</span>
-                                </label>
-                                <label className="flex items-center gap-2 cursor-pointer" onClick={(e) => e.stopPropagation()}>
-                                  <Checkbox 
-                                    checked={landOptions.accessRoadLost}
-                                    onCheckedChange={(checked) => updateLandOption(land.id, 'accessRoadLost', checked === true)}
-                                    className="h-[18px] w-[18px]"
-                                  />
-                                  <span className="text-xs">접면도로 상실</span>
-                                </label>
-                                <label className="flex items-center gap-2 cursor-pointer" onClick={(e) => e.stopPropagation()}>
-                                  <Checkbox 
-                                    checked={landOptions.waterChannelLost}
-                                    onCheckedChange={(checked) => updateLandOption(land.id, 'waterChannelLost', checked === true)}
-                                    className="h-[18px] w-[18px]"
-                                  />
-                                  <span className="text-xs">관개수로 상실</span>
-                                </label>
+                              <div className="mt-3 ml-7 space-y-3 border-t pt-3">
+                                {/* 현재 활용 지목 */}
+                                <div className="space-y-1.5">
+                                  <div className="flex items-center justify-between">
+                                    <label className="text-xs font-medium text-foreground">
+                                      현재 활용 지목 <span className="text-destructive">*</span>
+                                    </label>
+                                    <span className="text-xs text-muted-foreground">
+                                      공부상 지목: <span className="font-medium text-foreground">{land.landType}</span>
+                                    </span>
+                                  </div>
+                                  <Select 
+                                    value={adminCurrentUsagePerLand[land.id] || ""} 
+                                    onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [land.id]: value }))}
+                                  >
+                                    <SelectTrigger className="h-8 bg-background text-sm">
+                                      <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="대">대 (택지)</SelectItem>
+                                      <SelectItem value="전">전 (밭)</SelectItem>
+                                      <SelectItem value="답">답 (논)</SelectItem>
+                                      <SelectItem value="임">임 (임야)</SelectItem>
+                                      <SelectItem value="잡">잡 (잡종지)</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                  <p className="text-[10px] text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
+                                </div>
+                                
+                                {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
+                                {adminCurrentUsagePerLand[land.id] === "대" && (
+                                  <div className="space-y-1.5 rounded bg-muted/30 p-2">
+                                    <label className="text-xs font-medium text-foreground">
+                                      건축물 용도 선택 <span className="text-destructive">*</span>
+                                    </label>
+                                    <Select 
+                                      value={adminLandSubTypePerLand[land.id] || ""} 
+                                      onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [land.id]: value }))}
+                                    >
+                                      <SelectTrigger className="h-8 bg-background text-sm">
+                                        <SelectValue placeholder="건축물 용도를 선택해 주세요" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
+                                        <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
+                                        <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
+                                        <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
+                                        <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                )}
+                                
+                                {/* 현장확인 옵션 */}
+                                <div className="space-y-1.5">
+                                  <span className="text-xs text-muted-foreground font-medium">현장확인:</span>
+                                  <div className="flex flex-col gap-2">
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                      <Checkbox 
+                                        checked={landOptions.farmMachineDifficulty}
+                                        onCheckedChange={(checked) => updateLandOption(land.id, 'farmMachineDifficulty', checked === true)}
+                                        className="h-[18px] w-[18px]"
+                                      />
+                                      <span className="text-xs">농기계 곤란</span>
+                                    </label>
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                      <Checkbox 
+                                        checked={landOptions.accessRoadLost}
+                                        onCheckedChange={(checked) => updateLandOption(land.id, 'accessRoadLost', checked === true)}
+                                        className="h-[18px] w-[18px]"
+                                      />
+                                      <span className="text-xs">접면도로 상실</span>
+                                    </label>
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                      <Checkbox 
+                                        checked={landOptions.waterChannelLost}
+                                        onCheckedChange={(checked) => updateLandOption(land.id, 'waterChannelLost', checked === true)}
+                                        className="h-[18px] w-[18px]"
+                                      />
+                                      <span className="text-xs">관개수로 상실</span>
+                                    </label>
+                                  </div>
+                                </div>
                               </div>
                             )}
                           </div>
@@ -1926,7 +1989,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </CardDescription>
         </CardHeader>
 <CardContent className="space-y-6">
-          {/* 진행상황 선택 */}
+          {/* 진행상황 ��택 */}
           <div className="space-y-2">
             <Label>진행상황 설명</Label>
             <div className="flex flex-wrap gap-2">
