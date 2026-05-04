@@ -752,7 +752,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             const effectiveLimit = criteria.relaxed * groupLandIds.length;
             const meetsAreaCriteria = combinedArea <= effectiveLimit;
             if (meetsAreaCriteria) {
-              analysisReasons.push(`합산 면����� ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
+              analysisReasons.push(`합�� 면����� ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
             }
             
             // 토지유형별 추가 조건 검토 + 관리자 ���장 ���황 옵션 ����
@@ -956,15 +956,36 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </div>
             <div>
               <p className="text-xs text-muted-foreground">연락처</p>
-              <p className="font-medium">{application.phone}</p>
+              <p className="font-medium">{application.applicantContact}</p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground">신청일</p>
-              <p className="font-medium">{application.submittedAt}</p>
+              <p className="font-medium">{application.appliedAt}</p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground">사업명</p>
-              <p className="font-medium">{application.projectName}</p>
+              <p className="font-medium">{application.landInfo.projectName}</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 mt-4">
+            <div>
+              <p className="text-xs text-muted-foreground">주소</p>
+              <p className="font-medium">{application.applicantAddress}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">접수번호</p>
+              <p className="font-medium">{application.applicationNumber}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">신청유형</p>
+              <p className="font-medium">
+                {application.applicationType === "single" ? "단일필지" : 
+                 application.applicationType === "multiple" ? "복수필지" : "일단지"}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">신청사유</p>
+              <p className="font-medium text-sm line-clamp-2">{application.reason}</p>
             </div>
           </div>
         </CardContent>
@@ -1638,7 +1659,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         분석 프로세스 상세 보기
                       </Button>
                       
-                      {/* 적용된 옵션 */}
+                      {/* 적용된 옵�� */}
                       {(adminAIOptions.accessRoadLost || adminAIOptions.waterChannelLost || adminAIOptions.farmMachineDifficulty) && (
                         <div className="rounded-lg bg-blue-50 border border-blue-200 p-3">
                           <p className="text-xs font-medium text-blue-700 mb-2">적용된 현장 상황 옵션</p>
