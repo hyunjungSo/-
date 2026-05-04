@@ -32,7 +32,6 @@ import {
   Loader2,
   RotateCcw,
   X,
-  Merge,
   Split,
   Edit3,
   History,
@@ -132,9 +131,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     owner: string;
   } | null>(null);
   
-  // 일단지 병합 판정 모드
-  const [unifiedMergeMode, setUnifiedMergeMode] = useState<"auto" | "manual">("auto");
-  const [manualUnifiedLandIds, setManualUnifiedLandIds] = useState<string[]>([]);
+  
   
   // 관리자 수치 수정 (면적, 폭 등)
   const [adminEditedValues, setAdminEditedValues] = useState<Record<string, {
@@ -1030,39 +1027,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               )}
               </CardTitle>
             </div>
-            {/* 일단지 병합 판정 컨트롤러 */}
-            {isMultipleLands && (
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 rounded-lg border bg-muted/50 p-1">
-                  <Button
-                    variant={unifiedMergeMode === "auto" ? "default" : "ghost"}
-                    size="sm"
-                    className="h-7 text-xs gap-1"
-                    onClick={() => setUnifiedMergeMode("auto")}
-                  >
-                    <Bot className="h-3 w-3" />
-                    자동 판정
-                  </Button>
-                  <Button
-                    variant={unifiedMergeMode === "manual" ? "default" : "ghost"}
-                    size="sm"
-                    className="h-7 text-xs gap-1"
-                    onClick={() => setUnifiedMergeMode("manual")}
-                  >
-                    <Merge className="h-3 w-3" />
-                    수동 병합
-                  </Button>
-                </div>
-              </div>
-            )}
           </div>
-          {isMultipleLands && (
-            <CardDescription className="mt-2">
-              {unifiedMergeMode === "auto" 
-                ? "AI가 소유자, 연접성, 용도를 분석하여 일단지 여부를 자동 판정합니다."
-                : "관리자가 직접 필지를 선택하여 일단지로 병합할 수 있습니다."}
-            </CardDescription>
-          )}
+          <CardDescription>
+            신청된 필지 정보와 편입 현황을 확인합니다.
+          </CardDescription>
         </CardHeader>
         
         {/* 일단지 판정 요약 (일단지 신청인 경우에만 표시) */}
@@ -1347,7 +1315,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <ChevronDown className="h-4 w-4" />
                   {checkedLandIds.length > 0 ? (
                     <>
-                      아래 정보는 <Badge variant="default" className="mx-1">{checkedLandIds.length}필�� 선택됨</Badge> 기준입니다
+                      아래 정보는 <Badge variant="default" className="mx-1">{checkedLandIds.length}필��� 선택됨</Badge> 기준입니다
                     </>
                   ) : (
                     <>
