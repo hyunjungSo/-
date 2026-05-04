@@ -1400,7 +1400,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </Badge>
                   </div>
                   
-                  {/* 지���������� */}
+                  {/* 지������������ */}
                   <div className="h-[300px] rounded-lg overflow-hidden border">
                   <LeafletMap
                     parcels={(() => {
@@ -1807,10 +1807,20 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           </div>
                         </div>
                         
+                        {/* 판정 사유 */}
+                        {landResult?.reason && (
+                          <div className="mt-3 pt-3 border-t">
+                            <p className="text-sm text-muted-foreground">
+                              <span className="font-medium">판정 사유:</span> {landResult.reason}
+                            </p>
+                          </div>
+                        )}
+                        
                         {/* 기준 충족 여부 */}
                         {landResult && landResult.criteriaChecks && (
                           <div className="mt-3 pt-3 border-t space-y-1">
-                            {landResult.criteriaChecks.slice(0, 3).map((check, cIdx) => (
+                            <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준</p>
+                            {landResult.criteriaChecks.map((check, cIdx) => (
                               <div key={cIdx} className="flex items-center justify-between text-sm">
                                 <span className="text-muted-foreground">{check.criteriaName}</span>
                                 <Badge variant={check.isMet ? "default" : "destructive"} className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}>
