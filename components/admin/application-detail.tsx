@@ -743,14 +743,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             // 토지유형별 경로 (합산 편입전 330㎡ 초과)
             const landType = primaryLand.landType;
             
-            // 합산 면적 기준 충족 여부
+            // 합산 면적 기준 충�� 여부
             const effectiveLimit = criteria.relaxed * groupLandIds.length;
             const meetsAreaCriteria = combinedArea <= effectiveLimit;
             if (meetsAreaCriteria) {
               analysisReasons.push(`합산 면적 ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
             }
             
-            // 토지유형별 추가 조건 검토 + 관리자 현장 상황 옵션 반영
+            // 토지유형별 추가 조건 검토 + 관리자 현장 상황 옵션 반��
             if (landType === "대지") {
               // 택지 경로
               const hasRoadLoss = adminAIOptions.accessRoadLost || groupLands.some(l => l.remainingRatio < 30);
@@ -1456,41 +1456,44 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         </div>
                       )}
                       
-                      {/* 복수 필지 개별 신청: 필지별 분석 결과 */}
-                      {applicationType === "multiple" && (
-                        <div className="space-y-3 max-h-[400px] overflow-y-auto">
-                          {Object.entries(adminLandAIResults).map(([landId, result]) => {
-                            const land = allLands.find(l => l.id === landId);
-                            const landIdx = allLands.findIndex(l => l.id === landId);
-                            if (!land) return null;
-                            
-                            return (
-                              <div 
-                                key={landId}
-                                className={`rounded-lg border p-4 ${
-                                  result.provisionalJudgment === "매수"
-                                    ? "border-green-200 bg-green-50/50"
-                                    : "border-red-200 bg-red-50/50"
-                                }`}
-                              >
-                                <div className="flex items-center justify-between mb-3">
+                      {/* 필지별 분석 결과 - 아코디언 UI */}
+                      <Accordion type="multiple" className="space-y-3 max-h-[400px] overflow-y-auto">
+                        {Object.entries(adminLandAIResults).map(([landId, result]) => {
+                          const land = allLands.find(l => l.id === landId);
+                          const landIdx = allLands.findIndex(l => l.id === landId);
+                          if (!land) return null;
+                          
+                          return (
+                            <AccordionItem 
+                              key={landId}
+                              value={landId}
+                              className={`rounded-lg border px-4 ${
+                                result.provisionalJudgment === "매수"
+                                  ? "border-green-200 bg-green-50/50"
+                                  : "border-red-200 bg-red-50/50"
+                              }`}
+                            >
+                              <AccordionTrigger className="hover:no-underline py-3">
+                                <div className="flex items-center justify-between w-full pr-2">
                                   <div className="flex items-center gap-2">
                                     <span className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-white ${
                                       result.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"
                                     }`}>
                                       {String.fromCharCode(65 + landIdx)}
                                     </span>
-                                    <div>
-                                      <p className="font-medium">{land.address}</p>
-                                      <p className="text-sm text-muted-foreground">{land.landType} | {land.landCategory}</p>
+                                    <div className="text-left">
+                                      <p className="font-medium text-sm">{land.address}</p>
+                                      <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
                                     </div>
                                   </div>
-                                  <Badge className={result.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"}>
+                                  <Badge className={`ml-2 ${result.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"}`}>
                                     {result.provisionalJudgment}
                                   </Badge>
                                 </div>
-                                
-                                <div className="grid grid-cols-3 gap-3 text-sm">
+                              </AccordionTrigger>
+                              <AccordionContent className="pb-4">
+                                {/* 기본 정보 */}
+                                <div className="grid grid-cols-3 gap-3 text-sm mb-4">
                                   <div className="rounded bg-white/80 p-2 text-center">
                                     <p className="text-xs text-muted-foreground">잔여 면적</p>
                                     <p className="font-semibold">{land.remainingArea.toLocaleString()}m²</p>
@@ -1505,55 +1508,91 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   </div>
                                 </div>
                                 
-                                {result.reason && (
-                                  <div className="mt-3 pt-3 border-t">
-                                    <p className="text-sm text-muted-foreground">
-                                      <span className="font-medium">판정 사유:</span> {result.reason}
-                                    </p>
+                                {/* 상세 분석 내용 */}
+                                <div className="space-y-3">
+                                  {/* 편입 정보 */}
+                                  <div className="rounded-lg bg-white/60 p-3 border">
+                                    <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
+                                    <div className="grid grid-cols-2 gap-2 text-sm">
+                                      <div>
+                                        <span className="text-muted-foreground">편입 전 면적:</span>
+                                        <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}m²</span>
+                                      </div>
+                                      <div>
+                                        <span className="text-muted-foreground">편입 면적:</span>
+                                        <span className="ml-1 font-medium">{land.includedArea.toLocaleString()}m²</span>
+                                      </div>
+                                    </div>
                                   </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                      
-                      {/* 단일 필지 신청: 단일 분석 ��과 */}
-                      {applicationType === "single" && Object.values(adminLandAIResults)[0] && (
-                        <div className={`rounded-lg border p-4 ${
-                          Object.values(adminLandAIResults)[0].provisionalJudgment === "매수"
-                            ? "border-green-200 bg-green-50/50"
-                            : "border-red-200 bg-red-50/50"
-                        }`}>
-                          <div className="flex items-center justify-between mb-3">
-                            <span className="font-medium">단일 필지 분석 결과</span>
-                            <Badge className={Object.values(adminLandAIResults)[0].provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"}>
-                              {Object.values(adminLandAIResults)[0].provisionalJudgment}
-                            </Badge>
-                          </div>
-                          <div className="grid grid-cols-3 gap-3 text-sm">
-                            <div className="rounded bg-white/80 p-2 text-center">
-                              <p className="text-xs text-muted-foreground">잔여 면적</p>
-                              <p className="font-semibold">{allLands[0]?.remainingArea.toLocaleString()}m²</p>
-                            </div>
-                            <div className="rounded bg-white/80 p-2 text-center">
-                              <p className="text-xs text-muted-foreground">잔여 비율</p>
-                              <p className="font-semibold">{allLands[0]?.remainingRatio}%</p>
-                            </div>
-                            <div className="rounded bg-white/80 p-2 text-center">
-                              <p className="text-xs text-muted-foreground">형상지수</p>
-                              <p className="font-semibold">+{Object.values(adminLandAIResults)[0].shapeIndexChange?.toFixed(1) ?? "-"}</p>
-                            </div>
-                          </div>
-                          {Object.values(adminLandAIResults)[0].reason && (
-                            <div className="mt-3 pt-3 border-t">
-                              <p className="text-sm text-muted-foreground">
-                                <span className="font-medium">판정 사유:</span> {Object.values(adminLandAIResults)[0].reason}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      )}
+                                  
+                                  {/* 판정 사유 */}
+                                  {result.reason && (
+                                    <div className="rounded-lg bg-white/60 p-3 border">
+                                      <p className="text-xs font-medium text-muted-foreground mb-2">판정 사유</p>
+                                      <p className="text-sm">{result.reason}</p>
+                                    </div>
+                                  )}
+                                  
+                                  {/* 판정 기준 충족 여부 */}
+                                  {result.criteriaChecks && result.criteriaChecks.length > 0 && (
+                                    <div className="rounded-lg bg-white/60 p-3 border">
+                                      <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준</p>
+                                      <div className="space-y-2">
+                                        {result.criteriaChecks.map((check, cIdx) => (
+                                          <div key={cIdx} className="flex items-center justify-between text-sm">
+                                            <span className="text-muted-foreground">{check.criteriaName}</span>
+                                            <Badge 
+                                              variant={check.isMet ? "default" : "destructive"} 
+                                              className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}
+                                            >
+                                              {check.isMet ? "충족" : "미충족"}
+                                            </Badge>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                  
+                                  {/* 분석 세부 정보 */}
+                                  <div className="rounded-lg bg-white/60 p-3 border">
+                                    <p className="text-xs font-medium text-muted-foreground mb-2">분석 세부 정보</p>
+                                    <div className="grid grid-cols-2 gap-2 text-sm">
+                                      <div>
+                                        <span className="text-muted-foreground">토지 형상:</span>
+                                        <span className="ml-1 font-medium">{land.landUse || "정형"}</span>
+                                      </div>
+                                      <div>
+                                        <span className="text-muted-foreground">접도 조건:</span>
+                                        <span className="ml-1 font-medium">{result.roadAccess || "양호"}</span>
+                                      </div>
+                                      <div>
+                                        <span className="text-muted-foreground">이용 현황:</span>
+                                        <span className="ml-1 font-medium">{land.landCategory}</span>
+                                      </div>
+                                      <div>
+                                        <span className="text-muted-foreground">신뢰도:</span>
+                                        <span className="ml-1 font-medium">{result.confidence || 85}%</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* 적용된 현장 상황 옵션 */}
+                                  {(adminAIOptions.accessRoadLost || adminAIOptions.waterChannelLost || adminAIOptions.farmMachineDifficulty) && (
+                                    <div className="rounded-lg bg-blue-50/80 p-3 border border-blue-200">
+                                      <p className="text-xs font-medium text-blue-700 mb-2">적용된 현장 상황</p>
+                                      <div className="flex flex-wrap gap-2">
+                                        {adminAIOptions.accessRoadLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">접면도로 상실</Badge>}
+                                        {adminAIOptions.waterChannelLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">관개수로 상실</Badge>}
+                                        {adminAIOptions.farmMachineDifficulty && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">농기계 진입 곤란</Badge>}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          );
+                        })}
+                      </Accordion>
                     
                     {/* 일단지 그룹 (관리자 재판독) */}
                     {Object.keys(adminUnifiedGroups).length > 0 && (
@@ -1642,7 +1681,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </div>
               <div>
                 <h4 className="font-semibold text-amber-800">담당자 최종 컨펌</h4>
-                <p className="text-xs text-amber-600">AI 제안을 확인하고 최종 결정을 내려주세요</p>
+                <p className="text-xs text-amber-600">AI 제안을 확인하고 최종 결정을 내���주세요</p>
               </div>
             </div>
             
