@@ -128,6 +128,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
   
+  // 관리자용 AI 판독 추가 옵션 (현장 상황)
+  const [adminAIOptions, setAdminAIOptions] = useState({
+    accessRoadLost: false,      // 접면도로 상실
+    waterChannelLost: false,    // 관개수로 상실
+    farmMachineDifficulty: false, // 농기계 진입 곤란
+  });
+  
   // 체크박스로 선택된 필지 ID 목록 (초기값: 미체크)
   const [checkedLandIds, setCheckedLandIds] = useState<string[]>([]);
   
@@ -395,7 +402,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경로: 기본 330㎡, 잔여비율 25% ��하 시 495㎡ (완화)
+      // 농지 경로: 기본 330㎡, 잔여비율 25% ���하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -427,8 +434,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     }
   };
   
-  // 개별 필지 AI 분석
-  const analyzeSingleLand = (land: typeof allLands[0], landData?: typeof application.landDataList[0]) => {
+  // 개별 필지 AI 분석 (관리자 옵션 반영)
+  const analyzeSingleLand = (land: typeof allLands[0], landData?: typeof application.landDataList[0], adminOptions?: typeof adminAIOptions) => {
     const criteria = getAreaCriteria(land, landData);
     const isSmall = isSmallScaleLand(land);
     const shapeCriteria = checkShapeCriteria(land);
@@ -448,13 +455,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     });
     
     if (land.landType === "대지") {
-      // 택지 경로
+      // 택지 경로 + 관리자 옵션 반영
       // 2. 접면도로 상태 변경
-      const roadLost = landData?.accessRoadLost || land.remainingRatio < 30;
+      const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || land.remainingRatio < 30;
       criteriaChecks.push({
         name: "접면도로 상태",
         met: roadLost,
-        description: roadLost ? "접면도로 상실로 건축 불가" : "접면도로 유지"
+        description: roadLost ? "접면도로 상실로 건축 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유지"
       });
       
       // 3. 형상 부정형 변경
@@ -468,7 +475,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || roadLost || shapeCriteria.met) {
         judgment = "매수";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (roadLost) reasons.push("접면도로 상실");
+        if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
         judgment = "매수불가";
@@ -476,22 +483,24 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       }
       
     } else if (land.landType === "농지") {
-      // 농지 경로
+      // 농지 경로 + 관리자 옵션 반영
       // 2. 접면 도로/수로 상실 여부
-      const waterLost = landData?.waterChannelLost || false;
-      const roadLost = landData?.accessRoadLost || false;
+      const waterLost = adminOptions?.waterChannelLost || landData?.waterChannelLost || false;
+      const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || false;
       criteriaChecks.push({
         name: "도로/수로 상실",
         met: waterLost || roadLost,
-        description: waterLost ? "관개수로 상실로 농지 사용 불가" : (roadLost ? "접면도로 상실" : "도로/수로 유지")
+        description: waterLost 
+          ? "관개수로 상실로 농지 사용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
+          : (roadLost ? "접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "도로/수로 유지")
       });
       
       // 3. 농기계 회전 곤란, 형상 부정형 변경
-      const farmDifficulty = landData?.farmMachineDifficulty || land.remainingArea < 200;
+      const farmDifficulty = adminOptions?.farmMachineDifficulty || landData?.farmMachineDifficulty || land.remainingArea < 200;
       criteriaChecks.push({
         name: "농기계 진입/회전",
         met: farmDifficulty,
-        description: farmDifficulty ? "농기계 진입/회전 곤란" : "농기계 사용 가능"
+        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : "") : "농기계 사용 가능"
       });
       
       criteriaChecks.push({
@@ -503,9 +512,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || waterLost || roadLost || farmDifficulty || shapeCriteria.met) {
         judgment = "매수";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (waterLost) reasons.push("관개수로 상실");
-        if (roadLost) reasons.push("접면도로 상실");
-        if (farmDifficulty) reasons.push("농기계 진입 곤란");
+        if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
+        if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
+        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
         judgment = "매수불가";
@@ -513,28 +522,28 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       }
       
     } else if (land.landType === "산지") {
-      // 산지 경로
+      // 산지 경로 + 관리자 옵션 반영
       // 2. 접면 도로 상실 여부
-      const roadLost = landData?.accessRoadLost || land.remainingRatio < 25;
+      const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || land.remainingRatio < 25;
       criteriaChecks.push({
         name: "접면도로 상실",
         met: roadLost,
-        description: roadLost ? "도로 접하지 않아 접근 불가" : "접면도로 유지"
+        description: roadLost ? "도로 접하지 않아 접근 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유지"
       });
       
       if (areaCheckMet || roadLost) {
         judgment = "매수";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (roadLost) reasons.push("접면도로 상실");
+        if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
       } else {
         judgment = "매수불가";
         reasons.push("모든 기준 미충족");
       }
       
     } else {
-      // 그 밖의 토지
+      // 그 밖의 토지 + 관리자 옵션 반영
       // 종래 목적 사용 곤란 여부 (위치, 형상, 접근 상태 고려)
-      const usageDifficulty = land.remainingRatio < 40 || shapeCriteria.met;
+      const usageDifficulty = adminOptions?.accessRoadLost || adminOptions?.farmMachineDifficulty || land.remainingRatio < 40 || shapeCriteria.met;
       criteriaChecks.push({
         name: "종래 사용 곤란",
         met: usageDifficulty,
@@ -554,7 +563,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     // 소규모 토지 추가 검토
     if (isSmall) {
       criteriaChecks.push({
-        name: "소규모 토지",
+        name: "���규모 토지",
         met: true,
         description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규모 해당)`
       });
@@ -654,40 +663,41 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               analysisReasons.push(`합산 면적 ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
             }
             
-            // 토지유형별 추가 조건 검토
+            // 토지유형별 추가 조건 검토 + 관리자 현장 상황 옵션 반영
             if (landType === "대지") {
               // 택지 경로
-              const hasRoadLoss = groupLands.some(l => l.remainingRatio < 30);
+              const hasRoadLoss = adminAIOptions.accessRoadLost || groupLands.some(l => l.remainingRatio < 30);
               const hasShapeChange = groupLands.some(l => checkShapeCriteria(l).met);
-              if (hasRoadLoss) analysisReasons.push("접면도로 상실");
+              if (hasRoadLoss) analysisReasons.push("접면도로 상실" + (adminAIOptions.accessRoadLost ? " (관리자 확인)" : ""));
               if (hasShapeChange) analysisReasons.push("형상 부정형 변경");
               
             } else if (landType === "농지") {
-              // 농지 경로
-              const hasRoadLoss = groupLands.some(l => {
+              // 농지 경로 + 관리자 옵션 우선 반영
+              const hasRoadLoss = adminAIOptions.accessRoadLost || groupLands.some(l => {
                 const data = application.landDataList?.[allLands.findIndex(al => al.id === l.id)];
                 return data?.accessRoadLost || l.remainingRatio < 30;
               });
-              const hasWaterLoss = groupLands.some(l => {
+              const hasWaterLoss = adminAIOptions.waterChannelLost || groupLands.some(l => {
                 const data = application.landDataList?.[allLands.findIndex(al => al.id === l.id)];
                 return data?.waterChannelLost;
               });
-              const hasFarmDifficulty = groupLands.some(l => l.remainingArea < 200);
+              const hasFarmDifficulty = adminAIOptions.farmMachineDifficulty || groupLands.some(l => l.remainingArea < 200);
               const hasShapeChange = groupLands.some(l => checkShapeCriteria(l).met);
               
-              if (hasRoadLoss) analysisReasons.push("접면도로 상실");
-              if (hasWaterLoss) analysisReasons.push("관개수로 상실");
-              if (hasFarmDifficulty) analysisReasons.push("농기계 진입/회전 곤란");
+              if (hasRoadLoss) analysisReasons.push("접면도로 상실" + (adminAIOptions.accessRoadLost ? " (관리자 확인)" : ""));
+              if (hasWaterLoss) analysisReasons.push("관개수로 상실" + (adminAIOptions.waterChannelLost ? " (관리자 확인)" : ""));
+              if (hasFarmDifficulty) analysisReasons.push("농기계 진입/회전 곤란" + (adminAIOptions.farmMachineDifficulty ? " (관리자 확인)" : ""));
               if (hasShapeChange) analysisReasons.push("형상 부정형 변경");
               
             } else if (landType === "산지") {
               // 산지 경로
-              const hasRoadLoss = groupLands.some(l => l.remainingRatio < 25);
-              if (hasRoadLoss) analysisReasons.push("접면도로 상실 (접근 불가)");
+              const hasRoadLoss = adminAIOptions.accessRoadLost || groupLands.some(l => l.remainingRatio < 25);
+              if (hasRoadLoss) analysisReasons.push("접면도로 상실 (접근 불가)" + (adminAIOptions.accessRoadLost ? " (관리자 확인)" : ""));
               
             } else {
               // 그 밖의 토지
-              const hasUsageDifficulty = groupLands.some(l => l.remainingRatio < 40 || checkShapeCriteria(l).met);
+              const hasUsageDifficulty = adminAIOptions.accessRoadLost || adminAIOptions.farmMachineDifficulty || 
+                groupLands.some(l => l.remainingRatio < 40 || checkShapeCriteria(l).met);
               if (hasUsageDifficulty) analysisReasons.push("종래 목적 사용 곤란");
             }
             
@@ -726,8 +736,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           const landIndex = allLands.findIndex(l => l.id === landId);
           const landData = application.landDataList?.[landIndex];
           
-          // [2단계] 개별 필지 상세 분석
-          const analysis = analyzeSingleLand(land, landData);
+          // [2단계] 개별 필지 상세 분석 (관리자 옵션 반영)
+          const analysis = analyzeSingleLand(land, landData, adminAIOptions);
           const addr = parseAddress(land.address);
           
           newResults[landId] = {
@@ -757,7 +767,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     setUnifiedGroups({});
   };
   
-  // 필지 포���/제외 상태 (민원인 소유 확인용)
+  // 필지 ������/제외 상태 (민원인 소유 확인용)
   const [excludedLands, setExcludedLands] = useState<Set<string>>(new Set());
   
   // 필지 포함/제외 토글
@@ -1346,8 +1356,73 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </TabsContent>
             </Tabs>
             
-            {/* AI 판독 실행 버튼 */}
+            {/* 관리자용 AI 판독 옵션 + 실행 버튼 */}
             <div className="mt-4 pt-4 border-t border-border">
+              {/* 현장 상황 체크 옵션 */}
+              {checkedLandIds.length > 0 && (
+                <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50/50 p-4">
+                  <h4 className="mb-3 text-sm font-medium text-blue-800 flex items-center gap-2">
+                    <Info className="h-4 w-4" />
+                    현장 상황 확인 (선택 시 AI 판독에 반영)
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Checkbox
+                        id="admin-accessRoadLost"
+                        checked={adminAIOptions.accessRoadLost}
+                        onCheckedChange={(checked) => 
+                          setAdminAIOptions(prev => ({ ...prev, accessRoadLost: !!checked }))
+                        }
+                      />
+                      <Label 
+                        htmlFor="admin-accessRoadLost" 
+                        className="text-sm font-normal cursor-pointer"
+                      >
+                        접면도로 상실
+                        <span className="ml-2 text-xs text-muted-foreground">(사업으로 인해 도로 접근이 불가능해진 경우)</span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Checkbox
+                        id="admin-waterChannelLost"
+                        checked={adminAIOptions.waterChannelLost}
+                        onCheckedChange={(checked) => 
+                          setAdminAIOptions(prev => ({ ...prev, waterChannelLost: !!checked }))
+                        }
+                      />
+                      <Label 
+                        htmlFor="admin-waterChannelLost" 
+                        className="text-sm font-normal cursor-pointer"
+                      >
+                        관개수로 상실
+                        <span className="ml-2 text-xs text-muted-foreground">(사업으로 인해 농업용수 공급이 불가능해진 경우)</span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Checkbox
+                        id="admin-farmMachineDifficulty"
+                        checked={adminAIOptions.farmMachineDifficulty}
+                        onCheckedChange={(checked) => 
+                          setAdminAIOptions(prev => ({ ...prev, farmMachineDifficulty: !!checked }))
+                        }
+                      />
+                      <Label 
+                        htmlFor="admin-farmMachineDifficulty" 
+                        className="text-sm font-normal cursor-pointer"
+                      >
+                        농기계 진입 곤란
+                        <span className="ml-2 text-xs text-muted-foreground">(형상 변경으로 농기계 진입이 어려워진 경우)</span>
+                      </Label>
+                    </div>
+                  </div>
+                  {(adminAIOptions.accessRoadLost || adminAIOptions.waterChannelLost || adminAIOptions.farmMachineDifficulty) && (
+                    <p className="mt-3 text-xs text-blue-700 bg-blue-100 rounded px-2 py-1">
+                      선택된 현장 상황이 AI 판독 시 가중치로 반영됩니다.
+                    </p>
+                  )}
+                </div>
+              )}
+              
               <Button
                 onClick={handleRunAIAnalysis}
                 disabled={isAIAnalyzing || checkedLandIds.length === 0}
