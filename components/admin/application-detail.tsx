@@ -180,7 +180,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
-  // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
+  // 관리자용 AI 판독 추가 옵션 (��장 상황) - 필지별 관리
   const [adminAIOptionsPerLand, setAdminAIOptionsPerLand] = useState<Record<string, {
     accessRoadLost: boolean;      // 접면도로 상실
     waterChannelLost: boolean;    // 관개수로 상실
@@ -940,11 +940,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       setAdminLandAIResults(adminResults);
       setAiResultViewMode("admin"); // 관리자 결과 탭으로 자동 전환
       setIsAIAnalyzing(false);
-    };
-    
-    // 2초 후 분석 실행
-    setTimeout(() => {
-      analyzeSequentially();
     }, 2000);
   };
   
@@ -1100,7 +1095,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             {/* 민원인 결과 탭 */}
             <TabsContent value="citizen">
-              {/* 일단지인 경우 최상단에 일단지 판정 결과 표시 */}
+              {/* 일단지인 경우 최상단��� 일단지 판정 결과 표시 */}
               {applicationType === "unified" && (
                 <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4 mb-6">
                   <div className="flex items-center justify-between mb-3">
