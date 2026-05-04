@@ -1338,29 +1338,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <div className="grid gap-6 lg:grid-cols-2">
                 {/* 좌측: 지적도 + 필지 리스트 */}
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium flex items-center gap-2">
-                      <MapIcon className="h-4 w-4" />
-                      지적도
-                    </h4>
-                  </div>
-                  
-                  {/* 선택 상태 표시 */}
-                  <div className="flex items-center justify-between rounded-lg border bg-muted/30 px-3 py-2">
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="text-muted-foreground">전체 필지:</span>
-                      <Badge variant="secondary" className="font-medium">{allLands.length}건</Badge>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="text-muted-foreground">선택된 필지:</span>
-                      <Badge variant={adminCheckedLandIds.length > 0 ? "default" : "outline"} className="font-medium">
-                        {adminCheckedLandIds.length}건
-                      </Badge>
-                      {adminCheckedLandIds.length > 1 && (
-                        <span className="text-xs text-blue-600 font-medium">(복수 선택)</span>
-                      )}
-                    </div>
-                  </div>
+                  <h4 className="font-medium flex items-center gap-2">
+                    <MapIcon className="h-4 w-4" />
+                    지적도
+                  </h4>
                   
                   {/* 지적도 */}
                   <div className="relative h-[550px] rounded-lg overflow-hidden border">
