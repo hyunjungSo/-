@@ -1339,12 +1339,66 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div className="flex items-center justify-between">
                     <h4 className="font-medium flex items-center gap-2">
                       <MapIcon className="h-4 w-4" />
-                      지적도 및 필지 선택
+                      지적도
                     </h4>
-                    <Badge variant="outline" className="font-normal">
-                      {allLands.length}필지 / {adminCheckedLandIds.length}선택
-                    </Badge>
                   </div>
+                  
+                  {/* 선택 상태 표시 */}
+                  <div className="flex items-center justify-between rounded-lg border bg-muted/30 px-3 py-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="text-muted-foreground">전체 필지:</span>
+                      <Badge variant="secondary" className="font-medium">{allLands.length}건</Badge>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="text-muted-foreground">선택된 필지:</span>
+                      <Badge variant={adminCheckedLandIds.length > 0 ? "default" : "outline"} className="font-medium">
+                        {adminCheckedLandIds.length}건
+                      </Badge>
+                      {adminCheckedLandIds.length > 1 && (
+                        <span className="text-xs text-blue-600 font-medium">(복수 선택)</span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* 선택된 필지 목록 미리보기 */}
+                  {adminCheckedLandIds.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {adminCheckedLandIds.map((landId) => {
+                        const land = allLands.find(l => l.id === landId);
+                        const idx = allLands.findIndex(l => l.id === landId);
+                        if (!land) return null;
+                        return (
+                          <Badge 
+                            key={landId} 
+                            variant="outline" 
+                            className="flex items-center gap-1 bg-primary/5 border-primary/30 text-xs"
+                          >
+                            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                              {String.fromCharCode(65 + idx)}
+                            </span>
+                            <span className="max-w-[120px] truncate">{land.address.split(" ").slice(-2).join(" ")}</span>
+                            <button
+                              type="button"
+                              className="ml-0.5 hover:text-destructive"
+                              onClick={() => setAdminCheckedLandIds(prev => prev.filter(id => id !== landId))}
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </Badge>
+                        );
+                      })}
+                      {adminCheckedLandIds.length > 0 && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-6 text-xs text-muted-foreground"
+                          onClick={() => setAdminCheckedLandIds([])}
+                        >
+                          전체 해제
+                        </Button>
+                      )}
+                    </div>
+                  )}
                   
                   {/* 지적도 + 필지 리스트 컨테이너 */}
                   <div className="relative h-[550px] rounded-lg overflow-hidden border">
