@@ -1404,97 +1404,20 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             {/* 민원인 결과 탭 */}
             <TabsContent value="citizen">
               <div className="grid gap-6 lg:grid-cols-2">
-                {/* 좌측: 지적도 */}
+                {/* 좌측: 지적도 + 필지 목록 */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h4 className="font-medium flex items-center gap-2">
                       <MapIcon className="h-4 w-4" />
                       지적도
                     </h4>
-                    {checkedLandIds.length > 0 && (
-                      <Badge variant="outline" className="font-normal">
-                        {checkedLandIds.length}필지 선택
-                      </Badge>
-                    )}
+                    <Badge variant="outline" className="font-normal">
+                      {citizenSelectedLandIds.length}필지
+                    </Badge>
                   </div>
-              
-                  {/* 민원인 신청 필지 목록 (읽기 전용) */}
-              {isMultipleLands && (
-                <div className="mb-4 rounded-lg border overflow-hidden">
-                {/* 헤더 */}
-                <div className="flex items-center justify-between border-b bg-muted/50 px-3 py-2">
-                  <span className="text-sm font-medium">민원인 신청 필지</span>
-                  <span className="text-primary font-medium text-xs">
-                    {citizenSelectedLandIds.length}필지
-                  </span>
-                </div>
-                
-                {/* 필지 목록 (읽기 전용) */}
-                <ul className="max-h-[280px] overflow-y-auto divide-y">
-                  {allLands.map((land, idx) => {
-                    const landResult = landAIResults[land.id];
-                    const judgment = landResult?.provisionalJudgment;
-                    const isHovered = hoveredLandId === land.id;
-                    
-                    return (
-                      <li key={land.id}>
-                        <div 
-                          className={`flex w-full items-center gap-3 px-3 py-3 transition-all duration-150 ${
-                            isHovered
-                              ? "border-l-4 border-l-blue-500 bg-blue-50"
-                              : "border-l-4 border-l-primary bg-primary/5"
-                          }`}
-                          onMouseEnter={() => setHoveredLandId(land.id)}
-                          onMouseLeave={() => setHoveredLandId(null)}
-                        >
-                          {/* 필지 라벨 */}
-                          <span className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold shrink-0 bg-primary text-primary-foreground">
-                            {String.fromCharCode(65 + idx)}
-                          </span>
-                          
-                          {/* 필지 정보 */}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm truncate">
-                                {land.address}
-                              </span>
-                              {/* AI 판독 결과 뱃지 */}
-                              {judgment && (
-                                <Badge 
-                                  variant={judgment === "매수" ? "default" : "secondary"}
-                                  className={`text-[10px] px-1.5 py-0 shrink-0 ${
-                                    judgment === "매수" 
-                                      ? "bg-green-100 text-green-700 border-green-200" 
-                                      : judgment === "매수불가"
-                                        ? "bg-red-100 text-red-700 border-red-200"
-                                        : "bg-amber-100 text-amber-700 border-amber-200"
-                                  }`}
-                                >
-                                  {judgment === "매수" ? "매수" : judgment === "매수불가" ? "매수불가" : "심의이관"}
-                                </Badge>
-                              )}
-                            </div>
-                            <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-                              <span>잔여 {land.remainingArea.toLocaleString()}m²</span>
-                              <span>|</span>
-                              <span>{land.landType}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )}
-            
-            <Tabs defaultValue="cadastral">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="cadastral">지적도</TabsTrigger>
-                <TabsTrigger value="aerial">항공사진</TabsTrigger>
-              </TabsList>
-              <TabsContent value="cadastral" className="mt-4">
-                <div className="h-[350px] sm:h-[450px]">
+                  
+                  {/* 지적도 */}
+                  <div className="h-[300px] rounded-lg overflow-hidden border">
                   <LeafletMap
                     parcels={(() => {
                       // 신청 필지 폴리곤
@@ -1680,42 +1603,56 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                   </div>
                 </div>
-              </TabsContent>
-              <TabsContent value="aerial" className="mt-4">
-                <div className="flex h-[350px] items-center justify-center rounded-lg bg-muted sm:h-[450px]">
-                  <p className="text-muted-foreground">
-                    항공/드론 사진 (연동 예정)
-                  </p>
+                  
+                  {/* 필지 리스트 */}
+                  <div className="rounded-lg border overflow-hidden">
+                    <div className="flex items-center justify-between border-b bg-muted/50 px-3 py-2">
+                      <span className="text-sm font-medium">민원인 신청 필지</span>
+                      <span className="text-xs text-primary font-medium">
+                        {citizenSelectedLandIds.length}필지
+                      </span>
+                    </div>
+                    <ul className="max-h-[180px] overflow-y-auto divide-y">
+                      {allLands.map((land, idx) => {
+                        const landResult = landAIResults[land.id];
+                        const isHovered = hoveredLandId === land.id;
+                        return (
+                          <li 
+                            key={land.id}
+                            className={`flex items-center gap-3 px-3 py-2 transition-colors ${
+                              isHovered ? "bg-blue-50" : "bg-primary/5"
+                            }`}
+                            onMouseEnter={() => setHoveredLandId(land.id)}
+                            onMouseLeave={() => setHoveredLandId(null)}
+                          >
+                            <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
+                              landResult?.provisionalJudgment === "매수" ? "bg-green-600 text-white" : 
+                              landResult?.provisionalJudgment === "매수불가" ? "bg-red-500 text-white" : "bg-primary text-primary-foreground"
+                            }`}>
+                              {String.fromCharCode(65 + idx)}
+                            </span>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium truncate">{land.address}</p>
+                              <p className="text-xs text-muted-foreground">
+                                잔여 {land.remainingArea.toLocaleString()}m² | {land.landType}
+                              </p>
+                            </div>
+                            {landResult && (
+                              <Badge variant={landResult.provisionalJudgment === "매수" ? "default" : "destructive"} className="text-xs">
+                                {landResult.provisionalJudgment}
+                              </Badge>
+                            )}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
                 </div>
-              </TabsContent>
-            </Tabs>
-            
-              {/* 관리자용 AI 판독 실행 버튼 */}
-              <div className="mt-4 pt-4 border-t border-border">
-                <Button
-                  onClick={handleRunAIAnalysis}
-                  disabled={isAIAnalyzing || checkedLandIds.length === 0}
-                  className="w-full gap-2 bg-primary hover:bg-primary/90"
-                  size="lg"
-                >
-                  {isAIAnalyzing ? (
-                    <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                      AI 판독 중... ({checkedLandIds.length}필지)
-                    </>
-                  ) : Object.keys(landAIResults).length > 0 ? (
-                    <>
-                      <RotateCcw className="h-5 w-5" />
-                      선택 필지 AI 재판독 ({checkedLandIds.length}필지)
-                    </>
-                  ) : (
-                    <>
-                      <Bot className="h-5 w-5" />
-                      선택 필지 AI 판독 ({checkedLandIds.length}필지)
-                    </>
-                  )}
-                </Button>
-              </div>
+                
+                {/* 우측: AI 분석 결과 */}
+                <div className="space-y-4">
+                  <h4 className="font-medium">분석 결과</h4>
+                  
               {/* AI 판독 결과 - 신청 유형에 따라 다르게 표시 */}
               {Object.keys(landAIResults).length > 0 && (
                 <div className="mt-4 space-y-3">
@@ -2494,7 +2431,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             )}
           </div>
 
-          {/* 저장 버튼 */}
+          {/* 저장 ��튼 */}
           <div className="flex justify-end gap-3 border-t border-border pt-4">
             <Button variant="outline" onClick={onBack}>
               취소
