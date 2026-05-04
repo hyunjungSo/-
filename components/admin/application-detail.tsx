@@ -932,7 +932,86 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </div>
       </div>
 
-      {/* AI 분석 섹션 */}
+      {/* Section 01. 신청인 정보 */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <User className="h-5 w-5" />
+            신청인 정보
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <div>
+              <p className="text-xs text-muted-foreground">신청인</p>
+              <p className="font-medium">{application.applicantName}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">연락처</p>
+              <p className="font-medium">{application.phone}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">신청일</p>
+              <p className="font-medium">{application.submittedAt}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">사업명</p>
+              <p className="font-medium">{application.projectName}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Section 02. 필지 관리 */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <MapIcon className="h-5 w-5" />
+              필지 관리
+            </CardTitle>
+            <Badge variant="outline">
+              {applicationType === "unified" ? "일단지" : applicationType === "multiple" ? "복수필지" : "단일필지"}
+            </Badge>
+          </div>
+          <CardDescription>
+            신청된 필지 정보와 편입 현황을 확인합니다.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {allLands.map((land, idx) => (
+              <div key={land.id} className="rounded-lg border p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+                    {String.fromCharCode(65 + idx)}
+                  </span>
+                  <div>
+                    <p className="font-medium">{land.address}</p>
+                    <p className="text-sm text-muted-foreground">{land.landType} | {land.landCategory}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <p className="text-xs text-muted-foreground">편입 전 면적</p>
+                    <p className="font-medium">{land.originalArea.toLocaleString()}m²</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">편입 면적</p>
+                    <p className="font-medium">{land.incorporatedArea.toLocaleString()}m²</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">잔여 면적</p>
+                    <p className="font-medium">{land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Section 03. AI 분석 */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
@@ -940,12 +1019,194 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             AI 분석
           </CardTitle>
           <CardDescription>
-            담당자 분석 결과를 확인합니다.
+            민원인 신청 결과와 담당자 분석 결과를 확인합니다.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-6 lg:grid-cols-2">
-            {/* 좌측: 지적도 + 필지 선택 + AI 분석 옵션 */}
+          <Tabs defaultValue="citizen" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-6">
+              <TabsTrigger value="citizen" className="gap-2">
+                <User className="h-4 w-4" />
+                민원인 결과
+              </TabsTrigger>
+              <TabsTrigger value="admin" className="gap-2">
+                <Shield className="h-4 w-4" />
+                담당자 결과
+              </TabsTrigger>
+            </TabsList>
+            
+            {/* 민원인 결과 탭 */}
+            <TabsContent value="citizen">
+              <div className="grid gap-6 lg:grid-cols-2">
+                {/* 좌측: 지적도 */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium flex items-center gap-2">
+                      <MapIcon className="h-4 w-4" />
+                      지적도
+                    </h4>
+                    <Badge variant="outline" className="font-normal">
+                      {allLands.length}필지
+                    </Badge>
+                  </div>
+                  
+                  {/* 지적도 */}
+                  <div className="h-[300px] rounded-lg overflow-hidden border">
+                    <LeafletMap
+                      parcels={(() => {
+                        const applicationParcels = allLands.map((land, idx) => {
+                          const baseLat = 37.2180 + (idx * 0.0008);
+                          const baseLng = 127.2950 + (idx * 0.0005);
+                          const offset = 0.0003;
+                          
+                          return {
+                            id: land.id,
+                            address: land.address,
+                            isIncluded: true,
+                            isOwned: true,
+                            coordinates: [
+                              { lat: baseLat, lng: baseLng },
+                              { lat: baseLat, lng: baseLng + offset * 1.2 },
+                              { lat: baseLat + offset, lng: baseLng + offset * 1.2 },
+                              { lat: baseLat + offset, lng: baseLng },
+                            ],
+                          };
+                        });
+                        
+                        const adjacentParcels = [
+                          {
+                            id: "adjacent-001",
+                            address: "경기도 용인시 처인구 포곡읍 마성리 101",
+                            isIncluded: false,
+                            isOwned: false,
+                            coordinates: [
+                              { lat: 37.2183, lng: 127.2953 },
+                              { lat: 37.2183, lng: 127.2957 },
+                              { lat: 37.2186, lng: 127.2957 },
+                              { lat: 37.2186, lng: 127.2953 },
+                            ],
+                          },
+                        ];
+                        
+                        return [...applicationParcels, ...adjacentParcels];
+                      })()}
+                      selectedParcelIds={new Set(allLands.map(l => l.id))}
+                      onParcelClick={() => {}}
+                      hoveredParcelId={hoveredLandId}
+                      onParcelHover={(parcelId) => setHoveredLandId(parcelId)}
+                      zoom={18}
+                    />
+                  </div>
+                  
+                  {/* 지도 범례 */}
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
+                      <span>신청필지</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
+                      <span>인접필지</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* 우측: 분석결과 */}
+                <div className="space-y-4">
+                  <h4 className="font-medium">분석결과</h4>
+                  
+                  {/* 일단지인 경우 상단에 일단지 판정 결과 표시 */}
+                  {applicationType === "unified" && (
+                    <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h5 className="font-medium text-emerald-800 flex items-center gap-2">
+                          <Layers className="h-4 w-4" />
+                          일단지 판정 결과
+                        </h5>
+                        <Badge className="bg-emerald-600 hover:bg-emerald-600">매수</Badge>
+                      </div>
+                      <div className="text-sm space-y-1 text-emerald-700">
+                        <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
+                        <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
+                        <p className="text-xs text-emerald-600 mt-2">소유자 동일 + 지반 연속 + 용도 일체성 충족</p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* 필지별 분석 결과 */}
+                  <div className="space-y-3 max-h-[350px] overflow-y-auto">
+                    {allLands.map((land, idx) => {
+                      const landResult = landAIResults[land.id];
+                      return (
+                        <div 
+                          key={land.id}
+                          className={`rounded-lg border p-4 ${
+                            landResult?.provisionalJudgment === "매수"
+                              ? "border-green-200 bg-green-50/50"
+                              : landResult?.provisionalJudgment === "매수불가"
+                                ? "border-red-200 bg-red-50/50"
+                                : "border-slate-200 bg-slate-50/50"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                              <span className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-white ${
+                                landResult?.provisionalJudgment === "매수" ? "bg-green-600" : 
+                                landResult?.provisionalJudgment === "매수불가" ? "bg-red-500" : "bg-slate-400"
+                              }`}>
+                                {String.fromCharCode(65 + idx)}
+                              </span>
+                              <div>
+                                <p className="font-medium">{land.address}</p>
+                                <p className="text-sm text-muted-foreground">{land.landType} | {land.landCategory}</p>
+                              </div>
+                            </div>
+                            {landResult && (
+                              <Badge className={`${
+                                landResult.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"
+                              }`}>
+                                {landResult.provisionalJudgment}
+                              </Badge>
+                            )}
+                          </div>
+                          
+                          <div className="grid grid-cols-3 gap-3 text-sm">
+                            <div className="rounded bg-white/80 p-2 text-center">
+                              <p className="text-xs text-muted-foreground">잔여 면적</p>
+                              <p className="font-semibold">{land.remainingArea.toLocaleString()}m²</p>
+                            </div>
+                            <div className="rounded bg-white/80 p-2 text-center">
+                              <p className="text-xs text-muted-foreground">잔여 비율</p>
+                              <p className="font-semibold">{land.remainingRatio}%</p>
+                            </div>
+                            <div className="rounded bg-white/80 p-2 text-center">
+                              <p className="text-xs text-muted-foreground">형상지수 변화</p>
+                              <p className="font-semibold">
+                                {landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}
+                              </p>
+                            </div>
+                          </div>
+                          
+                          {/* 판정 사유 */}
+                          {landResult?.reason && (
+                            <div className="mt-3 pt-3 border-t">
+                              <p className="text-sm text-muted-foreground">
+                                <span className="font-medium">판정 사유:</span> {landResult.reason}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+            
+            {/* 담당자 결과 탭 */}
+            <TabsContent value="admin">
+              <div className="grid gap-6 lg:grid-cols-2">
+                {/* 좌측: 지적도 + 필지 선택 + AI 분석 옵션 */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h4 className="font-medium flex items-center gap-2">
@@ -1305,6 +1566,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   )}
                 </div>
               </div>
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
 
@@ -1352,7 +1615,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </p>
           </div>
 
-          {/* 담당자 최종 컨펌 섹션 */}
+          {/* 담당자 최종 컨펌 ���션 */}
           <div className="rounded-xl border-2 border-amber-200 bg-gradient-to-b from-amber-50/80 to-white p-5 space-y-4">
             <div className="flex items-center gap-2 mb-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100">
@@ -1398,7 +1661,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 최종 판정
                 {reviewData.adminStatus !== "심사완료" && (
                   <span className="ml-2 text-sm font-normal text-muted-foreground">
-                    (진행상황을 &apos;심사완료&apos;로 설정하면 활성화됩니다)
+                    (진행상황을 &apos;심사완���&apos;로 설정하면 활성화됩니다)
                   </span>
                 )}
               </Label>
