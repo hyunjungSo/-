@@ -135,6 +135,31 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     farmMachineDifficulty: false, // 농기계 진입 곤란
   });
   
+  // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
+  const [aiResultViewMode, setAiResultViewMode] = useState<"citizen" | "admin">("citizen");
+  
+  // 관리자 재판독 결과 (별도 저장)
+  const [adminLandAIResults, setAdminLandAIResults] = useState<Record<string, {
+    provisionalJudgment: string;
+    landTypePath: string;
+    accessRoadLost: boolean;
+    waterChannelLost: boolean;
+    farmMachineDifficulty: boolean;
+    confidence: number;
+    analysisDate: string;
+    unifiedGroupId?: string;
+    reason?: string;
+    adminOptions: typeof adminAIOptions; // 관리자가 선택한 옵션 기록
+  }>>({});
+  
+  // 관리자 재판독 일단지 그룹
+  const [adminUnifiedGroups, setAdminUnifiedGroups] = useState<Record<string, {
+    groupName: string;
+    landIds: string[];
+    combinedArea: number;
+    judgment: string;
+  }>>({});
+  
   // 체크박스로 선택된 필지 ID 목록 (초기값: 미체크)
   const [checkedLandIds, setCheckedLandIds] = useState<string[]>([]);
   
@@ -753,18 +778,35 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         }
       });
       
-      setUnifiedGroups(newGroups);
-      setLandAIResults(newResults);
+      // 관리자 재판독 결과로 저장 (민원인 결과는 유지)
+      const adminResults: typeof adminLandAIResults = {};
+      Object.entries(newResults).forEach(([landId, result]) => {
+        adminResults[landId] = {
+          ...result,
+          farmMachineDifficulty: adminAIOptions.farmMachineDifficulty,
+          adminOptions: { ...adminAIOptions }
+        };
+      });
+      
+      setAdminUnifiedGroups(newGroups);
+      setAdminLandAIResults(adminResults);
+      setAiResultViewMode("admin"); // 관리자 결과 탭으로 자동 전환
       setIsAIAnalyzing(false);
     }, 2000);
   };
   
   
   
-  // 판독 결과 초�����������������화
-  const handleResetAIResults = () => {
-    setLandAIResults({});
-    setUnifiedGroups({});
+  // 판독 결과 초기화 (관리자 재판독 결과만)
+  const handleResetAdminAIResults = () => {
+    setAdminLandAIResults({});
+    setAdminUnifiedGroups({});
+    setAdminAIOptions({
+      accessRoadLost: false,
+      waterChannelLost: false,
+      farmMachineDifficulty: false,
+    });
+    setAiResultViewMode("citizen");
   };
   
   // 필지 ������/제외 상태 (민원인 소유 확인용)
@@ -1558,32 +1600,93 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             <CardTitle className="flex items-center gap-2">
               <Bot className="h-5 w-5" />
               AI 분석 결과
-              <div className="ml-auto flex items-center gap-2">
-                {aiResult && (
-                  <Badge 
-                    className={
-                      aiResult.provisionalJudgment === "매수" 
-                        ? "bg-green-500 hover:bg-green-500 text-white" 
-                        : aiResult.provisionalJudgment === "매수불가" || aiResult.provisionalJudgment === "기각"
-                          ? "bg-red-500 hover:bg-red-500 text-white"
-                          : "bg-amber-500 hover:bg-amber-500 text-white"
-                    }
-                  >
-                    {aiResult.provisionalJudgment}
-                  </Badge>
-                )}
-                {isMultipleLands && (
-                  <Badge variant="outline" className="font-normal">
-                    필지 {selectedLandIndex + 1}
-                  </Badge>
-                )}
-              </div>
             </CardTitle>
             <CardDescription>
-              토지 유형: {aiResult?.landTypePath || allLands[selectedLandIndex].landType}
+              민원인 신청 시 결과와 관리자 재판독 결과를 비교할 수 있습니다
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* 결과 탭 전환 */}
+            <div className="flex gap-2 rounded-lg bg-muted p-1">
+              <button
+                onClick={() => setAiResultViewMode("citizen")}
+                className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                  aiResultViewMode === "citizen"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <span>민원인 신청 결과</span>
+                  {aiResult && (
+                    <Badge 
+                      variant="outline"
+                      className={
+                        aiResult.provisionalJudgment === "매수" 
+                          ? "border-green-500 text-green-600" 
+                          : aiResult.provisionalJudgment === "매수불가" || aiResult.provisionalJudgment === "기각"
+                            ? "border-red-500 text-red-600"
+                            : "border-amber-500 text-amber-600"
+                      }
+                    >
+                      {aiResult.provisionalJudgment}
+                    </Badge>
+                  )}
+                </div>
+              </button>
+              <button
+                onClick={() => setAiResultViewMode("admin")}
+                className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                  aiResultViewMode === "admin"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <span>관리자 재판독 결과</span>
+                  {Object.keys(adminLandAIResults).length > 0 && (
+                    <Badge 
+                      variant="outline"
+                      className={(() => {
+                        const results = Object.values(adminLandAIResults);
+                        const hasPurchase = results.some(r => r.provisionalJudgment === "매수");
+                        const allRejected = results.every(r => r.provisionalJudgment === "매수불가");
+                        if (allRejected) return "border-red-500 text-red-600";
+                        if (hasPurchase) return "border-green-500 text-green-600";
+                        return "border-amber-500 text-amber-600";
+                      })()}
+                    >
+                      {(() => {
+                        const results = Object.values(adminLandAIResults);
+                        const purchaseCount = results.filter(r => r.provisionalJudgment === "매수").length;
+                        return `${purchaseCount}/${results.length} 매수`;
+                      })()}
+                    </Badge>
+                  )}
+                  {Object.keys(adminLandAIResults).length === 0 && (
+                    <Badge variant="outline" className="border-muted-foreground/30 text-muted-foreground">
+                      미실행
+                    </Badge>
+                  )}
+                </div>
+              </button>
+            </div>
+            
+            {/* 민원인 신청 결과 뷰 */}
+            {aiResultViewMode === "citizen" && (
+              <div className="space-y-4">
+                {/* 결과 요약 헤더 */}
+                <div className="flex items-center justify-between rounded-lg border bg-muted/30 p-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">토지 유형:</span>
+                    <span className="font-medium">{aiResult?.landTypePath || allLands[selectedLandIndex].landType}</span>
+                  </div>
+                  {isMultipleLands && (
+                    <Badge variant="outline" className="font-normal">
+                      필지 {selectedLandIndex + 1}
+                    </Badge>
+                  )}
+                </div>
             {/* 분석 상세 보기 버튼 */}
             <Button
               variant="outline"
@@ -1656,6 +1759,216 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </p>
                   </div>
                 </div>
+              </div>
+            )}
+              </div>
+            )}
+            
+            {/* 관리자 재판독 결과 뷰 */}
+            {aiResultViewMode === "admin" && (
+              <div className="space-y-4">
+                {/* 재판독 결과가 있을 때 초기화 버튼 */}
+                {Object.keys(adminLandAIResults).length > 0 && (
+                  <div className="flex justify-end">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleResetAdminAIResults}
+                      className="gap-2"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                      재판독 결과 초기화
+                    </Button>
+                  </div>
+                )}
+                
+                {Object.keys(adminLandAIResults).length === 0 ? (
+                  <div className="rounded-lg border-2 border-dashed border-muted p-8 text-center">
+                    <Bot className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                    <h4 className="mt-4 font-medium text-foreground">관리자 재판독 미실행</h4>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      위 담당자 검토 영역에서 필지를 선택하고<br />
+                      현장 상황 옵션을 설정한 후 AI 판독을 실행해주세요.
+                    </p>
+                    <div className="mt-4 flex flex-wrap justify-center gap-2">
+                      <Badge variant="outline" className="text-xs">접면도로 상실</Badge>
+                      <Badge variant="outline" className="text-xs">관개수로 상실</Badge>
+                      <Badge variant="outline" className="text-xs">농기계 진입 곤란</Badge>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {/* 관리자 옵션 적용 내역 */}
+                    {(adminAIOptions.accessRoadLost || adminAIOptions.waterChannelLost || adminAIOptions.farmMachineDifficulty) && (
+                      <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-4">
+                        <h4 className="mb-2 text-sm font-medium text-blue-800 flex items-center gap-2">
+                          <Info className="h-4 w-4" />
+                          적용된 현장 상황 옵션
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {adminAIOptions.accessRoadLost && (
+                            <Badge className="bg-blue-600 hover:bg-blue-600">접면도로 상실</Badge>
+                          )}
+                          {adminAIOptions.waterChannelLost && (
+                            <Badge className="bg-blue-600 hover:bg-blue-600">관개수로 상실</Badge>
+                          )}
+                          {adminAIOptions.farmMachineDifficulty && (
+                            <Badge className="bg-blue-600 hover:bg-blue-600">농기계 진입 곤란</Badge>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* 필지별 재판독 결과 */}
+                    <div className="space-y-3">
+                      <h4 className="font-medium text-foreground flex items-center gap-2">
+                        필지별 재판독 결과
+                        <Badge variant="outline">
+                          {Object.keys(adminLandAIResults).length}필지
+                        </Badge>
+                      </h4>
+                      {Object.entries(adminLandAIResults).map(([landId, result]) => {
+                        const land = allLands.find(l => l.id === landId);
+                        const landIdx = allLands.findIndex(l => l.id === landId);
+                        if (!land) return null;
+                        
+                        return (
+                          <div 
+                            key={landId}
+                            className={`rounded-lg border p-4 ${
+                              result.provisionalJudgment === "매수"
+                                ? "border-green-200 bg-green-50/50"
+                                : "border-red-200 bg-red-50/50"
+                            }`}
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-center gap-3">
+                                <span className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${
+                                  result.provisionalJudgment === "매수" 
+                                    ? "bg-green-600 text-white" 
+                                    : "bg-red-500 text-white"
+                                }`}>
+                                  {String.fromCharCode(65 + landIdx)}
+                                </span>
+                                <div>
+                                  <p className="font-medium">{land.address}</p>
+                                  <p className="text-sm text-muted-foreground">
+                                    잔여: {land.remainingArea.toLocaleString()}m² | {land.landType}
+                                  </p>
+                                </div>
+                              </div>
+                              <Badge className={
+                                result.provisionalJudgment === "매수" 
+                                  ? "bg-green-600 hover:bg-green-600" 
+                                  : "bg-red-500 hover:bg-red-500"
+                              }>
+                                {result.provisionalJudgment}
+                              </Badge>
+                            </div>
+                            
+                            {/* 판정 사유 */}
+                            {result.reason && (
+                              <div className="mt-3 pt-3 border-t">
+                                <p className="text-sm text-muted-foreground">
+                                  <span className="font-medium">판정 사유:</span> {result.reason}
+                                </p>
+                              </div>
+                            )}
+                            
+                            {/* 관리자 확인 항목 표시 */}
+                            {result.adminOptions && (result.adminOptions.accessRoadLost || result.adminOptions.waterChannelLost || result.adminOptions.farmMachineDifficulty) && (
+                              <div className="mt-2 flex flex-wrap gap-1">
+                                {result.adminOptions.accessRoadLost && (
+                                  <Badge variant="outline" className="text-xs border-blue-300 text-blue-700">
+                                    접면도로 상실 (관리자 확인)
+                                  </Badge>
+                                )}
+                                {result.adminOptions.waterChannelLost && (
+                                  <Badge variant="outline" className="text-xs border-blue-300 text-blue-700">
+                                    관개수로 상실 (관리자 확인)
+                                  </Badge>
+                                )}
+                                {result.adminOptions.farmMachineDifficulty && (
+                                  <Badge variant="outline" className="text-xs border-blue-300 text-blue-700">
+                                    농기계 진입 곤란 (관리자 확인)
+                                  </Badge>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                    
+                    {/* 일단지 그룹 (관리자 재판독) */}
+                    {Object.keys(adminUnifiedGroups).length > 0 && (
+                      <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-4">
+                        <h4 className="mb-3 font-medium text-emerald-800 flex items-center gap-2">
+                          <Layers className="h-4 w-4" />
+                          일단지 판정 (관리자 재판독)
+                        </h4>
+                        <div className="space-y-2">
+                          {Object.entries(adminUnifiedGroups).map(([groupId, group]) => (
+                            <div key={groupId} className="rounded-md bg-white/80 p-3 border border-emerald-100">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="font-medium text-emerald-700">{group.groupName}</span>
+                                <Badge className="bg-emerald-600 hover:bg-emerald-600">
+                                  {group.judgment}
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-muted-foreground">
+                                합산 면적: {group.combinedArea.toLocaleString()}m²
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* 민원인 결과와 비교 */}
+                    {aiResult && (
+                      <div className="rounded-lg border border-amber-200 bg-amber-50/50 p-4">
+                        <h4 className="mb-3 font-medium text-amber-800 flex items-center gap-2">
+                          <AlertTriangle className="h-4 w-4" />
+                          민원인 신청 결과와 비교
+                        </h4>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="rounded-md bg-white/80 p-3 border border-amber-100 text-center">
+                            <p className="text-sm text-muted-foreground mb-1">민원인 신청</p>
+                            <Badge 
+                              className={
+                                aiResult.provisionalJudgment === "매수" 
+                                  ? "bg-green-600 hover:bg-green-600" 
+                                  : "bg-red-500 hover:bg-red-500"
+                              }
+                            >
+                              {aiResult.provisionalJudgment}
+                            </Badge>
+                          </div>
+                          <div className="rounded-md bg-white/80 p-3 border border-amber-100 text-center">
+                            <p className="text-sm text-muted-foreground mb-1">관리자 재판독</p>
+                            <Badge 
+                              className={(() => {
+                                const results = Object.values(adminLandAIResults);
+                                const hasPurchase = results.some(r => r.provisionalJudgment === "매수");
+                                if (hasPurchase) return "bg-green-600 hover:bg-green-600";
+                                return "bg-red-500 hover:bg-red-500";
+                              })()}
+                            >
+                              {(() => {
+                                const results = Object.values(adminLandAIResults);
+                                const purchaseCount = results.filter(r => r.provisionalJudgment === "매수").length;
+                                if (purchaseCount === 0) return "매수불가";
+                                if (purchaseCount === results.length) return "매수";
+                                return `${purchaseCount}/${results.length} 매수`;
+                              })()}
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             )}
           </CardContent>
