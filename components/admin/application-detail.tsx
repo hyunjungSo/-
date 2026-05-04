@@ -180,7 +180,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
-  // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
+  // 관리자용 AI 판독 추가 옵션 (��장 상황) - 필지별 관리
   const [adminAIOptionsPerLand, setAdminAIOptionsPerLand] = useState<Record<string, {
     accessRoadLost: boolean;      // 접면도로 상실
     waterChannelLost: boolean;    // 관개수로 상실
@@ -1762,13 +1762,198 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                   
                   {Object.keys(adminLandAIResults).length === 0 ? (
-                    <div className="rounded-xl border-2 border-dashed border-muted p-8 text-center">
-                      <AIIcon className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                      <h4 className="mt-4 font-medium text-foreground">재분석 미실행</h4>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        좌측에서 현장 상황 옵션을 설정하고<br />AI 분석을 실행해주세요.
-                      </p>
-                    </div>
+                    <>
+                      {/* 재분석 미실행 안내 */}
+                      <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 mb-4 flex items-start gap-2">
+                        <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
+                        <p className="text-xs text-blue-700">
+                          현재 민원인 결과를 표시하고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분석을 실행하면 담당자 결과가 표시됩니다.
+                        </p>
+                      </div>
+                      
+                      {/* 민원인 결과를 기본으로 표시 */}
+                      <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto">
+                        {allLands.map((land, idx) => {
+                          const aiResult = application.aiResult;
+                          return (
+                            <AccordionItem 
+                              key={land.id}
+                              value={land.id}
+                              className={`rounded-lg border px-4 ${
+                                aiResult?.provisionalJudgment === "매수"
+                                  ? "border-green-200 bg-green-50/50"
+                                  : "border-red-200 bg-red-50/50"
+                              }`}
+                            >
+                              <AccordionTrigger className="hover:no-underline py-3">
+                                <div className="flex items-center justify-between w-full pr-2">
+                                  <div className="flex items-center gap-2">
+                                    <span className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-white ${
+                                      aiResult?.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"
+                                    }`}>
+                                      {String.fromCharCode(65 + idx)}
+                                    </span>
+                                    <div className="text-left">
+                                      <p className="font-medium text-sm">{land.address}</p>
+                                      <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
+                                    </div>
+                                  </div>
+                                  {aiResult?.provisionalJudgment && (
+                                    <Badge className={aiResult.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"}>
+                                      {aiResult.provisionalJudgment}
+                                    </Badge>
+                                  )}
+                                </div>
+                              </AccordionTrigger>
+                              <AccordionContent className="pb-4">
+                                {/* 기본 정보 */}
+                                <div className="grid grid-cols-3 gap-3 text-sm mb-4">
+                                  <div className="rounded bg-white/80 p-2 text-center">
+                                    <p className="text-xs text-muted-foreground">잔여 면적</p>
+                                    <p className="font-semibold">{land.remainingArea.toLocaleString()}m²</p>
+                                  </div>
+                                  <div className="rounded bg-white/80 p-2 text-center">
+                                    <p className="text-xs text-muted-foreground">잔여 비율</p>
+                                    <p className="font-semibold">{land.remainingRatio}%</p>
+                                  </div>
+                                  <div className="rounded bg-white/80 p-2 text-center">
+                                    <p className="text-xs text-muted-foreground">형상지수 변화</p>
+                                    <p className="font-semibold">
+                                      {aiResult?.shapeIndexChange != null ? `+${aiResult.shapeIndexChange.toFixed(1)}` : "-"}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                {/* 편입 정보 */}
+                                <div className="rounded-lg bg-white/60 p-3 border mb-4">
+                                  <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
+                                  <div className="grid grid-cols-2 gap-2 text-sm">
+                                    <div>
+                                      <span className="text-muted-foreground">편입 전 면적:</span>
+                                      <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}m²</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-muted-foreground">편입 면적:</span>
+                                      <span className="ml-1 font-medium">{land.includedArea.toLocaleString()}m²</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-muted-foreground">잔여 면적:</span>
+                                      <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-muted-foreground">형상지수 변화:</span>
+                                      <span className="ml-1 font-medium">{aiResult?.shapeIndexChange != null ? `+${aiResult.shapeIndexChange.toFixed(1)}` : "-"}</span>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* 상세 분석 내용 */}
+                                <div className="space-y-4">
+                                  {/* 판단 요약 */}
+                                  {aiResult?.judgmentRationale && (
+                                    <div className="flex items-start gap-2">
+                                      <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                      <div>
+                                        <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
+                                        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.summary}</p>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* 법적 근거 */}
+                                  {aiResult?.judgmentRationale && (
+                                    <div className="flex items-start gap-2">
+                                      <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                      <div>
+                                        <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
+                                        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* 적용 기준 */}
+                                  {aiResult?.judgmentRationale && (
+                                    <div className="flex items-start gap-2">
+                                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                      <div>
+                                        <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
+                                        <ul className="mt-1 space-y-1">
+                                          {aiResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
+                                            <li key={cIdx} className="flex items-start gap-1.5 text-sm text-muted-foreground">
+                                              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
+                                              <span>{criteria}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* 수동 확인 항목 */}
+                                  {aiResult?.judgmentRationale?.manualCheckItems && aiResult.judgmentRationale.manualCheckItems.length > 0 && (
+                                    <div className="flex items-start gap-2">
+                                      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                      <div>
+                                        <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
+                                        <ul className="mt-1 space-y-1">
+                                          {aiResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
+                                            <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                                              <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
+                                              <span>{item}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* 상세 분석 */}
+                                  {aiResult?.judgmentRationale?.detailedExplanation && (
+                                    <div className="flex items-start gap-2">
+                                      <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                                      <div>
+                                        <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
+                                        <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
+                                          {aiResult.judgmentRationale.detailedExplanation}
+                                        </pre>
+                                      </div>
+                                    </div>
+                                  )}
+                                  
+                                  {/* 판정 기준 충족 여부 */}
+                                  {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
+                                    <div className="rounded-lg bg-white/60 p-3 border">
+                                      <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
+                                      <div className="space-y-2">
+                                        {aiResult.criteriaChecks.map((check, cIdx) => (
+                                          <div key={cIdx} className="flex items-center justify-between text-sm">
+                                            <span className="text-muted-foreground">{check.criteriaName}</span>
+                                            <Badge 
+                                              variant={check.isMet ? "default" : "destructive"} 
+                                              className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}
+                                            >
+                                              {check.isMet ? "충족" : "미충족"}
+                                            </Badge>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* 안내 문구 */}
+                                  <div className="flex items-start gap-2 pt-2 border-t">
+                                    <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
+                                    <p className="text-xs text-muted-foreground">
+                                      AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                    </p>
+                                  </div>
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          );
+                        })}
+                      </Accordion>
+                    </>
                   ) : (
                     <>
                       {/* 분석 프로세스 보기 버튼 */}
