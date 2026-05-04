@@ -177,6 +177,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
   
+  // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
+  const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
+  
   // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
   const [adminAIOptionsPerLand, setAdminAIOptionsPerLand] = useState<Record<string, {
     accessRoadLost: boolean;      // 접면도로 상실
@@ -738,6 +741,26 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     setAdminLandAIResults({});
     setAdminUnifiedGroups({});
     
+    // 필지별 분석 상태 초기화 (모두 pending)
+    const initialStatus: Record<string, 'pending' | 'analyzing' | 'done'> = {};
+    adminCheckedLandIds.forEach(id => {
+      initialStatus[id] = 'pending';
+    });
+    setLandAnalysisStatus(initialStatus);
+    
+    // 필지별 순차 분석 시뮬레이션
+    const simulateSequentialAnalysis = async () => {
+      // 각 필지를 순차적으로 'analyzing' 상태로 변경
+      for (let i = 0; i < adminCheckedLandIds.length; i++) {
+        const landId = adminCheckedLandIds[i];
+        setLandAnalysisStatus(prev => ({ ...prev, [landId]: 'analyzing' }));
+        await new Promise(resolve => setTimeout(resolve, 400)); // 각 필지당 400ms 대기
+        setLandAnalysisStatus(prev => ({ ...prev, [landId]: 'done' }));
+      }
+    };
+    
+    simulateSequentialAnalysis();
+    
     setTimeout(() => {
       const newResults: typeof adminLandAIResults = {};
       const newGroups: typeof adminUnifiedGroups = {};
@@ -763,7 +786,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           
           // 일단지 판정 사유 기록
           const unificationReasons = [
-            "소유����� 동���",
+            "소유자 동일",
             `지반 연속 (${parseAddress(primaryLand.address).district})`,
             `용도 일체 (${primaryLand.landType})`
           ];
@@ -1574,8 +1597,17 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </p>
                               </div>
                               
-                              {/* AI 판정 결과 배지 */}
-                              {landResult?.provisionalJudgment && (
+                              {/* AI 분석 상태 표시 */}
+                              {landAnalysisStatus[land.id] === 'analyzing' ? (
+                                <Badge variant="outline" className="text-xs shrink-0 border-blue-500 text-blue-700 bg-blue-50 gap-1">
+                                  <Loader2 className="h-3 w-3 animate-spin" />
+                                  분석중
+                                </Badge>
+                              ) : landAnalysisStatus[land.id] === 'pending' && isAIAnalyzing ? (
+                                <Badge variant="outline" className="text-xs shrink-0 border-gray-300 text-gray-500 bg-gray-50">
+                                  대기중
+                                </Badge>
+                              ) : landResult?.provisionalJudgment ? (
                                 <Badge 
                                   variant="outline" 
                                   className={`text-xs shrink-0 ${
@@ -1586,7 +1618,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 >
                                   {landResult.provisionalJudgment}
                                 </Badge>
-                              )}
+                              ) : null}
                             </div>
                             
                             {/* 하단: 필지 상세 옵션 (선택된 필지만 표시) */}
