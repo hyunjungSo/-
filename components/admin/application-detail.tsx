@@ -757,7 +757,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           
           // 일단지 판정 사유 기록
           const unificationReasons = [
-            "소유자 동�������",
+            "소유�� 동�������",
             `지반 연속 (${parseAddress(primaryLand.address).district})`,
             `용도 일체 (${primaryLand.landType})`
           ];
@@ -1088,10 +1088,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 좌측: 지���도 */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium flex items-center gap-2">
-                      <MapIcon className="h-4 w-4" />
-                      지적도
-                    </h4>
+                    <h4 className="font-medium">지적도</h4>
                     <Badge variant="outline" className="font-normal">
                       {allLands.length}필지
                     </Badge>
@@ -1163,10 +1160,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 
                 {/* 우측: 분석결과 */}
                 <div className="space-y-4">
-                  <h4 className="font-medium flex items-center gap-2">
-                    <FileText className="h-4 w-4" />
-                    분석결과
-                  </h4>
+                  <h4 className="font-medium">분석결과</h4>
                   
                   {/* 일단지인 경우 일단지 판정 결과 표시 */}
                   {applicationType === "unified" && (
@@ -1424,10 +1418,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 좌측: 지적도 + 필지 리스트 */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium flex items-center gap-2">
-                      <MapIcon className="h-4 w-4" />
-                      지적도
-                    </h4>
+                    <h4 className="font-medium">지적도</h4>
                     <Badge variant="outline" className="font-normal">
                       {allLands.length}필지
                     </Badge>
@@ -1711,10 +1702,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 
                 {/* 우측: 분석결과 */}
                 <div className="space-y-4">
-                  <h4 className="font-medium flex items-center gap-2">
-                    <FileText className="h-4 w-4" />
-                    분석결과
-                  </h4>
+                  <h4 className="font-medium">분석결과</h4>
                   
                   {Object.keys(adminLandAIResults).length === 0 ? (
                     <div className="rounded-xl border-2 border-dashed border-muted p-8 text-center">
