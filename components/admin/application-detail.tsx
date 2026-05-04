@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { LandMap } from "@/components/land-map";
+import { LeafletMap } from "@/components/leaflet-map";
 import { AIAnalysisFlowDialog } from "@/components/admin/ai-analysis-flow-dialog";
 import { landShapes, landCategories } from "@/lib/dummy-data";
 import type { Application, JudgmentResult, LandShape, LandCategory, AdminStatus } from "@/lib/types";
@@ -108,6 +109,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
   // 선택된 필지 인덱스 (복수 필지용)
   const [selectedLandIndex, setSelectedLandIndex] = useState(0);
+  
+  // 호버된 필지 ID (지도-리스트 연동)
+  const [hoveredLandId, setHoveredLandId] = useState<string | null>(null);
   
   // 필지별 검토 데이터 업데이트 함수
   const updateLandReviewData = (index: number, field: keyof LandReviewData, value: LandReviewData[keyof LandReviewData]) => {
@@ -1328,13 +1332,17 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     const hasResult = landResult || adminResult;
                     const judgment = adminResult?.provisionalJudgment || landResult?.provisionalJudgment;
                     
+                    const isHovered = hoveredLandId === land.id;
+                    
                     return (
                       <li key={land.id}>
                         <div 
                           className={`flex w-full items-center gap-3 px-3 py-3 transition-all duration-150 cursor-pointer ${
-                            isChecked 
-                              ? "border-l-4 border-l-primary bg-primary/5" 
-                              : "hover:bg-muted/50"
+                            isHovered
+                              ? "border-l-4 border-l-blue-500 bg-blue-50"
+                              : isChecked 
+                                ? "border-l-4 border-l-primary bg-primary/5" 
+                                : "hover:bg-muted/50"
                           }`}
                           onClick={() => {
                             if (isChecked) {
@@ -1344,6 +1352,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             }
                             setSelectedLandIndex(idx);
                           }}
+                          onMouseEnter={() => setHoveredLandId(land.id)}
+                          onMouseLeave={() => setHoveredLandId(null)}
                         >
                           {/* 체크박스 */}
                           <Checkbox
@@ -1442,14 +1452,64 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 <TabsTrigger value="aerial">항공사진</TabsTrigger>
               </TabsList>
               <TabsContent value="cadastral" className="mt-4">
-                {checkedLandIds.length > 0 ? (
-                  <LandMap landInfo={allLands.find(l => l.id === checkedLandIds[0])!} showOverlay />
-                ) : (
-                  <LandMap landInfo={allLands[selectedLandIndex]} showOverlay />
-                )}
+                <div className="h-[350px] sm:h-[450px]">
+                  <LeafletMap
+                    parcels={allLands.map((land, idx) => {
+                      // 필지별 폴리곤 좌표 생성 (더미 데이터 - 실제로는 API에서 받아와야 함)
+                      const baseLat = 37.2180 + (idx * 0.0008);
+                      const baseLng = 127.2950 + (idx * 0.0005);
+                      const offset = 0.0003;
+                      
+                      return {
+                        id: land.id,
+                        address: land.address,
+                        isIncluded: true,
+                        isOwned: checkedLandIds.includes(land.id),
+                        coordinates: [
+                          { lat: baseLat, lng: baseLng },
+                          { lat: baseLat, lng: baseLng + offset * 1.2 },
+                          { lat: baseLat + offset, lng: baseLng + offset * 1.2 },
+                          { lat: baseLat + offset, lng: baseLng },
+                        ],
+                      };
+                    })}
+                    selectedParcelIds={new Set(checkedLandIds)}
+                    onParcelClick={(parcelId) => {
+                      // 필지 선택/해제 토글
+                      if (checkedLandIds.includes(parcelId)) {
+                        setCheckedLandIds(prev => prev.filter(id => id !== parcelId));
+                      } else {
+                        setCheckedLandIds(prev => [...prev, parcelId]);
+                      }
+                      // 선택된 필지로 포커스 이동
+                      const landIdx = allLands.findIndex(l => l.id === parcelId);
+                      if (landIdx !== -1) {
+                        setSelectedLandIndex(landIdx);
+                      }
+                    }}
+                    hoveredParcelId={hoveredLandId}
+                    onParcelHover={(parcelId) => setHoveredLandId(parcelId)}
+                    zoom={18}
+                  />
+                </div>
+                {/* 지도 범례 */}
+                <div className="mt-2 flex items-center justify-center gap-4 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-3 w-3 rounded-sm border-2 border-[#4caf50] bg-[#c8e6c9]" />
+                    <span>선택된 필지</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-3 w-3 rounded-sm border-2 border-[#9e9e9e] bg-[#e0e0e0]" />
+                    <span>미선택 필지</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-3 w-3 rounded-sm border-2 border-[#2196f3] bg-[#bbdefb]" />
+                    <span>호버 중</span>
+                  </div>
+                </div>
               </TabsContent>
               <TabsContent value="aerial" className="mt-4">
-                <div className="flex h-[300px] items-center justify-center rounded-lg bg-muted sm:h-[400px]">
+                <div className="flex h-[350px] items-center justify-center rounded-lg bg-muted sm:h-[450px]">
                   <p className="text-muted-foreground">
                     항공/드론 사진 (연동 예정)
                   </p>
@@ -1635,7 +1695,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           <span className="text-blue-700 font-medium">분석 요약</span>
                           <span className="text-muted-foreground">
                             매수 가능: {checkedLandIds.filter(id => landAIResults[id]?.provisionalJudgment === "매수").length}필지 / 
-                            기각: {checkedLandIds.filter(id => landAIResults[id]?.provisionalJudgment !== "매수").length}필지
+                            기각: {checkedLandIds.filter(id => landAIResults[id]?.provisionalJudgment !== "매��").length}필지
                           </span>
                         </div>
                       </div>
