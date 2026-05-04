@@ -569,7 +569,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "농기계 진입/회전",
         met: farmDifficulty,
-        description: farmDifficulty ? "농기계 진입/회전 곤���" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : "") : "농기계 사용 가능"
+        description: farmDifficulty ? "농기계 진입/회�� 곤���" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : "") : "농기계 사용 가능"
       });
       
       criteriaChecks.push({
@@ -922,7 +922,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardHeader>
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
-              <CardTitle>민원 정보</CardTitle>
+              <CardTitle>민원 ���보</CardTitle>
               {(() => {
                 const config = adminStatusConfig[application.adminStatus];
                 const Icon = config.icon;
@@ -2081,7 +2081,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                               <div className="rounded bg-white/80 p-2 text-center">
                                 <p className="text-xs text-muted-foreground">형상지수 변화</p>
-                                <p className="font-semibold">+{result.shapeIndexChange.toFixed(1)}</p>
+                                <p className="font-semibold">+{result.shapeIndexChange?.toFixed(1) ?? "-"}</p>
                               </div>
                             </div>
                             
@@ -2178,7 +2178,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     )}
                   </Button>
                 </div>
-</TabsContent>
+              </TabsContent>
             </Tabs>
           </CardContent>
         </Card>
