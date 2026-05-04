@@ -1400,7 +1400,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </Badge>
                   </div>
                   
-                  {/* 지적��� */}
+                  {/* 지������ */}
                   <div className="h-[300px] rounded-lg overflow-hidden border">
                   <LeafletMap
                     parcels={(() => {
@@ -1588,50 +1588,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                 </div>
                   
-                  {/* 필지 리스트 */}
-                  <div className="rounded-lg border overflow-hidden">
-                    <div className="flex items-center justify-between border-b bg-muted/50 px-3 py-2">
-                      <span className="text-sm font-medium">민원인 신청 필지</span>
-                      <span className="text-xs text-primary font-medium">
-                        {citizenSelectedLandIds.length}필지
-                      </span>
-                    </div>
-                    <ul className="max-h-[180px] overflow-y-auto divide-y">
-                      {allLands.map((land, idx) => {
-                        const landResult = landAIResults[land.id];
-                        const isHovered = hoveredLandId === land.id;
-                        return (
-                          <li 
-                            key={land.id}
-                            className={`flex items-center gap-3 px-3 py-2 transition-colors ${
-                              isHovered ? "bg-blue-50" : "bg-primary/5"
-                            }`}
-                            onMouseEnter={() => setHoveredLandId(land.id)}
-                            onMouseLeave={() => setHoveredLandId(null)}
-                          >
-                            <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
-                              landResult?.provisionalJudgment === "매수" ? "bg-green-600 text-white" : 
-                              landResult?.provisionalJudgment === "매수불가" ? "bg-red-500 text-white" : "bg-primary text-primary-foreground"
-                            }`}>
-                              {String.fromCharCode(65 + idx)}
-                            </span>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium truncate">{land.address}</p>
-                              <p className="text-xs text-muted-foreground">
-                                잔여 {land.remainingArea.toLocaleString()}m² | {land.landType}
-                              </p>
-                            </div>
-                            {landResult && (
-                              <Badge variant={landResult.provisionalJudgment === "매수" ? "default" : "destructive"} className="text-xs">
-                                {landResult.provisionalJudgment}
-                              </Badge>
-                            )}
-                          </li>
-                        );
-                      })}
-                    </ul>
                   </div>
-                </div>
                 
                 {/* 우측: 분석결과 */}
                 <div className="space-y-4">
