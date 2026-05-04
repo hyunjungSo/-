@@ -181,7 +181,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [adminAIOptions, setAdminAIOptions] = useState({
     accessRoadLost: false,      // 접면도로 상실
     waterChannelLost: false,    // 관개수로 상실
-    farmMachineDifficulty: false, // 농기계 진입 �����������란
+    farmMachineDifficulty: false, // 농기계 진입 �������������란
   });
   
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
@@ -396,7 +396,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   };
 
 // ===== [1��계] 일단지 판정 로직 =====
-  // ��소���서 �����/동 및 지번 정보 추출
+  // ���소���서 �����/동 및 지번 정보 추출
   const parseAddress = (address: string) => {
     const parts = address.split(" ");
     const lastPart = parts[parts.length - 1];
@@ -903,7 +903,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지 ������/제외 상태 (민원인 소유 확인용)
   const [excludedLands, setExcludedLands] = useState<Set<string>>(new Set());
   
-  // 필지 포함/제외 ��글
+  // 필지 포���/제외 ��글
   const toggleLandInclusion = (landId: string) => {
     setExcludedLands(prev => {
       const newSet = new Set(prev);
@@ -1566,16 +1566,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <p className="text-xs font-medium text-muted-foreground mb-2">범례</p>
                     <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                        <span className="text-green-700 font-medium">신청필지 (선택)</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
-                        <span>신청필지 (미선택)</span>
+                        <span>민원인 신청 필지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
-                        <span>인접필지</span>
+                        <span>인접 필지</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
+                        <span className="text-green-700 font-medium">선택된 필지</span>
                       </div>
                     </div>
                   </div>
