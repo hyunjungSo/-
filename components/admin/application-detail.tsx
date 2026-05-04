@@ -752,7 +752,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             const effectiveLimit = criteria.relaxed * groupLandIds.length;
             const meetsAreaCriteria = combinedArea <= effectiveLimit;
             if (meetsAreaCriteria) {
-              analysisReasons.push(`합산 면적 ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
+              analysisReasons.push(`합산 면��� ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
             }
             
             // 토지유형별 추가 조건 검토 + 관리자 ���장 ���황 옵션 ����
@@ -1058,14 +1058,17 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                   
                   {/* 지도 범례 */}
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                      <span>신청필지</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
-                      <span>인접필지</span>
+                  <div className="rounded-lg border bg-white/80 p-2">
+                    <p className="text-xs font-medium text-muted-foreground mb-2">범례</p>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
+                        <span className="text-green-700 font-medium">신청필지</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
+                        <span>인접필지</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1438,18 +1441,25 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                   
                   {/* 지도 범례 */}
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                      <span>신청필지</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
-                      <span>인접필지</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-3 w-3 rounded-sm border-2 border-blue-500 bg-blue-200" />
-                      <span>선택됨</span>
+                  <div className="rounded-lg border bg-white/80 p-2">
+                    <p className="text-xs font-medium text-muted-foreground mb-2">범례</p>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
+                        <span>신청필지 (미선택)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
+                        <span className="text-green-700 font-medium">신청필지 (선택)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
+                        <span>인접필지</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
+                        <span className="text-blue-700">마우스 호버</span>
+                      </div>
                     </div>
                   </div>
                   
@@ -1887,7 +1897,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 최종 판정
                 {reviewData.adminStatus !== "심사완료" && (
                   <span className="ml-2 text-sm font-normal text-muted-foreground">
-                    (진행상황을 &apos;심사완���&apos;로 설정하면 활성���됩니다)
+                    (진행상황을 &apos;심사완���&apos;로 설정하면 ���성���됩니다)
                   </span>
                 )}
               </Label>
