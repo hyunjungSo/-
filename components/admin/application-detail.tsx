@@ -1308,23 +1308,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </span>
               </div>
               
-              {/* 선택된 필지 기준 표시 안내 */}
-              <div className="flex items-center justify-center gap-2 pt-2 text-sm text-muted-foreground">
-                <div className="h-px flex-1 bg-border" />
-                <span className="flex items-center gap-1.5 px-2">
-                  <ChevronDown className="h-4 w-4" />
-                  {checkedLandIds.length > 0 ? (
-                    <>
-                      아래 정보는 <Badge variant="default" className="mx-1">{checkedLandIds.length}필��� 선택됨</Badge> 기준입니다
-                    </>
-                  ) : (
-                    <>
-                      아래 정보는 <Badge variant="outline" className="mx-1">필지 {String.fromCharCode(65 + selectedLandIndex)}</Badge> 기준입니다
-                    </>
-                  )}
-                </span>
-                <div className="h-px flex-1 bg-border" />
-              </div>
+
             </div>
           ) : (
             <div className="rounded-lg border border-border p-4">
