@@ -181,7 +181,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [adminAIOptions, setAdminAIOptions] = useState({
     accessRoadLost: false,      // 접면도로 상실
     waterChannelLost: false,    // 관개수로 상실
-    farmMachineDifficulty: false, // 농기계 진입 �������������란
+    farmMachineDifficulty: false, // 농기계 진입 ���������������란
   });
   
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
@@ -383,7 +383,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     return {};
   });
   
-  // 현재 선택된 필지의 AI 결과
+  // 현재 선택된 필지의 AI ���과
   const currentAIResult = landAIResults[allLands[selectedLandIndex]?.id] || null;
   
   // 필지가 속한 일단지 그룹 찾기
@@ -1108,11 +1108,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                        <span className="text-green-700 font-medium">신청필지 (선택)</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
-                        <span>신청필지 (미선택)</span>
+                        <span className="text-green-700 font-medium">신청필지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
