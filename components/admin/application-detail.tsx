@@ -762,7 +762,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           groupIndex++;
           
         } else {
-          // ===== 단독 필지 (일단지 미해당) =====
+          // ===== 단독 필지 분석 =====
           const landId = groupLandIds[0];
           const land = allLands.find(l => l.id === landId)!;
           const landIndex = allLands.findIndex(l => l.id === landId);
@@ -1002,17 +1002,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <Badge variant="default">{group.judgment}</Badge>
                 </div>
               ))}
-              {(() => {
-                const unifiedLandIds = Object.values(unifiedGroups).flatMap(g => g.landIds);
-                const nonUnifiedLands = allLands.filter(l => !unifiedLandIds.includes(l.id));
-                if (nonUnifiedLands.length === 0) return null;
-                return (
-                  <div className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2">
-                    <Badge variant="outline" className="text-muted-foreground">미해당</Badge>
-                    <span className="text-sm font-medium">{nonUnifiedLands.length}필지</span>
-                  </div>
-                );
-              })()}
             </div>
           </div>
         )}
@@ -1167,96 +1156,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         </div>
                       ))}
                       
-                      {/* 미해당 필지들 */}
-                      {(() => {
-                        const unifiedLandIds = Object.values(unifiedGroups).flatMap(g => g.landIds);
-                        const nonUnifiedLands = allLands.filter(l => !unifiedLandIds.includes(l.id));
-                        if (nonUnifiedLands.length === 0) return null;
-                        
-                        return (
-                          <div className="rounded-lg border-2 border-dashed border-amber-400/50 bg-amber-50/30 p-4 dark:bg-amber-950/20">
-                            <div className="mb-3 flex items-center justify-between">
-                              <div className="flex items-center gap-2">
-                                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-500 text-white text-xs font-bold">
-                                  {nonUnifiedLands.length}
-                                </div>
-                                <div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-semibold text-amber-700 dark:text-amber-400">
-                                      일단지 미해당
-                                    </span>
-                                    <Badge variant="secondary" className="text-xs">
-                                      개별 검토
-                                    </Badge>
-                                  </div>
-                                  <span className="text-xs text-muted-foreground">
-                                    ���연접 또는 기준 미충족 {nonUnifiedLands.length}필지
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="grid gap-2 sm:grid-cols-2">
-                              {nonUnifiedLands.map((land) => {
-                                const index = allLands.findIndex(l => l.id === land.id);
-                                const isSelected = selectedLandIndex === index;
-                                const isChecked = checkedLandIds.includes(land.id);
-                                const landResult = landAIResults[land.id];
-                                const landLabel = String.fromCharCode(65 + index);
-                                return (
-                                  <div
-                                    key={land.id}
-                                    onClick={() => setSelectedLandIndex(index)}
-                                    className={`flex flex-col items-start gap-1.5 rounded-lg border-2 p-3 text-left transition-all cursor-pointer ${
-                                      isChecked
-                                        ? "border-primary bg-white ring-2 ring-primary dark:bg-background" 
-                                        : isSelected 
-                                          ? "border-amber-400 bg-white dark:bg-amber-900/30" 
-                                          : "border-amber-300 bg-white/90 hover:border-amber-400 dark:border-amber-700 dark:bg-amber-900/20"
-                                    }`}
-                                  >
-                                    <div className="flex w-full items-center justify-between">
-                                      <div className="flex items-center gap-2">
-                                        <input
-                                          type="checkbox"
-                                          checked={isChecked}
-                                          onChange={(e) => {
-                                            e.stopPropagation();
-                                            handleCheckLand(land.id, e.target.checked);
-                                          }}
-                                          onClick={(e) => e.stopPropagation()}
-                                          className="h-4 w-4 rounded border-gray-300"
-                                        />
-                                        <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${isChecked ? "bg-primary text-primary-foreground" : "bg-amber-500 text-white"}`}>
-                                          {landLabel}
-                                        </span>
-                                        <span className="text-sm font-medium">필지 {landLabel}</span>
-                                      </div>
-                                      <Badge variant="secondary" className="text-xs">
-                                        {landResult?.provisionalJudgment || "미해당"}
-                                      </Badge>
-                                    </div>
-                                    <p className="text-xs text-muted-foreground line-clamp-1 pl-6">{land.address}</p>
-                                    <div className="flex gap-3 text-xs pl-6">
-                                      <span className="font-medium text-amber-700 dark:text-amber-400">{land.remainingArea.toLocaleString()}m²</span>
-                                      <span className="text-muted-foreground">잔여 {land.remainingRatio}%</span>
-                                    </div>
-                                    {landResult?.reason && (
-                                      <p className="mt-0.5 text-xs text-amber-600 dark:text-amber-400 line-clamp-1 pl-6">
-                                        {landResult.reason}
-                                      </p>
-                                    )}
-                                    {landResult?.analysisDate && (
-                                      <p className="text-xs text-muted-foreground pl-6">
-                                        판���: {landResult.analysisDate}
-                                      </p>
-                                    )}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        );
-                      })()}
                     </>
                   ) : (
                     /* 일단지 그룹 없음 - 기본 그리드 표시 (AI 판독 전) */
