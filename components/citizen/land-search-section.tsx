@@ -109,7 +109,7 @@ const regionData = {
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     "천안시 서북구": ["성환읍", "성거읍", "직산읍", "입장면"],
     "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악면", "신창면", "염치읍", "영인면", "인주면", "도고면", "신장면"],
-    "논산시": ["가야곡면", "강경읍", "광석면", "노성면", "벌곡면", "부적면", "상월면", "성동면", "양촌면", "연무읍", "연산면", "은진면", "채운면", "취암동"],
+    "논산시": ["가야곡면", "강경읍", "���석면", "노성면", "벌곡면", "부적면", "상월면", "성동면", "양촌면", "연무읍", "연산면", "은진면", "채운면", "취암동"],
     "공주시": ["계룡면", "반포면", "사곡면", "신풍면", "우성면", "유구읍", "의당면", "이인면", "장기면", "정안면", "탄천면"],
     "서산시": ["고북면", "대산읍", "부석면", "성연면", "송악면", "양대면", "운산면", "음암면", "인지면", "지곡면", "팔봉면", "해미면"],
     "당진시": ["고대면", "면천면", "석문면", "송산면", "송악읍", "순성면", "신평면", "우강면", "정미면", "합덕읍"],
@@ -240,7 +240,7 @@ const regionData = {
     // 세종특별자치시
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
-    "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산�����리"],
+    "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산�������리"],
     "�������정면": ["고등�����������", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
@@ -391,7 +391,7 @@ function simulateAIAnalysis(
     areaCriteriaMet = land.remainingArea <= 330;
   } else if (currentUsage === "임") {
     // 현재 활용 지목이 "임"(임야)인 경우 산지 기준
-    areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (산지 ��준: 990㎡ ��하)`;
+    areaCriteriaLabel = `잔��� 면적 ${land.remainingArea}㎡ (산지 ��준: 990㎡ ��하)`;
     areaCriteriaMet = land.remainingArea <= 990;
   } else {
     // 그 밖의 지목 (잡종지 등)
@@ -603,7 +603,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 ${summary}`;
   } else {
     // 매수불가
-    summary = `본 토���는 잔여지 ���� 및 형상상 ��래 목���대��� 사용 ��능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
+    summary = `�� 토���는 잔여지 ���� 및 형상상 ��래 목���대��� 사용 ��능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -1010,8 +1010,14 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     
     setAiAnalyzing(true);
     
+    // 기존 AI 판독 결과 초기화 (새로 판독할 때 기존 결과 삭제)
+    setParcelAiResults(new Map());
+    setAiResult(null);
+    // 체크된 필지 초기화
+    setCheckedParcelsForCart(new Set());
+    
     setTimeout(() => {
-      const newResults = new Map(parcelAiResults);
+      const newResults = new Map<string, AIAnalysisResult>();
       
       // 일단지 판정을 위한 정보 수집
       const ownedParcelsList = selectedParcels;
@@ -1683,7 +1689,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
           </div>
 
-          {/* 기본정보 패널 (선택된 ��지 ���보) - 슬라이드 */}
+          {/* ���본정보 패널 (선택된 ��지 ���보) - 슬라이드 */}
           {selectedLand && (
           <div className={`flex h-full flex-col border-l bg-background transition-all duration-300 overflow-hidden ${isBasicInfoCollapsed ? "w-0 border-l-0" : "w-[320px]"}`}>
             {/* 헤더 */}
