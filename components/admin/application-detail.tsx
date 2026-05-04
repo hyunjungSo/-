@@ -181,7 +181,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [adminAIOptions, setAdminAIOptions] = useState({
     accessRoadLost: false,      // 접면도로 상실
     waterChannelLost: false,    // 관개수로 상실
-    farmMachineDifficulty: false, // 농기계 진입 ���란
+    farmMachineDifficulty: false, // 농기계 진입 �����란
   });
   
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
@@ -396,7 +396,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   };
 
 // ===== [1단계] 일단지 판정 로직 =====
-  // 주소에서 읍면/동 및 지��� 정보 추출
+  // 주소에서 읍면/동 및 지����� 정보 추출
   const parseAddress = (address: string) => {
     const parts = address.split(" ");
     const lastPart = parts[parts.length - 1];
@@ -1625,54 +1625,58 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                   )}
                   
-                  {/* 정밀 재분석 설정 */}
-                  <div className="rounded-xl border-2 border-blue-200 bg-gradient-to-b from-blue-50/80 to-white p-4">
-                    <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
-                      <Edit3 className="h-4 w-4" />
-                      정밀 재분석 설정
-                    </h4>
-                    
-                    <div className="space-y-3 mb-4">
-                      <div className="flex items-center justify-between rounded-lg border bg-white p-3">
-                        <Label className="text-sm">농기계 진입 곤란</Label>
-                        <Switch 
-                          checked={adminAIOptions.farmMachineDifficulty}
-                          onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, farmMachineDifficulty: checked }))}
-                        />
+                  {/* 정밀 재분석 설정 - 컴팩트 UI */}
+                  <div className="rounded-lg border bg-white p-3">
+                    <div className="flex items-center justify-between gap-4">
+                      {/* 옵션 토글들 */}
+                      <div className="flex items-center gap-4 flex-wrap">
+                        <span className="text-xs font-medium text-muted-foreground">현장확인:</span>
+                        <label className="flex items-center gap-1.5 cursor-pointer">
+                          <Checkbox 
+                            checked={adminAIOptions.farmMachineDifficulty}
+                            onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, farmMachineDifficulty: checked === true }))}
+                            className="h-3.5 w-3.5"
+                          />
+                          <span className="text-xs">농기계 곤란</span>
+                        </label>
+                        <label className="flex items-center gap-1.5 cursor-pointer">
+                          <Checkbox 
+                            checked={adminAIOptions.accessRoadLost}
+                            onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, accessRoadLost: checked === true }))}
+                            className="h-3.5 w-3.5"
+                          />
+                          <span className="text-xs">접면도로 상실</span>
+                        </label>
+                        <label className="flex items-center gap-1.5 cursor-pointer">
+                          <Checkbox 
+                            checked={adminAIOptions.waterChannelLost}
+                            onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, waterChannelLost: checked === true }))}
+                            className="h-3.5 w-3.5"
+                          />
+                          <span className="text-xs">관개수로 상실</span>
+                        </label>
                       </div>
-                      <div className="flex items-center justify-between rounded-lg border bg-white p-3">
-                        <Label className="text-sm">접면도로 상실</Label>
-                        <Switch 
-                          checked={adminAIOptions.accessRoadLost}
-                          onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, accessRoadLost: checked }))}
-                        />
-                      </div>
-                      <div className="flex items-center justify-between rounded-lg border bg-white p-3">
-                        <Label className="text-sm">관개수로 상실</Label>
-                        <Switch 
-                          checked={adminAIOptions.waterChannelLost}
-                          onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, waterChannelLost: checked }))}
-                        />
-                      </div>
+                      
+                      {/* AI 분석 버튼 */}
+                      <Button
+                        onClick={handleRunAIAnalysis}
+                        disabled={isAIAnalyzing || adminCheckedLandIds.length === 0}
+                        size="sm"
+                        className="gap-1.5 bg-blue-600 hover:bg-blue-700 shrink-0"
+                      >
+                        {isAIAnalyzing ? (
+                          <>
+                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                            분석중
+                          </>
+                        ) : (
+                          <>
+                            <Bot className="h-3.5 w-3.5" />
+                            AI 분석 ({adminCheckedLandIds.length})
+                          </>
+                        )}
+                      </Button>
                     </div>
-                    
-                    <Button
-                      onClick={handleRunAIAnalysis}
-                      disabled={isAIAnalyzing || adminCheckedLandIds.length === 0}
-                      className="w-full gap-2 bg-blue-600 hover:bg-blue-700"
-                    >
-                      {isAIAnalyzing ? (
-                        <>
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          AI 분석 중...
-                        </>
-                      ) : (
-                        <>
-                          <Bot className="h-4 w-4" />
-                          AI 분석 실행 ({adminCheckedLandIds.length}필지)
-                        </>
-                      )}
-                    </Button>
                   </div>
                 </div>
                 
@@ -2084,7 +2088,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 flex items-start gap-2">
                 <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-amber-800">AI 제안과 다른 판정입니다</p>
+                  <p className="text-sm font-medium text-amber-800">AI 제안과 ���른 판정입니다</p>
                   <p className="text-sm text-amber-700">위 검토 의견에 사유를 상세히 작성해주세요.</p>
                 </div>
               </div>
