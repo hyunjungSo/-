@@ -720,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               const hasFarmDifficulty = adminAIOptions.farmMachineDifficulty || groupLands.some(l => l.remainingArea < 200);
               const hasShapeChange = groupLands.some(l => checkShapeCriteria(l).met);
               
-              if (hasRoadLoss) analysisReasons.push("접면도로 상실" + (adminAIOptions.accessRoadLost ? " (관리자 확인)" : ""));
+              if (hasRoadLoss) analysisReasons.push("접면도로 상��" + (adminAIOptions.accessRoadLost ? " (관리자 확인)" : ""));
               if (hasWaterLoss) analysisReasons.push("관개수로 상실" + (adminAIOptions.waterChannelLost ? " (관리자 확인)" : ""));
               if (hasFarmDifficulty) analysisReasons.push("농기계 진입/회전 곤란" + (adminAIOptions.farmMachineDifficulty ? " (관리자 확인)" : ""));
               if (hasShapeChange) analysisReasons.push("형상 부정형 변경");
@@ -1454,37 +1454,83 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <TabsContent value="cadastral" className="mt-4">
                 <div className="h-[350px] sm:h-[450px]">
                   <LeafletMap
-                    parcels={allLands.map((land, idx) => {
-                      // 필지별 폴리곤 좌표 생성 (더미 데이터 - 실제로는 API에서 받아와야 함)
-                      const baseLat = 37.2180 + (idx * 0.0008);
-                      const baseLng = 127.2950 + (idx * 0.0005);
-                      const offset = 0.0003;
+                    parcels={(() => {
+                      // 신청 필지 폴리곤
+                      const applicationParcels = allLands.map((land, idx) => {
+                        const baseLat = 37.2180 + (idx * 0.0008);
+                        const baseLng = 127.2950 + (idx * 0.0005);
+                        const offset = 0.0003;
+                        
+                        return {
+                          id: land.id,
+                          address: land.address,
+                          isIncluded: true,
+                          isOwned: checkedLandIds.includes(land.id),
+                          coordinates: [
+                            { lat: baseLat, lng: baseLng },
+                            { lat: baseLat, lng: baseLng + offset * 1.2 },
+                            { lat: baseLat + offset, lng: baseLng + offset * 1.2 },
+                            { lat: baseLat + offset, lng: baseLng },
+                          ],
+                        };
+                      });
                       
-                      return {
-                        id: land.id,
-                        address: land.address,
-                        isIncluded: true,
-                        isOwned: checkedLandIds.includes(land.id),
-                        coordinates: [
-                          { lat: baseLat, lng: baseLng },
-                          { lat: baseLat, lng: baseLng + offset * 1.2 },
-                          { lat: baseLat + offset, lng: baseLng + offset * 1.2 },
-                          { lat: baseLat + offset, lng: baseLng },
-                        ],
-                      };
-                    })}
+                      // 인접 필지 (더미 데이터 - 실제로는 API에서 받아와야 함)
+                      const adjacentParcels = [
+                        {
+                          id: "adjacent-001",
+                          address: "경기도 용인시 처인구 포곡읍 마성리 101",
+                          isIncluded: false,
+                          isOwned: false,
+                          coordinates: [
+                            { lat: 37.2183, lng: 127.2953 },
+                            { lat: 37.2183, lng: 127.2957 },
+                            { lat: 37.2186, lng: 127.2957 },
+                            { lat: 37.2186, lng: 127.2953 },
+                          ],
+                        },
+                        {
+                          id: "adjacent-002",
+                          address: "경기도 용인시 처인구 포곡읍 마성리 102",
+                          isIncluded: false,
+                          isOwned: false,
+                          coordinates: [
+                            { lat: 37.2177, lng: 127.2947 },
+                            { lat: 37.2177, lng: 127.2951 },
+                            { lat: 37.2180, lng: 127.2951 },
+                            { lat: 37.2180, lng: 127.2947 },
+                          ],
+                        },
+                        {
+                          id: "adjacent-003",
+                          address: "경기도 용인시 처인구 포곡읍 마성리 103 (도로)",
+                          isIncluded: false,
+                          isOwned: false,
+                          coordinates: [
+                            { lat: 37.2175, lng: 127.2950 },
+                            { lat: 37.2175, lng: 127.2958 },
+                            { lat: 37.2177, lng: 127.2958 },
+                            { lat: 37.2177, lng: 127.2950 },
+                          ],
+                        },
+                      ];
+                      
+                      return [...applicationParcels, ...adjacentParcels];
+                    })()}
                     selectedParcelIds={new Set(checkedLandIds)}
                     onParcelClick={(parcelId) => {
-                      // 필지 선택/해제 토글
-                      if (checkedLandIds.includes(parcelId)) {
-                        setCheckedLandIds(prev => prev.filter(id => id !== parcelId));
-                      } else {
-                        setCheckedLandIds(prev => [...prev, parcelId]);
-                      }
-                      // 선택된 필지로 포커스 이동
-                      const landIdx = allLands.findIndex(l => l.id === parcelId);
-                      if (landIdx !== -1) {
-                        setSelectedLandIndex(landIdx);
+                      // 신청 필지만 선택/해제 가능 (인접 필지는 클릭 시 정보만 표시)
+                      const isApplicationParcel = allLands.some(l => l.id === parcelId);
+                      if (isApplicationParcel) {
+                        if (checkedLandIds.includes(parcelId)) {
+                          setCheckedLandIds(prev => prev.filter(id => id !== parcelId));
+                        } else {
+                          setCheckedLandIds(prev => [...prev, parcelId]);
+                        }
+                        const landIdx = allLands.findIndex(l => l.id === parcelId);
+                        if (landIdx !== -1) {
+                          setSelectedLandIndex(landIdx);
+                        }
                       }
                     }}
                     hoveredParcelId={hoveredLandId}
@@ -1493,14 +1539,18 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   />
                 </div>
                 {/* 지도 범례 */}
-                <div className="mt-2 flex items-center justify-center gap-4 text-xs text-muted-foreground">
+                <div className="mt-2 flex flex-wrap items-center justify-center gap-3 text-xs text-muted-foreground">
                   <div className="flex items-center gap-1.5">
                     <div className="h-3 w-3 rounded-sm border-2 border-[#4caf50] bg-[#c8e6c9]" />
-                    <span>선택된 필지</span>
+                    <span>선택된 신청 필지</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="h-3 w-3 rounded-sm border-2 border-[#9e9e9e] bg-[#e0e0e0]" />
-                    <span>미선택 필지</span>
+                    <span>미선택 신청 필지</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-3 w-3 rounded-sm border-2 border-[#ff9800] bg-[#ffe0b2]" />
+                    <span>인접 필지</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="h-3 w-3 rounded-sm border-2 border-[#2196f3] bg-[#bbdefb]" />
@@ -1540,7 +1590,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         className="text-sm font-normal cursor-pointer"
                       >
                         접면도로 상실
-                        <span className="ml-2 text-xs text-muted-foreground">(사업으로 인해 도로 접근이 불가능해진 경우)</span>
+                        <span className="ml-2 text-xs text-muted-foreground">(사업으로 인해 도로 접근�� 불가능해진 경우)</span>
                       </Label>
                     </div>
                     <div className="flex items-center gap-3">
@@ -2232,7 +2282,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <Badge variant="destructive-subtle" className="text-xs">관개수로 상실</Badge>
                             )}
                             {selectedLandData.farmMachineDifficulty && (
-                              <Badge variant="destructive-subtle" className="text-xs">농기계 진입 곤란</Badge>
+                              <Badge variant="destructive-subtle" className="text-xs">농기계 진입 곤��</Badge>
                             )}
                             {!selectedLandData.accessRoadLost && !selectedLandData.waterChannelLost && !selectedLandData.farmMachineDifficulty && (
                               <span className="text-xs text-muted-foreground">직접 확인 항목 없음</span>

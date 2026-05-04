@@ -313,9 +313,10 @@ export function LeafletMap({
       const isSelected = parcel.id === selectedParcelId || selectedParcelIds.has(parcel.id);
       const isOwned = parcel.isOwned ?? selectedParcelIds.has(parcel.id);
       const isHovered = parcel.id === hoveredParcelId;
+      const isAdjacentParcel = !parcel.isIncluded; // 인접 필지 여부
       const latlngs = parcel.coordinates.map(coord => [coord.lat, coord.lng] as [number, number]);
 
-      // 폴리곤 스타일 - 호버(파란색), 선택됨(녹색), 미선택(회색)
+      // 폴리곤 스타일 - 호버(파란색), 선택됨(녹색), 인접(주황), 미선택(회색)
       let polygonColor = "#9e9e9e"; // 기본: 미선택 회색
       let fillColor = "#e0e0e0";
       let weight = 2;
@@ -331,6 +332,11 @@ export function LeafletMap({
         fillColor = "#c8e6c9";
         weight = isSelected ? 4 : 3;
         fillOpacity = isSelected ? 0.5 : 0.35;
+      } else if (isAdjacentParcel) {
+        polygonColor = "#ff9800"; // 인접 필지: 주황색
+        fillColor = "#ffe0b2";
+        weight = 2;
+        fillOpacity = 0.25;
       }
       
       const polygon = L.polygon(latlngs, {
