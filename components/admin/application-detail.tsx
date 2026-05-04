@@ -41,6 +41,7 @@ import {
   Shield,
   Brain,
   ListChecks,
+  Locate,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -124,6 +125,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
   // 호버된 필지 ID (지도-리스트 연동)
   const [hoveredLandId, setHoveredLandId] = useState<string | null>(null);
+  
+  // 포커스된 필지 ID (지도 중심 이동용)
+  const [focusedLandId, setFocusedLandId] = useState<string | null>(null);
   
   // 선택된 인접 필지 정보 표시용
   const [selectedAdjacentParcel, setSelectedAdjacentParcel] = useState<{
@@ -751,7 +755,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               analysisReasons.push(`합산 면적 ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
             }
             
-            // 토지유형별 추가 조건 검토 + 관리자 ��장 ���황 옵션 ����
+            // 토지유형별 추가 조건 검토 + 관리자 ���장 ���황 옵션 ����
             if (landType === "대지") {
               // 택지 경로
               const hasRoadLoss = adminAIOptions.accessRoadLost || groupLands.some(l => l.remainingRatio < 30);
@@ -1314,6 +1318,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       }}
                       hoveredParcelId={hoveredLandId}
                       onParcelHover={(parcelId) => setHoveredLandId(parcelId)}
+                      focusedParcelId={focusedLandId}
                       zoom={18}
                     />
                     </div>
@@ -1369,6 +1374,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   setAdminCheckedLandIds(prev => [...prev, land.id]);
                                 }
                                 setSelectedLandIndex(idx);
+                                // 필지 위치로 지도 이동
+                                setFocusedLandId(land.id);
                               }}
                             >
                               <div className="flex items-center gap-2 px-3 py-2">
@@ -1399,6 +1406,19 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <span>잔여 {land.remainingArea.toLocaleString()}m²</span>
                                   </div>
                                 </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-6 w-6 p-0 shrink-0"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setFocusedLandId(land.id);
+                                    setSelectedLandIndex(idx);
+                                  }}
+                                  title="필지 위치로 이동"
+                                >
+                                  <Locate className="h-3 w-3" />
+                                </Button>
                               </div>
                             </div>
                           );
@@ -1900,7 +1920,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             <div className="space-y-2">
               <Label className="text-base font-medium">담당자 최종 검토 의견</Label>
               <Textarea
-                placeholder="현지상황 및 검토의견을 작성해주세요. 이 내용은 심의서에 자동 ��력됩니다."
+                placeholder="현지상황 �� 검토의견을 작성해주세요. 이 내용은 심의서에 자동 ��력됩니다."
                 rows={4}
                 value={reviewData.reviewerComment || ""}
                 onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}

@@ -76,6 +76,7 @@ interface LeafletMapProps {
   selectedParcelId?: string;
   selectedParcelIds?: Set<string>; // 복수 선택 지원
   hoveredParcelId?: string | null; // 호버된 필지 ID
+  focusedParcelId?: string | null; // 포커스할 필지 ID (지도 중심 이동)
 }
 
 type BaseMapType = "normal" | "satellite";
@@ -90,6 +91,7 @@ export function LeafletMap({
   parcels = [],
   selectedParcelId,
   hoveredParcelId,
+  focusedParcelId,
 }: LeafletMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -208,6 +210,22 @@ export function LeafletMap({
       });
     }
   }, [selectedRegion]);
+
+  // focusedParcelId 변경 시 해당 필지로 지도 이동
+  useEffect(() => {
+    if (!mapInstanceRef.current || !focusedParcelId || !isMapReady) return;
+
+    const parcel = parcels.find(p => p.id === focusedParcelId);
+    if (parcel && parcel.coordinates.length > 0) {
+      // 필지 중심점 계산
+      const avgLat = parcel.coordinates.reduce((sum, c) => sum + c.lat, 0) / parcel.coordinates.length;
+      const avgLng = parcel.coordinates.reduce((sum, c) => sum + c.lng, 0) / parcel.coordinates.length;
+      
+      mapInstanceRef.current.setView([avgLat, avgLng], 18, {
+        animate: true,
+      });
+    }
+  }, [focusedParcelId, parcels, isMapReady]);
 
   // 배경지도 타입 변경 시 타일 전환
   useEffect(() => {
