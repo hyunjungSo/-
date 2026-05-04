@@ -337,12 +337,22 @@ export function LeafletMap({
     // 각 필지에 대해 폴리곤 생성
     parcels.forEach((parcel) => {
       if (!parcel.coordinates || parcel.coordinates.length < 3) return;
+      
+      // 좌표 유효성 검사
+      const validCoords = parcel.coordinates.filter(coord => 
+        coord && typeof coord.lat === 'number' && typeof coord.lng === 'number' &&
+        !isNaN(coord.lat) && !isNaN(coord.lng) && 
+        isFinite(coord.lat) && isFinite(coord.lng) &&
+        Math.abs(coord.lat) <= 90 && Math.abs(coord.lng) <= 180
+      );
+      
+      if (validCoords.length < 3) return;
 
       const isSelected = parcel.id === selectedParcelId || selectedParcelIds.has(parcel.id);
       const isOwned = parcel.isOwned ?? selectedParcelIds.has(parcel.id);
       const isHovered = parcel.id === hoveredParcelId;
       const isAdjacentParcel = !parcel.isIncluded; // 인접 필지 여부
-      const latlngs = parcel.coordinates.map(coord => [coord.lat, coord.lng] as [number, number]);
+      const latlngs = validCoords.map(coord => [coord.lat, coord.lng] as [number, number]);
 
       // 폴리곤 스타일 - 신청필지(녹색/회색), 인접필지(점선/주황), 선택시 각각 다른 스타일
       let polygonColor = "#6b7280"; // 기본: 미선택 신청필지 (진한 회색)
@@ -467,11 +477,22 @@ export function LeafletMap({
     if (parcels.length > 0) {
       const firstParcel = parcels[0];
       if (firstParcel.coordinates && firstParcel.coordinates.length > 0) {
-        // 첫번째 필지의 중심점으로 이동
-        const coords = firstParcel.coordinates;
-        const centerLat = coords.reduce((sum, c) => sum + c.lat, 0) / coords.length;
-        const centerLng = coords.reduce((sum, c) => sum + c.lng, 0) / coords.length;
-        mapInstanceRef.current.setView([centerLat, centerLng], 18, { animate: true });
+        // 유효한 좌표만 필터링
+        const validCoords = firstParcel.coordinates.filter(c => 
+          c && typeof c.lat === 'number' && typeof c.lng === 'number' &&
+          !isNaN(c.lat) && !isNaN(c.lng) && isFinite(c.lat) && isFinite(c.lng)
+        );
+        
+        if (validCoords.length > 0) {
+          try {
+            // 첫번째 필지의 중심점으로 이동
+            const centerLat = validCoords.reduce((sum, c) => sum + c.lat, 0) / validCoords.length;
+            const centerLng = validCoords.reduce((sum, c) => sum + c.lng, 0) / validCoords.length;
+            mapInstanceRef.current.setView([centerLat, centerLng], 18, { animate: true });
+          } catch {
+            // setView 오류 무시
+          }
+        }
       }
     }
   }, [parcels, selectedParcelId, selectedParcelIdsKey, parcelsOwnedKey, hoveredParcelId, onParcelClick, onParcelHover, isMapReady]);
@@ -594,86 +615,91 @@ export function LeafletMap({
     // 유효한 좌표만 필터링
     const validPoints = measurePoints.filter(p => 
       p && typeof p.lat === 'number' && typeof p.lng === 'number' && 
-      !isNaN(p.lat) && !isNaN(p.lng) && isFinite(p.lat) && isFinite(p.lng)
+      !isNaN(p.lat) && !isNaN(p.lng) && isFinite(p.lat) && isFinite(p.lng) &&
+      Math.abs(p.lat) <= 90 && Math.abs(p.lng) <= 180
     );
     
     if (validPoints.length === 0) return;
     
-    // 라인 그리기
-    if (validPoints.length > 1) {
-      const latlngs = validPoints.map(p => [p.lat, p.lng] as [number, number]);
-      const polyline = L.polyline(latlngs, {
-        color: NAVER_PINK,
-        weight: 4,
-        opacity: 1,
-      });
-      polyline.addTo(measureLayer);
+    try {
+      // 라인 그리기
+      if (validPoints.length > 1) {
+        const latlngs = validPoints.map(p => L.latLng(p.lat, p.lng));
+        const polyline = L.polyline(latlngs, {
+          color: NAVER_PINK,
+          weight: 4,
+          opacity: 1,
+        });
+        polyline.addTo(measureLayer);
+        
+        // 각 구간 중간에 거리 라벨 표시
+        for (let i = 1; i < validPoints.length; i++) {
+          const p1 = validPoints[i - 1];
+          const p2 = validPoints[i];
+          const midLat = (p1.lat + p2.lat) / 2;
+          const midLng = (p1.lng + p2.lng) / 2;
+          const distance = calculateDistance(p1.lat, p1.lng, p2.lat, p2.lng);
+          
+          const label = distance >= 1000 
+            ? `${(distance / 1000).toFixed(1)}km` 
+            : `${distance.toFixed(0)}m`;
+          
+          const labelIcon = L.divIcon({
+            className: "measure-label",
+            html: `<div style="
+              background: white;
+              border: 2px solid ${NAVER_PINK};
+              border-radius: 4px;
+              padding: 2px 6px;
+              font-size: 12px;
+              font-weight: bold;
+              color: ${NAVER_PINK};
+              white-space: nowrap;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            ">${label}</div>`,
+            iconSize: [60, 24],
+            iconAnchor: [30, 12],
+          });
+          
+          L.marker([midLat, midLng], { icon: labelIcon, interactive: false }).addTo(measureLayer);
+        }
+      }
       
-      // 각 구간 중간에 거리 라벨 표시
-      for (let i = 1; i < validPoints.length; i++) {
-        const p1 = validPoints[i - 1];
-        const p2 = validPoints[i];
-        const midLat = (p1.lat + p2.lat) / 2;
-        const midLng = (p1.lng + p2.lng) / 2;
-        const distance = calculateDistance(p1.lat, p1.lng, p2.lat, p2.lng);
-        
-        const label = distance >= 1000 
-          ? `${(distance / 1000).toFixed(1)}km` 
-          : `${distance.toFixed(0)}m`;
-        
-        const labelIcon = L.divIcon({
-          className: "measure-label",
+      // 포인트 마커 그리기
+      validPoints.forEach((point, index) => {
+        const markerIcon = L.divIcon({
+          className: "measure-point",
           html: `<div style="
+            width: 14px;
+            height: 14px;
             background: white;
-            border: 2px solid ${NAVER_PINK};
-            border-radius: 4px;
-            padding: 2px 6px;
-            font-size: 12px;
-            font-weight: bold;
-            color: ${NAVER_PINK};
-            white-space: nowrap;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-          ">${label}</div>`,
-          iconSize: [60, 24],
-          iconAnchor: [30, 12],
+            border: 3px solid ${NAVER_PINK};
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            ${index === 0 && measurePoints.length > 1 ? `
+              position: relative;
+            ` : ""}
+          ">${index === 0 && measurePoints.length > 1 ? `
+            <div style="
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              width: 6px;
+              height: 6px;
+              background: ${NAVER_PINK};
+              border-radius: 50%;
+            "></div>
+          ` : ""}</div>`,
+          iconSize: [14, 14],
+          iconAnchor: [7, 7],
         });
         
-        L.marker([midLat, midLng], { icon: labelIcon, interactive: false }).addTo(measureLayer);
-      }
-    }
-    
-    // 포인트 마커 그리기
-    validPoints.forEach((point, index) => {
-      const markerIcon = L.divIcon({
-        className: "measure-point",
-        html: `<div style="
-          width: 14px;
-          height: 14px;
-          background: white;
-          border: 3px solid ${NAVER_PINK};
-          border-radius: 50%;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-          ${index === 0 && measurePoints.length > 1 ? `
-            position: relative;
-          ` : ""}
-        ">${index === 0 && measurePoints.length > 1 ? `
-          <div style="
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 6px;
-            height: 6px;
-            background: ${NAVER_PINK};
-            border-radius: 50%;
-          "></div>
-        ` : ""}</div>`,
-        iconSize: [14, 14],
-        iconAnchor: [7, 7],
+        L.marker([point.lat, point.lng], { icon: markerIcon, interactive: false }).addTo(measureLayer);
       });
-      
-      L.marker([point.lat, point.lng], { icon: markerIcon, interactive: false }).addTo(measureLayer);
-    });
+    } catch {
+      // 거리 측정 렌더링 에러 무시
+    }
   }, [measurePoints, isMapReady]);
 
   return (
