@@ -1229,12 +1229,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           <AccordionTrigger className="hover:no-underline py-3">
                             <div className="flex items-center justify-between w-full pr-2">
                               <div className="flex items-center gap-2">
-                                <span className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-white ${
-                                  landResult?.provisionalJudgment === "매수" ? "bg-green-600" : 
-                                  landResult?.provisionalJudgment === "매수불가" ? "bg-red-500" : "bg-slate-400"
-                                }`}>
-                                  {String.fromCharCode(65 + idx)}
-                                </span>
                                 <div className="text-left">
                                   <p className="font-medium text-sm">{land.address}</p>
                                   <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
@@ -1916,7 +1910,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <div className="flex items-start gap-2 pt-2 border-t">
                                     <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                     <p className="text-xs text-muted-foreground">
-                                      담당자 AI 분석 결과입니다. 현장 상황 옵션이 적용되어 민원인 결과와 다를 수 있습니다.
+                                      담당자 AI 분석 결���입니다. 현장 상황 옵션이 적용되어 민원인 결과와 다를 수 있습니다.
                                     </p>
                                   </div>
                                 </div>
