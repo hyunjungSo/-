@@ -1714,7 +1714,20 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 
                 {/* 우측: 분석결과 */}
                 <div className="space-y-4">
-                  <h4 className="font-medium">분석결과</h4>
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium">분석결과</h4>
+                    {Object.keys(adminLandAIResults).length > 0 && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleResetAdminAIResults}
+                        className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                        title="재분석 결과 초기화"
+                      >
+                        <RotateCcw className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
                   
                   {Object.keys(adminLandAIResults).length === 0 ? (
                     <div className="rounded-xl border-2 border-dashed border-muted p-8 text-center">
@@ -1959,16 +1972,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       </div>
                     )}
                     
-                    {/* 초기화 버튼 */}
-                    <Button 
-                      variant="outline"
-                      size="sm"
-                      onClick={handleResetAdminAIResults}
-                      className="w-full gap-2"
-                    >
-                      <RotateCcw className="h-4 w-4" />
-                      재분석 결과 초기화
-                    </Button>
                     </>
                   )}
                 </div>
