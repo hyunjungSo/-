@@ -31,6 +31,7 @@ import {
   Map as MapIcon,
   Loader2,
   RotateCcw,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -112,6 +113,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
   // 호버된 필지 ID (지도-리스트 연동)
   const [hoveredLandId, setHoveredLandId] = useState<string | null>(null);
+  
+  // 선택된 인접 필지 정보 표시용
+  const [selectedAdjacentParcel, setSelectedAdjacentParcel] = useState<{
+    id: string;
+    address: string;
+    landCategory: string;
+    landType: string;
+    area: number;
+    owner: string;
+  } | null>(null);
   
   // 필지별 검토 데이터 업데이트 함수
   const updateLandReviewData = (index: number, field: keyof LandReviewData, value: LandReviewData[keyof LandReviewData]) => {
@@ -1458,6 +1469,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         {
                           id: "adjacent-001",
                           address: "경기도 용인시 처인구 포곡읍 마성리 101",
+                          landCategory: "전",
+                          landType: "농경지",
+                          area: 856,
+                          owner: "김OO",
                           isIncluded: false,
                           isOwned: false,
                           coordinates: [
@@ -1470,6 +1485,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         {
                           id: "adjacent-002",
                           address: "경기도 용인시 처인구 포곡읍 마성리 102",
+                          landCategory: "답",
+                          landType: "농경지",
+                          area: 1234,
+                          owner: "박OO",
                           isIncluded: false,
                           isOwned: false,
                           coordinates: [
@@ -1481,7 +1500,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         },
                         {
                           id: "adjacent-003",
-                          address: "경기도 용인시 처인구 포곡읍 마성리 103 (도로)",
+                          address: "경기도 용인시 처인구 포곡읍 마성리 103",
+                          landCategory: "도로",
+                          landType: "도로",
+                          area: 320,
+                          owner: "국유지",
                           isIncluded: false,
                           isOwned: false,
                           coordinates: [
@@ -1500,13 +1523,30 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       // 신청 필지와 인접 필지 모두 선택/해제 가능
                       if (checkedLandIds.includes(parcelId)) {
                         setCheckedLandIds(prev => prev.filter(id => id !== parcelId));
+                        // 인접 필지 해제 시 정보 패널도 닫기
+                        if (parcelId.startsWith("adjacent-")) {
+                          setSelectedAdjacentParcel(null);
+                        }
                       } else {
                         setCheckedLandIds(prev => [...prev, parcelId]);
+                        // 인접 필지 선택 시 정보 표시
+                        if (parcelId.startsWith("adjacent-")) {
+                          const adjacentData: Record<string, { address: string; landCategory: string; landType: string; area: number; owner: string }> = {
+                            "adjacent-001": { address: "경기도 용인시 처인구 포곡읍 마성리 101", landCategory: "전", landType: "농경지", area: 856, owner: "김OO" },
+                            "adjacent-002": { address: "경기도 용인시 처인구 포곡읍 마성리 102", landCategory: "답", landType: "농경지", area: 1234, owner: "박OO" },
+                            "adjacent-003": { address: "경기도 용인시 처인구 포곡읍 마성리 103", landCategory: "도로", landType: "도로", area: 320, owner: "국유지" },
+                          };
+                          const data = adjacentData[parcelId];
+                          if (data) {
+                            setSelectedAdjacentParcel({ id: parcelId, ...data });
+                          }
+                        }
                       }
                       // 신청 필지인 경우 선택된 인덱스 업데이트
                       const landIdx = allLands.findIndex(l => l.id === parcelId);
                       if (landIdx !== -1) {
                         setSelectedLandIndex(landIdx);
+                        setSelectedAdjacentParcel(null); // 신청필지 선택 시 인접필지 정보 닫기
                       }
                     }}
                     hoveredParcelId={hoveredLandId}
@@ -1514,6 +1554,52 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     zoom={18}
                   />
                 </div>
+                {/* 선택된 인접 필지 정보 패널 */}
+                {selectedAdjacentParcel && (
+                  <div className="mt-3 rounded-lg border-2 border-orange-400 bg-orange-50 p-4 dark:bg-orange-950/30">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-500 text-white text-xs font-bold">
+                          인
+                        </div>
+                        <span className="font-semibold text-orange-700 dark:text-orange-400">인접 필지 정보</span>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                        onClick={() => setSelectedAdjacentParcel(null)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="grid gap-2 text-sm">
+                      <div className="flex items-start gap-2">
+                        <span className="text-muted-foreground shrink-0 w-16">소재지</span>
+                        <span className="font-medium">{selectedAdjacentParcel.address}</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                        <div>
+                          <span className="text-muted-foreground text-xs">지목</span>
+                          <p className="font-medium">{selectedAdjacentParcel.landCategory}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground text-xs">용도</span>
+                          <p className="font-medium">{selectedAdjacentParcel.landType}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground text-xs">면적</span>
+                          <p className="font-medium">{selectedAdjacentParcel.area.toLocaleString()}m²</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground text-xs">소유자</span>
+                          <p className="font-medium">{selectedAdjacentParcel.owner}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
                 {/* 지도 범례 */}
                 <div className="mt-3 rounded-lg border bg-muted/30 p-3">
                   <div className="text-xs font-medium text-foreground mb-2">지도 범례</div>
