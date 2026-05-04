@@ -33,6 +33,12 @@ export type LandCategory =
   | "창"
   | "천";
 
+// 신청 유형 (민원 분류)
+export type ApplicationType = 
+  | "single"      // 단일 필지 신청
+  | "multiple"    // 복수 필지 개별 신청 (각 필지 개별 분석)
+  | "unified";    // 일단지 신청 (모든 필지를 하나의 일단지로 신청)
+
 // 처리 상태
 export type ProcessStatus = "접수완료" | "AI분석완료" | "검토중" | "처리완료";
 
@@ -133,6 +139,7 @@ export interface LandSpecificData {
 export interface Application {
   id: string;
   applicationNumber: string; // 접수번호
+  applicationType: ApplicationType; // 신청 유형 (단일/복수개별/일단지)
   applicantName: string; // 신청인명
   applicantContact: string; // 연락처
   applicantAddress: string; // 주소

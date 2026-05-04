@@ -76,11 +76,18 @@ interface LandReviewData {
 }
 
 export function ApplicationDetail({ application, onBack, onSave }: ApplicationDetailProps) {
-  // 복수 필지 여부 확인
+// 복수 필지 여부 확인
   const isMultipleLands = application.additionalLands && application.additionalLands.length > 0;
-  const allLands = isMultipleLands 
-    ? [application.landInfo, ...application.additionalLands] 
+  const allLands = isMultipleLands
+    ? [application.landInfo, ...application.additionalLands]
     : [application.landInfo];
+  
+  // 신청 유형 결정 (하위 호환: applicationType이 없으면 필지 수로 추론)
+  const applicationType = application.applicationType || (
+    isMultipleLands 
+      ? (application.unifiedParcelCondition?.isUnifiedParcel ? "unified" : "multiple")
+      : "single"
+  );
 
   // 필지별 검토 데이터 초기화
   const initializeLandReviewData = (): LandReviewData[] => {
@@ -944,16 +951,33 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </Badge>
               )}
             </CardTitle>
+            {/* 신청 유형 표시 */}
+            {isMultipleLands && (
+              <div className="flex items-center gap-2">
+                {applicationType === "unified" ? (
+                  <Badge className="bg-emerald-600 hover:bg-emerald-600">
+                    <Layers className="mr-1 h-3 w-3" />
+                    일단지 신청
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="border-blue-300 text-blue-700">
+                    복수 필지 개별 신청
+                  </Badge>
+                )}
+              </div>
+            )}
           </div>
           {isMultipleLands && (
             <CardDescription>
-              필지를 선택하면 아래 모든 정보가 해당 필지 기준으로 표시됩니다.
+              {applicationType === "unified" 
+                ? "일단지 신청: 모든 필지가 하나의 토지로 합산되어 분석됩니다."
+                : "복수 필지 개별 신청: 각 필지별로 개별 분석됩니다."}
             </CardDescription>
           )}
         </CardHeader>
         
-        {/* 일단지 판정 요약 (최상단 표시) */}
-        {Object.keys(unifiedGroups).length > 0 && (
+        {/* 일단지 판정 요약 (일단지 신청인 경우에만 표시) */}
+        {applicationType === "unified" && Object.keys(unifiedGroups).length > 0 && (
           <div className="mx-6 mb-4 rounded-lg border-2 border-emerald-500/50 bg-emerald-50/50 p-4 dark:bg-emerald-950/30">
             <div className="mb-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -1488,94 +1512,127 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </>
                 )}
               </Button>
-              {/* 일단지 판정 결과 - 해당/미해당 분리 표시 */}
+              {/* AI 판독 결과 - 신청 유형에 따라 다르게 표시 */}
               {Object.keys(landAIResults).length > 0 && (
                 <div className="mt-4 space-y-3">
-                  {/* 일단지 해당 그룹 */}
-                  {Object.keys(unifiedGroups).length > 0 && (
+                  {/* 일단지 신청인 경우 */}
+                  {applicationType === "unified" && (
                     <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-4">
                       <h4 className="mb-3 font-medium text-emerald-800 flex items-center gap-2">
                         <Layers className="h-4 w-4" />
-                        일단지 해당
-                        <Badge variant="outline" className="ml-auto border-emerald-300 text-emerald-700">
-                          {Object.keys(unifiedGroups).length}개 그룹
+                        일단지 분석 결과
+                        <Badge className="ml-auto bg-emerald-600 hover:bg-emerald-600">
+                          {checkedLandIds.length}필지 합산
                         </Badge>
                       </h4>
                       <div className="space-y-2">
-                        {Object.entries(unifiedGroups).map(([groupId, group]) => {
-                          const groupLands = allLands.filter(l => group.landIds.includes(l.id));
-                          return (
-                            <div key={groupId} className="rounded-md bg-white/80 p-3 border border-emerald-100">
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="font-medium text-emerald-700">{group.groupName}</span>
-                                <Badge className="bg-emerald-600 hover:bg-emerald-600">
-                                  {group.judgment}
-                                </Badge>
-                              </div>
-                              <div className="text-sm text-muted-foreground space-y-1">
-                                <p>포함 필지: {groupLands.map((l) => String.fromCharCode(65 + allLands.findIndex(al => al.id === l.id))).join(", ")}</p>
-                                <p>합산 면적: {group.combinedArea.toLocaleString()}m²</p>
-                                <p className="text-xs text-emerald-600">
-                                  소유자 동일 + 지반 연속 + 용도 일체성 충족
-                                </p>
-                              </div>
-                            </div>
-                          );
-                        })}
+                        <div className="rounded-md bg-white/80 p-3 border border-emerald-100">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-medium text-emerald-700">일단지 판정</span>
+                            {Object.keys(unifiedGroups).length > 0 ? (
+                              <Badge className="bg-emerald-600 hover:bg-emerald-600">
+                                {Object.values(unifiedGroups)[0]?.judgment || "매수"}
+                              </Badge>
+                            ) : (
+                              <Badge variant="destructive">일단지 조건 미충족</Badge>
+                            )}
+                          </div>
+                          <div className="text-sm text-muted-foreground space-y-1">
+                            <p>포함 필지: {checkedLandIds.map((id) => String.fromCharCode(65 + allLands.findIndex(al => al.id === id))).join(", ")}</p>
+                            <p>합산 면적: {allLands.filter(l => checkedLandIds.includes(l.id)).reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
+                            {Object.keys(unifiedGroups).length > 0 && (
+                              <p className="text-xs text-emerald-600">
+                                소유자 동일 + 지반 연속 + 용도 일체성 충족
+                              </p>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
                   
-                  {/* 일단지 미해당 필지 (별도 섹션) */}
-                  {(() => {
-                    const unifiedLandIds = Object.values(unifiedGroups).flatMap(g => g.landIds);
-                    const nonUnifiedChecked = checkedLandIds.filter(id => !unifiedLandIds.includes(id));
-                    if (nonUnifiedChecked.length === 0) return null;
-                    
-                    const nonUnifiedLands = allLands.filter(l => nonUnifiedChecked.includes(l.id));
-                    
-                    return (
-                      <div className="rounded-lg border border-amber-200 bg-amber-50/50 p-4">
-                        <h4 className="mb-3 font-medium text-amber-800 flex items-center gap-2">
-                          <Info className="h-4 w-4" />
-                          일단지 미해당
-                          <Badge variant="outline" className="ml-auto border-amber-300 text-amber-700">
-                            {nonUnifiedChecked.length}필지
-                          </Badge>
-                        </h4>
-                        <div className="space-y-2">
-                          {nonUnifiedLands.map((land) => {
-                            const landResult = landAIResults[land.id];
-                            const landIdx = allLands.findIndex(l => l.id === land.id);
-                            return (
-                              <div key={land.id} className="rounded-md bg-white/80 p-3 border border-amber-100">
-                                <div className="flex items-center justify-between mb-1">
-                                  <span className="font-medium text-amber-700">
-                                    필지 {String.fromCharCode(65 + landIdx)}
-                                  </span>
-                                  {landResult && (
-                                    <Badge 
-                                      variant={landResult.provisionalJudgment === "매수" ? "default" : "destructive"}
-                                      className={landResult.provisionalJudgment === "매수" ? "bg-emerald-600 hover:bg-emerald-600" : ""}
-                                    >
-                                      {landResult.provisionalJudgment}
-                                    </Badge>
-                                  )}
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  <p className="truncate">{land.address}</p>
-                                  <p>잔여 면적: {land.remainingArea.toLocaleString()}m²</p>
-                                </div>
-                                <p className="mt-1 text-xs text-amber-600">
-                                  개별 필지로 분석 (일단지 조건 미충족)
-                                </p>
+                  {/* 복수 필지 개별 신청인 경우 */}
+                  {applicationType === "multiple" && (
+                    <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-4">
+                      <h4 className="mb-3 font-medium text-blue-800 flex items-center gap-2">
+                        <Info className="h-4 w-4" />
+                        필지별 개별 분석 결과
+                        <Badge variant="outline" className="ml-auto border-blue-300 text-blue-700">
+                          {checkedLandIds.length}필지
+                        </Badge>
+                      </h4>
+                      <div className="space-y-2">
+                        {checkedLandIds.map((landId) => {
+                          const land = allLands.find(l => l.id === landId);
+                          const landResult = landAIResults[landId];
+                          const landIdx = allLands.findIndex(l => l.id === landId);
+                          if (!land) return null;
+                          return (
+                            <div key={landId} className="rounded-md bg-white/80 p-3 border border-blue-100">
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="font-medium text-blue-700">
+                                  필지 {String.fromCharCode(65 + landIdx)}
+                                </span>
+                                {landResult && (
+                                  <Badge 
+                                    variant={landResult.provisionalJudgment === "매수" ? "default" : "destructive"}
+                                    className={landResult.provisionalJudgment === "매수" ? "bg-emerald-600 hover:bg-emerald-600" : ""}
+                                  >
+                                    {landResult.provisionalJudgment}
+                                  </Badge>
+                                )}
                               </div>
-                            );
-                          })}
+                              <div className="text-sm text-muted-foreground">
+                                <p className="truncate">{land.address}</p>
+                                <p>잔여 면적: {land.remainingArea.toLocaleString()}m²</p>
+                              </div>
+                              {landResult?.reason && (
+                                <p className="mt-1 text-xs text-blue-600">
+                                  {landResult.reason}
+                                </p>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="mt-3 pt-3 border-t border-blue-200">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-blue-700 font-medium">분석 요약</span>
+                          <span className="text-muted-foreground">
+                            매수 가능: {checkedLandIds.filter(id => landAIResults[id]?.provisionalJudgment === "매수").length}필지 / 
+                            기각: {checkedLandIds.filter(id => landAIResults[id]?.provisionalJudgment !== "매수").length}필지
+                          </span>
                         </div>
                       </div>
-                    );
-                  })()}
+                    </div>
+                  )}
+                  
+                  {/* 단일 필지인 경우 */}
+                  {applicationType === "single" && checkedLandIds.length > 0 && (
+                    <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4">
+                      <h4 className="mb-3 font-medium text-gray-800 flex items-center gap-2">
+                        <Info className="h-4 w-4" />
+                        단일 필지 분석 결과
+                      </h4>
+                      {(() => {
+                        const landId = checkedLandIds[0];
+                        const landResult = landAIResults[landId];
+                        return (
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">AI 판정 결과</span>
+                            {landResult && (
+                              <Badge 
+                                variant={landResult.provisionalJudgment === "매수" ? "default" : "destructive"}
+                                className={landResult.provisionalJudgment === "매수" ? "bg-emerald-600 hover:bg-emerald-600" : ""}
+                              >
+                                {landResult.provisionalJudgment}
+                              </Badge>
+                            )}
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  )}
                 </div>
               )}
               
@@ -2226,7 +2283,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </p>
                 <Textarea
                   id="finalReviewOpinion"
-                  placeholder="복수 필지에 대한 종합 검토 의견을 작성하세요. (예: 해당 토지들은 동일 소유자 소유로 연접해 있으며, 도�� 편입으로 인해 모두 불규칙한 형태로 남아 건축 및 영농이 곤란한 상태입니다.)"
+                  placeholder="복수 필지에 대한 종합 검토 의견을 작성하세요. (예: 해당 토지들은 동일 소유자 소유로 연접해 있으며, 도�� 편입으로 인해 모두 불규칙한 형태로 남아 건축 및 영농이 곤란한 ��태입니다.)"
                   rows={5}
                   value={reviewData.finalReviewOpinion}
                   onChange={(e) =>

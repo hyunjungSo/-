@@ -1026,7 +1026,7 @@ export const dummyLandInfoList: LandInfo[] = [
   // 4필지 중 2필지만 일단지 판정, 나머지 2필지는 개별 판정
   {
     id: "land-mixed-001",
-    address: "경기도 평택시 포승읍 내기리 200-1",
+    address: "���기도 평택시 포승읍 내기리 200-1",
     originalArea: 500,
     includedArea: 350,
     remainingArea: 150,
@@ -1390,6 +1390,7 @@ export const dummyApplications: Application[] = [
   {
     id: "app-001",
     applicationNumber: "2026-0401-001",
+    applicationType: "single",
     applicantName: "김철수",
     applicantContact: "010-1234-5678",
     applicantAddress: "경기도 용인시 처인구 포곡읍 마성리 100",
@@ -1408,6 +1409,7 @@ export const dummyApplications: Application[] = [
   {
     id: "app-002",
     applicationNumber: "2026-0402-001",
+    applicationType: "single",
     applicantName: "박영희",
     applicantContact: "010-9876-5432",
     applicantAddress: "경기도 화성시 동탄면 신리 400",
@@ -1427,6 +1429,7 @@ export const dummyApplications: Application[] = [
   {
     id: "app-003",
     applicationNumber: "2026-0403-001",
+    applicationType: "single",
     applicantName: "이민호",
     applicantContact: "010-5555-1234",
     applicantAddress: "경기도 평택시 진위면 봉남리 700",
@@ -1445,6 +1448,7 @@ export const dummyApplications: Application[] = [
   {
     id: "app-004",
     applicationNumber: "2026-0404-001",
+    applicationType: "single",
     applicantName: "최지영",
     applicantContact: "010-7777-8888",
     applicantAddress: "경기도 안성시 공도읍 용사리 200",
@@ -1463,10 +1467,11 @@ export const dummyApplications: Application[] = [
     adminName: "홍길동",
     statusUpdatedAt: "2026-04-15",
   },
-  // 동일 소유자 복수 필지 신청 (일단지 판정 케이스)
+  // 동일 소유자 복수 필지 신청 (일단지 신청 케이스)
   {
     id: "app-005",
     applicationNumber: "2026-0405-001",
+    applicationType: "unified", // 일단지 신청
     applicantName: "강동원",
     applicantContact: "010-6666-7777",
     applicantAddress: "경기도 성남시 분당구 야탑동 50",
@@ -1515,6 +1520,7 @@ export const dummyApplications: Application[] = [
   {
     id: "app-006",
     applicationNumber: "2026-0406-001",
+    applicationType: "single",
     applicantName: "윤서연",
     applicantContact: "010-8888-9999",
     applicantAddress: "경기도 광주시 오포읍 능평리 500",
@@ -1534,6 +1540,7 @@ export const dummyApplications: Application[] = [
   {
     id: "app-met-001",
     applicationNumber: "2026-0420-001",
+    applicationType: "single",
     applicantName: "이충족",
     applicantContact: "010-1111-0000",
     applicantAddress: "경기도 용인시 처인구 양지면 마성리 133",
@@ -1554,6 +1561,7 @@ export const dummyApplications: Application[] = [
   {
     id: "app-review-001",
     applicationNumber: "2026-0421-001",
+    applicationType: "single",
     applicantName: "박검토",
     applicantContact: "010-9999-8888",
     applicantAddress: "경기도 용인시 처인구 양지면 마성리 137",
@@ -1601,6 +1609,7 @@ export const dummyApplications: Application[] = [
   {
     id: "app-007",
     applicationNumber: "2026-0407-001",
+    applicationType: "single",
     applicantName: "조현우",
     applicantContact: "010-1111-2222",
     applicantAddress: "경기도 이천시 마장면 덕평리 300",
@@ -1623,6 +1632,7 @@ export const dummyApplications: Application[] = [
   {
     id: "app-008",
     applicationNumber: "2026-0408-001",
+    applicationType: "single",
     applicantName: "송지훈",
     applicantContact: "010-3333-4444",
     applicantAddress: "경기도 여주시 대신면 천남리 700",
@@ -1639,10 +1649,11 @@ export const dummyApplications: Application[] = [
     adminName: "홍길동",
     statusUpdatedAt: "2026-04-19",
   },
-  // 복수 필지 8건 신청 케이스
+  // 복수 필지 8건 신청 케이스 (복수 필지 개별 신청)
   {
     id: "app-multi-8",
     applicationNumber: "2026-0420-001",
+    applicationType: "multiple", // 복수 필지 개별 신청
     applicantName: "김대현",
     applicantContact: "010-1234-0001",
     applicantAddress: "경기도 화성시 동탄면 신리 200",
@@ -2004,7 +2015,7 @@ export const dummyApplications: Application[] = [
       landTypePath: "대지",
       criteriaChecks: [
         { criteriaName: "면적 기준", criteriaDescription: "대지 기준 90㎡ 이하 (완화: 135㎡)", isMet: true, autoDetected: true },
-        { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 자루형, 역삼각형)", isMet: true, autoDetected: true },
+        { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각��, 자루형, 역삼각형)", isMet: true, autoDetected: true },
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 불가", isMet: true, autoDetected: false },
         { criteriaName: "일단지 해당", criteriaDescription: "동일 소유자 연속 필지로 일단지 판정 (용도 상이)", isMet: true, autoDetected: true },
@@ -2347,7 +2358,7 @@ export const dummyApplications: Application[] = [
           "내기리 필지: 면적 기준 충족, 형상 변경, 농기계 진입 곤란 → 매수",
           "만호리 필지: 면적 기준 미충족, 형상 양호, 종래 사용 가능 → 미해당",
         ],
-        detailedExplanation: "4필지 혼합 판정\n\n[일단지 A - 매수 판정]\n• 내기리 200-1: 500㎡ → 150㎡ (삼각형) ✓\n• 내기리 200-2: 600㎡ → 180㎡ (역삼각형) ✓\n→ 합산 잔여 330㎡, 관개수로 상실, 농기계 진입 곤란\n\n[미해당 - 개별 부적합]\n• 만호리 55-1: 800㎡ → 600㎡ (정방형) ✗\n• 만호리 55-2: 700㎡ → 550㎡ (가로장방형) ✗\n→ 면적 기준 미충족, 형상 양호, 종래 사용 가능\n\n※ 내기리 필지와 만호리 필지는 지리적으로 떨어져 있어 일단지로 묶을 수 없습니다.",
+        detailedExplanation: "4필지 혼합 판정\n\n[일단지 A - 매수 판정]\n• 내기리 200-1: 500㎡ → 150㎡ (삼각형) ✓\n• 내기리 200-2: 600㎡ → 180㎡ (역삼각형) ✓\n→ 합산 잔여 330㎡, 관개수로 상실, 농기계 진입 곤란\n\n[미해당 - 개별 부적합]\n• 만호리 55-1: 800㎡ → 600㎡ (정방형) ✗\n• ��호리 55-2: 700㎡ → 550㎡ (가로장방형) ✗\n→ 면적 기준 미충족, 형상 양호, 종래 사용 가능\n\n※ 내기리 필지와 만호리 필지는 지리적으로 떨어져 있어 일단지로 묶을 수 없습니다.",
         manualCheckItems: ["만호리 필지 현장 확인", "농기계 진입로 상태 확인"],
       },
       unifiedParcelAnalysis: {
