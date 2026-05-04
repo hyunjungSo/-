@@ -1356,24 +1356,35 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* 지도 및 토지 정보 */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2">
-              <MapIcon className="h-5 w-5" />
-              지적도
-              {checkedLandIds.length > 0 && (
-                <Badge variant="outline" className="ml-auto font-normal">
-                  {checkedLandIds.length}필지 선택
-                </Badge>
-              )}
+{/* Section 03. AI 분석 */}
+      <Card>
+        <CardHeader className="pb-3">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">03</span>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Bot className="h-5 w-5" />
+              AI 분석
             </CardTitle>
-            <CardDescription>
-              필지를 선택하여 AI 재판독을 실행�� 수 있습니다
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+          </div>
+          <CardDescription>
+            민원인 신청 결과와 담당자 재분석 결과를 비교합니다
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-6 lg:grid-cols-2">
+            {/* 좌측: 지적도 */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h4 className="font-medium flex items-center gap-2">
+                  <MapIcon className="h-4 w-4" />
+                  지적도
+                </h4>
+                {checkedLandIds.length > 0 && (
+                  <Badge variant="outline" className="font-normal">
+                    {checkedLandIds.length}필지 선택
+                  </Badge>
+                )}
+              </div>
             {/* 필지 선택 목록 (������인 화면과 동��한 형태) */}
             {isMultipleLands && (
               <div className="mb-4 rounded-lg border overflow-hidden">
@@ -1870,30 +1881,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     AI 판독 실행 시 일단지 여부를 자동으로 판정합니다
                   </p>
                   <p className="text-xs text-muted-foreground text-center mt-1">
-                    (소유자 동일, 지반 연속, 용도 일체성 기준)
+                    (소유자 동일, 지반 연속, 용도 일체성 기���)
                   </p>
                 </div>
               )}
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Section 03. AI 분석 */}
-        <Card>
-          <CardHeader className="pb-3">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">03</span>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Bot className="h-5 w-5" />
-                AI 분석
-              </CardTitle>
-            </div>
-            <CardDescription>
-              민원인 신청 결과와 담당자 재분석 결과를 비교합니다
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-4">
-            <Tabs value={aiResultViewMode} onValueChange={(v) => setAiResultViewMode(v as "citizen" | "admin")}>
+            
+            {/* 우측: 분석 결과 탭 */}
+            <div className="space-y-4">
+              <Tabs value={aiResultViewMode} onValueChange={(v) => setAiResultViewMode(v as "citizen" | "admin")}>
               <TabsList className="grid w-full grid-cols-2 mb-4">
                 <TabsTrigger value="citizen" className="gap-2">
                   <FileText className="h-4 w-4" />
@@ -2206,10 +2202,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </Button>
                 </div>
               </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
-      </div>
+              </Tabs>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Section 04. 담당자 검토 */}
       <Card>
