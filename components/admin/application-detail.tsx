@@ -13,11 +13,11 @@ import { Label } from "@/components/ui/label";
 import { LandMap } from "@/components/land-map";
 import { LeafletMap } from "@/components/leaflet-map";
 import { AIAnalysisFlowDialog } from "@/components/admin/ai-analysis-flow-dialog";
+import { AIIcon } from "@/components/ui/ai-icon";
 import { landShapes, landCategories } from "@/lib/dummy-data";
 import type { Application, JudgmentResult, LandShape, LandCategory, AdminStatus } from "@/lib/types";
 import {
   ArrowLeft,
-  Bot,
   User,
   FileText,
   CheckCircle2,
@@ -181,7 +181,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [adminAIOptions, setAdminAIOptions] = useState({
     accessRoadLost: false,      // 접면도로 상실
     waterChannelLost: false,    // 관개수로 상실
-    farmMachineDifficulty: false, // 농기계 진입 ���란
+    farmMachineDifficulty: false, // 농기계 진입 곤란
   });
   
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
@@ -1019,7 +1019,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
-            <Bot className="h-5 w-5" />
+            <AIIcon className="h-5 w-5" />
             AI 분석
           </CardTitle>
           <CardDescription>
@@ -1656,7 +1656,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           </>
                         ) : (
                           <>
-                            <Bot className="h-3.5 w-3.5" />
+                            <AIIcon className="h-3.5 w-3.5" />
                             AI 분석 ({adminCheckedLandIds.length})
                           </>
                         )}
@@ -1674,7 +1674,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {Object.keys(adminLandAIResults).length === 0 ? (
                     <div className="rounded-xl border-2 border-dashed border-muted p-8 text-center">
-                      <Bot className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                      <AIIcon className="mx-auto h-12 w-12 text-muted-foreground/50" />
                       <h4 className="mt-4 font-medium text-foreground">재분석 미실행</h4>
                       <p className="mt-2 text-sm text-muted-foreground">
                         좌측에서 현장 상황 옵션을 설정하고<br />AI 분석을 실행해주세요.
@@ -1995,7 +1995,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <div className="rounded-lg bg-white border p-3">
                 <p className="text-xs text-muted-foreground mb-2">AI 제안</p>
                 <div className="flex items-center gap-3">
-                  <Bot className="h-5 w-5 text-muted-foreground" />
+                  <AIIcon className="h-5 w-5 text-muted-foreground" />
                   <Badge 
                     className={(() => {
                       const results = Object.values(adminLandAIResults);
