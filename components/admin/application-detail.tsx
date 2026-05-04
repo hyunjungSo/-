@@ -181,7 +181,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [adminAIOptions, setAdminAIOptions] = useState({
     accessRoadLost: false,      // 접면도로 상실
     waterChannelLost: false,    // 관개수로 상실
-    farmMachineDifficulty: false, // 농기계 진입 �����란
+    farmMachineDifficulty: false, // 농기계 진입 곤란
   });
   
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
@@ -396,7 +396,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   };
 
 // ===== [1단계] 일단지 판정 로직 =====
-  // 주소에서 읍면/동 및 지����� 정보 추출
+  // 주소에서 읍면/동 및 지번 정보 추출
   const parseAddress = (address: string) => {
     const parts = address.split(" ");
     const lastPart = parts[parts.length - 1];
@@ -729,7 +729,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         const isUnified = groupLandIds.length >= 2;
         
         if (isUnified) {
-          // ===== 일단지 병�� 처리 =====
+          // ===== 일단지 병합 처리 =====
           const groupId = `group-${Date.now()}-${groupIndex}`;
           const combinedArea = groupLands.reduce((sum, l) => sum + l.remainingArea, 0);
           const combinedOriginalArea = groupLands.reduce((sum, l) => sum + l.originalArea, 0);
@@ -1599,7 +1599,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         </Button>
                       </div>
                       
-                      {/* 현재 선택된 필지 ��세 정보 */}
+                      {/* 현재 선택된 필지 상세 정보 */}
                       {allLands[selectedLandIndex] && (
                         <div className="space-y-2">
                           <div className="grid grid-cols-2 gap-2 text-sm">
@@ -1704,19 +1704,19 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         분석 프로세스 상세 보기
                       </Button>
                       
-                      {/* 적용된 옵�� */}
+                      {/* 적용된 옵션 */}
                       {(adminAIOptions.accessRoadLost || adminAIOptions.waterChannelLost || adminAIOptions.farmMachineDifficulty) && (
                         <div className="rounded-lg bg-blue-50 border border-blue-200 p-3">
                           <p className="text-xs font-medium text-blue-700 mb-2">적용된 현장 상황 옵션</p>
                           <div className="flex flex-wrap gap-2">
-                            {adminAIOptions.accessRoadLost && <Badge className="bg-blue-600">접면도로 ��실</Badge>}
+                            {adminAIOptions.accessRoadLost && <Badge className="bg-blue-600">접면도로 상실</Badge>}
                             {adminAIOptions.waterChannelLost && <Badge className="bg-blue-600">관개수로 상실</Badge>}
                             {adminAIOptions.farmMachineDifficulty && <Badge className="bg-blue-600">농기계 진입 곤란</Badge>}
                           </div>
                         </div>
                       )}
                       
-{/* 신청 유형별 재��석 결과 */}
+{/* 신청 유형별 재분석 결과 */}
                       
                       {/* 일단지 신청: 통합 분석 결과 */}
                       {applicationType === "unified" && (
@@ -1927,7 +1927,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       </div>
                     )}
                     
-                    {/* 초기화 ��튼 */}
+                    {/* 초기화 버튼 */}
                     <Button 
                       variant="outline"
                       size="sm"
@@ -2069,7 +2069,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             <div className="space-y-2">
               <Label className="text-base font-medium">담당자 최종 검토 의견</Label>
               <Textarea
-                placeholder="현지상황 �� 검토의견을 작성해주세요. 이 내용은 심의서에 자동 ��력됩니다."
+                placeholder="현지상황 및 검토의견을 작성해주세요. 이 내용은 심의서에 자동 입력됩니다."
                 rows={4}
                 value={reviewData.reviewerComment || ""}
                 onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}
@@ -2088,14 +2088,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 flex items-start gap-2">
                 <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-amber-800">AI 제안과 ���른 판정입니다</p>
+                  <p className="text-sm font-medium text-amber-800">AI 제안과 다른 판정입니다</p>
                   <p className="text-sm text-amber-700">위 검토 의견에 사유를 상세히 작성해주세요.</p>
                 </div>
               </div>
             )}
           </div>
 
-          {/* 저장 ��튼 */}
+          {/* 저장 버튼 */}
           <div className="flex justify-end gap-3 border-t border-border pt-4">
             <Button variant="outline" onClick={onBack}>
               취소
@@ -2131,7 +2131,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
         aiResult={(() => {
-          // 선택�� 필지의 관리자 재판독 결과가 있으면 우선 사용
+          // 선택된 필지의 관리자 재판독 결과가 있으면 우선 사용
           const selectedLandId = allLands[selectedLandIndex]?.id;
           if (selectedLandId && adminLandAIResults[selectedLandId]) {
             return adminLandAIResults[selectedLandId];

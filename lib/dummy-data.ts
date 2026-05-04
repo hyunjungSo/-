@@ -1126,7 +1126,7 @@ export const dummyLandInfoList: LandInfo[] = [
   },
 ];
 
-// 토지분류별 면적 ��준 (PRD v2.0 기준 - 중앙토지수용위원회 참고기준)
+// 토지분류별 면적 기준 (PRD v2.0 기준 - 중앙토지수용위원회 참고기준)
 // 잔여비율 25% 이하 시 면적 기준 1.5배 완화 적용
 const LAND_TYPE_CRITERIA = {
   // 대지(택지): 주거 90㎡ / 상업 150㎡ / 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)
@@ -1927,7 +1927,7 @@ export const dummyApplications: Application[] = [
           "농지 물리조건: 관개수로 상실, 농기계 진입 곤란",
           "형상 변화: 3필지 모두 비정형으로 변경",
         ],
-        detailedExplanation: "일단지 판정 3필지 농지\n\n[필지 1] 501-1: 800㎡ → 250㎡ (삼각형)\n[필지 2] 501-2: 650㎡ → 170㎡ (역삼각형)\n[필지 3] 501-3: 550㎡ → 150㎡ (부정형)\n\n합산 편입전: 2,000㎡ / 합산 잔여: 570㎡\n\n※ 일단지로 일괄 경작해 온 농지로, 도로 ��입 후 관개수로가 단절되고 형상이 불규칙하게 변경되어 농업 활동이 불가능한 상태입니다.",
+        detailedExplanation: "일단지 판정 3필지 농지\n\n[필지 1] 501-1: 800㎡ → 250㎡ (삼각형)\n[필지 2] 501-2: 650㎡ → 170㎡ (역삼각형)\n[필지 3] 501-3: 550㎡ → 150㎡ (부정형)\n\n합산 편입전: 2,000㎡ / 합산 잔여: 570㎡\n\n※ 일단지로 일괄 경작해 온 농지로, 도로 편입 후 관개수로가 단절되고 형상이 불규칙하게 변경되어 농업 활동이 불가능한 상태입니다.",
         manualCheckItems: [],
       },
       unifiedParcelAnalysis: {
@@ -1941,7 +1941,7 @@ export const dummyApplications: Application[] = [
           sameUsage: true,
         },
         combinedArea: 570,
-        explanation: "동일 소유자(박일단)의 연속된 3필지 농지로, 일체적으로 농업에 ��용해 왔으므로 일단지로 판정합니다. 도로 편입으로 관개수로가 단절되고 각 필지가 비정형으로 변경되어 농업 활동이 불가능합니다.",
+        explanation: "동일 소유자(박일단)의 연속된 3필지 농지로, 일체적으로 농업에 사용해 왔으므로 일단지로 판정합니다. 도로 편입으로 관개수로가 단절되고 각 필지가 비정형으로 변경되어 농업 활동이 불가능합니다.",
       },
     },
     finalJudgment: "매수",
@@ -2015,7 +2015,7 @@ export const dummyApplications: Application[] = [
       landTypePath: "대지",
       criteriaChecks: [
         { criteriaName: "면적 기준", criteriaDescription: "대지 기준 90㎡ 이하 (완화: 135㎡)", isMet: true, autoDetected: true },
-        { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각��, 자루형, 역삼각형)", isMet: true, autoDetected: true },
+        { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 자루형, 역삼각형)", isMet: true, autoDetected: true },
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 불가", isMet: true, autoDetected: false },
         { criteriaName: "일단지 해당", criteriaDescription: "동일 소유자 연속 필지로 일단지 판정 (용도 상이)", isMet: true, autoDetected: true },
@@ -2351,14 +2351,14 @@ export const dummyApplications: Application[] = [
       farmMachineDifficulty: true,
       judgmentRationale: {
         summary: "4필지 혼합 - 2필지(내기리) 일단지 「매수」, 2필지(만호리) 「미해당」 판정",
-        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 ��한 법률」 제74조 및 동법 시행규칙 제34조",
+        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
           "일단지 해당 (내기리 200-1, 200-2): 연접 필지, 동일 용도, 일체 경작",
           "일단지 미해당 (만호리 55-1, 55-2): 내기리와 비연접, 별도 위치",
           "내기리 필지: 면적 기준 충족, 형상 변경, 농기계 진입 곤란 → 매수",
-          "만호리 필지: ��적 기준 미충족, 형상 양호, 종래 사용 가능 → 미해당",
+          "만호리 필지: 면적 기준 미충족, 형상 양호, 종래 사용 가능 → 미해당",
         ],
-        detailedExplanation: "4필지 혼합 판정\n\n[일단지 A - 매수 판정]\n• 내기리 200-1: 500㎡ → 150㎡ (삼각형) ✓\n• 내기리 200-2: 600㎡ → 180㎡ (역삼각형) ✓\n→ 합산 잔여 330㎡, 관개수로 상실, 농기계 진입 곤란\n\n[미해당 - 개별 부적합]\n• 만호리 55-1: 800㎡ → 600㎡ (정방형) ✗\n• ��호리 55-2: 700㎡ → 550㎡ (가로장방형) ✗\n→ 면적 기준 미충족, 형상 양호, 종래 사용 가능\n\n※ 내기리 필지와 만호리 필지는 지리적으로 떨어져 있어 일단지로 묶을 수 없습니다.",
+        detailedExplanation: "4필지 혼합 판정\n\n[일단지 A - 매수 판정]\n• 내기리 200-1: 500㎡ → 150㎡ (삼각형) ✓\n• 내기리 200-2: 600㎡ → 180㎡ (역삼각형) ✓\n→ 합산 잔여 330㎡, 관개수로 상실, 농기계 진입 곤란\n\n[미해당 - 개별 부적합]\n• 만호리 55-1: 800㎡ → 600㎡ (정방형) ✗\n• 만호리 55-2: 700㎡ → 550㎡ (가로장방형) ✗\n→ 면적 기준 미충족, 형상 양호, 종래 사용 가능\n\n※ 내기리 필지와 만호리 필지는 지리적으로 떨어져 있어 일단지로 묶을 수 없습니다.",
         manualCheckItems: ["만호리 필지 현장 확인", "농기계 진입로 상태 확인"],
       },
       unifiedParcelAnalysis: {

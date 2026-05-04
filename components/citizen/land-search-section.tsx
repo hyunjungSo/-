@@ -80,7 +80,7 @@ const regionData = {
     // 부산광역시
     "해운대구": ["반송동", "반여동", "석대동", "송정동", "우동", "좌동", "재송동", "중동"],
     "기장군": ["기장읍", "장안읍", "정관읍", "일광면", "철마면"],
-    "금정구": ["구서동", "금사동", "금성동", "남산동", "노포동", "두��동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
+    "금정구": ["구서동", "금사동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
     // 경기도
     "용인시 처인구": ["양지면", "백암면", "원삼면", "이동읍", "남사읍", "포곡읍", "모현읍"],
     "용인시 기흥구": ["구갈동", "마북동", "보라동", "상갈동", "상하동", "서농동", "신갈동", "언남동", "영덕동", "중동", "지곡동", "청덕동", "하갈동"],
@@ -879,7 +879,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
       setAiResult(null);
     }
     
-    // 기본정보 패널이 접혀 ��으면 자동으로 펼침
+    // 기본정보 패널이 접혀 있으면 자동으로 펼침
     if (isBasicInfoCollapsed) {
       setIsBasicInfoCollapsed(false);
     }
@@ -1109,7 +1109,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               </div>
               <div className="flex flex-1 flex-wrap items-center gap-4 bg-background px-4 py-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">��명</span>
+                  <span className="text-sm text-muted-foreground">성명</span>
                   <Input
                     placeholder="홍길동"
                     value={ownerName}
@@ -1814,7 +1814,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                               ? "매수 가능" 
                               : aiResult.provisionalJudgment === "심의위원회이관"
                                 ? "경계 사례"
-                                : "기준 미충��"}
+                                : "기준 미충족"}
                           </Badge>
                         </div>
 
@@ -1831,7 +1831,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         </div>
                       )}
 
-                      {/* 법적 ��거 */}
+                      {/* 법적 근거 */}
                       {aiResult.judgmentRationale && (
                         <div className="flex items-start gap-2">
                           <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
