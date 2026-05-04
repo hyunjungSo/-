@@ -177,12 +177,32 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
   
-  // 관리자용 AI 판독 추가 옵션 (현장 상황)
-  const [adminAIOptions, setAdminAIOptions] = useState({
-    accessRoadLost: false,      // 접면도로 상실
-    waterChannelLost: false,    // 관개수로 상실
-    farmMachineDifficulty: false, // 농기계 진입 곤란
-  });
+  // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
+  const [adminAIOptionsPerLand, setAdminAIOptionsPerLand] = useState<Record<string, {
+    accessRoadLost: boolean;      // 접면도로 상실
+    waterChannelLost: boolean;    // 관개수로 상실
+    farmMachineDifficulty: boolean; // 농기계 진입 곤란
+  }>>({});
+  
+  // 필지별 옵션 업데이트 헬퍼
+  const updateLandOption = (landId: string, option: string, value: boolean) => {
+    setAdminAIOptionsPerLand(prev => ({
+      ...prev,
+      [landId]: {
+        accessRoadLost: prev[landId]?.accessRoadLost || false,
+        waterChannelLost: prev[landId]?.waterChannelLost || false,
+        farmMachineDifficulty: prev[landId]?.farmMachineDifficulty || false,
+        [option]: value
+      }
+    }));
+  };
+  
+  // 기존 호환성을 위한 adminAIOptions (선택된 필지들의 옵션 합산)
+  const adminAIOptions = {
+    accessRoadLost: adminCheckedLandIds.some(id => adminAIOptionsPerLand[id]?.accessRoadLost),
+    waterChannelLost: adminCheckedLandIds.some(id => adminAIOptionsPerLand[id]?.waterChannelLost),
+    farmMachineDifficulty: adminCheckedLandIds.some(id => adminAIOptionsPerLand[id]?.farmMachineDifficulty),
+  };
   
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
   const [aiResultViewMode, setAiResultViewMode] = useState<"citizen" | "admin">("citizen");
@@ -779,40 +799,47 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               analysisReasons.push(`합산 면적 ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
             }
             
-            // 토지유형별 추가 조건 검토 + 관리자 현장 상황 옵션 반영
+            // 토지유형별 추가 조건 검토 + 관리자 현장 상황 옵션 반영 (필지별 옵션 사용)
+            // 그룹 내 필지들의 옵션 합산
+            const groupOptions = {
+              accessRoadLost: groupLandIds.some(id => adminAIOptionsPerLand[id]?.accessRoadLost),
+              waterChannelLost: groupLandIds.some(id => adminAIOptionsPerLand[id]?.waterChannelLost),
+              farmMachineDifficulty: groupLandIds.some(id => adminAIOptionsPerLand[id]?.farmMachineDifficulty),
+            };
+            
             if (landType === "대지") {
               // 택지 경로
-              const hasRoadLoss = adminAIOptions.accessRoadLost || groupLands.some(l => l.remainingRatio < 30);
+              const hasRoadLoss = groupOptions.accessRoadLost || groupLands.some(l => l.remainingRatio < 30);
               const hasShapeChange = groupLands.some(l => checkShapeCriteria(l).met);
-              if (hasRoadLoss) analysisReasons.push("접면도로 상실" + (adminAIOptions.accessRoadLost ? " (관리자 확인)" : ""));
+              if (hasRoadLoss) analysisReasons.push("접면도로 상실" + (groupOptions.accessRoadLost ? " (관리자 확인)" : ""));
               if (hasShapeChange) analysisReasons.push("형상 부정형 변경");
               
             } else if (landType === "농지") {
               // 농지 경로 + 관리자 옵션 우선 반영
-              const hasRoadLoss = adminAIOptions.accessRoadLost || groupLands.some(l => {
+              const hasRoadLoss = groupOptions.accessRoadLost || groupLands.some(l => {
                 const data = application.landDataList?.[allLands.findIndex(al => al.id === l.id)];
                 return data?.accessRoadLost || l.remainingRatio < 30;
               });
-              const hasWaterLoss = adminAIOptions.waterChannelLost || groupLands.some(l => {
+              const hasWaterLoss = groupOptions.waterChannelLost || groupLands.some(l => {
                 const data = application.landDataList?.[allLands.findIndex(al => al.id === l.id)];
                 return data?.waterChannelLost;
               });
-              const hasFarmDifficulty = adminAIOptions.farmMachineDifficulty || groupLands.some(l => l.remainingArea < 200);
+              const hasFarmDifficulty = groupOptions.farmMachineDifficulty || groupLands.some(l => l.remainingArea < 200);
               const hasShapeChange = groupLands.some(l => checkShapeCriteria(l).met);
               
-              if (hasRoadLoss) analysisReasons.push("접면도로 상실" + (adminAIOptions.accessRoadLost ? " (관리자 확인)" : ""));
-              if (hasWaterLoss) analysisReasons.push("관개수로 상실" + (adminAIOptions.waterChannelLost ? " (관리자 확인)" : ""));
-              if (hasFarmDifficulty) analysisReasons.push("농기계 진입/회전 곤란" + (adminAIOptions.farmMachineDifficulty ? " (관리자 확인)" : ""));
+              if (hasRoadLoss) analysisReasons.push("접면도로 상실" + (groupOptions.accessRoadLost ? " (관리자 확인)" : ""));
+              if (hasWaterLoss) analysisReasons.push("관개수로 상실" + (groupOptions.waterChannelLost ? " (관리자 확인)" : ""));
+              if (hasFarmDifficulty) analysisReasons.push("농기계 진입/회전 곤란" + (groupOptions.farmMachineDifficulty ? " (관리자 확인)" : ""));
               if (hasShapeChange) analysisReasons.push("형상 부정형 변경");
               
             } else if (landType === "산지") {
               // 산지 경로
-              const hasRoadLoss = adminAIOptions.accessRoadLost || groupLands.some(l => l.remainingRatio < 25);
-              if (hasRoadLoss) analysisReasons.push("접면도로 상실 (접근 불가)" + (adminAIOptions.accessRoadLost ? " (관리자 확인)" : ""));
+              const hasRoadLoss = groupOptions.accessRoadLost || groupLands.some(l => l.remainingRatio < 25);
+              if (hasRoadLoss) analysisReasons.push("접면도로 상실 (접근 불가)" + (groupOptions.accessRoadLost ? " (관리자 확인)" : ""));
               
             } else {
               // 그 밖의 토지
-              const hasUsageDifficulty = adminAIOptions.accessRoadLost || adminAIOptions.farmMachineDifficulty || 
+              const hasUsageDifficulty = groupOptions.accessRoadLost || groupOptions.farmMachineDifficulty || 
                 groupLands.some(l => l.remainingRatio < 40 || checkShapeCriteria(l).met);
               if (hasUsageDifficulty) analysisReasons.push("종래 목적 사용 곤란");
             }
@@ -852,8 +879,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           const landIndex = allLands.findIndex(l => l.id === landId);
           const landData = application.landDataList?.[landIndex];
           
-          // [2단계] 개별 필지 상세 분석 (관리자 옵션 반영)
-          const analysis = analyzeSingleLand(land, landData, adminAIOptions);
+          // [2단계] 개별 필지 상세 분석 (관리자 옵션 반영 - 해당 필지의 옵션 사용)
+          const landOptions = adminAIOptionsPerLand[landId] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
+          const analysis = analyzeSingleLand(land, landData, landOptions);
           const addr = parseAddress(land.address);
           
           newResults[landId] = {
@@ -1520,79 +1548,113 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                     
                     {/* 필지 리스트 */}
-                    <div className="divide-y max-h-[280px] overflow-y-auto">
+                    <div className="divide-y max-h-[320px] overflow-y-auto">
                       {allLands.map((land, idx) => {
                         const isSelected = adminCheckedLandIds.includes(land.id);
                         const isHovered = hoveredLandId === land.id;
                         const landResult = adminLandAIResults[land.id];
+                        const landOptions = adminAIOptionsPerLand[land.id] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
                         
                         return (
                           <div 
                             key={land.id} 
-                            className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors ${
+                            className={`px-3 py-2.5 transition-colors ${
                               isHovered ? "bg-blue-50" :
                               isSelected ? "bg-primary/5 border-l-4 border-l-primary" : 
                               "hover:bg-muted/50"
                             }`}
                             onMouseEnter={() => setHoveredLandId(land.id)}
                             onMouseLeave={() => setHoveredLandId(null)}
-                            onClick={() => {
-                              // 체크박스 토글
-                              if (isSelected) {
-                                setAdminCheckedLandIds(prev => prev.filter(id => id !== land.id));
-                              } else {
-                                setAdminCheckedLandIds(prev => [...prev, land.id]);
-                              }
-                              // 선택된 필지 인덱스 업데이트
-                              setSelectedLandIndex(idx);
-                              // 지도에서 해당 필지로 포커스
-                              setFocusedLandId(land.id);
-                            }}
                           >
-                            {/* 체크박스 */}
-                            <Checkbox
-                              checked={isSelected}
-                              onCheckedChange={(checked) => {
-                                if (checked) {
-                                  setAdminCheckedLandIds(prev => [...prev, land.id]);
-                                } else {
+                            {/* 상단: 체크박스 + 필지 정보 */}
+                            <div 
+                              className="flex items-center gap-3 cursor-pointer"
+                              onClick={() => {
+                                if (isSelected) {
                                   setAdminCheckedLandIds(prev => prev.filter(id => id !== land.id));
+                                } else {
+                                  setAdminCheckedLandIds(prev => [...prev, land.id]);
                                 }
-                              }}
-                              onClick={(e) => e.stopPropagation()}
-                              className="h-4 w-4 shrink-0"
-                            />
-                            
-                            {/* 필지 마커 */}
-                            <span 
-                              className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white shrink-0"
-                              style={{
-                                backgroundColor: isSelected ? "#16a34a" : "#6b7280"
+                                setSelectedLandIndex(idx);
+                                setFocusedLandId(land.id);
                               }}
                             >
-                              {String.fromCharCode(65 + idx)}
-                            </span>
-                            
-                            {/* 필지 정보 */}
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium truncate">{land.address.split(" ").slice(-2).join(" ")}</p>
-                              <p className="text-xs text-muted-foreground">
-                                {land.landType} | 잔여 {land.remainingArea.toLocaleString()}m²
-                              </p>
+                              {/* 체크박스 */}
+                              <Checkbox
+                                checked={isSelected}
+                                onCheckedChange={(checked) => {
+                                  if (checked) {
+                                    setAdminCheckedLandIds(prev => [...prev, land.id]);
+                                  } else {
+                                    setAdminCheckedLandIds(prev => prev.filter(id => id !== land.id));
+                                  }
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                                className="h-4 w-4 shrink-0"
+                              />
+                              
+                              {/* 필지 마커 */}
+                              <span 
+                                className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white shrink-0"
+                                style={{
+                                  backgroundColor: isSelected ? "#16a34a" : "#6b7280"
+                                }}
+                              >
+                                {String.fromCharCode(65 + idx)}
+                              </span>
+                              
+                              {/* 필지 정보 */}
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium truncate">{land.address.split(" ").slice(-2).join(" ")}</p>
+                                <p className="text-xs text-muted-foreground">
+                                  {land.landType} | 잔여 {land.remainingArea.toLocaleString()}m²
+                                </p>
+                              </div>
+                              
+                              {/* AI 판정 결과 배지 */}
+                              {landResult?.provisionalJudgment && (
+                                <Badge 
+                                  variant="outline" 
+                                  className={`text-xs shrink-0 ${
+                                    landResult.provisionalJudgment === "매수" ? "border-green-500 text-green-700 bg-green-50" : 
+                                    landResult.provisionalJudgment === "매수불가" ? "border-red-500 text-red-700 bg-red-50" : 
+                                    "border-amber-500 text-amber-700 bg-amber-50"
+                                  }`}
+                                >
+                                  {landResult.provisionalJudgment}
+                                </Badge>
+                              )}
                             </div>
                             
-                            {/* AI 판정 결과 배지 */}
-                            {landResult?.provisionalJudgment && (
-                              <Badge 
-                                variant="outline" 
-                                className={`text-xs shrink-0 ${
-                                  landResult.provisionalJudgment === "매수" ? "border-green-500 text-green-700 bg-green-50" : 
-                                  landResult.provisionalJudgment === "매수불가" ? "border-red-500 text-red-700 bg-red-50" : 
-                                  "border-amber-500 text-amber-700 bg-amber-50"
-                                }`}
-                              >
-                                {landResult.provisionalJudgment}
-                              </Badge>
+                            {/* 하단: 현장확인 옵션 (선택된 필지만 표시) */}
+                            {isSelected && (
+                              <div className="mt-2 ml-7 flex items-center gap-3 flex-wrap">
+                                <span className="text-[10px] text-muted-foreground">현장확인:</span>
+                                <label className="flex items-center gap-1 cursor-pointer" onClick={(e) => e.stopPropagation()}>
+                                  <Checkbox 
+                                    checked={landOptions.farmMachineDifficulty}
+                                    onCheckedChange={(checked) => updateLandOption(land.id, 'farmMachineDifficulty', checked === true)}
+                                    className="h-3 w-3"
+                                  />
+                                  <span className="text-[10px]">농기계 곤란</span>
+                                </label>
+                                <label className="flex items-center gap-1 cursor-pointer" onClick={(e) => e.stopPropagation()}>
+                                  <Checkbox 
+                                    checked={landOptions.accessRoadLost}
+                                    onCheckedChange={(checked) => updateLandOption(land.id, 'accessRoadLost', checked === true)}
+                                    className="h-3 w-3"
+                                  />
+                                  <span className="text-[10px]">접면도로 상실</span>
+                                </label>
+                                <label className="flex items-center gap-1 cursor-pointer" onClick={(e) => e.stopPropagation()}>
+                                  <Checkbox 
+                                    checked={landOptions.waterChannelLost}
+                                    onCheckedChange={(checked) => updateLandOption(land.id, 'waterChannelLost', checked === true)}
+                                    className="h-3 w-3"
+                                  />
+                                  <span className="text-[10px]">관개수로 상실</span>
+                                </label>
+                              </div>
                             )}
                           </div>
                         );
@@ -1610,59 +1672,24 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                   </div>
                   
-                  {/* 정밀 재분석 설정 - 컴팩트 UI */}
-                  <div className="rounded-lg border bg-white p-3">
-                    <div className="flex items-center justify-between gap-4">
-                      {/* 옵션 토글들 */}
-                      <div className="flex items-center gap-4 flex-wrap">
-                        <span className="text-xs font-medium text-muted-foreground">현장확인:</span>
-                        <label className="flex items-center gap-1.5 cursor-pointer">
-                          <Checkbox 
-                            checked={adminAIOptions.farmMachineDifficulty}
-                            onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, farmMachineDifficulty: checked === true }))}
-                            className="h-3.5 w-3.5"
-                          />
-                          <span className="text-xs">농기계 곤란</span>
-                        </label>
-                        <label className="flex items-center gap-1.5 cursor-pointer">
-                          <Checkbox 
-                            checked={adminAIOptions.accessRoadLost}
-                            onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, accessRoadLost: checked === true }))}
-                            className="h-3.5 w-3.5"
-                          />
-                          <span className="text-xs">접면도로 상실</span>
-                        </label>
-                        <label className="flex items-center gap-1.5 cursor-pointer">
-                          <Checkbox 
-                            checked={adminAIOptions.waterChannelLost}
-                            onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, waterChannelLost: checked === true }))}
-                            className="h-3.5 w-3.5"
-                          />
-                          <span className="text-xs">관개수로 상실</span>
-                        </label>
-                      </div>
-                      
-                      {/* AI 분석 버튼 */}
-                      <Button
-                        onClick={handleRunAIAnalysis}
-                        disabled={isAIAnalyzing || adminCheckedLandIds.length === 0}
-                        size="sm"
-                        className="gap-1.5 bg-blue-600 hover:bg-blue-700 shrink-0"
-                      >
-                        {isAIAnalyzing ? (
-                          <>
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                            분석중
-                          </>
-                        ) : (
-                          <>
-                            <AIIcon className="h-3.5 w-3.5" />
-                            AI 분석 ({adminCheckedLandIds.length})
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </div>
+                  {/* AI 분석 버튼 */}
+                  <Button
+                    onClick={handleRunAIAnalysis}
+                    disabled={isAIAnalyzing || adminCheckedLandIds.length === 0}
+                    className="w-full gap-2 bg-blue-600 hover:bg-blue-700"
+                  >
+                    {isAIAnalyzing ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        AI 분석 중...
+                      </>
+                    ) : (
+                      <>
+                        <AIIcon className="h-4 w-4" />
+                        AI 분석 실행 ({adminCheckedLandIds.length}필지)
+                      </>
+                    )}
+                  </Button>
                 </div>
                 
                 {/* 우측: 분석결과 */}
