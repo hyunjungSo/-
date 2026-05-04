@@ -119,7 +119,7 @@ export function AIAnalysisFlowDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent 
-        className="max-h-[95vh] overflow-y-auto p-0 border-0 shadow-2xl bg-white" 
+        className="max-h-[95vh] overflow-y-auto p-0 border-0 shadow-2xl bg-white z-[1100]" 
         style={{ width: '75vw', maxWidth: '1400px', minWidth: '1000px' }}
       >
         {/* 헤더 */}
