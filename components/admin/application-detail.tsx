@@ -1581,50 +1581,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                   </div>
                   
-                  {/* 선택된 필지 상세 정보 */}
-                  {adminCheckedLandIds.length > 0 && selectedLandIndex >= 0 && (
-                    <div className="rounded-lg border bg-slate-50/50 p-3">
-                      <div className="flex items-center justify-between mb-2">
-                        <h5 className="text-sm font-medium flex items-center gap-2">
-                          <ListChecks className="h-4 w-4" />
-                          현재 선택: {allLands[selectedLandIndex]?.address.split(" ").slice(-2).join(" ")}
-                        </h5>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="h-6 text-xs text-muted-foreground"
-                          onClick={() => setAdminCheckedLandIds([])}
-                        >
-                          전체 해제
-                        </Button>
-                      </div>
-                      
-                      {/* 현재 선택된 필지 상세 정보 */}
-                      {allLands[selectedLandIndex] && (
-                        <div className="space-y-2">
-                          <div className="grid grid-cols-2 gap-2 text-sm">
-                            <div className="rounded bg-white p-2">
-                              <p className="text-xs text-muted-foreground">토지유형</p>
-                              <p className="font-medium">{allLands[selectedLandIndex].landType}</p>
-                            </div>
-                            <div className="rounded bg-white p-2">
-                              <p className="text-xs text-muted-foreground">지목</p>
-                              <p className="font-medium">{allLands[selectedLandIndex].landCategory}</p>
-                            </div>
-                            <div className="rounded bg-white p-2">
-                              <p className="text-xs text-muted-foreground">잔여면적</p>
-                              <p className="font-medium">{allLands[selectedLandIndex].remainingArea.toLocaleString()}m²</p>
-                            </div>
-                            <div className="rounded bg-white p-2">
-                              <p className="text-xs text-muted-foreground">잔여비율</p>
-                              <p className="font-medium">{allLands[selectedLandIndex].remainingRatio}%</p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  
                   {/* 정밀 재분석 설정 - 컴팩트 UI */}
                   <div className="rounded-lg border bg-white p-3">
                     <div className="flex items-center justify-between gap-4">
