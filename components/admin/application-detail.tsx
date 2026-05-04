@@ -181,7 +181,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [adminAIOptions, setAdminAIOptions] = useState({
     accessRoadLost: false,      // 접면도로 상실
     waterChannelLost: false,    // 관개수로 상실
-    farmMachineDifficulty: false, // 농기계 진입 곤란
+    farmMachineDifficulty: false, // 농기계 진입 ���란
   });
   
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
@@ -752,7 +752,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             const effectiveLimit = criteria.relaxed * groupLandIds.length;
             const meetsAreaCriteria = combinedArea <= effectiveLimit;
             if (meetsAreaCriteria) {
-              analysisReasons.push(`합산 면��� ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
+              analysisReasons.push(`합산 면����� ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
             }
             
             // 토지유형별 추가 조건 검토 + 관리자 ���장 ���황 옵션 ����
@@ -1153,8 +1153,79 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             </div>
                             
-                            {/* 상세 분석 내용 */}
-                            <div className="space-y-3">
+                            {/* 상세 분석 내용 - 민원인 화면과 동일 */}
+                            <div className="space-y-4">
+                              {/* 판단 요약 */}
+                              {landResult?.judgmentRationale && (
+                                <div className="flex items-start gap-2">
+                                  <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                  <div>
+                                    <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
+                                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{landResult.judgmentRationale.summary}</p>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* 법적 근거 */}
+                              {landResult?.judgmentRationale && (
+                                <div className="flex items-start gap-2">
+                                  <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                  <div>
+                                    <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
+                                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{landResult.judgmentRationale.legalBasis}</p>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* 적용 기준 */}
+                              {landResult?.judgmentRationale && (
+                                <div className="flex items-start gap-2">
+                                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                  <div>
+                                    <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
+                                    <ul className="mt-1 space-y-1">
+                                      {landResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
+                                        <li key={cIdx} className="flex items-start gap-1.5 text-sm text-muted-foreground">
+                                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
+                                          <span>{criteria}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* 수동 확인 항목 */}
+                              {landResult?.judgmentRationale?.manualCheckItems && landResult.judgmentRationale.manualCheckItems.length > 0 && (
+                                <div className="flex items-start gap-2">
+                                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                  <div>
+                                    <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
+                                    <ul className="mt-1 space-y-1">
+                                      {landResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
+                                        <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                                          <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
+                                          <span>{item}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* 상세 분석 */}
+                              {landResult?.judgmentRationale?.detailedExplanation && (
+                                <div className="flex items-start gap-2">
+                                  <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                                  <div>
+                                    <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
+                                    <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
+                                      {landResult.judgmentRationale.detailedExplanation}
+                                    </pre>
+                                  </div>
+                                </div>
+                              )}
+
                               {/* 편입 정보 */}
                               <div className="rounded-lg bg-white/60 p-3 border">
                                 <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
@@ -1167,21 +1238,21 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <span className="text-muted-foreground">편입 면적:</span>
                                     <span className="ml-1 font-medium">{land.includedArea.toLocaleString()}m²</span>
                                   </div>
+                                  <div>
+                                    <span className="text-muted-foreground">잔여 면적:</span>
+                                    <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)</span>
+                                  </div>
+                                  <div>
+                                    <span className="text-muted-foreground">형상지수 변화:</span>
+                                    <span className="ml-1 font-medium">{landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}</span>
+                                  </div>
                                 </div>
                               </div>
-                              
-                              {/* 판정 사유 */}
-                              {landResult?.reason && (
-                                <div className="rounded-lg bg-white/60 p-3 border">
-                                  <p className="text-xs font-medium text-muted-foreground mb-2">판정 사유</p>
-                                  <p className="text-sm">{landResult.reason}</p>
-                                </div>
-                              )}
                               
                               {/* 판정 기준 충족 여부 */}
                               {landResult?.criteriaChecks && landResult.criteriaChecks.length > 0 && (
                                 <div className="rounded-lg bg-white/60 p-3 border">
-                                  <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준</p>
+                                  <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
                                   <div className="space-y-2">
                                     {landResult.criteriaChecks.map((check, cIdx) => (
                                       <div key={cIdx} className="flex items-center justify-between text-sm">
@@ -1197,28 +1268,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   </div>
                                 </div>
                               )}
-                              
-                              {/* 추가 분석 정보 */}
-                              <div className="rounded-lg bg-white/60 p-3 border">
-                                <p className="text-xs font-medium text-muted-foreground mb-2">분석 세부 정보</p>
-                                <div className="grid grid-cols-2 gap-2 text-sm">
-                                  <div>
-                                    <span className="text-muted-foreground">토지 형상:</span>
-                                    <span className="ml-1 font-medium">{land.landUse || "정형"}</span>
-                                  </div>
-                                  <div>
-                                    <span className="text-muted-foreground">접도 조건:</span>
-                                    <span className="ml-1 font-medium">{landResult?.roadAccess || "양호"}</span>
-                                  </div>
-                                  <div>
-                                    <span className="text-muted-foreground">이용 현황:</span>
-                                    <span className="ml-1 font-medium">{land.landCategory}</span>
-                                  </div>
-                                  <div>
-                                    <span className="text-muted-foreground">신뢰도:</span>
-                                    <span className="ml-1 font-medium">{landResult?.confidence || 85}%</span>
-                                  </div>
-                                </div>
+
+                              {/* 안내 문구 */}
+                              <div className="flex items-start gap-2 pt-2 border-t">
+                                <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
+                                <p className="text-xs text-muted-foreground">
+                                  AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                </p>
                               </div>
                             </div>
                           </AccordionContent>
@@ -1670,24 +1726,79 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </div>
                               </AccordionTrigger>
                               <AccordionContent className="pb-4">
-                                {/* 기본 정보 */}
-                                <div className="grid grid-cols-3 gap-3 text-sm mb-4">
-                                  <div className="rounded bg-white/80 p-2 text-center">
-                                    <p className="text-xs text-muted-foreground">잔여 면적</p>
-                                    <p className="font-semibold">{land.remainingArea.toLocaleString()}m²</p>
-                                  </div>
-                                  <div className="rounded bg-white/80 p-2 text-center">
-                                    <p className="text-xs text-muted-foreground">잔여 비율</p>
-                                    <p className="font-semibold">{land.remainingRatio}%</p>
-                                  </div>
-                                  <div className="rounded bg-white/80 p-2 text-center">
-                                    <p className="text-xs text-muted-foreground">형상지수 변화</p>
-                                    <p className="font-semibold">+{result.shapeIndexChange?.toFixed(1) ?? "-"}</p>
-                                  </div>
-                                </div>
-                                
-                                {/* 상세 분석 내용 */}
-                                <div className="space-y-3">
+                                {/* 상세 분석 내용 - 민원인 화면과 동일 */}
+                                <div className="space-y-4">
+                                  {/* 판단 요약 */}
+                                  {result.judgmentRationale && (
+                                    <div className="flex items-start gap-2">
+                                      <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                      <div>
+                                        <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
+                                        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{result.judgmentRationale.summary}</p>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* 법적 근거 */}
+                                  {result.judgmentRationale && (
+                                    <div className="flex items-start gap-2">
+                                      <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                      <div>
+                                        <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
+                                        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{result.judgmentRationale.legalBasis}</p>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* 적용 기준 */}
+                                  {result.judgmentRationale && (
+                                    <div className="flex items-start gap-2">
+                                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                      <div>
+                                        <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
+                                        <ul className="mt-1 space-y-1">
+                                          {result.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
+                                            <li key={cIdx} className="flex items-start gap-1.5 text-sm text-muted-foreground">
+                                              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
+                                              <span>{criteria}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* 수동 확인 항목 */}
+                                  {result.judgmentRationale?.manualCheckItems && result.judgmentRationale.manualCheckItems.length > 0 && (
+                                    <div className="flex items-start gap-2">
+                                      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                      <div>
+                                        <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
+                                        <ul className="mt-1 space-y-1">
+                                          {result.judgmentRationale.manualCheckItems.map((item, mIdx) => (
+                                            <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                                              <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
+                                              <span>{item}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* 상세 분석 */}
+                                  {result.judgmentRationale?.detailedExplanation && (
+                                    <div className="flex items-start gap-2">
+                                      <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                                      <div>
+                                        <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
+                                        <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
+                                          {result.judgmentRationale.detailedExplanation}
+                                        </pre>
+                                      </div>
+                                    </div>
+                                  )}
+
                                   {/* 편입 정보 */}
                                   <div className="rounded-lg bg-white/60 p-3 border">
                                     <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
@@ -1700,21 +1811,21 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <span className="text-muted-foreground">편입 면적:</span>
                                         <span className="ml-1 font-medium">{land.includedArea.toLocaleString()}m²</span>
                                       </div>
+                                      <div>
+                                        <span className="text-muted-foreground">잔여 면적:</span>
+                                        <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)</span>
+                                      </div>
+                                      <div>
+                                        <span className="text-muted-foreground">형상지수 변화:</span>
+                                        <span className="ml-1 font-medium">+{result.shapeIndexChange?.toFixed(1) ?? "-"}</span>
+                                      </div>
                                     </div>
                                   </div>
-                                  
-                                  {/* 판정 사유 */}
-                                  {result.reason && (
-                                    <div className="rounded-lg bg-white/60 p-3 border">
-                                      <p className="text-xs font-medium text-muted-foreground mb-2">판정 사유</p>
-                                      <p className="text-sm">{result.reason}</p>
-                                    </div>
-                                  )}
                                   
                                   {/* 판정 기준 충족 여부 */}
                                   {result.criteriaChecks && result.criteriaChecks.length > 0 && (
                                     <div className="rounded-lg bg-white/60 p-3 border">
-                                      <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준</p>
+                                      <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
                                       <div className="space-y-2">
                                         {result.criteriaChecks.map((check, cIdx) => (
                                           <div key={cIdx} className="flex items-center justify-between text-sm">
@@ -1731,29 +1842,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </div>
                                   )}
                                   
-                                  {/* 분석 세부 정보 */}
-                                  <div className="rounded-lg bg-white/60 p-3 border">
-                                    <p className="text-xs font-medium text-muted-foreground mb-2">분석 세부 정보</p>
-                                    <div className="grid grid-cols-2 gap-2 text-sm">
-                                      <div>
-                                        <span className="text-muted-foreground">토지 형상:</span>
-                                        <span className="ml-1 font-medium">{land.landUse || "정형"}</span>
-                                      </div>
-                                      <div>
-                                        <span className="text-muted-foreground">접도 조건:</span>
-                                        <span className="ml-1 font-medium">{result.roadAccess || "양호"}</span>
-                                      </div>
-                                      <div>
-                                        <span className="text-muted-foreground">이용 현황:</span>
-                                        <span className="ml-1 font-medium">{land.landCategory}</span>
-                                      </div>
-                                      <div>
-                                        <span className="text-muted-foreground">신뢰도:</span>
-                                        <span className="ml-1 font-medium">{result.confidence || 85}%</span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  
                                   {/* 적용된 현장 상황 옵션 */}
                                   {(adminAIOptions.accessRoadLost || adminAIOptions.waterChannelLost || adminAIOptions.farmMachineDifficulty) && (
                                     <div className="rounded-lg bg-blue-50/80 p-3 border border-blue-200">
@@ -1765,6 +1853,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       </div>
                                     </div>
                                   )}
+
+                                  {/* 안내 문구 */}
+                                  <div className="flex items-start gap-2 pt-2 border-t">
+                                    <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
+                                    <p className="text-xs text-muted-foreground">
+                                      담당자 AI 분석 결과입니다. 현장 상황 옵션이 적용되어 민원인 결과와 다를 수 있습니다.
+                                    </p>
+                                  </div>
                                 </div>
                               </AccordionContent>
                             </AccordionItem>
@@ -1897,7 +1993,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 최종 판정
                 {reviewData.adminStatus !== "심사완료" && (
                   <span className="ml-2 text-sm font-normal text-muted-foreground">
-                    (진행상황을 &apos;심사완���&apos;로 설정하면 ���성���됩니다)
+                    (진행상황을 &apos;심사완���&apos;로 ��정하면 ���성���됩니다)
                   </span>
                 )}
               </Label>
