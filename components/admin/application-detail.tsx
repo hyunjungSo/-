@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -1087,13 +1088,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   )}
                   
                   {/* 필지별 분석 결과 */}
-                  <div className="space-y-3 max-h-[350px] overflow-y-auto">
+                  <Accordion type="multiple" className="space-y-3 max-h-[400px] overflow-y-auto">
                     {allLands.map((land, idx) => {
                       const landResult = landAIResults[land.id];
                       return (
-                        <div 
+                        <AccordionItem 
                           key={land.id}
-                          className={`rounded-lg border p-4 ${
+                          value={land.id}
+                          className={`rounded-lg border px-4 ${
                             landResult?.provisionalJudgment === "매수"
                               ? "border-green-200 bg-green-50/50"
                               : landResult?.provisionalJudgment === "매수불가"
@@ -1101,57 +1103,121 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 : "border-slate-200 bg-slate-50/50"
                           }`}
                         >
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center gap-2">
-                              <span className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-white ${
-                                landResult?.provisionalJudgment === "매수" ? "bg-green-600" : 
-                                landResult?.provisionalJudgment === "매수불가" ? "bg-red-500" : "bg-slate-400"
-                              }`}>
-                                {String.fromCharCode(65 + idx)}
-                              </span>
-                              <div>
-                                <p className="font-medium">{land.address}</p>
-                                <p className="text-sm text-muted-foreground">{land.landType} | {land.landCategory}</p>
+                          <AccordionTrigger className="hover:no-underline py-3">
+                            <div className="flex items-center justify-between w-full pr-2">
+                              <div className="flex items-center gap-2">
+                                <span className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-white ${
+                                  landResult?.provisionalJudgment === "매수" ? "bg-green-600" : 
+                                  landResult?.provisionalJudgment === "매수불가" ? "bg-red-500" : "bg-slate-400"
+                                }`}>
+                                  {String.fromCharCode(65 + idx)}
+                                </span>
+                                <div className="text-left">
+                                  <p className="font-medium text-sm">{land.address}</p>
+                                  <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
+                                </div>
+                              </div>
+                              {landResult && (
+                                <Badge className={`ml-2 ${
+                                  landResult.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"
+                                }`}>
+                                  {landResult.provisionalJudgment}
+                                </Badge>
+                              )}
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent className="pb-4">
+                            {/* 기본 정보 */}
+                            <div className="grid grid-cols-3 gap-3 text-sm mb-4">
+                              <div className="rounded bg-white/80 p-2 text-center">
+                                <p className="text-xs text-muted-foreground">잔여 면적</p>
+                                <p className="font-semibold">{land.remainingArea.toLocaleString()}m²</p>
+                              </div>
+                              <div className="rounded bg-white/80 p-2 text-center">
+                                <p className="text-xs text-muted-foreground">잔여 비율</p>
+                                <p className="font-semibold">{land.remainingRatio}%</p>
+                              </div>
+                              <div className="rounded bg-white/80 p-2 text-center">
+                                <p className="text-xs text-muted-foreground">형상지수 변화</p>
+                                <p className="font-semibold">
+                                  {landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}
+                                </p>
                               </div>
                             </div>
-                            {landResult && (
-                              <Badge className={`${
-                                landResult.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"
-                              }`}>
-                                {landResult.provisionalJudgment}
-                              </Badge>
-                            )}
-                          </div>
-                          
-                          <div className="grid grid-cols-3 gap-3 text-sm">
-                            <div className="rounded bg-white/80 p-2 text-center">
-                              <p className="text-xs text-muted-foreground">잔��� 면적</p>
-                              <p className="font-semibold">{land.remainingArea.toLocaleString()}m²</p>
+                            
+                            {/* 상세 분석 내용 */}
+                            <div className="space-y-3">
+                              {/* 편입 정보 */}
+                              <div className="rounded-lg bg-white/60 p-3 border">
+                                <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
+                                <div className="grid grid-cols-2 gap-2 text-sm">
+                                  <div>
+                                    <span className="text-muted-foreground">편입 전 면적:</span>
+                                    <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}m²</span>
+                                  </div>
+                                  <div>
+                                    <span className="text-muted-foreground">편입 면적:</span>
+                                    <span className="ml-1 font-medium">{land.includedArea.toLocaleString()}m²</span>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              {/* 판정 사유 */}
+                              {landResult?.reason && (
+                                <div className="rounded-lg bg-white/60 p-3 border">
+                                  <p className="text-xs font-medium text-muted-foreground mb-2">판정 사유</p>
+                                  <p className="text-sm">{landResult.reason}</p>
+                                </div>
+                              )}
+                              
+                              {/* 판정 기준 충족 여부 */}
+                              {landResult?.criteriaChecks && landResult.criteriaChecks.length > 0 && (
+                                <div className="rounded-lg bg-white/60 p-3 border">
+                                  <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준</p>
+                                  <div className="space-y-2">
+                                    {landResult.criteriaChecks.map((check, cIdx) => (
+                                      <div key={cIdx} className="flex items-center justify-between text-sm">
+                                        <span className="text-muted-foreground">{check.criteriaName}</span>
+                                        <Badge 
+                                          variant={check.isMet ? "default" : "destructive"} 
+                                          className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}
+                                        >
+                                          {check.isMet ? "충족" : "미충족"}
+                                        </Badge>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* 추가 분석 정보 */}
+                              <div className="rounded-lg bg-white/60 p-3 border">
+                                <p className="text-xs font-medium text-muted-foreground mb-2">분석 세부 정보</p>
+                                <div className="grid grid-cols-2 gap-2 text-sm">
+                                  <div>
+                                    <span className="text-muted-foreground">토지 형상:</span>
+                                    <span className="ml-1 font-medium">{land.landUse || "정형"}</span>
+                                  </div>
+                                  <div>
+                                    <span className="text-muted-foreground">접도 조건:</span>
+                                    <span className="ml-1 font-medium">{landResult?.roadAccess || "양호"}</span>
+                                  </div>
+                                  <div>
+                                    <span className="text-muted-foreground">이용 현황:</span>
+                                    <span className="ml-1 font-medium">{land.landCategory}</span>
+                                  </div>
+                                  <div>
+                                    <span className="text-muted-foreground">신뢰도:</span>
+                                    <span className="ml-1 font-medium">{landResult?.confidence || 85}%</span>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-                            <div className="rounded bg-white/80 p-2 text-center">
-                              <p className="text-xs text-muted-foreground">잔여 비율</p>
-                              <p className="font-semibold">{land.remainingRatio}%</p>
-                            </div>
-                            <div className="rounded bg-white/80 p-2 text-center">
-                              <p className="text-xs text-muted-foreground">형상지수 변화</p>
-                              <p className="font-semibold">
-                                {landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}
-                              </p>
-                            </div>
-                          </div>
-                          
-                          {/* 판정 사유 */}
-                          {landResult?.reason && (
-                            <div className="mt-3 pt-3 border-t">
-                              <p className="text-sm text-muted-foreground">
-                                <span className="font-medium">판정 사유:</span> {landResult.reason}
-                              </p>
-                            </div>
-                          )}
-                        </div>
+                          </AccordionContent>
+                        </AccordionItem>
                       );
                     })}
-                  </div>
+                  </Accordion>
                 </div>
               </div>
             </TabsContent>
