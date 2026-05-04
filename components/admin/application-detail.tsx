@@ -1956,11 +1956,89 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <MapIcon className="h-4 w-4" />
                       지적도
                     </h4>
-                    {checkedLandIds.length > 0 && (
+                    {adminCheckedLandIds.length > 0 && (
                       <Badge variant="outline" className="font-normal">
-                        {checkedLandIds.length}필지 선택
+                        {adminCheckedLandIds.length}필지 선택
                       </Badge>
                     )}
+                  </div>
+                  
+                  {/* 지적도 */}
+                  <div className="h-[300px] rounded-lg overflow-hidden border">
+                    <LeafletMap
+                      parcels={(() => {
+                        const applicationParcels = allLands.map((land, idx) => {
+                          const baseLat = 37.2180 + (idx * 0.0008);
+                          const baseLng = 127.2950 + (idx * 0.0005);
+                          const offset = 0.0003;
+                          
+                          return {
+                            id: land.id,
+                            address: land.address,
+                            isIncluded: true,
+                            isOwned: adminCheckedLandIds.includes(land.id),
+                            coordinates: [
+                              { lat: baseLat, lng: baseLng },
+                              { lat: baseLat, lng: baseLng + offset * 1.2 },
+                              { lat: baseLat + offset, lng: baseLng + offset * 1.2 },
+                              { lat: baseLat + offset, lng: baseLng },
+                            ],
+                          };
+                        });
+                        
+                        const adjacentParcels = [
+                          {
+                            id: "adjacent-001",
+                            address: "경기도 용인시 처인구 포곡읍 마성리 101",
+                            landCategory: "전",
+                            landType: "농경지",
+                            area: 856,
+                            owner: "김OO",
+                            isIncluded: false,
+                            isOwned: false,
+                            coordinates: [
+                              { lat: 37.2183, lng: 127.2953 },
+                              { lat: 37.2183, lng: 127.2957 },
+                              { lat: 37.2186, lng: 127.2957 },
+                              { lat: 37.2186, lng: 127.2953 },
+                            ],
+                          },
+                          {
+                            id: "adjacent-002",
+                            address: "경기도 용인시 처인구 포곡읍 마성리 102",
+                            landCategory: "답",
+                            landType: "농경지",
+                            area: 1234,
+                            owner: "박OO",
+                            isIncluded: false,
+                            isOwned: false,
+                            coordinates: [
+                              { lat: 37.2177, lng: 127.2947 },
+                              { lat: 37.2177, lng: 127.2951 },
+                              { lat: 37.2180, lng: 127.2951 },
+                              { lat: 37.2180, lng: 127.2947 },
+                            ],
+                          },
+                        ];
+                        
+                        return [...applicationParcels, ...adjacentParcels];
+                      })()}
+                      selectedParcelIds={new Set(adminCheckedLandIds)}
+                      onParcelClick={(parcelId) => {
+                        if (adminCheckedLandIds.includes(parcelId)) {
+                          setAdminCheckedLandIds(prev => prev.filter(id => id !== parcelId));
+                        } else {
+                          setAdminCheckedLandIds(prev => [...prev, parcelId]);
+                        }
+                        const landIdx = allLands.findIndex(l => l.id === parcelId);
+                        if (landIdx !== -1) {
+                          setSelectedLandIndex(landIdx);
+                        }
+                      }}
+                      hoveredParcelId={hoveredLandId}
+                      onParcelHover={(parcelId) => setHoveredLandId(parcelId)}
+                      zoom={18}
+                    />
                   </div>
                   
                   {/* 일단지 신청인 경우: 일단지 판정 기준 확인 */}
