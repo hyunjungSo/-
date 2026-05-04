@@ -757,7 +757,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           
           // 일단지 판정 사유 기록
           const unificationReasons = [
-            "소유자 동일",
+            "소유자 동���",
             `지반 연속 (${parseAddress(primaryLand.address).district})`,
             `용도 일체 (${primaryLand.landType})`
           ];
@@ -1056,12 +1056,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardContent>
           <Tabs defaultValue="citizen" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="citizen" className="gap-2">
-                <User className="h-4 w-4" />
+              <TabsTrigger value="citizen">
                 민원인 결과
               </TabsTrigger>
-              <TabsTrigger value="admin" className="gap-2">
-                <Shield className="h-4 w-4" />
+              <TabsTrigger value="admin">
                 담당자 결과
               </TabsTrigger>
             </TabsList>
@@ -1842,7 +1840,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </div>
                                   )}
 
-                                  {/* 수동 확인 항목 */}
+                                  {/* 수동 확��� 항목 */}
                                   {result.judgmentRationale?.manualCheckItems && result.judgmentRationale.manualCheckItems.length > 0 && (
                                     <div className="flex items-start gap-2">
                                       <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
