@@ -288,7 +288,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       manualCheckItems?: string[];
     };
   }>>(() => {
-    // 기존 application.aiResult가 있으면 ���기값��로 설정
+    // 기존 application.aiResult가 있으면 초기값으로 설정
     if (application.aiResult) {
       const initial: Record<string, {
         provisionalJudgment: string;
@@ -757,7 +757,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           
           // 일단지 판정 사유 기록
           const unificationReasons = [
-            "소유��� 동�������",
+            "소유자 동일",
             `지반 연속 (${parseAddress(primaryLand.address).district})`,
             `용도 일체 (${primaryLand.landType})`
           ];
@@ -1085,7 +1085,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               )}
               
               <div className="grid gap-6 lg:grid-cols-2">
-                {/* 좌측: 지���도 */}
+                {/* 좌측: 지적도 */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h4 className="font-medium">지적도</h4>
@@ -1278,7 +1278,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             </div>
 
                             {/* 편입 정보 */}
-                            <div className="rounded-lg bg-white/60 p-3 border mb-4">
+                            <div className="rounded-lg bg-white/60 p-3 border">
                               <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
                               <div className="grid grid-cols-2 gap-2 text-sm">
                                 <div>
@@ -1300,7 +1300,17 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             </div>
                             
-{/* 상세 분석 내용 - 개별 필지인 경우에만 표시 (일단지는 상단에 통합 표시) */}
+                            {/* 일단지인 경우 안내 문구 */}
+                            {applicationType === "unified" && (
+                              <div className="flex items-start gap-2 pt-3 mt-3 border-t text-blue-600">
+                                <Info className="mt-0.5 h-3 w-3 shrink-0" />
+                                <p className="text-xs">
+                                  이 필지는 일단지로 판정되었습니다. 상세 분석 결과는 상단의 일단지 판정 결과를 참조하세요.
+                                </p>
+                              </div>
+                            )}
+                            
+                            {/* 상세 분석 내용 - 개별 필지인 경우에만 표시 (일단지는 상단에 통합 표시) */}
                             {applicationType !== "unified" && (
                             <div className="space-y-4">
                               {/* 판단 요약 */}
@@ -1854,7 +1864,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </div>
                                   )}
 
-                                  {/* 수동 확��� 항목 */}
+                                  {/* 수동 확인 항목 */}
                                   {result.judgmentRationale?.manualCheckItems && result.judgmentRationale.manualCheckItems.length > 0 && (
                                     <div className="flex items-start gap-2">
                                       <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
@@ -1921,7 +1931,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <div className="flex items-start gap-2 pt-2 border-t">
                                     <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                     <p className="text-xs text-muted-foreground">
-                                      담당자 AI 분석 결���입니다. 현장 상황 옵션이 적용되어 민원인 결과와 다를 수 있습니다.
+                                      담당자 AI 분석 결과입니다. 현장 상황 옵션이 적용되어 민원인 결과와 다를 수 있습니다.
                                     </p>
                                   </div>
                                 </div>
@@ -2097,7 +2107,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               />
             </div>
             
-            {/* AI 결과와 다�� 판정 시 경고 */}
+            {/* AI 결과와 다른 판정 시 경고 */}
             {reviewData.finalJudgment && Object.keys(adminLandAIResults).length > 0 && (() => {
               const results = Object.values(adminLandAIResults);
               const aiJudgment = results.every(r => r.provisionalJudgment === "매수") ? "매수" : 
