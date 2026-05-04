@@ -396,7 +396,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   };
 
 // ===== [1단계] 일단지 판정 로직 =====
-  // 주소에서 읍면/동 및 지번 정보 추출
+  // 주소에서 읍면/동 및 지��� 정보 추출
   const parseAddress = (address: string) => {
     const parts = address.split(" ");
     const lastPart = parts[parts.length - 1];
@@ -1459,6 +1459,124 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
                         <span className="text-green-700 font-medium">선택된 필지</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* 필지 리스트 (체크박스 + 지도 연동) */}
+                  <div className="rounded-lg border bg-white">
+                    {/* 헤더 */}
+                    <div className="flex items-center justify-between border-b bg-muted/30 px-3 py-2">
+                      <span className="text-sm font-medium">필지 목록</span>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 text-xs"
+                          onClick={() => setAdminCheckedLandIds(allLands.map(l => l.id))}
+                        >
+                          전체 선택
+                        </Button>
+                        {adminCheckedLandIds.length > 0 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 px-2 text-xs text-muted-foreground"
+                            onClick={() => setAdminCheckedLandIds([])}
+                          >
+                            전체 해제
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* 필지 리스트 */}
+                    <div className="divide-y max-h-[280px] overflow-y-auto">
+                      {allLands.map((land, idx) => {
+                        const isSelected = adminCheckedLandIds.includes(land.id);
+                        const isHovered = hoveredLandId === land.id;
+                        const landResult = adminLandAIResults[land.id];
+                        
+                        return (
+                          <div 
+                            key={land.id} 
+                            className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors ${
+                              isHovered ? "bg-blue-50" :
+                              isSelected ? "bg-primary/5 border-l-4 border-l-primary" : 
+                              "hover:bg-muted/50"
+                            }`}
+                            onMouseEnter={() => setHoveredLandId(land.id)}
+                            onMouseLeave={() => setHoveredLandId(null)}
+                            onClick={() => {
+                              // 체크박스 토글
+                              if (isSelected) {
+                                setAdminCheckedLandIds(prev => prev.filter(id => id !== land.id));
+                              } else {
+                                setAdminCheckedLandIds(prev => [...prev, land.id]);
+                              }
+                              // 선택된 필지 인덱스 업데이트
+                              setSelectedLandIndex(idx);
+                              // 지도에서 해당 필지로 포커스
+                              setFocusedLandId(land.id);
+                            }}
+                          >
+                            {/* 체크박스 */}
+                            <Checkbox
+                              checked={isSelected}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setAdminCheckedLandIds(prev => [...prev, land.id]);
+                                } else {
+                                  setAdminCheckedLandIds(prev => prev.filter(id => id !== land.id));
+                                }
+                              }}
+                              onClick={(e) => e.stopPropagation()}
+                              className="h-4 w-4 shrink-0"
+                            />
+                            
+                            {/* 필지 마커 */}
+                            <span 
+                              className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white shrink-0"
+                              style={{
+                                backgroundColor: isSelected ? "#16a34a" : "#6b7280"
+                              }}
+                            >
+                              {String.fromCharCode(65 + idx)}
+                            </span>
+                            
+                            {/* 필지 정보 */}
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium truncate">{land.address.split(" ").slice(-2).join(" ")}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {land.landType} | 잔여 {land.remainingArea.toLocaleString()}m²
+                              </p>
+                            </div>
+                            
+                            {/* AI 판정 결과 배지 */}
+                            {landResult?.provisionalJudgment && (
+                              <Badge 
+                                variant="outline" 
+                                className={`text-xs shrink-0 ${
+                                  landResult.provisionalJudgment === "매수" ? "border-green-500 text-green-700 bg-green-50" : 
+                                  landResult.provisionalJudgment === "매수불가" ? "border-red-500 text-red-700 bg-red-50" : 
+                                  "border-amber-500 text-amber-700 bg-amber-50"
+                                }`}
+                              >
+                                {landResult.provisionalJudgment}
+                              </Badge>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                    
+                    {/* 선택 요약 */}
+                    <div className="border-t bg-muted/30 px-3 py-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-muted-foreground">{adminCheckedLandIds.length}필지 선택됨</span>
+                        <span className="font-medium">
+                          합계: {allLands.filter(l => adminCheckedLandIds.includes(l.id)).reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²
+                        </span>
                       </div>
                     </div>
                   </div>
