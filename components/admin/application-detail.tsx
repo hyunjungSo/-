@@ -37,6 +37,8 @@ import {
   History,
   ArrowRight,
   Scale,
+  Shield,
+  Brain,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
