@@ -288,7 +288,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       manualCheckItems?: string[];
     };
   }>>(() => {
-    // 기존 application.aiResult가 있으면 초기값��로 설정
+    // 기존 application.aiResult가 있으면 ���기값��로 설정
     if (application.aiResult) {
       const initial: Record<string, {
         provisionalJudgment: string;
@@ -757,7 +757,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           
           // 일단지 판정 사유 기록
           const unificationReasons = [
-            "소유자 동일",
+            "소유자 동���",
             `지반 연속 (${parseAddress(primaryLand.address).district})`,
             `용도 일체 (${primaryLand.landType})`
           ];
@@ -1652,7 +1652,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <Checkbox 
                                     checked={landOptions.farmMachineDifficulty}
                                     onCheckedChange={(checked) => updateLandOption(land.id, 'farmMachineDifficulty', checked === true)}
-                                    className="h-6 w-6"
+                                    className="h-[18px] w-[18px]"
                                   />
                                   <span className="text-xs">농기계 곤란</span>
                                 </label>
@@ -1660,7 +1660,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <Checkbox 
                                     checked={landOptions.accessRoadLost}
                                     onCheckedChange={(checked) => updateLandOption(land.id, 'accessRoadLost', checked === true)}
-                                    className="h-6 w-6"
+                                    className="h-[18px] w-[18px]"
                                   />
                                   <span className="text-xs">접면도로 상실</span>
                                 </label>
@@ -1668,7 +1668,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <Checkbox 
                                     checked={landOptions.waterChannelLost}
                                     onCheckedChange={(checked) => updateLandOption(land.id, 'waterChannelLost', checked === true)}
-                                    className="h-6 w-6"
+                                    className="h-[18px] w-[18px]"
                                   />
                                   <span className="text-xs">관개수로 상실</span>
                                 </label>
