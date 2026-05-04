@@ -751,7 +751,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               analysisReasons.push(`합산 면적 ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
             }
             
-            // 토지유형별 추가 조건 검토 + 관리자 현장 ���황 옵션 ����
+            // 토지유형별 추가 조건 검토 + 관리자 ��장 ���황 옵션 ����
             if (landType === "대지") {
               // 택지 경로
               const hasRoadLoss = adminAIOptions.accessRoadLost || groupLands.some(l => l.remainingRatio < 30);
@@ -1006,7 +1006,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                   
                   {/* 지적도 */}
-                  <div className="h-[300px] rounded-lg overflow-hidden border">
+                  <div className="h-[450px] rounded-lg overflow-hidden border">
                     <LeafletMap
                       parcels={(() => {
                         const applicationParcels = allLands.map((land, idx) => {
@@ -1089,7 +1089,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   )}
                   
                   {/* 필지별 분석 결과 */}
-                  <Accordion type="multiple" className="space-y-3 max-h-[400px] overflow-y-auto">
+                  <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto">
                     {allLands.map((land, idx) => {
                       const landResult = landAIResults[land.id];
                       return (
@@ -1239,7 +1239,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                   
                   {/* 지적도 + 필지 리스트 컨테이너 */}
-                  <div className="relative h-[400px] rounded-lg overflow-hidden border">
+                  <div className="relative h-[550px] rounded-lg overflow-hidden border">
                     {/* 지적도 */}
                     <div className="absolute inset-0">
                     <LeafletMap
@@ -1605,7 +1605,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       )}
                       
                       {/* 필지별 분석 결과 - 아코디언 UI */}
-                      <Accordion type="multiple" className="space-y-3 max-h-[400px] overflow-y-auto">
+                      <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto">
                         {Object.entries(adminLandAIResults).map(([landId, result]) => {
                           const land = allLands.find(l => l.id === landId);
                           const landIdx = allLands.findIndex(l => l.id === landId);
