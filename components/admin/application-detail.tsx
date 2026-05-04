@@ -1894,15 +1894,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </Badge>
                   )}
                 </div>
-            {/* 분석 상세 보기 버튼 */}
-            <Button
-              variant="outline"
-              className="w-full gap-2"
-              onClick={() => setShowAnalysisFlow(true)}
-            >
-              <PlayCircle className="h-4 w-4" />
-              분석 프로세스 상세 보기
-            </Button>
 
             {/* 기준 충족 여부 */}
             <div className="space-y-2">
@@ -2005,6 +1996,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                 ) : (
                   <>
+                    {/* 분석 프로세스 상세 보기 버튼 (관리자 재판독 결과에서만) */}
+                    <Button
+                      variant="outline"
+                      className="w-full gap-2"
+                      onClick={() => setShowAnalysisFlow(true)}
+                    >
+                      <PlayCircle className="h-4 w-4" />
+                      분석 프로세스 상세 보기
+                    </Button>
+                    
                     {/* 관리자 옵션 적용 내역 */}
                     {(adminAIOptions.accessRoadLost || adminAIOptions.waterChannelLost || adminAIOptions.farmMachineDifficulty) && (
                       <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-4">
