@@ -181,7 +181,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [adminAIOptions, setAdminAIOptions] = useState({
     accessRoadLost: false,      // 접면도로 상실
     waterChannelLost: false,    // 관개수로 상실
-    farmMachineDifficulty: false, // 농기계 진입 ���������란
+    farmMachineDifficulty: false, // 농기계 진입 �����������란
   });
   
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
@@ -396,7 +396,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   };
 
 // ===== [1��계] 일단지 판정 로직 =====
-  // 주소��서 �����/동 및 지번 정보 추출
+  // 주소���서 �����/동 및 지번 정보 추출
   const parseAddress = (address: string) => {
     const parts = address.split(" ");
     const lastPart = parts[parts.length - 1];
@@ -903,7 +903,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지 ������/제외 상태 (민원인 소유 확인용)
   const [excludedLands, setExcludedLands] = useState<Set<string>>(new Set());
   
-  // 필지 포함/제외 토글
+  // 필지 포함/제외 ��글
   const toggleLandInclusion = (landId: string) => {
     setExcludedLands(prev => {
       const newSet = new Set(prev);
@@ -1144,6 +1144,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto">
                     {allLands.map((land, idx) => {
                       const landResult = landAIResults[land.id];
+                      // 민원인이 실행한 AI 분석 결과 (application.aiResult 직접 사용)
+                      const aiResult = application.aiResult;
                       return (
                         <AccordionItem 
                           key={land.id}
@@ -1221,38 +1223,38 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             </div>
                             
-                            {/* 상세 분석 내용 - 민원인 화면과 동일 */}
+                            {/* 상세 분석 내용 - 민원인 화면과 동일 (application.aiResult 직접 사용) */}
                             <div className="space-y-4">
                               {/* 판단 요약 */}
-                              {landResult?.judgmentRationale && (
+                              {aiResult?.judgmentRationale && (
                                 <div className="flex items-start gap-2">
                                   <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                                   <div>
                                     <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
-                                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{landResult.judgmentRationale.summary}</p>
+                                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.summary}</p>
                                   </div>
                                 </div>
                               )}
 
                               {/* 법적 근거 */}
-                              {landResult?.judgmentRationale && (
+                              {aiResult?.judgmentRationale && (
                                 <div className="flex items-start gap-2">
                                   <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                                   <div>
                                     <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
-                                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{landResult.judgmentRationale.legalBasis}</p>
+                                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
                                   </div>
                                 </div>
                               )}
 
                               {/* 적용 기준 */}
-                              {landResult?.judgmentRationale && (
+                              {aiResult?.judgmentRationale && (
                                 <div className="flex items-start gap-2">
                                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                                   <div>
                                     <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
                                     <ul className="mt-1 space-y-1">
-                                      {landResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
+                                      {aiResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
                                         <li key={cIdx} className="flex items-start gap-1.5 text-sm text-muted-foreground">
                                           <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
                                           <span>{criteria}</span>
@@ -1264,13 +1266,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               )}
 
                               {/* 수동 확인 항목 */}
-                              {landResult?.judgmentRationale?.manualCheckItems && landResult.judgmentRationale.manualCheckItems.length > 0 && (
+                              {aiResult?.judgmentRationale?.manualCheckItems && aiResult.judgmentRationale.manualCheckItems.length > 0 && (
                                 <div className="flex items-start gap-2">
                                   <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                                   <div>
                                     <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
                                     <ul className="mt-1 space-y-1">
-                                      {landResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
+                                      {aiResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
                                         <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
                                           <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
                                           <span>{item}</span>
@@ -1282,24 +1284,24 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               )}
 
                               {/* 상세 분석 */}
-                              {landResult?.judgmentRationale?.detailedExplanation && (
+                              {aiResult?.judgmentRationale?.detailedExplanation && (
                                 <div className="flex items-start gap-2">
                                   <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                                   <div>
                                     <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
                                     <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
-                                      {landResult.judgmentRationale.detailedExplanation}
+                                      {aiResult.judgmentRationale.detailedExplanation}
                                     </pre>
                                   </div>
                                 </div>
                               )}
                               
                               {/* 판정 기준 충족 여부 */}
-                              {landResult?.criteriaChecks && landResult.criteriaChecks.length > 0 && (
+                              {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
                                 <div className="rounded-lg bg-white/60 p-3 border">
                                   <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
                                   <div className="space-y-2">
-                                    {landResult.criteriaChecks.map((check, cIdx) => (
+                                    {aiResult.criteriaChecks.map((check, cIdx) => (
                                       <div key={cIdx} className="flex items-center justify-between text-sm">
                                         <span className="text-muted-foreground">{check.criteriaName}</span>
                                         <Badge 
