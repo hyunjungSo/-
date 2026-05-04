@@ -181,7 +181,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [adminAIOptions, setAdminAIOptions] = useState({
     accessRoadLost: false,      // 접면도로 상실
     waterChannelLost: false,    // 관개수로 상실
-    farmMachineDifficulty: false, // 농기계 진입 �������란
+    farmMachineDifficulty: false, // 농기계 진입 ���������란
   });
   
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
@@ -396,7 +396,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   };
 
 // ===== [1��계] 일단지 판정 로직 =====
-  // 주소에서 ���/동 및 지번 정보 추출
+  // 주소에서 �����/동 및 지번 정보 추출
   const parseAddress = (address: string) => {
     const parts = address.split(" ");
     const lastPart = parts[parts.length - 1];
@@ -1360,108 +1360,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                   </div>
                   
-                  {/* 전체 필지 목록 (리스트 + 체크박스) */}
-                  <div className="rounded-lg border bg-white">
-                    {/* 헤더 */}
-                    <div className="flex items-center justify-between border-b bg-muted/30 px-3 py-2">
-                      <span className="text-sm font-medium">필지 목록</span>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 px-2 text-xs"
-                          onClick={() => setAdminCheckedLandIds(allLands.map(l => l.id))}
-                        >
-                          전체 선택
-                        </Button>
-                        {adminCheckedLandIds.length > 0 && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 px-2 text-xs text-muted-foreground"
-                            onClick={() => setAdminCheckedLandIds([])}
-                          >
-                            전체 해제
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                    
-                    {/* 필지 리스트 */}
-                    <ul className="divide-y max-h-[200px] overflow-y-auto">
-                      {allLands.map((land, idx) => {
-                        const isSelected = adminCheckedLandIds.includes(land.id);
-                        const landResult = landAIResults[land.id];
-                        
-                        return (
-                          <li 
-                            key={land.id} 
-                            className={`hover:bg-muted/30 transition-colors cursor-pointer ${isSelected ? "bg-primary/5" : ""}`}
-                            onClick={() => {
-                              if (isSelected) {
-                                setAdminCheckedLandIds(prev => prev.filter(id => id !== land.id));
-                              } else {
-                                setAdminCheckedLandIds(prev => [...prev, land.id]);
-                              }
-                              setFocusedLandId(land.id);
-                            }}
-                          >
-                            <div className="flex w-full items-center gap-2 px-3 py-2.5">
-                              {/* 체크박스 */}
-                              <Checkbox
-                                checked={isSelected}
-                                onCheckedChange={(checked) => {
-                                  if (checked) {
-                                    setAdminCheckedLandIds(prev => [...prev, land.id]);
-                                  } else {
-                                    setAdminCheckedLandIds(prev => prev.filter(id => id !== land.id));
-                                  }
-                                }}
-                                className="h-4 w-4 shrink-0"
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                              
-                              {/* 필지 정보 */}
-                              <div className="flex flex-1 items-center gap-2">
-                                <span 
-                                  className="flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white shrink-0" 
-                                  style={{
-                                    backgroundColor: 
-                                      landResult?.provisionalJudgment === "매수" ? "#16a34a" : 
-                                      landResult?.provisionalJudgment === "매수불가" ? "#dc2626" : 
-                                      "#6b7280"
-                                  }}
-                                >
-                                  {String.fromCharCode(65 + idx)}
-                                </span>
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-medium text-foreground truncate">{land.address.split(" ").slice(-2).join(" ")}</p>
-                                  <p className="text-xs text-muted-foreground">
-                                    {land.landType} | 잔여 {land.remainingArea.toLocaleString()}m²
-                                  </p>
-                                </div>
-                                {/* 판정 결과 배지 */}
-                                {landResult?.provisionalJudgment && (
-                                  <Badge 
-                                    variant="outline" 
-                                    className={`text-[10px] shrink-0 ${
-                                      landResult.provisionalJudgment === "매수" ? "border-green-500 text-green-700 bg-green-50" : 
-                                      landResult.provisionalJudgment === "매수불가" ? "border-red-500 text-red-700 bg-red-50" : 
-                                      "border-gray-400 text-gray-600"
-                                    }`}
-                                  >
-                                    {landResult.provisionalJudgment}
-                                  </Badge>
-                                )}
-                              </div>
-                            </div>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                  
-                  {/* 지적도 + 필지 리스트 컨테이너 */}
+                  {/* 지적도 */}
                   <div className="relative h-[550px] rounded-lg overflow-hidden border">
                     {/* 지적도 */}
                     <div className="absolute inset-0">
