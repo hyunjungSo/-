@@ -181,7 +181,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [adminAIOptions, setAdminAIOptions] = useState({
     accessRoadLost: false,      // 접면도로 상실
     waterChannelLost: false,    // 관개수로 상실
-    farmMachineDifficulty: false, // 농기계 진입 ���란
+    farmMachineDifficulty: false, // 농기계 진입 곤란
   });
   
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
@@ -1138,7 +1138,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 
                 {/* 우측: 분석결과 */}
                 <div className="space-y-4">
-                  <h4 className="font-medium">분석결과</h4>
+                  <h4 className="font-medium flex items-center gap-2">
+                    <FileText className="h-4 w-4" />
+                    분석결과
+                  </h4>
                   
                   {/* 일단지인 경우 일단지 판정 결과 표시 */}
                   {applicationType === "unified" && (
@@ -1241,7 +1244,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             </div>
                             
-                            {/* 상세 분석 내용 - 민원인 ��면과 동일 (application.aiResult 직접 사용) */}
+                            {/* 상세 분석 내용 - 민원인 화면과 동일 (application.aiResult 직접 사용) */}
                             <div className="space-y-4">
                               {/* 판단 요약 */}
                               {aiResult?.judgmentRationale && (
@@ -1356,13 +1359,18 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <div className="grid gap-6 lg:grid-cols-2">
                 {/* 좌측: 지적도 + 필지 리스트 */}
                 <div className="space-y-4">
-                  <h4 className="font-medium flex items-center gap-2">
-                    <MapIcon className="h-4 w-4" />
-                    지적도
-                  </h4>
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium flex items-center gap-2">
+                      <MapIcon className="h-4 w-4" />
+                      지적도
+                    </h4>
+                    <Badge variant="outline" className="font-normal">
+                      {allLands.length}필지
+                    </Badge>
+                  </div>
                   
                   {/* 지적도 */}
-                  <div className="relative h-[550px] rounded-lg overflow-hidden border">
+                  <div className="relative h-[450px] rounded-lg overflow-hidden border">
                     {/* 지적도 */}
                     <div className="absolute inset-0">
                     <LeafletMap
@@ -1466,7 +1474,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div className="rounded-lg border bg-white">
                     {/* 헤더 */}
                     <div className="flex items-center justify-between border-b bg-muted/30 px-3 py-2">
-                      <span className="text-sm font-medium">필지 목록</span>
+                      <span className="text-sm font-medium flex items-center gap-1.5">
+                        <ListChecks className="h-3.5 w-3.5" />
+                        필지 목록
+                      </span>
                       <div className="flex items-center gap-2">
                         <Button
                           variant="ghost"
@@ -1637,7 +1648,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 
                 {/* 우측: 분석결과 */}
                 <div className="space-y-4">
-                  <h4 className="font-medium">분석결과</h4>
+                  <h4 className="font-medium flex items-center gap-2">
+                    <FileText className="h-4 w-4" />
+                    분석결과
+                  </h4>
                   
                   {Object.keys(adminLandAIResults).length === 0 ? (
                     <div className="rounded-xl border-2 border-dashed border-muted p-8 text-center">
