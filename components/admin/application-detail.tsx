@@ -1066,7 +1066,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardContent>
           {isMultipleLands ? (
             <div className="space-y-3">
-              {/* 필지가 5개 이상이면 셀렉트 박스 + 요약, 4개 이��면 카드 그리드 */}
+              {/* 필지가 5개 이상이면 셀렉트 박스 + 요약, 4개 이��면 ���드 그리드 */}
               {allLands.length >= 5 ? (
                 <div className="space-y-3">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
@@ -1400,7 +1400,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </Badge>
                   </div>
                   
-                  {/* 지�������������� */}
+                  {/* ����������������� */}
                   <div className="h-[300px] rounded-lg overflow-hidden border">
                   <LeafletMap
                     parcels={(() => {
@@ -1716,8 +1716,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               )}
                 </div>
                 
-                {/* 우측: 분석결과 */}
+{/* 우측: 분석결과 */}
                 <div className="space-y-4">
+                  <h4 className="font-medium">분석결과</h4>
+                  
                   {/* 일단지인 경우 상단에 일단지 판정 결과 표시 */}
                   {applicationType === "unified" && Object.keys(unifiedGroups).length > 0 && (
                     <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
