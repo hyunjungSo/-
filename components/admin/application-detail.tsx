@@ -1404,14 +1404,109 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {/* 필지 선택 체크박스 (복수 필지인 경우) */}
+            {/* 필지 선택 목록 (민원인 화면과 동일한 형태) */}
             {isMultipleLands && (
-              <div className="mb-4 rounded-lg border bg-muted/30 p-3">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium">판독 대상 필지 선택</span>
+              <div className="mb-4 rounded-lg border overflow-hidden">
+                {/* 헤더 */}
+                <div className="flex items-center justify-between border-b bg-muted/50 px-3 py-2">
+                  <span className="text-sm font-medium">판독 대상 필지</span>
+                  <div className="flex items-center gap-2 text-xs">
+                    <span className="text-muted-foreground">
+                      선택: {checkedLandIds.length}필지
+                    </span>
+                    <span className="text-primary font-medium">
+                      총 {allLands.length}필지
+                    </span>
+                  </div>
+                </div>
+                
+                {/* 필지 목록 */}
+                <ul className="max-h-[280px] overflow-y-auto divide-y">
+                  {allLands.map((land, idx) => {
+                    const isChecked = checkedLandIds.includes(land.id);
+                    const landResult = landAIResults[land.id];
+                    const adminResult = adminLandAIResults[land.id];
+                    const hasResult = landResult || adminResult;
+                    const judgment = adminResult?.provisionalJudgment || landResult?.provisionalJudgment;
+                    
+                    return (
+                      <li key={land.id}>
+                        <div 
+                          className={`flex w-full items-center gap-3 px-3 py-3 transition-all duration-150 cursor-pointer ${
+                            isChecked 
+                              ? "border-l-4 border-l-primary bg-primary/5" 
+                              : "hover:bg-muted/50"
+                          }`}
+                          onClick={() => {
+                            if (isChecked) {
+                              setCheckedLandIds(prev => prev.filter(id => id !== land.id));
+                            } else {
+                              setCheckedLandIds(prev => [...prev, land.id]);
+                            }
+                            setSelectedLandIndex(idx);
+                          }}
+                        >
+                          {/* 체크박스 */}
+                          <Checkbox
+                            checked={isChecked}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                setCheckedLandIds(prev => [...prev, land.id]);
+                              } else {
+                                setCheckedLandIds(prev => prev.filter(id => id !== land.id));
+                              }
+                            }}
+                            className="h-5 w-5 shrink-0"
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                          
+                          {/* 필지 라벨 */}
+                          <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold shrink-0 ${
+                            isChecked ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                          }`}>
+                            {String.fromCharCode(65 + idx)}
+                          </span>
+                          
+                          {/* 필지 정보 */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <span className={`text-sm truncate ${!isChecked ? "text-muted-foreground" : ""}`}>
+                                {land.address}
+                              </span>
+                              {/* AI 판독 결과 뱃지 */}
+                              {hasResult && (
+                                <Badge 
+                                  variant={judgment === "매수" ? "default" : "secondary"}
+                                  className={`text-[10px] px-1.5 py-0 shrink-0 ${
+                                    judgment === "매수" 
+                                      ? "bg-green-100 text-green-700 border-green-200" 
+                                      : judgment === "매수불가"
+                                        ? "bg-red-100 text-red-700 border-red-200"
+                                        : "bg-amber-100 text-amber-700 border-amber-200"
+                                  }`}
+                                >
+                                  {adminResult ? "(재)" : ""}
+                                  {judgment === "매수" ? "판독완료" : judgment === "매수불가" ? "미충족" : "심의이관"}
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
+                              <span>잔여 {land.remainingArea.toLocaleString()}m²</span>
+                              <span>|</span>
+                              <span>{land.landType}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+                
+                {/* 하단 전체 선택/해제 */}
+                <div className="flex items-center justify-between border-t bg-muted/30 px-3 py-2">
                   <div className="flex items-center gap-2">
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
                       onClick={() => setCheckedLandIds(allLands.map(l => l.id))}
                       className="h-7 text-xs"
@@ -1419,7 +1514,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       전체 선택
                     </Button>
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
                       onClick={() => setCheckedLandIds([])}
                       className="h-7 text-xs"
@@ -1427,68 +1522,17 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       전체 해제
                     </Button>
                   </div>
-                </div>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                  {allLands.map((land, idx) => {
-                    const isChecked = checkedLandIds.includes(land.id);
-                    const landResult = landAIResults[land.id];
-                    const adminResult = adminLandAIResults[land.id];
-                    
-                    return (
-                      <div 
-                        key={land.id}
-                        className={`flex items-center gap-2 rounded-md border p-2 cursor-pointer transition-colors ${
-                          isChecked 
-                            ? "border-primary bg-primary/5" 
-                            : "border-border hover:bg-muted/50"
-                        }`}
-                        onClick={() => {
-                          if (isChecked) {
-                            setCheckedLandIds(prev => prev.filter(id => id !== land.id));
-                          } else {
-                            setCheckedLandIds(prev => [...prev, land.id]);
-                          }
-                        }}
-                      >
-                        <Checkbox
-                          checked={isChecked}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setCheckedLandIds(prev => [...prev, land.id]);
-                            } else {
-                              setCheckedLandIds(prev => prev.filter(id => id !== land.id));
-                            }
-                          }}
-                          className="pointer-events-none"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1">
-                            <span className={`flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold ${
-                              isChecked ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                            }`}>
-                              {String.fromCharCode(65 + idx)}
-                            </span>
-                            <span className="text-xs truncate">{land.landType}</span>
-                          </div>
-                          {/* AI 판독 결과 표시 */}
-                          {(adminResult || landResult) && (
-                            <div className="mt-1">
-                              <Badge 
-                                variant="outline" 
-                                className={`text-[10px] ${
-                                  (adminResult?.provisionalJudgment || landResult?.provisionalJudgment) === "매수"
-                                    ? "border-green-300 text-green-700"
-                                    : "border-red-300 text-red-700"
-                                }`}
-                              >
-                                {adminResult ? "(재)" : ""}{adminResult?.provisionalJudgment || landResult?.provisionalJudgment}
-                              </Badge>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
+                  {Object.keys(adminLandAIResults).length > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleResetAdminAIResults}
+                      className="h-7 text-xs text-muted-foreground"
+                    >
+                      <RotateCcw className="h-3 w-3 mr-1" />
+                      재판독 초기화
+                    </Button>
+                  )}
                 </div>
               </div>
             )}
