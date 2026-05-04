@@ -204,25 +204,43 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     judgment: string;
   }>>({});
   
-  // 체크박스로 선택된 필지 ID 목록 (초기값: 미체크)
-  const [checkedLandIds, setCheckedLandIds] = useState<string[]>([]);
+  // 민원인이 신청한 필지 ID 목록 (application에서 가져옴, 읽기 전용)
+  const citizenSelectedLandIds = allLands.map(l => l.id);
   
-  // 체크박스 선택 변경 핸들러
-  const handleCheckLand = (landId: string, checked: boolean) => {
+  // 담당자가 선택한 필지 ID 목록 (수정 가능, 초기값: 민원인 신청 필지와 동일)
+  const [adminCheckedLandIds, setAdminCheckedLandIds] = useState<string[]>(() => allLands.map(l => l.id));
+  
+  // 현재 탭에 따른 선택된 필지 ID (지도 표시용)
+  const currentSelectedLandIds = aiResultViewMode === "citizen" ? citizenSelectedLandIds : adminCheckedLandIds;
+  
+  // 담당자 탭 체크박스 선택 변경 핸들러
+  const handleAdminCheckLand = (landId: string, checked: boolean) => {
     if (checked) {
-      setCheckedLandIds(prev => [...prev, landId]);
+      setAdminCheckedLandIds(prev => [...prev, landId]);
     } else {
-      setCheckedLandIds(prev => prev.filter(id => id !== landId));
+      setAdminCheckedLandIds(prev => prev.filter(id => id !== landId));
     }
   };
   
-  // 전체 선택 핸들러
-  const handleCheckAll = (checked: boolean) => {
+  // 담당자 탭 전체 선택 핸들러
+  const handleAdminCheckAll = (checked: boolean) => {
     if (checked) {
-      setCheckedLandIds(allLands.map(l => l.id));
+      setAdminCheckedLandIds(allLands.map(l => l.id));
     } else {
-      setCheckedLandIds([]);
+      setAdminCheckedLandIds([]);
     }
+  };
+  
+  // 기존 호환용 (일부 로직에서 사용)
+  const checkedLandIds = aiResultViewMode === "admin" ? adminCheckedLandIds : citizenSelectedLandIds;
+  
+  // 담당자 탭 필지 토글 핸들러
+  const handleLandCheckToggle = (landId: string) => {
+    setAdminCheckedLandIds(prev => 
+      prev.includes(landId) 
+        ? prev.filter(id => id !== landId)
+        : [...prev, landId]
+    );
   };
   
   // 필지별 AI 판독 결과 상태 (landId -> AIResult)
@@ -653,24 +671,24 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     };
   };
 
-  // AI 판독 실행 핸들러 (2단계 프로세스) - 체크박스 선택된 필지만 분석
+  // AI 판독 실행 핸들러 (2단계 프로세스) - 담당자가 선택한 필지만 분석
   const handleRunAIAnalysis = () => {
     // 선택된 필지가 없으면 알림
-    if (checkedLandIds.length === 0) {
+    if (adminCheckedLandIds.length === 0) {
       alert("AI 판독할 필지를 선택해주세요.");
       return;
     }
     
     setIsAIAnalyzing(true);
-    setLandAIResults({});
-    setUnifiedGroups({});
+    setAdminLandAIResults({});
+    setAdminUnifiedGroups({});
     
     setTimeout(() => {
-      const newResults: typeof landAIResults = {};
-      const newGroups: typeof unifiedGroups = {};
+      const newResults: typeof adminLandAIResults = {};
+      const newGroups: typeof adminUnifiedGroups = {};
       
-      // 선택된 필지들만 분석 대상으로 설정
-      const selectedLands = allLands.filter(l => checkedLandIds.includes(l.id));
+      // 담당자가 선택한 필지들만 분석 대상으로 설정
+      const selectedLands = allLands.filter(l => adminCheckedLandIds.includes(l.id));
       
       // ===== [1단계] 일단지 판정 =====
       // ���유자 동일, 지반 연속, 용도 일체성 확인하여 일단지 그룹 형성
@@ -1432,83 +1450,48 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     )}
                   </div>
               
-                  {/* 필지 선택 목록 */}
+                  {/* 민원인 신청 필지 목록 (읽기 전용) */}
               {isMultipleLands && (
                 <div className="mb-4 rounded-lg border overflow-hidden">
                 {/* 헤더 */}
                 <div className="flex items-center justify-between border-b bg-muted/50 px-3 py-2">
-                  <span className="text-sm font-medium">판독 대상 필지</span>
-                  <div className="flex items-center gap-2 text-xs">
-                    <span className="text-muted-foreground">
-                      선택: {checkedLandIds.length}필지
-                    </span>
-                    <span className="text-primary font-medium">
-                      총 {allLands.length}필지
-                    </span>
-                  </div>
+                  <span className="text-sm font-medium">민원인 신청 필지</span>
+                  <span className="text-primary font-medium text-xs">
+                    {citizenSelectedLandIds.length}필지
+                  </span>
                 </div>
                 
-                {/* 필지 목록 */}
+                {/* 필지 목록 (읽기 전용) */}
                 <ul className="max-h-[280px] overflow-y-auto divide-y">
                   {allLands.map((land, idx) => {
-                    const isChecked = checkedLandIds.includes(land.id);
                     const landResult = landAIResults[land.id];
-                    const adminResult = adminLandAIResults[land.id];
-                    const hasResult = landResult || adminResult;
-                    const judgment = adminResult?.provisionalJudgment || landResult?.provisionalJudgment;
-                    
+                    const judgment = landResult?.provisionalJudgment;
                     const isHovered = hoveredLandId === land.id;
                     
                     return (
                       <li key={land.id}>
                         <div 
-                          className={`flex w-full items-center gap-3 px-3 py-3 transition-all duration-150 cursor-pointer ${
+                          className={`flex w-full items-center gap-3 px-3 py-3 transition-all duration-150 ${
                             isHovered
                               ? "border-l-4 border-l-blue-500 bg-blue-50"
-                              : isChecked 
-                                ? "border-l-4 border-l-primary bg-primary/5" 
-                                : "hover:bg-muted/50"
+                              : "border-l-4 border-l-primary bg-primary/5"
                           }`}
-                          onClick={() => {
-                            if (isChecked) {
-                              setCheckedLandIds(prev => prev.filter(id => id !== land.id));
-                            } else {
-                              setCheckedLandIds(prev => [...prev, land.id]);
-                            }
-                            setSelectedLandIndex(idx);
-                          }}
                           onMouseEnter={() => setHoveredLandId(land.id)}
                           onMouseLeave={() => setHoveredLandId(null)}
                         >
-                          {/* 체크박스 */}
-                          <Checkbox
-                            checked={isChecked}
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                setCheckedLandIds(prev => [...prev, land.id]);
-                              } else {
-                                setCheckedLandIds(prev => prev.filter(id => id !== land.id));
-                              }
-                            }}
-                            className="h-5 w-5 shrink-0"
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                          
                           {/* 필지 라벨 */}
-                          <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold shrink-0 ${
-                            isChecked ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                          }`}>
+                          <span className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold shrink-0 bg-primary text-primary-foreground">
                             {String.fromCharCode(65 + idx)}
                           </span>
                           
                           {/* 필지 정보 */}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <span className={`text-sm truncate ${!isChecked ? "text-muted-foreground" : ""}`}>
+                              <span className="text-sm truncate">
                                 {land.address}
                               </span>
                               {/* AI 판독 결과 뱃지 */}
-                              {hasResult && (
+                              {judgment && (
                                 <Badge 
                                   variant={judgment === "매수" ? "default" : "secondary"}
                                   className={`text-[10px] px-1.5 py-0 shrink-0 ${
@@ -1519,8 +1502,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         : "bg-amber-100 text-amber-700 border-amber-200"
                                   }`}
                                 >
-                                  {adminResult ? "(재)" : ""}
-                                  {judgment === "매수" ? "판독완료" : judgment === "매수불가" ? "미충족" : "심의이관"}
+                                  {judgment === "매수" ? "매수" : judgment === "매수불가" ? "매수불가" : "심의이관"}
                                 </Badge>
                               )}
                             </div>
@@ -1535,39 +1517,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     );
                   })}
                 </ul>
-                
-                {/* 하단 전체 선택/해제 */}
-                <div className="flex items-center justify-between border-t bg-muted/30 px-3 py-2">
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCheckedLandIds(allLands.map(l => l.id))}
-                      className="h-7 text-xs"
-                    >
-                      전체 선택
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCheckedLandIds([])}
-                      className="h-7 text-xs"
-                    >
-                      전체 해제
-                    </Button>
-                  </div>
-                  {Object.keys(adminLandAIResults).length > 0 && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleResetAdminAIResults}
-                      className="h-7 text-xs text-muted-foreground"
-                    >
-                      <RotateCcw className="h-3 w-3 mr-1" />
-                      재판독 초기화
-                    </Button>
-                  )}
-                </div>
               </div>
             )}
             
@@ -1590,7 +1539,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           id: land.id,
                           address: land.address,
                           isIncluded: true,
-                          isOwned: checkedLandIds.includes(land.id),
+                          isOwned: currentSelectedLandIds.includes(land.id),
                           coordinates: [
                             { lat: baseLat, lng: baseLng },
                             { lat: baseLat, lng: baseLng + offset * 1.2 },
@@ -1654,17 +1603,17 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       
                       return [...applicationParcels, ...adjacentParcels];
                     })()}
-                    selectedParcelIds={new Set(checkedLandIds)}
+                    selectedParcelIds={new Set(currentSelectedLandIds)}
                     onParcelClick={(parcelId) => {
-                      // 신청 필지와 인접 필지 모두 선택/해제 가능
-                      if (checkedLandIds.includes(parcelId)) {
-                        setCheckedLandIds(prev => prev.filter(id => id !== parcelId));
-                        // 인접 필지 해제 시 정보 패널도 닫기
-                        if (parcelId.startsWith("adjacent-")) {
-                          setSelectedAdjacentParcel(null);
-                        }
-                      } else {
-                        setCheckedLandIds(prev => [...prev, parcelId]);
+                      // 담당자 탭에서만 필지 선택/해제 가능
+                      if (aiResultViewMode === "admin") {
+                        if (adminCheckedLandIds.includes(parcelId)) {
+                          setAdminCheckedLandIds(prev => prev.filter(id => id !== parcelId));
+                          if (parcelId.startsWith("adjacent-")) {
+                            setSelectedAdjacentParcel(null);
+                          }
+                        } else {
+                          setAdminCheckedLandIds(prev => [...prev, parcelId]);
                         // 인접 필지 선택 시 정보 표시
                         if (parcelId.startsWith("adjacent-")) {
                           const adjacentData: Record<string, { address: string; landCategory: string; landType: string; area: number; owner: string }> = {
@@ -1678,11 +1627,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           }
                         }
                       }
+                      }
                       // 신청 필지인 경우 선택된 인덱스 업데이트
                       const landIdx = allLands.findIndex(l => l.id === parcelId);
                       if (landIdx !== -1) {
                         setSelectedLandIndex(landIdx);
-                        setSelectedAdjacentParcel(null); // 신청필지 선택 시 인접필지 정보 닫기
+                        setSelectedAdjacentParcel(null);
                       }
                     }}
                     hoveredParcelId={hoveredLandId}
@@ -2121,7 +2071,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     
                     <Button
                       onClick={handleRunAIAnalysis}
-                      disabled={isAIAnalyzing || checkedLandIds.length === 0}
+                      disabled={isAIAnalyzing || adminCheckedLandIds.length === 0}
                       className="w-full gap-2 bg-blue-600 hover:bg-blue-700"
                     >
                       {isAIAnalyzing ? (
@@ -2132,7 +2082,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       ) : (
                         <>
                           <Bot className="h-4 w-4" />
-                          AI 분석 실행 ({checkedLandIds.length}필지)
+                          AI 분석 실행 ({adminCheckedLandIds.length}필지)
                         </>
                       )}
                     </Button>
