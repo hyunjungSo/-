@@ -757,7 +757,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           
           // 일단지 판정 사유 기록
           const unificationReasons = [
-            "소유자 동���",
+            "소유자 동�����",
             `지반 연속 (${parseAddress(primaryLand.address).district})`,
             `용도 일체 (${primaryLand.landType})`
           ];
@@ -1342,8 +1342,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </div>
                               )}
 
-                              {/* 상세 분석 */}
-                              {aiResult?.judgmentRationale?.detailedExplanation && (
+                              {/* 상세 분석 - 일단지가 아닌 경우에만 표시 (일단지는 상단에 통합 표시) */}
+                              {applicationType !== "unified" && aiResult?.judgmentRationale?.detailedExplanation && (
                                 <div className="flex items-start gap-2">
                                   <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                                   <div>
@@ -2083,7 +2083,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               />
             </div>
             
-            {/* AI 결과와 다른 판정 시 경고 */}
+            {/* AI 결과와 다�� 판정 시 경고 */}
             {reviewData.finalJudgment && Object.keys(adminLandAIResults).length > 0 && (() => {
               const results = Object.values(adminLandAIResults);
               const aiJudgment = results.every(r => r.provisionalJudgment === "매수") ? "매수" : 
