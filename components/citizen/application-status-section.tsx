@@ -231,7 +231,7 @@ export function ApplicationStatusSection() {
           {myApplications.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center p-8 text-center">
               <FileText className="h-10 w-10 text-muted-foreground" />
-              <p className="mt-4 text-sm font-medium text-foreground">신청 내���이 없습니다</p>
+              <p className="mt-4 text-sm font-medium text-foreground">신청 내역이 없습니다</p>
               <p className="mt-1 text-xs text-muted-foreground">
                 신규 신청 탭에서 잔여지 매수를 신청해 주세요.
               </p>

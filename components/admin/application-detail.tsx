@@ -181,13 +181,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [adminAIOptions, setAdminAIOptions] = useState({
     accessRoadLost: false,      // 접면도로 상실
     waterChannelLost: false,    // 관개수로 상실
-    farmMachineDifficulty: false, // 농기계 진입 �����������������란
+    farmMachineDifficulty: false, // 농기계 진입 곤란
   });
   
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
   const [aiResultViewMode, setAiResultViewMode] = useState<"citizen" | "admin">("citizen");
   
-  // 관리자 재판독 결과 (별도 ��장)
+  // 관리자 재판독 결과 (별도 저장)
   const [adminLandAIResults, setAdminLandAIResults] = useState<Record<string, {
     provisionalJudgment: string;
     landTypePath: string;
@@ -383,7 +383,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     return {};
   });
   
-  // 현재 선택된 필지의 AI ���과
+  // 현재 선택된 필지의 AI 결과
   const currentAIResult = landAIResults[allLands[selectedLandIndex]?.id] || null;
   
   // 필지가 속한 일단지 그룹 찾기
@@ -395,8 +395,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     return null;
   };
 
-// ===== [1��계] 일단지 판정 로직 =====
-  // ���소���서 �����/동 및 지번 정보 추출
+// ===== [1단계] 일단지 판정 로직 =====
+  // 주소에서 읍면/동 및 지번 정보 추출
   const parseAddress = (address: string) => {
     const parts = address.split(" ");
     const lastPart = parts[parts.length - 1];
@@ -439,7 +439,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     
     // 유사 용도 그룹 (택지류, 농지류 등)
     const residentialTypes = ["대지", "주택용지"];
-    const agriculturalTypes = ["���지", "전", "답", "과수원"];
+    const agriculturalTypes = ["농지", "전", "답", "과수원"];
     const forestTypes = ["산지", "임야"];
     
     const getGroup = (type: string) => {
@@ -518,7 +518,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경로: 기본 330㎡, 잔여비율 25% ���하 시 495㎡ (완화)
+      // 농지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -616,7 +616,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "농기계 진입/회전",
         met: farmDifficulty,
-        description: farmDifficulty ? "농기계 진입/회�� 곤���" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : "") : "농기계 사용 가능"
+        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : "") : "농기계 사용 가능"
       });
       
       criteriaChecks.push({
@@ -644,7 +644,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "접면도로 상실",
         met: roadLost,
-        description: roadLost ? "도로 접하지 않아 접근 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유����"
+        description: roadLost ? "도로 접하지 않아 접근 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유지"
       });
       
       if (areaCheckMet || roadLost) {
@@ -679,7 +679,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     // 소규모 토지 추가 검토
     if (isSmall) {
       criteriaChecks.push({
-        name: "���규모 토지",
+        name: "소규모 토지",
         met: true,
         description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규모 해당)`
       });
@@ -720,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       const selectedLands = allLands.filter(l => adminCheckedLandIds.includes(l.id));
       
       // ===== [1단계] 일단지 판정 =====
-      // ���유자 동일, 지반 연속, 용도 일체성 확인하여 일단지 그룹 형성
+      // 소유자 동일, 지반 연속, 용도 일체성 확인하여 일단지 그룹 형성
       const unifiedLandGroups = selectedLands.length >= 2 ? findUnifiedGroups(selectedLands) : selectedLands.length === 1 ? [[selectedLands[0].id]] : [];
       let groupIndex = 0;
       
@@ -772,14 +772,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             // 토지유형별 경로 (합산 편입전 330㎡ 초과)
             const landType = primaryLand.landType;
             
-            // 합산 면��� 기준 충�� 여부
+            // 합산 면적 기준 충족 여부
             const effectiveLimit = criteria.relaxed * groupLandIds.length;
             const meetsAreaCriteria = combinedArea <= effectiveLimit;
             if (meetsAreaCriteria) {
-              analysisReasons.push(`합��� 면����� ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
+              analysisReasons.push(`합산 면적 ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
             }
             
-            // 토지유형별 추가 조건 검토 + 관리자 ���장 ���황 옵션 ����
+            // 토지유형별 추가 조건 검토 + 관리자 현장 상황 옵션 반영
             if (landType === "대지") {
               // 택지 경로
               const hasRoadLoss = adminAIOptions.accessRoadLost || groupLands.some(l => l.remainingRatio < 30);
@@ -800,7 +800,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               const hasFarmDifficulty = adminAIOptions.farmMachineDifficulty || groupLands.some(l => l.remainingArea < 200);
               const hasShapeChange = groupLands.some(l => checkShapeCriteria(l).met);
               
-              if (hasRoadLoss) analysisReasons.push("접면도��� 상��" + (adminAIOptions.accessRoadLost ? " (관리자 확인)" : ""));
+              if (hasRoadLoss) analysisReasons.push("접면도로 상실" + (adminAIOptions.accessRoadLost ? " (관리자 확인)" : ""));
               if (hasWaterLoss) analysisReasons.push("관개수로 상실" + (adminAIOptions.waterChannelLost ? " (관리자 확인)" : ""));
               if (hasFarmDifficulty) analysisReasons.push("농기계 진입/회전 곤란" + (adminAIOptions.farmMachineDifficulty ? " (관리자 확인)" : ""));
               if (hasShapeChange) analysisReasons.push("형상 부정형 변경");
@@ -900,10 +900,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     setAiResultViewMode("citizen");
   };
   
-  // 필지 ������/제외 상태 (민원인 소유 확인용)
+  // 필지 포함/제외 상태 (민원인 소유 확인용)
   const [excludedLands, setExcludedLands] = useState<Set<string>>(new Set());
   
-  // 필지 포���/제외 ��글
+  // 필지 포함/제외 토글
   const toggleLandInclusion = (landId: string) => {
     setExcludedLands(prev => {
       const newSet = new Set(prev);
@@ -1954,7 +1954,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 <CardContent className="space-y-6">
           {/* 진행상황 선택 */}
           <div className="space-y-2">
-            <Label>진행상황 설���</Label>
+            <Label>진행상황 설명</Label>
             <div className="flex flex-wrap gap-2">
               {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
                 const config = adminStatusConfig[status];
@@ -1981,7 +1981,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </p>
           </div>
 
-          {/* 담당자 최종 컨펌 ���션 */}
+          {/* 담당자 최종 컨펌 섹션 */}
           <div className="rounded-xl border-2 border-amber-200 bg-gradient-to-b from-amber-50/80 to-white p-5 space-y-4">
             <div className="flex items-center gap-2 mb-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100">
@@ -1989,7 +1989,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </div>
               <div>
                 <h4 className="font-semibold text-amber-800">담당자 최종 컨펌</h4>
-                <p className="text-xs text-amber-600">AI 제안을 확인하고 최종 결정을 내���주세요</p>
+                <p className="text-xs text-amber-600">AI 제안을 확인하고 최종 결정을 내려주세요</p>
               </div>
             </div>
             
@@ -2016,7 +2016,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     })()}
                   </Badge>
                   <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">담당자 최종 ���정:</span>
+                  <span className="text-sm text-muted-foreground">담당자 최종 결정:</span>
                 </div>
               </div>
             )}
@@ -2027,7 +2027,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 최종 판정
                 {reviewData.adminStatus !== "심사완료" && (
                   <span className="ml-2 text-sm font-normal text-muted-foreground">
-                    (진행상황을 &apos;심사완���&apos;로 ��정하면 ���성���됩니다)
+                    (진행상황을 &apos;심사완료&apos;로 설정하면 완성됩니다)
                   </span>
                 )}
               </Label>

@@ -888,7 +888,7 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerContact: "010-1234-5678",
     hasIncludedLand: true,
     businessUnit: "양평이천",
-    projectName: "용인-���성 고속도로 확장",
+    projectName: "용인-안성 고속도로 확장",
     coordinates: [
       { lat: 37.2355, lng: 127.2860 },
       { lat: 37.2360, lng: 127.2870 },
@@ -1026,7 +1026,7 @@ export const dummyLandInfoList: LandInfo[] = [
   // 4필지 중 2필지만 일단지 판정, 나머지 2필지는 개별 판정
   {
     id: "land-mixed-001",
-    address: "���기도 평택시 포승읍 내기리 200-1",
+    address: "경기도 평택시 포승읍 내기리 200-1",
     originalArea: 500,
     includedArea: 350,
     remainingArea: 150,
@@ -1486,7 +1486,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "도로 편입으로 인접한 2개 필지가 모두 불규칙한 형태로 남아 건축이 불가능합니다. ���단지로 판정하여 병합 처리를 요청드립니다.",
+    reason: "도로 편입으로 인접한 2개 필지가 모두 불규칙한 형태로 남아 건축이 불가능합니다. 일단지로 판정하여 병합 처리를 요청드립니다.",
     // 토지별 민원인 입력 데이터
     landDataList: [
       {
@@ -1676,7 +1676,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "동탄2 도시개발사업으로 인해 소유한 8개 필지가 모두 도로에 편입���어 잔여지가 불규칙한 형태로 남았습니다. 각 필지별로 건축 및 농업 활동이 불가능하여 일괄 매수를 신청합니다.",
+    reason: "동탄2 도시개발사업으로 인해 소유한 8개 필지가 모두 도로에 편입되어 잔여지가 불규칙한 형태로 남았습니다. 각 필지별로 건축 및 농업 활동이 불가능하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "대" as const,
@@ -2129,7 +2129,7 @@ export const dummyApplications: Application[] = [
           "맹지 판정: 양 필지 모두 접면도로 상실로 건축허가 불가",
           "※ 개별 기준으로는 매수 불가이나, 일단지 합산 시 맹지 상태로 매수 인정",
         ],
-        detailedExplanation: "일단지 인정 2필지 대지\n\n[필지 1] 123-1: 180㎡ → 80㎡ (삼각형) - 면적 기준 미달\n[필지 2] 123-2: 150㎡ → 60㎡ (자루형) - 면적 기준 미���\n\n합산 편입전: 330㎡ / 합산 잔여: 140㎡\n\n※ 개별 필지는 면적 기준(90㎡)을 초과하여 개별로는 매수 대상이 아니나, 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 일단지로 합산 시 건축이 불가능한 맹지 상태이므로 매수가 인정됩니다.",
+        detailedExplanation: "일단지 인정 2필지 대지\n\n[필지 1] 123-1: 180㎡ → 80㎡ (삼각형) - 면적 기준 미달\n[필지 2] 123-2: 150㎡ → 60㎡ (자루형) - 면적 기준 미달\n\n합산 편입전: 330㎡ / 합산 잔여: 140㎡\n\n※ 개별 필지는 면적 기준(90㎡)을 초과하여 개별로는 매수 대상이 아니나, 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 일단지로 합산 시 건축이 불가능한 맹지 상태이므로 매수가 인정됩니다.",
         manualCheckItems: [],
       },
       unifiedParcelAnalysis: {
@@ -2143,12 +2143,12 @@ export const dummyApplications: Application[] = [
           sameUsage: true,
         },
         combinedArea: 140,
-        explanation: "동일 소유자(김인정)의 연속된 2필지 대지로, 일체적으로 주거용으로 사용해 왔습니���. 개별 필지는 면적 기준을 초과하나, 고속도로 편입으로 양 필지 모두 맹지가 되어 일단지 합산 시 매수가 인정됩니다.",
+        explanation: "동일 소유자(김인정)의 연속된 2필지 대지로, 일체적으로 주거용으로 사용해 왔습니다. 개별 필지는 면적 기준을 초과하나, 고속도로 편입으로 양 필지 모두 맹지가 되어 일단지 합산 시 매수가 인정됩니다.",
       },
     },
     finalJudgment: "매수",
     reviewerComment: "개별 면적 기준 미달이나 일단지 합산 시 맹지 판정으로 매수 인정. 현장 확인 결과 양 필지 모두 접면도로 상실 확인.",
-    finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2필지 대지입니다. 각 필지의 잔여면적(80㎡, 60㎡)은 개별적으로는 대지 면적 기준(90㎡)을 초과하여 매수 대상이 아니나, 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 일���지로 합산하여 검토한 결과, 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
+    finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2필지 대지입니다. 각 필지의 잔여면적(80㎡, 60㎡)은 개별적으로는 대지 면적 기준(90㎡)을 초과하여 매수 대상이 아니나, 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 일단지로 합산하여 검토한 결과, 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
     adminName: "김철수",
     statusUpdatedAt: "2026-04-29",
   },
@@ -2225,7 +2225,7 @@ export const dummyApplications: Application[] = [
     aiResult: {
       landTypePath: "산지",
       criteriaChecks: [
-        { criteriaName: "면적 기준 (개별)", criteriaDescription: "개별 ���지 면적 기준 미달 (각 500~1500㎡ > 990㎡ 기준)", isMet: false, autoDetected: true },
+        { criteriaName: "면적 기준 (개별)", criteriaDescription: "개별 필지 면적 기준 미달 (각 500~1500㎡ > 990㎡ 기준)", isMet: false, autoDetected: true },
         { criteriaName: "일단지 합산 면적", criteriaDescription: "합산 잔여면적 4,100㎡로 조림지 분단", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },
@@ -2270,7 +2270,7 @@ export const dummyApplications: Application[] = [
     statusUpdatedAt: "2026-04-29",
   },
   // ===== 혼합 케이스: 일부 일단지 해당 + 일부 미해당 =====
-  // 정혼합 - 4필��� 중 2필지만 일단지 판정 (내기리 200-1, 200-2), 나머지 2필지는 미해당 (만호리 55-1, 55-2)
+  // 정혼합 - 4필지 중 2필지만 일단지 판정 (내기리 200-1, 200-2), 나머지 2필지는 미해당 (만호리 55-1, 55-2)
   {
     id: "app-mixed-001",
     applicationNumber: "2026-0429-001",
@@ -2351,12 +2351,12 @@ export const dummyApplications: Application[] = [
       farmMachineDifficulty: true,
       judgmentRationale: {
         summary: "4필지 혼합 - 2필지(내기리) 일단지 「매수」, 2필지(만호리) 「미해당」 판정",
-        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
+        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 ��한 법률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
           "일단지 해당 (내기리 200-1, 200-2): 연접 필지, 동일 용도, 일체 경작",
           "일단지 미해당 (만호리 55-1, 55-2): 내기리와 비연접, 별도 위치",
           "내기리 필지: 면적 기준 충족, 형상 변경, 농기계 진입 곤란 → 매수",
-          "만호리 필지: 면적 기준 미충족, 형상 양호, 종래 사용 가능 → 미해당",
+          "만호리 필지: ��적 기준 미충족, 형상 양호, 종래 사용 가능 → 미해당",
         ],
         detailedExplanation: "4필지 혼합 판정\n\n[일단지 A - 매수 판정]\n• 내기리 200-1: 500㎡ → 150㎡ (삼각형) ✓\n• 내기리 200-2: 600㎡ → 180㎡ (역삼각형) ✓\n→ 합산 잔여 330㎡, 관개수로 상실, 농기계 진입 곤란\n\n[미해당 - 개별 부적합]\n• 만호리 55-1: 800㎡ → 600㎡ (정방형) ✗\n• ��호리 55-2: 700㎡ → 550㎡ (가로장방형) ✗\n→ 면적 기준 미충족, 형상 양호, 종래 사용 가능\n\n※ 내기리 필지와 만호리 필지는 지리적으로 떨어져 있어 일단지로 묶을 수 없습니다.",
         manualCheckItems: ["만호리 필지 현장 확인", "농기계 진입로 상태 확인"],

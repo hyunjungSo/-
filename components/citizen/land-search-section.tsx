@@ -109,7 +109,7 @@ const regionData = {
     "천안시 동남구": ["광덕면", "동면", "목천읍", "병천면", "북면", "성남면", "수신면", "풍세면"],
     "천안시 서북구": ["성환읍", "성거읍", "직산읍", "입장면"],
     "아산시": ["탕정면", "배방읍", "음봉면", "둔포면", "선장면", "송악면", "신창면", "염치읍", "영인면", "인주면", "도고면", "신장면"],
-    "논산시": ["가야곡면", "강경읍", "���석면", "노성면", "벌곡면", "부적면", "상월면", "성동면", "양촌면", "연무읍", "연산면", "은진면", "채운면", "취암동"],
+    "논산시": ["가야곡면", "강경읍", "광석면", "노성면", "벌곡면", "부적면", "상월면", "성동면", "양촌면", "연무읍", "연산면", "은진면", "채운면", "취암동"],
     "공주시": ["계룡면", "반포면", "사곡면", "신풍면", "우성면", "유구읍", "의당면", "이인면", "장기면", "정안면", "탄천면"],
     "서산시": ["고북면", "대산읍", "부석면", "성연면", "송악면", "양대면", "운산면", "음암면", "인지면", "지곡면", "팔봉면", "해미면"],
     "당진시": ["고대면", "면천면", "석문면", "송산면", "송악읍", "순성면", "신평면", "우강면", "정미면", "합덕읍"],
@@ -136,7 +136,7 @@ const regionData = {
     "양산시": ["동면", "물금읍", "상북면", "웅상읍", "원동면", "하북면"],
     // 제주특별자치도
     "제주시": ["구좌읍", "애월읍", "우도면", "조천읍", "추자면", "한경면", "한림읍", "아라동", "건입동", "노형동", "봉개동", "삼도동", "연동", "오라동", "외도동", "용담동", "이도동", "이호동", "일도동", "화북동"],
-    "서귀포시": ["남원읍", "대정읍", "성산읍", "안덕면", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "���목동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
+    "서귀포시": ["남원읍", "대정읍", "성산읍", "안덕면", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "보목동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
   },
   리: {
     // 경기도 - 용인시 처인구
@@ -158,7 +158,7 @@ const regionData = {
     "율면": ["고당리", "반룡리", "산양리", "월포리", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
-    // ��������도 - 광주시
+    // 경기도 - 광주시
     "곤지암읍": ["신리", "역동리", "삼리", "건업리", "연곡리", "오향리", "화촌리"],
     "도척면": ["진우리", "노곡리", "상림리", "도웅리", "유정리", "추곡리"],
     "퇴촌면": ["정지리", "영동리", "도수리", "관음리", "무수리", "원당리"],
@@ -178,7 +178,7 @@ const regionData = {
     "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "음양리"],
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
     "향남읍": ["구문천리", "도이리", "발안리", "상신리", "제암리", "평리", "행정리"],
-    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "���천���"],
+    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "어천리"],
     "비봉면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
     "마도면": ["백곡리", "송정리", "쌍송리", "청원리", "해문리"],
     "남양읍": ["남양리", "문호리", "북양리", "송림리", "신남리"],
@@ -235,13 +235,13 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["도고리", "시���리", "��자��", "��산리"],
+    "도고면": ["도고리", "시전리", "봉자리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
-    "부강면": ["금산리", "노호리", "등곡리", "문곡���", "산�������리"],
-    "�������정면": ["고등�����������", "대곡리", "소정리", "운담리"],
+    "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
+    "소정면": ["고등리", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -288,7 +288,7 @@ function simulateAIAnalysis(
     areaCriteriaMet = land.remainingArea <= 330;
   } else if (currentUsage === "임") {
     // 현재 활용 지목이 "임"(임야)인 경우 산지 기준
-    areaCriteriaLabel = `잔��� 면적 ${land.remainingArea}㎡ (산지 ��준: 990㎡ ��하)`;
+    areaCriteriaLabel = `잔여 면적 ${land.remainingArea}㎡ (산지 기준: 990㎡ 이하)`;
     areaCriteriaMet = land.remainingArea <= 990;
   } else {
     // 그 밖의 지목 (잡종지 등)
@@ -489,8 +489,8 @@ function generateJudgmentRationale(
 - 잔여 비율: ${land.remainingRatio}%
 
 3. 형상 분석
-- 편입 전 형상: ${land.originalShape} (형���지수 ${land.originalShapeIndex})
-- 잔여지 ����상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
+- 편입 전 형상: ${land.originalShape} (형상지수 ${land.originalShapeIndex})
+- 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
 - 형상지수 변화: +${shapeIndexChange.toFixed(1)}
 
 4. 충족 기준
@@ -499,8 +499,8 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 5. 판정 결과
 ${summary}`;
   } else {
-    // 매수���가
-    summary = `�� 토���는 잔여지 ���� 및 형상상 ��래 목���대��� 사용 ��능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
+    // 매수불가
+    summary = `본 토지는 잔여지 면적 및 형상상 종래 목적대로 사용 가능한 것으로 판단되어 매수청구 대상에 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
 1. 분석 대상 토지
@@ -669,7 +669,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         // 실제 구현에서는 API 호출, 여기서는 더미 데이터 시뮬레이션
         // 홍길동이 3개 관할기관(양평이천, 수도권, 천안안성)에 잔여지를 소유한 경우
         const ownerLandData = [
-          // 양평이천 관������관 - 2건
+          // 양평이천 관할기관 - 2건
           {
             id: "owner-search-0",
             address: "경기도 이천시 마장면 덕평리 55-3",
@@ -812,7 +812,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return true;
       });
       
-      // 검색 결���가 없으면 ��당 지역의 더미 데이터 생성 (��표 포함)
+      // 검색 결과가 없으면 해당 지역의 더미 데이터 생성 (좌표 포함)
       if (results.length === 0) {
         const baseCoords = [
           [
@@ -893,9 +893,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   // AI 판독 실행 (선택된 모든 필지 한번에 판독)
   const handleAIAnalysis = () => {
     if (noIncludedLand) return;
-    // 현재 활용 지목 필��
+    // 현재 활용 지목 필수
     if (!currentUsage) return;
-    // 현��� 활용 지목이 "대"(��지)��� 경우 세부 유형이 필수
+    // 현재 활용 지목이 "대"(대지)인 경우 세부 유형이 필수
     if (currentUsage === "대" && !landSubType) return;
     
     // 선택된 필지들 가져오기 (체크된 필지들)
@@ -1210,7 +1210,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 }}
               >
                 <SelectTrigger className="w-[130px]">
-                  <SelectValue placeholder="시��� 선택" />
+                  <SelectValue placeholder="시도 선택" />
                 </SelectTrigger>
                 <SelectContent>
                   {regionData.시도.map((sido) => (
@@ -1390,7 +1390,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       </p>
                       <p className="mt-2 text-sm text-muted-foreground">
                         입력하신 성명과 주민번호 앞자리로<br />
-                        등록된 편입 토지를 찾��� 수 없���니���.<br />
+                        등록된 편입 토지를 찾을 수 없습니다.<br />
                         정보를 다시 확인해 주세요.
                       </p>
                     </div>
@@ -1476,7 +1476,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                         ? "판독완료" 
                                         : landAiResult?.provisionalJudgment === "매수불가"
                                           ? "미충족"
-                                          : "심의이���"}
+                                          : "심의이상"}
                                     </Badge>
                                   )}
                                 </div>
@@ -1583,7 +1583,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
           </div>
 
-          {/* ���본정보 패널 (선택된 ��지 ���보) - 슬라이드 */}
+          {/* 기본정보 패널 (선택된 토지 정보) - 슬라이드 */}
           {selectedLand && (
           <div className={`flex h-full flex-col border-l bg-background transition-all duration-300 overflow-hidden ${isBasicInfoCollapsed ? "w-0 border-l-0" : "w-[320px]"}`}>
             {/* 헤더 */}
@@ -1673,7 +1673,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       </SelectContent>
                     </Select>
                     <p className="mt-1.5 text-xs text-muted-foreground">
-                      택지 유형에 따라 매수 기준 면적이 ���라집니다.
+                      택지 유형에 따라 매수 기준 면적이 달라집니다.
                     </p>
                   </div>
                 )}
@@ -1818,7 +1818,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           </Badge>
                         </div>
 
-                    {/* 내용 - 신청���황조회와 동일한 순서 */}
+                    {/* 내용 - 신청현황조회와 동일한 순서 */}
                     <div className="space-y-4">
                       {/* 판단 요약 */}
                       {aiResult.judgmentRationale && (
