@@ -720,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               const hasFarmDifficulty = adminAIOptions.farmMachineDifficulty || groupLands.some(l => l.remainingArea < 200);
               const hasShapeChange = groupLands.some(l => checkShapeCriteria(l).met);
               
-              if (hasRoadLoss) analysisReasons.push("접면도로 상��" + (adminAIOptions.accessRoadLost ? " (관리자 확인)" : ""));
+              if (hasRoadLoss) analysisReasons.push("접면도��� 상��" + (adminAIOptions.accessRoadLost ? " (관리자 확인)" : ""));
               if (hasWaterLoss) analysisReasons.push("관개수로 상실" + (adminAIOptions.waterChannelLost ? " (관리자 확인)" : ""));
               if (hasFarmDifficulty) analysisReasons.push("농기계 진입/회전 곤란" + (adminAIOptions.farmMachineDifficulty ? " (관리자 확인)" : ""));
               if (hasShapeChange) analysisReasons.push("형상 부정형 변경");
@@ -1519,18 +1519,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     })()}
                     selectedParcelIds={new Set(checkedLandIds)}
                     onParcelClick={(parcelId) => {
-                      // 신청 필지만 선택/해제 가능 (인접 필지는 클릭 시 정보만 표시)
-                      const isApplicationParcel = allLands.some(l => l.id === parcelId);
-                      if (isApplicationParcel) {
-                        if (checkedLandIds.includes(parcelId)) {
-                          setCheckedLandIds(prev => prev.filter(id => id !== parcelId));
-                        } else {
-                          setCheckedLandIds(prev => [...prev, parcelId]);
-                        }
-                        const landIdx = allLands.findIndex(l => l.id === parcelId);
-                        if (landIdx !== -1) {
-                          setSelectedLandIndex(landIdx);
-                        }
+                      // 신청 필지와 인접 필지 모두 선택/해제 가능
+                      if (checkedLandIds.includes(parcelId)) {
+                        setCheckedLandIds(prev => prev.filter(id => id !== parcelId));
+                      } else {
+                        setCheckedLandIds(prev => [...prev, parcelId]);
+                      }
+                      // 신청 필지인 경우 선택된 인덱스 업데이트
+                      const landIdx = allLands.findIndex(l => l.id === parcelId);
+                      if (landIdx !== -1) {
+                        setSelectedLandIndex(landIdx);
                       }
                     }}
                     hoveredParcelId={hoveredLandId}
@@ -1539,22 +1537,29 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   />
                 </div>
                 {/* 지도 범례 */}
-                <div className="mt-3 flex flex-wrap items-center justify-center gap-4 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                    <span>선택된 신청 필지</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
-                    <span>미선택 신청 필지</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
-                    <span>인접 필지</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
-                    <span>호버 중</span>
+                <div className="mt-3 rounded-lg border bg-muted/30 p-3">
+                  <div className="text-xs font-medium text-foreground mb-2">지도 범례</div>
+                  <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground sm:grid-cols-3">
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
+                      <span>선택 신청필지</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
+                      <span>미선택 신청필지</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-sm border-2 border-[#ea580c] bg-[#fed7aa]" />
+                      <span>선택 인접필지</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
+                      <span>미선택 인접필지</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
+                      <span>호버 중</span>
+                    </div>
                   </div>
                 </div>
               </TabsContent>

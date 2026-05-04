@@ -316,7 +316,7 @@ export function LeafletMap({
       const isAdjacentParcel = !parcel.isIncluded; // 인접 필지 여부
       const latlngs = parcel.coordinates.map(coord => [coord.lat, coord.lng] as [number, number]);
 
-      // 폴리곤 스타일 - 신청필지(녹색/회색), 인접필지(점선/반투명), 호버(파란색)
+      // 폴리곤 스타일 - 신청필지(녹색/회색), 인접필지(점선/주황), 선택시 각각 다른 스타일
       let polygonColor = "#6b7280"; // 기본: 미선택 신청필지 (진한 회색)
       let fillColor = "#f3f4f6";
       let weight = 3;
@@ -324,12 +324,21 @@ export function LeafletMap({
       let dashArray: string | undefined = undefined;
       
       if (isAdjacentParcel) {
-        // 인접 필지: 연한 갈색 점선 테두리로 명확히 구분
-        polygonColor = "#d97706"; // 진한 주황/갈색
-        fillColor = "#fef3c7"; // 연한 노란색 배경
-        weight = 2;
-        fillOpacity = 0.15;
-        dashArray = "6, 4"; // 점선 스타일
+        if (isSelected || isOwned) {
+          // 선택된 인접 필지: 진한 주황색 실선
+          polygonColor = "#ea580c"; // 진한 주황색
+          fillColor = "#fed7aa"; // 주황색 배경
+          weight = 4;
+          fillOpacity = 0.5;
+          dashArray = undefined; // 선택 시 실선
+        } else {
+          // 미선택 인접 필지: 점선 테두리
+          polygonColor = "#d97706"; // 진한 주황/갈색
+          fillColor = "#fef3c7"; // 연한 노란색 배경
+          weight = 2;
+          fillOpacity = 0.15;
+          dashArray = "6, 4"; // 점선 스타일
+        }
       } else if (isSelected || isOwned) {
         // 선택된 신청 필지: 진한 녹색 실선
         polygonColor = "#16a34a"; // 진한 녹색
@@ -338,19 +347,23 @@ export function LeafletMap({
         fillOpacity = 0.45;
       }
       
-      // 호버 시 스타일 오버라이드 (신청 필지만)
-      if (isHovered && !isAdjacentParcel) {
-        polygonColor = "#2563eb"; // 파란색
-        fillColor = "#dbeafe";
-        weight = 4;
-        fillOpacity = 0.5;
-        dashArray = undefined;
-      } else if (isHovered && isAdjacentParcel) {
-        // 인접 필지 호버 시 약간 강조
-        polygonColor = "#b45309";
-        fillColor = "#fde68a";
-        weight = 3;
-        fillOpacity = 0.3;
+      // 호버 시 스타일 오버라이드
+      if (isHovered) {
+        if (isAdjacentParcel) {
+          // 인접 필지 호버
+          polygonColor = "#c2410c";
+          fillColor = "#ffedd5";
+          weight = 4;
+          fillOpacity = 0.4;
+          dashArray = undefined;
+        } else {
+          // 신청 필지 호버
+          polygonColor = "#2563eb"; // 파란색
+          fillColor = "#dbeafe";
+          weight = 4;
+          fillOpacity = 0.5;
+          dashArray = undefined;
+        }
       }
       
       const polygon = L.polygon(latlngs, {
