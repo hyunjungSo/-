@@ -485,10 +485,12 @@ export function LeafletMap({
         
         if (validCoords.length > 0) {
           try {
-            // 첫번째 필지의 중심점으로 이동
+            // 첫번째 필지의 중심점으로 이동 (animate: false로 에러 방지)
             const centerLat = validCoords.reduce((sum, c) => sum + c.lat, 0) / validCoords.length;
             const centerLng = validCoords.reduce((sum, c) => sum + c.lng, 0) / validCoords.length;
-            mapInstanceRef.current.setView([centerLat, centerLng], 18, { animate: true });
+            if (isFinite(centerLat) && isFinite(centerLng)) {
+              mapInstanceRef.current.setView([centerLat, centerLng], 18, { animate: false });
+            }
           } catch {
             // setView 오류 무시
           }
