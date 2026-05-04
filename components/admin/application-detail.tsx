@@ -757,7 +757,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           
           // 일단지 판정 사유 기록
           const unificationReasons = [
-            "소유자 동���",
+            "소유�� 동���",
             `지반 연속 (${parseAddress(primaryLand.address).district})`,
             `용도 일체 (${primaryLand.landType})`
           ];
@@ -2018,14 +2018,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
           {/* 담당자 최종 컨펌 섹션 */}
           <div className="rounded-xl border-2 border-amber-200 bg-gradient-to-b from-amber-50/80 to-white p-5 space-y-4">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100">
-                <Scale className="h-4 w-4 text-amber-600" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-amber-800">담당자 최종 컨펌</h4>
-                <p className="text-xs text-amber-600">AI 제안을 확인하고 최종 결정을 내려주세요</p>
-              </div>
+            <div className="mb-2">
+              <h4 className="font-semibold text-amber-800">담당자 최종 컨펌</h4>
+              <p className="text-xs text-amber-600">AI 제안을 확인하고 최종 결정을 내려주세요</p>
             </div>
             
             {/* AI 제안 표시 */}
@@ -2058,7 +2053,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             {/* 최종 판정 선택 */}
             <div className="space-y-2">
-              <Label className={reviewData.adminStatus !== "심사완료" ? "text-muted-foreground" : ""}>
+              <Label className={`text-sm font-medium ${reviewData.adminStatus !== "심사완료" ? "text-muted-foreground" : ""}`}>
                 최종 판정
                 {reviewData.adminStatus !== "심사완료" && (
                   <span className="ml-2 text-sm font-normal text-muted-foreground">
@@ -2093,7 +2088,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             {/* 담당자 최종 검토 의견 */}
             <div className="space-y-2">
-              <Label className="text-base font-medium">담당자 최종 검토 의견</Label>
+              <Label className="text-sm font-medium">담당자 최종 검토 의견</Label>
               <Textarea
                 placeholder="현지상황 및 검토의견을 작성해주세요. 이 내용은 심의서에 자동 입력됩니다."
                 rows={4}
