@@ -591,9 +591,17 @@ export function LeafletMap({
     
     const NAVER_PINK = "#ff3478";
     
+    // 유효한 좌표만 필터링
+    const validPoints = measurePoints.filter(p => 
+      p && typeof p.lat === 'number' && typeof p.lng === 'number' && 
+      !isNaN(p.lat) && !isNaN(p.lng) && isFinite(p.lat) && isFinite(p.lng)
+    );
+    
+    if (validPoints.length === 0) return;
+    
     // 라인 그리기
-    if (measurePoints.length > 1) {
-      const latlngs = measurePoints.map(p => [p.lat, p.lng] as [number, number]);
+    if (validPoints.length > 1) {
+      const latlngs = validPoints.map(p => [p.lat, p.lng] as [number, number]);
       const polyline = L.polyline(latlngs, {
         color: NAVER_PINK,
         weight: 4,
@@ -602,9 +610,9 @@ export function LeafletMap({
       polyline.addTo(measureLayer);
       
       // 각 구간 중간에 거리 라벨 표시
-      for (let i = 1; i < measurePoints.length; i++) {
-        const p1 = measurePoints[i - 1];
-        const p2 = measurePoints[i];
+      for (let i = 1; i < validPoints.length; i++) {
+        const p1 = validPoints[i - 1];
+        const p2 = validPoints[i];
         const midLat = (p1.lat + p2.lat) / 2;
         const midLng = (p1.lng + p2.lng) / 2;
         const distance = calculateDistance(p1.lat, p1.lng, p2.lat, p2.lng);
@@ -635,7 +643,7 @@ export function LeafletMap({
     }
     
     // 포인트 마커 그리기
-    measurePoints.forEach((point, index) => {
+    validPoints.forEach((point, index) => {
       const markerIcon = L.divIcon({
         className: "measure-point",
         html: `<div style="
@@ -683,7 +691,7 @@ export function LeafletMap({
         </div>
       )}
 
-      {/* 지도 컨트롤 - 배경지도/거리측정/레이어 */}
+      {/* 지도 컨트롤 - 배경지��/거리측정/레이어 */}
       <div className="absolute right-14 top-3 z-[1000] flex flex-col gap-2">
         {/* 배경지도 선택 */}
         <Popover>
