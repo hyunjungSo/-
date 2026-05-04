@@ -32,7 +32,15 @@ import {
   Loader2,
   RotateCcw,
   X,
+  Merge,
+  Split,
+  Edit3,
+  History,
+  ArrowRight,
+  Scale,
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
 
 interface ApplicationDetailProps {
@@ -123,6 +131,20 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     area: number;
     owner: string;
   } | null>(null);
+  
+  // 일단지 병합 판정 모드
+  const [unifiedMergeMode, setUnifiedMergeMode] = useState<"auto" | "manual">("auto");
+  const [manualUnifiedLandIds, setManualUnifiedLandIds] = useState<string[]>([]);
+  
+  // 관리자 수치 수정 (면적, 폭 등)
+  const [adminEditedValues, setAdminEditedValues] = useState<Record<string, {
+    remainingArea?: number;
+    width?: number;
+    originalArea?: number;
+  }>>({});
+  
+  // AI 결과와 다른 최종 판정 시 사유 필수
+  const [adminOverrideReason, setAdminOverrideReason] = useState("");
   
   // 필지별 검토 데이터 업데이트 함수
   const updateLandReviewData = (index: number, field: keyof LandReviewData, value: LandReviewData[keyof LandReviewData]) => {
@@ -955,18 +977,50 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
       {/* 필지 선택 영역 (상위 레벨) */}
       <Card>
-        <CardHeader className="pb-3">
+<CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               <Layers className="h-5 w-5" />
-              대상 필지
+              필지 관리
               {isMultipleLands && (
-                <Badge variant="secondary" className="ml-1">
+                <Badge variant="secondary" className="font-normal">
                   {allLands.length}필지
                 </Badge>
               )}
             </CardTitle>
+            {/* 일단지 병합 판정 컨트롤러 */}
+            {isMultipleLands && (
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 rounded-lg border bg-muted/50 p-1">
+                  <Button
+                    variant={unifiedMergeMode === "auto" ? "default" : "ghost"}
+                    size="sm"
+                    className="h-7 text-xs gap-1"
+                    onClick={() => setUnifiedMergeMode("auto")}
+                  >
+                    <Bot className="h-3 w-3" />
+                    자동 판정
+                  </Button>
+                  <Button
+                    variant={unifiedMergeMode === "manual" ? "default" : "ghost"}
+                    size="sm"
+                    className="h-7 text-xs gap-1"
+                    onClick={() => setUnifiedMergeMode("manual")}
+                  >
+                    <Merge className="h-3 w-3" />
+                    수동 병합
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
+          {isMultipleLands && (
+            <CardDescription className="mt-2">
+              {unifiedMergeMode === "auto" 
+                ? "AI가 소유자, 연접성, 용도를 분석하여 일단지 여부를 자동 판정합니다."
+                : "관리자가 직접 필지를 선택하여 일단지로 병합할 수 있습니다."}
+            </CardDescription>
+          )}
         </CardHeader>
         
         {/* 일단지 판정 요약 (일단지 신청인 경우에만 표시) */}
@@ -1865,384 +1919,361 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </CardContent>
         </Card>
 
-        {/* AI 분석 결과 */}
+        {/* AI 분석 결과 비교 (Dual View) */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Bot className="h-5 w-5" />
-              AI 분석 결과
+              <Scale className="h-5 w-5" />
+              AI 분석 결과 비교
             </CardTitle>
             <CardDescription>
-              민원인 신청 시 결과와 관리자 재판독 결과를 비교할 수 있습니다
+              민원인 신청 시 결과와 관리자 재판독 결과를 나란히 비교합니다
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {/* 결과 탭 전환 */}
-            <div className="flex gap-2 rounded-lg bg-muted p-1">
-              <button
-                onClick={() => setAiResultViewMode("citizen")}
-                className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
-                  aiResultViewMode === "citizen"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <div className="flex items-center justify-center gap-2">
-                  <span>민원인 신청 결과</span>
+          <CardContent>
+            {/* Dual View 레이아웃 */}
+            <div className="grid gap-4 lg:grid-cols-2">
+              {/* 좌측: 민원인 분석 결과 (읽기 전용) */}
+              <div className="rounded-xl border-2 border-violet-200 bg-gradient-to-b from-violet-50/80 to-white p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-violet-100">
+                      <History className="h-4 w-4 text-violet-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-violet-800">민원인 신청 결과</h4>
+                      <p className="text-xs text-violet-600">수정 불가 (히스토리)</p>
+                    </div>
+                  </div>
                   {aiResult && (
                     <Badge 
-                      variant="outline"
                       className={
                         aiResult.provisionalJudgment === "매수" 
-                          ? "border-green-500 text-green-600" 
+                          ? "bg-green-600 hover:bg-green-600" 
                           : aiResult.provisionalJudgment === "매수불가" || aiResult.provisionalJudgment === "기각"
-                            ? "border-red-500 text-red-600"
-                            : "border-amber-500 text-amber-600"
+                            ? "bg-red-500 hover:bg-red-500"
+                            : "bg-amber-500 hover:bg-amber-500"
                       }
                     >
                       {aiResult.provisionalJudgment}
                     </Badge>
                   )}
                 </div>
-              </button>
-              <button
-                onClick={() => setAiResultViewMode("admin")}
-                className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
-                  aiResultViewMode === "admin"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <div className="flex items-center justify-center gap-2">
-                  <span>관리자 재판독 결과</span>
-                  {Object.keys(adminLandAIResults).length > 0 && (
+                
+                {/* 민원인 결과 상세 */}
+                {aiResult ? (
+                  <div className="space-y-3">
+                    {/* 토지 유형 */}
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">토지 유형</span>
+                      <span className="font-medium">{aiResult.landTypePath || allLands[selectedLandIndex].landType}</span>
+                    </div>
+                    
+                    {/* 주요 수치 */}
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="rounded-lg bg-violet-100/50 p-2">
+                        <p className="text-xs text-violet-600">잔여 면적</p>
+                        <p className="font-semibold text-violet-800">{allLands[selectedLandIndex].remainingArea.toLocaleString()}m²</p>
+                      </div>
+                      <div className="rounded-lg bg-violet-100/50 p-2">
+                        <p className="text-xs text-violet-600">잔여 비율</p>
+                        <p className="font-semibold text-violet-800">{allLands[selectedLandIndex].remainingRatio}%</p>
+                      </div>
+                    </div>
+                    
+                    {/* 형상지수 */}
+                    <div className="rounded-lg border border-violet-200 bg-white p-3">
+                      <p className="text-xs text-muted-foreground mb-2">형상지수 변화</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm">{aiResult.originalShapeIndex.toFixed(1)}</span>
+                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm">{aiResult.remainingShapeIndex.toFixed(1)}</span>
+                        <Badge variant="outline" className={aiResult.shapeIndexChange >= 1 ? "border-red-300 text-red-600" : ""}>
+                          +{aiResult.shapeIndexChange.toFixed(1)}
+                        </Badge>
+                      </div>
+                    </div>
+                    
+                    {/* 기준 충족 요약 */}
+                    <div className="space-y-1">
+                      <p className="text-xs text-muted-foreground">기준 충족 여부</p>
+                      {aiResult.criteriaChecks.slice(0, 3).map((check, idx) => (
+                        <div key={idx} className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground truncate">{check.criteriaName}</span>
+                          <Badge variant={check.isMet ? "default" : "destructive"} className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}>
+                            {check.isMet ? "충족" : "미충족"}
+                          </Badge>
+                        </div>
+                      ))}
+                      {aiResult.criteriaChecks.length > 3 && (
+                        <p className="text-xs text-muted-foreground">외 {aiResult.criteriaChecks.length - 3}개 항목</p>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-8 text-center">
+                    <Info className="h-8 w-8 text-violet-300 mb-2" />
+                    <p className="text-sm text-muted-foreground">민원인 분석 결과 없음</p>
+                  </div>
+                )}
+              </div>
+              
+              {/* 우측: 관리자 재분석 결과 (실시간 업데이트) */}
+              <div className="rounded-xl border-2 border-emerald-200 bg-gradient-to-b from-emerald-50/80 to-white p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100">
+                      <Bot className="h-4 w-4 text-emerald-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-emerald-800">관리자 재분석 결과</h4>
+                      <p className="text-xs text-emerald-600">실시간 업데이트</p>
+                    </div>
+                  </div>
+                  {Object.keys(adminLandAIResults).length > 0 ? (
                     <Badge 
-                      variant="outline"
                       className={(() => {
                         const results = Object.values(adminLandAIResults);
                         const hasPurchase = results.some(r => r.provisionalJudgment === "매수");
-                        const allRejected = results.every(r => r.provisionalJudgment === "매수불가");
-                        if (allRejected) return "border-red-500 text-red-600";
-                        if (hasPurchase) return "border-green-500 text-green-600";
-                        return "border-amber-500 text-amber-600";
+                        if (hasPurchase) return "bg-green-600 hover:bg-green-600";
+                        return "bg-red-500 hover:bg-red-500";
                       })()}
                     >
                       {(() => {
                         const results = Object.values(adminLandAIResults);
                         const purchaseCount = results.filter(r => r.provisionalJudgment === "매수").length;
+                        if (purchaseCount === results.length) return "매수";
+                        if (purchaseCount === 0) return "매수불가";
                         return `${purchaseCount}/${results.length} 매수`;
                       })()}
                     </Badge>
-                  )}
-                  {Object.keys(adminLandAIResults).length === 0 && (
-                    <Badge variant="outline" className="border-muted-foreground/30 text-muted-foreground">
-                      미실행
-                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="border-emerald-300 text-emerald-600">미실행</Badge>
                   )}
                 </div>
-              </button>
-            </div>
-            
-            {/* 민원인 신청 결과 뷰 */}
-            {aiResultViewMode === "citizen" && (
-              <div className="space-y-4">
-                {/* 결과 요약 헤더 */}
-                <div className="flex items-center justify-between rounded-lg border bg-muted/30 p-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">토지 유형:</span>
-                    <span className="font-medium">{aiResult?.landTypePath || allLands[selectedLandIndex].landType}</span>
-                  </div>
-                  {isMultipleLands && (
-                    <Badge variant="outline" className="font-normal">
-                      필지 {selectedLandIndex + 1}
-                    </Badge>
-                  )}
-                </div>
-
-            {/* 기준 충족 여부 */}
-            <div className="space-y-2">
-              <h4 className="font-medium text-foreground">기준 충족 여부</h4>
-              {aiResult?.criteriaChecks.map((check, index) => (
-                <div
-                  key={index}
-                  className={`flex items-start gap-3 rounded-lg border p-3 ${
-                    check.isMet 
-                      ? "border-green-200 bg-green-50/50" 
-                      : "border-red-200 bg-red-50/50"
-                  }`}
-                >
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      {check.isMet ? (
-                        <Badge variant="default" className="bg-green-600 hover:bg-green-600">
-                          충족
-                        </Badge>
-                      ) : (
-                        <Badge variant="destructive-subtle">
-                          미충족
-                        </Badge>
-                      )}
-                      <p className="font-medium text-foreground">{check.criteriaName}</p>
-                      {!check.autoDetected && (
-                        <Badge variant="outline">
-                          직접 확인 필요
-                        </Badge>
-                      )}
-                    </div>
-                    <p className="mt-1 text-base text-muted-foreground">
-                      {check.criteriaDescription}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* 형상지수 */}
-            {aiResult && (
-              <div className="rounded-lg border border-border p-4">
-                <h4 className="mb-3 font-medium text-foreground">형상지수</h4>
-                <div className="grid grid-cols-3 gap-4 text-center text-base">
-                  <div>
-                    <p className="text-muted-foreground">편입 전</p>
-                    <p className="text-lg font-semibold text-foreground">
-                      {aiResult.originalShapeIndex.toFixed(1)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">편입 후</p>
-                    <p className="text-lg font-semibold text-foreground">
-                      {aiResult.remainingShapeIndex.toFixed(1)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">변화량</p>
-                    <p className={`text-lg font-semibold ${aiResult.shapeIndexChange >= 1 ? "text-destructive" : "text-foreground"}`}>
-                      +{aiResult.shapeIndexChange.toFixed(1)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-              </div>
-            )}
-            
-            {/* 관리자 재판독 결과 뷰 */}
-            {aiResultViewMode === "admin" && (
-              <div className="space-y-4">
-                {/* 재판독 결과가 있을 때 초기화 버튼 */}
-                {Object.keys(adminLandAIResults).length > 0 && (
-                  <div className="flex justify-end">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={handleResetAdminAIResults}
-                      className="gap-2"
-                    >
-                      <RotateCcw className="h-4 w-4" />
-                      재판독 결과 초기화
-                    </Button>
-                  </div>
-                )}
                 
                 {Object.keys(adminLandAIResults).length === 0 ? (
-                  <div className="rounded-lg border-2 border-dashed border-muted p-8 text-center">
-                    <Bot className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                    <h4 className="mt-4 font-medium text-foreground">관리자 재판독 미실행</h4>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      위 담당자 검토 영역에서 필지를 선택하고<br />
-                      현장 상황 옵션을 설정한 후 AI 판독을 실행해주세요.
+                  <div className="flex flex-col items-center justify-center py-8 text-center">
+                    <Bot className="h-10 w-10 text-emerald-200 mb-3" />
+                    <p className="text-sm font-medium text-muted-foreground mb-1">관리자 재판독 미실행</p>
+                    <p className="text-xs text-muted-foreground">
+                      아래에서 파라미터 조정 후<br />AI 분석을 실행하세요
                     </p>
-                    <div className="mt-4 flex flex-wrap justify-center gap-2">
-                      <Badge variant="outline" className="text-xs">접면도로 상실</Badge>
-                      <Badge variant="outline" className="text-xs">관개수로 상실</Badge>
-                      <Badge variant="outline" className="text-xs">농기계 진입 곤란</Badge>
-                    </div>
                   </div>
                 ) : (
-                  <>
-                    {/* 분석 프로세스 상세 보기 버튼 (관리자 재판독 결과에서만) */}
+                  <div className="space-y-3">
+                    {/* 분석 프로세스 상세 보기 */}
                     <Button
                       variant="outline"
-                      className="w-full gap-2"
+                      size="sm"
+                      className="w-full gap-2 border-emerald-300 text-emerald-700 hover:bg-emerald-50"
                       onClick={() => setShowAnalysisFlow(true)}
                     >
                       <PlayCircle className="h-4 w-4" />
-                      분석 프로세스 상세 보기
+                      분석 프로세스 보기
                     </Button>
                     
-                    {/* 관리자 옵션 적용 내역 */}
+                    {/* 적용된 옵션 */}
                     {(adminAIOptions.accessRoadLost || adminAIOptions.waterChannelLost || adminAIOptions.farmMachineDifficulty) && (
-                      <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-4">
-                        <h4 className="mb-2 text-sm font-medium text-blue-800 flex items-center gap-2">
-                          <Info className="h-4 w-4" />
-                          적용된 현장 상황 옵션
-                        </h4>
-                        <div className="flex flex-wrap gap-2">
+                      <div className="rounded-lg bg-emerald-100/50 p-2">
+                        <p className="text-xs text-emerald-700 mb-1">적용된 옵션</p>
+                        <div className="flex flex-wrap gap-1">
                           {adminAIOptions.accessRoadLost && (
-                            <Badge className="bg-blue-600 hover:bg-blue-600">접면도로 상실</Badge>
+                            <Badge className="text-xs bg-emerald-600">도로 상실</Badge>
                           )}
                           {adminAIOptions.waterChannelLost && (
-                            <Badge className="bg-blue-600 hover:bg-blue-600">관개수로 상실</Badge>
+                            <Badge className="text-xs bg-emerald-600">수로 상실</Badge>
                           )}
                           {adminAIOptions.farmMachineDifficulty && (
-                            <Badge className="bg-blue-600 hover:bg-blue-600">농기계 진입 곤란</Badge>
+                            <Badge className="text-xs bg-emerald-600">농기계 곤란</Badge>
                           )}
                         </div>
                       </div>
                     )}
                     
-                    {/* 필지별 재판독 결과 */}
-                    <div className="space-y-3">
-                      <h4 className="font-medium text-foreground flex items-center gap-2">
-                        필지별 재판독 결과
-                        <Badge variant="outline">
-                          {Object.keys(adminLandAIResults).length}필지
-                        </Badge>
-                      </h4>
-                      {Object.entries(adminLandAIResults).map(([landId, result]) => {
+                    {/* 필지별 결과 요약 */}
+                    <div className="space-y-2 max-h-48 overflow-y-auto">
+                      {Object.entries(adminLandAIResults).slice(0, 4).map(([landId, result]) => {
                         const land = allLands.find(l => l.id === landId);
                         const landIdx = allLands.findIndex(l => l.id === landId);
                         if (!land) return null;
-                        
                         return (
                           <div 
                             key={landId}
-                            className={`rounded-lg border p-4 ${
+                            className={`rounded-lg p-2 text-sm ${
                               result.provisionalJudgment === "매수"
-                                ? "border-green-200 bg-green-50/50"
-                                : "border-red-200 bg-red-50/50"
+                                ? "bg-green-100/80 border border-green-200"
+                                : "bg-red-100/80 border border-red-200"
                             }`}
                           >
-                            <div className="flex items-start justify-between">
-                              <div className="flex items-center gap-3">
-                                <span className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${
-                                  result.provisionalJudgment === "매수" 
-                                    ? "bg-green-600 text-white" 
-                                    : "bg-red-500 text-white"
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className={`flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white ${
+                                  result.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"
                                 }`}>
                                   {String.fromCharCode(65 + landIdx)}
                                 </span>
-                                <div>
-                                  <p className="font-medium">{land.address}</p>
-                                  <p className="text-sm text-muted-foreground">
-                                    잔여: {land.remainingArea.toLocaleString()}m² | {land.landType}
-                                  </p>
-                                </div>
+                                <span className="text-muted-foreground truncate max-w-[120px]">{land.address.split(" ").slice(-2).join(" ")}</span>
                               </div>
-                              <Badge className={
-                                result.provisionalJudgment === "매수" 
-                                  ? "bg-green-600 hover:bg-green-600" 
-                                  : "bg-red-500 hover:bg-red-500"
-                              }>
+                              <Badge className={`text-xs ${result.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"}`}>
                                 {result.provisionalJudgment}
                               </Badge>
                             </div>
-                            
-                            {/* 판정 사유 */}
-                            {result.reason && (
-                              <div className="mt-3 pt-3 border-t">
-                                <p className="text-sm text-muted-foreground">
-                                  <span className="font-medium">판정 사유:</span> {result.reason}
-                                </p>
-                              </div>
-                            )}
-                            
-                            {/* 관리자 확인 항목 표시 */}
-                            {result.adminOptions && (result.adminOptions.accessRoadLost || result.adminOptions.waterChannelLost || result.adminOptions.farmMachineDifficulty) && (
-                              <div className="mt-2 flex flex-wrap gap-1">
-                                {result.adminOptions.accessRoadLost && (
-                                  <Badge variant="outline" className="text-xs border-blue-300 text-blue-700">
-                                    접면도로 상실 (관리자 확인)
-                                  </Badge>
-                                )}
-                                {result.adminOptions.waterChannelLost && (
-                                  <Badge variant="outline" className="text-xs border-blue-300 text-blue-700">
-                                    관개수로 상실 (관리자 확인)
-                                  </Badge>
-                                )}
-                                {result.adminOptions.farmMachineDifficulty && (
-                                  <Badge variant="outline" className="text-xs border-blue-300 text-blue-700">
-                                    농기계 진입 곤란 (관리자 확인)
-                                  </Badge>
-                                )}
-                              </div>
-                            )}
                           </div>
                         );
                       })}
+                      {Object.keys(adminLandAIResults).length > 4 && (
+                        <p className="text-xs text-center text-muted-foreground">
+                          외 {Object.keys(adminLandAIResults).length - 4}필지
+                        </p>
+                      )}
                     </div>
                     
-                    {/* 일단지 그룹 (관리자 재판독) */}
-                    {Object.keys(adminUnifiedGroups).length > 0 && (
-                      <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-4">
-                        <h4 className="mb-3 font-medium text-emerald-800 flex items-center gap-2">
-                          <Layers className="h-4 w-4" />
-                          일단지 판정 (관리자 재판독)
-                        </h4>
-                        <div className="space-y-2">
-                          {Object.entries(adminUnifiedGroups).map(([groupId, group]) => (
-                            <div key={groupId} className="rounded-md bg-white/80 p-3 border border-emerald-100">
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="font-medium text-emerald-700">{group.groupName}</span>
-                                <Badge className="bg-emerald-600 hover:bg-emerald-600">
-                                  {group.judgment}
-                                </Badge>
-                              </div>
-                              <p className="text-sm text-muted-foreground">
-                                합산 면적: {group.combinedArea.toLocaleString()}m²
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* 민원인 결과와 비교 */}
-                    {aiResult && (
-                      <div className="rounded-lg border border-amber-200 bg-amber-50/50 p-4">
-                        <h4 className="mb-3 font-medium text-amber-800 flex items-center gap-2">
-                          <AlertTriangle className="h-4 w-4" />
-                          민원인 신청 결과와 비교
-                        </h4>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="rounded-md bg-white/80 p-3 border border-amber-100 text-center">
-                            <p className="text-sm text-muted-foreground mb-1">민원인 신청</p>
-                            <Badge 
-                              className={
-                                aiResult.provisionalJudgment === "매수" 
-                                  ? "bg-green-600 hover:bg-green-600" 
-                                  : "bg-red-500 hover:bg-red-500"
-                              }
-                            >
-                              {aiResult.provisionalJudgment}
-                            </Badge>
-                          </div>
-                          <div className="rounded-md bg-white/80 p-3 border border-amber-100 text-center">
-                            <p className="text-sm text-muted-foreground mb-1">관리자 재판독</p>
-                            <Badge 
-                              className={(() => {
-                                const results = Object.values(adminLandAIResults);
-                                const hasPurchase = results.some(r => r.provisionalJudgment === "매수");
-                                if (hasPurchase) return "bg-green-600 hover:bg-green-600";
-                                return "bg-red-500 hover:bg-red-500";
-                              })()}
-                            >
-                              {(() => {
-                                const results = Object.values(adminLandAIResults);
-                                const purchaseCount = results.filter(r => r.provisionalJudgment === "매수").length;
-                                if (purchaseCount === 0) return "매수불가";
-                                if (purchaseCount === results.length) return "매수";
-                                return `${purchaseCount}/${results.length} 매수`;
-                              })()}
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </>
+                    {/* 초기화 버튼 */}
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={handleResetAdminAIResults}
+                      className="w-full gap-2 text-muted-foreground hover:text-foreground"
+                    >
+                      <RotateCcw className="h-3 w-3" />
+                      결과 초기화
+                    </Button>
+                  </div>
                 )}
               </div>
-            )}
+            </div>
+            
+            {/* 관리자 전용 정밀 재분석 기능 */}
+            <div className="mt-6 rounded-xl border-2 border-blue-200 bg-gradient-to-b from-blue-50/80 to-white p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100">
+                  <Edit3 className="h-4 w-4 text-blue-600" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-blue-800">정밀 재분석 설정</h4>
+                  <p className="text-xs text-blue-600">관리자 전용 파라미터 조절</p>
+                </div>
+              </div>
+              
+              {/* 현장 상황 토글 스위치 */}
+              <div className="grid gap-4 sm:grid-cols-3 mb-4">
+                <div className="flex items-center justify-between rounded-lg border bg-white p-3">
+                  <div>
+                    <Label className="text-sm font-medium">농기계 진입/회전 곤란</Label>
+                    <p className="text-xs text-muted-foreground">농지에만 적용</p>
+                  </div>
+                  <Switch 
+                    checked={adminAIOptions.farmMachineDifficulty}
+                    onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, farmMachineDifficulty: checked }))}
+                  />
+                </div>
+                <div className="flex items-center justify-between rounded-lg border bg-white p-3">
+                  <div>
+                    <Label className="text-sm font-medium">접면도로 상실</Label>
+                    <p className="text-xs text-muted-foreground">전면 도로 상실 여부</p>
+                  </div>
+                  <Switch 
+                    checked={adminAIOptions.accessRoadLost}
+                    onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, accessRoadLost: checked }))}
+                  />
+                </div>
+                <div className="flex items-center justify-between rounded-lg border bg-white p-3">
+                  <div>
+                    <Label className="text-sm font-medium">관개수로 상실</Label>
+                    <p className="text-xs text-muted-foreground">농지의 수로 상실 여부</p>
+                  </div>
+                  <Switch 
+                    checked={adminAIOptions.waterChannelLost}
+                    onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, waterChannelLost: checked }))}
+                  />
+                </div>
+              </div>
+              
+              {/* 수치 수정 입력 */}
+              {checkedLandIds.length > 0 && (
+                <div className="mb-4 p-4 rounded-lg border bg-white">
+                  <h5 className="text-sm font-medium mb-3 flex items-center gap-2">
+                    <Edit3 className="h-4 w-4" />
+                    AI 추출 수치 수정
+                    <Badge variant="outline" className="text-xs">선택 필지: {checkedLandIds.length}개</Badge>
+                  </h5>
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {checkedLandIds.slice(0, 3).map((landId) => {
+                      const land = allLands.find(l => l.id === landId);
+                      const landIdx = allLands.findIndex(l => l.id === landId);
+                      if (!land) return null;
+                      const editedValues = adminEditedValues[landId] || {};
+                      return (
+                        <div key={landId} className="rounded-lg border p-3 space-y-2">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-xs font-bold">
+                              {String.fromCharCode(65 + landIdx)}
+                            </span>
+                            <span className="text-sm font-medium truncate">{land.address.split(" ").slice(-2).join(" ")}</span>
+                          </div>
+                          <div className="space-y-2">
+                            <div>
+                              <Label className="text-xs text-muted-foreground">잔여 면적 (m²)</Label>
+                              <Input
+                                type="number"
+                                value={editedValues.remainingArea ?? land.remainingArea}
+                                onChange={(e) => setAdminEditedValues(prev => ({
+                                  ...prev,
+                                  [landId]: { ...prev[landId], remainingArea: Number(e.target.value) }
+                                }))}
+                                className="h-8 text-sm"
+                              />
+                            </div>
+                            <div>
+                              <Label className="text-xs text-muted-foreground">최소 폭 (m) - 사각형 5m/삼각형 11m 기준</Label>
+                              <Input
+                                type="number"
+                                step="0.1"
+                                value={editedValues.width ?? 5}
+                                onChange={(e) => setAdminEditedValues(prev => ({
+                                  ...prev,
+                                  [landId]: { ...prev[landId], width: Number(e.target.value) }
+                                }))}
+                                className="h-8 text-sm"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {checkedLandIds.length > 3 && (
+                    <p className="text-xs text-muted-foreground mt-2 text-center">
+                      외 {checkedLandIds.length - 3}필지 (스크롤하여 확인)
+                    </p>
+                  )}
+                </div>
+              )}
+              
+              {/* AI 분석 실행 버튼 */}
+              <Button
+                onClick={handleRunAIAnalysis}
+                disabled={isAIAnalyzing || checkedLandIds.length === 0}
+                className="w-full gap-2 h-12 text-base bg-blue-600 hover:bg-blue-700"
+                size="lg"
+              >
+                {isAIAnalyzing ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    AI 분석 중... ({checkedLandIds.length}필지)
+                  </>
+                ) : (
+                  <>
+                    <Bot className="h-5 w-5" />
+                    AI 분석 실행 ({checkedLandIds.length}필지)
+                  </>
+                )}
+              </Button>
+              <p className="text-xs text-muted-foreground text-center mt-2">
+                실행 시 중앙토지수용위원회 기준 프로세스 맵이 표시됩니다
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -2550,47 +2581,128 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </p>
           </div>
 
-          {/* 최종 판정 - 진행상황이 완료일 때만 활성화 */}
-          <div className="space-y-2">
-<Label className={reviewData.adminStatus !== "심사완료" ? "text-muted-foreground" : ""}>
-                  최종 판정
-                  {reviewData.adminStatus !== "심사완료" && (
-                    <span className="ml-2 text-base font-normal text-muted-foreground">
-                      (진행상황을 &apos;심사완료&apos;로 설정하면 활성화됩니다)
-                    </span>
-                  )}
-            </Label>
-            <div className="flex flex-wrap gap-2">
-              {(["매수", "기각", "심의위원회이관"] as JudgmentResult[]).map((judgment) => {
-                const config = judgmentConfig[judgment];
-                const Icon = config.icon;
-                const isSelected = reviewData.finalJudgment === judgment;
-                const isDisabled = reviewData.adminStatus !== "심사완료";
-                return (
-                  <Button
-                    key={judgment}
-                    type="button"
-                    variant="outline"
-                    onClick={() =>
-                      setReviewData((prev) => ({ ...prev, finalJudgment: judgment }))
-                    }
-                    disabled={isDisabled}
-                    className={`cursor-pointer border-2 ${isSelected ? "border-primary text-primary" : "border-[#E1E4E7] text-foreground"} ${isDisabled ? "opacity-50" : ""}`}
-                  >
-                    <Icon className="mr-2 h-4 w-4" />
-                    {config.label}
-                  </Button>
-                );
-              })}
+          {/* 담당자 최종 컨펌 섹션 */}
+          <div className="rounded-xl border-2 border-amber-200 bg-gradient-to-b from-amber-50/80 to-white p-5 space-y-4">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100">
+                <Scale className="h-4 w-4 text-amber-600" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-amber-800">담당자 최종 컨펌</h4>
+                <p className="text-xs text-amber-600">AI 제안을 확인하고 최종 결정을 내려주세요</p>
+              </div>
             </div>
+            
+            {/* AI 제안 표시 */}
+            {Object.keys(adminLandAIResults).length > 0 && (
+              <div className="rounded-lg bg-white border p-3">
+                <p className="text-xs text-muted-foreground mb-2">AI 제안</p>
+                <div className="flex items-center gap-3">
+                  <Bot className="h-5 w-5 text-muted-foreground" />
+                  <Badge 
+                    className={(() => {
+                      const results = Object.values(adminLandAIResults);
+                      const hasPurchase = results.some(r => r.provisionalJudgment === "매수");
+                      if (hasPurchase) return "bg-green-600 hover:bg-green-600";
+                      return "bg-red-500 hover:bg-red-500";
+                    })()}
+                  >
+                    {(() => {
+                      const results = Object.values(adminLandAIResults);
+                      const purchaseCount = results.filter(r => r.provisionalJudgment === "매수").length;
+                      if (purchaseCount === results.length) return "매수";
+                      if (purchaseCount === 0) return "매수불가";
+                      return `${purchaseCount}/${results.length} 매수`;
+                    })()}
+                  </Badge>
+                  <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">담당자 최종 판정:</span>
+                </div>
+              </div>
+            )}
+            
+            {/* 최종 판정 선택 */}
+            <div className="space-y-2">
+              <Label className={reviewData.adminStatus !== "심사완료" ? "text-muted-foreground" : ""}>
+                최종 판정
+                {reviewData.adminStatus !== "심사완료" && (
+                  <span className="ml-2 text-sm font-normal text-muted-foreground">
+                    (진행상황을 &apos;심사완료&apos;로 설정하면 활성화됩니다)
+                  </span>
+                )}
+              </Label>
+              <div className="flex flex-wrap gap-2">
+                {(["매수", "기각", "심의위원회이관"] as JudgmentResult[]).map((judgment) => {
+                  const config = judgmentConfig[judgment];
+                  const Icon = config.icon;
+                  const isSelected = reviewData.finalJudgment === judgment;
+                  const isDisabled = reviewData.adminStatus !== "심사완료";
+                  return (
+                    <Button
+                      key={judgment}
+                      type="button"
+                      variant="outline"
+                      onClick={() =>
+                        setReviewData((prev) => ({ ...prev, finalJudgment: judgment }))
+                      }
+                      disabled={isDisabled}
+                      className={`cursor-pointer border-2 ${isSelected ? `${config.borderColor} ${config.textColor}` : "border-[#E1E4E7] text-foreground"} ${isDisabled ? "opacity-50" : ""}`}
+                    >
+                      <Icon className="mr-2 h-4 w-4" />
+                      {config.label}
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+            
+            {/* AI 결과와 다르게 결정 시 사유 입력 (필수) */}
+            {reviewData.finalJudgment && Object.keys(adminLandAIResults).length > 0 && (() => {
+              const results = Object.values(adminLandAIResults);
+              const aiJudgment = results.every(r => r.provisionalJudgment === "매수") ? "매수" : 
+                                results.every(r => r.provisionalJudgment !== "매수") ? "기각" : "mixed";
+              const isDifferent = reviewData.finalJudgment !== aiJudgment && aiJudgment !== "mixed";
+              return isDifferent;
+            })() && (
+              <div className="rounded-lg border-2 border-red-200 bg-red-50 p-4 space-y-2">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-red-600" />
+                  <Label className="text-base font-semibold text-red-700">
+                    관리자 검토 의견 (필수)
+                  </Label>
+                </div>
+                <p className="text-sm text-red-600">
+                  AI 제안과 다른 판정을 내렸습니다. 사유를 반드시 입력해주세요.
+                </p>
+                <Textarea
+                  placeholder="AI 판정과 다르게 결정한 사유를 작성해주세요..."
+                  rows={3}
+                  value={adminOverrideReason}
+                  onChange={(e) => setAdminOverrideReason(e.target.value)}
+                  className="border-red-300 focus:border-red-500"
+                />
+              </div>
+            )}
           </div>
 
-          {/* 저장 버�� */}
+          {/* 저장 버튼 */}
           <div className="flex justify-end gap-3 border-t border-border pt-4">
             <Button variant="outline" onClick={onBack}>
               취소
             </Button>
-            <Button onClick={handleSave} disabled={isSaving}>
+            <Button 
+              onClick={handleSave} 
+              disabled={isSaving || (
+                // AI 결과와 다르게 결정 시 사유 필수
+                reviewData.finalJudgment && Object.keys(adminLandAIResults).length > 0 && (() => {
+                  const results = Object.values(adminLandAIResults);
+                  const aiJudgment = results.every(r => r.provisionalJudgment === "매수") ? "매수" : 
+                                    results.every(r => r.provisionalJudgment !== "매수") ? "기각" : "mixed";
+                  const isDifferent = reviewData.finalJudgment !== aiJudgment && aiJudgment !== "mixed";
+                  return isDifferent && !adminOverrideReason.trim();
+                })()
+              )}
+            >
               {isSaving ? (
                 "저장 중..."
               ) : (
@@ -2609,7 +2721,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
         aiResult={(() => {
-          // 선택된 필지의 관리자 재판독 결과가 있으면 우선 사용
+          // 선택�� 필지의 관리자 재판독 결과가 있으면 우선 사용
           const selectedLandId = allLands[selectedLandIndex]?.id;
           if (selectedLandId && adminLandAIResults[selectedLandId]) {
             return adminLandAIResults[selectedLandId];
