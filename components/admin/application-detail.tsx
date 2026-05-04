@@ -1400,7 +1400,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </Badge>
                   </div>
                   
-                  {/* 지������ */}
+                  {/* 지�������� */}
                   <div className="h-[300px] rounded-lg overflow-hidden border">
                   <LeafletMap
                     parcels={(() => {
@@ -1731,9 +1731,29 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               )}
                 </div>
                 
-                {/* 우측: 분석결과 - 일단지가 아닌 경우 필지별 결과 표시 */}
+                {/* 우측: 분석결과 */}
                 <div className="space-y-4">
-                  {applicationType !== "unified" && (
+                  {/* 일단지인 경우 상단에 일단지 판정 결과 표시 */}
+                  {applicationType === "unified" && Object.keys(unifiedGroups).length > 0 && (
+                    <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h5 className="font-medium text-emerald-800 flex items-center gap-2">
+                          <Layers className="h-4 w-4" />
+                          일단지 판정 결과
+                        </h5>
+                        <Badge className="bg-emerald-600 hover:bg-emerald-600">
+                          {Object.values(unifiedGroups)[0]?.judgment || "매수"}
+                        </Badge>
+                      </div>
+                      <div className="text-sm space-y-1 text-emerald-700">
+                        <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
+                        <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
+                        <p className="text-xs text-emerald-600 mt-2">소유자 동일 + 지반 연속 + 용도 일체성 충족</p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* 모든 케이스에서 필지별 분석 결과 표시 */}
                   <div className="space-y-3 max-h-[400px] overflow-y-auto">
                   {allLands.map((land, idx) => {
                     const landResult = landAIResults[land.id];
@@ -1804,23 +1824,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     );
                   })}
                   </div>
-                  )}
-                
-                  {/* 일단지 판정 정보 */}
-                  {applicationType === "unified" && Object.keys(unifiedGroups).length > 0 && (
-                    <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-4">
-                      <h4 className="font-medium text-emerald-800 flex items-center gap-2 mb-2">
-                        <Layers className="h-4 w-4" />
-                        일단지 판정
-                      </h4>
-                      {Object.values(unifiedGroups).map((group, idx) => (
-                        <div key={idx} className="flex items-center justify-between text-sm">
-                          <span className="text-emerald-700">{group.groupName}</span>
-                          <span className="font-medium">합산 {group.combinedArea.toLocaleString()}m²</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </div>
             </TabsContent>
