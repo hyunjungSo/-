@@ -1372,7 +1372,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardHeader>
         <CardContent>
           <Tabs value={aiResultViewMode} onValueChange={(v) => setAiResultViewMode(v as "citizen" | "admin")} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
+            <TabsList className="grid w-full grid-cols-2 mb-4">
               <TabsTrigger value="citizen" className="gap-2">
                 <FileText className="h-4 w-4" />
                 민원인 결과
@@ -1425,9 +1425,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <MapIcon className="h-4 w-4" />
                       지적도
                     </h4>
+                    {checkedLandIds.length > 0 && (
+                      <Badge variant="outline" className="font-normal">
+                        {checkedLandIds.length}필지 선택
+                      </Badge>
+                    )}
                   </div>
               
-              {/* 필지 선택 목록 */}
+                  {/* 필지 선택 목록 */}
               {isMultipleLands && (
                 <div className="mb-4 rounded-lg border overflow-hidden">
                 {/* 헤더 */}
