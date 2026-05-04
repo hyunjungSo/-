@@ -920,25 +920,42 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       {/* Section 01. 민원정보 */}
       <Card>
         <CardHeader className="pb-4">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">01</span>
-            <CardTitle className="text-lg">민원정보</CardTitle>
-          </div>
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2">
-              <CardTitle>민��� ���보</CardTitle>
-              {(() => {
-                const config = adminStatusConfig[application.adminStatus];
-                const Icon = config.icon;
-                return (
-                  <Badge variant={config.variant}>
-                    <Icon className="h-3.5 w-3.5" />
-                    {config.label}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">01</span>
+              <div>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  민원정보
+                  {/* 민원 케이스 유형 뱃지 */}
+                  <Badge 
+                    variant="outline" 
+                    className={
+                      applicationType === "single" 
+                        ? "border-slate-400 bg-slate-50 text-slate-700" 
+                        : applicationType === "unified"
+                          ? "border-emerald-400 bg-emerald-50 text-emerald-700"
+                          : "border-blue-400 bg-blue-50 text-blue-700"
+                    }
+                  >
+                    {applicationType === "single" && "단일 필지"}
+                    {applicationType === "multiple" && `복수 필지 (${allLands.length}필지)`}
+                    {applicationType === "unified" && `일단지 (${allLands.length}필지)`}
                   </Badge>
-                );
-              })()}
+                </CardTitle>
+                <CardDescription>접수번호: {application.applicationNumber}</CardDescription>
+              </div>
             </div>
-            <CardDescription>접수번호: {application.applicationNumber}</CardDescription>
+            {/* 진행상태 뱃지 */}
+            {(() => {
+              const config = adminStatusConfig[application.adminStatus];
+              const Icon = config.icon;
+              return (
+                <Badge variant={config.variant} className="h-7">
+                  <Icon className="h-3.5 w-3.5 mr-1" />
+                  {config.label}
+                </Badge>
+              );
+            })()}
           </div>
         </CardHeader>
         <CardContent>
@@ -1353,7 +1370,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               )}
             </CardTitle>
             <CardDescription>
-              필지를 선택하여 AI 재판독을 실행할 수 있습니다
+              필지를 선택하여 AI 재판독을 실행�� 수 있습니다
             </CardDescription>
           </CardHeader>
           <CardContent>
