@@ -395,7 +395,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
+      // 농지 경로: 기본 330㎡, 잔여비율 25% ��하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -757,7 +757,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     setUnifiedGroups({});
   };
   
-  // 필지 포함/제외 상태 (민원인 소유 확인용)
+  // 필지 포���/제외 상태 (민원인 소유 확인용)
   const [excludedLands, setExcludedLands] = useState<Set<string>>(new Set());
   
   // 필지 포함/제외 토글
@@ -1371,57 +1371,99 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </>
                 )}
               </Button>
-              {/* 일단지 판정 결과 */}
-              {Object.keys(unifiedGroups).length > 0 && (
-                <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50/50 p-4">
-                  <h4 className="mb-3 font-medium text-emerald-800 flex items-center gap-2">
-                    <Layers className="h-4 w-4" />
-                    일단지 판정 결과
-                  </h4>
-                  <div className="space-y-2">
-                    {Object.entries(unifiedGroups).map(([groupId, group]) => {
-                      const groupLands = allLands.filter(l => group.landIds.includes(l.id));
-                      return (
-                        <div key={groupId} className="rounded-md bg-white/80 p-3 border border-emerald-100">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="font-medium text-emerald-700">{group.groupName}</span>
-                            <Badge className="bg-emerald-600 hover:bg-emerald-600">
-                              {group.judgment}
-                            </Badge>
-                          </div>
-                          <div className="text-sm text-muted-foreground space-y-1">
-                            <p>포함 필지: {groupLands.map((l, i) => String.fromCharCode(65 + allLands.findIndex(al => al.id === l.id))).join(", ")}</p>
-                            <p>합산 면적: {group.combinedArea.toLocaleString()}m²</p>
-                            <p className="text-xs text-emerald-600">
-                              소유자 동일 + 지반 연속 + 용도 일체성 충족
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+              {/* 일단지 판정 결과 - 해당/미해당 분리 표시 */}
+              {Object.keys(landAIResults).length > 0 && (
+                <div className="mt-4 space-y-3">
+                  {/* 일단지 해당 그룹 */}
+                  {Object.keys(unifiedGroups).length > 0 && (
+                    <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-4">
+                      <h4 className="mb-3 font-medium text-emerald-800 flex items-center gap-2">
+                        <Layers className="h-4 w-4" />
+                        일단지 해당
+                        <Badge variant="outline" className="ml-auto border-emerald-300 text-emerald-700">
+                          {Object.keys(unifiedGroups).length}개 그룹
+                        </Badge>
+                      </h4>
+                      <div className="space-y-2">
+                        {Object.entries(unifiedGroups).map(([groupId, group]) => {
+                          const groupLands = allLands.filter(l => group.landIds.includes(l.id));
+                          return (
+                            <div key={groupId} className="rounded-md bg-white/80 p-3 border border-emerald-100">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="font-medium text-emerald-700">{group.groupName}</span>
+                                <Badge className="bg-emerald-600 hover:bg-emerald-600">
+                                  {group.judgment}
+                                </Badge>
+                              </div>
+                              <div className="text-sm text-muted-foreground space-y-1">
+                                <p>포함 필지: {groupLands.map((l) => String.fromCharCode(65 + allLands.findIndex(al => al.id === l.id))).join(", ")}</p>
+                                <p>합산 면적: {group.combinedArea.toLocaleString()}m²</p>
+                                <p className="text-xs text-emerald-600">
+                                  소유자 동일 + 지반 연속 + 용도 일체성 충족
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                   
-                  {/* 일단지 미포함 필지 안내 */}
+                  {/* 일단지 미해당 필지 (별도 섹션) */}
                   {(() => {
                     const unifiedLandIds = Object.values(unifiedGroups).flatMap(g => g.landIds);
                     const nonUnifiedChecked = checkedLandIds.filter(id => !unifiedLandIds.includes(id));
                     if (nonUnifiedChecked.length === 0) return null;
+                    
+                    const nonUnifiedLands = allLands.filter(l => nonUnifiedChecked.includes(l.id));
+                    
                     return (
-                      <div className="mt-3 pt-3 border-t border-emerald-200">
-                        <p className="text-sm text-amber-700">
-                          일단지 미해당: 필지 {nonUnifiedChecked.map(id => {
-                            const idx = allLands.findIndex(l => l.id === id);
-                            return String.fromCharCode(65 + idx);
-                          }).join(", ")} (개별 분석)
-                        </p>
+                      <div className="rounded-lg border border-amber-200 bg-amber-50/50 p-4">
+                        <h4 className="mb-3 font-medium text-amber-800 flex items-center gap-2">
+                          <Info className="h-4 w-4" />
+                          일단지 미해당
+                          <Badge variant="outline" className="ml-auto border-amber-300 text-amber-700">
+                            {nonUnifiedChecked.length}필지
+                          </Badge>
+                        </h4>
+                        <div className="space-y-2">
+                          {nonUnifiedLands.map((land) => {
+                            const landResult = landAIResults[land.id];
+                            const landIdx = allLands.findIndex(l => l.id === land.id);
+                            return (
+                              <div key={land.id} className="rounded-md bg-white/80 p-3 border border-amber-100">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="font-medium text-amber-700">
+                                    필지 {String.fromCharCode(65 + landIdx)}
+                                  </span>
+                                  {landResult && (
+                                    <Badge 
+                                      variant={landResult.provisionalJudgment === "매수" ? "default" : "destructive"}
+                                      className={landResult.provisionalJudgment === "매수" ? "bg-emerald-600 hover:bg-emerald-600" : ""}
+                                    >
+                                      {landResult.provisionalJudgment}
+                                    </Badge>
+                                  )}
+                                </div>
+                                <div className="text-sm text-muted-foreground">
+                                  <p className="truncate">{land.address}</p>
+                                  <p>잔여 면적: {land.remainingArea.toLocaleString()}m²</p>
+                                </div>
+                                <p className="mt-1 text-xs text-amber-600">
+                                  개별 필지로 분석 (일단지 조건 미충족)
+                                </p>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     );
                   })()}
                 </div>
               )}
               
-              {/* 일단지 미판정 상태 안내 */}
-              {checkedLandIds.length >= 2 && Object.keys(unifiedGroups).length === 0 && Object.keys(landAIResults).length === 0 && (
+              {/* 일단지 미판정 상태 안내 (AI 판독 전) */}
+              {checkedLandIds.length >= 2 && Object.keys(landAIResults).length === 0 && (
                 <div className="mt-4 rounded-lg border border-muted bg-muted/30 p-4">
                   <p className="text-sm text-muted-foreground text-center">
                     AI 판독 실행 시 일단지 여부를 자동으로 판정합니다
