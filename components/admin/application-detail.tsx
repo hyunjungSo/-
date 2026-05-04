@@ -288,7 +288,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       manualCheckItems?: string[];
     };
   }>>(() => {
-    // 기존 application.aiResult가 있으면 초기값으로 설정
+    // 기존 application.aiResult가 있으면 초기값��로 설정
     if (application.aiResult) {
       const initial: Record<string, {
         provisionalJudgment: string;
@@ -1979,13 +1979,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       {/* Section 04. 담당자 검토 */}
       <Card>
         <CardHeader>
-          <div className="flex items-center gap-3 mb-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">04</span>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <User className="h-5 w-5" />
-              담당자 검토
-            </CardTitle>
-          </div>
+          <CardTitle className="text-lg">
+            담당자 검토
+          </CardTitle>
           <CardDescription>
             AI 분석 결과를 확인하고 최종 판정을 내려주세요
           </CardDescription>
