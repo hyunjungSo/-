@@ -258,6 +258,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     analysisDate: string;
     unifiedGroupId?: string; // 일단지 그룹 ID (있으면 일단지로 묶임)
     reason?: string; // 판정 사유
+    shapeIndexChange?: number; // 형상지수 변화
+    criteriaChecks?: Array<{ criteriaName: string; isMet: boolean }>; // 판정 기준
+    judgmentRationale?: { // 판단 근거 설명
+      summary: string;
+      legalBasis: string;
+      appliedCriteria: string[];
+      detailedExplanation: string;
+      manualCheckItems?: string[];
+    };
   }>>(() => {
     // 기존 application.aiResult가 있으면 초기값으로 설정
     if (application.aiResult) {
@@ -270,6 +279,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         analysisDate: string;
         unifiedGroupId?: string;
         reason?: string;
+        shapeIndexChange?: number;
+        criteriaChecks?: Array<{ criteriaName: string; isMet: boolean }>;
+        judgmentRationale?: {
+          summary: string;
+          legalBasis: string;
+          appliedCriteria: string[];
+          detailedExplanation: string;
+          manualCheckItems?: string[];
+        };
       }> = {};
       
       // landJudgments가 있으면 필지별 판정 정보 사용 (혼합 케이스)
@@ -286,6 +304,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               analysisDate: new Date().toISOString().split("T")[0],
               unifiedGroupId: lj.unifiedGroupId || undefined,
               reason: lj.reason,
+              shapeIndexChange: application.aiResult!.shapeIndexChange,
+              criteriaChecks: application.aiResult!.criteriaChecks?.map(c => ({ criteriaName: c.criteriaName, isMet: c.isMet })),
+              judgmentRationale: application.aiResult!.judgmentRationale,
             };
           }
         });
@@ -301,6 +322,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             confidence: 0.9,
             analysisDate: new Date().toISOString().split("T")[0],
             unifiedGroupId: hasUnifiedAnalysis ? "group-initial" : undefined,
+            shapeIndexChange: application.aiResult!.shapeIndexChange,
+            criteriaChecks: application.aiResult!.criteriaChecks?.map(c => ({ criteriaName: c.criteriaName, isMet: c.isMet })),
+            judgmentRationale: application.aiResult!.judgmentRationale,
           };
         });
       }
