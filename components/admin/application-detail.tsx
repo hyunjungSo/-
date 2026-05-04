@@ -181,7 +181,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
   const [aiResultViewMode, setAiResultViewMode] = useState<"citizen" | "admin">("citizen");
   
-  // 관리자 재판독 결과 (별도 저장)
+  // 관리자 재판독 결과 (별도 ��장)
   const [adminLandAIResults, setAdminLandAIResults] = useState<Record<string, {
     provisionalJudgment: string;
     landTypePath: string;
@@ -964,56 +964,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* Section 02. 필지 관리 */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <MapIcon className="h-5 w-5" />
-              필지 관리
-            </CardTitle>
-            <Badge variant="outline">
-              {applicationType === "unified" ? "일단지" : applicationType === "multiple" ? "복수필지" : "단일필지"}
-            </Badge>
-          </div>
-          <CardDescription>
-            신청된 필지 정보와 편입 현황을 확인합니다.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {allLands.map((land, idx) => (
-              <div key={land.id} className="rounded-lg border p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
-                    {String.fromCharCode(65 + idx)}
-                  </span>
-                  <div>
-                    <p className="font-medium">{land.address}</p>
-                    <p className="text-sm text-muted-foreground">{land.landType} | {land.landCategory}</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-4 text-sm">
-                  <div>
-                    <p className="text-xs text-muted-foreground">편입 전 면적</p>
-                    <p className="font-medium">{land.originalArea.toLocaleString()}m²</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">편입 면적</p>
-                    <p className="font-medium">{land.includedArea.toLocaleString()}m²</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">잔여 면적</p>
-                    <p className="font-medium">{land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Section 03. AI 분석 */}
+      {/* Section 02. AI 분석 */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
@@ -1174,7 +1125,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           
                           <div className="grid grid-cols-3 gap-3 text-sm">
                             <div className="rounded bg-white/80 p-2 text-center">
-                              <p className="text-xs text-muted-foreground">잔여 면적</p>
+                              <p className="text-xs text-muted-foreground">잔��� 면적</p>
                               <p className="font-semibold">{land.remainingArea.toLocaleString()}m²</p>
                             </div>
                             <div className="rounded bg-white/80 p-2 text-center">
@@ -1392,14 +1343,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         <div className="rounded-lg bg-blue-50 border border-blue-200 p-3">
                           <p className="text-xs font-medium text-blue-700 mb-2">적용된 현장 상황 옵션</p>
                           <div className="flex flex-wrap gap-2">
-                            {adminAIOptions.accessRoadLost && <Badge className="bg-blue-600">접면도로 상실</Badge>}
+                            {adminAIOptions.accessRoadLost && <Badge className="bg-blue-600">접면도로 ��실</Badge>}
                             {adminAIOptions.waterChannelLost && <Badge className="bg-blue-600">관개수로 상실</Badge>}
                             {adminAIOptions.farmMachineDifficulty && <Badge className="bg-blue-600">농기계 진입 곤란</Badge>}
                           </div>
                         </div>
                       )}
                       
-{/* 신청 유형별 재분석 결과 */}
+{/* 신청 유형별 재��석 결과 */}
                       
                       {/* 일단지 신청: 통합 분석 결과 */}
                       {applicationType === "unified" && (
@@ -1663,7 +1614,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 최종 판정
                 {reviewData.adminStatus !== "심사완료" && (
                   <span className="ml-2 text-sm font-normal text-muted-foreground">
-                    (진행상황을 &apos;심사완���&apos;로 설정하면 활성화됩니다)
+                    (진행상황을 &apos;심사완���&apos;로 설정하면 활성���됩니다)
                   </span>
                 )}
               </Label>
