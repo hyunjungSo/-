@@ -1066,7 +1066,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardContent>
           {isMultipleLands ? (
             <div className="space-y-3">
-              {/* 필지가 5개 이상이면 셀렉트 박스 + 요약, 4개 이하면 카드 그리드 */}
+              {/* 필지가 5개 이상이면 셀렉트 박스 + 요약, 4개 이��면 카드 그리드 */}
               {allLands.length >= 5 ? (
                 <div className="space-y-3">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
@@ -1400,7 +1400,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </Badge>
                   </div>
                   
-                  {/* 지������������ */}
+                  {/* 지�������������� */}
                   <div className="h-[300px] rounded-lg overflow-hidden border">
                   <LeafletMap
                     parcels={(() => {
@@ -1562,29 +1562,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 )}
                 
                 {/* 지도 범례 */}
-                <div className="mt-3 rounded-lg border bg-muted/30 p-3">
-                  <div className="text-xs font-medium text-foreground mb-2">지도 범례</div>
-                  <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground sm:grid-cols-3">
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                      <span>선택 신청필지</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
-                      <span>미선택 신청필지</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-3 w-3 rounded-sm border-2 border-[#ea580c] bg-[#fed7aa]" />
-                      <span>선택 인접필지</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
-                      <span>미선택 인접필지</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
-                      <span>호버 중</span>
-                    </div>
+                <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
+                    <span>신청필지</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
+                    <span>인접필지</span>
                   </div>
                 </div>
                   
@@ -1934,29 +1919,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                   
                   {/* 지도 범례 */}
-                  <div className="rounded-lg border bg-muted/30 p-3">
-                    <div className="text-xs font-medium text-foreground mb-2">지도 범례</div>
-                    <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground sm:grid-cols-3">
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                        <span>선택 신청필지</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
-                        <span>미선택 신청필지</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-3 rounded-sm border-2 border-[#ea580c] bg-[#fed7aa]" />
-                        <span>선택 인접필지</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
-                        <span>미선택 인접필지</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
-                        <span>호버 중</span>
-                      </div>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
+                      <span>신청필지</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
+                      <span>인접필지</span>
                     </div>
                   </div>
                   
