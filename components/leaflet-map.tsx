@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Layers, Map as MapIcon, Plus, Minus, Info, Locate } from "lucide-react";
+import { Layers, Map as MapIcon, Plus, Minus, Info, Locate, Ruler, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -105,6 +105,12 @@ export function LeafletMap({
     landSupplyDemand: false,
     roadArea: true,
   });
+  
+  // 거리 측정 상태
+  const [measureMode, setMeasureMode] = useState(false);
+  const [measurePoints, setMeasurePoints] = useState<Array<{ lat: number; lng: number }>>([]);
+  const [totalDistance, setTotalDistance] = useState(0);
+  const measureLayerRef = useRef<L.LayerGroup | null>(null);
 
   const isLayerVisible = currentZoom >= LAYER_MIN_ZOOM;
 
@@ -167,6 +173,10 @@ export function LeafletMap({
       // 도로구역 레이어 그룹 생성 (기본 활성화)
       const roadAreaLayer = L.layerGroup().addTo(map);
       roadAreaLayerRef.current = roadAreaLayer;
+      
+      // 거리 측정 레이어 그룹 생성
+      const measureLayer = L.layerGroup().addTo(map);
+      measureLayerRef.current = measureLayer;
 
       // 줌 변경 이벤트
       map.on("zoomend", () => {
@@ -477,6 +487,168 @@ export function LeafletMap({
       );
     }
   };
+  
+  // 두 좌표 간 거리 계산 (Haversine 공식)
+  const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
+    const R = 6371000; // 지구 반지름 (미터)
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+  
+  // 거리 측정 모드 토글
+  const toggleMeasureMode = () => {
+    if (measureMode) {
+      setMeasureMode(false);
+      resetMeasurement();
+    } else {
+      setMeasureMode(true);
+    }
+  };
+  
+  // 측정 초기화
+  const resetMeasurement = () => {
+    setMeasurePoints([]);
+    setTotalDistance(0);
+    if (measureLayerRef.current) {
+      measureLayerRef.current.clearLayers();
+    }
+  };
+  
+  // 거리 측정 클릭 핸들러
+  useEffect(() => {
+    if (!mapInstanceRef.current || !measureLayerRef.current || !isMapReady) return;
+    
+    const map = mapInstanceRef.current;
+    const measureLayer = measureLayerRef.current;
+    const L = (window as typeof window & { L: typeof import("leaflet") }).L;
+    
+    const handleMapClick = (e: L.LeafletMouseEvent) => {
+      if (!measureMode) return;
+      
+      const newPoint = { lat: e.latlng.lat, lng: e.latlng.lng };
+      const newPoints = [...measurePoints, newPoint];
+      setMeasurePoints(newPoints);
+      
+      // 총 거리 계산
+      if (newPoints.length > 1) {
+        let total = 0;
+        for (let i = 1; i < newPoints.length; i++) {
+          total += calculateDistance(
+            newPoints[i - 1].lat, newPoints[i - 1].lng,
+            newPoints[i].lat, newPoints[i].lng
+          );
+        }
+        setTotalDistance(total);
+      }
+    };
+    
+    if (measureMode) {
+      map.on("click", handleMapClick);
+      map.getContainer().style.cursor = "crosshair";
+    } else {
+      map.off("click", handleMapClick);
+      map.getContainer().style.cursor = "";
+    }
+    
+    return () => {
+      map.off("click", handleMapClick);
+    };
+  }, [measureMode, measurePoints, isMapReady]);
+  
+  // 거리 측정 포인트/라인 렌더링
+  useEffect(() => {
+    if (!measureLayerRef.current || !isMapReady) return;
+    
+    const measureLayer = measureLayerRef.current;
+    const L = (window as typeof window & { L: typeof import("leaflet") }).L;
+    
+    measureLayer.clearLayers();
+    
+    if (measurePoints.length === 0) return;
+    
+    const NAVER_PINK = "#ff3478";
+    
+    // 라인 그리기
+    if (measurePoints.length > 1) {
+      const latlngs = measurePoints.map(p => [p.lat, p.lng] as [number, number]);
+      const polyline = L.polyline(latlngs, {
+        color: NAVER_PINK,
+        weight: 4,
+        opacity: 1,
+      });
+      polyline.addTo(measureLayer);
+      
+      // 각 구간 중간에 거리 라벨 표시
+      for (let i = 1; i < measurePoints.length; i++) {
+        const p1 = measurePoints[i - 1];
+        const p2 = measurePoints[i];
+        const midLat = (p1.lat + p2.lat) / 2;
+        const midLng = (p1.lng + p2.lng) / 2;
+        const distance = calculateDistance(p1.lat, p1.lng, p2.lat, p2.lng);
+        
+        const label = distance >= 1000 
+          ? `${(distance / 1000).toFixed(1)}km` 
+          : `${distance.toFixed(0)}m`;
+        
+        const labelIcon = L.divIcon({
+          className: "measure-label",
+          html: `<div style="
+            background: white;
+            border: 2px solid ${NAVER_PINK};
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 12px;
+            font-weight: bold;
+            color: ${NAVER_PINK};
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          ">${label}</div>`,
+          iconSize: [60, 24],
+          iconAnchor: [30, 12],
+        });
+        
+        L.marker([midLat, midLng], { icon: labelIcon, interactive: false }).addTo(measureLayer);
+      }
+    }
+    
+    // 포인트 마커 그리기
+    measurePoints.forEach((point, index) => {
+      const markerIcon = L.divIcon({
+        className: "measure-point",
+        html: `<div style="
+          width: 14px;
+          height: 14px;
+          background: white;
+          border: 3px solid ${NAVER_PINK};
+          border-radius: 50%;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+          ${index === 0 && measurePoints.length > 1 ? `
+            position: relative;
+          ` : ""}
+        ">${index === 0 && measurePoints.length > 1 ? `
+          <div style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px;
+            height: 6px;
+            background: ${NAVER_PINK};
+            border-radius: 50%;
+          "></div>
+        ` : ""}</div>`,
+        iconSize: [14, 14],
+        iconAnchor: [7, 7],
+      });
+      
+      L.marker([point.lat, point.lng], { icon: markerIcon, interactive: false }).addTo(measureLayer);
+    });
+  }, [measurePoints, isMapReady]);
 
   return (
     <div className="relative h-full w-full overflow-hidden rounded-lg border border-border">
@@ -493,7 +665,7 @@ export function LeafletMap({
         </div>
       )}
 
-      {/* 지도 컨트롤 - 배경지도/레이어 */}
+      {/* 지도 컨트롤 - 배경지도/거리측정/레이어 */}
       <div className="absolute right-14 top-3 z-[1000] flex flex-col gap-2">
         {/* 배경지도 선택 */}
         <Popover>
@@ -524,6 +696,22 @@ export function LeafletMap({
             </div>
           </PopoverContent>
         </Popover>
+        
+        {/* 거리 측정 */}
+        <Button 
+          variant="secondary" 
+          size="sm" 
+          className={`h-8 gap-1.5 shadow-md ${
+            measureMode 
+              ? "text-white hover:opacity-90" 
+              : "bg-white text-[#292929] hover:bg-gray-100 [&_svg]:text-[#292929]"
+          }`}
+          style={measureMode ? { backgroundColor: '#ff3478' } : undefined}
+          onClick={toggleMeasureMode}
+        >
+          <Ruler className="h-4 w-4" />
+          <span className="text-sm">거리 측정</span>
+        </Button>
 
         {/* 레이어 선택 */}
         <Popover>
@@ -607,6 +795,56 @@ export function LeafletMap({
           <Locate className="h-4 w-4" />
         </Button>
       </div>
+
+      {/* 거리 측정 결과 패널 */}
+      {measureMode && (
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000] rounded-lg bg-white shadow-lg border border-gray-200 overflow-hidden">
+          {measurePoints.length === 0 ? (
+            <div className="px-4 py-3 text-sm text-gray-600">
+              지도를 클릭하여 거리 측정을 시작하세요
+            </div>
+          ) : (
+            <div className="min-w-[200px]">
+              {/* 거리 정보 테이블 */}
+              <div className="px-4 py-3 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-700">총거리</span>
+                  <span className="text-sm font-bold" style={{ color: '#ff3478' }}>
+                    {totalDistance >= 1000 
+                      ? `${(totalDistance / 1000).toFixed(1)}km` 
+                      : `${totalDistance.toFixed(0)}m`}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-700">도보</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    {Math.ceil(totalDistance / 67)}분
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-700">자전거</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    {Math.ceil(totalDistance / 250)}분
+                  </span>
+                </div>
+              </div>
+              {/* 안내 문구 */}
+              <div className="px-4 py-2 bg-gray-50 border-t border-gray-100 text-xs text-gray-500">
+                클릭으로 포인트 추가 | 버튼으로 측정 종료
+              </div>
+            </div>
+          )}
+          {/* 닫기 버튼 */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-1 right-1 h-6 w-6 p-0 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+            onClick={toggleMeasureMode}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
 
       {/* 축척 표시 */}
       <div className="absolute bottom-3 left-3 z-[1000] rounded bg-white/90 px-2 py-1 text-base text-gray-600 shadow">
