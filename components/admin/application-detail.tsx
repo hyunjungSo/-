@@ -757,7 +757,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           
           // 일단지 판정 사유 기록
           const unificationReasons = [
-            "소유�� 동�������",
+            "소유��� 동�������",
             `지반 연속 (${parseAddress(primaryLand.address).district})`,
             `용도 일체 (${primaryLand.landType})`
           ];
@@ -1636,31 +1636,31 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             
                             {/* 하단: 현장확인 옵션 (선택된 필지만 표시) */}
                             {isSelected && (
-                              <div className="mt-2 ml-7 flex items-center gap-3 flex-wrap">
-                                <span className="text-[10px] text-muted-foreground">현장확인:</span>
-                                <label className="flex items-center gap-1 cursor-pointer" onClick={(e) => e.stopPropagation()}>
+                              <div className="mt-3 ml-7 flex items-center gap-4 flex-wrap">
+                                <span className="text-xs text-muted-foreground font-medium">현장확인:</span>
+                                <label className="flex items-center gap-2 cursor-pointer" onClick={(e) => e.stopPropagation()}>
                                   <Checkbox 
                                     checked={landOptions.farmMachineDifficulty}
                                     onCheckedChange={(checked) => updateLandOption(land.id, 'farmMachineDifficulty', checked === true)}
-                                    className="h-3 w-3"
+                                    className="h-6 w-6"
                                   />
-                                  <span className="text-[10px]">농기계 곤란</span>
+                                  <span className="text-xs">농기계 곤란</span>
                                 </label>
-                                <label className="flex items-center gap-1 cursor-pointer" onClick={(e) => e.stopPropagation()}>
+                                <label className="flex items-center gap-2 cursor-pointer" onClick={(e) => e.stopPropagation()}>
                                   <Checkbox 
                                     checked={landOptions.accessRoadLost}
                                     onCheckedChange={(checked) => updateLandOption(land.id, 'accessRoadLost', checked === true)}
-                                    className="h-3 w-3"
+                                    className="h-6 w-6"
                                   />
-                                  <span className="text-[10px]">접면도로 상실</span>
+                                  <span className="text-xs">접면도로 상실</span>
                                 </label>
-                                <label className="flex items-center gap-1 cursor-pointer" onClick={(e) => e.stopPropagation()}>
+                                <label className="flex items-center gap-2 cursor-pointer" onClick={(e) => e.stopPropagation()}>
                                   <Checkbox 
                                     checked={landOptions.waterChannelLost}
                                     onCheckedChange={(checked) => updateLandOption(land.id, 'waterChannelLost', checked === true)}
-                                    className="h-3 w-3"
+                                    className="h-6 w-6"
                                   />
-                                  <span className="text-[10px]">관개수로 상실</span>
+                                  <span className="text-xs">관개수로 상실</span>
                                 </label>
                               </div>
                             )}
