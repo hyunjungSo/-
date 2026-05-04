@@ -612,7 +612,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "접면도로 상실",
         met: roadLost,
-        description: roadLost ? "도로 접하지 않아 접근 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유��"
+        description: roadLost ? "도로 접하지 않아 접근 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유���"
       });
       
       if (areaCheckMet || roadLost) {
@@ -1400,7 +1400,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </Badge>
                   </div>
                   
-                  {/* 지적도 */}
+                  {/* 지적��� */}
                   <div className="h-[300px] rounded-lg overflow-hidden border">
                   <LeafletMap
                     parcels={(() => {
@@ -1633,9 +1633,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                 </div>
                 
-                {/* 우측: AI 분석 결과 */}
+                {/* 우측: 분석결과 */}
                 <div className="space-y-4">
-                  <h4 className="font-medium">분석 결과</h4>
+                  <h4 className="font-medium">분석결과</h4>
                   
               {/* AI 판독 결과 - 신청 유형에 따라 다르게 표시 */}
               {Object.keys(landAIResults).length > 0 && (
@@ -1774,9 +1774,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               )}
                 </div>
                 
-                {/* 우측: 민원인 분석 결과 */}
+                {/* 우측: 분석결과 - 일단지가 아닌 경우 필지별 결과 표시 */}
                 <div className="space-y-4">
-                  <h4 className="font-medium">필지별 분석 결과</h4>
+                  {applicationType !== "unified" && (
                   <div className="space-y-3 max-h-[400px] overflow-y-auto">
                   {allLands.map((land, idx) => {
                     const landResult = landAIResults[land.id];
@@ -1846,10 +1846,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       </div>
                     );
                   })}
-                </div>
+                  </div>
+                  )}
                 
-                {/* 일단지 판정 정보 */}
-                  {Object.keys(unifiedGroups).length > 0 && (
+                  {/* 일단지 판정 정보 */}
+                  {applicationType === "unified" && Object.keys(unifiedGroups).length > 0 && (
                     <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-4">
                       <h4 className="font-medium text-emerald-800 flex items-center gap-2 mb-2">
                         <Layers className="h-4 w-4" />
@@ -2087,9 +2088,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                 </div>
                 
-                {/* 우측: 분석 결과 */}
+                {/* 우측: 분석결과 */}
                 <div className="space-y-4">
-                  <h4 className="font-medium">담당자 재분석 결과</h4>
+                  <h4 className="font-medium">분석결과</h4>
                   
                   {Object.keys(adminLandAIResults).length === 0 ? (
                     <div className="rounded-xl border-2 border-dashed border-muted p-8 text-center">
@@ -2225,7 +2226,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         </div>
                       )}
                       
-                      {/* 단일 필지 신청: 단일 분석 결과 */}
+                      {/* 단일 필지 신청: 단일 분석 ��과 */}
                       {applicationType === "single" && Object.values(adminLandAIResults)[0] && (
                         <div className={`rounded-lg border p-4 ${
                           Object.values(adminLandAIResults)[0].provisionalJudgment === "매수"
