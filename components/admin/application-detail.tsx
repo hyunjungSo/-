@@ -955,29 +955,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </Badge>
               )}
             </CardTitle>
-            {/* 신청 유형 표시 */}
-            {isMultipleLands && (
-              <div className="flex items-center gap-2">
-                {applicationType === "unified" ? (
-                  <Badge className="bg-emerald-600 hover:bg-emerald-600">
-                    <Layers className="mr-1 h-3 w-3" />
-                    일단지 신청
-                  </Badge>
-                ) : (
-                  <Badge variant="outline" className="border-blue-300 text-blue-700">
-                    복수 필지 개별 신청
-                  </Badge>
-                )}
-              </div>
-            )}
           </div>
-          {isMultipleLands && (
-            <CardDescription>
-              {applicationType === "unified" 
-                ? "일단지 신청: 모든 필지가 하나의 토지로 합산되어 분석됩니다."
-                : "복수 필지 개별 신청: 각 필지별로 개별 분석됩니다."}
-            </CardDescription>
-          )}
         </CardHeader>
         
         {/* 일단지 판정 요약 (일단지 신청인 경우에만 표시) */}
