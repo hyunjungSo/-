@@ -197,13 +197,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     }));
   };
   
-  // 기존 호환성을 위한 adminAIOptions (선택된 필지들의 옵션 합산)
-  const adminAIOptions = {
-    accessRoadLost: adminCheckedLandIds.some(id => adminAIOptionsPerLand[id]?.accessRoadLost),
-    waterChannelLost: adminCheckedLandIds.some(id => adminAIOptionsPerLand[id]?.waterChannelLost),
-    farmMachineDifficulty: adminCheckedLandIds.some(id => adminAIOptionsPerLand[id]?.farmMachineDifficulty),
-  };
-  
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
   const [aiResultViewMode, setAiResultViewMode] = useState<"citizen" | "admin">("citizen");
   
@@ -234,6 +227,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
   // 담당자가 선택한 필지 ID 목록 (수정 가능, 초기값: 민원인 신청 필지와 동일)
   const [adminCheckedLandIds, setAdminCheckedLandIds] = useState<string[]>(() => allLands.map(l => l.id));
+  
+  // 기존 호환성을 위한 adminAIOptions (선택된 필지들의 옵션 합산)
+  const adminAIOptions = {
+    accessRoadLost: adminCheckedLandIds.some(id => adminAIOptionsPerLand[id]?.accessRoadLost),
+    waterChannelLost: adminCheckedLandIds.some(id => adminAIOptionsPerLand[id]?.waterChannelLost),
+    farmMachineDifficulty: adminCheckedLandIds.some(id => adminAIOptionsPerLand[id]?.farmMachineDifficulty),
+  };
   
   // 현재 탭에 따른 선택된 필지 ID (지도 표시용)
   const currentSelectedLandIds = aiResultViewMode === "citizen" ? citizenSelectedLandIds : adminCheckedLandIds;
