@@ -757,7 +757,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           
           // 일단지 판정 사유 기록
           const unificationReasons = [
-            "소유��� 동���",
+            "소유���� 동���",
             `지반 연속 (${parseAddress(primaryLand.address).district})`,
             `용도 일체 (${primaryLand.landType})`
           ];
@@ -1161,67 +1161,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 우측: 분석결과 */}
                 <div className="space-y-4">
                   <h4 className="font-medium">분석결과</h4>
-                  
-                  {/* 일단지인 경우 일단지 판정 결과 표시 */}
-                  {applicationType === "unified" && (
-                    <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4 space-y-4">
-                      <div className="flex items-center justify-between">
-                        <h5 className="font-medium text-emerald-800 flex items-center gap-2">
-                          <Layers className="h-4 w-4" />
-                          일단지 판정 결과
-                        </h5>
-                        <Badge className="bg-emerald-600 hover:bg-emerald-600">매수</Badge>
-                      </div>
-                      <div className="text-sm space-y-1 text-emerald-700">
-                        <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
-                        <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
-                      </div>
-                      
-                      {/* 판단 요약 */}
-                      {application.aiResult?.judgmentRationale?.summary && (
-                        <div className="rounded-lg bg-white/60 p-3 border border-emerald-200">
-                          <p className="text-xs font-medium text-emerald-700 mb-1">판단 요약</p>
-                          <p className="text-sm text-emerald-800">{application.aiResult.judgmentRationale.summary}</p>
-                        </div>
-                      )}
-                      
-                      {/* 판정 기준 충족 여부 */}
-                      {application.aiResult?.criteriaChecks && application.aiResult.criteriaChecks.length > 0 && (
-                        <div className="rounded-lg bg-white/60 p-3 border border-emerald-200">
-                          <p className="text-xs font-medium text-emerald-700 mb-2">판정 기준 충족 여부</p>
-                          <div className="grid grid-cols-2 gap-2">
-                            {application.aiResult.criteriaChecks.map((check, cIdx) => (
-                              <div key={cIdx} className="flex items-center justify-between text-sm bg-white/50 rounded px-2 py-1">
-                                <span className="text-muted-foreground text-xs">{check.criteriaName}</span>
-                                <Badge 
-                                  variant={check.isMet ? "default" : "destructive"} 
-                                  className={`text-[10px] h-5 ${check.isMet ? "bg-green-600" : ""}`}
-                                >
-                                  {check.isMet ? "충족" : "미충족"}
-                                </Badge>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      
-                      {/* 법적 근거 */}
-                      {application.aiResult?.judgmentRationale?.legalBasis && (
-                        <div className="rounded-lg bg-white/60 p-3 border border-emerald-200">
-                          <p className="text-xs font-medium text-emerald-700 mb-1">법적 근거</p>
-                          <p className="text-sm text-emerald-800">{application.aiResult.judgmentRationale.legalBasis}</p>
-                        </div>
-                      )}
-                      
-                      {/* 상세 분석 */}
-                      {application.aiResult?.judgmentRationale?.detailedExplanation && (
-                        <div className="rounded-lg bg-white/60 p-3 border border-emerald-200">
-                          <p className="text-xs font-medium text-emerald-700 mb-1">상세 분석</p>
-                          <pre className="text-sm text-emerald-800 whitespace-pre-wrap">{application.aiResult.judgmentRationale.detailedExplanation}</pre>
-                        </div>
-                      )}
-                    </div>
-                  )}
                   
                   {/* 필지별 분석 결과 */}
                   <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto">
