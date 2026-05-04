@@ -311,7 +311,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     return null;
   };
 
-// ===== [1단계] 일단지 판정 로직 =====
+// ===== [1��계] 일단지 판정 로직 =====
   // 주소에서 리/동 및 지번 정보 추출
   const parseAddress = (address: string) => {
     const parts = address.split(" ");
@@ -1399,8 +1399,100 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </Badge>
               )}
             </CardTitle>
+            <CardDescription>
+              필지를 선택하여 AI 재판독을 실행할 수 있습니다
+            </CardDescription>
           </CardHeader>
           <CardContent>
+            {/* 필지 선택 체크박스 (복수 필지인 경우) */}
+            {isMultipleLands && (
+              <div className="mb-4 rounded-lg border bg-muted/30 p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium">판독 대상 필지 선택</span>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setCheckedLandIds(allLands.map(l => l.id))}
+                      className="h-7 text-xs"
+                    >
+                      전체 선택
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setCheckedLandIds([])}
+                      className="h-7 text-xs"
+                    >
+                      전체 해제
+                    </Button>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  {allLands.map((land, idx) => {
+                    const isChecked = checkedLandIds.includes(land.id);
+                    const landResult = landAIResults[land.id];
+                    const adminResult = adminLandAIResults[land.id];
+                    
+                    return (
+                      <div 
+                        key={land.id}
+                        className={`flex items-center gap-2 rounded-md border p-2 cursor-pointer transition-colors ${
+                          isChecked 
+                            ? "border-primary bg-primary/5" 
+                            : "border-border hover:bg-muted/50"
+                        }`}
+                        onClick={() => {
+                          if (isChecked) {
+                            setCheckedLandIds(prev => prev.filter(id => id !== land.id));
+                          } else {
+                            setCheckedLandIds(prev => [...prev, land.id]);
+                          }
+                        }}
+                      >
+                        <Checkbox
+                          checked={isChecked}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setCheckedLandIds(prev => [...prev, land.id]);
+                            } else {
+                              setCheckedLandIds(prev => prev.filter(id => id !== land.id));
+                            }
+                          }}
+                          className="pointer-events-none"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1">
+                            <span className={`flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold ${
+                              isChecked ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                            }`}>
+                              {String.fromCharCode(65 + idx)}
+                            </span>
+                            <span className="text-xs truncate">{land.landType}</span>
+                          </div>
+                          {/* AI 판독 결과 표시 */}
+                          {(adminResult || landResult) && (
+                            <div className="mt-1">
+                              <Badge 
+                                variant="outline" 
+                                className={`text-[10px] ${
+                                  (adminResult?.provisionalJudgment || landResult?.provisionalJudgment) === "매수"
+                                    ? "border-green-300 text-green-700"
+                                    : "border-red-300 text-red-700"
+                                }`}
+                              >
+                                {adminResult ? "(재)" : ""}{adminResult?.provisionalJudgment || landResult?.provisionalJudgment}
+                              </Badge>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            
             <Tabs defaultValue="cadastral">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="cadastral">지적도</TabsTrigger>
