@@ -288,7 +288,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       manualCheckItems?: string[];
     };
   }>>(() => {
-    // 기존 application.aiResult가 있으면 초기값��로 설정
+    // 기존 application.aiResult가 있으면 ���기값��로 설정
     if (application.aiResult) {
       const initial: Record<string, {
         provisionalJudgment: string;
@@ -757,7 +757,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           
           // 일단지 판정 사유 기록
           const unificationReasons = [
-            "소유자 동�����",
+            "소유자 동�������",
             `지반 연속 (${parseAddress(primaryLand.address).district})`,
             `용도 일체 (${primaryLand.landType})`
           ];
@@ -1170,18 +1170,26 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* 일단지인 경우 일단지 판정 결과 표시 */}
                   {applicationType === "unified" && (
-                    <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
-                      <div className="flex items-center justify-between mb-3">
+                    <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4 space-y-4">
+                      <div className="flex items-center justify-between">
                         <h5 className="font-medium text-emerald-800 flex items-center gap-2">
                           <Layers className="h-4 w-4" />
                           일단지 판정 결과
                         </h5>
                         <Badge className="bg-emerald-600 hover:bg-emerald-600">매수</Badge>
                       </div>
-                      <div className="text-sm space-y-1 text-emerald-700 mb-3">
+                      <div className="text-sm space-y-1 text-emerald-700">
                         <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
                         <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
                       </div>
+                      
+                      {/* 판단 요약 */}
+                      {application.aiResult?.judgmentRationale?.summary && (
+                        <div className="rounded-lg bg-white/60 p-3 border border-emerald-200">
+                          <p className="text-xs font-medium text-emerald-700 mb-1">판단 요약</p>
+                          <p className="text-sm text-emerald-800">{application.aiResult.judgmentRationale.summary}</p>
+                        </div>
+                      )}
                       
                       {/* 판정 기준 충족 여부 */}
                       {application.aiResult?.criteriaChecks && application.aiResult.criteriaChecks.length > 0 && (
@@ -1200,6 +1208,22 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             ))}
                           </div>
+                        </div>
+                      )}
+                      
+                      {/* 법적 근거 */}
+                      {application.aiResult?.judgmentRationale?.legalBasis && (
+                        <div className="rounded-lg bg-white/60 p-3 border border-emerald-200">
+                          <p className="text-xs font-medium text-emerald-700 mb-1">법적 근거</p>
+                          <p className="text-sm text-emerald-800">{application.aiResult.judgmentRationale.legalBasis}</p>
+                        </div>
+                      )}
+                      
+                      {/* 상세 분석 */}
+                      {application.aiResult?.judgmentRationale?.detailedExplanation && (
+                        <div className="rounded-lg bg-white/60 p-3 border border-emerald-200">
+                          <p className="text-xs font-medium text-emerald-700 mb-1">상세 분석</p>
+                          <pre className="text-sm text-emerald-800 whitespace-pre-wrap">{application.aiResult.judgmentRationale.detailedExplanation}</pre>
                         </div>
                       )}
                     </div>
@@ -1282,7 +1306,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             </div>
                             
-                            {/* 상세 분석 내용 - 민원인 화면과 동일 (application.aiResult 직접 사용) */}
+{/* 상세 분석 내용 - 개별 필지인 경우에만 표시 (일단지는 상단에 통합 표시) */}
+                            {applicationType !== "unified" && (
                             <div className="space-y-4">
                               {/* 판단 요약 */}
                               {aiResult?.judgmentRationale && (
@@ -1342,8 +1367,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </div>
                               )}
 
-                              {/* 상세 분석 - 일단지가 아닌 경우에만 표시 (일단지는 상단에 통합 표시) */}
-                              {applicationType !== "unified" && aiResult?.judgmentRationale?.detailedExplanation && (
+                              {/* 상세 분석 */}
+                              {aiResult?.judgmentRationale?.detailedExplanation && (
                                 <div className="flex items-start gap-2">
                                   <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                                   <div>
@@ -1355,8 +1380,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </div>
                               )}
                               
-                              {/* 판정 기준 충족 여부 - 일단지가 아닌 경우에만 표시 (일단지는 상단에 통합 표시) */}
-                              {applicationType !== "unified" && aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
+                              {/* 판정 기준 충족 여부 */}
+                              {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
                                 <div className="rounded-lg bg-white/60 p-3 border">
                                   <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
                                   <div className="space-y-2">
@@ -1383,6 +1408,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </p>
                               </div>
                             </div>
+                            )}
                           </AccordionContent>
                         </AccordionItem>
                       );
