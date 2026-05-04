@@ -922,7 +922,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardHeader>
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
-              <CardTitle>민원 ���보</CardTitle>
+              <CardTitle>민�� ���보</CardTitle>
               {(() => {
                 const config = adminStatusConfig[application.adminStatus];
                 const Icon = config.icon;
@@ -1350,7 +1350,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {/* 필지 선택 목록 (민원인 화면과 동��한 형태) */}
+            {/* 필지 선택 목록 (민���인 화면과 동��한 형태) */}
             {isMultipleLands && (
               <div className="mb-4 rounded-lg border overflow-hidden">
                 {/* 헤더 */}
@@ -1961,7 +1961,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           <div className="rounded bg-white/80 p-2 text-center">
                             <p className="text-xs text-muted-foreground">형상지수 변화</p>
                             <p className="font-semibold">
-                              {landResult ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}
+                              {landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}
                             </p>
                           </div>
                         </div>
