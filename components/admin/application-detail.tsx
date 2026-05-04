@@ -181,7 +181,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [adminAIOptions, setAdminAIOptions] = useState({
     accessRoadLost: false,      // 접면도로 상실
     waterChannelLost: false,    // 관개수로 상실
-    farmMachineDifficulty: false, // 농기계 진입 �����란
+    farmMachineDifficulty: false, // 농기계 진입 �������란
   });
   
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
@@ -1360,42 +1360,64 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                   </div>
                   
-                  {/* 선택된 필지 목록 미리보기 */}
+                  {/* 선택된 필지 목록 (리스트 + 체크박스) */}
                   {adminCheckedLandIds.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5">
-                      {adminCheckedLandIds.map((landId) => {
-                        const land = allLands.find(l => l.id === landId);
-                        const idx = allLands.findIndex(l => l.id === landId);
-                        if (!land) return null;
-                        return (
-                          <Badge 
-                            key={landId} 
-                            variant="outline" 
-                            className="flex items-center gap-1 bg-primary/5 border-primary/30 text-xs"
-                          >
-                            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-                              {String.fromCharCode(65 + idx)}
-                            </span>
-                            <span className="max-w-[120px] truncate">{land.address.split(" ").slice(-2).join(" ")}</span>
-                            <button
-                              type="button"
-                              className="ml-0.5 hover:text-destructive"
-                              onClick={() => setAdminCheckedLandIds(prev => prev.filter(id => id !== landId))}
-                            >
-                              <X className="h-3 w-3" />
-                            </button>
-                          </Badge>
-                        );
-                      })}
+                    <div className="rounded-lg border bg-white">
+                      <ul className="divide-y">
+                        {adminCheckedLandIds.map((landId) => {
+                          const land = allLands.find(l => l.id === landId);
+                          const idx = allLands.findIndex(l => l.id === landId);
+                          if (!land) return null;
+                          const landResult = adminLandAIResults[land.id];
+                          
+                          return (
+                            <li key={landId} className="hover:bg-muted/30 transition-colors">
+                              <div className="flex w-full items-center gap-2 px-3 py-3">
+                                {/* 체크박스 */}
+                                <Checkbox
+                                  checked={true}
+                                  onCheckedChange={() => {
+                                    setAdminCheckedLandIds(prev => prev.filter(id => id !== landId));
+                                  }}
+                                  className="h-5 w-5 shrink-0"
+                                />
+                                
+                                {/* 필지 정보 */}
+                                <div className="flex flex-1 items-center gap-3">
+                                  <span className="flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold text-white shrink-0" 
+                                    style={{
+                                      backgroundColor: 
+                                        landResult?.provisionalJudgment === "매수" ? "#16a34a" : 
+                                        landResult?.provisionalJudgment === "매수불가" ? "#dc2626" : 
+                                        "#0ea5e9"
+                                    }}
+                                  >
+                                    {String.fromCharCode(65 + idx)}
+                                  </span>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-foreground truncate">{land.address}</p>
+                                    <p className="text-xs text-muted-foreground">
+                                      잔여 {land.remainingArea.toLocaleString()}m² | {land.landType}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                      {/* 전체 해제 버튼 */}
                       {adminCheckedLandIds.length > 0 && (
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="h-6 text-xs text-muted-foreground"
-                          onClick={() => setAdminCheckedLandIds([])}
-                        >
-                          전체 해제
-                        </Button>
+                        <div className="border-t px-3 py-2">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="w-full text-xs text-muted-foreground"
+                            onClick={() => setAdminCheckedLandIds([])}
+                          >
+                            전체 해제
+                          </Button>
+                        </div>
                       )}
                     </div>
                   )}
@@ -1636,7 +1658,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         </Button>
                       </div>
                       
-                      {/* 현재 선택된 필지 상세 정보 */}
+                      {/* 현재 선택된 필지 ��세 정보 */}
                       {allLands[selectedLandIndex] && (
                         <div className="space-y-2">
                           <div className="grid grid-cols-2 gap-2 text-sm">
