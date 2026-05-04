@@ -181,7 +181,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [adminAIOptions, setAdminAIOptions] = useState({
     accessRoadLost: false,      // 접면도로 상실
     waterChannelLost: false,    // 관개수로 상실
-    farmMachineDifficulty: false, // 농기계 진입 곤란
+    farmMachineDifficulty: false, // 농기계 진입 ���란
   });
   
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
@@ -1140,6 +1140,24 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 <div className="space-y-4">
                   <h4 className="font-medium">분석결과</h4>
                   
+                  {/* 일단지인 경우 일단지 판정 결과 표시 */}
+                  {applicationType === "unified" && (
+                    <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h5 className="font-medium text-emerald-800 flex items-center gap-2">
+                          <Layers className="h-4 w-4" />
+                          일단지 판정 결과
+                        </h5>
+                        <Badge className="bg-emerald-600 hover:bg-emerald-600">매수</Badge>
+                      </div>
+                      <div className="text-sm space-y-1 text-emerald-700">
+                        <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
+                        <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
+                        <p className="text-xs text-emerald-600 mt-1">소유자 동일 + 지반 연속 + 용도 일체성 충족</p>
+                      </div>
+                    </div>
+                  )}
+                  
                   {/* 필지별 분석 결과 */}
                   <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto">
                     {allLands.map((land, idx) => {
@@ -1223,7 +1241,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             </div>
                             
-                            {/* 상세 분석 내용 - 민원인 화면과 동일 (application.aiResult 직접 사용) */}
+                            {/* 상세 분석 내용 - 민원인 ��면과 동일 (application.aiResult 직접 사용) */}
                             <div className="space-y-4">
                               {/* 판단 요약 */}
                               {aiResult?.judgmentRationale && (
