@@ -1371,20 +1371,61 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-6 lg:grid-cols-2">
-            {/* 좌측: 지적도 */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h4 className="font-medium flex items-center gap-2">
-                  <MapIcon className="h-4 w-4" />
-                  지적도
-                </h4>
-                {checkedLandIds.length > 0 && (
-                  <Badge variant="outline" className="font-normal">
-                    {checkedLandIds.length}필지 선택
+          <Tabs value={aiResultViewMode} onValueChange={(v) => setAiResultViewMode(v as "citizen" | "admin")} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-6">
+              <TabsTrigger value="citizen" className="gap-2">
+                <FileText className="h-4 w-4" />
+                민원인 결과
+                {aiResult && (
+                  <Badge 
+                    variant="outline" 
+                    className={`ml-1 text-xs ${
+                      aiResult.provisionalJudgment === "매수" 
+                        ? "border-green-500 text-green-600" 
+                        : "border-red-500 text-red-600"
+                    }`}
+                  >
+                    {aiResult.provisionalJudgment}
                   </Badge>
                 )}
-              </div>
+              </TabsTrigger>
+              <TabsTrigger value="admin" className="gap-2">
+                <User className="h-4 w-4" />
+                담당자 결과
+                {Object.keys(adminLandAIResults).length > 0 ? (
+                  <Badge 
+                    variant="outline" 
+                    className={`ml-1 text-xs ${(() => {
+                      const results = Object.values(adminLandAIResults);
+                      const hasPurchase = results.some(r => r.provisionalJudgment === "매수");
+                      return hasPurchase ? "border-green-500 text-green-600" : "border-red-500 text-red-600";
+                    })()}`}
+                  >
+                    {(() => {
+                      const results = Object.values(adminLandAIResults);
+                      const purchaseCount = results.filter(r => r.provisionalJudgment === "매수").length;
+                      if (purchaseCount === results.length) return "매수";
+                      if (purchaseCount === 0) return "매수불가";
+                      return `${purchaseCount}/${results.length}`;
+                    })()}
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="ml-1 text-xs">미실행</Badge>
+                )}
+              </TabsTrigger>
+            </TabsList>
+            
+            {/* 민원인 결과 탭 */}
+            <TabsContent value="citizen">
+              <div className="grid gap-6 lg:grid-cols-2">
+                {/* 좌측: 지적도 */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium flex items-center gap-2">
+                      <MapIcon className="h-4 w-4" />
+                      지적도
+                    </h4>
+                  </div>
               
               {/* 필지 선택 목록 */}
               {isMultipleLands && (
@@ -1887,58 +1928,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </p>
                 </div>
               )}
-            </div>
-            
-            {/* 우측: 분석 결과 탭 */}
-            <div className="space-y-4">
-              <Tabs value={aiResultViewMode} onValueChange={(v) => setAiResultViewMode(v as "citizen" | "admin")}>
-              <TabsList className="grid w-full grid-cols-2 mb-4">
-                <TabsTrigger value="citizen" className="gap-2">
-                  <FileText className="h-4 w-4" />
-                  민원인 결과
-                  {aiResult && (
-                    <Badge 
-                      variant="outline" 
-                      className={`ml-1 text-xs ${
-                        aiResult.provisionalJudgment === "매수" 
-                          ? "border-green-500 text-green-600" 
-                          : "border-red-500 text-red-600"
-                      }`}
-                    >
-                      {aiResult.provisionalJudgment}
-                    </Badge>
-                  )}
-                </TabsTrigger>
-                <TabsTrigger value="admin" className="gap-2">
-                  <User className="h-4 w-4" />
-                  담당자 결과
-                  {Object.keys(adminLandAIResults).length > 0 ? (
-                    <Badge 
-                      variant="outline" 
-                      className={`ml-1 text-xs ${(() => {
-                        const results = Object.values(adminLandAIResults);
-                        const hasPurchase = results.some(r => r.provisionalJudgment === "매수");
-                        return hasPurchase ? "border-green-500 text-green-600" : "border-red-500 text-red-600";
-                      })()}`}
-                    >
-                      {(() => {
-                        const results = Object.values(adminLandAIResults);
-                        const purchaseCount = results.filter(r => r.provisionalJudgment === "매수").length;
-                        if (purchaseCount === results.length) return "매수";
-                        if (purchaseCount === 0) return "매수불가";
-                        return `${purchaseCount}/${results.length}`;
-                      })()}
-                    </Badge>
-                  ) : (
-                    <Badge variant="outline" className="ml-1 text-xs">미실행</Badge>
-                  )}
-                </TabsTrigger>
-              </TabsList>
-              
-              {/* 민원인 결과 탭 */}
-              <TabsContent value="citizen" className="space-y-4">
-                {/* 필지별 분석 결과 */}
-                <div className="space-y-3 max-h-[400px] overflow-y-auto">
+                </div>
+                
+                {/* 우측: 민원인 분석 결과 */}
+                <div className="space-y-4">
+                  <h4 className="font-medium">필지별 분석 결과</h4>
+                  <div className="space-y-3 max-h-[400px] overflow-y-auto">
                   {allLands.map((land, idx) => {
                     const landResult = landAIResults[land.id];
                     return (
@@ -2010,60 +2005,173 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </div>
                 
                 {/* 일단지 판정 정보 */}
-                {Object.keys(unifiedGroups).length > 0 && (
-                  <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-4">
-                    <h4 className="font-medium text-emerald-800 flex items-center gap-2 mb-2">
-                      <Layers className="h-4 w-4" />
-                      일단지 판정
-                    </h4>
-                    {Object.values(unifiedGroups).map((group, idx) => (
-                      <div key={idx} className="flex items-center justify-between text-sm">
-                        <span className="text-emerald-700">{group.groupName}</span>
-                        <span className="font-medium">합산 {group.combinedArea.toLocaleString()}m²</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </TabsContent>
+                  {Object.keys(unifiedGroups).length > 0 && (
+                    <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-4">
+                      <h4 className="font-medium text-emerald-800 flex items-center gap-2 mb-2">
+                        <Layers className="h-4 w-4" />
+                        일단지 판정
+                      </h4>
+                      {Object.values(unifiedGroups).map((group, idx) => (
+                        <div key={idx} className="flex items-center justify-between text-sm">
+                          <span className="text-emerald-700">{group.groupName}</span>
+                          <span className="font-medium">합산 {group.combinedArea.toLocaleString()}m²</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </TabsContent>
               
               {/* 담당자 결과 탭 */}
-              <TabsContent value="admin" className="space-y-4">
-                {Object.keys(adminLandAIResults).length === 0 ? (
-                  /* 재분석 미실행 상태 */
-                  <div className="rounded-xl border-2 border-dashed border-muted p-8 text-center">
-                    <Bot className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                    <h4 className="mt-4 font-medium text-foreground">담당자 재분석 미실행</h4>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      아래에서 현장 상황 옵션을 설정하고<br />AI 분석을 실행해주세요.
-                    </p>
-                  </div>
-                ) : (
-                  /* 재분석 결과 표시 */
-                  <>
-                    {/* 분석 프로세스 보기 버튼 */}
-                    <Button
-                      variant="outline"
-                      className="w-full gap-2"
-                      onClick={() => setShowAnalysisFlow(true)}
-                    >
-                      <PlayCircle className="h-4 w-4" />
-                      분석 프로세스 상세 보기
-                    </Button>
-                    
-                    {/* 적용된 옵션 */}
-                    {(adminAIOptions.accessRoadLost || adminAIOptions.waterChannelLost || adminAIOptions.farmMachineDifficulty) && (
-                      <div className="rounded-lg bg-blue-50 border border-blue-200 p-3">
-                        <p className="text-xs font-medium text-blue-700 mb-2">적용된 현장 상황 옵션</p>
-                        <div className="flex flex-wrap gap-2">
-                          {adminAIOptions.accessRoadLost && <Badge className="bg-blue-600">접면도로 상실</Badge>}
-                          {adminAIOptions.waterChannelLost && <Badge className="bg-blue-600">관개수로 상실</Badge>}
-                          {adminAIOptions.farmMachineDifficulty && <Badge className="bg-blue-600">농기계 진입 곤란</Badge>}
-                        </div>
-                      </div>
+            <TabsContent value="admin">
+              <div className="grid gap-6 lg:grid-cols-2">
+                {/* 좌측: 지적도 + 필지 선택 + AI 분석 옵션 */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium flex items-center gap-2">
+                      <MapIcon className="h-4 w-4" />
+                      지적도
+                    </h4>
+                    {checkedLandIds.length > 0 && (
+                      <Badge variant="outline" className="font-normal">
+                        {checkedLandIds.length}필지 선택
+                      </Badge>
                     )}
+                  </div>
+                  
+                  {/* 필지 선택 목록 */}
+                  {isMultipleLands && (
+                    <div className="rounded-lg border overflow-hidden">
+                      <div className="flex items-center justify-between border-b bg-muted/50 px-3 py-2">
+                        <span className="text-sm font-medium">판독 대상 필지</span>
+                        <span className="text-xs text-primary font-medium">
+                          {checkedLandIds.length}/{allLands.length}필지
+                        </span>
+                      </div>
+                      <ul className="max-h-[180px] overflow-y-auto divide-y">
+                        {allLands.map((land, idx) => {
+                          const isChecked = checkedLandIds.includes(land.id);
+                          const result = adminLandAIResults[land.id];
+                          return (
+                            <li 
+                              key={land.id}
+                              className={`flex items-center gap-3 px-3 py-2 hover:bg-muted/50 cursor-pointer transition-colors ${
+                                isChecked ? "bg-primary/5" : ""
+                              }`}
+                              onClick={() => handleLandCheckToggle(land.id)}
+                            >
+                              <Checkbox checked={isChecked} />
+                              <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
+                                result?.provisionalJudgment === "매수" ? "bg-green-600 text-white" : 
+                                result?.provisionalJudgment === "매수불가" ? "bg-red-500 text-white" : "bg-muted"
+                              }`}>
+                                {String.fromCharCode(65 + idx)}
+                              </span>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium truncate">{land.address}</p>
+                              </div>
+                              {result && (
+                                <Badge variant={result.provisionalJudgment === "매수" ? "default" : "destructive"} className="text-xs">
+                                  {result.provisionalJudgment}
+                                </Badge>
+                              )}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  )}
+                  
+                  {/* 정밀 재분석 설정 */}
+                  <div className="rounded-xl border-2 border-blue-200 bg-gradient-to-b from-blue-50/80 to-white p-4">
+                    <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                      <Edit3 className="h-4 w-4" />
+                      정밀 재분석 설정
+                    </h4>
                     
-                    {/* 필지별 재분석 결과 */}
-                    <div className="space-y-3 max-h-[400px] overflow-y-auto">
+                    <div className="space-y-3 mb-4">
+                      <div className="flex items-center justify-between rounded-lg border bg-white p-3">
+                        <Label className="text-sm">농기계 진입 곤란</Label>
+                        <Switch 
+                          checked={adminAIOptions.farmMachineDifficulty}
+                          onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, farmMachineDifficulty: checked }))}
+                        />
+                      </div>
+                      <div className="flex items-center justify-between rounded-lg border bg-white p-3">
+                        <Label className="text-sm">접면도로 상실</Label>
+                        <Switch 
+                          checked={adminAIOptions.accessRoadLost}
+                          onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, accessRoadLost: checked }))}
+                        />
+                      </div>
+                      <div className="flex items-center justify-between rounded-lg border bg-white p-3">
+                        <Label className="text-sm">관개수로 상실</Label>
+                        <Switch 
+                          checked={adminAIOptions.waterChannelLost}
+                          onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, waterChannelLost: checked }))}
+                        />
+                      </div>
+                    </div>
+                    
+                    <Button
+                      onClick={handleRunAIAnalysis}
+                      disabled={isAIAnalyzing || checkedLandIds.length === 0}
+                      className="w-full gap-2 bg-blue-600 hover:bg-blue-700"
+                    >
+                      {isAIAnalyzing ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          AI 분석 중...
+                        </>
+                      ) : (
+                        <>
+                          <Bot className="h-4 w-4" />
+                          AI 분석 실행 ({checkedLandIds.length}필지)
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+                
+                {/* 우측: 분석 결과 */}
+                <div className="space-y-4">
+                  <h4 className="font-medium">담당자 재분석 결과</h4>
+                  
+                  {Object.keys(adminLandAIResults).length === 0 ? (
+                    <div className="rounded-xl border-2 border-dashed border-muted p-8 text-center">
+                      <Bot className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                      <h4 className="mt-4 font-medium text-foreground">재분석 미실행</h4>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        좌측에서 현장 상황 옵션을 설정하고<br />AI 분석을 실행해주세요.
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      {/* 분석 프로세스 보기 버튼 */}
+                      <Button
+                        variant="outline"
+                        className="w-full gap-2"
+                        onClick={() => setShowAnalysisFlow(true)}
+                      >
+                        <PlayCircle className="h-4 w-4" />
+                        분석 프로세스 상세 보기
+                      </Button>
+                      
+                      {/* 적용된 옵션 */}
+                      {(adminAIOptions.accessRoadLost || adminAIOptions.waterChannelLost || adminAIOptions.farmMachineDifficulty) && (
+                        <div className="rounded-lg bg-blue-50 border border-blue-200 p-3">
+                          <p className="text-xs font-medium text-blue-700 mb-2">적용된 현장 상황 옵션</p>
+                          <div className="flex flex-wrap gap-2">
+                            {adminAIOptions.accessRoadLost && <Badge className="bg-blue-600">접면도로 상실</Badge>}
+                            {adminAIOptions.waterChannelLost && <Badge className="bg-blue-600">관개수로 상실</Badge>}
+                            {adminAIOptions.farmMachineDifficulty && <Badge className="bg-blue-600">농기계 진입 곤란</Badge>}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* 필지별 재분석 결과 */}
+                      <div className="space-y-3 max-h-[400px] overflow-y-auto">
                       {Object.entries(adminLandAIResults).map(([landId, result]) => {
                         const land = allLands.find(l => l.id === landId);
                         const landIdx = allLands.findIndex(l => l.id === landId);
@@ -2110,7 +2218,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             </div>
                             
-                            {/* 판정 사유 */}
+                            {/* 판정 사�� */}
                             {result.reason && (
                               <div className="mt-3 pt-3 border-t">
                                 <p className="text-sm text-muted-foreground">
@@ -2149,64 +2257,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <RotateCcw className="h-4 w-4" />
                       재분석 결과 초기화
                     </Button>
-                  </>
-                )}
-                
-                {/* 정밀 재분석 설정 */}
-                <div className="rounded-xl border-2 border-blue-200 bg-gradient-to-b from-blue-50/80 to-white p-4">
-                  <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
-                    <Edit3 className="h-4 w-4" />
-                    정밀 재분석 설정
-                  </h4>
-                  
-                  {/* 현장 상황 토글 */}
-                  <div className="grid gap-3 sm:grid-cols-3 mb-4">
-                    <div className="flex items-center justify-between rounded-lg border bg-white p-3">
-                      <Label className="text-sm">농기계 진입 곤란</Label>
-                      <Switch 
-                        checked={adminAIOptions.farmMachineDifficulty}
-                        onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, farmMachineDifficulty: checked }))}
-                      />
-                    </div>
-                    <div className="flex items-center justify-between rounded-lg border bg-white p-3">
-                      <Label className="text-sm">접면도로 상실</Label>
-                      <Switch 
-                        checked={adminAIOptions.accessRoadLost}
-                        onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, accessRoadLost: checked }))}
-                      />
-                    </div>
-                    <div className="flex items-center justify-between rounded-lg border bg-white p-3">
-                      <Label className="text-sm">관개수로 상실</Label>
-                      <Switch 
-                        checked={adminAIOptions.waterChannelLost}
-                        onCheckedChange={(checked) => setAdminAIOptions(prev => ({ ...prev, waterChannelLost: checked }))}
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* AI 분석 실행 버튼 */}
-                  <Button
-                    onClick={handleRunAIAnalysis}
-                    disabled={isAIAnalyzing || checkedLandIds.length === 0}
-                    className="w-full gap-2 bg-blue-600 hover:bg-blue-700"
-                  >
-                    {isAIAnalyzing ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        AI 분석 중...
-                      </>
-                    ) : (
-                      <>
-                        <Bot className="h-4 w-4" />
-                        AI 분석 실행 ({checkedLandIds.length}필지)
-                      </>
-                    )}
-                  </Button>
+                    </>
+                  )}
                 </div>
-              </TabsContent>
-              </Tabs>
-            </div>
-          </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
 
