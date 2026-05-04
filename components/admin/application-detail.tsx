@@ -612,7 +612,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "접면도로 상실",
         met: roadLost,
-        description: roadLost ? "도로 접하지 않아 접근 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유지"
+        description: roadLost ? "도로 접하지 않아 접근 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유��"
       });
       
       if (areaCheckMet || roadLost) {
@@ -2041,64 +2041,20 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     />
                   </div>
                   
-                  {/* 일단지 신청인 경우: 일단지 판정 기준 확인 */}
-                  {applicationType === "unified" && (
-                    <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 overflow-hidden">
-                      <div className="flex items-center justify-between border-b border-emerald-200 bg-emerald-100/50 px-3 py-2">
-                        <span className="text-sm font-medium text-emerald-800 flex items-center gap-2">
-                          <Layers className="h-4 w-4" />
-                          일단지 판정 기준 확인
-                        </span>
-                        <Badge className="bg-emerald-600 hover:bg-emerald-600">
-                          {allLands.length}필지 통합
-                        </Badge>
-                      </div>
-                      <div className="p-3 space-y-2">
-                        {/* 포함 필지 목록 */}
-                        <div className="text-sm text-emerald-700 mb-3">
-                          <p className="font-medium mb-1">포함 필지:</p>
-                          {allLands.map((land, idx) => (
-                            <p key={land.id} className="text-xs text-muted-foreground ml-2">
-                              {String.fromCharCode(65 + idx)}. {land.address}
-                            </p>
-                          ))}
-                        </div>
-                        {/* 일단지 기준 체크리스트 */}
-                        <div className="space-y-2 pt-2 border-t border-emerald-200">
-                          <p className="text-xs font-medium text-emerald-800">일단지 판정 요건</p>
-                          <div className="flex items-center justify-between rounded-lg border border-emerald-200 bg-white p-2">
-                            <Label className="text-sm">소유자 동일</Label>
-                            <Switch defaultChecked />
-                          </div>
-                          <div className="flex items-center justify-between rounded-lg border border-emerald-200 bg-white p-2">
-                            <Label className="text-sm">지반 연속</Label>
-                            <Switch defaultChecked />
-                          </div>
-                          <div className="flex items-center justify-between rounded-lg border border-emerald-200 bg-white p-2">
-                            <Label className="text-sm">용도 일체성</Label>
-                            <Switch defaultChecked />
-                          </div>
-                        </div>
-                        <div className="text-xs text-emerald-600 pt-2">
-                          합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²
-                        </div>
-                      </div>
+                  {/* 필지 리스트 */}
+                  <div className="rounded-lg border overflow-hidden">
+                    <div className="flex items-center justify-between border-b bg-muted/50 px-3 py-2">
+                      <span className="text-sm font-medium">
+                        {applicationType === "unified" ? "일단지 포함 필지" : applicationType === "multiple" ? "판독 대상 필지" : "분석 대상 필지"}
+                      </span>
+                      <span className="text-xs text-primary font-medium">
+                        {adminCheckedLandIds.length}/{allLands.length}필지
+                      </span>
                     </div>
-                  )}
-                  
-                  {/* 복수 필지 개별 신청인 경우: 필지 선택 가능 */}
-                  {applicationType === "multiple" && (
-                    <div className="rounded-lg border overflow-hidden">
-                      <div className="flex items-center justify-between border-b bg-muted/50 px-3 py-2">
-                        <span className="text-sm font-medium">판독 대상 필지 선택</span>
-                        <span className="text-xs text-primary font-medium">
-                          {adminCheckedLandIds.length}/{allLands.length}필지
-                        </span>
-                      </div>
-                      <ul className="max-h-[180px] overflow-y-auto divide-y">
-                        {allLands.map((land, idx) => {
-                          const isChecked = adminCheckedLandIds.includes(land.id);
-                          const result = adminLandAIResults[land.id];
+                    <ul className="max-h-[180px] overflow-y-auto divide-y">
+                      {allLands.map((land, idx) => {
+                        const isChecked = adminCheckedLandIds.includes(land.id);
+                        const result = adminLandAIResults[land.id];
                           return (
                             <li 
                               key={land.id}
@@ -2126,21 +2082,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           );
                         })}
                       </ul>
-                    </div>
-                  )}
-                  
-                  {/* 단일 필지 신청인 경우: 필지 정보만 표시 */}
-                  {applicationType === "single" && (
-                    <div className="rounded-lg border bg-muted/30 p-3">
-                      <p className="text-sm font-medium mb-2">분석 대상 필지</p>
-                      <div className="flex items-center gap-2">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold bg-primary text-primary-foreground">
-                          A
-                        </span>
-                        <p className="text-sm truncate">{allLands[0]?.address}</p>
-                      </div>
-                    </div>
-                  )}
+                  </div>
                   
                   {/* 정밀 재분석 설정 */}
                   <div className="rounded-xl border-2 border-blue-200 bg-gradient-to-b from-blue-50/80 to-white p-4">
@@ -2482,7 +2424,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     })()}
                   </Badge>
                   <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">담당자 최종 판정:</span>
+                  <span className="text-sm text-muted-foreground">담당자 최종 ���정:</span>
                 </div>
               </div>
             )}
