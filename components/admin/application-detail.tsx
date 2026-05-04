@@ -1400,7 +1400,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </Badge>
                   </div>
                   
-                  {/* 지�������� */}
+                  {/* 지���������� */}
                   <div className="h-[300px] rounded-lg overflow-hidden border">
                   <LeafletMap
                     parcels={(() => {
@@ -1948,53 +1948,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         <span>호버 중</span>
                       </div>
                     </div>
-                  </div>
-                  
-                  {/* 필지 리스트 */}
-                  <div className="rounded-lg border overflow-hidden">
-                    <div className="flex items-center justify-between border-b bg-muted/50 px-3 py-2">
-                      <span className="text-sm font-medium">
-                        {applicationType === "unified" ? "일단지 포함 필지" : applicationType === "multiple" ? "판독 대상 필지" : "분석 대상 필지"}
-                      </span>
-                      <span className="text-xs text-primary font-medium">
-                        {adminCheckedLandIds.length}/{allLands.length}필지
-                      </span>
-                    </div>
-                    <ul className="max-h-[180px] overflow-y-auto divide-y">
-                      {allLands.map((land, idx) => {
-                        const isChecked = adminCheckedLandIds.includes(land.id);
-                        const result = adminLandAIResults[land.id];
-                          return (
-                            <li 
-                              key={land.id}
-                              className={`flex items-center gap-3 px-3 py-2 hover:bg-muted/50 cursor-pointer transition-colors ${
-                                isChecked ? "bg-primary/5" : ""
-                              }`}
-                              onClick={() => handleLandCheckToggle(land.id)}
-                            >
-                              <Checkbox checked={isChecked} />
-                              <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
-                                result?.provisionalJudgment === "매수" ? "bg-green-600 text-white" : 
-                                result?.provisionalJudgment === "매수불가" ? "bg-red-500 text-white" : 
-                                isChecked ? "bg-primary text-primary-foreground" : "bg-muted"
-                              }`}>
-                                {String.fromCharCode(65 + idx)}
-                              </span>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium truncate">{land.address}</p>
-                                <p className="text-xs text-muted-foreground">
-                                  잔여 {land.remainingArea.toLocaleString()}m² | {land.landType}
-                                </p>
-                              </div>
-                              {result && (
-                                <Badge variant={result.provisionalJudgment === "매수" ? "default" : "destructive"} className="text-xs">
-                                  {result.provisionalJudgment}
-                                </Badge>
-                              )}
-                            </li>
-                          );
-                        })}
-                      </ul>
                   </div>
                   
                   {/* 정밀 재분석 설정 */}
