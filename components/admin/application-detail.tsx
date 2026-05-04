@@ -1356,7 +1356,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-{/* Section 03. AI 분석 */}
+      {/* Section 03. AI 분석 */}
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center gap-3 mb-2">
@@ -1385,9 +1385,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </Badge>
                 )}
               </div>
-            {/* 필지 선택 목록 (������인 화면과 동��한 형태) */}
-            {isMultipleLands && (
-              <div className="mb-4 rounded-lg border overflow-hidden">
+              
+              {/* 필지 선택 목록 */}
+              {isMultipleLands && (
+                <div className="mb-4 rounded-lg border overflow-hidden">
                 {/* 헤더 */}
                 <div className="flex items-center justify-between border-b bg-muted/50 px-3 py-2">
                   <span className="text-sm font-medium">판독 대상 필지</span>
@@ -1725,8 +1726,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </TabsContent>
             </Tabs>
             
-{/* 관리자용 AI 판독 실행 버튼 */}
-            <div className="mt-4 pt-4 border-t border-border">
+              {/* 관리자용 AI 판독 실행 버튼 */}
+              <div className="mt-4 pt-4 border-t border-border">
               <Button
                 onClick={handleRunAIAnalysis}
                 disabled={isAIAnalyzing || checkedLandIds.length === 0}
@@ -1885,6 +1886,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </p>
                 </div>
               )}
+            </div>
             </div>
             
             {/* 우측: 분석 결과 탭 */}
