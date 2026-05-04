@@ -135,41 +135,7 @@ function AddressSearchModal({
   );
 }
 
-// AI 분석 결과 상세 섹션
-import { RationaleCard } from "@/components/ui/rationale-card";
 
-function AIResultDetailSection({ aiResult, landInfo }: { aiResult: AIAnalysisResult; landInfo: LandInfo }) {
-  // aiResult에서 judgmentRationale 사용 (dummy-data.ts에서 생성)
-  const rationale = aiResult.judgmentRationale;
-
-  // rationale이 없는 경우 기본값 생성
-  const shapeIndexChange = aiResult.shapeIndexChange || 0;
-  const manualCheckItems = aiResult.criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
-
-  const defaultRationale = {
-    summary: aiResult.provisionalJudgment === "매수"
-      ? `잔여지 비율 ${landInfo.remainingRatio}%로 기준 충족, 형상지수 +${shapeIndexChange.toFixed(1)} 상승으로 매수 대상 판정`
-      : `분석 결과 매수 기준에 충족하지 않아 매수불가로 판정되었습니다.`,
-    legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
-    appliedCriteria: [] as string[],
-    manualCheckItems: manualCheckItems,
-    detailedExplanation: `소재지: ${landInfo.address}
-토지유형: ${landInfo.landType}, 지목: ${landInfo.landCategory}
-편입현황: ${landInfo.originalArea}㎡ → 잔여 ${landInfo.remainingArea}㎡ (잔여비율 ${landInfo.remainingRatio}%)
-형상변화: ${landInfo.originalShape} → ${landInfo.remainingShape} (지수 +${shapeIndexChange.toFixed(1)})`
-  };
-
-  const finalRationale = rationale || defaultRationale;
-
-  return (
-    <div className="mt-4">
-      <RationaleCard 
-        rationale={finalRationale}
-        provisionalJudgment={aiResult.provisionalJudgment}
-      />
-    </div>
-  );
-}
 
 export function ApplicationFormSection({
   landInfo,
@@ -480,11 +446,6 @@ export function ApplicationFormSection({
                     </p>
                   </div>
                 )}
-                
-                {/* 판단 근거 상세 보기 (첫 번째 필지 기준) */}
-                {allLands.length > 0 && allAiResults[0] && (
-                  <AIResultDetailSection aiResult={allAiResults[0]} landInfo={allLands[0]} />
-                )}
               </div>
             ) : (
               <div className="space-y-3">
@@ -560,14 +521,11 @@ export function ApplicationFormSection({
                         <span className="text-base font-bold text-red-600">기준 미충족</span>
                       </>
                     )}
-                  </div>
-                  <p className="mt-2 text-sm text-muted-foreground">
+</div>
+                <p className="mt-2 text-sm text-muted-foreground">
                     총 1필지 중 {aiResult?.provisionalJudgment === "매수" ? "1" : "0"}필지 매수 가능
                   </p>
                 </div>
-
-                {/* 판단 근거 상세 보기 */}
-                <AIResultDetailSection aiResult={aiResult} landInfo={landInfo} />
               </div>
             )}
           </CardContent>

@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { LandInfo, AIAnalysisResult } from "@/lib/types";
 import {
@@ -26,6 +27,7 @@ interface AIAnalysisFlowDialogProps {
   onOpenChange: (open: boolean) => void;
   aiResult: AIAnalysisResult | null;
   landInfo: LandInfo;
+  isAdminResult?: boolean; // 관리자 재판독 결과 여부
 }
 
 type LandType = "대지" | "농지" | "산지" | "그밖의토지";
@@ -42,6 +44,7 @@ export function AIAnalysisFlowDialog({
   onOpenChange,
   aiResult,
   landInfo,
+  isAdminResult = false,
 }: AIAnalysisFlowDialogProps) {
   const [animationStep, setAnimationStep] = useState(0);
 
@@ -121,9 +124,14 @@ export function AIAnalysisFlowDialog({
       >
         {/* 헤더 */}
         <DialogHeader className="px-6 pt-4 pb-4 bg-white sticky top-0 z-10 border-b border-gray-100">
-          <DialogTitle className="text-lg font-semibold text-foreground">
-            AI 분석 프로세스
-          </DialogTitle>
+<DialogTitle className="text-lg font-semibold text-foreground flex items-center gap-2">
+  AI 분석 프로세스
+  {isAdminResult && (
+    <Badge className="bg-blue-600 hover:bg-blue-600 text-xs">
+      담당자 재판독
+    </Badge>
+  )}
+</DialogTitle>
         </DialogHeader>
 
         <div className="p-4">

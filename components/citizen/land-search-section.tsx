@@ -240,7 +240,7 @@ const regionData = {
     // 세종특별자치시
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
-    "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산�������리"],
+    "부강면": ["금산리", "노호리", "등곡리", "문곡���", "산�������리"],
     "�������정면": ["고등�����������", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
@@ -255,109 +255,6 @@ const regionData = {
     "명일동": [], "상일동": [], "성내동": [], "암사동": [], "천호동": [],
   }
 } as const;
-
-// 판단 근거 설명 컴포넌트
-function JudgmentRationaleSection({ rationale }: { rationale: JudgmentRationale }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <CollapsibleTrigger asChild>
-        <Button 
-          variant="outline" 
-          className="w-full cursor-pointer justify-between"
-          size="sm"
-        >
-          <div className="flex items-center gap-2">
-            <Scale className="h-4 w-4 text-primary" />
-            <span>판단 근거 상세 보기</span>
-          </div>
-          {isOpen ? (
-            <ChevronUp className="h-4 w-4" />
-          ) : (
-            <ChevronDown className="h-4 w-4" />
-          )}
-        </Button>
-      </CollapsibleTrigger>
-      <CollapsibleContent className="mt-3 space-y-3">
-        {/* 판단 요약 */}
-        <div className="rounded-lg border border-border bg-card p-4">
-          <div className="flex items-start gap-2">
-            <FileText className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-            <div>
-              <h4 className="font-semibold text-foreground">판단 요약</h4>
-              <p className="mt-1 text-base text-muted-foreground">{rationale.summary}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* 법적 근거 */}
-        <div className="rounded-lg border border-border bg-muted/30 p-4">
-          <div className="flex items-start gap-2">
-            <Scale className="mt-0.5 h-5 w-5 shrink-0 text-chart-3" />
-            <div>
-              <h4 className="font-semibold text-foreground">법적 근거</h4>
-              <p className="mt-1 text-base text-muted-foreground">{rationale.legalBasis}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* 적용 기준 */}
-        <div className="rounded-lg border border-border bg-card p-4">
-          <h4 className="mb-2 font-semibold text-foreground">적용 기준</h4>
-          <ul className="space-y-1.5">
-            {rationale.appliedCriteria.map((criteria, idx) => (
-              <li key={idx} className="flex items-start gap-2 text-base text-muted-foreground">
-                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                <span>{criteria}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* 직접 확인 필요 항목 */}
-        {rationale.manualCheckItems && rationale.manualCheckItems.length > 0 && (
-          <div className="rounded-lg border border-warning/50 bg-warning/5 p-4">
-            <div className="flex items-start gap-2">
-              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
-              <div>
-                <h4 className="font-semibold text-foreground">직접 확인 필요 항목</h4>
-                <p className="mt-1 text-base text-muted-foreground">
-                  다음 항목은 AI 자동 판독이 불가하여 담당자가 현장 확인 후 판단합니다.
-                </p>
-                <ul className="mt-2 space-y-1">
-                  {rationale.manualCheckItems.map((item, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-base">
-                      <Info className="h-3 w-3 text-warning" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 상세 설명 */}
-        <div className="rounded-lg border border-border bg-card p-4">
-          <h4 className="mb-2 font-semibold text-foreground">상세 분석 내용</h4>
-          <pre className="whitespace-pre-wrap text-base leading-relaxed text-muted-foreground">
-            {rationale.detailedExplanation}
-          </pre>
-        </div>
-
-        {/* 안내 문구 */}
-        <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
-          <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-          <p className="text-base text-muted-foreground">
-            본 AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토 및 관련 법령에 따라 결정됩니다. 
-            판단 근거에 이의가 있으��면 신청서 제출 시 의견을 기재해 주시기 바랍니다.
-          </p>
-        </div>
-      </CollapsibleContent>
-    </Collapsible>
-  );
-}
 
 // 택지 세부 유형별 면적 기준
 const LAND_SUB_TYPE_CRITERIA: Record<string, { label: string; maxArea: number }> = {
@@ -602,7 +499,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 5. 판정 결과
 ${summary}`;
   } else {
-    // 매수불가
+    // 매수���가
     summary = `�� 토���는 잔여지 ���� 및 형상상 ��래 목���대��� 사용 ��능한 ���으로 판단���어 매수청구 ��상�� 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 

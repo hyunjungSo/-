@@ -2534,12 +2534,24 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* AI 분석 프로세스 ��이��로그 */}
+      {/* AI 분석 프로세스 다이얼로그 - 관리자 재판독 결과 우선 표시 */}
       <AIAnalysisFlowDialog
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
-        aiResult={aiResult}
+        aiResult={(() => {
+          // 선택된 필지의 관리자 재판독 결과가 있으면 우선 사용
+          const selectedLandId = allLands[selectedLandIndex]?.id;
+          if (selectedLandId && adminLandAIResults[selectedLandId]) {
+            return adminLandAIResults[selectedLandId];
+          }
+          // 없으면 기존 AI 결과 사용
+          if (selectedLandId && landAIResults[selectedLandId]) {
+            return landAIResults[selectedLandId];
+          }
+          return aiResult;
+        })()}
         landInfo={allLands[selectedLandIndex]}
+        isAdminResult={!!adminLandAIResults[allLands[selectedLandIndex]?.id]}
       />
     </div>
   );
