@@ -757,7 +757,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           
           // 일단지 판정 사유 기록
           const unificationReasons = [
-            "소유�� 동���",
+            "소유��� 동���",
             `지반 연속 (${parseAddress(primaryLand.address).district})`,
             `용도 일체 (${primaryLand.landType})`
           ];
@@ -1608,7 +1608,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   }
                                 }}
                                 onClick={(e) => e.stopPropagation()}
-                                className="h-4 w-4 shrink-0"
+                                className="h-6 w-6 shrink-0"
                               />
                               
                               {/* 필지 마커 */}
