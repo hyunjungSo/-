@@ -180,7 +180,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
-  // 관리자용 AI 판독 추가 옵션 (��장 상황) - 필지별 관리
+  // 관리자용 AI 판독 추가 옵션 (���장 상황) - 필지별 관리
   const [adminAIOptionsPerLand, setAdminAIOptionsPerLand] = useState<Record<string, {
     accessRoadLost: boolean;      // 접면도로 상실
     waterChannelLost: boolean;    // 관개수로 상실
@@ -1355,7 +1355,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               {/* 판정 기준 충족 여부 */}
                               {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
                                 <div className="rounded-lg bg-white/60 p-3 border">
-                                  <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
+                                  <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충�� 여부</p>
                                   <div className="space-y-2">
                                     {aiResult.criteriaChecks.map((check, cIdx) => (
                                       <div key={cIdx} className="flex items-center justify-between text-sm">
@@ -1869,6 +1869,47 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </div>
                               </AccordionTrigger>
                               <AccordionContent className="pb-4">
+                                {/* 기본 정보 */}
+                                <div className="grid grid-cols-3 gap-3 text-sm mb-4">
+                                  <div className="rounded bg-white/80 p-2 text-center">
+                                    <p className="text-xs text-muted-foreground">잔여 면적</p>
+                                    <p className="font-semibold">{land.remainingArea.toLocaleString()}m²</p>
+                                  </div>
+                                  <div className="rounded bg-white/80 p-2 text-center">
+                                    <p className="text-xs text-muted-foreground">잔여 비율</p>
+                                    <p className="font-semibold">{land.remainingRatio}%</p>
+                                  </div>
+                                  <div className="rounded bg-white/80 p-2 text-center">
+                                    <p className="text-xs text-muted-foreground">형상지수 변화</p>
+                                    <p className="font-semibold">
+                                      {result?.shapeIndexChange != null ? `+${result.shapeIndexChange.toFixed(1)}` : "-"}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                {/* 편입 정보 */}
+                                <div className="rounded-lg bg-white/60 p-3 border mb-4">
+                                  <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
+                                  <div className="grid grid-cols-2 gap-2 text-sm">
+                                    <div>
+                                      <span className="text-muted-foreground">편입 전 면적:</span>
+                                      <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}m²</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-muted-foreground">편입 면적:</span>
+                                      <span className="ml-1 font-medium">{land.includedArea.toLocaleString()}m²</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-muted-foreground">잔여 면적:</span>
+                                      <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-muted-foreground">형상지수 변화:</span>
+                                      <span className="ml-1 font-medium">{result?.shapeIndexChange != null ? `+${result.shapeIndexChange.toFixed(1)}` : "-"}</span>
+                                    </div>
+                                  </div>
+                                </div>
+
                                 {/* 상세 분석 내용 - 민원인 화면과 동일 */}
                                 <div className="space-y-4">
                                   {/* 판단 요약 */}
