@@ -288,7 +288,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       manualCheckItems?: string[];
     };
   }>>(() => {
-    // 기존 application.aiResult가 있으면 초기값으로 설정
+    // 기존 application.aiResult가 있으면 초기값��로 설정
     if (application.aiResult) {
       const initial: Record<string, {
         provisionalJudgment: string;
@@ -995,8 +995,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       {/* Section 01. 신청인 정보 */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <User className="h-5 w-5" />
+          <CardTitle className="text-lg">
             신청인 정보
           </CardTitle>
         </CardHeader>
@@ -1088,7 +1087,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               )}
               
               <div className="grid gap-6 lg:grid-cols-2">
-                {/* 좌측: 지적도 */}
+                {/* 좌측: 지���도 */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h4 className="font-medium flex items-center gap-2">
