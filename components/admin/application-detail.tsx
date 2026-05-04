@@ -181,7 +181,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [adminAIOptions, setAdminAIOptions] = useState({
     accessRoadLost: false,      // 접면도로 상실
     waterChannelLost: false,    // 관개수로 상실
-    farmMachineDifficulty: false, // 농기계 진입 ���란
+    farmMachineDifficulty: false, // 농기계 진입 �����란
   });
   
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
@@ -752,7 +752,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             const effectiveLimit = criteria.relaxed * groupLandIds.length;
             const meetsAreaCriteria = combinedArea <= effectiveLimit;
             if (meetsAreaCriteria) {
-              analysisReasons.push(`합�� 면����� ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
+              analysisReasons.push(`합��� 면����� ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
             }
             
             // 토지유형별 추가 조건 검토 + 관리자 ���장 ���황 옵션 ����
@@ -1173,6 +1173,29 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </p>
                               </div>
                             </div>
+
+                            {/* 편입 정보 */}
+                            <div className="rounded-lg bg-white/60 p-3 border mb-4">
+                              <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
+                              <div className="grid grid-cols-2 gap-2 text-sm">
+                                <div>
+                                  <span className="text-muted-foreground">편입 전 면적:</span>
+                                  <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}m²</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground">편입 면적:</span>
+                                  <span className="ml-1 font-medium">{land.includedArea.toLocaleString()}m²</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground">잔여 면적:</span>
+                                  <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground">형상지수 변화:</span>
+                                  <span className="ml-1 font-medium">{landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}</span>
+                                </div>
+                              </div>
+                            </div>
                             
                             {/* 상세 분석 내용 - 민원인 화면과 동일 */}
                             <div className="space-y-4">
@@ -1246,29 +1269,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   </div>
                                 </div>
                               )}
-
-                              {/* 편입 정보 */}
-                              <div className="rounded-lg bg-white/60 p-3 border">
-                                <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
-                                <div className="grid grid-cols-2 gap-2 text-sm">
-                                  <div>
-                                    <span className="text-muted-foreground">편입 전 면적:</span>
-                                    <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}m²</span>
-                                  </div>
-                                  <div>
-                                    <span className="text-muted-foreground">편입 면적:</span>
-                                    <span className="ml-1 font-medium">{land.includedArea.toLocaleString()}m²</span>
-                                  </div>
-                                  <div>
-                                    <span className="text-muted-foreground">잔여 면적:</span>
-                                    <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)</span>
-                                  </div>
-                                  <div>
-                                    <span className="text-muted-foreground">형상지수 변화:</span>
-                                    <span className="ml-1 font-medium">{landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}</span>
-                                  </div>
-                                </div>
-                              </div>
                               
                               {/* 판정 기준 충족 여부 */}
                               {landResult?.criteriaChecks && landResult.criteriaChecks.length > 0 && (
@@ -1819,29 +1819,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       </div>
                                     </div>
                                   )}
-
-                                  {/* 편입 정보 */}
-                                  <div className="rounded-lg bg-white/60 p-3 border">
-                                    <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
-                                    <div className="grid grid-cols-2 gap-2 text-sm">
-                                      <div>
-                                        <span className="text-muted-foreground">편입 전 면적:</span>
-                                        <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}m²</span>
-                                      </div>
-                                      <div>
-                                        <span className="text-muted-foreground">편입 면적:</span>
-                                        <span className="ml-1 font-medium">{land.includedArea.toLocaleString()}m²</span>
-                                      </div>
-                                      <div>
-                                        <span className="text-muted-foreground">잔여 면적:</span>
-                                        <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)</span>
-                                      </div>
-                                      <div>
-                                        <span className="text-muted-foreground">형상지수 변화:</span>
-                                        <span className="ml-1 font-medium">+{result.shapeIndexChange?.toFixed(1) ?? "-"}</span>
-                                      </div>
-                                    </div>
-                                  </div>
                                   
                                   {/* 판정 기준 충족 여부 */}
                                   {result.criteriaChecks && result.criteriaChecks.length > 0 && (
