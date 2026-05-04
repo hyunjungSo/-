@@ -40,6 +40,7 @@ import {
   Scale,
   Shield,
   Brain,
+  ListChecks,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -750,7 +751,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               analysisReasons.push(`합산 면적 ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
             }
             
-            // 토지유형별 추가 조건 검토 + 관리자 현장 상황 옵션 반��
+            // 토지유형별 추가 조건 검토 + 관리자 현장 상황 옵션 ����
             if (landType === "대지") {
               // 택지 경로
               const hasRoadLoss = adminAIOptions.accessRoadLost || groupLands.some(l => l.remainingRatio < 30);
@@ -1327,6 +1328,79 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
                       <span>인접필지</span>
                     </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-sm border-2 border-blue-500 bg-blue-200" />
+                      <span>선택됨</span>
+                    </div>
+                  </div>
+                  
+                  {/* 선택된 필지 정보 */}
+                  <div className="rounded-lg border bg-slate-50/50 p-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <h5 className="text-sm font-medium flex items-center gap-2">
+                        <ListChecks className="h-4 w-4" />
+                        선택된 필지
+                      </h5>
+                      {adminCheckedLandIds.length > 0 && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-6 text-xs text-muted-foreground"
+                          onClick={() => setAdminCheckedLandIds([])}
+                        >
+                          전체 해제
+                        </Button>
+                      )}
+                    </div>
+                    
+                    {adminCheckedLandIds.length === 0 ? (
+                      <p className="text-sm text-muted-foreground text-center py-2">
+                        지적도에서 분석할 필지를 클릭하여 선택하세요
+                      </p>
+                    ) : (
+                      <div className="space-y-2 max-h-[120px] overflow-y-auto">
+                        {adminCheckedLandIds.map((landId) => {
+                          const land = allLands.find(l => l.id === landId);
+                          const landIdx = allLands.findIndex(l => l.id === landId);
+                          if (!land) return null;
+                          return (
+                            <div 
+                              key={landId}
+                              className="flex items-center justify-between rounded-md bg-white p-2 border text-sm"
+                            >
+                              <div className="flex items-center gap-2">
+                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                                  {String.fromCharCode(65 + landIdx)}
+                                </span>
+                                <div>
+                                  <p className="font-medium text-xs">{land.address}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {land.landType} | 잔여 {land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)
+                                  </p>
+                                </div>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
+                                onClick={() => setAdminCheckedLandIds(prev => prev.filter(id => id !== landId))}
+                              >
+                                <X className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                    
+                    {adminCheckedLandIds.length > 0 && (
+                      <div className="mt-2 pt-2 border-t flex items-center justify-between text-xs">
+                        <span className="text-muted-foreground">총 {adminCheckedLandIds.length}필지 선택</span>
+                        <span className="font-medium">
+                          합산 면적: {allLands.filter(l => adminCheckedLandIds.includes(l.id)).reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²
+                        </span>
+                      </div>
+                    )}
                   </div>
                   
                   {/* 정밀 재분석 설정 */}
