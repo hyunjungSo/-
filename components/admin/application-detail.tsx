@@ -1728,29 +1728,30 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
               {/* 관리자용 AI 판독 실행 버튼 */}
               <div className="mt-4 pt-4 border-t border-border">
-              <Button
-                onClick={handleRunAIAnalysis}
-                disabled={isAIAnalyzing || checkedLandIds.length === 0}
-                className="w-full gap-2 bg-primary hover:bg-primary/90"
-                size="lg"
-              >
-                {isAIAnalyzing ? (
-                  <>
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    AI 판독 중... ({checkedLandIds.length}필지)
-                  </>
-                ) : Object.keys(landAIResults).length > 0 ? (
-                  <>
-                    <RotateCcw className="h-5 w-5" />
-                    선택 필지 AI 재판독 ({checkedLandIds.length}필지)
-                  </>
-                ) : (
-                  <>
-                    <Bot className="h-5 w-5" />
-                    선택 필지 AI 판독 ({checkedLandIds.length}필지)
-                  </>
-                )}
-              </Button>
+                <Button
+                  onClick={handleRunAIAnalysis}
+                  disabled={isAIAnalyzing || checkedLandIds.length === 0}
+                  className="w-full gap-2 bg-primary hover:bg-primary/90"
+                  size="lg"
+                >
+                  {isAIAnalyzing ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      AI 판독 중... ({checkedLandIds.length}필지)
+                    </>
+                  ) : Object.keys(landAIResults).length > 0 ? (
+                    <>
+                      <RotateCcw className="h-5 w-5" />
+                      선택 필지 AI 재판독 ({checkedLandIds.length}필지)
+                    </>
+                  ) : (
+                    <>
+                      <Bot className="h-5 w-5" />
+                      선택 필지 AI 판독 ({checkedLandIds.length}필지)
+                    </>
+                  )}
+                </Button>
+              </div>
               {/* AI 판독 결과 - 신청 유형에 따라 다르게 표시 */}
               {Object.keys(landAIResults).length > 0 && (
                 <div className="mt-4 space-y-3">
@@ -1886,7 +1887,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </p>
                 </div>
               )}
-            </div>
             </div>
             
             {/* 우측: 분석 결과 탭 */}
