@@ -396,7 +396,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   };
 
 // ===== [1��계] 일단지 판정 로직 =====
-  // 주소���서 �����/동 및 지번 정보 추출
+  // ��소���서 �����/동 및 지번 정보 추출
   const parseAddress = (address: string) => {
     const parts = address.split(" ");
     const lastPart = parts[parts.length - 1];
@@ -1105,10 +1105,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   {/* 지도 범례 */}
                   <div className="rounded-lg border bg-white/80 p-2">
                     <p className="text-xs font-medium text-muted-foreground mb-2">범례</p>
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+                    <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                        <span className="text-green-700 font-medium">신청필지</span>
+                        <span className="text-green-700 font-medium">신청필지 (선택)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
+                        <span>신청필지 (미선택)</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
@@ -1560,14 +1564,18 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   {/* 지도 범례 */}
                   <div className="rounded-lg border bg-white/80 p-2">
                     <p className="text-xs font-medium text-muted-foreground mb-2">범례</p>
-                    <div className="flex gap-4 text-xs">
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
-                        <span>미선택</span>
-                      </div>
+                    <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                        <span className="text-green-700 font-medium">선택</span>
+                        <span className="text-green-700 font-medium">신청필지 (선택)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
+                        <span>신청필지 (미선택)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
+                        <span>인접필지</span>
                       </div>
                     </div>
                   </div>
