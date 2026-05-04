@@ -1978,6 +1978,33 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     />
                   </div>
                   
+                  {/* 지도 범례 */}
+                  <div className="rounded-lg border bg-muted/30 p-3">
+                    <div className="text-xs font-medium text-foreground mb-2">지도 범례</div>
+                    <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground sm:grid-cols-3">
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
+                        <span>선택 신청필지</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
+                        <span>미선택 신청필지</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-[#ea580c] bg-[#fed7aa]" />
+                        <span>선택 인접필지</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
+                        <span>미선택 인접필지</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
+                        <span>호버 중</span>
+                      </div>
+                    </div>
+                  </div>
+                  
                   {/* 필지 리스트 */}
                   <div className="rounded-lg border overflow-hidden">
                     <div className="flex items-center justify-between border-b bg-muted/50 px-3 py-2">
@@ -2003,12 +2030,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <Checkbox checked={isChecked} />
                               <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
                                 result?.provisionalJudgment === "매수" ? "bg-green-600 text-white" : 
-                                result?.provisionalJudgment === "매수불가" ? "bg-red-500 text-white" : "bg-muted"
+                                result?.provisionalJudgment === "매수불가" ? "bg-red-500 text-white" : 
+                                isChecked ? "bg-primary text-primary-foreground" : "bg-muted"
                               }`}>
                                 {String.fromCharCode(65 + idx)}
                               </span>
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm font-medium truncate">{land.address}</p>
+                                <p className="text-xs text-muted-foreground">
+                                  잔여 {land.remainingArea.toLocaleString()}m² | {land.landType}
+                                </p>
                               </div>
                               {result && (
                                 <Badge variant={result.provisionalJudgment === "매수" ? "default" : "destructive"} className="text-xs">
