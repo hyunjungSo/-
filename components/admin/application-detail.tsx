@@ -998,7 +998,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">편입 면적</p>
-                    <p className="font-medium">{land.incorporatedArea.toLocaleString()}m²</p>
+                    <p className="font-medium">{land.includedArea.toLocaleString()}m²</p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">잔여 면적</p>
