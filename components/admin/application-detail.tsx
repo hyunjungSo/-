@@ -180,7 +180,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
-  // 필지별 분석 단계 상세 (0: 대��, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
+  // 필지별 분석 단계 상세 (0: 대���, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
   const [landAnalysisStep, setLandAnalysisStep] = useState<Record<string, number>>({});
   
   // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
@@ -1290,7 +1290,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             )}
                             
-                            {/* 상세 분석 내용 - 개별 필지인 경우에만 표시 (일단지는 상단��� 통합 표시) */}
+                            {/* ���세 분석 내용 - 개별 필지인 경우에만 표시 (일단지는 상단��� 통합 표시) */}
                             {applicationType !== "unified" && (
                             <div className="space-y-4">
                               {/* 판단 요약 */}
@@ -2258,23 +2258,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           );
                         })}
                       </Accordion>
-                    
-                    {/* 일단지 그룹 (관리자 재판독) */}
-                    {Object.keys(adminUnifiedGroups).length > 0 && (
-                      <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-4">
-                        <h4 className="font-medium text-emerald-800 flex items-center gap-2 mb-2">
-                          <Layers className="h-4 w-4" />
-                          일단지 판정 (담당자)
-                        </h4>
-                        {Object.values(adminUnifiedGroups).map((group, idx) => (
-                          <div key={idx} className="flex items-center justify-between text-sm">
-                            <span className="text-emerald-700">{group.groupName}</span>
-                            <span className="font-medium">합산 {group.combinedArea.toLocaleString()}m²</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    
                     </>
                   )}
                 </div>
