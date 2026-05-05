@@ -180,7 +180,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
-  // 필지별 분석 단계 상세 (0: 대����, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
+  // 필지별 분석 단계 상세 (0: 대기, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
   const [landAnalysisStep, setLandAnalysisStep] = useState<Record<string, number>>({});
   
   // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
@@ -619,7 +619,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         description: shapeCriteria.description
       });
       
-      // 하나라도 해당 시 → ��족(매수), 전체 미해당 시 → 미충족(기각)
+      // 하나라도 해당 시 → 충족(매수), 전체 미해당 시 → 미충족(기각)
       if (areaCheckMet || roadLost || shapeCriteria.met) {
         judgment = "매수";
         if (areaCheckMet) reasons.push("면적 기준 충족");
@@ -1107,7 +1107,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             {/* 민원인 결과 탭 */}
             <TabsContent value="citizen">
-              {/* 일단�����인 경우 최상단에 일단지 판정 결과 표시 */}
+              {/* 일단지인 경우 최상단에 일단지 판정 결과 표시 */}
               {applicationType === "unified" && (
                 <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4 mb-6">
                   <div className="flex items-center justify-between mb-3">
@@ -1290,7 +1290,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             )}
                             
-                            {/* ���세 분석 내용 - 개별 필지인 경우에만 표시 (일단지는 상단��� 통합 표시) */}
+                            {/* 상세 분석 내용 - 개별 필지인 경우에만 표시 (일단지는 상단에 통합 표시) */}
                             {applicationType !== "unified" && (
                             <div className="space-y-4">
                               {/* 판단 요약 */}
@@ -1815,6 +1815,24 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           현재 민원인 결과를 표시하고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분석을 실행하면 담당자 결과가 표시됩니다.
                         </p>
                       </div>
+                      
+                      {/* 일단지인 경우 최상단에 일단지 판정 결과 표시 */}
+                      {applicationType === "unified" && (
+                        <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4 mb-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <h5 className="font-medium text-emerald-800 flex items-center gap-2">
+                              <Layers className="h-4 w-4" />
+                              일단지 판정 결과
+                            </h5>
+                            <Badge className="bg-emerald-600 hover:bg-emerald-600">매수</Badge>
+                          </div>
+                          <div className="text-sm space-y-1 text-emerald-700">
+                            <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
+                            <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
+                            <p className="text-xs text-emerald-600 mt-2">소유자 동일 + 지반 연속 + 용도 일체성 충족</p>
+                          </div>
+                        </div>
+                      )}
                       
                       {/* 민원인 결과를 기본으로 표시 */}
                       <Accordion type="multiple" className="space-y-3 max-h-[320px] overflow-y-auto">
