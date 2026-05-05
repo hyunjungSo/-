@@ -1107,7 +1107,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             {/* 민원인 결과 탭 */}
             <TabsContent value="citizen">
-              {/* 일단���인 경우 최상단에 일단지 판정 결과 표시 */}
+              {/* 일단�����인 경우 최상단에 일단지 판정 결과 표시 */}
               {applicationType === "unified" && (
                 <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4 mb-6">
                   <div className="flex items-center justify-between mb-3">
@@ -1811,7 +1811,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       {/* 재분석 미실행 안내 */}
                       <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 mb-4 flex items-start gap-2">
                         <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
-                        <p className="text-xs text-blue-700">
+                        <p className="text-sm text-blue-700">
                           현재 민원인 결과를 표시하고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분석을 실행하면 담당자 결과가 표시됩니다.
                         </p>
                       </div>
