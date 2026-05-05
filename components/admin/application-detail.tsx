@@ -180,7 +180,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
-  // 필지별 분석 단계 상세 (0: 대기, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
+  // 필지별 분석 단계 상세 (0: 대��, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
   const [landAnalysisStep, setLandAnalysisStep] = useState<Record<string, number>>({});
   
   // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
@@ -1290,7 +1290,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             )}
                             
-                            {/* 상세 분석 내용 - 개별 필지인 경우에만 표시 (일단지는 상단에 통합 표시) */}
+                            {/* 상세 분석 내용 - 개별 필지인 경우에만 표시 (일단지는 상단��� 통합 표시) */}
                             {applicationType !== "unified" && (
                             <div className="space-y-4">
                               {/* 판단 요약 */}
@@ -2425,7 +2425,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           {/* 담당자 최종 컨펌 섹션 */}
           <div className="rounded-xl border-2 border-amber-200 bg-gradient-to-b from-amber-50/80 to-white p-5 space-y-4">
             <div className="mb-2">
-              <h4 className="font-semibold text-amber-800">담당자 최종 컨펌</h4>
+              <h4 className="font-semibold text-amber-800">최종 검토</h4>
               <p className="text-xs text-amber-600">AI 제안을 확인하고 최종 결정을 내려주세요</p>
             </div>
             
