@@ -180,7 +180,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
-  // 관리자용 AI 판독 추가 옵션 (��장 상황) - 필지별 관리
+  // 필지별 분석 단계 상세 (0: 대기, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
+  const [landAnalysisStep, setLandAnalysisStep] = useState<Record<string, number>>({});
+  
+  // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
   const [adminAIOptionsPerLand, setAdminAIOptionsPerLand] = useState<Record<string, {
     accessRoadLost: boolean;      // 접면도로 상실
     waterChannelLost: boolean;    // 관개수로 상실
@@ -743,18 +746,27 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     
     // 필지별 분석 상태 초기화 (모두 pending)
     const initialStatus: Record<string, 'pending' | 'analyzing' | 'done'> = {};
+    const initialStep: Record<string, number> = {};
     adminCheckedLandIds.forEach(id => {
       initialStatus[id] = 'pending';
+      initialStep[id] = 0;
     });
     setLandAnalysisStatus(initialStatus);
+    setLandAnalysisStep(initialStep);
     
     // 필지별 순차 분석 시뮬레이션
     const simulateSequentialAnalysis = async () => {
-      // 각 필지를 순차적으로 'analyzing' 상태로 변경
+      // 각 필지를 순차적으로 분석 단계별로 진행
       for (let i = 0; i < adminCheckedLandIds.length; i++) {
         const landId = adminCheckedLandIds[i];
         setLandAnalysisStatus(prev => ({ ...prev, [landId]: 'analyzing' }));
-        await new Promise(resolve => setTimeout(resolve, 400)); // 각 필지당 400ms 대기
+        
+        // 단계별 진행 (각 단계당 300ms)
+        for (let step = 1; step <= 5; step++) {
+          setLandAnalysisStep(prev => ({ ...prev, [landId]: step }));
+          await new Promise(resolve => setTimeout(resolve, 300));
+        }
+        
         setLandAnalysisStatus(prev => ({ ...prev, [landId]: 'done' }));
       }
     };
@@ -1620,6 +1632,39 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </Badge>
                               ) : null}
                             </div>
+                            
+                            {/* AI 분석 진행 단계 상세 (분석중일 때만 표시) */}
+                            {landAnalysisStatus[land.id] === 'analyzing' && (
+                              <div className="mt-2 ml-7 p-2 rounded-lg bg-blue-50/50 border border-blue-100">
+                                <div className="space-y-1.5">
+                                  {[
+                                    { step: 1, label: "형상지수 계산" },
+                                    { step: 2, label: "면적 비율 분석" },
+                                    { step: 3, label: "법적 기준 검토" },
+                                    { step: 4, label: "종합 판정" },
+                                    { step: 5, label: "결과 저장" },
+                                  ].map((item) => {
+                                    const currentStep = landAnalysisStep[land.id] || 0;
+                                    const isActive = currentStep === item.step;
+                                    const isDone = currentStep > item.step;
+                                    return (
+                                      <div key={item.step} className="flex items-center gap-2 text-xs">
+                                        {isDone ? (
+                                          <CheckCircle2 className="h-3.5 w-3.5 text-blue-600" />
+                                        ) : isActive ? (
+                                          <Loader2 className="h-3.5 w-3.5 text-blue-600 animate-spin" />
+                                        ) : (
+                                          <div className="h-3.5 w-3.5 rounded-full border border-gray-300" />
+                                        )}
+                                        <span className={isDone ? "text-blue-600" : isActive ? "text-blue-700 font-medium" : "text-gray-400"}>
+                                          {item.label}
+                                        </span>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
                             
                             {/* 하단: 필지 상세 옵션 (선택된 필지만 표시) */}
                             {isSelected && (
