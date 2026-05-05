@@ -1107,7 +1107,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             {/* 민원인 결과 탭 */}
             <TabsContent value="citizen">
-              {/* 일단지인 경우 최상단에 일단지 판정 결과 표시 */}
+              {/* 일단���인 경우 최상단에 일단지 판정 결과 표시 */}
               {applicationType === "unified" && (
                 <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4 mb-6">
                   <div className="flex items-center justify-between mb-3">
@@ -1817,7 +1817,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       </div>
                       
                       {/* 민원인 결과를 기본으로 표시 */}
-                      <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto">
+                      <Accordion type="multiple" className="space-y-3 max-h-[320px] overflow-y-auto">
                         {allLands.map((land, idx) => {
                           const aiResult = application.aiResult;
                           return (
