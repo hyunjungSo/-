@@ -2429,16 +2429,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 );
               })}
             </div>
-            <p className="text-base text-muted-foreground">
-              민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다.
-            </p>
+              <p className="text-sm text-muted-foreground">
+                민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다.
+              </p>
           </div>
 
           {/* 담당자 최종 컨펌 섹션 */}
           <div className="rounded-xl border-2 border-amber-200 bg-gradient-to-b from-amber-50/80 to-white p-5 space-y-4">
             <div className="mb-2">
               <h4 className="font-semibold text-amber-800">최종 검토</h4>
-              <p className="text-xs text-amber-600">AI 제안을 확인하고 최종 결정을 내려주세요</p>
+              <p className="text-sm text-amber-600">AI 제안을 확인하고 최종 결정을 내려주세요</p>
             </div>
             
             {/* AI 제안 표시 */}
