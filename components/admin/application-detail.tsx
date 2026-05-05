@@ -180,7 +180,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
-  // 필지별 분석 단계 상세 (0: 대���, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
+  // 필지별 분석 단계 상세 (0: 대����, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
   const [landAnalysisStep, setLandAnalysisStep] = useState<Record<string, number>>({});
   
   // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
@@ -619,7 +619,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         description: shapeCriteria.description
       });
       
-      // 하나라도 해당 시 → 충족(매수), 전체 미해당 시 → 미충족(기각)
+      // 하나라도 해당 시 → ��족(매수), 전체 미해당 시 → 미충족(기각)
       if (areaCheckMet || roadLost || shapeCriteria.met) {
         judgment = "매수";
         if (areaCheckMet) reasons.push("면적 기준 충족");
@@ -1258,7 +1258,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             </div>
 
                             {/* 편입 정보 */}
-                            <div className="rounded-lg bg-white/60 p-3 border">
+                            <div className="rounded-lg bg-white/60 p-3 border mb-4">
                               <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
                               <div className="grid grid-cols-2 gap-2 text-sm">
                                 <div>
