@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { LeafletMap } from "@/components/leaflet-map";
 import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult, JudgmentRationale, ApplicationCartItem } from "@/lib/types";
-import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ClipboardList, Plus, Trash2, X, User } from "lucide-react";
+import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ClipboardList, Plus, Trash2, X, User, Layers } from "lucide-react";
 import { AIIcon } from "@/components/ui/ai-icon";
 
 
@@ -158,7 +158,7 @@ const regionData = {
     "율면": ["고당리", "반룡리", "산양리", "월포리", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
-    // 경기도 - 광주시
+    // 경���도 - 광주시
     "곤지암읍": ["신리", "역동리", "삼리", "건업리", "연곡리", "오향리", "화촌리"],
     "도척면": ["진우리", "노곡리", "상림리", "도웅리", "유정리", "추곡리"],
     "퇴촌면": ["정지리", "영동리", "도수리", "관음리", "무수리", "원당리"],
@@ -1681,6 +1681,27 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 {/* AI 판독 결과 - 복수 필지 통합 뷰 (선택된 필지가 AI 판독된 경우에만 표시) */}
                 {parcelAiResults.size > 0 && aiResult && (
                   <div className="space-y-4">
+                    {/* 일단지 판정 결과 - 복수 필지인 경우만 표시 */}
+                    {parcelAiResults.size > 1 && (
+                      <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <h5 className="font-medium text-emerald-800 flex items-center gap-2">
+                            <Layers className="h-4 w-4" />
+                            일단지 판정 결과
+                          </h5>
+                          <Badge className="bg-emerald-600 hover:bg-emerald-600">매수</Badge>
+                        </div>
+                        <div className="text-sm space-y-1 text-emerald-700">
+                          <p>포함 필지: {Array.from(parcelAiResults.keys()).map((id, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
+                          <p>합산 면적: {Array.from(parcelAiResults.entries()).reduce((sum, [id]) => {
+                            const land = searchResults.find(l => l.id === id);
+                            return sum + (land?.remainingArea || 0);
+                          }, 0).toLocaleString()}m²</p>
+                          <p className="text-xs text-emerald-600 mt-2">소유자 동일 + 지반 연속 + 용도 일체성 충족</p>
+                        </div>
+                      </div>
+                    )}
+
 {/* 필지별 판독 결과 요약 리스트 */}
                     <div className="rounded-lg border bg-background">
                       <div className="border-b bg-muted/50 px-4 py-2">
