@@ -180,7 +180,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
-  // 필지별 분석 단계 상세 (0: 대기, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
+  // 필지별 분석 단계 상세 (0: 대��, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
   const [landAnalysisStep, setLandAnalysisStep] = useState<Record<string, number>>({});
   
   // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
@@ -2029,17 +2029,23 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         분석 프로세스 상세 보기
                       </Button>
                       
-                      {/* 적용된 옵션 */}
-                      {(adminAIOptions.accessRoadLost || adminAIOptions.waterChannelLost || adminAIOptions.farmMachineDifficulty) && (
-                        <div className="rounded-lg bg-blue-50 border border-blue-200 p-3">
-                          <p className="text-xs font-medium text-blue-700 mb-2">적용된 현장 상황 옵션</p>
-                          <div className="flex flex-wrap gap-2">
-                            {adminAIOptions.accessRoadLost && <Badge className="bg-blue-600">접면도로 상실</Badge>}
-                            {adminAIOptions.waterChannelLost && <Badge className="bg-blue-600">관개수로 상실</Badge>}
-                            {adminAIOptions.farmMachineDifficulty && <Badge className="bg-blue-600">농기계 진입 곤란</Badge>}
+                      {/* 적용된 옵션 - 필지별 현장 상황 옵션 표시 */}
+                      {allLands.map((land, idx) => {
+                        const landOptions = adminAIOptionsPerLand[land.id] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
+                        if (!landOptions.accessRoadLost && !landOptions.waterChannelLost && !landOptions.farmMachineDifficulty) {
+                          return null;
+                        }
+                        return (
+                          <div key={land.id} className="rounded-lg bg-blue-50 border border-blue-200 p-3">
+                            <p className="text-xs font-medium text-blue-700 mb-2">{String.fromCharCode(65 + idx)}: 적용된 현장 상황 옵션</p>
+                            <div className="flex flex-wrap gap-2">
+                              {landOptions.accessRoadLost && <Badge className="bg-blue-600">접면도로 상실</Badge>}
+                              {landOptions.waterChannelLost && <Badge className="bg-blue-600">관개수로 상실</Badge>}
+                              {landOptions.farmMachineDifficulty && <Badge className="bg-blue-600">농기계 진입 곤란</Badge>}
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        );
+                      })}
                       
 {/* 신청 유형별 재분석 결과 */}
                       
@@ -2128,7 +2134,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <p className="font-semibold">{land.remainingRatio}%</p>
                                   </div>
                                   <div className="rounded bg-white/80 p-2 text-center">
-                                    <p className="text-xs text-muted-foreground">형상지수 변화</p>
+                                    <p className="text-xs text-muted-foreground">형상지수 변���</p>
                                     <p className="font-semibold">
                                       {result?.shapeIndexChange != null ? `+${result.shapeIndexChange.toFixed(1)}` : "-"}
                                     </p>
@@ -2251,17 +2257,22 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </div>
                                   )}
                                   
-                                  {/* 적용된 현장 상황 옵션 */}
-                                  {(adminAIOptions.accessRoadLost || adminAIOptions.waterChannelLost || adminAIOptions.farmMachineDifficulty) && (
-                                    <div className="rounded-lg bg-blue-50/80 p-3 border border-blue-200">
-                                      <p className="text-xs font-medium text-blue-700 mb-2">적용된 현장 상황</p>
-                                      <div className="flex flex-wrap gap-2">
-                                        {adminAIOptions.accessRoadLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">접면도로 상실</Badge>}
-                                        {adminAIOptions.waterChannelLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">관개수로 상실</Badge>}
-                                        {adminAIOptions.farmMachineDifficulty && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">농기계 진입 곤란</Badge>}
-                                      </div>
-                                    </div>
-                                  )}
+                                  {/* 적용된 현장 상황 옵션 - 필지별 */}
+                                  {(() => {
+                                    const landOptions = adminAIOptionsPerLand[land.id] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
+                                    if (landOptions.accessRoadLost || landOptions.waterChannelLost || landOptions.farmMachineDifficulty) {
+                                      return (
+                                        <div className="rounded-lg bg-blue-50/80 p-3 border border-blue-200">
+                                          <p className="text-xs font-medium text-blue-700 mb-2">적용된 현장 상황</p>
+                                          <div className="flex flex-wrap gap-2">
+                                            {landOptions.accessRoadLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">접면도로 상실</Badge>}
+                                            {landOptions.waterChannelLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">관개수로 상실</Badge>}
+                                            {landOptions.farmMachineDifficulty && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">농기계 진입 곤란</Badge>}
+                                          </div>
+                                        </div>
+                                      );
+                                    }
+                                  })()}
 
                                   {/* 안내 문구 */}
                                   <div className="flex items-start gap-2 pt-2 border-t">
