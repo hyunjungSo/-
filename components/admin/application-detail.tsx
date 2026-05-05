@@ -180,7 +180,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
-  // 필지별 분석 단계 상세 (0: 대���, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
+  // 필지별 분석 단계 상세 (0: 대����, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
   const [landAnalysisStep, setLandAnalysisStep] = useState<Record<string, number>>({});
   
   // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
@@ -1107,7 +1107,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             {/* 민원인 결과 탭 */}
             <TabsContent value="citizen">
-              {/* 일단지인 경우 최상단에 일단지 판정 결과 표시 */}
+              {/* 일단���인 경우 최상단에 일단지 판정 결과 표시 */}
               {applicationType === "unified" && (
                 <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4 mb-6">
                   <div className="flex items-center justify-between mb-3">
@@ -1204,7 +1204,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <h4 className="font-medium">분석결과</h4>
                   
                   {/* 필지별 분석 결과 */}
-                  <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto">
+                  <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto pb-2">
                     {allLands.map((land, idx) => {
                       const landResult = landAIResults[land.id];
                       // 민원인이 실행한 AI 분석 결과 (application.aiResult 직접 사용)
@@ -1835,7 +1835,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       )}
                       
                       {/* 민원인 결과를 기본으로 표시 */}
-                      <Accordion type="multiple" className="space-y-3 max-h-[320px] overflow-y-auto">
+                      <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto pb-2">
                         {allLands.map((land, idx) => {
                           const aiResult = application.aiResult;
                           return (
@@ -2088,7 +2088,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       )}
                       
                       {/* 필지별 분석 결과 - 아코디언 UI */}
-                      <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto">
+                      <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto pb-2">
                         {Object.entries(adminLandAIResults).map(([landId, result]) => {
                           const land = allLands.find(l => l.id === landId);
                           const landIdx = allLands.findIndex(l => l.id === landId);
@@ -2158,7 +2158,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)</span>
                                     </div>
                                     <div>
-                                      <span className="text-muted-foreground">형상지수 변화:</span>
+                                      <span className="text-muted-foreground">형상지��� 변화:</span>
                                       <span className="ml-1 font-medium">{result?.shapeIndexChange != null ? `+${result.shapeIndexChange.toFixed(1)}` : "-"}</span>
                                     </div>
                                   </div>
