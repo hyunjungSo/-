@@ -1103,8 +1103,21 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             <div>
               <p className="text-xs text-muted-foreground">신청유형</p>
               <p className="font-medium">
-                {application.applicationType === "single" ? "단일필지" : 
-                 application.applicationType === "multiple" ? "복수필지" : "일단지"}
+                {(() => {
+                  // 테이블과 동일한 로직 적용
+                  const isUnified = application.aiResult?.unifiedLandAnalysis || 
+                    application.aiResult?.landJudgments?.some(lj => lj.unifiedGroupId) ||
+                    applicationType === "unified";
+                  const isMultiple = application.additionalLands && application.additionalLands.length > 0;
+                  
+                  if (isUnified) {
+                    return "일단지";
+                  } else if (isMultiple) {
+                    return `복수필지 (${application.additionalLands!.length + 1})`;
+                  } else {
+                    return "단일필지";
+                  }
+                })()}
               </p>
             </div>
             <div>
