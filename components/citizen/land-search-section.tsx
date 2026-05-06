@@ -241,7 +241,7 @@ const regionData = {
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
-    "소정면": ["송등���", "대곡리", "소정리", "운담리"],
+    "소정면": ["송등�����", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -1379,7 +1379,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             </div>
             
             {/* 검색 결과 목록 */}
-            <div className="h-[calc(100%-100px)] overflow-y-auto">
+            <div className="max-h-[calc(100%-100px)] overflow-y-auto">
               {searchResults.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center px-4 py-12 text-center">
                   <MapPin className="h-8 w-8 text-muted-foreground" />
@@ -1789,7 +1789,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       <div className={`rounded-lg border-2 p-4 ${
                         aiResult.provisionalJudgment === "매수" 
                           ? "border-success bg-success/5" 
-                          : aiResult.provisionalJudgment === "심의위원회이관"
+                          : aiResult.provisionalJudgment === "심의위원���이관"
                             ? "border-warning bg-warning/5"
                             : "border-destructive bg-destructive/5"
                       }`}>
