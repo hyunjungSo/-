@@ -537,7 +537,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
   // ===== [2단계] 대상 토지 상세 분석 (중앙토지수용위원회 기준) =====
   
-  // 편입 전 면적 기준 (㎡) - 초과 시 토지유형별 경로, 이하 시 소규모 토지 경로
+  // 편입 전 면적 기준 (㎡) - 초과 시 토지유형별 경로, 이��� 시 소규모 토지 경로
   const AREA_THRESHOLD = {
     residential: { detached: 90, apartment: 330, commercial: 150, industrial: 330 },
     agricultural: 330,
@@ -1221,21 +1221,29 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   {(applicationType === "unified" || hasUnifiedGroups) && (
                     <div className="space-y-3 mb-4">
                       {applicationType === "unified" ? (
+                        // 전체 일단지
                         <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
                           <div className="flex items-center justify-between mb-3">
                             <h5 className="font-medium text-emerald-800 flex items-center gap-2">
                               <Layers className="h-4 w-4" />
                               일단지 판정 결과
                             </h5>
-                            <Badge className="bg-emerald-600 hover:bg-emerald-600">매수</Badge>
+                            <Badge className={application.aiResult?.provisionalJudgment === "매수" || application.aiResult?.provisionalJudgment === "부분매수" ? "bg-emerald-600 hover:bg-emerald-600" : "bg-red-500 hover:bg-red-500"}>
+                              {application.aiResult?.provisionalJudgment || "매수"}
+                            </Badge>
                           </div>
                           <div className="text-sm space-y-1 text-emerald-700">
                             <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
                             <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
-                            <p className="text-xs text-emerald-600 mt-2">소유자 동일 + 지반 연속 + 용도 일체성 충족</p>
+                            <p className="text-xs text-emerald-600 mt-2">
+                              {application.aiResult?.unifiedParcelAnalysis?.explanation || 
+                               application.aiResult?.judgmentRationale?.summary ||
+                               "소유자 동일 + 지반 연속 + 용도 일체성 충족"}
+                            </p>
                           </div>
                         </div>
                       ) : (
+                        // 부분 일단지 (그룹별로 표시)
                         Object.entries(partialUnifiedGroups).map(([groupId, lands]) => {
                           const groupLands = lands.map(lj => {
                             const landIdx = allLands.findIndex(l => l.id === lj.landId);
@@ -1911,21 +1919,29 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       {(applicationType === "unified" || hasUnifiedGroups) && (
                         <div className="space-y-3 mb-4">
                           {applicationType === "unified" ? (
+                            // 전체 일단지
                             <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
                               <div className="flex items-center justify-between mb-3">
                                 <h5 className="font-medium text-emerald-800 flex items-center gap-2">
                                   <Layers className="h-4 w-4" />
                                   일단지 판정 결과
                                 </h5>
-                                <Badge className="bg-emerald-600 hover:bg-emerald-600">매수</Badge>
+                                <Badge className={application.aiResult?.provisionalJudgment === "매수" || application.aiResult?.provisionalJudgment === "부분매수" ? "bg-emerald-600 hover:bg-emerald-600" : "bg-red-500 hover:bg-red-500"}>
+                                  {application.aiResult?.provisionalJudgment || "매수"}
+                                </Badge>
                               </div>
                               <div className="text-sm space-y-1 text-emerald-700">
                                 <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
                                 <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
-                                <p className="text-xs text-emerald-600 mt-2">소유자 동일 + 지반 연속 + 용도 일체성 충족</p>
+                                <p className="text-xs text-emerald-600 mt-2">
+                                  {application.aiResult?.unifiedParcelAnalysis?.explanation || 
+                                   application.aiResult?.judgmentRationale?.summary ||
+                                   "소유자 동일 + 지반 연속 + 용도 일체성 충족"}
+                                </p>
                               </div>
                             </div>
                           ) : (
+                            // 부분 일단지 (그룹별로 표시)
                             Object.entries(partialUnifiedGroups).map(([groupId, lands]) => {
                               const groupLands = lands.map(lj => {
                                 const landIdx = allLands.findIndex(l => l.id === lj.landId);
