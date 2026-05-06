@@ -567,7 +567,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경�����������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
+      // 농지 경�������������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -1798,6 +1798,54 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         </AccordionItem>
                       );
                     })}
+                    
+                    {/* 인접 필지 */}
+                    {[
+                      {
+                        id: "adjacent-001",
+                        address: "경기도 용인시 처인구 포곡읍 마성리 101",
+                        landCategory: "전",
+                        landType: "농경지",
+                        area: 856,
+                        owner: "김OO",
+                      },
+                      {
+                        id: "adjacent-002",
+                        address: "경기도 용인시 처인구 포곡읍 마성리 102",
+                        landCategory: "답",
+                        landType: "농경지",
+                        area: 1234,
+                        owner: "박OO",
+                      },
+                    ].map((adjacent, adjIdx) => (
+                      <AccordionItem 
+                        key={adjacent.id}
+                        value={adjacent.id}
+                        className="rounded-lg border border-dashed border-amber-300 bg-amber-50/50 px-4"
+                      >
+                        <AccordionTrigger className="hover:no-underline py-3">
+                          <div className="flex items-center justify-between w-full pr-2">
+                            <div className="flex items-center gap-2">
+                              <div className="flex h-5 w-5 items-center justify-center rounded border-2 border-dashed border-amber-500 bg-amber-100 text-xs font-bold text-amber-700 shrink-0">
+                                {String.fromCharCode(97 + adjIdx)}
+                              </div>
+                              <div className="text-left">
+                                <div className="flex items-center gap-2">
+                                  <p className="font-medium text-sm text-amber-800">{adjacent.address}</p>
+                                  <Badge variant="outline" className="text-[10px] h-4 px-1 border-amber-400 text-amber-600 shrink-0">인접</Badge>
+                                </div>
+                                <p className="text-xs text-amber-600">{adjacent.landCategory} | {adjacent.area.toLocaleString()}m² | 소유자: {adjacent.owner}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="pb-4">
+                          <div className="text-sm text-amber-700">
+                            <p>인접 필지입니다. 민원인이 선택하여 분석에 포함할 수 있습니다.</p>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
                   </Accordion>
                   </div>
                 </div>
@@ -2345,7 +2393,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 우측: 분석결과 */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium">분석결과</h4>
+                    <h4 className="font-medium">분석결��</h4>
                     {Object.keys(adminLandAIResults).length > 0 && (
                       <Button
                         variant="ghost"
@@ -2874,7 +2922,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <div className="flex items-start gap-2">
                                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                                           <div>
-                                            <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
+                                            <h4 className="text-sm font-semibold text-foreground">수동 확��� 항목</h4>
                                             <ul className="mt-1 space-y-1">
                                               {landResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
                                                 <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -2934,6 +2982,102 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             </AccordionItem>
                           );
                         })}
+                        
+                        {/* 인접 필지 */}
+                        {[
+                          {
+                            id: "adjacent-001",
+                            address: "경기도 용인시 처인구 포곡읍 마성리 101",
+                            landCategory: "전",
+                            landType: "농경지",
+                            area: 856,
+                            owner: "김OO",
+                          },
+                          {
+                            id: "adjacent-002",
+                            address: "경기도 용인시 처인구 포곡읍 마성리 102",
+                            landCategory: "답",
+                            landType: "농경지",
+                            area: 1234,
+                            owner: "박OO",
+                          },
+                        ].map((adjacent, adjIdx) => (
+                          <AccordionItem 
+                            key={adjacent.id}
+                            value={adjacent.id}
+                            className="rounded-lg border border-dashed border-amber-300 bg-amber-50/50 px-4"
+                          >
+                            <AccordionTrigger className="hover:no-underline py-3">
+                              <div className="flex items-center justify-between w-full pr-2">
+                                <div className="flex items-center gap-2">
+                                  <div className="flex h-5 w-5 items-center justify-center rounded border-2 border-dashed border-amber-500 bg-amber-100 text-xs font-bold text-amber-700 shrink-0">
+                                    {String.fromCharCode(97 + adjIdx)}
+                                  </div>
+                                  <div className="text-left">
+                                    <div className="flex items-center gap-2">
+                                      <p className="font-medium text-sm text-amber-800">{adjacent.address}</p>
+                                      <Badge variant="outline" className="text-[10px] h-4 px-1 border-amber-400 text-amber-600 shrink-0">인접</Badge>
+                                    </div>
+                                    <p className="text-xs text-amber-600">{adjacent.landCategory} | {adjacent.area.toLocaleString()}m² | 소유자: {adjacent.owner}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </AccordionTrigger>
+                            <AccordionContent className="pb-4">
+                              <div className="space-y-3">
+                                {/* 현재 활용 지목 */}
+                                <div className="space-y-1.5">
+                                  <div className="flex items-center justify-between">
+                                    <label className="text-xs font-medium text-amber-800">
+                                      현재 활용 지목 <span className="text-destructive">*</span>
+                                    </label>
+                                    <span className="text-xs text-amber-600">
+                                      공부상 지목: <span className="font-medium text-amber-800">{adjacent.landCategory}</span>
+                                    </span>
+                                  </div>
+                                  <Select 
+                                    value={currentUsagePerLand[adjacent.id] || ""} 
+                                    onValueChange={(value) => setCurrentUsagePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
+                                  >
+                                    <SelectTrigger className="h-8 bg-background text-sm border-amber-300">
+                                      <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="대">대 (택지)</SelectItem>
+                                      <SelectItem value="전">전 (밭)</SelectItem>
+                                      <SelectItem value="답">답 (논)</SelectItem>
+                                      <SelectItem value="임">임 (임야)</SelectItem>
+                                      <SelectItem value="잡">잡 (잡종지)</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                
+                                {/* 건축물 용도 선택 */}
+                                {currentUsagePerLand[adjacent.id] === "대" && (
+                                  <div className="space-y-1.5 rounded bg-amber-100/50 p-2">
+                                    <label className="text-xs font-medium text-amber-800">
+                                      건축물 용도 선택 <span className="text-destructive">*</span>
+                                    </label>
+                                    <Select 
+                                      value={landSubTypePerLand[adjacent.id] || ""} 
+                                      onValueChange={(value) => setLandSubTypePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
+                                    >
+                                      <SelectTrigger className="h-8 bg-background text-sm border-amber-300">
+                                        <SelectValue placeholder="건축물 용도를 선택해 주세요" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="residential-detached">주거용 - 단독주택</SelectItem>
+                                        <SelectItem value="residential-multi">주거용 - 연립/다세대</SelectItem>
+                                        <SelectItem value="commercial">상업용</SelectItem>
+                                        <SelectItem value="industrial">공업용</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                )}
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        ))}
                       </Accordion>
                     </>
                   ) : (
