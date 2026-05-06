@@ -1937,6 +1937,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     
                     {/* 필지 리스트 */}
                     <div className="divide-y max-h-[320px] overflow-y-auto">
+                      {/* 신청 필지 목록 */}
                       {allLands.map((land, idx) => {
                         const isSelected = adminCheckedLandIds.includes(land.id);
                         const isHovered = hoveredLandId === land.id;
@@ -2165,6 +2166,52 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           </div>
                         );
                       })}
+                      
+                      {/* 인접 필지 */}
+                      {[
+                        {
+                          id: "adjacent-001",
+                          address: "경기도 용인시 처인구 포곡읍 마성리 101",
+                          landType: "농경지",
+                          remainingArea: 856,
+                          owner: "김OO",
+                        },
+                        {
+                          id: "adjacent-002",
+                          address: "경기도 용인시 처인구 포곡읍 마성리 102",
+                          landType: "농경지",
+                          remainingArea: 1234,
+                          owner: "박OO",
+                        },
+                      ].map((adjacentLand, adjIdx) => (
+                        <div 
+                          key={adjacentLand.id} 
+                          className="border-t border-dashed border-amber-300 bg-amber-50/50 px-3 py-2.5 transition-colors"
+                          onMouseEnter={() => setHoveredLandId(adjacentLand.id)}
+                          onMouseLeave={() => setHoveredLandId(null)}
+                        >
+                          <div className="flex items-center gap-3">
+                            {/* 인접 필지 마커 */}
+                            <span 
+                              className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white shrink-0 border-2 border-dashed border-amber-500 bg-amber-400"
+                            >
+                              {String.fromCharCode(97 + allLands.length + adjIdx)}
+                            </span>
+                            
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-amber-900">{adjacentLand.address.split(" ").slice(-2).join(" ")}</p>
+                              <p className="text-xs text-amber-700">
+                                {adjacentLand.landType} | {adjacentLand.remainingArea.toLocaleString()}m² | 소유자: {adjacentLand.owner}
+                              </p>
+                            </div>
+                            
+                            {/* 인접 필지 배지 */}
+                            <Badge variant="outline" className="text-[10px] h-4 px-1 border-amber-400 text-amber-600 shrink-0 bg-amber-100">
+                              인접
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                     
                     {/* 선택 요약 */}
@@ -3285,7 +3332,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             />
           </div>
 
-          {/* 저장 버튼 */}
+          {/* ���장 버튼 */}
           <div className="flex justify-end gap-3 border-t border-border pt-4">
             <Button variant="outline" onClick={onBack}>
               취소
