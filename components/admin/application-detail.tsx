@@ -1976,33 +1976,32 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       {/* 민원인 결과를 기본으로 표시 */}
                       <Accordion type="multiple" defaultValue={[]} className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
                         {allLands.map((land, idx) => {
-                          const aiResult = application.aiResult;
+                          const landResult = landAIResults[land.id];
                           return (
                             <AccordionItem 
                               key={land.id}
                               value={land.id}
                               className={`rounded-lg border px-4 ${
-                                aiResult?.provisionalJudgment === "매수"
+                                landResult?.provisionalJudgment === "매수"
                                   ? "border-emerald-200 bg-emerald-50/50"
-                                  : "border-red-200 bg-red-50/50"
+                                  : landResult?.provisionalJudgment === "매수불가"
+                                    ? "border-red-200 bg-red-50/50"
+                                    : "border-slate-200 bg-slate-50/50"
                               }`}
                             >
                               <AccordionTrigger className="hover:no-underline py-3">
                                 <div className="flex items-center justify-between w-full pr-2">
                                   <div className="flex items-center gap-2">
-                                    <span className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-white ${
-                                      aiResult?.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"
-                                    }`}>
-                                      {String.fromCharCode(65 + idx)}
-                                    </span>
                                     <div className="text-left">
                                       <p className="font-medium text-sm">{land.address}</p>
                                       <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
                                     </div>
                                   </div>
-                                  {aiResult?.provisionalJudgment && (
-                                    <Badge className={aiResult.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"}>
-                                      {aiResult.provisionalJudgment}
+                                  {landResult && (
+                                    <Badge className={`ml-2 ${
+                                      landResult.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"
+                                    }`}>
+                                      {landResult.provisionalJudgment}
                                     </Badge>
                                   )}
                                 </div>
@@ -2021,7 +2020,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <div className="rounded bg-white/80 p-2 text-center">
                                     <p className="text-xs text-muted-foreground">형상지수 변화</p>
                                     <p className="font-semibold">
-                                      {aiResult?.shapeIndexChange != null ? `+${aiResult.shapeIndexChange.toFixed(1)}` : "-"}
+                                      {landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}
                                     </p>
                                   </div>
                                 </div>
@@ -2044,7 +2043,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </div>
                                     <div>
                                       <span className="text-muted-foreground">형상지수 변화:</span>
-                                      <span className="ml-1 font-medium">{aiResult?.shapeIndexChange != null ? `+${aiResult.shapeIndexChange.toFixed(1)}` : "-"}</span>
+                                      <span className="ml-1 font-medium">{landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}</span>
                                     </div>
                                   </div>
                                 </div>
