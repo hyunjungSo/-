@@ -182,7 +182,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미���력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미�����력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -566,7 +566,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
         case "commercial": // 상업용
           return { base: 150, relaxed: remainingRatio <= 25 ? 187.5 : 150 };
-        case "industrial": // ��업용
+        case "industrial": // ����업용
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
         default:
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
@@ -2173,42 +2173,37 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           id: "adjacent-001",
                           address: "경기도 용인시 처인구 포곡읍 마성리 101",
                           landType: "농경지",
+                          landCategory: "전",
                           remainingArea: 856,
-                          owner: "김OO",
                         },
                         {
                           id: "adjacent-002",
                           address: "경기도 용인시 처인구 포곡읍 마성리 102",
                           landType: "농경지",
+                          landCategory: "답",
                           remainingArea: 1234,
-                          owner: "박OO",
                         },
-                      ].map((adjacentLand, adjIdx) => (
+                      ].map((adjacentLand) => (
                         <div 
                           key={adjacentLand.id} 
-                          className="border-t border-dashed border-amber-300 bg-amber-50/50 px-3 py-2.5 transition-colors"
+                          className="px-3 py-2.5 transition-colors hover:bg-muted/50"
                           onMouseEnter={() => setHoveredLandId(adjacentLand.id)}
                           onMouseLeave={() => setHoveredLandId(null)}
                         >
                           <div className="flex items-center gap-3">
-                            {/* 인접 필지 마커 */}
-                            <span 
-                              className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white shrink-0 border-2 border-dashed border-amber-500 bg-amber-400"
-                            >
-                              {String.fromCharCode(97 + allLands.length + adjIdx)}
-                            </span>
+                            {/* 체크박스 - 비활성화 */}
+                            <Checkbox 
+                              checked={false}
+                              disabled
+                              className="shrink-0 cursor-not-allowed opacity-50"
+                            />
                             
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-amber-900">{adjacentLand.address.split(" ").slice(-2).join(" ")}</p>
-                              <p className="text-xs text-amber-700">
-                                {adjacentLand.landType} | {adjacentLand.remainingArea.toLocaleString()}m² | 소유자: {adjacentLand.owner}
+                              <p className="text-sm font-medium">{adjacentLand.address}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {adjacentLand.landType} | {adjacentLand.landCategory}
                               </p>
                             </div>
-                            
-                            {/* 인접 필지 배지 */}
-                            <Badge variant="outline" className="text-[10px] h-4 px-1 border-amber-400 text-amber-600 shrink-0 bg-amber-100">
-                              인접
-                            </Badge>
                           </div>
                         </div>
                       ))}
