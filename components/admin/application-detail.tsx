@@ -2178,7 +2178,137 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         );
                       })}
                       
-                      {/* 인접 필지는 추후 구현 예정 */}
+                      {/* 인접 필지 */}
+                      {[
+                        {
+                          id: "adjacent-001",
+                          address: "경기도 용인시 처인구 포곡읍 마성리 101",
+                          landCategory: "전",
+                          landType: "농경지",
+                          area: 856,
+                          owner: "김OO",
+                        },
+                        {
+                          id: "adjacent-002",
+                          address: "경기도 용인시 처인구 포곡읍 마성리 102",
+                          landCategory: "답",
+                          landType: "농경지",
+                          area: 1234,
+                          owner: "박OO",
+                        },
+                      ].map((adjacent, adjIdx) => {
+                        const isAdjacentSelected = adminCheckedLandIds.includes(adjacent.id);
+                        const isAdjacentHovered = hoveredLandId === adjacent.id;
+                        const isAdjacentFocused = focusedLandId === adjacent.id;
+                        return (
+                          <div 
+                            key={adjacent.id}
+                            className={`border-b border-dashed border-amber-200 last:border-b-0 transition-colors ${
+                              isAdjacentHovered ? "bg-amber-100/50" :
+                              isAdjacentSelected ? "bg-amber-50/50" : 
+                              "bg-amber-50/30"
+                            }`}
+                            onMouseEnter={() => setHoveredLandId(adjacent.id)}
+                            onMouseLeave={() => setHoveredLandId(null)}
+                          >
+                            {/* 상단: 필지 정보 행 */}
+                            <div 
+                              className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer ${
+                                isAdjacentFocused ? "border-l-4 border-l-amber-500" : ""
+                              }`}
+                              onClick={() => setFocusedLandId(isAdjacentFocused ? null : adjacent.id)}
+                            >
+                              {/* 체크박스 */}
+                              <Checkbox
+                                checked={isAdjacentSelected}
+                                onCheckedChange={(checked) => {
+                                  if (checked) {
+                                    setAdminCheckedLandIds(prev => [...prev, adjacent.id]);
+                                  } else {
+                                    setAdminCheckedLandIds(prev => prev.filter(id => id !== adjacent.id));
+                                  }
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                                className="h-5 w-5 shrink-0 border-amber-400 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
+                              />
+                              
+                              {/* 인접 필지 마커 */}
+                              <div className="flex h-5 w-5 items-center justify-center rounded border-2 border-dashed border-amber-500 bg-amber-100 text-xs font-bold text-amber-700 shrink-0">
+                                {String.fromCharCode(97 + adjIdx)}
+                              </div>
+                              
+                              {/* 필지 정보 */}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <p className="text-sm font-medium text-amber-800 truncate">{adjacent.address}</p>
+                                  <Badge variant="outline" className="text-[10px] h-4 px-1 border-amber-400 text-amber-600 shrink-0">인접</Badge>
+                                </div>
+                                <p className="text-xs text-amber-600">
+                                  {adjacent.landCategory} | {adjacent.area.toLocaleString()}m² | 소유자: {adjacent.owner}
+                                </p>
+                              </div>
+                              
+                              {/* 펼침/접힘 아이콘 */}
+                              <ChevronDown className={`h-4 w-4 text-amber-500 transition-transform shrink-0 ${isAdjacentFocused ? "rotate-180" : ""}`} />
+                            </div>
+                            
+                            {/* 하단: 필지 상세 옵션 */}
+                            {isAdjacentFocused && (
+                              <div className="px-3 pb-3 ml-7 space-y-3 border-t border-amber-200 pt-3 bg-amber-50/50">
+                                {/* 현재 활용 지목 */}
+                                <div className="space-y-1.5">
+                                  <div className="flex items-center justify-between">
+                                    <label className="text-xs font-medium text-amber-800">
+                                      현재 활용 지목 <span className="text-destructive">*</span>
+                                    </label>
+                                    <span className="text-xs text-amber-600">
+                                      공부상 지목: <span className="font-medium text-amber-800">{adjacent.landCategory}</span>
+                                    </span>
+                                  </div>
+                                  <Select 
+                                    value={adminCurrentUsagePerLand[adjacent.id] || ""} 
+                                    onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
+                                  >
+                                    <SelectTrigger className="h-8 bg-background text-sm border-amber-300">
+                                      <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="대">대 (택지)</SelectItem>
+                                      <SelectItem value="전">전 (밭)</SelectItem>
+                                      <SelectItem value="답">답 (논)</SelectItem>
+                                      <SelectItem value="임">임 (임야)</SelectItem>
+                                      <SelectItem value="잡">잡 (잡종지)</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                
+                                {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
+                                {adminCurrentUsagePerLand[adjacent.id] === "대" && (
+                                  <div className="space-y-1.5 rounded bg-amber-100/50 p-2">
+                                    <label className="text-xs font-medium text-amber-800">
+                                      건축물 용도 선택 <span className="text-destructive">*</span>
+                                    </label>
+                                    <Select 
+                                      value={adminLandSubTypePerLand[adjacent.id] || ""} 
+                                      onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
+                                    >
+                                      <SelectTrigger className="h-8 bg-background text-sm border-amber-300">
+                                        <SelectValue placeholder="건축물 용도를 선택해 주세요" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="residential-detached">주거용 - 단독주택</SelectItem>
+                                        <SelectItem value="residential-multi">주거용 - 연립/다세대</SelectItem>
+                                        <SelectItem value="commercial">상업용</SelectItem>
+                                        <SelectItem value="industrial">공업용</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                     
                     {/* 선택 요약 */}
