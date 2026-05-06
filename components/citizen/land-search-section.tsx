@@ -80,7 +80,7 @@ const regionData = {
     // 부산광역시
     "해운대구": ["반송동", "반여동", "석대동", "송정동", "우동", "좌동", "재송동", "중동"],
     "기장군": ["기장읍", "장안읍", "정관읍", "일광면", "철마면"],
-    "금정구": ["구서동", "금사동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
+    "금정구": ["구서동", "금��동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
     // 경기도
     "용인시 처인구": ["양지면", "백암면", "원삼면", "이동읍", "남사읍", "포곡읍", "모현읍"],
     "용인시 기흥구": ["구갈동", "마북동", "보라동", "상갈동", "상하동", "서농동", "신갈동", "언남동", "영덕동", "중동", "지곡동", "청덕동", "하갈동"],
@@ -1428,15 +1428,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                     : "hover:bg-muted/50"
                             }`}
                           >
-                            {/* 본인 소유 체크박스 */}
-                            <Checkbox
-                              checked={isOwned}
-                              onCheckedChange={() => {
-                                toggleOwnedParcel(land.id);
-                              }}
-                              className="h-5 w-5 shrink-0"
-                            />
-                            
                             {/* 필지 정보 버튼 */}
                             <button
                               onClick={() => handleLandSelect(land)}
@@ -1487,43 +1478,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     })}
                   </ul>
                   
-                  {/* 선택된 필지 요약 + AI 판독 버튼 */}
-                  {searchResults.length > 0 && (
-                    <div className="border-t bg-muted/30 px-3 py-3">
-                      <div className="mb-2 flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground">
-                          선��: {ownedParcels.size || 1}필지
-                        </span>
-                        <span className="font-medium text-primary">
-                          총 {searchResults.length}필지
-                        </span>
-                      </div>
-                      {/* AI 판독 버튼 */}
-                      <Button 
-                        onClick={handleAIAnalysis}
-                        className="h-10 w-full gap-2 text-sm"
-                        variant="default"
-                        disabled={aiAnalyzing || !currentUsage || (currentUsage === "대" && !landSubType) || noIncludedLand}
-                      >
-                        {aiAnalyzing ? (
-                          <>
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            {ownedParcels.size || 1}개 필지 판독 중...
-                          </>
-                        ) : (
-                          <>
-                            <AIIcon className="h-5 w-5" />
-                            선택 필지 AI 판독 ({ownedParcels.size || 1}건)
-                          </>
-                        )}
-                      </Button>
-                      {(!currentUsage || (currentUsage === "대" && !landSubType)) && (
-                        <p className="mt-1.5 text-center text-[11px] text-muted-foreground">
-                          기본정보에서 활용 지목을 선택하세요
-                        </p>
-                      )}
-                    </div>
-                  )}
+
                 </>
               )}
             </div>
@@ -1939,6 +1894,35 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             )}
             </div>
             </div>
+            
+            {/* AI 판독 버튼 - 하단 고정 (AI 결과 없을 때) */}
+            {!aiResult && !noIncludedLand && (
+              <div className="shrink-0 border-t bg-background p-3">
+                <Button 
+                  onClick={handleAIAnalysis}
+                  className="h-10 w-full gap-2 text-sm"
+                  variant="default"
+                  disabled={aiAnalyzing || !currentUsage || (currentUsage === "대" && !landSubType)}
+                >
+                  {aiAnalyzing ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      {ownedParcels.size || 1}개 필지 판독 중...
+                    </>
+                  ) : (
+                    <>
+                      <AIIcon className="h-5 w-5" />
+                      선택 필지 AI 판독 ({ownedParcels.size || 1}건)
+                    </>
+                  )}
+                </Button>
+                {(!currentUsage || (currentUsage === "대" && !landSubType)) && (
+                  <p className="mt-1.5 text-center text-[11px] text-muted-foreground">
+                    활용 지목을 선택하세요
+                  </p>
+                )}
+              </div>
+            )}
             
             {/* 신청 목록 추가 버튼 - 하단 고정 */}
             {aiResult && (
