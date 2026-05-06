@@ -1626,17 +1626,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 : "border-slate-200 bg-slate-50/50"
                           }`}
                         >
-                          <AccordionTrigger className="hover:no-underline py-3">
-                            <div className="flex items-center justify-between w-full pr-2">
-                              <div className="flex items-center gap-2">
-                                <div className="text-left">
-                                  <p className="font-medium text-sm">{land.address}</p>
-                                  <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
-                                </div>
+                          <AccordionTrigger className="hover:no-underline py-3 flex items-center justify-between w-full">
+                            <div className="flex items-center justify-between w-full pr-2 flex-1">
+                              <div className="text-left flex-1">
+                                <p className="font-medium text-sm">{land.address}</p>
+                                <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
                               </div>
                               {/* 필지별 매수/불매수 Badge 표시 */}
                               {landResult && (
-                                <Badge className={`ml-2 ${
+                                <Badge className={`ml-2 shrink-0 ${
                                   landResult.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"
                                 }`}>
                                   {landResult.provisionalJudgment}
@@ -2098,7 +2096,7 @@ return applicationParcels;
                                   </div>
                                 )}
                                 
-                                {/* 현장확인 옵션 */}
+                                {/* ��장확인 옵션 */}
                                 <div className="space-y-1.5">
                                   <span className="text-xs text-muted-foreground font-medium">현장확인:</span>
                                   <div className="flex flex-col gap-2">
@@ -2332,7 +2330,7 @@ return applicationParcels;
                                         </div>
                                       )}
 
-                                      {/* 수동 확인 항목 */}
+                                      {/* 수동 ��인 항목 */}
                                       {application.aiResult?.judgmentRationale?.manualCheckItems && application.aiResult.judgmentRationale.manualCheckItems.length > 0 && (
                                         <div className="flex items-start gap-2">
                                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
