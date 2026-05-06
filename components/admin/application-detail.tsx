@@ -191,7 +191,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
   
-  // 필�����별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
+  // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
   // 필지별 분석 단계 상세 (0: 대기, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
@@ -266,7 +266,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 현재 탭에 따른 선택된 필지 ID (지도 표시용)
   const currentSelectedLandIds = aiResultViewMode === "citizen" ? citizenSelectedLandIds : adminCheckedLandIds;
   
-  // 담당자 탭 ��크박스 선택 변경 핸들러
+  // 담당자 탭 체크박스 선택 변경 핸들러
   const handleAdminCheckLand = (landId: string, checked: boolean) => {
     if (checked) {
       setAdminCheckedLandIds(prev => [...prev, landId]);
@@ -537,7 +537,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
   // ===== [2단계] 대상 토지 상세 분석 (중앙토지수용위원회 기준) =====
   
-  // 편입 전 면적 기준 (㎡) - 초과 시 토지유형별 경로, 이��� 시 소규모 토지 경로
+  // 편입 전 면적 기준 (㎡) - 초과 시 토지유형별 경로, 이하 시 소규모 토지 경로
   const AREA_THRESHOLD = {
     residential: { detached: 90, apartment: 330, commercial: 150, industrial: 330 },
     agricultural: 330,
@@ -567,7 +567,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경�������������������������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
+      // 농지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -578,7 +578,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     }
   };
   
-  // 소규모 토지 여부 판단 (편입 전 면적 330�� 이하 또는 잔여비율 50% 이하)
+  // 소규모 토지 여부 판단 (편입 전 면적 330㎡ 이하 또는 잔여비율 50% 이하)
   const isSmallScaleLand = (land: typeof allLands[0]) => {
     return land.originalArea <= 330 || land.remainingRatio <= 50;
   };
@@ -609,7 +609,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   ) => {
     // 담당자가 선택한 현재 활용지목 우선 적용, 없으면 원래 지목 사용
     const effectiveLandType = adminCurrentUsage 
-      ? (adminCurrentUsage === "대" ? "���지" : adminCurrentUsage === "��" || adminCurrentUsage === "답" ? "농지" : adminCurrentUsage === "임" ? "임야" : "기타")
+      ? (adminCurrentUsage === "대" ? "대지" : adminCurrentUsage === "전" || adminCurrentUsage === "답" ? "농지" : adminCurrentUsage === "임" ? "임야" : "기타")
       : land.landType;
     
     const criteria = getAreaCriteria(land, landData, adminLandSubType);
@@ -621,7 +621,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     let judgment: "매수" | "매수불가" | "검토필요" = "매수불가";
     let reasons: string[] = [];
     
-    // 1. ��적 기준 미달 여부
+    // 1. 면적 기준 미달 여부
     const effectiveLimit = criteria.relaxed;
     const areaCheckMet = land.remainingArea <= effectiveLimit;
     criteriaChecks.push({
@@ -676,7 +676,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "농기계 진입/회전",
         met: farmDifficulty,
-        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : "") : "���기계 사용 가능"
+        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : "") : "농기계 사용 가능"
       });
       
       criteriaChecks.push({
@@ -723,7 +723,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "종래 사용 곤란",
         met: usageDifficulty,
-        description: usageDifficulty ? "���치/형상/접근 상태로 ��래 ���용 곤란" : "종래 ��용 ���능"
+        description: usageDifficulty ? "위치/형상/접근 상태로 종래 사용 곤란" : "종래 사용 가능"
       });
       
       if (areaCheckMet || usageDifficulty) {
@@ -732,20 +732,20 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (usageDifficulty) reasons.push("종래 사용 곤란");
       } else {
         judgment = "매수불가";
-        reasons.push("��든 ���준 미충족");
+        reasons.push("모든 기준 미충족");
       }
     }
     
-    // 소규모 토지 추��� 검���
+    // 소규모 토지 추가 검토
     if (isSmall) {
       criteriaChecks.push({
         name: "소규모 토지",
         met: true,
-        description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (���규��� 해당)`
+        description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규모 해당)`
       });
       if (judgment === "매수불가") {
         judgment = "검토필요";
-        reasons.push("소규모 토지로 추가 검토 ��요");
+        reasons.push("소규모 토지로 추가 검토 필요");
       }
     }
     
@@ -760,7 +760,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     };
   };
 
-  // AI 판독 실행 핸들러 (2단계 프로세스) - 담������가 선택한 필지만 분석
+  // AI 판독 실행 핸들러 (2단계 프로세스) - 담당자가 선택한 필지만 분석
   const handleRunAIAnalysis = () => {
     // 선택된 필지가 없으면 알림
     if (adminCheckedLandIds.length === 0) {
@@ -805,7 +805,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       const newResults: typeof adminLandAIResults = {};
       const newGroups: typeof adminUnifiedGroups = {};
       
-      // 담당자가 선택한 필지들만 분석 대상��로 설정
+      // 담당자가 선택한 필지들만 분석 대상으로 설정
       const selectedLands = allLands.filter(l => adminCheckedLandIds.includes(l.id));
       
       // ===== [1단계] 일단지 판정 =====
@@ -899,7 +899,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               if (hasRoadLoss) analysisReasons.push("접면도로 상실" + (groupOptions.accessRoadLost ? " (관리자 확인)" : ""));
               if (hasWaterLoss) analysisReasons.push("관개수로 상실" + (groupOptions.waterChannelLost ? " (관리자 확인)" : ""));
               if (hasFarmDifficulty) analysisReasons.push("농기계 진입/회전 곤란" + (groupOptions.farmMachineDifficulty ? " (관리자 확인)" : ""));
-              if (hasShapeChange) analysisReasons.push("형상 부��형 변경");
+              if (hasShapeChange) analysisReasons.push("형상 부정형 변경");
               
             } else if (landType === "산지") {
               // 산지 경로
@@ -1079,7 +1079,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <p className="font-medium">{application.applicantName}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">연���처</p>
+              <p className="text-xs text-muted-foreground">연락처</p>
               <p className="font-medium">{application.applicantContact}</p>
             </div>
             <div>
@@ -1087,7 +1087,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <p className="font-medium">{application.appliedAt}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">����명</p>
+              <p className="text-xs text-muted-foreground">사업명</p>
               <p className="font-medium">{application.landInfo.projectName}</p>
             </div>
           </div>
@@ -1209,7 +1209,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     />
                   </div>
                   
-                  {/* 지��� 범례 */}
+                  {/* 지도 범례 */}
                   <div className="rounded-lg border bg-white/80 p-2">
                     <p className="text-xs font-medium text-muted-foreground mb-2">범례</p>
                     <div className="flex flex-wrap gap-3 text-xs">
@@ -1276,7 +1276,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <p className="font-semibold text-sm">{allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
                             </div>
                             <div className="rounded bg-white/80 p-2 text-center">
-                              <p className="text-xs text-muted-foreground">합산 잔여���적</p>
+                              <p className="text-xs text-muted-foreground">합산 잔여면적</p>
                               <p className="font-semibold text-sm">{allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
                             </div>
                             <div className="rounded bg-white/80 p-2 text-center">
@@ -1678,27 +1678,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             </div>
                             
-                            {/* 일단지 또는 부분 일단지 그룹에 속한 경우 안내 문구 */}
-                            {(() => {
-                              const landJudgment = application.aiResult?.landJudgments?.find(lj => lj.landId === land.id);
-                              const isInUnifiedGroup = applicationType === "unified" || landJudgment?.unifiedGroupId;
-                              if (!isInUnifiedGroup) return null;
-                              return (
-                                <div className="flex items-start gap-2 pt-3 mt-3 border-t text-blue-600">
-                                  <Info className="mt-0.5 h-3 w-3 shrink-0" />
-                                  <p className="text-xs">
-                                    이 필지는 일단지로 판정���었��니다. 상세 분석 결과는 상단의 일단지 판정 결과를 참조하세요.
-                                  </p>
-                                </div>
-                              );
-                            })()}
-                            
-                            {/* 상세 분석 내용 - 개별 필지인 경우에만 표시 (일단지는 상단에 통합 표시) */}
-                            {(() => {
-                              const landJudgment = application.aiResult?.landJudgments?.find(lj => lj.landId === land.id);
-                              const isInUnifiedGroup = applicationType === "unified" || landJudgment?.unifiedGroupId;
-                              return !isInUnifiedGroup;
-                            })() && (
+                            {/* 상세 분석 내용 - 모든 필지에 표시 */}
+                            {landResult && (
                               <div className="space-y-4">
                                 {/* 판단 요약 */}
                                 {landResult?.judgmentRationale && (
@@ -1763,7 +1744,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <div className="flex items-start gap-2">
                                     <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                                     <div>
-                                      <h4 className="text-sm font-semibold text-foreground">�����세 분석</h4>
+                                      <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
                                       <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                                         {landResult.judgmentRationale.detailedExplanation}
                                       </pre>
@@ -2085,7 +2066,7 @@ return applicationParcels;
                                   <p className="text-[10px] text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
                                 </div>
                                 
-                                {/* 건축물 용도 ��택 - 현재 활용 지목이 "대"인 경우만 표시 */}
+                                {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
                                 {adminCurrentUsagePerLand[land.id] === "대" && (
                                   <div className="space-y-1.5 rounded bg-muted/30 p-2">
                                     <label className="text-xs font-medium text-foreground">
@@ -2180,14 +2161,14 @@ return applicationParcels;
                 {/* 우측: 분석결과 */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium">분석결��</h4>
+                    <h4 className="font-medium">분석결과</h4>
                     {Object.keys(adminLandAIResults).length > 0 && (
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={handleResetAdminAIResults}
                         className="h-7 w-7 text-muted-foreground hover:text-destructive"
-                        title="재분석 결과 ���기화"
+                        title="재분석 결과 초기화"
                       >
                         <RotateCcw className="h-4 w-4" />
                       </Button>
@@ -2200,7 +2181,7 @@ return applicationParcels;
                       <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 mb-4 flex items-start gap-2">
                         <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
                         <p className="text-sm text-blue-700">
-                          현재 민원인 결과를 표시���고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분�����을 실행하면 담당자 결과가 표시��니다.
+                          현재 민원인 결과를 표시하고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분석을 실행하면 담당자 결과가 표시됩니다.
                         </p>
                       </div>
                       
@@ -2385,7 +2366,7 @@ return applicationParcels;
                                       <div className="flex items-start gap-2 pt-2 border-t border-emerald-200">
                                         <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
                                         <p className="text-xs text-emerald-600">
-                                          AI 판독 결과는 참고용이며, 최종 판정은 ���당자 검토에 따라 결정됩니다.
+                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                                         </p>
                                       </div>
                                     </div>
@@ -2446,7 +2427,7 @@ return applicationParcels;
                                     </div>
                                   </div>
 
-                                  {/* 추가 조�� */}
+                                  {/* 추가 조건 */}
                                   <div className="flex flex-wrap gap-2 mb-3">
                                     {application.aiResult?.farmMachineDifficulty && (
                                       <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
@@ -2611,17 +2592,7 @@ return applicationParcels;
                                 </div>
                               </AccordionTrigger>
                               <AccordionContent className="pb-4">
-                                {/* 일단지 그룹에 속한 필지는 안내 메시지만 표시 */}
-                                {isInUnifiedGroup ? (
-                                  <div className="flex items-start gap-2 text-blue-600">
-                                    <Info className="mt-0.5 h-4 w-4 shrink-0" />
-                                    <p className="text-sm">
-                                      이 필지는 일단지로 판정되었습니다. 상세 분석 결과는 상단의 일단지 판정 결과를 참조하세요.
-                                    </p>
-                                  </div>
-                                ) : (
-                                  <>
-                                    {/* 기본 정보 */}
+                                {/* 기본 정보 */}
                                     <div className="grid grid-cols-3 gap-3 text-sm mb-4">
                                       <div className="rounded bg-white/80 p-2 text-center">
                                         <p className="text-xs text-muted-foreground">잔여 면적</p>
@@ -2709,7 +2680,7 @@ return applicationParcels;
                                         <div className="flex items-start gap-2">
                                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                                           <div>
-                                            <h4 className="text-sm font-semibold text-foreground">수동 확��� 항목</h4>
+                                            <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
                                             <ul className="mt-1 space-y-1">
                                               {landResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
                                                 <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -2759,12 +2730,10 @@ return applicationParcels;
                                       <div className="flex items-start gap-2 pt-2 border-t">
                                         <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                         <p className="text-xs text-muted-foreground">
-                                          AI 판독 결과는 참고용��며, 최종 판정은 담당자 검토�� 따라 결정됩니다.
+                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                                         </p>
                                       </div>
                                     </div>
-                                  </>
-                                )}
                               </AccordionContent>
                             </AccordionItem>
                           );
@@ -2783,7 +2752,7 @@ return applicationParcels;
                         분석 프로세스 상세 보기
                       </Button>
                       
-                      {/* 적용된 옵션 - 필지별 현장 상황 옵�� 표시 */}
+                      {/* 적용된 옵션 - 필지별 현장 상황 옵션 표시 */}
                       {allLands.map((land, idx) => {
                         const landOptions = adminAIOptionsPerLand[land.id] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
                         if (!landOptions.accessRoadLost && !landOptions.waterChannelLost && !landOptions.farmMachineDifficulty) {
@@ -2841,7 +2810,7 @@ return applicationParcels;
                         </div>
                       )}
                       
-                      {/* 필지별 분석 ���과 - 아코디언 UI */}
+                      {/* 필지별 분석 결과 - 아코디언 UI */}
                       <Accordion type="multiple" defaultValue={[]} className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
                         {Object.entries(adminLandAIResults).map(([landId, result]) => {
                           const land = allLands.find(l => l.id === landId);
@@ -3140,7 +3109,7 @@ return applicationParcels;
                             <div className="rounded-lg border border-amber-200 bg-amber-50 p-2 flex items-start gap-2">
                               <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
                               <p className="text-xs text-amber-700">
-                                AI 제안({aiResult.provisionalJudgment})과 다른 판정입니다. ��토 의견에 사유를 작성해주��요.
+                                AI 제안({aiResult.provisionalJudgment})과 다른 판정입니다. 검토 의견에 사유를 작성해주세요.
                               </p>
                             </div>
                           )}
@@ -3196,7 +3165,7 @@ return applicationParcels;
         </CardContent>
       </Card>
 
-      {/* 최종 ���토 */}
+      {/* 최종 검토 */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">최종 검토</CardTitle>
@@ -3245,7 +3214,7 @@ return applicationParcels;
         </CardContent>
       </Card>
 
-      {/* AI 분석 프로세스 ���이얼로그 - 관리자 재판독 결과 우선 표시 */}
+      {/* AI 분석 프로세스 다이얼로그 - 관리자 재판독 결과 우선 표시 */}
       <AIAnalysisFlowDialog
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
