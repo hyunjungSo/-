@@ -240,7 +240,7 @@ const regionData = {
     // 세종특별자치시
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
-    "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수��"],
+    "부강면": ["금산리", "노호리", "등곡리", "문��리", "산수��"],
     "��정면": ["송등�������", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
@@ -573,8 +573,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const [isCartOpen, setIsCartOpen] = useState(false);
   // 장바구니 선택 항목
   const [selectedCartItems, setSelectedCartItems] = useState<Set<string>>(new Set());
-  // AI 판독 결과에서 신청 목록에 추가할 필지 선택
-  const [checkedParcelsForCart, setCheckedParcelsForCart] = useState<Set<string>>(new Set());
+
   
   // 검색 방식 탭 (지번 / 개인정보 / 법인정보)
   const [searchMode, setSearchMode] = useState<"address" | "individual" | "corporation">("address");
@@ -1608,7 +1607,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             className="px-3 py-1 text-sm font-bold"
                           >
                             {aiResult.provisionalJudgment === "매수" 
-                              ? "매수 가능" 
+                              ? "매�� 가능" 
                               : aiResult.provisionalJudgment === "심의위원회이관"
                                 ? "경계 사례"
                                 : "기준 미충족"}
@@ -1758,47 +1757,19 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   }
                   
                   if (aiResult.provisionalJudgment !== "매수불가") {
-                    // 체크된 필지 중 신청 가능한 필지 필터링
-                    const checkedAddableItems = Array.from(checkedParcelsForCart)
-                      .map(id => ({
-                        land: searchResults.find(l => l.id === id),
-                        result: parcelAiResults.get(id)
-                      }))
-                      .filter(item => 
-                        item.land && 
-                        item.result && 
-                        item.result.provisionalJudgment !== "매수불가" && 
-                        !cartItems.some(c => c.landInfo.id === item.land!.id)
-                      );
-                    
-                    const checkedCount = checkedAddableItems.length;
+                    const isAlreadyInCart = cartItems.some(c => c.landInfo.id === selectedLand.id);
                     
                     return (
-                      <div className="space-y-2">
+                      <div>
                         <Button
-                          onClick={() => {
-                            if (checkedCount > 0) {
-                              checkedAddableItems.forEach(item => {
-                                if (item.land && item.result) {
-                                  onAddToCart(item.land, item.result);
-                                }
-                              });
-                              setCheckedParcelsForCart(new Set());
-                            } else {
-                              // 체크된 게 없으면 현재 선택된 필지만 추가
-                              onAddToCart(selectedLand, aiResult!);
-                            }
-                          }}
+                          onClick={() => onAddToCart(selectedLand, aiResult!)}
                           className="h-12 w-full cursor-pointer text-base"
                           variant="default"
-                          disabled={checkedCount === 0}
+                          disabled={isAlreadyInCart}
                         >
                           <Plus className="mr-2 h-4 w-4" />
-                          신청 목록에 추가 ({checkedCount}건)
+                          신청 목록에 추가
                         </Button>
-                        <p className="text-center text-xs text-muted-foreground">
-                          위 목록에서 추가할 필지를 선택하세요
-                        </p>
                       </div>
                     );
                   }
