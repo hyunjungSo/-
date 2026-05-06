@@ -567,7 +567,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경���: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
+      // 농지 경�����: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -1361,7 +1361,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className="flex items-start gap-2 pt-3 mt-3 border-t text-blue-600">
                                   <Info className="mt-0.5 h-3 w-3 shrink-0" />
                                   <p className="text-xs">
-                                    이 필지는 일단지로 판정되었습니다. 상세 분석 결과는 상단의 일단지 판정 결과를 참조하세요.
+                                    이 필지는 일단지로 판정되었��니다. 상세 분석 결과는 상단의 일단지 판정 결과를 참조하세요.
                                   </p>
                                 </div>
                               );
@@ -1857,6 +1857,46 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           </div>
                         );
                       })}
+                      
+                      {/* 인접 필지 섹션 */}
+                      <div className="border-t border-dashed border-amber-300 mt-2 pt-2">
+                        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50/50">
+                          <div className="h-2.5 w-2.5 rounded-sm border-2 border-dashed border-amber-500 bg-amber-100" />
+                          <span className="text-xs font-medium text-amber-700">인접 필지</span>
+                        </div>
+                        {[
+                          {
+                            id: "adjacent-001",
+                            address: "경기도 용인시 처인구 포곡읍 마성리 101",
+                            landCategory: "전",
+                            area: 856,
+                            owner: "김OO",
+                          },
+                          {
+                            id: "adjacent-002",
+                            address: "경기도 용인시 처인구 포곡읍 마성리 102",
+                            landCategory: "답",
+                            area: 1234,
+                            owner: "박OO",
+                          },
+                        ].map((adjacent) => (
+                          <div 
+                            key={adjacent.id}
+                            className="px-3 py-2 hover:bg-amber-50/50 transition-colors"
+                            onMouseEnter={() => setHoveredLandId(adjacent.id)}
+                            onMouseLeave={() => setHoveredLandId(null)}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-amber-800 truncate">{adjacent.address}</p>
+                                <p className="text-xs text-amber-600">
+                                  {adjacent.landCategory} | {adjacent.area.toLocaleString()}m² | 소유자: {adjacent.owner}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                     
                     {/* 선택 요약 */}
@@ -2637,7 +2677,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* AI 분석 프로세스 다이얼로그 - 관리자 재판독 결과 우선 표시 */}
+      {/* AI 분석 프로세스 ���이얼로그 - 관리자 재판독 결과 우선 표시 */}
       <AIAnalysisFlowDialog
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
