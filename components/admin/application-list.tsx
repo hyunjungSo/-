@@ -293,13 +293,9 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       {app.applicationNumber}
                     </span>
                     {(() => {
-                      const isUnified = app.aiResult?.unifiedLandAnalysis || 
-                        app.aiResult?.landJudgments?.some(lj => lj.unifiedGroupId);
                       const isMultiple = app.additionalLands && app.additionalLands.length > 0;
                       
-                      if (isUnified) {
-                        return <span className="text-sm text-foreground">일단지</span>;
-                      } else if (isMultiple) {
+                      if (isMultiple) {
                         return <span className="text-sm text-foreground">복수필지 ({app.additionalLands!.length + 1})</span>;
                       } else {
                         return <span className="text-sm text-foreground">단일필지</span>;

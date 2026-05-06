@@ -1026,7 +1026,7 @@ export const dummyLandInfoList: LandInfo[] = [
   // 4필지 중 2필지만 일단지 판정, 나머지 2필지는 개별 판정
   {
     id: "land-mixed-001",
-    address: "경기도 평택시 포승읍 내기리 200-1",
+    address: "경기��� 평택시 포승읍 내기리 200-1",
     originalArea: 500,
     includedArea: 350,
     remainingArea: 150,
@@ -1908,7 +1908,6 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "도로/수로 상실", criteriaDescription: "관개수로 상실로 농지 사용 불가", isMet: true, autoDetected: false },
         { criteriaName: "농기계 진입 곤란", criteriaDescription: "농기계 진입/회전 곤란으로 경작 불가", isMet: true, autoDetected: false },
-        { criteriaName: "일단지 해당", criteriaDescription: "동일 소유자 연속 필지로 일단지 판정", isMet: true, autoDetected: true },
       ],
       provisionalJudgment: "매수",
       originalShapeIndex: 4.2,
@@ -2275,10 +2274,9 @@ export const dummyApplications: Application[] = [
     aiResult: {
       landTypePath: "농지",
       criteriaChecks: [
-        { criteriaName: "일단지 검토 (내기리)", criteriaDescription: "200-1, 200-2 필지: 동일 소유자, 연접, 동일 용도(답) → 일단지 해당", isMet: true, autoDetected: true },
-        { criteriaName: "일단지 검토 (만호리)", criteriaDescription: "55-1, 55-2 필지: 내기리와 비연접, 용도 상이(전) → 일단지 미해당", isMet: false, autoDetected: true },
-        { criteriaName: "일단지 면적 기준", criteriaDescription: "일단지 합산 잔여 330㎡ ≤ 330㎡ (농지 기준 충족)", isMet: true, autoDetected: true },
-        { criteriaName: "일단지 형상지수", criteriaDescription: "일단지 형상지수 5.0 ≥ 2.0 (불량)", isMet: true, autoDetected: true },
+        { criteriaName: "면적 기준 (200-1)", criteriaDescription: "잔여 150㎡ ≤ 330㎡ (농지 기준 충족)", isMet: true, autoDetected: true },
+        { criteriaName: "면적 기준 (200-2)", criteriaDescription: "잔여 180㎡ ≤ 330㎡ (농지 기준 충족)", isMet: true, autoDetected: true },
+        { criteriaName: "형상지수 (200-1)", criteriaDescription: "형상지수 5.0 ≥ 2.0 (불량)", isMet: true, autoDetected: true },
         { criteriaName: "면적 기준 (55-1)", criteriaDescription: "잔여 600㎡ > 330㎡ (농지 기준 미충족)", isMet: false, autoDetected: true },
         { criteriaName: "형상지수 (55-1)", criteriaDescription: "형상지수 1.2 < 2.0 (양호)", isMet: false, autoDetected: true },
         { criteriaName: "면적 기준 (55-2)", criteriaDescription: "잔여 550㎡ > 330㎡ (농지 기준 미충족)", isMet: false, autoDetected: true },
@@ -2293,16 +2291,15 @@ export const dummyApplications: Application[] = [
       waterChannelLost: true,
       farmMachineDifficulty: true,
       judgmentRationale: {
-        summary: "4필지 혼합 판정 - 2필지(내기리) 일단지 「매수」, 2필지(만호리) 개별 「미해당」",
+        summary: "4필지 개별 판정 - 2필지(내기리) 「매수」, 2필지(만호리) 「미해당」",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
-          "일단지 해당 (내기리 200-1, 200-2): 동일 소유자, 연접 필지, 동일 용도(답), 일체 경작",
-          "일단지 미해당 (만호리 55-1, 55-2): 내기리와 비연접, 용도 상이(전)",
-          "일단지(내기리): 합산 잔여 330㎡ ≤ 330㎡, 형상지수 5.0(불량), 농기계 진입곤란 → 매수",
+          "내기리 200-1: 잔여 150㎡ ≤ 330㎡, 형상지수 5.0(불량), 농기계 진입곤란 → 매수",
+          "내기리 200-2: 잔여 180㎡ ≤ 330㎡, 형상지수 4.8(불량), 관개수로 상실 → 매수",
           "만호리 55-1: 면적 기준 미충족(600㎡>330㎡), 형상 양호(1.2), 종래 사용 가능 → 미해당",
           "만호리 55-2: 면적 기준 미충족(550㎡>330㎡), 형상 양호(1.3), 종래 사용 가능 → 미해당",
         ],
-        detailedExplanation: "4필지 혼합 판정\n\n[일단지 - 매수 판정]\n• 내기리 200-1(답): 500㎡→150㎡, 삼각형\n• 내기리 200-2(답): 600㎡→180㎡, 역삼각형\n→ 동일 소유자, 연접, 동일 용도(답)로 일단지 인정\n→ 합산 잔여 330㎡, 형상지수 5.0(불량), 관개수로 상실, 농기계 진입 곤란\n\n[개별 필지 - 미해당 판정]\n• 만호리 55-1(전): 800㎡→600㎡, 형상지수 1.2, 정방형 ✗\n• 만호리 55-2(전): 700㎡→550㎡, 형상지수 1.3, 장방형 ✗\n→ 내기리와 비연접, 용도 상이(전)로 일단지 불가\n→ 면적 기준 미충족, 형상 양호, 종래 용도 사용 가능",
+        detailedExplanation: "4필지 개별 판정\n\n[매수 판정]\n• 내기리 200-1(답): 500㎡→150㎡, 삼각형, 형상지수 5.0(불량)\n• 내기리 200-2(답): 600㎡→180㎡, 역삼각형, 형상지수 4.8(불량)\n→ 면적 기준 충족, 형상 불량, 관개수로 상실, 농기계 진입 곤란\n\n[미해당 판정]\n• 만호리 55-1(전): 800㎡→600㎡, 형상지수 1.2, 정방형\n• 만호리 55-2(전): 700㎡→550㎡, 형상지수 1.3, 장방형\n→ 면적 기준 미충족, 형상 양호, 종래 용도 사용 가능",
         manualCheckItems: ["만호리 필지 현장 확인", "농기계 진입로 상태 확인"],
       },
       unifiedParcelAnalysis: {
@@ -2318,10 +2315,10 @@ export const dummyApplications: Application[] = [
         combinedArea: 1480,
         explanation: "4필지 중 내기리 200-1, 200-2는 동일 소유자, 연접, 동일 용도(답)로 일단지 요건 충족. 만호리 55-1, 55-2는 내기리와 비연접하고 용도도 상이(전)하여 일단지에 포함 불가. 내기리 일단지는 합산 잔여면적 330㎡, 형상지수 5.0으로 매수 기준 충족. 만호리 개별 필지는 면적 기준 미충족으로 미해당.",
       },
-      // 필지별 판정 결과 (내기리는 일단지, 만호리는 개별)
+      // 필지별 판정 결과 (개별 분석)
       landJudgments: [
-        { landId: "land-mixed-001", judgment: "매수", unifiedGroupId: "unified-naegiri", reason: "일단지(내기리): 동일 소유자, 연접, 동일 용도(답), 합산 잔여 330㎡, 형상지수 5.0(불량)" },
-        { landId: "land-mixed-002", judgment: "매수", unifiedGroupId: "unified-naegiri", reason: "일단지(내기리): 동일 소유자, 연접, 동일 용도(답), 합산 잔여 330㎡, 형상지수 5.0(불량)" },
+        { landId: "land-mixed-001", judgment: "매수", unifiedGroupId: null, reason: "내기리 200-1: 잔여 150㎡ ≤ 330㎡, 형상지수 5.0(불량), 농기계 진입곤란" },
+        { landId: "land-mixed-002", judgment: "매수", unifiedGroupId: null, reason: "내기리 200-2: 잔여 180㎡ ≤ 330㎡, 형상지수 4.8(불량), 관개수로 상실" },
         { landId: "land-mixed-003", judgment: "미해당", unifiedGroupId: null, reason: "면적 기준 미충족(600㎡>330㎡), 형상지수 1.2(양호), 종래 사용 가능" },
         { landId: "land-mixed-004", judgment: "미해당", unifiedGroupId: null, reason: "면적 기준 미충족(550㎡>330㎡), 형상지수 1.3(양호), 종래 사용 가능" },
       ],
@@ -2414,16 +2411,16 @@ export const dummyApplications: Application[] = [
       waterChannelLost: false,
       farmMachineDifficulty: false,
       judgmentRationale: {
-        summary: "일단지 요건 충족: 동일 소유자, 연접 필지, 동일 용도(대지). 합산 잔여 330㎡, 형상지수 4.5(불량)로 매수 기준 충족",
+        summary: "대지 2필지 개별 분석 - 200-1: 잔여 180㎡, 형상지수 4.5(불량)로 매수 기준 충족",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
-          "일단지 요건: 동일 소유자 ✓, 연접 ✓, 동일 용도(대지) ✓",
-          "합산 잔여면적: 330㎡ ≤ 330㎡ ✓",
+          "200-1: 잔여 180㎡ ≤ 200㎡(소규모 기준 충족) ✓",
           "형상지수: 4.5 (불량) ✓",
+          "200-2: 잔여 150㎡, 형상지수 3.2 → 매수",
           "접면도로 상실: 인정 ✓",
         ],
-        detailedExplanation: "둔전리 200-1(대지, 450㎡→180㎡)과 200-2(대지, 380㎡→150㎡)는 동일 소유자 정민재 소유이며 연접해 있고 모두 대지로 용도가 동일합니다. 합산 잔여면적 330㎡는 대지 기준 330㎡ 이하이고, 형상지수 4.5로 불량하여 건축이 곤란합니다. 일단지로 판정하여 매수 가능합니다.",
-        manualCheckItems: ["현장 연접 상태 확인", "건축 가능 여부 검토"],
+        detailedExplanation: "둔전리 200-1(대지, 450㎡→180㎡): 잔여 180㎡로 소규모 토지 기준 충족, 형상지수 4.5(불량)로 건축이 곤란합니다.\n둔전리 200-2(대지, 380㎡→150㎡): 잔여 150㎡로 소규모 토지 기준 충족, 형상지수 3.2(불량)로 건축이 곤란합니다.",
+        manualCheckItems: ["현장 형상 확인", "건축 가능 여부 검토"],
       },
       landJudgments: [
         { landId: "land-unified-001", judgment: "매수", reason: "대지: 잔여 180㎡(소규모), 형상지수 4.5(불량), 건축 곤란" },
@@ -2453,7 +2450,7 @@ export const dummyApplications: Application[] = [
           "형상지수: 3.2 (불량) ✓",
           "200-2: 잔여 150㎡(소규모), 형상지수 2.5(양호) → 미해당",
         ],
-        detailedExplanation: "둔전리 200-1(대지): 잔여 180㎡로 소규모 토지 기준 충족, 형상지수 3.2(불량)로 건축 곤란하여 매수 기준 충족.\n둔전리 200-2(대지): 잔여 150㎡로 소규모 토지 기준 충족하나, 형상지수 2.5(양호)로 건축 가능하여 미해당.",
+        detailedExplanation: "둔전리 200-1(대지): 잔여 180㎡로 소���모 토지 기준 충족, 형상지수 3.2(불량)로 건축 곤란하여 매수 기준 충족.\n둔전리 200-2(대지): 잔여 150㎡로 소규모 토지 기준 충족하나, 형상지수 2.5(양호)로 건축 가능하여 미해당.",
         manualCheckItems: ["200-2 건축 가능 여부 현장 확인"],
       },
       landJudgments: [
