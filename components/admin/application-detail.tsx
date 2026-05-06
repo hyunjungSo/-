@@ -87,6 +87,7 @@ interface LandReviewData {
   accessRoadLost: boolean;
   waterChannelLost: boolean;
   landJudgment: JudgmentResult | null;
+  landComment: string; // 필지별 검토의견
 }
 
 export function ApplicationDetail({ application, onBack, onSave }: ApplicationDetailProps) {
@@ -114,6 +115,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         accessRoadLost: landData?.accessRoadLost || false,
         waterChannelLost: landData?.waterChannelLost || false,
         landJudgment: null,
+        landComment: "",
       };
     });
   };
@@ -1107,7 +1109,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             {/* 민원인 결과 탭 */}
             <TabsContent value="citizen">
-              {/* 일������인 경우 최상단에 일단지 판정 결과 표시 */}
+              {/* ���������인 경우 최상단에 일단지 판정 결과 표시 */}
               {applicationType === "unified" && (
                 <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4 mb-6">
                   <div className="flex items-center justify-between mb-3">
@@ -2392,10 +2394,21 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             <div className="rounded-lg border border-amber-200 bg-amber-50 p-2 flex items-start gap-2">
                               <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
                               <p className="text-xs text-amber-700">
-                                AI 제안({aiResult.provisionalJudgment})과 다른 판정입니다. 최종 검토 의견에 사유를 작성해주세요.
+                                AI 제안({aiResult.provisionalJudgment})과 다른 판정입니다. 검토 의견에 사유를 작성해주세요.
                               </p>
                             </div>
                           )}
+                          
+                          {/* 필지별 검토 의견 */}
+                          <div className="space-y-2">
+                            <Label className="text-sm font-medium">검토 의견</Label>
+                            <Textarea
+                              placeholder="해당 필지에 대한 검토 의견을 입력하세요..."
+                              value={landReview.landComment}
+                              onChange={(e) => updateLandReviewData(idx, 'landComment', e.target.value)}
+                              className="min-h-[80px] resize-none"
+                            />
+                          </div>
                         </div>
                       </AccordionContent>
                     </AccordionItem>
@@ -2434,104 +2447,24 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </p>
           </div>
 
-          {/* 담당자 최종 컨펌 섹션 */}
+          {/* 최종 검토 섹션 */}
           <div className="rounded-xl border-2 border-amber-200 bg-gradient-to-b from-amber-50/80 to-white p-5 space-y-4">
             <div className="mb-2">
               <h4 className="font-semibold text-amber-800">최종 검토</h4>
-              <p className="text-sm text-amber-600">AI 제안을 확인하고 최종 결정을 내려주세요</p>
+              <p className="text-sm text-amber-600">전체 민원에 대한 최종 검토 의견을 작성해주세요</p>
             </div>
             
-            {/* AI 제안 표시 */}
-            {Object.keys(adminLandAIResults).length > 0 && (
-              <div className="rounded-lg bg-white border p-3">
-                <p className="text-xs text-muted-foreground mb-2">AI 제안</p>
-                <div className="flex items-center gap-3">
-                  <AIIcon className="h-5 w-5 text-muted-foreground" />
-                  <Badge 
-                    className={(() => {
-                      const results = Object.values(adminLandAIResults);
-                      const hasPurchase = results.some(r => r.provisionalJudgment === "매수");
-                      if (hasPurchase) return "bg-green-600 hover:bg-green-600";
-                      return "bg-red-500 hover:bg-red-500";
-                    })()}
-                  >
-                    {(() => {
-                      const results = Object.values(adminLandAIResults);
-                      const purchaseCount = results.filter(r => r.provisionalJudgment === "매수").length;
-                      if (purchaseCount === results.length) return "매수";
-                      if (purchaseCount === 0) return "매수불가";
-                      return `${purchaseCount}/${results.length} 매수`;
-                    })()}
-                  </Badge>
-                  <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">담당자 최종 결정:</span>
-                </div>
-              </div>
-            )}
-            
-            {/* 최종 판정 선택 */}
+            {/* 최종 검토 의견 */}
             <div className="space-y-2">
-              <Label className={`text-sm font-medium ${reviewData.adminStatus !== "심사완료" ? "text-muted-foreground" : ""}`}>
-                최종 판정
-                {reviewData.adminStatus !== "심사완료" && (
-                  <span className="ml-2 text-sm font-normal text-muted-foreground">
-                    (진행상황을 &apos;심사완료&apos;로 설정하면 완성됩니다)
-                  </span>
-                )}
-              </Label>
-              <div className="flex flex-wrap gap-2">
-                {(["매수", "기각", "심의위원회이관"] as JudgmentResult[]).map((judgment) => {
-                  const config = judgmentConfig[judgment];
-                  const Icon = config.icon;
-                  const isSelected = reviewData.finalJudgment === judgment;
-                  const isDisabled = reviewData.adminStatus !== "심사완료";
-                  return (
-                    <Button
-                      key={judgment}
-                      type="button"
-                      variant="outline"
-                      onClick={() =>
-                        setReviewData((prev) => ({ ...prev, finalJudgment: judgment }))
-                      }
-                      disabled={isDisabled}
-                      className={`cursor-pointer border-2 ${isSelected ? `${config.borderColor} ${config.textColor}` : "border-[#E1E4E7] text-foreground"} ${isDisabled ? "opacity-50" : ""}`}
-                    >
-                      <Icon className="mr-2 h-4 w-4" />
-                      {config.label}
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
-            
-            {/* 담당자 최종 검토 의견 */}
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">담당자 최종 검토 의견</Label>
+              <Label className="text-sm font-medium">최종 검토 의견</Label>
               <Textarea
-                placeholder="현지상황 및 검토의견을 작성해주세요. 이 내용은 심의서에 자동 입력됩니다."
+                placeholder="현지상황 및 종합 검토의견을 작성해주세요. 이 내용은 심의서에 자동 입력됩니다."
                 rows={4}
                 value={reviewData.reviewerComment || ""}
                 onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}
                 className="resize-none"
               />
             </div>
-            
-            {/* AI 결과와 다른 판정 시 경고 */}
-            {reviewData.finalJudgment && Object.keys(adminLandAIResults).length > 0 && (() => {
-              const results = Object.values(adminLandAIResults);
-              const aiJudgment = results.every(r => r.provisionalJudgment === "매수") ? "매수" : 
-                                results.every(r => r.provisionalJudgment !== "매수") ? "기각" : "mixed";
-              const isDifferent = reviewData.finalJudgment !== aiJudgment && aiJudgment !== "mixed";
-              return isDifferent;
-            })() && (
-              <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 flex items-start gap-2">
-                <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-amber-800">AI 제안과 다른 판정입니다</p>
-                  <p className="text-sm text-amber-700">위 검토 의견에 사유를 상세히 작성해주세요.</p>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* 저장 버튼 */}
