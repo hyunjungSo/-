@@ -178,7 +178,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
   
-  // 필��별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
+  // 필���별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
   // 필지별 분석 단계 상세 (0: 대기, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
@@ -608,7 +608,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     let judgment: "매수" | "매수불가" | "검토필요" = "매수불가";
     let reasons: string[] = [];
     
-    // 1. 면적 기준 미달 여부
+    // 1. ��적 기준 미달 여부
     const effectiveLimit = criteria.relaxed;
     const areaCheckMet = land.remainingArea <= effectiveLimit;
     criteriaChecks.push({
@@ -728,7 +728,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "소규모 토지",
         met: true,
-        description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규모 해당)`
+        description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규��� 해당)`
       });
       if (judgment === "매수불가") {
         judgment = "검토필요";
@@ -886,7 +886,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               if (hasRoadLoss) analysisReasons.push("접면도로 상실" + (groupOptions.accessRoadLost ? " (관리자 확인)" : ""));
               if (hasWaterLoss) analysisReasons.push("관개수로 상실" + (groupOptions.waterChannelLost ? " (관리자 확인)" : ""));
               if (hasFarmDifficulty) analysisReasons.push("농기계 진입/회전 곤란" + (groupOptions.farmMachineDifficulty ? " (관리자 확인)" : ""));
-              if (hasShapeChange) analysisReasons.push("형상 부정형 변경");
+              if (hasShapeChange) analysisReasons.push("형상 부��형 변경");
               
             } else if (landType === "산지") {
               // 산지 경로
@@ -1650,6 +1650,25 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   {landResult.provisionalJudgment}
                                 </Badge>
                               ) : null}
+                              
+                              {/* 아코디언 화살표 아이콘 */}
+                              <div 
+                                className="shrink-0 ml-2 cursor-pointer p-1 hover:bg-muted rounded"
+                                onClick={() => {
+                                  if (focusedLandId === land.id) {
+                                    setFocusedLandId(null);
+                                  } else {
+                                    setSelectedLandIndex(idx);
+                                    setFocusedLandId(land.id);
+                                  }
+                                }}
+                              >
+                                {focusedLandId === land.id ? (
+                                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                                ) : (
+                                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                                )}
+                              </div>
                             </div>
                             
                             {/* AI 분석 진행 단계 상세 (분석중일 때만 표시) */}
