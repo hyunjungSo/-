@@ -223,6 +223,24 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지별 건축물 용도 상태
   const [adminLandSubTypePerLand, setAdminLandSubTypePerLand] = useState<Record<string, string>>({});
   
+  // 필지별 현장확인 옵션 상태
+  const [adminLandOptionsPerLand, setAdminLandOptionsPerLand] = useState<Record<string, {
+    farmMachineDifficulty: boolean;
+    accessRoadLost: boolean;
+    waterChannelLost: boolean;
+  }>>({});
+  
+  // 인접 필지 현장확인 옵션 업데이트 함수
+  const updateAdminLandOption = (landId: string, option: 'farmMachineDifficulty' | 'accessRoadLost' | 'waterChannelLost', value: boolean) => {
+    setAdminLandOptionsPerLand(prev => ({
+      ...prev,
+      [landId]: {
+        ...prev[landId],
+        [option]: value
+      }
+    }));
+  };
+  
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
   const [aiResultViewMode, setAiResultViewMode] = useState<"citizen" | "admin">("citizen");
   
@@ -567,7 +585,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경�������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
+      // 농지 경���������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -609,7 +627,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   ) => {
     // 담당자가 선택한 현재 활용지목 우선 적용, 없으면 원래 지목 사용
     const effectiveLandType = adminCurrentUsage 
-      ? (adminCurrentUsage === "대" ? "대지" : adminCurrentUsage === "��" || adminCurrentUsage === "답" ? "농지" : adminCurrentUsage === "임" ? "임야" : "기타")
+      ? (adminCurrentUsage === "대" ? "���지" : adminCurrentUsage === "��" || adminCurrentUsage === "답" ? "농지" : adminCurrentUsage === "임" ? "임야" : "기타")
       : land.landType;
     
     const criteria = getAreaCriteria(land, landData, adminLandSubType);
@@ -2182,7 +2200,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         const isAdjacentSelected = adminCheckedLandIds.includes(adjacent.id);
                         const isAdjacentHovered = hoveredLandId === adjacent.id;
                         const isAdjacentFocused = focusedLandId === adjacent.id;
-                        const adjacentOptions = landOptionsPerLand[adjacent.id] || {
+                        const adjacentOptions = adminLandOptionsPerLand[adjacent.id] || {
                           farmMachineDifficulty: false,
                           accessRoadLost: false,
                           waterChannelLost: false,
@@ -2255,8 +2273,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </span>
                                   </div>
                                   <Select 
-                                    value={currentUsagePerLand[adjacent.id] || ""} 
-                                    onValueChange={(value) => setCurrentUsagePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
+                                    value={adminCurrentUsagePerLand[adjacent.id] || ""} 
+                                    onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
                                   >
                                     <SelectTrigger className="h-8 bg-background text-sm border-amber-300">
                                       <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
@@ -2273,14 +2291,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </div>
                                 
                                 {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
-                                {currentUsagePerLand[adjacent.id] === "대" && (
+                                {adminCurrentUsagePerLand[adjacent.id] === "대" && (
                                   <div className="space-y-1.5 rounded bg-amber-100/50 p-2">
                                     <label className="text-xs font-medium text-amber-800">
                                       건축물 용도 선택 <span className="text-destructive">*</span>
                                     </label>
                                     <Select 
-                                      value={landSubTypePerLand[adjacent.id] || ""} 
-                                      onValueChange={(value) => setLandSubTypePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
+                                      value={adminLandSubTypePerLand[adjacent.id] || ""} 
+                                      onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
                                     >
                                       <SelectTrigger className="h-8 bg-background text-sm border-amber-300">
                                         <SelectValue placeholder="건축물 용도를 선택해 주세요" />
@@ -2303,7 +2321,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
                                         checked={adjacentOptions.farmMachineDifficulty}
-                                        onCheckedChange={(checked) => updateLandOption(adjacent.id, 'farmMachineDifficulty', checked === true)}
+                                        onCheckedChange={(checked) => updateAdminLandOption(adjacent.id, 'farmMachineDifficulty', checked === true)}
                                         className="h-[18px] w-[18px] border-amber-400 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
                                       />
                                       <span className="text-xs text-amber-800">농기계 곤란</span>
@@ -2311,7 +2329,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
                                         checked={adjacentOptions.accessRoadLost}
-                                        onCheckedChange={(checked) => updateLandOption(adjacent.id, 'accessRoadLost', checked === true)}
+                                        onCheckedChange={(checked) => updateAdminLandOption(adjacent.id, 'accessRoadLost', checked === true)}
                                         className="h-[18px] w-[18px] border-amber-400 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
                                       />
                                       <span className="text-xs text-amber-800">접면도로 상실</span>
@@ -2319,7 +2337,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
                                         checked={adjacentOptions.waterChannelLost}
-                                        onCheckedChange={(checked) => updateLandOption(adjacent.id, 'waterChannelLost', checked === true)}
+                                        onCheckedChange={(checked) => updateAdminLandOption(adjacent.id, 'waterChannelLost', checked === true)}
                                         className="h-[18px] w-[18px] border-amber-400 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
                                       />
                                       <span className="text-xs text-amber-800">관개수로 상실</span>
@@ -2965,7 +2983,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         분석 프로세스 상세 보기
                       </Button>
                       
-                      {/* 적용된 옵션 - 필지별 현장 상황 옵션 표시 */}
+                      {/* 적용된 옵션 - 필지별 현장 상황 옵�� 표시 */}
                       {allLands.map((land, idx) => {
                         const landOptions = adminAIOptionsPerLand[land.id] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
                         if (!landOptions.accessRoadLost && !landOptions.waterChannelLost && !landOptions.farmMachineDifficulty) {
@@ -3322,7 +3340,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             <div className="rounded-lg border border-amber-200 bg-amber-50 p-2 flex items-start gap-2">
                               <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
                               <p className="text-xs text-amber-700">
-                                AI 제안({aiResult.provisionalJudgment})과 다른 판정입니다. ��토 의견에 사유를 작성해주세요.
+                                AI 제안({aiResult.provisionalJudgment})과 다른 판정입니다. ��토 의견에 사유를 작성해주��요.
                               </p>
                             </div>
                           )}
