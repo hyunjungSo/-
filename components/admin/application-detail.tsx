@@ -182,7 +182,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미�������력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미���������력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -542,7 +542,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
   // ===== [2단계] 대상 토지 상세 분석 (중앙토지수용위원회 기준) =====
   
-  // ���입 전 면적 기준 (㎡) - 초과 시 토지유형별 경로, 이하 시 소규모 토지 경로
+  // ���입 전 면적 기준 (㎡) - 초과 시 토지���형별 경로, 이하 시 소규모 토지 경로
   const AREA_THRESHOLD = {
     residential: { detached: 90, apartment: 330, commercial: 150, industrial: 330 },
     agricultural: 330,
@@ -1115,9 +1115,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {isMultipleLands && (
-
-                  )}
                   {isMultipleLands && (
                     <SelectItem value="multiple">복수필지 ({allLands.length})</SelectItem>
                   )}
@@ -2387,7 +2384,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   application.unifiedParcelCondition?.sameUsage ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"
                                 }`}>
                                   {application.unifiedParcelCondition?.sameUsage ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                                  용도 일체성
+                                  용��� 일체성
                                 </div>
                               </div>
 
@@ -3348,7 +3345,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">최종 검토</CardTitle>
-          <CardDescription>전체 민원에 대한 최종 검토 의견을 작성해주세요</CardDescription>
+          <CardDescription>전체 민원에 ���한 최종 검토 의견을 작성해주세요</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
