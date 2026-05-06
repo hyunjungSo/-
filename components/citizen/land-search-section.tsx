@@ -240,7 +240,7 @@ const regionData = {
     // 세종특별자치시
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
-    "부강면": ["금산리", "노호리", "등곡리", "문��리", "산수��"],
+    "부강면": ["금산리", "노호리", "등곡리", "문���리", "산수��"],
     "��정면": ["송등�������", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
@@ -1760,7 +1760,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     const isAlreadyInCart = cartItems.some(c => c.landInfo.id === selectedLand.id);
                     
                     return (
-                      <div>
+                      <div className="space-y-2">
                         <Button
                           onClick={() => onAddToCart(selectedLand, aiResult!)}
                           className="h-12 w-full cursor-pointer text-base"
@@ -1768,8 +1768,13 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           disabled={isAlreadyInCart}
                         >
                           <Plus className="mr-2 h-4 w-4" />
-                          신청 목록에 추가
+                          신청 목록에 추가 (1건)
                         </Button>
+                        {isAlreadyInCart && (
+                          <p className="text-center text-xs text-muted-foreground">
+                            이미 신청 목록에 추가된 필지입니다
+                          </p>
+                        )}
                       </div>
                     );
                   }
