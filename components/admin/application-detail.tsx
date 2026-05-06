@@ -1677,109 +1677,108 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               const isInUnifiedGroup = applicationType === "unified" || landJudgment?.unifiedGroupId;
                               return !isInUnifiedGroup;
                             })() && (
-                            <div className="space-y-4">
-                              {/* 판단 요약 */}
-                              {aiResult?.judgmentRationale && (
-                                <div className="flex items-start gap-2">
-                                  <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                                  <div>
-                                    <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
-                                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.summary}</p>
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* 법적 근거 */}
-                              {aiResult?.judgmentRationale && (
-                                <div className="flex items-start gap-2">
-                                  <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-                                  <div>
-                                    <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
-                                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* 적용 기준 */}
-                              {aiResult?.judgmentRationale && (
-                                <div className="flex items-start gap-2">
-                                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                                  <div>
-                                    <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
-                                    <ul className="mt-1 space-y-1">
-                                      {aiResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
-                                        <li key={cIdx} className="flex items-start gap-1.5 text-sm text-muted-foreground">
-                                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
-                                          <span>{criteria}</span>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </div>
-                                </div>
-                                      )}
-
-                                      {/* 수동 확인 항목 */}
-                                      {landResult?.judgmentRationale?.manualCheckItems && landResult.judgmentRationale.manualCheckItems.length > 0 && (
-                                        <div className="flex items-start gap-2">
-                                          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-                                          <div>
-                                            <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
-                                            <ul className="mt-1 space-y-1">
-                                              {landResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
-                                                <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                                                  <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
-                                                  <span>{item}</span>
-                                                </li>
-                                              ))}
-                                            </ul>
-                                          </div>
-                                        </div>
-                                      )}
-
-                                      {/* 상세 분석 */}
-                                      {landResult?.judgmentRationale?.detailedExplanation && (
-                                        <div className="flex items-start gap-2">
-                                          <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
-                                          <div>
-                                            <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
-                                            <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
-                                              {landResult.judgmentRationale.detailedExplanation}
-                                            </pre>
-                                          </div>
-                                        </div>
-                                      )}
-                                      
-                                      {/* 판정 기준 충족 여부 */}
-                                      {landResult?.criteriaChecks && landResult.criteriaChecks.length > 0 && (
-                                        <div className="rounded-lg bg-white/60 p-3 border">
-                                          <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
-                                          <div className="space-y-2">
-                                            {landResult.criteriaChecks.map((check, cIdx) => (
-                                              <div key={cIdx} className="flex items-center justify-between text-sm">
-                                                <span className="text-muted-foreground">{check.criteriaName}</span>
-                                                <Badge 
-                                                  variant={check.isMet ? "default" : "destructive"} 
-                                                  className={`text-xs ${check.isMet ? "bg-emerald-600" : ""}`}
-                                                >
-                                          {check.isMet ? "충족" : "미충족"}
-                                        </Badge>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                                      )}
-
-                                      {/* 안내 문구 */}
-                                      <div className="flex items-start gap-2 pt-2 border-t">
-                                        <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
-                                        <p className="text-xs text-muted-foreground">
-                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
-                                        </p>
-                                      </div>
+                              <div className="space-y-4">
+                                {/* 판단 요약 */}
+                                {landResult?.judgmentRationale && (
+                                  <div className="flex items-start gap-2">
+                                    <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                    <div>
+                                      <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
+                                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{landResult.judgmentRationale.summary}</p>
                                     </div>
-                                  </>
+                                  </div>
                                 )}
-                              </AccordionContent>
+
+                                {/* 법적 근거 */}
+                                {landResult?.judgmentRationale && (
+                                  <div className="flex items-start gap-2">
+                                    <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                    <div>
+                                      <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
+                                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{landResult.judgmentRationale.legalBasis}</p>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* 적용 기준 */}
+                                {landResult?.judgmentRationale?.appliedCriteria && (
+                                  <div className="flex items-start gap-2">
+                                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                    <div>
+                                      <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
+                                      <ul className="mt-1 space-y-1">
+                                        {landResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
+                                          <li key={cIdx} className="flex items-start gap-1.5 text-sm text-muted-foreground">
+                                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
+                                            <span>{criteria}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* 수동 확인 항목 */}
+                                {landResult?.judgmentRationale?.manualCheckItems && landResult.judgmentRationale.manualCheckItems.length > 0 && (
+                                  <div className="flex items-start gap-2">
+                                    <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                    <div>
+                                      <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
+                                      <ul className="mt-1 space-y-1">
+                                        {landResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
+                                          <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                                            <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
+                                            <span>{item}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* 상세 분석 */}
+                                {landResult?.judgmentRationale?.detailedExplanation && (
+                                  <div className="flex items-start gap-2">
+                                    <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                                    <div>
+                                      <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
+                                      <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
+                                        {landResult.judgmentRationale.detailedExplanation}
+                                      </pre>
+                                    </div>
+                                  </div>
+                                )}
+                                
+                                {/* 판정 기준 충족 여부 */}
+                                {landResult?.criteriaChecks && landResult.criteriaChecks.length > 0 && (
+                                  <div className="rounded-lg bg-white/60 p-3 border">
+                                    <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
+                                    <div className="space-y-2">
+                                      {landResult.criteriaChecks.map((check, cIdx) => (
+                                        <div key={cIdx} className="flex items-center justify-between text-sm">
+                                          <span className="text-muted-foreground">{check.criteriaName}</span>
+                                          <Badge 
+                                            variant={check.isMet ? "default" : "destructive"} 
+                                            className={`text-xs ${check.isMet ? "bg-emerald-600" : ""}`}
+                                          >
+                                            {check.isMet ? "충족" : "미충족"}
+                                          </Badge>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* 안내 문구 */}
+                                <div className="flex items-start gap-2 pt-2 border-t">
+                                  <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
+                                  <p className="text-xs text-muted-foreground">
+                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                          </AccordionContent>
                         </AccordionItem>
                       );
                     })}
@@ -1845,7 +1844,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           },
                           {
                             id: "adjacent-002",
-                            address: "경기도 용인시 처인구 포곡읍 마성리 102",
+                            address: "경기도 용인시 처인구 포곡��� 마성리 102",
                             landCategory: "답",
                             landType: "농경지",
                             area: 1234,
