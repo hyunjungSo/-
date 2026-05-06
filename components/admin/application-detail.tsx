@@ -1080,53 +1080,38 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardContent>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <div>
-              <p className="text-xs text-muted-foreground">신��인</p>
-              <p className="font-medium">{application.applicantName}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">연락처</p>
-              <p className="font-medium">{application.applicantContact}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">��청일</p>
-              <p className="font-medium">{application.appliedAt}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">사업명</p>
-              <p className="font-medium">{application.landInfo.projectName}</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 mt-4">
-            <div>
-              <p className="text-xs text-muted-foreground">주소</p>
-              <p className="font-medium">{application.applicantAddress}</p>
-            </div>
-            <div>
               <p className="text-xs text-muted-foreground">접수번호</p>
               <p className="font-medium">{application.applicationNumber}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground mb-1">신청유형</p>
-              <Select 
-                value={applicationType} 
-                onValueChange={(value: "unified" | "multiple" | "single") => setApplicationType(value)}
-              >
-                <SelectTrigger className="h-8 w-[140px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {isMultipleLands && (
-                    <SelectItem value="multiple">복수필지 ({allLands.length})</SelectItem>
-                  )}
-                  {!isMultipleLands && (
-                    <SelectItem value="single">단일필지</SelectItem>
-                  )}
-                </SelectContent>
-              </Select>
+              <p className="text-xs text-muted-foreground">신청인</p>
+              <p className="font-medium">{application.applicantName}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">신청사유</p>
-              <p className="font-medium text-sm line-clamp-2">{application.reason}</p>
+              <p className="text-xs text-muted-foreground">신청일</p>
+              <p className="font-medium">{application.appliedAt}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">대상 지번</p>
+              <p className="font-medium truncate">{application.landInfo.address}</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 mt-4">
+            <div>
+              <p className="text-xs text-muted-foreground">토지 유형</p>
+              <p className="font-medium">{application.landInfo.landType}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">필지 수</p>
+              <p className="font-medium">{allLands.length}필지</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">면적</p>
+              <p className="font-medium">{application.landInfo.remainingArea.toLocaleString()}m²</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">담당자</p>
+              <p className="font-medium">{application.assignedTo || "-"}</p>
             </div>
           </div>
         </CardContent>
@@ -2359,7 +2344,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <div className="flex items-center justify-between mb-3">
                                 <h5 className="font-medium text-emerald-800 flex items-center gap-2">
                                   <Layers className="h-4 w-4" />
-                                  일단지 판정 결과
+                                  일단지 ��정 결과
                                 </h5>
                                 <Badge className={application.aiResult?.provisionalJudgment === "매수" ? "bg-emerald-600 hover:bg-emerald-600" : "bg-red-500 hover:bg-red-500"}>
                                   {application.aiResult?.provisionalJudgment || "매수"}
