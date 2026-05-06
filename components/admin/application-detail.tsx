@@ -567,7 +567,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경���������������������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
+      // 농지 경�����������������������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -732,7 +732,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (usageDifficulty) reasons.push("종래 사용 곤란");
       } else {
         judgment = "매수불가";
-        reasons.push("모든 기준 미충족");
+        reasons.push("모든 ���준 미충족");
       }
     }
     
@@ -1231,8 +1231,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* 스크롤 컨테이너 - 일단지 판정 결과와 필지별 분석 결과 함께 스크롤 */}
                   <div className="max-h-[550px] overflow-y-auto space-y-4 pr-1">
-                  {/* 일단지 또는 부분 일단지인 경우 최상단에 일단지 판정 결과 표시 */}
-                  {(applicationType === "unified" || hasUnifiedGroups) && (
+                  {/* 일단지인 경우에만 최상단에 일단지 판정 결과 표시 */}
+                  {applicationType === "unified" && (
                     <div className="space-y-3 mb-4">
                       {applicationType === "unified" ? (
                         // 전체 일단지
@@ -2200,12 +2200,12 @@ return applicationParcels;
                       <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 mb-4 flex items-start gap-2">
                         <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
                         <p className="text-sm text-blue-700">
-                          현재 민원인 결과를 표시���고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분�����을 실행하면 담당자 결과가 표시됩니다.
+                          현재 민원인 결과를 표시���고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분�����을 실행하면 담당자 결과가 표시��니다.
                         </p>
                       </div>
                       
-                      {/* 일단지 또는 부분 일단지인 경우 최상단에 일단지 판정 결과 표시 */}
-                      {(applicationType === "unified" || hasUnifiedGroups) && (
+                      {/* 일단지인 경우에만 최상단에 일단지 판정 결과 표시 */}
+                      {applicationType === "unified" && (
                         <div className="space-y-3 mb-4">
                           {applicationType === "unified" ? (
                             // 전체 일단지
@@ -2759,7 +2759,7 @@ return applicationParcels;
                                       <div className="flex items-start gap-2 pt-2 border-t">
                                         <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                         <p className="text-xs text-muted-foreground">
-                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토�� 따라 결정됩니다.
+                                          AI 판독 결과는 참고용��며, 최종 판정은 담당자 검토�� 따라 결정됩니다.
                                         </p>
                                       </div>
                                     </div>
