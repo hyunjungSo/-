@@ -98,9 +98,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     ? [application.landInfo, ...application.additionalLands]
     : [application.landInfo];
   
-  // 신청 유형 결정 (하위 호환: applicationType이 없으면 필지 수로 추론)
-  // applicationType이 명시적으로 "unified"인 경우에만 일단지로 판단 (복수필지와 구분)
-  const applicationType = application.applicationType === "unified"
+  // 신청 유형 결정 - 테이블과 동일한 로직 사용
+  // aiResult에 unifiedLandAnalysis가 있거나 landJudgments에 unifiedGroupId가 있으면 일단지
+  const isUnifiedFromAiResult = application.aiResult?.unifiedLandAnalysis || 
+    application.aiResult?.landJudgments?.some(lj => lj.unifiedGroupId);
+  const applicationType = isUnifiedFromAiResult
     ? "unified"
     : application.applicationType || (isMultipleLands ? "multiple" : "single");
   
@@ -2997,7 +2999,7 @@ return applicationParcels;
                                     }
                                   })()}
 
-                                  {/* 안내 문구 */}
+                                  {/* 안��� 문구 */}
                                   <div className="flex items-start gap-2 pt-2 border-t">
                                     <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                     <p className="text-xs text-muted-foreground">
