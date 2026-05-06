@@ -178,7 +178,7 @@ const regionData = {
     "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "음양리"],
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
     "향남읍": ["구문천리", "도이리", "발안리", "상신리", "제암리", "평리", "행정리"],
-    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "어천리"],
+    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "어��리"],
     "비��면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
     "마도면": ["백곡리", "송정리", "쌍송리", "청원리", "해문리"],
     "남양읍": ["남양리", "문호리", "북양리", "송림리", "신남리"],
@@ -235,12 +235,12 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["도고리", "���전리", "���수리", "금산리"],
+    "도고면": ["도고���", "���전리", "���수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
-    "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
+    "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수��"],
     "��정면": ["송등�������", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
@@ -890,7 +890,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     }
   };
 
-  // AI 판독 실행 (선택된 모든 필지 한번에 판독)
+  // AI 판독 실행 (단일 필지만 분석)
   const handleAIAnalysis = () => {
     if (noIncludedLand) return;
     // 현재 활용 지목 필수
@@ -898,84 +898,40 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     // 현재 활용 지목이 "대"(대지)인 경우 세부 유형이 필수
     if (currentUsage === "대" && !landSubType) return;
     
-    // 선택된 필지들 가져오기 (체크된 필지들)
-    const selectedParcels = searchResults.filter((land, index) => 
-      ownedParcels.has(land.id) || (index === 0 && ownedParcels.size === 0)
-    );
-    
-    if (selectedParcels.length === 0) return;
+    // 현재 선택된 단일 필지만 분석 (복수 분석 불가)
+    if (!selectedLand) return;
     
     setAiAnalyzing(true);
     
-    // 기존 AI 판독 결과 초기화 (새로 판독할 때 기존 결과 삭제)
+    // 기존 AI 판독 결과 초기화
     setParcelAiResults(new Map());
     setAiResult(null);
-    // 체크된 필지 초기화
     setCheckedParcelsForCart(new Set());
     
     setTimeout(() => {
-      const newResults = new Map<string, AIAnalysisResult>();
+      // 단일 필지 AI 분석 실행
+      const result = simulateAIAnalysis(selectedLand, currentUsage, landSubType);
       
-      // 일단지 판정을 위한 정보 수집
-      const ownedParcelsList = selectedParcels;
-      const adjacentParcelsList = searchResults.filter((land, index) => 
-        !ownedParcels.has(land.id) && !(index === 0 && ownedParcels.size === 0)
-      );
-      
-      // 일단지 판정 로직
-      const totalParcels = searchResults.length;
-      const ownedCount = ownedParcelsList.length;
-      const adjacentCount = adjacentParcelsList.length;
-      const combinedArea = ownedParcelsList.reduce((sum, land) => sum + land.remainingArea, 0);
-      
-      // 일단지 조건 체크 (시뮬레이션)
-      const sameOwner = ownedCount > 0; // 본인 소유 필지가 체크됨
-      const continuous = totalParcels > 1; // 복수 필지가 존재 (인접 가정)
-      const sameUsage = ownedParcelsList.every(land => land.landCategory === ownedParcelsList[0]?.landCategory);
-      const isUnifiedParcel = sameOwner && continuous && sameUsage && ownedCount >= 2;
-      
-      let unifiedExplanation = "";
-      if (isUnifiedParcel) {
-        unifiedExplanation = `선택된 ${ownedCount}개 필지가 동일 소유자의 인접 토지로서, 동일 용도(${ownedParcelsList[0]?.landCategory || "동일"})로 일체 이용되고 있어 일단지로 인정됩니다. 합산 면적: ${combinedArea.toLocaleString()}㎡`;
-      } else if (ownedCount === 1) {
-        unifiedExplanation = "단일 필지로 일단지 판정 대상이 아닙니다.";
-      } else if (!sameUsage) {
-        unifiedExplanation = "선택된 필지들의 용도가 상이하여 일단지로 인정되지 않습니다.";
-      } else {
-        unifiedExplanation = "일단지 요건(소유자 동일, 지반 연속, 용도 일체)을 충족하지 않습니다.";
-      }
-      
-      const unifiedParcelAnalysis = {
-        isUnifiedParcel,
-        totalParcels,
-        ownedParcels: ownedCount,
-        adjacentParcels: adjacentCount,
+      // 단일 필지이므로 일단지 판정 없음
+      result.unifiedParcelAnalysis = {
+        isUnifiedParcel: false,
+        totalParcels: 1,
+        ownedParcels: 1,
+        adjacentParcels: 0,
         conditions: {
-          sameOwner,
-          continuous,
-          sameUsage,
+          sameOwner: true,
+          continuous: false,
+          sameUsage: true,
         },
-        combinedArea,
-        explanation: unifiedExplanation,
+        combinedArea: selectedLand.remainingArea,
+        explanation: "단일 필지 분석입니다.",
       };
       
-      // 선택된 모든 필지에 대해 AI 분석 실행 (일단지 정보 포함)
-      selectedParcels.forEach(land => {
-        const result = simulateAIAnalysis(land, currentUsage, landSubType);
-        // 일단지 분석 결과 추가
-        result.unifiedParcelAnalysis = unifiedParcelAnalysis;
-        newResults.set(land.id, result);
-      });
-      
+      // 결과 저장
+      const newResults = new Map<string, AIAnalysisResult>();
+      newResults.set(selectedLand.id, result);
       setParcelAiResults(newResults);
-      
-      // 현재 선택된 필지의 결과를 aiResult에도 설정 (상세 보기용)
-      if (selectedLand && newResults.has(selectedLand.id)) {
-        setAiResult(newResults.get(selectedLand.id)!);
-      } else if (selectedParcels.length > 0) {
-        setAiResult(newResults.get(selectedParcels[0].id)!);
-        setSelectedLand(selectedParcels[0]);
-      }
+      setAiResult(result);
       
       setAiAnalyzing(false);
     }, 1500);
@@ -998,7 +954,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setHasSearched(false);
   };
   
-  // 검색 방식 변경 시 필지 목록 및 기본 정보 초��화
+  // 검색 방식 변경 시 필지 목록 및 ���본 정보 초��화
   const handleSearchModeChange = (mode: "address" | "individual" | "corporation") => {
     setSearchMode(mode);
     setOwnerName("");
@@ -1902,17 +1858,17 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   onClick={handleAIAnalysis}
                   className="h-10 w-full gap-2 text-sm"
                   variant="default"
-                  disabled={aiAnalyzing || !currentUsage || (currentUsage === "대" && !landSubType)}
+                  disabled={aiAnalyzing || !currentUsage || (currentUsage === "대" && !landSubType) || !selectedLand}
                 >
                   {aiAnalyzing ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      {ownedParcels.size || 1}개 필지 판독 중...
+                      필지 판독 중...
                     </>
                   ) : (
                     <>
                       <AIIcon className="h-5 w-5" />
-                      선택 필지 AI 판독 ({ownedParcels.size || 1}건)
+                      AI 판독 실행
                     </>
                   )}
                 </Button>
