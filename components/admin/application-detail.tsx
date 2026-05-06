@@ -567,7 +567,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경���������������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
+      // 농지 경�����������������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -723,7 +723,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "종래 사용 곤란",
         met: usageDifficulty,
-        description: usageDifficulty ? "위치/형상/접근 상태로 종래 ���용 곤란" : "종래 ��용 ���능"
+        description: usageDifficulty ? "위치/형상/접근 상태로 ��래 ���용 곤란" : "종래 ��용 ���능"
       });
       
       if (areaCheckMet || usageDifficulty) {
@@ -1106,8 +1106,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {(() => {
                   // 테이블과 동일한 로직 적용
                   const isUnified = application.aiResult?.unifiedLandAnalysis || 
-                    application.aiResult?.landJudgments?.some(lj => lj.unifiedGroupId) ||
-                    applicationType === "unified";
+                    application.aiResult?.landJudgments?.some(lj => lj.unifiedGroupId);
                   const isMultiple = application.additionalLands && application.additionalLands.length > 0;
                   
                   if (isUnified) {
@@ -2563,7 +2562,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <div className="flex items-start gap-2 pt-2 border-t border-emerald-200">
                                         <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
                                         <p className="text-xs text-emerald-600">
-                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                          AI 판독 결과는 참고용이며, 최종 판정은 ���당자 검토에 따라 결정됩니다.
                                         </p>
                                       </div>
                                     </div>
@@ -2952,7 +2951,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         {[
                           {
                             id: "adjacent-001",
-                            address: "경기도 용인시 처인구 포곡읍 마성리 101",
+                            address: "경기도 용인시 처인구 포곡읍 마��리 101",
                             landCategory: "전",
                             landType: "농경지",
                             area: 856,
