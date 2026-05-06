@@ -178,7 +178,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
   
-  // 필���별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
+  // 필����별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
   // 필지별 분석 단계 상세 (0: 대기, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
@@ -728,7 +728,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "소규모 토지",
         met: true,
-        description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규��� 해당)`
+        description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (���규��� 해당)`
       });
       if (judgment === "매수불가") {
         judgment = "검토필요";
@@ -2455,7 +2455,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </AccordionItem>
                   );
                 })}
-              </Accordion>
+            </Accordion>
           </CardContent>
         </Card>
       )}
