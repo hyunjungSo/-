@@ -89,7 +89,22 @@ export default function ReviewDocumentPage({
   ]);
 
   useEffect(() => {
-    const found = dummyApplications.find((app) => app.id === resolvedParams.id);
+    // localStorage에서 업데이트된 데이터를 먼저 확인
+    let found: Application | undefined;
+    try {
+      const savedApplications = JSON.parse(localStorage.getItem('updatedApplications') || '{}');
+      if (savedApplications[resolvedParams.id]) {
+        found = savedApplications[resolvedParams.id];
+      }
+    } catch (e) {
+      console.error('Failed to read from localStorage:', e);
+    }
+    
+    // localStorage에 없으면 더미 데이터에서 찾기
+    if (!found) {
+      found = dummyApplications.find((app) => app.id === resolvedParams.id);
+    }
+    
     if (found) {
       setApplication(found);
       setOwnerInfo({

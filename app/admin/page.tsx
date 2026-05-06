@@ -25,6 +25,15 @@ export default function AdminPage() {
       )
     );
     setSelectedApplication(updatedApplication);
+    
+    // localStorage에 업데이트된 application 저장 (심의서 페이지와 연동)
+    try {
+      const savedApplications = JSON.parse(localStorage.getItem('updatedApplications') || '{}');
+      savedApplications[updatedApplication.id] = updatedApplication;
+      localStorage.setItem('updatedApplications', JSON.stringify(savedApplications));
+    } catch (e) {
+      console.error('Failed to save to localStorage:', e);
+    }
   };
 
   return (
