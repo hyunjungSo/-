@@ -240,7 +240,7 @@ const regionData = {
     // 세종특별자치시
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
-    "부강면": ["금산리", "노호리", "등곡리", "문�����리", "산수��"],
+    "부강면": ["금산리", "노호리", "등곡리", "문������리", "산수��"],
     "��정면": ["송등�������", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
@@ -906,21 +906,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setTimeout(() => {
       // 단일 필지 AI 분석 실행
       const result = simulateAIAnalysis(selectedLand, currentUsage, landSubType);
-      
-      // 단일 필지이므로 일단지 판정 없음
-      result.unifiedParcelAnalysis = {
-        isUnifiedParcel: false,
-        totalParcels: 1,
-        ownedParcels: 1,
-        adjacentParcels: 0,
-        conditions: {
-          sameOwner: true,
-          continuous: false,
-          sameUsage: true,
-        },
-        combinedArea: selectedLand.remainingArea,
-        explanation: "단일 필지 분석입니다.",
-      };
       
       // 기존 결과 유지하면서 새 결과 추가
       setParcelAiResults(prev => {
@@ -1609,7 +1594,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             {aiResult.provisionalJudgment === "매수" 
                               ? "매수가능" 
                               : aiResult.provisionalJudgment === "심의위원회이관"
-                                ? "경계 사례"
+                                ? "경�� 사례"
                                 : "기준 미충족"}
                           </Badge>
                         </div>

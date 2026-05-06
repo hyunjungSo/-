@@ -1116,7 +1116,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </SelectTrigger>
                 <SelectContent>
                   {isMultipleLands && (
-                    <SelectItem value="unified">일단지</SelectItem>
+
                   )}
                   {isMultipleLands && (
                     <SelectItem value="multiple">복수필지 ({allLands.length})</SelectItem>
@@ -1237,10 +1237,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 <div className="space-y-4">
                   <h4 className="font-medium">분석결과</h4>
                   
-                  {/* 스크롤 컨테이너 - 일단지 판정 결과와 필지별 분석 결과 함께 스크롤 */}
+                  {/* 스크롤 컨테이너 - 필지별 분석 결과 */}
                   <div className="max-h-[550px] overflow-y-auto space-y-4 pr-1">
-                  {/* 일단지인 경우에만 최상단에 일단지 판정 결과 표시 */}
-                  {applicationType === "unified" && (
+                  {/* 일단지 판정 결과 UI 제거됨 */}
+                  {false && (
                     <div className="space-y-3 mb-4">
                       {applicationType === "unified" ? (
                         // 전체 일단지
@@ -2353,8 +2353,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         </p>
                       </div>
                       
-                      {/* 일단지인 경우에만 최상단에 일단지 판정 결과 표시 */}
-                      {applicationType === "unified" && (
+                      {/* 일단지 판정 결과 UI 제거됨 */}
+                      {false && (
                         <div className="space-y-3 mb-4">
                           {applicationType === "unified" ? (
                             // 전체 일단지
@@ -2989,46 +2989,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         );
                       })}
                       
-{/* 신청 유형별 재분석 결과 */}
-                      
-                      {/* 일단지 신청: 통합 분석 결과 */}
-                      {applicationType === "unified" && (
-                        <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
-                          <div className="flex items-center justify-between mb-3">
-                            <h4 className="font-medium text-emerald-800 flex items-center gap-2">
-                              <Layers className="h-4 w-4" />
-                              일단지 통합 분석 결과
-                            </h4>
-                            {Object.values(adminLandAIResults)[0] && (
-                              <Badge className={Object.values(adminLandAIResults)[0].provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"}>
-                                {Object.values(adminLandAIResults)[0].provisionalJudgment}
-                              </Badge>
-                            )}
-                          </div>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">포함 필지</span>
-                              <span className="font-medium">{allLands.length}필지</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">합산 면적</span>
-                              <span className="font-medium">{allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">일단지 기준</span>
-                              <Badge variant="outline" className="border-emerald-400 text-emerald-700">충족</Badge>
-                            </div>
-                          </div>
-                          {Object.values(adminLandAIResults)[0]?.reason && (
-                            <div className="mt-3 pt-3 border-t border-emerald-200">
-                              <p className="text-sm text-emerald-700">
-                                <span className="font-medium">판정 사유:</span> {Object.values(adminLandAIResults)[0].reason}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                      
                       {/* 필지별 분석 결과 - 아코디언 UI */}
                       <Accordion type="multiple" defaultValue={[]} className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
                         {Object.entries(adminLandAIResults).map(([landId, result]) => {
@@ -3191,7 +3151,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                               variant={check.isMet ? "default" : "destructive"} 
                                               className={`text-xs ${check.isMet ? "bg-emerald-600" : ""}`}
                                             >
-                                              {check.isMet ? "충족" : "미충족"}
+                                              {check.isMet ? "충족" : "미충���"}
                                             </Badge>
                                           </div>
                                         ))}
@@ -3361,7 +3321,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
+            {(["���수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
               const config = adminStatusConfig[status];
               const Icon = config.icon;
               const isSelected = reviewData.adminStatus === status;

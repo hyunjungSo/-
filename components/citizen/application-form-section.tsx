@@ -347,14 +347,6 @@ export function ApplicationFormSection({
             {/* 복수 필지일 경우 목록 표시 */}
             {isMultipleLands ? (
               <div className="space-y-3">
-                {/* 일단지 안내 문구 */}
-                <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-3">
-                  <p className="text-sm text-blue-800">
-                    <strong>일단지 매수 안내:</strong> 인접한 본인 소유의 잔여지를 함께 신청하시면, 
-                    담당자 검토 시 일단지 여부가 판정되어 매수 가능성이 높아질 수 있습니다.
-                  </p>
-                </div>
-                
                 <div className="max-h-[300px] space-y-2 overflow-y-auto">
                   {allLands.map((land, index) => {
                     const result = allAiResults[index];
