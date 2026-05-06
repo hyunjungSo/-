@@ -29,6 +29,7 @@ import {
   Layers,
   Info,
   ChevronDown,
+  ChevronUp,
   Map as MapIcon,
   Loader2,
   RotateCcw,
@@ -102,6 +103,18 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const applicationType = application.applicationType === "unified" || application.unifiedParcelCondition?.isUnifiedParcel
     ? "unified"
     : application.applicationType || (isMultipleLands ? "multiple" : "single");
+  
+  // 부분 일단지 여부 확인 (landJudgments에서 unifiedGroupId가 있는 필지가 있으면 부분 일단지)
+  const partialUnifiedGroups = application.aiResult?.landJudgments?.reduce((groups, lj) => {
+    if (lj.unifiedGroupId) {
+      if (!groups[lj.unifiedGroupId]) {
+        groups[lj.unifiedGroupId] = [];
+      }
+      groups[lj.unifiedGroupId].push(lj);
+    }
+    return groups;
+  }, {} as Record<string, typeof application.aiResult.landJudgments>) || {};
+  const hasUnifiedGroups = Object.keys(partialUnifiedGroups).length > 0;
 
   // 필지별 검토 데이터 초기화
   const initializeLandReviewData = (): LandReviewData[] => {
@@ -178,7 +191,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
   
-  // 필����별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
+  // 필�����별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
   // 필지별 분석 단계 상세 (0: 대기, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
@@ -1204,21 +1217,51 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 <div className="space-y-4">
                   <h4 className="font-medium">분석결과</h4>
                   
-                  {/* 일단지인 경우 최상단에 일단지 판정 결과 표시 */}
-                  {applicationType === "unified" && (
-                    <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <h5 className="font-medium text-emerald-800 flex items-center gap-2">
-                          <Layers className="h-4 w-4" />
-                          일단지 판정 결과
-                        </h5>
-                        <Badge className="bg-emerald-600 hover:bg-emerald-600">매수</Badge>
-                      </div>
-                      <div className="text-sm space-y-1 text-emerald-700">
-                        <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
-                        <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
-                        <p className="text-xs text-emerald-600 mt-2">소유자 동일 + 지반 연속 + 용도 일체성 충족</p>
-                      </div>
+                  {/* 일단지 또는 부분 일단지인 경우 최상단에 일단지 판정 결과 표시 */}
+                  {(applicationType === "unified" || hasUnifiedGroups) && (
+                    <div className="space-y-3 mb-4">
+                      {applicationType === "unified" ? (
+                        <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <h5 className="font-medium text-emerald-800 flex items-center gap-2">
+                              <Layers className="h-4 w-4" />
+                              일단지 판정 결과
+                            </h5>
+                            <Badge className="bg-emerald-600 hover:bg-emerald-600">매수</Badge>
+                          </div>
+                          <div className="text-sm space-y-1 text-emerald-700">
+                            <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
+                            <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
+                            <p className="text-xs text-emerald-600 mt-2">소유자 동일 + 지반 연속 + 용도 일체성 충족</p>
+                          </div>
+                        </div>
+                      ) : (
+                        Object.entries(partialUnifiedGroups).map(([groupId, lands]) => {
+                          const groupLands = lands.map(lj => {
+                            const landIdx = allLands.findIndex(l => l.id === lj.landId);
+                            return { ...lj, landIdx, land: allLands[landIdx] };
+                          }).filter(l => l.land);
+                          const groupJudgment = lands[0]?.judgment || "매수";
+                          return (
+                            <div key={groupId} className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
+                              <div className="flex items-center justify-between mb-3">
+                                <h5 className="font-medium text-emerald-800 flex items-center gap-2">
+                                  <Layers className="h-4 w-4" />
+                                  일단지 판정 결과 ({groupId.replace("group-", "그룹 ")})
+                                </h5>
+                                <Badge className={groupJudgment === "매수" ? "bg-emerald-600 hover:bg-emerald-600" : "bg-red-500 hover:bg-red-500"}>
+                                  {groupJudgment}
+                                </Badge>
+                              </div>
+                              <div className="text-sm space-y-1 text-emerald-700">
+                                <p>포함 필지: {groupLands.map(l => String.fromCharCode(65 + l.landIdx)).join(", ")}</p>
+                                <p>합산 면적: {groupLands.reduce((sum, l) => sum + (l.land?.remainingArea || 0), 0).toLocaleString()}m²</p>
+                                <p className="text-xs text-emerald-600 mt-2">{lands[0]?.reason || "소유자 동일 + 지반 연속 + 용도 일체성 충족"}</p>
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
                     </div>
                   )}
                   
@@ -1299,18 +1342,28 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             </div>
                             
-                            {/* 일단지인 경우 안내 문구 */}
-                            {applicationType === "unified" && (
-                              <div className="flex items-start gap-2 pt-3 mt-3 border-t text-blue-600">
-                                <Info className="mt-0.5 h-3 w-3 shrink-0" />
-                                <p className="text-xs">
-                                  이 필지는 일단지로 판정되었습니다. 상세 분석 결과는 상단의 일단지 판정 결과를 참조하세요.
-                                </p>
-                              </div>
-                            )}
+                            {/* 일단지 또는 부분 일단지 그룹에 속한 경우 안내 문구 */}
+                            {(() => {
+                              const landJudgment = application.aiResult?.landJudgments?.find(lj => lj.landId === land.id);
+                              const isInUnifiedGroup = applicationType === "unified" || landJudgment?.unifiedGroupId;
+                              if (!isInUnifiedGroup) return null;
+                              const groupName = landJudgment?.unifiedGroupId ? landJudgment.unifiedGroupId.replace("group-", "그룹 ") : "";
+                              return (
+                                <div className="flex items-start gap-2 pt-3 mt-3 border-t text-blue-600">
+                                  <Info className="mt-0.5 h-3 w-3 shrink-0" />
+                                  <p className="text-xs">
+                                    이 필지는 일단지{groupName ? ` (${groupName})` : ""}로 판정되었습니다. 상세 분석 결과는 상단의 일단지 판정 결과를 참조하세요.
+                                  </p>
+                                </div>
+                              );
+                            })()}
                             
                             {/* 상세 분석 내용 - 개별 필지인 경우에만 표시 (일단지는 상단에 통합 표시) */}
-                            {applicationType !== "unified" && (
+                            {(() => {
+                              const landJudgment = application.aiResult?.landJudgments?.find(lj => lj.landId === land.id);
+                              const isInUnifiedGroup = applicationType === "unified" || landJudgment?.unifiedGroupId;
+                              return !isInUnifiedGroup;
+                            })() && (
                             <div className="space-y-4">
                               {/* 판단 요약 */}
                               {aiResult?.judgmentRationale && (
@@ -1837,7 +1890,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         size="icon"
                         onClick={handleResetAdminAIResults}
                         className="h-7 w-7 text-muted-foreground hover:text-destructive"
-                        title="재분석 결과 ��기화"
+                        title="재분석 결과 ���기화"
                       >
                         <RotateCcw className="h-4 w-4" />
                       </Button>
@@ -1854,21 +1907,51 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         </p>
                       </div>
                       
-                      {/* 일단지인 경우 최상단에 일단지 판정 결과 표시 */}
-                      {applicationType === "unified" && (
-                        <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4 mb-4">
-                          <div className="flex items-center justify-between mb-3">
-                            <h5 className="font-medium text-emerald-800 flex items-center gap-2">
-                              <Layers className="h-4 w-4" />
-                              일단지 판정 결과
-                            </h5>
-                            <Badge className="bg-emerald-600 hover:bg-emerald-600">매수</Badge>
-                          </div>
-                          <div className="text-sm space-y-1 text-emerald-700">
-                            <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
-                            <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
-                            <p className="text-xs text-emerald-600 mt-2">소유자 동일 + 지반 연속 + 용도 일체성 충족</p>
-                          </div>
+                      {/* 일단지 또는 부분 일단지인 경우 최상단에 일단지 판정 결과 표시 */}
+                      {(applicationType === "unified" || hasUnifiedGroups) && (
+                        <div className="space-y-3 mb-4">
+                          {applicationType === "unified" ? (
+                            <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
+                              <div className="flex items-center justify-between mb-3">
+                                <h5 className="font-medium text-emerald-800 flex items-center gap-2">
+                                  <Layers className="h-4 w-4" />
+                                  일단지 판정 결과
+                                </h5>
+                                <Badge className="bg-emerald-600 hover:bg-emerald-600">매수</Badge>
+                              </div>
+                              <div className="text-sm space-y-1 text-emerald-700">
+                                <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
+                                <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
+                                <p className="text-xs text-emerald-600 mt-2">소유자 동일 + 지반 연속 + 용도 일체성 충족</p>
+                              </div>
+                            </div>
+                          ) : (
+                            Object.entries(partialUnifiedGroups).map(([groupId, lands]) => {
+                              const groupLands = lands.map(lj => {
+                                const landIdx = allLands.findIndex(l => l.id === lj.landId);
+                                return { ...lj, landIdx, land: allLands[landIdx] };
+                              }).filter(l => l.land);
+                              const groupJudgment = lands[0]?.judgment || "매수";
+                              return (
+                                <div key={groupId} className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
+                                  <div className="flex items-center justify-between mb-3">
+                                    <h5 className="font-medium text-emerald-800 flex items-center gap-2">
+                                      <Layers className="h-4 w-4" />
+                                      일단지 판정 결과 ({groupId.replace("group-", "그룹 ")})
+                                    </h5>
+                                    <Badge className={groupJudgment === "매수" ? "bg-emerald-600 hover:bg-emerald-600" : "bg-red-500 hover:bg-red-500"}>
+                                      {groupJudgment}
+                                    </Badge>
+                                  </div>
+                                  <div className="text-sm space-y-1 text-emerald-700">
+                                    <p>포함 필지: {groupLands.map(l => String.fromCharCode(65 + l.landIdx)).join(", ")}</p>
+                                    <p>합산 면적: {groupLands.reduce((sum, l) => sum + (l.land?.remainingArea || 0), 0).toLocaleString()}m²</p>
+                                    <p className="text-xs text-emerald-600 mt-2">{lands[0]?.reason || "소유자 동일 + 지반 연속 + 용도 일체성 충족"}</p>
+                                  </div>
+                                </div>
+                              );
+                            })
+                          )}
                         </div>
                       )}
                       
