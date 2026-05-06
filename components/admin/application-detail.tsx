@@ -1837,7 +1837,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       )}
                       
                       {/* 민원인 결과를 기본으로 표시 */}
-                      <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
+                      <Accordion type="multiple" defaultValue={[]} className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
                         {allLands.map((land, idx) => {
                           const aiResult = application.aiResult;
                           return (
@@ -2090,7 +2090,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       )}
                       
                       {/* 필지별 분석 결과 - 아코디언 UI */}
-                      <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
+                      <Accordion type="multiple" defaultValue={[]} className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
                         {Object.entries(adminLandAIResults).map(([landId, result]) => {
                           const land = allLands.find(l => l.id === landId);
                           const landIdx = allLands.findIndex(l => l.id === landId);
