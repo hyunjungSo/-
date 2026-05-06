@@ -1058,7 +1058,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       <div className="flex items-center justify-between">
         <Button variant="ghost" onClick={onBack} className="h-auto px-0 text-muted-foreground hover:bg-transparent hover:text-foreground">
           <ArrowLeft className="mr-1.5 h-4 w-4" />
-          목록으로 돌아가기
+          목록으로 돌아���기
         </Button>
         <div className="flex gap-2">
           <Button variant="secondary" asChild>
@@ -2217,9 +2217,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                               
                               <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium truncate">{adjacentLand.address.split(" ").slice(-2).join(" ")}</p>
+                                <p className="text-sm font-medium">{adjacentLand.address}</p>
                                 <p className="text-xs text-muted-foreground">
-                                  {adjacentLand.landType} | 잔여 {adjacentLand.remainingArea.toLocaleString()}m²
+                                  {adjacentLand.landType} | {adjacentLand.remainingArea.toLocaleString()}m² ({adjacentLand.remainingRatio}%)
                                 </p>
                               </div>
                               
@@ -3361,7 +3361,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {(["접수���료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
+            {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
               const config = adminStatusConfig[status];
               const Icon = config.icon;
               const isSelected = reviewData.adminStatus === status;
