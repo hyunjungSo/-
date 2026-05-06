@@ -733,7 +733,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       });
       if (judgment === "매수불가") {
         judgment = "검토필요";
-        reasons.push("소규모 토지로 추가 검토 필요");
+        reasons.push("소규모 토지로 추가 검토 ��요");
       }
     }
     
@@ -748,7 +748,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     };
   };
 
-  // AI 판독 실행 핸들러 (2단계 프로세스) - 담당자가 선택한 필지만 분석
+  // AI 판독 실행 핸들러 (2단계 프로세스) - 담당���가 선택한 필지만 분석
   const handleRunAIAnalysis = () => {
     // 선택된 필지가 없으면 알림
     if (adminCheckedLandIds.length === 0) {
@@ -1599,12 +1599,17 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 className="h-6 w-6 shrink-0"
                               />
                               
-                              {/* 필지 마커 + 정보 (클릭 시 확장/축소) */}
+                              {/* 필지 마커 + 정보 (클릭 시 확장/축소 토글) */}
                               <div 
                                 className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer"
                                 onClick={() => {
-                                  setSelectedLandIndex(idx);
-                                  setFocusedLandId(land.id);
+                                  // 같은 필지 클릭 시 닫기, 다른 필지 클릭 시 열기
+                                  if (focusedLandId === land.id) {
+                                    setFocusedLandId(null);
+                                  } else {
+                                    setSelectedLandIndex(idx);
+                                    setFocusedLandId(land.id);
+                                  }
                                 }}
                               >
                                 <span 
@@ -1681,8 +1686,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             )}
                             
-                            {/* 하단: 필지 상세 옵션 (선택된 필지만 표시) */}
-                            {isSelected && (
+                            {/* 하단: 필지 상세 옵션 (포커스된 필지만 표시 - 아코디언 토글) */}
+                            {focusedLandId === land.id && (
                               <div className="mt-3 ml-7 space-y-3 border-t pt-3">
                                 {/* 현재 활용 지목 */}
                                 <div className="space-y-1.5">
