@@ -299,7 +299,7 @@ export default function ReviewDocumentPage({
                           rowSpan={2}
                           className="border border-foreground bg-muted px-2 py-1 text-center text-base font-medium text-foreground"
                         >
-                          면적(m&sup2;)
+                          면적(m²)
                         </td>
                         <td
                           colSpan={2}
@@ -337,13 +337,13 @@ export default function ReviewDocumentPage({
                           지번
                         </td>
                         <td className="border border-foreground bg-muted px-2 py-1 text-center text-base font-medium text-foreground">
-                          면적(m&sup2;)
+                          면적(m²)
                         </td>
                         <td className="border border-foreground bg-muted px-1 py-1 text-center text-base font-medium text-foreground" style={{ width: "50px" }}>
                           지번
                         </td>
                         <td className="border border-foreground bg-muted px-2 py-1 text-center text-base font-medium text-foreground">
-                          면적(m&sup2;)
+                          면적(m²)
                         </td>
                         <td className="border border-foreground bg-muted px-2 py-1 text-center text-base font-medium text-foreground">
                           잔여비율
