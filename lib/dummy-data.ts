@@ -832,7 +832,7 @@ export const dummyLandInfoList: LandInfo[] = [
     remainingShape: "삼각형",
     originalShapeIndex: 4.1,
     remainingShapeIndex: 5.4,
-    ownerName: "최혼합",
+    ownerName: "최���합",
     ownerContact: "010-7700-2002",
     hasIncludedLand: true,
     businessUnit: "천안안성",
@@ -1026,7 +1026,7 @@ export const dummyLandInfoList: LandInfo[] = [
   // 4필지 중 2필지만 일단지 판정, 나머지 2필지는 개별 판정
   {
     id: "land-mixed-001",
-    address: "경기����� 평택시 포승읍 내기리 200-1",
+    address: "경기������� 평택시 포승읍 내기리 200-1",
     originalArea: 500,
     includedArea: 350,
     remainingArea: 150,
@@ -1676,7 +1676,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "동탄2 도시개발사업으로 인해 소유한 8개 필지가 모두 도로에 편입되어 잔여지가 불규칙한 형태로 남았습니다. 각 필지별로 건축 및 농업 활동이 불가능하여 일괄 매수를 신청합니다.",
+    reason: "동탄2 도시개발사업으로 인해 소유한 8개 필지가 모두 도��에 편입되어 잔여지가 불규칙한 형태로 남았습니다. 각 필지별로 건축 및 농업 활동이 불가능하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "대" as const,
@@ -2007,7 +2007,7 @@ export const dummyApplications: Application[] = [
         waterChannelLost: false,
       },
     ],
-    attachments: ["토지대장_777-1.pdf", "토지대장_777-2.pdf", "토지대장_777-3.pdf", "토지대장_777-4.pdf", "등기부등본.pdf", "건축물대장.pdf"],
+    attachments: ["토지대장_777-1.pdf", "토지대장_777-2.pdf", "토지대장_777-3.pdf", "토지대장_777-4.pdf", "등기부등본.pdf", "건��물대장.pdf"],
     status: "검토중",
     adminStatus: "진행중",
     appliedAt: "2026-04-26",
@@ -2270,7 +2270,7 @@ export const dummyApplications: Application[] = [
     statusUpdatedAt: "2026-04-29",
   },
   // ===== 혼합 케이스: 일부 매수 + 일부 미해당 =====
-  // 정혼합 - 4필지 모두 개별 판정 (일단지 아님 - 지목/용도가 서로 다름)
+  // 정혼합 - 4필지 모두 ��별 판정 (일단지 아님 - 지목/용도가 서로 다름)
   // 내기리 200-1, 200-2: 답(논), 면적 기준 충족 → 매수
   // 만호리 55-1, 55-2: 전(밭), 면적 기준 미충족 → 미해당
   {
@@ -2320,7 +2320,7 @@ export const dummyApplications: Application[] = [
         waterChannelLost: false,
       },
       {
-        currentUsage: "전" as const,
+        currentUsage: "��" as const,
         landSubType: "" as const,
         actualUsage: "전" as const,
         reportedShape: "가로장방형" as const,
@@ -2386,106 +2386,6 @@ export const dummyApplications: Application[] = [
         { landId: "land-mixed-002", judgment: "매수", unifiedGroupId: null, reason: "면적 기준 충족(180㎡≤330㎡), 형상지수 4.8(불량), 관개수로 상실" },
         { landId: "land-mixed-003", judgment: "미해당", unifiedGroupId: null, reason: "면적 기준 미충족(600㎡>330㎡), 형상지수 1.2(양호), 종래 사용 가능" },
         { landId: "land-mixed-004", judgment: "미해당", unifiedGroupId: null, reason: "면적 기준 미충족(550㎡>330㎡), 형상지수 1.3(양호), 종래 사용 가능" },
-      ],
-    },
-    adminName: "홍길동",
-    statusUpdatedAt: "2026-04-30",
-  },
-    actualUsage: "답",
-    reportedShape: "삼각형",
-    farmMachineDifficulty: true,
-    reason: "평택항 배후도로 건설로 인해 소유한 4개 농지 필지가 편입되었습니다. 내기리 200-1, 200-2 필지는 연접하여 일단지로 경작해 왔으나, 도로 편입 후 형상이 불규칙해져 농기계 사용이 불가합니다. 만호리 55-1, 55-2 필지는 별도 위치에 있어 개별 검토가 필요합니다.",
-    landDataList: [
-      {
-        currentUsage: "답" as const,
-        landSubType: "" as const,
-        actualUsage: "답" as const,
-        reportedShape: "삼각형" as const,
-        farmMachineDifficulty: true,
-        accessRoadLost: false,
-        waterChannelLost: true,
-      },
-      {
-        currentUsage: "답" as const,
-        landSubType: "" as const,
-        actualUsage: "답" as const,
-        reportedShape: "역삼각형" as const,
-        farmMachineDifficulty: true,
-        accessRoadLost: false,
-        waterChannelLost: true,
-      },
-      {
-        currentUsage: "전" as const,
-        landSubType: "" as const,
-        actualUsage: "전" as const,
-        reportedShape: "정방형" as const,
-        farmMachineDifficulty: false,
-        accessRoadLost: false,
-        waterChannelLost: false,
-      },
-      {
-        currentUsage: "전" as const,
-        landSubType: "" as const,
-        actualUsage: "전" as const,
-        reportedShape: "가로장방형" as const,
-        farmMachineDifficulty: false,
-        accessRoadLost: false,
-        waterChannelLost: false,
-      },
-    ],
-    attachments: ["토지대장_200-1.pdf", "토지대장_200-2.pdf", "토지대장_55-1.pdf", "토지대장_55-2.pdf", "등기부등본.pdf"],
-    status: "검토중",
-    adminStatus: "진행중",
-    appliedAt: "2026-04-29",
-    aiResult: {
-      landTypePath: "농지",
-      criteriaChecks: [
-        { criteriaName: "일단지 검토 (내기리)", criteriaDescription: "200-1, 200-2 필지: 연접 필지로 일단지 해당", isMet: true, autoDetected: true },
-        { criteriaName: "일단지 검토 (만호리)", criteriaDescription: "55-1, 55-2 필지: 비연접으로 일단지 미해당", isMet: false, autoDetected: true },
-        { criteriaName: "면적 기준 (200-1)", criteriaDescription: "잔여 150㎡ ≤ 330㎡ (농지 기준)", isMet: true, autoDetected: true },
-        { criteriaName: "면적 기준 (200-2)", criteriaDescription: "잔여 180㎡ ≤ 330㎡ (농지 기준)", isMet: true, autoDetected: true },
-        { criteriaName: "면적 기준 (55-1)", criteriaDescription: "잔여 600㎡ > 330㎡ (농지 기준 미충족)", isMet: false, autoDetected: true },
-        { criteriaName: "면적 기준 (55-2)", criteriaDescription: "잔여 550㎡ > 330㎡ (농지 기준 미충족)", isMet: false, autoDetected: true },
-      ],
-      provisionalJudgment: "매수",
-      originalShapeIndex: 4.1,
-      remainingShapeIndex: 5.0,
-      shapeIndexChange: 0.9,
-      isBlindLand: false,
-      accessRoadLost: false,
-      waterChannelLost: true,
-      farmMachineDifficulty: true,
-      judgmentRationale: {
-        summary: "4필지 혼합 - 2필지(내기리) 일단지 「매수」, 2필지(만호리) 「미해당」 판정",
-        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
-        appliedCriteria: [
-          "일단지 해당 (내기리 200-1, 200-2): 연접 필지, 동일 용도, 일체 경작",
-          "일단지 미해당 (만호리 55-1, 55-2): 내기리와 비연접, 별도 위치",
-          "내기리 필지: 면적 기준 충족, 형상 변경, 농기계 진입 곤란 → 매수",
-          "만호리 필지: 면적 기준 미충족, 형상 양호, 종래 사용 ��능 → 미해당",
-        ],
-        detailedExplanation: "4필지 혼합 판정\n\n[일단지 A - 매수 판정]\n• 내기리 200-1: 500㎡ → 150㎡ (삼각형) ✓\n• 내기리 200-2: 600㎡ → 180㎡ (역삼각형) ✓\n→ 합산 잔여 330㎡, 관개수로 상실, 농기계 진입 곤란\n\n[미해당 - 개별 부적합]\n• 만호리 55-1: 800㎡ → 600㎡ (정방형) ✗\n• 만호리 55-2: 700㎡ → 550㎡ (가로장방형) ✗\n→ 면적 기준 미충족, 형상 양호, 종래 사용 가능\n\n※ 내기리 필지와 만호리 필지는 지리적으로 떨어져 있어 일단지로 묶을 수 없습니다.",
-        manualCheckItems: ["만호리 필지 현장 확인", "농기계 진입로 상태 확인"],
-      },
-      unifiedParcelAnalysis: {
-        isUnifiedParcel: false, // 전체는 일단지 아님
-        totalParcels: 4,
-        ownedParcels: 4,
-        adjacentParcels: 2, // 내기리만 연접
-        conditions: {
-          sameOwner: true,
-          continuous: false,
-          sameUsage: true,
-        },
-        combinedArea: 1480,
-        explanation: "4필지 중 내기리 200-1, 200-2만 연접하여 일단지로 인정됩니다. 만호리 55-1, 55-2는 내기리와 지리적으로 떨어져 있어 일단지에 포함되지 않으며, 개별적으로도 면적 기준을 충족하지 못해 미해당입니다.",
-      },
-      // 필지별 판정 결과 (새로운 필드)
-      landJudgments: [
-        { landId: "land-mixed-001", judgment: "매수", unifiedGroupId: "group-A", reason: "일단지 A (연접 필지, 면적/형상 기준 충족)" },
-        { landId: "land-mixed-002", judgment: "매수", unifiedGroupId: "group-A", reason: "일단지 A (연접 필지, 면적/형상 기준 충족)" },
-        { landId: "land-mixed-003", judgment: "미해당", unifiedGroupId: null, reason: "면적 기준 미충족 (600㎡ > 330㎡), 형상 양호" },
-        { landId: "land-mixed-004", judgment: "미해당", unifiedGroupId: null, reason: "면적 기준 미충족 (550㎡ > 330㎡), 형상 양호" },
       ],
     },
     adminName: "홍길동",
