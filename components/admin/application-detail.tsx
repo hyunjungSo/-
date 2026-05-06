@@ -55,7 +55,7 @@ interface ApplicationDetailProps {
 }
 
 const judgmentConfig = {
-  매수: { label: "매수", icon: CheckCircle2, borderColor: "border-success", textColor: "text-success", color: "text-success" },
+  매수: { label: "매수", icon: CheckCircle2, borderColor: "border-green-700", textColor: "text-green-700", color: "text-green-700" },
   매수불가: { label: "매수불가", icon: XCircle, borderColor: "border-red-600", textColor: "text-red-700", color: "text-red-700" },
   기각: { label: "기각", icon: XCircle, borderColor: "border-red-600", textColor: "text-red-700", color: "text-red-700" },
   심의위원회이관: { label: "심의위원회 이관", icon: AlertTriangle, borderColor: "border-amber-600", textColor: "text-amber-700", color: "text-amber-700" },
@@ -182,7 +182,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미���������������력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미�����������������력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -1205,7 +1205,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                        <span className="text-success font-medium">신청필지</span>
+                        <span className="text-green-700 font-medium">신청필지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
@@ -1226,13 +1226,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <div className="space-y-3 mb-4">
                       {applicationType === "unified" ? (
                         // 전체 일단지
-                        <div className="rounded-lg border-2 border-success/20 bg-success/5 p-4">
+                        <div className="rounded-lg border-2 border-green-700/20 bg-green-700/5 p-4">
                           <div className="flex items-center justify-between mb-3">
                             <h5 className="font-medium text-emerald-800 flex items-center gap-2">
                               <Layers className="h-4 w-4" />
                               일단지 판정 결과
                             </h5>
-                            <Badge className={application.aiResult?.provisionalJudgment === "매수" ? "bg-success hover:bg-success" : "bg-red-500 hover:bg-red-500"}>
+                            <Badge className={application.aiResult?.provisionalJudgment === "매수" ? "bg-green-700 hover:bg-green-800" : "bg-red-500 hover:bg-red-500"}>
                               {application.aiResult?.provisionalJudgment || "매수"}
                             </Badge>
                           </div>
@@ -1240,19 +1240,19 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           {/* 일단지 조건 체크 */}
                           <div className="grid grid-cols-3 gap-2 mb-3">
                             <div className={`flex items-center gap-1.5 text-xs rounded px-2 py-1 ${
-                              application.unifiedParcelCondition?.sameOwner ? "bg-success/10 text-success" : "bg-red-100 text-red-600"
+                              application.unifiedParcelCondition?.sameOwner ? "bg-green-700/10 text-green-700" : "bg-red-100 text-red-600"
                             }`}>
                               {application.unifiedParcelCondition?.sameOwner ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
                               소유자 동일
                             </div>
                             <div className={`flex items-center gap-1.5 text-xs rounded px-2 py-1 ${
-                              application.unifiedParcelCondition?.continuous ? "bg-success/10 text-success" : "bg-red-100 text-red-600"
+                              application.unifiedParcelCondition?.continuous ? "bg-green-700/10 text-green-700" : "bg-red-100 text-red-600"
                             }`}>
                               {application.unifiedParcelCondition?.continuous ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
                               지반 연속
                             </div>
                             <div className={`flex items-center gap-1.5 text-xs rounded px-2 py-1 ${
-                              application.unifiedParcelCondition?.sameUsage ? "bg-success/10 text-success" : "bg-red-100 text-red-600"
+                              application.unifiedParcelCondition?.sameUsage ? "bg-green-700/10 text-green-700" : "bg-red-100 text-red-600"
                             }`}>
                               {application.unifiedParcelCondition?.sameUsage ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
                               용도 일체성
@@ -1279,7 +1279,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           <Accordion type="single" collapsible className="w-full">
                             <AccordionItem value="unified-detail" className="border-none">
                               <AccordionTrigger className="hover:no-underline py-2 px-0">
-                                <span className="text-xs text-success font-medium">상세 분석 보기</span>
+                                <span className="text-xs text-green-700 font-medium">상세 분석 보기</span>
                               </AccordionTrigger>
                               <AccordionContent className="pt-2">
                                 {/* 추가 조건 */}
@@ -1306,14 +1306,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   )}
                                 </div>
 
-                                <div className="space-y-3 pt-3 border-t border-success/20">
+                                <div className="space-y-3 pt-3 border-t border-green-700/20">
                                   {/* 판단 요약 */}
                                   {application.aiResult?.judgmentRationale && (
                                     <div className="flex items-start gap-2">
                                       <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
                                       <div>
                                         <h4 className="text-sm font-semibold text-emerald-800">판단 요약</h4>
-                                        <p className="mt-1 text-sm leading-relaxed text-success">{application.aiResult.judgmentRationale.summary}</p>
+                                        <p className="mt-1 text-sm leading-relaxed text-green-700">{application.aiResult.judgmentRationale.summary}</p>
                                       </div>
                                     </div>
                                   )}
@@ -1324,7 +1324,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                                       <div>
                                         <h4 className="text-sm font-semibold text-emerald-800">법적 근거</h4>
-                                        <p className="mt-1 text-sm leading-relaxed text-success">{application.aiResult.judgmentRationale.legalBasis}</p>
+                                        <p className="mt-1 text-sm leading-relaxed text-green-700">{application.aiResult.judgmentRationale.legalBasis}</p>
                                       </div>
                                     </div>
                                   )}
@@ -1337,8 +1337,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <h4 className="text-sm font-semibold text-emerald-800">적용 기준</h4>
                                         <ul className="mt-1 space-y-1">
                                           {application.aiResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
-                                            <li key={cIdx} className="flex items-start gap-1.5 text-sm text-success">
-                                              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-success" />
+                                            <li key={cIdx} className="flex items-start gap-1.5 text-sm text-green-700">
+                                              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-green-700" />
                                               <span>{criteria}</span>
                                             </li>
                                           ))}
@@ -1353,7 +1353,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
                                       <div>
                                         <h4 className="text-sm font-semibold text-emerald-800">상세 분석</h4>
-                                        <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-success bg-white/50 p-2 rounded">
+                                        <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-green-700 bg-white/50 p-2 rounded">
                                           {application.aiResult.judgmentRationale.detailedExplanation}
                                         </pre>
                                       </div>
@@ -1380,15 +1380,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
                                   {/* 판정 기준 충족 여부 */}
                                   {application.aiResult?.criteriaChecks && application.aiResult.criteriaChecks.length > 0 && (
-                                    <div className="rounded-lg bg-white/60 p-3 border border-success/20">
-                                      <p className="text-xs font-medium text-success mb-2">판정 기준 충족 여부</p>
+                                    <div className="rounded-lg bg-white/60 p-3 border border-green-700/20">
+                                      <p className="text-xs font-medium text-green-700 mb-2">판정 기준 충족 여부</p>
                                       <div className="space-y-2">
                                         {application.aiResult.criteriaChecks.map((check, cIdx) => (
                                           <div key={cIdx} className="flex items-center justify-between text-sm">
-                                            <span className="text-success">{check.criteriaName}</span>
+                                            <span className="text-green-700">{check.criteriaName}</span>
                                             <Badge 
                                               variant={check.isMet ? "default" : "destructive"} 
-                                              className={`text-xs ${check.isMet ? "bg-success" : ""}`}
+                                              className={`text-xs ${check.isMet ? "bg-green-700" : ""}`}
                                             >
                                               {check.isMet ? "충족" : "미충족"}
                                             </Badge>
@@ -1399,7 +1399,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   )}
 
                                   {/* 안내 문구 */}
-                                  <div className="flex items-start gap-2 pt-2 border-t border-success/20">
+                                  <div className="flex items-start gap-2 pt-2 border-t border-green-700/20">
                                     <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
                                     <p className="text-xs text-emerald-600">
                                       AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
@@ -1420,28 +1420,28 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           const groupJudgment = lands[0]?.judgment || "매수";
                           const totalRemainingArea = groupLands.reduce((sum, l) => sum + (l.land?.remainingArea || 0), 0);
                           return (
-                            <div key={groupId} className="rounded-lg border-2 border-success/20 bg-success/5 p-4">
+                            <div key={groupId} className="rounded-lg border-2 border-green-700/20 bg-green-700/5 p-4">
                               <div className="flex items-center justify-between mb-3">
                                 <h5 className="font-medium text-emerald-800 flex items-center gap-2">
                                   <Layers className="h-4 w-4" />
                                   일단지 판정 결과
                                 </h5>
-                                <Badge className={groupJudgment === "매수" ? "bg-success hover:bg-success" : "bg-red-500 hover:bg-red-500"}>
+                                <Badge className={groupJudgment === "매수" ? "bg-green-700 hover:bg-green-800" : "bg-red-500 hover:bg-red-500"}>
                                   {groupJudgment}
                                 </Badge>
                               </div>
                               
                               {/* 일단지 조건 체크 */}
                               <div className="grid grid-cols-3 gap-2 mb-3">
-                                <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-success/10 text-success">
+                                <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-green-700/10 text-green-700">
                                   <CheckCircle2 className="h-3 w-3" />
                                   소유자 동일
                                 </div>
-                                <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-success/10 text-success">
+                                <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-green-700/10 text-green-700">
                                   <CheckCircle2 className="h-3 w-3" />
                                   지반 연속
                                 </div>
-                                <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-success/10 text-success">
+                                <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-green-700/10 text-green-700">
                                   <CheckCircle2 className="h-3 w-3" />
                                   용도 일체성
                                 </div>
@@ -1483,14 +1483,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
 
                               {/* 상세 분석 내용 */}
-                              <div className="space-y-3 mt-4 pt-3 border-t border-success/20">
+                              <div className="space-y-3 mt-4 pt-3 border-t border-green-700/20">
                                 {/* 판단 요약 */}
                                 {application.aiResult?.judgmentRationale && (
                                   <div className="flex items-start gap-2">
                                     <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
                                     <div>
                                       <h4 className="text-sm font-semibold text-emerald-800">판단 요약</h4>
-                                      <p className="mt-1 text-sm leading-relaxed text-success">{application.aiResult.judgmentRationale.summary}</p>
+                                      <p className="mt-1 text-sm leading-relaxed text-green-700">{application.aiResult.judgmentRationale.summary}</p>
                                     </div>
                                   </div>
                                 )}
@@ -1501,7 +1501,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                                     <div>
                                       <h4 className="text-sm font-semibold text-emerald-800">법적 근거</h4>
-                                      <p className="mt-1 text-sm leading-relaxed text-success">{application.aiResult.judgmentRationale.legalBasis}</p>
+                                      <p className="mt-1 text-sm leading-relaxed text-green-700">{application.aiResult.judgmentRationale.legalBasis}</p>
                                     </div>
                                   </div>
                                 )}
@@ -1514,8 +1514,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <h4 className="text-sm font-semibold text-emerald-800">적용 기준</h4>
                                       <ul className="mt-1 space-y-1">
                                         {application.aiResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
-                                          <li key={cIdx} className="flex items-start gap-1.5 text-sm text-success">
-                                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-success" />
+                                          <li key={cIdx} className="flex items-start gap-1.5 text-sm text-green-700">
+                                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-green-700" />
                                             <span>{criteria}</span>
                                           </li>
                                         ))}
@@ -1530,7 +1530,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
                                     <div>
                                       <h4 className="text-sm font-semibold text-emerald-800">상세 분석</h4>
-                                      <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-success bg-white/50 p-2 rounded">
+                                      <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-green-700 bg-white/50 p-2 rounded">
                                         {application.aiResult.judgmentRationale.detailedExplanation}
                                       </pre>
                                     </div>
@@ -1557,15 +1557,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
                                 {/* 판정 기준 충족 여부 */}
                                 {application.aiResult?.criteriaChecks && application.aiResult.criteriaChecks.length > 0 && (
-                                  <div className="rounded-lg bg-white/60 p-3 border border-success/20">
-                                    <p className="text-xs font-medium text-success mb-2">판정 기준 충족 여부</p>
+                                  <div className="rounded-lg bg-white/60 p-3 border border-green-700/20">
+                                    <p className="text-xs font-medium text-green-700 mb-2">판정 기준 충족 여부</p>
                                     <div className="space-y-2">
                                       {application.aiResult.criteriaChecks.map((check, cIdx) => (
                                         <div key={cIdx} className="flex items-center justify-between text-sm">
-                                          <span className="text-success">{check.criteriaName}</span>
+                                          <span className="text-green-700">{check.criteriaName}</span>
                                           <Badge 
                                             variant={check.isMet ? "default" : "destructive"} 
-                                            className={`text-xs ${check.isMet ? "bg-success" : ""}`}
+                                            className={`text-xs ${check.isMet ? "bg-green-700" : ""}`}
                                           >
                                             {check.isMet ? "충족" : "미충족"}
                                           </Badge>
@@ -1576,10 +1576,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 )}
 
                                 {/* 안내 ���구 */}
-                                <div className="flex items-start gap-2 pt-2 border-t border-success/20">
+                                <div className="flex items-start gap-2 pt-2 border-t border-green-700/20">
                                   <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
                                   <p className="text-xs text-emerald-600">
-                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 ��라 결��������������니다.
+                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 ��라 결���������������니다.
                                   </p>
                                 </div>
                               </div>
@@ -1602,7 +1602,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           value={land.id}
                           className={`rounded-lg border px-4 ${
                             landResult?.provisionalJudgment === "매수"
-                              ? "border-success/20 bg-success/5"
+                              ? "border-green-700/20 bg-green-700/5"
                               : landResult?.provisionalJudgment === "매수불가"
                                 ? "border-red-200 bg-red-50/50"
                                 : "border-slate-200 bg-slate-50/50"
@@ -1617,7 +1617,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               {/* 필지별 매수/불매수 Badge 표시 */}
                               {landResult && (
                                 <Badge className={`ml-2 shrink-0 ${
-                                  landResult.provisionalJudgment === "매���" ? "bg-success" : "bg-red-500"
+                                  landResult.provisionalJudgment === "매���" ? "bg-green-700" : "bg-red-500"
                                 }`}>
                                   {landResult.provisionalJudgment}
                                 </Badge>
@@ -1750,7 +1750,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <span className="text-muted-foreground">{check.criteriaName}</span>
                                           <Badge 
                                             variant={check.isMet ? "default" : "destructive"} 
-                                            className={`text-xs ${check.isMet ? "bg-success" : ""}`}
+                                            className={`text-xs ${check.isMet ? "bg-green-700" : ""}`}
                                           >
                                             {check.isMet ? "충족" : "미충족"}
                                           </Badge>
@@ -1882,7 +1882,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                        <span className="text-success font-medium">선택된 필지</span>
+                        <span className="text-green-700 font-medium">선택된 필지</span>
                       </div>
                     </div>
                   </div>
@@ -1996,7 +1996,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <Badge 
                                   variant="outline" 
                                   className={`text-xs shrink-0 ${
-                                    landResult.provisionalJudgment === "매수" ? "border-emerald-500 text-success bg-emerald-50" : 
+                                    landResult.provisionalJudgment === "매수" ? "border-emerald-500 text-green-700 bg-emerald-50" : 
                                     landResult.provisionalJudgment === "매수불가" ? "border-red-500 text-red-700 bg-red-50" : 
                                     "border-amber-500 text-amber-700 bg-amber-50"
                                   }`}
@@ -2380,13 +2380,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         <div className="space-y-3 mb-4">
                           {applicationType === "unified" ? (
                             // 전체 일단지
-                            <div className="rounded-lg border-2 border-success/20 bg-success/5 p-4">
+                            <div className="rounded-lg border-2 border-green-700/20 bg-green-700/5 p-4">
                               <div className="flex items-center justify-between mb-3">
                                 <h5 className="font-medium text-emerald-800 flex items-center gap-2">
                                   <Layers className="h-4 w-4" />
                                   일단지 ��정 결과
                                 </h5>
-                                <Badge className={application.aiResult?.provisionalJudgment === "매수" ? "bg-success hover:bg-success" : "bg-red-500 hover:bg-red-500"}>
+                                <Badge className={application.aiResult?.provisionalJudgment === "매수" ? "bg-green-700 hover:bg-green-800" : "bg-red-500 hover:bg-red-500"}>
                                   {application.aiResult?.provisionalJudgment || "매수"}
                                 </Badge>
                               </div>
@@ -2394,19 +2394,19 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               {/* 일단지 조건 체크 */}
                               <div className="grid grid-cols-3 gap-2 mb-3">
                                 <div className={`flex items-center gap-1.5 text-xs rounded px-2 py-1 ${
-                                  application.unifiedParcelCondition?.sameOwner ? "bg-success/10 text-success" : "bg-red-100 text-red-600"
+                                  application.unifiedParcelCondition?.sameOwner ? "bg-green-700/10 text-green-700" : "bg-red-100 text-red-600"
                                 }`}>
                                   {application.unifiedParcelCondition?.sameOwner ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
                                   소유자 동일
                                 </div>
                                 <div className={`flex items-center gap-1.5 text-xs rounded px-2 py-1 ${
-                                  application.unifiedParcelCondition?.continuous ? "bg-success/10 text-success" : "bg-red-100 text-red-600"
+                                  application.unifiedParcelCondition?.continuous ? "bg-green-700/10 text-green-700" : "bg-red-100 text-red-600"
                                 }`}>
                                   {application.unifiedParcelCondition?.continuous ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
                                   지반 연속
                                 </div>
                                 <div className={`flex items-center gap-1.5 text-xs rounded px-2 py-1 ${
-                                  application.unifiedParcelCondition?.sameUsage ? "bg-success/10 text-success" : "bg-red-100 text-red-600"
+                                  application.unifiedParcelCondition?.sameUsage ? "bg-green-700/10 text-green-700" : "bg-red-100 text-red-600"
                                 }`}>
                                   {application.unifiedParcelCondition?.sameUsage ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
                                   용��� 일체성
@@ -2433,7 +2433,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <Accordion type="single" collapsible className="w-full">
                                 <AccordionItem value="admin-unified-detail" className="border-none">
                                   <AccordionTrigger className="hover:no-underline py-2 px-0">
-                                    <span className="text-xs text-success font-medium">상세 분석 보기</span>
+                                    <span className="text-xs text-green-700 font-medium">상세 분석 보기</span>
                                   </AccordionTrigger>
                                   <AccordionContent className="pt-2">
                                     {/* 추가 조건 */}
@@ -2460,14 +2460,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       )}
                                     </div>
 
-                                    <div className="space-y-3 pt-3 border-t border-success/20">
+                                    <div className="space-y-3 pt-3 border-t border-green-700/20">
                                       {/* 판단 요약 */}
                                       {application.aiResult?.judgmentRationale && (
                                         <div className="flex items-start gap-2">
                                           <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
                                           <div>
                                             <h4 className="text-sm font-semibold text-emerald-800">판단 요약</h4>
-                                            <p className="mt-1 text-sm leading-relaxed text-success">{application.aiResult.judgmentRationale.summary}</p>
+                                            <p className="mt-1 text-sm leading-relaxed text-green-700">{application.aiResult.judgmentRationale.summary}</p>
                                           </div>
                                         </div>
                                       )}
@@ -2478,7 +2478,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                                           <div>
                                             <h4 className="text-sm font-semibold text-emerald-800">법적 근거</h4>
-                                            <p className="mt-1 text-sm leading-relaxed text-success">{application.aiResult.judgmentRationale.legalBasis}</p>
+                                            <p className="mt-1 text-sm leading-relaxed text-green-700">{application.aiResult.judgmentRationale.legalBasis}</p>
                                           </div>
                                         </div>
                                       )}
@@ -2491,8 +2491,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                             <h4 className="text-sm font-semibold text-emerald-800">적용 기준</h4>
                                             <ul className="mt-1 space-y-1">
                                               {application.aiResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
-                                                <li key={cIdx} className="flex items-start gap-1.5 text-sm text-success">
-                                                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-success" />
+                                                <li key={cIdx} className="flex items-start gap-1.5 text-sm text-green-700">
+                                                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-green-700" />
                                                   <span>{criteria}</span>
                                                 </li>
                                               ))}
@@ -2507,7 +2507,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
                                           <div>
                                             <h4 className="text-sm font-semibold text-emerald-800">상세 분석</h4>
-                                            <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-success bg-white/50 p-2 rounded">
+                                            <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-green-700 bg-white/50 p-2 rounded">
                                               {application.aiResult.judgmentRationale.detailedExplanation}
                                             </pre>
                                           </div>
@@ -2534,15 +2534,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
                                       {/* 판정 기준 충족 여부 */}
                                       {application.aiResult?.criteriaChecks && application.aiResult.criteriaChecks.length > 0 && (
-                                        <div className="rounded-lg bg-white/60 p-3 border border-success/20">
-                                          <p className="text-xs font-medium text-success mb-2">판정 기준 충족 여부</p>
+                                        <div className="rounded-lg bg-white/60 p-3 border border-green-700/20">
+                                          <p className="text-xs font-medium text-green-700 mb-2">판정 기준 충족 여부</p>
                                           <div className="space-y-2">
                                             {application.aiResult.criteriaChecks.map((check, cIdx) => (
                                               <div key={cIdx} className="flex items-center justify-between text-sm">
-                                                <span className="text-success">{check.criteriaName}</span>
+                                                <span className="text-green-700">{check.criteriaName}</span>
                                                 <Badge 
                                                   variant={check.isMet ? "default" : "destructive"} 
-                                                  className={`text-xs ${check.isMet ? "bg-success" : ""}`}
+                                                  className={`text-xs ${check.isMet ? "bg-green-700" : ""}`}
                                                 >
                                                   {check.isMet ? "충족" : "미충족"}
                                                 </Badge>
@@ -2553,7 +2553,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       )}
 
                                       {/* 안내 문구 */}
-                                      <div className="flex items-start gap-2 pt-2 border-t border-success/20">
+                                      <div className="flex items-start gap-2 pt-2 border-t border-green-700/20">
                                         <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
                                         <p className="text-xs text-emerald-600">
                                           AI 판��� 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
@@ -2565,7 +2565,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </Accordion>
                             </div>
                           ) : (
-                            // 부분 일단지 (그룹별로 표시)
+                            // 부분 ��단지 (그룹별로 표시)
                             Object.entries(partialUnifiedGroups).map(([groupId, lands]) => {
                               const groupLands = lands.map(lj => {
                                 const landIdx = allLands.findIndex(l => l.id === lj.landId);
@@ -2574,28 +2574,28 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               const groupJudgment = lands[0]?.judgment || "매수";
                               const totalRemainingArea = groupLands.reduce((sum, l) => sum + (l.land?.remainingArea || 0), 0);
                               return (
-                                <div key={groupId} className="rounded-lg border-2 border-success/20 bg-success/5 p-4">
+                                <div key={groupId} className="rounded-lg border-2 border-green-700/20 bg-green-700/5 p-4">
                                   <div className="flex items-center justify-between mb-3">
                                     <h5 className="font-medium text-emerald-800 flex items-center gap-2">
                                       <Layers className="h-4 w-4" />
                                       일단지 판정 결과
                                     </h5>
-                                    <Badge className={groupJudgment === "매수" ? "bg-success hover:bg-success" : "bg-red-500 hover:bg-red-500"}>
+                                    <Badge className={groupJudgment === "매수" ? "bg-green-700 hover:bg-green-800" : "bg-red-500 hover:bg-red-500"}>
                                       {groupJudgment}
                                     </Badge>
                                   </div>
                                   
                                   {/* 일단지 조건 체크 */}
                                   <div className="grid grid-cols-3 gap-2 mb-3">
-                                    <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-success/10 text-success">
+                                    <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-green-700/10 text-green-700">
                                       <CheckCircle2 className="h-3 w-3" />
                                       소유자 동일
                                     </div>
-                                    <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-success/10 text-success">
+                                    <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-green-700/10 text-green-700">
                                       <CheckCircle2 className="h-3 w-3" />
                                       지반 연속
                                     </div>
-                                    <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-success/10 text-success">
+                                    <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-green-700/10 text-green-700">
                                       <CheckCircle2 className="h-3 w-3" />
                                       용도 일체성
                                     </div>
@@ -2637,14 +2637,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   </div>
 
                                   {/* 상세 분석 내용 */}
-                                  <div className="space-y-3 mt-4 pt-3 border-t border-success/20">
+                                  <div className="space-y-3 mt-4 pt-3 border-t border-green-700/20">
                                     {/* 판단 요약 */}
                                     {application.aiResult?.judgmentRationale && (
                                       <div className="flex items-start gap-2">
                                         <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
                                         <div>
                                           <h4 className="text-sm font-semibold text-emerald-800">판단 요약</h4>
-                                          <p className="mt-1 text-sm leading-relaxed text-success">{application.aiResult.judgmentRationale.summary}</p>
+                                          <p className="mt-1 text-sm leading-relaxed text-green-700">{application.aiResult.judgmentRationale.summary}</p>
                                         </div>
                                       </div>
                                     )}
@@ -2655,7 +2655,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                                         <div>
                                           <h4 className="text-sm font-semibold text-emerald-800">법적 근거</h4>
-                                          <p className="mt-1 text-sm leading-relaxed text-success">{application.aiResult.judgmentRationale.legalBasis}</p>
+                                          <p className="mt-1 text-sm leading-relaxed text-green-700">{application.aiResult.judgmentRationale.legalBasis}</p>
                                         </div>
                                       </div>
                                     )}
@@ -2668,8 +2668,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <h4 className="text-sm font-semibold text-emerald-800">적용 기준</h4>
                                           <ul className="mt-1 space-y-1">
                                             {application.aiResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
-                                              <li key={cIdx} className="flex items-start gap-1.5 text-sm text-success">
-                                                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-success" />
+                                              <li key={cIdx} className="flex items-start gap-1.5 text-sm text-green-700">
+                                                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-green-700" />
                                                 <span>{criteria}</span>
                                               </li>
                                             ))}
@@ -2684,7 +2684,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
                                         <div>
                                           <h4 className="text-sm font-semibold text-emerald-800">상세 분석</h4>
-                                          <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-success bg-white/50 p-2 rounded">
+                                          <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-green-700 bg-white/50 p-2 rounded">
                                             {application.aiResult.judgmentRationale.detailedExplanation}
                                           </pre>
                                         </div>
@@ -2711,15 +2711,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
                                     {/* 판정 기준 충족 여부 */}
                                     {application.aiResult?.criteriaChecks && application.aiResult.criteriaChecks.length > 0 && (
-                                      <div className="rounded-lg bg-white/60 p-3 border border-success/20">
-                                        <p className="text-xs font-medium text-success mb-2">판정 기준 충족 여부</p>
+                                      <div className="rounded-lg bg-white/60 p-3 border border-green-700/20">
+                                        <p className="text-xs font-medium text-green-700 mb-2">판정 기준 충족 여부</p>
                                         <div className="space-y-2">
                                           {application.aiResult.criteriaChecks.map((check, cIdx) => (
                                             <div key={cIdx} className="flex items-center justify-between text-sm">
-                                              <span className="text-success">{check.criteriaName}</span>
+                                              <span className="text-green-700">{check.criteriaName}</span>
                                               <Badge 
                                                 variant={check.isMet ? "default" : "destructive"} 
-                                                className={`text-xs ${check.isMet ? "bg-success" : ""}`}
+                                                className={`text-xs ${check.isMet ? "bg-green-700" : ""}`}
                                               >
                                                 {check.isMet ? "충족" : "미충족"}
                                               </Badge>
@@ -2730,7 +2730,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     )}
 
                                     {/* 안내 문구 */}
-                                    <div className="flex items-start gap-2 pt-2 border-t border-success/20">
+                                    <div className="flex items-start gap-2 pt-2 border-t border-green-700/20">
                                       <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
                                       <p className="text-xs text-emerald-600">
                                         AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
@@ -2756,7 +2756,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               value={land.id}
                               className={`rounded-lg border px-4 ${
                                 landResult?.provisionalJudgment === "매수"
-                                  ? "border-success/20 bg-success/5"
+                                  ? "border-green-700/20 bg-green-700/5"
                                   : landResult?.provisionalJudgment === "매수불가"
                                     ? "border-red-200 bg-red-50/50"
                                     : "border-slate-200 bg-slate-50/50"
@@ -2772,7 +2772,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   </div>
                                   {landResult && (
                                     <Badge className={`ml-2 ${
-                                      landResult.provisionalJudgment === "매수" ? "bg-success" : "bg-red-500"
+                                      landResult.provisionalJudgment === "매수" ? "bg-green-700" : "bg-red-500"
                                     }`}>
                                       {landResult.provisionalJudgment}
                                     </Badge>
@@ -2904,7 +2904,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                                 <span className="text-muted-foreground">{check.criteriaName}</span>
                                                 <Badge 
                                                   variant={check.isMet ? "default" : "destructive"} 
-                                                  className={`text-xs ${check.isMet ? "bg-success" : ""}`}
+                                                  className={`text-xs ${check.isMet ? "bg-green-700" : ""}`}
                                                 >
                                                   {check.isMet ? "충족" : "미충족"}
                                                 </Badge>
@@ -3001,9 +3001,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         );
                       })}
                       
-                      {/* 필지별 분석 결과 - 아코디언 UI (AI 분석 실행된 필지만 표시) */}
+                      {/* 필지별 분석 결과 - 아코디언 UI (allLands에만 속한 필지의 AI 분석 결과만 표시) */}
                       <Accordion type="multiple" defaultValue={[]} className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
-                        {Object.entries(adminLandAIResults).map(([landId, result]) => {
+                        {Object.entries(adminLandAIResults)
+                          .filter(([landId]) => allLands.some(l => l.id === landId))
+                          .map(([landId, result]) => {
                           const land = allLands.find(l => l.id === landId);
                           const landIdx = allLands.findIndex(l => l.id === landId);
                           if (!land) return null;
@@ -3014,7 +3016,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               value={landId}
                               className={`rounded-lg border px-4 ${
                                 result.provisionalJudgment === "매수"
-                                  ? "border-success/20 bg-success/5"
+                                  ? "border-green-700/20 bg-green-700/5"
                                   : "border-red-200 bg-red-50/50"
                               }`}
                             >
@@ -3022,7 +3024,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className="flex items-center justify-between w-full pr-2">
                                   <div className="flex items-center gap-2">
                                     <span className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-white ${
-                                      result.provisionalJudgment === "매수" ? "bg-success" : "bg-red-500"
+                                      result.provisionalJudgment === "매수" ? "bg-green-700" : "bg-red-500"
                                     }`}>
                                       {String.fromCharCode(65 + landIdx)}
                                     </span>
@@ -3031,7 +3033,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
                                     </div>
                                   </div>
-                                  <Badge className={`ml-2 ${result.provisionalJudgment === "매수" ? "bg-success" : "bg-red-500"}`}>
+                                  <Badge className={`ml-2 ${result.provisionalJudgment === "매수" ? "bg-green-700" : "bg-red-500"}`}>
                                     {result.provisionalJudgment}
                                   </Badge>
                                 </div>
@@ -3161,7 +3163,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                             <span className="text-muted-foreground">{check.criteriaName}</span>
                                             <Badge 
                                               variant={check.isMet ? "default" : "destructive"} 
-                                              className={`text-xs ${check.isMet ? "bg-success" : ""}`}
+                                              className={`text-xs ${check.isMet ? "bg-green-700" : ""}`}
                                             >
                                               {check.isMet ? "충족" : "미충���"}
                                             </Badge>
@@ -3245,13 +3247,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <AccordionItem 
                       key={land.id} 
                       value={land.id}
-                      className={`rounded-lg border ${isReviewed ? 'border-success/20 bg-emerald-50/30' : 'border-gray-200'}`}
+                      className={`rounded-lg border ${isReviewed ? 'border-green-700/20 bg-emerald-50/30' : 'border-gray-200'}`}
                     >
                       <AccordionTrigger className="hover:no-underline px-4 py-3">
                         <div className="flex items-center justify-between w-full pr-2">
                           <div className="flex items-center gap-3">
                             <div className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white ${
-                              isReviewed ? 'bg-success' : 'bg-gray-400'
+                              isReviewed ? 'bg-green-700' : 'bg-gray-400'
                             }`}>
                               {idx + 1}
                             </div>
@@ -3268,7 +3270,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             )}
                             {landReview.landJudgment && (
                               <Badge className={
-                                landReview.landJudgment === "매수" ? "bg-success" :
+                                landReview.landJudgment === "매수" ? "bg-green-700" :
                                 landReview.landJudgment === "기각" ? "bg-red-500" : "bg-amber-500"
                               }>
                                 {landReview.landJudgment}
