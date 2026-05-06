@@ -567,7 +567,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경�����������������������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
+      // 농지 경�������������������������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -723,7 +723,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "종래 사용 곤란",
         met: usageDifficulty,
-        description: usageDifficulty ? "위치/형상/접근 상태로 ��래 ���용 곤란" : "종래 ��용 ���능"
+        description: usageDifficulty ? "���치/형상/접근 상태로 ��래 ���용 곤란" : "종래 ��용 ���능"
       });
       
       if (areaCheckMet || usageDifficulty) {
@@ -732,7 +732,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (usageDifficulty) reasons.push("종래 사용 곤란");
       } else {
         judgment = "매수불가";
-        reasons.push("모든 ���준 미충족");
+        reasons.push("��든 ���준 미충족");
       }
     }
     
@@ -3019,7 +3019,7 @@ return applicationParcels;
                                         <div className="rounded-lg bg-blue-50/80 p-3 border border-blue-200">
                                           <p className="text-xs font-medium text-blue-700 mb-2">적용된 현장 상황</p>
                                           <div className="flex flex-wrap gap-2">
-                                            {landOptions.accessRoadLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">접면도�� 상실</Badge>}
+                                            {landOptions.accessRoadLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">접면도로 상실</Badge>}
                                             {landOptions.waterChannelLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">관개수로 상실</Badge>}
                                             {landOptions.farmMachineDifficulty && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">농기계 진입 곤란</Badge>}
                                           </div>
