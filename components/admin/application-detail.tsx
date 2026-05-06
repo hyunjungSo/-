@@ -1107,26 +1107,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </TabsTrigger>
             </TabsList>
             
-            {/* 민원인 ��과 탭 */}
+            {/* 민원인 결과 탭 */}
             <TabsContent value="citizen">
-              {/* ���������인 경우 최상단에 일단지 판정 결과 표시 */}
-              {applicationType === "unified" && (
-                <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4 mb-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <h5 className="font-medium text-emerald-800 flex items-center gap-2">
-                      <Layers className="h-4 w-4" />
-                      일단지 판정 결과
-                    </h5>
-                    <Badge className="bg-emerald-600 hover:bg-emerald-600">매수</Badge>
-                  </div>
-                  <div className="text-sm space-y-1 text-emerald-700">
-                    <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
-                    <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
-                    <p className="text-xs text-emerald-600 mt-2">소유자 동일 + 지반 연속 + 용도 일체성 충족</p>
-                  </div>
-                </div>
-              )}
-              
               <div className="grid gap-6 lg:grid-cols-2">
                 {/* 좌측: 지적도 */}
                 <div className="space-y-4">
@@ -1204,6 +1186,24 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 우측: 분석결과 */}
                 <div className="space-y-4">
                   <h4 className="font-medium">분석결과</h4>
+                  
+                  {/* 일단지인 경우 최상단에 일단지 판정 결과 표시 */}
+                  {applicationType === "unified" && (
+                    <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h5 className="font-medium text-emerald-800 flex items-center gap-2">
+                          <Layers className="h-4 w-4" />
+                          일단지 판정 결과
+                        </h5>
+                        <Badge className="bg-emerald-600 hover:bg-emerald-600">매수</Badge>
+                      </div>
+                      <div className="text-sm space-y-1 text-emerald-700">
+                        <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
+                        <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
+                        <p className="text-xs text-emerald-600 mt-2">소유자 동일 + 지반 연속 + 용도 일체성 충족</p>
+                      </div>
+                    </div>
+                  )}
                   
                   {/* 필지별 분석 결과 */}
                   <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
@@ -1681,7 +1681,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [land.id]: value }))}
                                   >
                                     <SelectTrigger className="h-8 bg-background text-sm">
-                                      <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+                                      <SelectValue placeholder="현재 활용 ���목을 선택해 주세요" />
                                     </SelectTrigger>
                                     <SelectContent>
                                       <SelectItem value="대">대 (택지)</SelectItem>
@@ -1809,7 +1809,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 mb-4 flex items-start gap-2">
                         <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
                         <p className="text-sm text-blue-700">
-                          현재 민원인 결과를 표시하고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분석을 실행하면 담당자 결과가 표시됩니다.
+                          현��� 민원인 결과를 표시하고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분석을 실행하면 담당자 결과가 표시됩니다.
                         </p>
                       </div>
                       
