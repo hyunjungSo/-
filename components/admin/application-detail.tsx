@@ -268,7 +268,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     farmMachineDifficulty: adminCheckedLandIds.some(id => adminAIOptionsPerLand[id]?.farmMachineDifficulty),
   };
   
-  // 현재 탭에 ��른 선택된 필지 ID (지도 표시용)
+  // 현재 ��에 ��른 선택된 필지 ID (지도 표시용)
   const currentSelectedLandIds = aiResultViewMode === "citizen" ? citizenSelectedLandIds : adminCheckedLandIds;
   
   // 담당자 탭 체크박스 선택 변경 핸들러
@@ -1088,7 +1088,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <p className="font-medium">{application.applicantContact}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">신청일</p>
+              <p className="text-xs text-muted-foreground">��청일</p>
               <p className="font-medium">{application.appliedAt}</p>
             </div>
             <div>
@@ -2175,6 +2175,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           landType: "농경지",
                           landCategory: "전",
                           remainingArea: 856,
+                          remainingRatio: 100,
                         },
                         {
                           id: "adjacent-002",
@@ -2182,31 +2183,46 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           landType: "농경지",
                           landCategory: "답",
                           remainingArea: 1234,
+                          remainingRatio: 100,
                         },
-                      ].map((adjacentLand) => (
-                        <div 
-                          key={adjacentLand.id} 
-                          className="px-3 py-2.5 transition-colors hover:bg-muted/50"
-                          onMouseEnter={() => setHoveredLandId(adjacentLand.id)}
-                          onMouseLeave={() => setHoveredLandId(null)}
-                        >
-                          <div className="flex items-center gap-3">
-                            {/* 체크박스 - 비활성화 */}
-                            <Checkbox 
-                              checked={false}
-                              disabled
-                              className="shrink-0 cursor-not-allowed opacity-50"
-                            />
-                            
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium">{adjacentLand.address}</p>
-                              <p className="text-xs text-muted-foreground">
-                                {adjacentLand.landType} | {adjacentLand.landCategory}
-                              </p>
+                      ].map((adjacentLand, adjIdx) => {
+                        const isSelected = adminCheckedLandIds.includes(adjacentLand.id);
+                        const isHovered = hoveredLandId === adjacentLand.id;
+                        
+                        return (
+                          <div 
+                            key={adjacentLand.id} 
+                            className={`px-3 py-2.5 transition-colors ${
+                              isHovered ? "bg-blue-50" :
+                              isSelected ? "bg-primary/5 border-l-4 border-l-primary" : 
+                              "hover:bg-muted/50"
+                            }`}
+                            onMouseEnter={() => setHoveredLandId(adjacentLand.id)}
+                            onMouseLeave={() => setHoveredLandId(null)}
+                          >
+                            <div className="flex items-center gap-3">
+                              {/* 체크박스 - 활성화 */}
+                              <Checkbox 
+                                checked={isSelected}
+                                onCheckedChange={(checked) => handleAdminCheckLand(adjacentLand.id, checked as boolean)}
+                                className="shrink-0"
+                              />
+                              
+                              {/* 순서 마커 */}
+                              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-white shrink-0">
+                                {String.fromCharCode(65 + allLands.length + adjIdx)}
+                              </div>
+                              
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium">{adjacentLand.address}</p>
+                                <p className="text-xs text-muted-foreground">
+                                  {adjacentLand.landType} | {adjacentLand.remainingArea.toLocaleString()}m² ({adjacentLand.remainingRatio}%)
+                                </p>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                     
                     {/* 선택 요약 */}
