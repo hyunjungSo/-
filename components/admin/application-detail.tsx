@@ -1273,131 +1273,140 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             </div>
                           </div>
 
-                          {/* 추가 조건 */}
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            {application.aiResult?.farmMachineDifficulty && (
-                              <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
-                                <AlertTriangle className="h-3 w-3" /> 농기계 진입 곤란
-                              </span>
-                            )}
-                            {application.aiResult?.waterChannelLost && (
-                              <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
-                                <AlertTriangle className="h-3 w-3" /> 관개수로 상실
-                              </span>
-                            )}
-                            {application.aiResult?.accessRoadLost && (
-                              <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
-                                <AlertTriangle className="h-3 w-3" /> 진입로 상실
-                              </span>
-                            )}
-                            {application.aiResult?.isBlindLand && (
-                              <span className="inline-flex items-center gap-1 text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded">
-                                <AlertTriangle className="h-3 w-3" /> 맹지 발생
-                              </span>
-                            )}
-                          </div>
-
-                          {/* 상세 분석 내용 */}
-                          <div className="space-y-3 mt-4 pt-3 border-t border-emerald-200">
-                            {/* 판단 요약 */}
-                            {application.aiResult?.judgmentRationale && (
-                              <div className="flex items-start gap-2">
-                                <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                                <div>
-                                  <h4 className="text-sm font-semibold text-emerald-800">판단 요약</h4>
-                                  <p className="mt-1 text-sm leading-relaxed text-emerald-700">{application.aiResult.judgmentRationale.summary}</p>
+                          {/* 상세 분석 내용 - 아코디언 UI */}
+                          <Accordion type="single" collapsible className="w-full">
+                            <AccordionItem value="unified-detail" className="border-none">
+                              <AccordionTrigger className="hover:no-underline py-2 px-0">
+                                <span className="text-xs text-emerald-700 font-medium">상세 분석 보기</span>
+                              </AccordionTrigger>
+                              <AccordionContent className="pt-2">
+                                {/* 추가 조건 */}
+                                <div className="flex flex-wrap gap-2 mb-3">
+                                  {application.aiResult?.farmMachineDifficulty && (
+                                    <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                      <AlertTriangle className="h-3 w-3" /> 농기계 진입 곤란
+                                    </span>
+                                  )}
+                                  {application.aiResult?.waterChannelLost && (
+                                    <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                      <AlertTriangle className="h-3 w-3" /> 관개수로 상실
+                                    </span>
+                                  )}
+                                  {application.aiResult?.accessRoadLost && (
+                                    <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                      <AlertTriangle className="h-3 w-3" /> 진입로 상실
+                                    </span>
+                                  )}
+                                  {application.aiResult?.isBlindLand && (
+                                    <span className="inline-flex items-center gap-1 text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded">
+                                      <AlertTriangle className="h-3 w-3" /> 맹지 발생
+                                    </span>
+                                  )}
                                 </div>
-                              </div>
-                            )}
 
-                            {/* 법적 근거 */}
-                            {application.aiResult?.judgmentRationale && (
-                              <div className="flex items-start gap-2">
-                                <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-                                <div>
-                                  <h4 className="text-sm font-semibold text-emerald-800">법적 근거</h4>
-                                  <p className="mt-1 text-sm leading-relaxed text-emerald-700">{application.aiResult.judgmentRationale.legalBasis}</p>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* 적용 기준 */}
-                            {application.aiResult?.judgmentRationale?.appliedCriteria && (
-                              <div className="flex items-start gap-2">
-                                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                                <div>
-                                  <h4 className="text-sm font-semibold text-emerald-800">적용 기준</h4>
-                                  <ul className="mt-1 space-y-1">
-                                    {application.aiResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
-                                      <li key={cIdx} className="flex items-start gap-1.5 text-sm text-emerald-700">
-                                        <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-emerald-500" />
-                                        <span>{criteria}</span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* 상세 분석 */}
-                            {application.aiResult?.judgmentRationale?.detailedExplanation && (
-                              <div className="flex items-start gap-2">
-                                <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                                <div>
-                                  <h4 className="text-sm font-semibold text-emerald-800">상세 분석</h4>
-                                  <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-emerald-700 bg-white/50 p-2 rounded">
-                                    {application.aiResult.judgmentRationale.detailedExplanation}
-                                  </pre>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* 수동 확인 항목 */}
-                            {application.aiResult?.judgmentRationale?.manualCheckItems && application.aiResult.judgmentRationale.manualCheckItems.length > 0 && (
-                              <div className="flex items-start gap-2">
-                                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-                                <div>
-                                  <h4 className="text-sm font-semibold text-emerald-800">수동 확인 항목</h4>
-                                  <ul className="mt-1 space-y-1">
-                                    {application.aiResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
-                                      <li key={mIdx} className="flex items-center gap-1.5 text-sm text-amber-700">
-                                        <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
-                                        <span>{item}</span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* 판정 기준 충족 여부 */}
-                            {application.aiResult?.criteriaChecks && application.aiResult.criteriaChecks.length > 0 && (
-                              <div className="rounded-lg bg-white/60 p-3 border border-emerald-200">
-                                <p className="text-xs font-medium text-emerald-700 mb-2">판정 기준 충족 여부</p>
-                                <div className="space-y-2">
-                                  {application.aiResult.criteriaChecks.map((check, cIdx) => (
-                                    <div key={cIdx} className="flex items-center justify-between text-sm">
-                                      <span className="text-emerald-700">{check.criteriaName}</span>
-                                      <Badge 
-                                        variant={check.isMet ? "default" : "destructive"} 
-                                        className={`text-xs ${check.isMet ? "bg-emerald-600" : ""}`}
-                                      >
-                                        {check.isMet ? "충족" : "미충족"}
-                                      </Badge>
+                                <div className="space-y-3 pt-3 border-t border-emerald-200">
+                                  {/* 판단 요약 */}
+                                  {application.aiResult?.judgmentRationale && (
+                                    <div className="flex items-start gap-2">
+                                      <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                                      <div>
+                                        <h4 className="text-sm font-semibold text-emerald-800">판단 요약</h4>
+                                        <p className="mt-1 text-sm leading-relaxed text-emerald-700">{application.aiResult.judgmentRationale.summary}</p>
+                                      </div>
                                     </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
+                                  )}
 
-                            {/* 안내 문구 */}
-                            <div className="flex items-start gap-2 pt-2 border-t border-emerald-200">
-                              <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
-                              <p className="text-xs text-emerald-600">
-                                AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
-                              </p>
-                            </div>
-                          </div>
+                                  {/* 법적 근거 */}
+                                  {application.aiResult?.judgmentRationale && (
+                                    <div className="flex items-start gap-2">
+                                      <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                      <div>
+                                        <h4 className="text-sm font-semibold text-emerald-800">법적 근거</h4>
+                                        <p className="mt-1 text-sm leading-relaxed text-emerald-700">{application.aiResult.judgmentRationale.legalBasis}</p>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* 적용 기준 */}
+                                  {application.aiResult?.judgmentRationale?.appliedCriteria && (
+                                    <div className="flex items-start gap-2">
+                                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                                      <div>
+                                        <h4 className="text-sm font-semibold text-emerald-800">적용 기준</h4>
+                                        <ul className="mt-1 space-y-1">
+                                          {application.aiResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
+                                            <li key={cIdx} className="flex items-start gap-1.5 text-sm text-emerald-700">
+                                              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-emerald-500" />
+                                              <span>{criteria}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* 상세 분석 */}
+                                  {application.aiResult?.judgmentRationale?.detailedExplanation && (
+                                    <div className="flex items-start gap-2">
+                                      <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                                      <div>
+                                        <h4 className="text-sm font-semibold text-emerald-800">상세 분석</h4>
+                                        <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-emerald-700 bg-white/50 p-2 rounded">
+                                          {application.aiResult.judgmentRationale.detailedExplanation}
+                                        </pre>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* 수동 확인 항목 */}
+                                  {application.aiResult?.judgmentRationale?.manualCheckItems && application.aiResult.judgmentRationale.manualCheckItems.length > 0 && (
+                                    <div className="flex items-start gap-2">
+                                      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                      <div>
+                                        <h4 className="text-sm font-semibold text-emerald-800">수동 확인 항목</h4>
+                                        <ul className="mt-1 space-y-1">
+                                          {application.aiResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
+                                            <li key={mIdx} className="flex items-center gap-1.5 text-sm text-amber-700">
+                                              <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
+                                              <span>{item}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* 판정 기준 충족 여부 */}
+                                  {application.aiResult?.criteriaChecks && application.aiResult.criteriaChecks.length > 0 && (
+                                    <div className="rounded-lg bg-white/60 p-3 border border-emerald-200">
+                                      <p className="text-xs font-medium text-emerald-700 mb-2">판정 기준 충족 여부</p>
+                                      <div className="space-y-2">
+                                        {application.aiResult.criteriaChecks.map((check, cIdx) => (
+                                          <div key={cIdx} className="flex items-center justify-between text-sm">
+                                            <span className="text-emerald-700">{check.criteriaName}</span>
+                                            <Badge 
+                                              variant={check.isMet ? "default" : "destructive"} 
+                                              className={`text-xs ${check.isMet ? "bg-emerald-600" : ""}`}
+                                            >
+                                              {check.isMet ? "충족" : "미충족"}
+                                            </Badge>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* 안내 문구 */}
+                                  <div className="flex items-start gap-2 pt-2 border-t border-emerald-200">
+                                    <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
+                                    <p className="text-xs text-emerald-600">
+                                      AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                    </p>
+                                  </div>
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          </Accordion>
                         </div>
                       ) : (
                         // 부분 일단지 (그룹별로 표시)
@@ -2290,131 +2299,140 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </div>
                               </div>
 
-                              {/* 추가 조건 */}
-                              <div className="flex flex-wrap gap-2 mb-3">
-                                {application.aiResult?.farmMachineDifficulty && (
-                                  <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
-                                    <AlertTriangle className="h-3 w-3" /> 농기계 진입 곤란
-                                  </span>
-                                )}
-                                {application.aiResult?.waterChannelLost && (
-                                  <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
-                                    <AlertTriangle className="h-3 w-3" /> 관개수로 상실
-                                  </span>
-                                )}
-                                {application.aiResult?.accessRoadLost && (
-                                  <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
-                                    <AlertTriangle className="h-3 w-3" /> 진입로 상실
-                                  </span>
-                                )}
-                                {application.aiResult?.isBlindLand && (
-                                  <span className="inline-flex items-center gap-1 text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded">
-                                    <AlertTriangle className="h-3 w-3" /> 맹지 발생
-                                  </span>
-                                )}
-                              </div>
-
-                              {/* 상세 분석 내용 */}
-                              <div className="space-y-3 mt-4 pt-3 border-t border-emerald-200">
-                                {/* 판단 요약 */}
-                                {application.aiResult?.judgmentRationale && (
-                                  <div className="flex items-start gap-2">
-                                    <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                                    <div>
-                                      <h4 className="text-sm font-semibold text-emerald-800">판단 요약</h4>
-                                      <p className="mt-1 text-sm leading-relaxed text-emerald-700">{application.aiResult.judgmentRationale.summary}</p>
+{/* 상세 분석 내용 - 아코디언 UI */}
+                              <Accordion type="single" collapsible className="w-full">
+                                <AccordionItem value="admin-unified-detail" className="border-none">
+                                  <AccordionTrigger className="hover:no-underline py-2 px-0">
+                                    <span className="text-xs text-emerald-700 font-medium">상세 분석 보기</span>
+                                  </AccordionTrigger>
+                                  <AccordionContent className="pt-2">
+                                    {/* 추가 조건 */}
+                                    <div className="flex flex-wrap gap-2 mb-3">
+                                      {application.aiResult?.farmMachineDifficulty && (
+                                        <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                          <AlertTriangle className="h-3 w-3" /> 농기계 진입 곤란
+                                        </span>
+                                      )}
+                                      {application.aiResult?.waterChannelLost && (
+                                        <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                          <AlertTriangle className="h-3 w-3" /> 관개수로 상실
+                                        </span>
+                                      )}
+                                      {application.aiResult?.accessRoadLost && (
+                                        <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                          <AlertTriangle className="h-3 w-3" /> 진입로 상실
+                                        </span>
+                                      )}
+                                      {application.aiResult?.isBlindLand && (
+                                        <span className="inline-flex items-center gap-1 text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded">
+                                          <AlertTriangle className="h-3 w-3" /> 맹지 발생
+                                        </span>
+                                      )}
                                     </div>
-                                  </div>
-                                )}
 
-                                {/* 법적 근거 */}
-                                {application.aiResult?.judgmentRationale && (
-                                  <div className="flex items-start gap-2">
-                                    <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-                                    <div>
-                                      <h4 className="text-sm font-semibold text-emerald-800">법적 근거</h4>
-                                      <p className="mt-1 text-sm leading-relaxed text-emerald-700">{application.aiResult.judgmentRationale.legalBasis}</p>
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* 적용 기준 */}
-                                {application.aiResult?.judgmentRationale?.appliedCriteria && (
-                                  <div className="flex items-start gap-2">
-                                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                                    <div>
-                                      <h4 className="text-sm font-semibold text-emerald-800">적용 기준</h4>
-                                      <ul className="mt-1 space-y-1">
-                                        {application.aiResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
-                                          <li key={cIdx} className="flex items-start gap-1.5 text-sm text-emerald-700">
-                                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-emerald-500" />
-                                            <span>{criteria}</span>
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* 상세 분석 */}
-                                {application.aiResult?.judgmentRationale?.detailedExplanation && (
-                                  <div className="flex items-start gap-2">
-                                    <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                                    <div>
-                                      <h4 className="text-sm font-semibold text-emerald-800">���세 분석</h4>
-                                      <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-emerald-700 bg-white/50 p-2 rounded">
-                                        {application.aiResult.judgmentRationale.detailedExplanation}
-                                      </pre>
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* 수동 확인 항목 */}
-                                {application.aiResult?.judgmentRationale?.manualCheckItems && application.aiResult.judgmentRationale.manualCheckItems.length > 0 && (
-                                  <div className="flex items-start gap-2">
-                                    <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-                                    <div>
-                                      <h4 className="text-sm font-semibold text-emerald-800">수동 확인 항목</h4>
-                                      <ul className="mt-1 space-y-1">
-                                        {application.aiResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
-                                          <li key={mIdx} className="flex items-center gap-1.5 text-sm text-amber-700">
-                                            <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
-                                            <span>{item}</span>
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* 판정 기준 충족 여부 */}
-                                {application.aiResult?.criteriaChecks && application.aiResult.criteriaChecks.length > 0 && (
-                                  <div className="rounded-lg bg-white/60 p-3 border border-emerald-200">
-                                    <p className="text-xs font-medium text-emerald-700 mb-2">판정 기준 충족 여부</p>
-                                    <div className="space-y-2">
-                                      {application.aiResult.criteriaChecks.map((check, cIdx) => (
-                                        <div key={cIdx} className="flex items-center justify-between text-sm">
-                                          <span className="text-emerald-700">{check.criteriaName}</span>
-                                          <Badge 
-                                            variant={check.isMet ? "default" : "destructive"} 
-                                            className={`text-xs ${check.isMet ? "bg-emerald-600" : ""}`}
-                                          >
-                                            {check.isMet ? "충족" : "미충족"}
-                                          </Badge>
+                                    <div className="space-y-3 pt-3 border-t border-emerald-200">
+                                      {/* 판단 요약 */}
+                                      {application.aiResult?.judgmentRationale && (
+                                        <div className="flex items-start gap-2">
+                                          <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                                          <div>
+                                            <h4 className="text-sm font-semibold text-emerald-800">판단 요약</h4>
+                                            <p className="mt-1 text-sm leading-relaxed text-emerald-700">{application.aiResult.judgmentRationale.summary}</p>
+                                          </div>
                                         </div>
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
+                                      )}
 
-                                {/* 안내 문구 */}
-                                <div className="flex items-start gap-2 pt-2 border-t border-emerald-200">
-                                  <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
-                                  <p className="text-xs text-emerald-600">
-                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
-                                  </p>
-                                </div>
-                              </div>
+                                      {/* 법적 근거 */}
+                                      {application.aiResult?.judgmentRationale && (
+                                        <div className="flex items-start gap-2">
+                                          <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                          <div>
+                                            <h4 className="text-sm font-semibold text-emerald-800">법적 근거</h4>
+                                            <p className="mt-1 text-sm leading-relaxed text-emerald-700">{application.aiResult.judgmentRationale.legalBasis}</p>
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {/* 적용 기준 */}
+                                      {application.aiResult?.judgmentRationale?.appliedCriteria && (
+                                        <div className="flex items-start gap-2">
+                                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                                          <div>
+                                            <h4 className="text-sm font-semibold text-emerald-800">적용 기준</h4>
+                                            <ul className="mt-1 space-y-1">
+                                              {application.aiResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
+                                                <li key={cIdx} className="flex items-start gap-1.5 text-sm text-emerald-700">
+                                                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-emerald-500" />
+                                                  <span>{criteria}</span>
+                                                </li>
+                                              ))}
+                                            </ul>
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {/* 상세 분석 */}
+                                      {application.aiResult?.judgmentRationale?.detailedExplanation && (
+                                        <div className="flex items-start gap-2">
+                                          <FileText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                                          <div>
+                                            <h4 className="text-sm font-semibold text-emerald-800">상세 분석</h4>
+                                            <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-emerald-700 bg-white/50 p-2 rounded">
+                                              {application.aiResult.judgmentRationale.detailedExplanation}
+                                            </pre>
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {/* 수동 확인 항목 */}
+                                      {application.aiResult?.judgmentRationale?.manualCheckItems && application.aiResult.judgmentRationale.manualCheckItems.length > 0 && (
+                                        <div className="flex items-start gap-2">
+                                          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                          <div>
+                                            <h4 className="text-sm font-semibold text-emerald-800">수동 확인 항목</h4>
+                                            <ul className="mt-1 space-y-1">
+                                              {application.aiResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
+                                                <li key={mIdx} className="flex items-center gap-1.5 text-sm text-amber-700">
+                                                  <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
+                                                  <span>{item}</span>
+                                                </li>
+                                              ))}
+                                            </ul>
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {/* 판정 기준 충족 여부 */}
+                                      {application.aiResult?.criteriaChecks && application.aiResult.criteriaChecks.length > 0 && (
+                                        <div className="rounded-lg bg-white/60 p-3 border border-emerald-200">
+                                          <p className="text-xs font-medium text-emerald-700 mb-2">판정 기준 충족 여부</p>
+                                          <div className="space-y-2">
+                                            {application.aiResult.criteriaChecks.map((check, cIdx) => (
+                                              <div key={cIdx} className="flex items-center justify-between text-sm">
+                                                <span className="text-emerald-700">{check.criteriaName}</span>
+                                                <Badge 
+                                                  variant={check.isMet ? "default" : "destructive"} 
+                                                  className={`text-xs ${check.isMet ? "bg-emerald-600" : ""}`}
+                                                >
+                                                  {check.isMet ? "충족" : "미충족"}
+                                                </Badge>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {/* 안내 문구 */}
+                                      <div className="flex items-start gap-2 pt-2 border-t border-emerald-200">
+                                        <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
+                                        <p className="text-xs text-emerald-600">
+                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </AccordionContent>
+                                </AccordionItem>
+                              </Accordion>
                             </div>
                           ) : (
                             // 부분 일단지 (그룹별로 표시)
@@ -2786,7 +2804,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <div className="flex items-start gap-2 pt-2 border-t">
                                         <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                         <p className="text-xs text-muted-foreground">
-                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토�� 따라 결정됩니다.
                                         </p>
                                       </div>
                                     </div>
