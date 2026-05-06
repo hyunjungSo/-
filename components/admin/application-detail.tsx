@@ -226,6 +226,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     unifiedGroupId?: string;
     reason?: string;
     adminOptions: typeof adminAIOptions; // 관리자가 선택한 옵션 기록
+    adminCurrentUsage?: string;  // 담당자가 선택한 현재 활용지목
+    adminLandSubType?: string;   // 담당자가 선택한 건축물 용도
   }>>({});
   
   // 관리자 재판독 일단지 그룹
@@ -532,9 +534,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   };
   
   // 토지 유형별 면적 기준 (㎡)
-  const getAreaCriteria = (land: typeof allLands[0], landData?: typeof application.landDataList[0]) => {
+  const getAreaCriteria = (land: typeof allLands[0], landData?: typeof application.landDataList[0], adminLandSubType?: string) => {
     const landType = land.landType;
-    const subType = landData?.landSubType || "";
+    // 담당자가 선택한 건축물 용도 우선 적용, 없으면 신청 시 입력된 값 사용
+    const subType = adminLandSubType || landData?.landSubType || "";
     const remainingRatio = land.remainingRatio;
     
     if (landType === "대지") {
@@ -585,8 +588,19 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   };
   
   // 개별 필지 AI 분석 (관리자 옵션 반영)
-  const analyzeSingleLand = (land: typeof allLands[0], landData?: typeof application.landDataList[0], adminOptions?: typeof adminAIOptions) => {
-    const criteria = getAreaCriteria(land, landData);
+  const analyzeSingleLand = (
+    land: typeof allLands[0], 
+    landData?: typeof application.landDataList[0], 
+    adminOptions?: typeof adminAIOptions,
+    adminCurrentUsage?: string, // 담당자가 선택한 현재 활용지목
+    adminLandSubType?: string   // 담당자가 선택한 건축물 용도
+  ) => {
+    // 담당자가 선택한 현재 활용지목 우선 적용, 없으면 원래 지목 사용
+    const effectiveLandType = adminCurrentUsage 
+      ? (adminCurrentUsage === "대" ? "대지" : adminCurrentUsage === "전" || adminCurrentUsage === "답" ? "농지" : adminCurrentUsage === "임" ? "임야" : "기타")
+      : land.landType;
+    
+    const criteria = getAreaCriteria(land, landData, adminLandSubType);
     const isSmall = isSmallScaleLand(land);
     const shapeCriteria = checkShapeCriteria(land);
     const addr = parseAddress(land.address);
@@ -604,7 +618,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       description: `잔여 ${land.remainingArea}㎡ ${areaCheckMet ? "≤" : ">"} ${effectiveLimit}㎡`
     });
     
-    if (land.landType === "대지") {
+    if (effectiveLandType === "대지") {
       // 택지 경로 + 관리자 옵션 반영
       // 2. 접면도로 상태 변경
       const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || land.remainingRatio < 30;
@@ -632,7 +646,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         reasons.push("모든 기준 미충족");
       }
       
-    } else if (land.landType === "농지") {
+    } else if (effectiveLandType === "농지") {
       // 농지 경로 + 관리자 옵션 반영
       // 2. 접면 도로/수로 상실 여부
       const waterLost = adminOptions?.waterChannelLost || landData?.waterChannelLost || false;
@@ -924,7 +938,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           
           // [2단계] 개별 필지 상세 분석 (관리자 옵션 반영 - 해당 필지의 옵션 사용)
           const landOptions = adminAIOptionsPerLand[landId] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
-          const analysis = analyzeSingleLand(land, landData, landOptions);
+          const adminCurrentUsage = adminCurrentUsagePerLand[landId];
+          const adminLandSubType = adminLandSubTypePerLand[landId];
+          const analysis = analyzeSingleLand(land, landData, landOptions, adminCurrentUsage, adminLandSubType);
           const addr = parseAddress(land.address);
           
           newResults[landId] = {
@@ -936,6 +952,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             analysisDate: new Date().toISOString().split("T")[0],
             unifiedGroupId: undefined,
             reason: `[단독] ${analysis.reasons.join(", ")}`,
+            adminCurrentUsage: adminCurrentUsage, // 담당자가 선택한 현재 활용지목
+            adminLandSubType: adminLandSubType,   // 담당자가 선택한 건축물 용도
           };
         }
       });
