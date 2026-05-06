@@ -182,7 +182,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미�����������력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미�������������력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -1575,11 +1575,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   </div>
                                 )}
 
-                                {/* 안내 ��구 */}
+                                {/* 안내 ���구 */}
                                 <div className="flex items-start gap-2 pt-2 border-t border-emerald-200">
                                   <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
                                   <p className="text-xs text-emerald-600">
-                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결������������니다.
+                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결��������������니다.
                                   </p>
                                 </div>
                               </div>
@@ -2556,7 +2556,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <div className="flex items-start gap-2 pt-2 border-t border-emerald-200">
                                         <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
                                         <p className="text-xs text-emerald-600">
-                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                          AI 판��� 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                                         </p>
                                       </div>
                                     </div>
@@ -2780,7 +2780,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </div>
                               </AccordionTrigger>
                               <AccordionContent className="pb-4">
-                                {/* 기본 정보 */}
+                                {/* ���본 정보 */}
                                     <div className="grid grid-cols-3 gap-3 text-sm mb-4">
                                       <div className="rounded bg-white/80 p-2 text-center">
                                         <p className="text-xs text-muted-foreground">잔여 면적</p>
@@ -2983,17 +2983,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </>
                   ) : (
                     <>
-                      {/* 분석 프로세스 보기 버튼 */}
-                      <Button
-                        variant="outline"
-                        className="w-full gap-2"
-                        onClick={() => setShowAnalysisFlow(true)}
-                      >
-                        <PlayCircle className="h-4 w-4" />
-                        분석 프로세스 상세 보기
-                      </Button>
-                      
-                      {/* 적용된 옵션 - 필지별 현�� 상황 옵션 표시 */}
+                      {/* 적용된 옵션 - 필지별 현장 상황 옵션 표시 */}
                       {allLands.map((land, idx) => {
                         const landOptions = adminAIOptionsPerLand[land.id] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
                         if (!landOptions.accessRoadLost && !landOptions.waterChannelLost && !landOptions.farmMachineDifficulty) {
@@ -3207,6 +3197,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       담당자 AI 분석 결과입니다. 현장 상황 옵션이 적용되어 민원인 결과와 다를 수 있습니다.
                                     </p>
                                   </div>
+                                  
+                                  {/* 분석 프로세스 상세 보기 버튼 */}
+                                  <Button
+                                    variant="outline"
+                                    className="w-full gap-2 mt-3"
+                                    onClick={() => setShowAnalysisFlow(true)}
+                                  >
+                                    <PlayCircle className="h-4 w-4" />
+                                    분석 프로세스 상세 보기
+                                  </Button>
                                 </div>
                               </AccordionContent>
                             </AccordionItem>
