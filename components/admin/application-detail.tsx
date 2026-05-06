@@ -182,7 +182,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미�����력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미�������력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -542,7 +542,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
   // ===== [2단계] 대상 토지 상세 분석 (중앙토지수용위원회 기준) =====
   
-  // 편입 전 면적 기준 (㎡) - 초과 시 토지유형별 경로, 이하 시 소규모 토지 경로
+  // ���입 전 면적 기준 (㎡) - 초과 시 토지유형별 경로, 이하 시 소규모 토지 경로
   const AREA_THRESHOLD = {
     residential: { detached: 90, apartment: 330, commercial: 150, industrial: 330 },
     agricultural: 330,
@@ -610,7 +610,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     landData?: typeof application.landDataList[0], 
     adminOptions?: typeof adminAIOptions,
     adminCurrentUsage?: string, // 담당자가 선택한 현재 활용지목
-    adminLandSubType?: string   // 담당자가 선택한 건��물 용도
+    adminLandSubType?: string   // 담당���가 선택한 건��물 용도
   ) => {
     // 담당자가 선택한 현재 활용지목 우선 적용, 없으면 원래 지목 사용
     const effectiveLandType = adminCurrentUsage 
@@ -2188,6 +2188,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       ].map((adjacentLand, adjIdx) => {
                         const isSelected = adminCheckedLandIds.includes(adjacentLand.id);
                         const isHovered = hoveredLandId === adjacentLand.id;
+                        const isFocused = focusedLandId === adjacentLand.id;
+                        const landOptions = adminAIOptionsPerLand[adjacentLand.id] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
                         
                         return (
                           <div 
@@ -2200,8 +2202,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             onMouseEnter={() => setHoveredLandId(adjacentLand.id)}
                             onMouseLeave={() => setHoveredLandId(null)}
                           >
-                            <div className="flex items-center gap-3">
-                              {/* 체크박스 - 활성화 */}
+                            {/* 상단: 기본 정보 */}
+                            <div className="flex items-center gap-3 cursor-pointer" onClick={() => setFocusedLandId(isFocused ? null : adjacentLand.id)}>
+                              {/* 체크박스 */}
                               <Checkbox 
                                 checked={isSelected}
                                 onCheckedChange={(checked) => handleAdminCheckLand(adjacentLand.id, checked as boolean)}
@@ -2219,7 +2222,74 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   {adjacentLand.landType} | {adjacentLand.remainingArea.toLocaleString()}m² ({adjacentLand.remainingRatio}%)
                                 </p>
                               </div>
+                              
+                              {/* 토글 아이콘 */}
+                              <ChevronDown className={`h-4 w-4 transition-transform shrink-0 ${isFocused ? "rotate-180" : ""}`} />
                             </div>
+                            
+                            {/* 하단: 필지 상세 옵션 */}
+                            {isFocused && (
+                              <div className="mt-3 ml-7 space-y-3 border-t pt-3">
+                                {/* 현재 활용 지목 */}
+                                <div className="space-y-1.5">
+                                  <div className="flex items-center justify-between">
+                                    <label className="text-xs font-medium text-foreground">
+                                      현재 활용 지목 <span className="text-destructive">*</span>
+                                    </label>
+                                    <span className="text-xs text-muted-foreground">
+                                      공부상 지목: <span className="font-medium text-foreground">{adjacentLand.landCategory}</span>
+                                    </span>
+                                  </div>
+                                  <Select 
+                                    value={adminCurrentUsagePerLand[adjacentLand.id] || ""} 
+                                    onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [adjacentLand.id]: value }))}
+                                  >
+                                    <SelectTrigger className="h-8 bg-background text-sm">
+                                      <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="대">대 (택지)</SelectItem>
+                                      <SelectItem value="전">전 (밭)</SelectItem>
+                                      <SelectItem value="답">답 (논)</SelectItem>
+                                      <SelectItem value="임">임 (임야)</SelectItem>
+                                      <SelectItem value="잡">잡 (잡종지)</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                  <p className="text-[10px] text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
+                                </div>
+                                
+                                {/* 현장확인 옵션 */}
+                                <div className="space-y-1.5">
+                                  <span className="text-xs text-muted-foreground font-medium">현장확인:</span>
+                                  <div className="flex flex-col gap-2">
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                      <Checkbox 
+                                        checked={landOptions.farmMachineDifficulty}
+                                        onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'farmMachineDifficulty', checked === true)}
+                                        className="h-[18px] w-[18px]"
+                                      />
+                                      <span className="text-xs">농기계 곤란</span>
+                                    </label>
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                      <Checkbox 
+                                        checked={landOptions.accessRoadLost}
+                                        onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'accessRoadLost', checked === true)}
+                                        className="h-[18px] w-[18px]"
+                                      />
+                                      <span className="text-xs">접면도로 상실</span>
+                                    </label>
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                      <Checkbox 
+                                        checked={landOptions.waterChannelLost}
+                                        onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'waterChannelLost', checked === true)}
+                                        className="h-[18px] w-[18px]"
+                                      />
+                                      <span className="text-xs">관개용수로 상실</span>
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         );
                       })}
