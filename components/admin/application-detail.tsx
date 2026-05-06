@@ -1575,11 +1575,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   </div>
                                 )}
 
-                                {/* 안내 문구 */}
+                                {/* 안내 ��구 */}
                                 <div className="flex items-start gap-2 pt-2 border-t border-emerald-200">
                                   <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
                                   <p className="text-xs text-emerald-600">
-                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정���니다.
                                   </p>
                                 </div>
                               </div>
@@ -1833,7 +1833,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           },
                           {
                             id: "adjacent-002",
-                            address: "경기도 용인시 처인구 포곡읍 마성리 102",
+                            address: "경기도 용인시 처인구 포곡읍 마���리 102",
                             isIncluded: false,
                             isOwned: false,
                             isAdjacent: true,
@@ -2100,7 +2100,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [land.id]: value }))}
                                     >
                                       <SelectTrigger className="h-8 bg-background text-sm">
-                                        <SelectValue placeholder="건축물 용도를 선택해 주세요" />
+                                        <SelectValue placeholder="건축�� 용도를 선택해 주세요" />
                                       </SelectTrigger>
                                       <SelectContent>
                                         <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
@@ -2195,7 +2195,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               
                               {/* 순서 마커 */}
                               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-white shrink-0">
-                                {String.fromCharCode(65 + allLands.length + adjIdx)}
+                                {allLands.length + adjIdx + 1}
                               </div>
                               
                               <div className="flex-1 min-w-0">
@@ -2239,6 +2239,30 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   </Select>
                                   <p className="text-[10px] text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
                                 </div>
+                                
+                                {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
+                                {adminCurrentUsagePerLand[adjacentLand.id] === "대" && (
+                                  <div className="space-y-1.5 rounded bg-muted/30 p-2">
+                                    <label className="text-xs font-medium text-foreground">
+                                      건축물 용도 선택 <span className="text-destructive">*</span>
+                                    </label>
+                                    <Select 
+                                      value={adminLandSubTypePerLand[adjacentLand.id] || ""} 
+                                      onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [adjacentLand.id]: value }))}
+                                    >
+                                      <SelectTrigger className="h-8 bg-background text-sm">
+                                        <SelectValue placeholder="건축물 용도를 선택해 주세요" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
+                                        <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
+                                        <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
+                                        <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
+                                        <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                )}
                                 
                                 {/* 현장확인 옵션 */}
                                 <div className="space-y-1.5">
