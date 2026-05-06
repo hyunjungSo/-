@@ -145,7 +145,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 호버된 필지 ID (지도-리스트 연동)
   const [hoveredLandId, setHoveredLandId] = useState<string | null>(null);
   
-  // 포커스된 필지 ID (지도 중심 이동용)
+  // ��커스된 필지 ID (지도 중심 이동용)
   const [focusedLandId, setFocusedLandId] = useState<string | null>(null);
   
   // 선택된 인접 필지 정보 표시용
@@ -1164,7 +1164,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </div>
                                   )}
 
-                                  {/* 판정 기준 충족 여부 */}
+                                  {/* ���정 기준 충족 여부 */}
                                   {application.aiResult?.criteriaChecks && application.aiResult.criteriaChecks.length > 0 && (
                                     <div className="rounded-lg bg-white/60 p-3 border border-green-700/20">
                                       <p className="text-xs font-medium text-green-700 mb-2">판정 기준 충족 여부</p>
@@ -2115,11 +2115,20 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                   
                   {/* AI 분석 버튼 */}
-                  <Button
-                    onClick={handleRunAIAnalysis}
-                    disabled={isAIAnalyzing || adminCheckedLandIds.length === 0}
-                    className="w-full gap-2 bg-blue-600 hover:bg-blue-700"
-                  >
+                  {(() => {
+                    // 선택된 모든 필지가 현재 활용 지목을 선택했는지 확인
+                    const allSelectedLandsHaveCurrentUsage = adminCheckedLandIds.every(
+                      id => adminCurrentUsagePerLand[id] && adminCurrentUsagePerLand[id].trim() !== ""
+                    );
+                    const isDisabled = isAIAnalyzing || adminCheckedLandIds.length === 0 || !allSelectedLandsHaveCurrentUsage;
+                    
+                    return (
+                      <Button
+                        onClick={handleRunAIAnalysis}
+                        disabled={isDisabled}
+                        className="w-full gap-2 bg-blue-600 hover:bg-blue-700"
+                        title={!allSelectedLandsHaveCurrentUsage ? "모든 선택된 필지의 현재 활용 지목을 선택해주세요" : ""}
+                      >
                     {isAIAnalyzing ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -2131,7 +2140,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         AI 분석 실행 ({adminCheckedLandIds.length}필지)
                       </>
                     )}
-                  </Button>
+                      </Button>
+                    );
+                  })()}
                 </div>
                 
                 {/* 우측: 분석결과 */}
@@ -2300,7 +2311,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         </div>
                                       )}
 
-                                      {/* 수동 ��인 항목 */}
+                                      {/* 수�� ��인 항목 */}
                                       {application.aiResult?.judgmentRationale?.manualCheckItems && application.aiResult.judgmentRationale.manualCheckItems.length > 0 && (
                                         <div className="flex items-start gap-2">
                                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
@@ -2704,7 +2715,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <div className="flex items-start gap-2 pt-2 border-t">
                                         <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                         <p className="text-xs text-muted-foreground">
-                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토�� 따라 결정됩니다.
                                         </p>
                                       </div>
                                     </div>
