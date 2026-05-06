@@ -491,7 +491,7 @@ export function ApplicationFormSection({
                     </span>
                   </div>
                 </div>
-
+              </div>
             )}
           </CardContent>
         </Card>
