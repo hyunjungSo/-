@@ -231,7 +231,7 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.2195, lng: 127.2995 },
     ],
   },
-  // 동일 소유자 복수 필지 (일단지 판정 케이스) - 주 필지
+  // 동일 소유자 복수 필지 - 주 필지
   {
     id: "land-007",
     address: "경기도 성남시 분당구 야탑동 100-1",
@@ -257,8 +257,8 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.4108, lng: 127.1280 },
     ],
   },
-  // ========== 강남 지역 필지들 (일단지 판정 테스트용) ==========
-  // 강남 필지 1: 김대현 소유 (일단지 그룹 1)
+  // ========== 강남 지역 필지들 ==========
+  // 강남 필지 1: 김대현 소유
   {
     id: "land-gangnam-001",
     address: "서울특별시 강남구 역삼동 123-1",
@@ -284,7 +284,7 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.5003, lng: 127.0365 },
     ],
   },
-  // 강남 필지 2: 김대현 소유 (일단지 그룹 1 - 동일 소유자, 동일 지목)
+  // 강남 필지 2: 김대현 소유 (동일 소유자, 동일 지목)
   {
     id: "land-gangnam-002",
     address: "서울특별시 강남구 역삼동 123-2",
@@ -310,7 +310,7 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.5008, lng: 127.0375 },
     ],
   },
-  // 강남 필지 3: 이서현 소유 (일단지 미해당 - 다른 소유자)
+  // 강남 필지 3: 이서현 소유 (다른 소유자)
   {
     id: "land-gangnam-003",
     address: "서울특별시 강남구 역삼동 125-1",
@@ -336,7 +336,7 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.5013, lng: 127.0385 },
     ],
   },
-  // 강남 필지 4: 박준혁 소유 (일단지 미해당 - 다른 소유자)
+  // 강남 필지 4: 박준혁 소유 (다른 소유자)
   {
     id: "land-gangnam-004",
     address: "서울특별시 강남구 역삼동 127-3",
@@ -666,8 +666,8 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.2083, lng: 127.0835 },
     ],
   },
-  // ===== 일단지 해당 케이스 =====
-  // 일단지 해당: 3필지 농지 (동일 소유자, 연속된 농지)
+  // ===== 복수필지 매수 케이스 =====
+  // 복수필지: 3필지 농지 (동일 소유자)
   {
     id: "land-unified-001",
     address: "경기도 안성시 미양면 계륵리 501-1",
@@ -743,7 +743,7 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.0053, lng: 127.2775 },
     ],
   },
-  // 일단지 해당: 대지+농지 혼합 (4필지, 다양한 용도)
+  // 복수필지: 대지+농지 혼합 (4필지, 다양한 용도)
   {
     id: "land-unified-004",
     address: "충청남도 천안시 서북구 성정동 777-1",
@@ -844,8 +844,8 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 36.8158, lng: 127.1585 },
     ],
   },
-  // ===== 일단지 인정 케이스 (개별 면적 미달 but 일단지 합산으로 매수 인정) =====
-  // 일단지 인정: 2필지 소규모 대지 (개별로는 면적 기준 미달, 합산 시 맹지 판정으로 매수)
+  // ===== 소규모 복수필지 케이스 =====
+  // 소규모 복수필지: 2필지 대지 (맹지 발생으로 매수)
   {
     id: "land-recognized-001",
     address: "경기도 용인시 처인구 양지면 대대리 123-1",
@@ -896,7 +896,7 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.2348, lng: 127.2865 },
     ],
   },
-  // 일단지 인정: 5필지 산지 (임야 일괄 조림지)
+  // 복수필지: 5필지 산지 (임야 조림지)
   {
     id: "land-recognized-003",
     address: "강원도 원주시 지정면 신평리 산 101",
@@ -1022,11 +1022,11 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.3175, lng: 127.9540 },
     ],
   },
-  // ===== 혼합 케이스 (일부 일단지 해당 + 일부 미해당) =====
-  // 4필지 중 2필지만 일단지 판정, 나머지 2필지는 개별 판정
+  // ===== 혼합 케이스 (일부 매수 + 일부 미해당) =====
+  // 4필지 중 2필지 매수, 나머지 2필지 미해당
   {
     id: "land-mixed-001",
-    address: "경기��� 평택시 포승읍 내기리 200-1",
+    address: "경기����� 평택시 포승읍 내기리 200-1",
     originalArea: 500,
     includedArea: 350,
     remainingArea: 150,
@@ -1467,11 +1467,11 @@ export const dummyApplications: Application[] = [
     adminName: "홍길동",
     statusUpdatedAt: "2026-04-15",
   },
-  // 동일 소유자 복수 필지 신청 (일단지 신청 케이스)
+  // 동일 소유자 복수 필지 신청 케이스
   {
     id: "app-005",
     applicationNumber: "2026-0405-001",
-    applicationType: "unified", // 일단지 신청
+    applicationType: "multiple", // 복수필지 신청
     applicantName: "강동원",
     applicantContact: "010-6666-7777",
     applicantAddress: "경기도 성남시 분당구 야탑동 50",
@@ -1481,12 +1481,12 @@ export const dummyApplications: Application[] = [
       sameOwner: true,
       continuous: true,
       sameUsage: true,
-      isUnifiedParcel: true,
+      isUnifiedParcel: false,
     },
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "도로 편입으로 인접한 2개 필지가 모두 불규칙한 형태로 남아 건축이 불가능합니다. 일단지로 판정하여 병합 처리를 요청드립니다.",
+    reason: "도로 편입으로 인접한 2개 필지가 모두 불규칙한 형태로 남아 건축이 불가능합니다. 각 필지별로 매수 검토를 요청드립니다.",
     // 토지별 민원인 입력 데이터
     landDataList: [
       {
@@ -1847,8 +1847,8 @@ export const dummyApplications: Application[] = [
     adminName: "최영호",
     statusUpdatedAt: "2026-04-20",
   },
-  // ===== 일단지 해당 케이스 (신규) =====
-  // 일단지 해당 케이스 1: 박일단 - 3필지 농지 (AI 분석 완료, 매수 판정)
+  // ===== 복수필지 매수 케이스 (신규) =====
+  // 복수필지 케이스 1: 박일단 - 3필지 농지 (AI 분석 완료, 매수 판정)
   {
     id: "app-unified-001",
     applicationNumber: "2026-0425-001",
@@ -1861,12 +1861,12 @@ export const dummyApplications: Application[] = [
       sameOwner: true,
       continuous: true,
       sameUsage: true, // 모두 농지
-      isUnifiedParcel: true,
+      isUnifiedParcel: false,
     },
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 인접한 농지로 일단지로 사용해 왔으나, 편입 후 각 필지가 불규칙한 형태로 남아 농기계 진입이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 일단지로 판정하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 진입이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -1936,7 +1936,7 @@ export const dummyApplications: Application[] = [
     adminName: "홍길동",
     statusUpdatedAt: "2026-04-28",
   },
-  // 일단지 해당 케이스 2: 최혼합 - 4필지 혼합 (대지+농지+잡종지, 검토 중)
+  // 복수필지 케이스 2: 최혼합 - 4필지 혼합 (대지+농지+잡종지, 검토 중)
   {
     id: "app-unified-002",
     applicationNumber: "2026-0426-001",
@@ -1949,12 +1949,12 @@ export const dummyApplications: Application[] = [
       sameOwner: true,
       continuous: true,
       sameUsage: false, // 대지+농지+잡종지 혼합
-      isUnifiedParcel: true,
+      isUnifiedParcel: false,
     },
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "천안 도시개발사업으로 인해 소유한 4개 필지(대지 1, 농지 2, 잡종지 1)가 모두 도로에 편입되었습니다. 대지에는 주택이 있었으나 철거되었고, 인접한 농지와 잡종지는 주택 부속 텃밭과 창고용지로 일체적으로 사용해 왔습니다. 편입 후 각 필지가 불규칙한 형태로 남아 건축 및 농업이 불가능합니다. 일단지로 판정하여 일괄 매수를 신청합니다.",
+    reason: "천안 도시개발사업으로 인해 소유한 4개 필지(대지 1, 농지 2, 잡종지 1)가 모두 도로에 편입되었습니다. 대지에는 주택이 있었으나 철거되었고, 인접한 농지와 잡종지는 주택 부속 텃밭과 창고용지로 사용해 왔습니다. 편입 후 각 필지가 불규칙한 형태로 남아 건축 및 농업이 불가능합니다. 4필지 모두 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "대" as const,
@@ -2030,8 +2030,8 @@ export const dummyApplications: Application[] = [
     adminName: "홍길동",
     statusUpdatedAt: "2026-04-27",
   },
-  // ===== 일단지 인정 케이스 (개별 미달 → 합산 인정) =====
-  // 일단지 인정 케이스 1: 김인정 - 2필지 대지 (개별 면적 기준 미달이나 합산 시 맹지로 매수 인정)
+  // ===== 소규모 복수필지 케이스 =====
+  // 소규모 복수필지 케이스 1: 김인정 - 2필지 대지 (개별 필지별 맹지 발생으로 매수 인정)
   {
     id: "app-recognized-001",
     applicationNumber: "2026-0427-001",
@@ -2097,7 +2097,7 @@ export const dummyApplications: Application[] = [
           "잔여면적: 140㎡ (건축 곤란)",
           "맹지 판정: 양 필지 모두 접면도로 상실로 건축허가 불가",
         ],
-        detailedExplanation: "2필지 대지\n\n[필지 1] 123-1: 180㎡ → 80㎡ (삼각형)\n[필지 2] 123-2: 150㎡ → 60㎡ (자루형)\n\n고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 인정됩니다.",
+        detailedExplanation: "2필지 대지\n\n[필지 1] 123-1: 180㎡ → 80㎡ (삼각형)\n[필지 2] 123-2: 150㎡ → 60㎡ (자루형)\n\n고속도로 편입으�� 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 인정됩니다.",
         manualCheckItems: [],
       },
     },
@@ -2107,7 +2107,7 @@ export const dummyApplications: Application[] = [
     adminName: "김철수",
     statusUpdatedAt: "2026-04-29",
   },
-  // 일단지 인정 케이스 2: 이산림 - 5필지 산지 (개별로는 면적 미달, 합산 시 조림지 분단으로 매수 인정)
+  // 소규모 복수필지 케이스 2: 이산림 - 5필지 산지 (조림지 분단으로 매수 인정)
   {
     id: "app-recognized-002",
     applicationNumber: "2026-0428-001",
@@ -2120,12 +2120,12 @@ export const dummyApplications: Application[] = [
       sameOwner: true,
       continuous: true,
       sameUsage: true,
-      isUnifiedParcel: true,
+      isUnifiedParcel: false,
     },
     actualUsage: "임",
     reportedShape: "부정형",
     farmMachineDifficulty: false,
-    reason: "원주-제천 고속도로 건설로 인해 소유한 5개 산지 필지가 편입되었습니다. 30년간 일괄 조림하여 관리해 온 임야로, 고속도로가 중앙을 관통하여 조림지가 양분되었습니다. 개별 필지의 잔여면적은 산지 기준(990㎡)을 초과하나, 조림지가 분단되어 일체적 산림경영이 불가능합니다. 일단지 인정을 통한 매수를 신청합니다.",
+    reason: "원주-제천 고속도로 건설로 인해 소유한 5개 산지 필지가 편입되었습니다. 30년간 조림하여 관리해 온 임야로, 고속도로가 중앙을 관통하여 조림지가 양분되었습니다. 각 필지별로 형상이 불량해지고 접근로가 차단되어 산림경영이 불가능합니다. 5필지 모두 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "임" as const,
@@ -2173,7 +2173,7 @@ export const dummyApplications: Application[] = [
         waterChannelLost: false,
       },
     ],
-    attachments: ["토지대장_산101.pdf", "토지대장_산102.pdf", "토지대장_산103.pdf", "토지대장_산104.pdf", "토지대장_산105.pdf", "등기부등본.pdf", "산림경영계획서.pdf", "조림현황사진.jpg"],
+    attachments: ["토지대장_산101.pdf", "토지대���_산102.pdf", "토지대장_산103.pdf", "토지대장_산104.pdf", "토지대장_산105.pdf", "등기부등본.pdf", "산림경영계획서.pdf", "조림현황사진.jpg"],
     status: "검토중",
     adminStatus: "진행중",
     appliedAt: "2026-04-28",
@@ -2208,7 +2208,7 @@ export const dummyApplications: Application[] = [
     statusUpdatedAt: "2026-04-29",
   },
   // ===== 혼합 케이스: 일부 매수 + 일부 미해당 =====
-  // 정혼합 - 4필지 모두 개별 판정 (일단지 아님 - 지목/용도가 서로 다름)
+  // 정혼합 - 4필지 개별 판정
   // 내기리 200-1, 200-2: 답(논), 면적 기준 충족 → 매수
   // 만호리 55-1, 55-2: 전(밭), 면적 기준 미충족 → 미해당
   {
@@ -2223,7 +2223,7 @@ export const dummyApplications: Application[] = [
       sameOwner: true,
       continuous: false, // 내기리와 만호리가 떨어져 있음
       sameUsage: false, // 답(논)과 전(밭)으로 용도 다름
-      isUnifiedParcel: false, // 전체는 일단지 아님
+      isUnifiedParcel: false,
     },
     actualUsage: "답",
     reportedShape: "삼각형",
@@ -2303,7 +2303,7 @@ export const dummyApplications: Application[] = [
         manualCheckItems: ["만호리 필지 현장 확인", "농기계 진입로 상태 확인"],
       },
       unifiedParcelAnalysis: {
-        isUnifiedParcel: false, // 전체 4필지는 일단지 아님 (부분 일단지 있음)
+        isUnifiedParcel: false,
         totalParcels: 4,
         ownedParcels: 4,
         adjacentParcels: 2, // 내기리 200-1, 200-2만 연접
@@ -2313,7 +2313,7 @@ export const dummyApplications: Application[] = [
           sameUsage: false, // 전체는 용도 불일치 (답/전)
         },
         combinedArea: 1480,
-        explanation: "4필지 중 내기리 200-1, 200-2는 동일 소유자, 연접, 동일 용도(답)로 일단지 요건 충족. 만호리 55-1, 55-2는 내기리와 비연접하고 용도도 상이(전)하여 일단지에 포함 불가. 내기리 일단지는 합산 잔여면적 330㎡, 형상지수 5.0으로 매수 기준 충족. 만호리 개별 필지는 면적 기준 미충족으로 미해당.",
+        explanation: "4필지 개별 분석 결과: 내기리 200-1, 200-2는 면적 기준 충족 및 형상 불량으로 매수 판정. 만호리 55-1, 55-2는 면적 기준 미충족, 형상 양호로 미해당 판정.",
       },
       // 필지별 판정 결과 (개별 분석)
       landJudgments: [
@@ -2326,11 +2326,11 @@ export const dummyApplications: Application[] = [
     adminName: "홍길동",
     statusUpdatedAt: "2026-04-30",
   },
-  // 일단지 신청 -> 담당자 재분석으로 복수필지로 변경된 케이스
+  // 복수필지 신청 케이스
   {
     id: "app-unified-to-multiple",
     applicationNumber: "2026-0501-001",
-    applicationType: "unified", // 민원인이 일단지로 신청
+    applicationType: "multiple", // 복수필지 신청
     applicantName: "정민재",
     applicantContact: "010-5555-1234",
     applicantAddress: "경기도 용인시 처인구 포곡읍 둔전리 200",
@@ -2366,12 +2366,12 @@ export const dummyApplications: Application[] = [
       sameOwner: true,
       continuous: true,
       sameUsage: true,
-      isUnifiedParcel: true, // 민원인 입장에서 일단지 조건 충족으로 신청
+      isUnifiedParcel: false,
     },
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "도로 편입으로 인접한 2개 필지가 함께 잔여지로 남았습니다. 동일 소유자이며 연접하고 있어 일단지로 판정하여 매수를 요청드립니다.",
+    reason: "도로 편입으로 인접한 2개 필지가 함께 잔여지로 남았습니다. 각 필지 모두 형상이 불량하고 건축이 곤란하여 매수를 요청드립니다.",
     landDataList: [
       {
         currentUsage: "대" as const,
@@ -2396,7 +2396,7 @@ export const dummyApplications: Application[] = [
     status: "검토중",
     adminStatus: "진행중",
     appliedAt: "2026-05-01",
-    // 민원인 AI 분석 결과 - 일단지 판정 (매수)
+    // 민원인 AI 분석 결과 - 개별 필지 판정 (매수)
     aiResult: {
       provisionalJudgment: "매수",
       confidence: 88,
