@@ -2455,10 +2455,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </AccordionItem>
                   );
                 })}
-            </Accordion>
-          </CardContent>
-        </Card>
-      )}
+              </Accordion>
+            </CardContent>
+          </Card>
+        )}
 
       {/* 진행상황 선택 */}
       <Card>
