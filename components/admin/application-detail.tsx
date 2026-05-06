@@ -1173,7 +1173,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                        <span className="text-green-700 font-medium">신청필지</span>
+                        <span className="text-emerald-700 font-medium">신청필지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
@@ -1217,7 +1217,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           value={land.id}
                           className={`rounded-lg border px-4 ${
                             landResult?.provisionalJudgment === "매수"
-                              ? "border-green-200 bg-green-50/50"
+                              ? "border-emerald-200 bg-emerald-50/50"
                               : landResult?.provisionalJudgment === "매수불가"
                                 ? "border-red-200 bg-red-50/50"
                                 : "border-slate-200 bg-slate-50/50"
@@ -1233,7 +1233,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                               {landResult && (
                                 <Badge className={`ml-2 ${
-                                  landResult.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"
+                                  landResult.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"
                                 }`}>
                                   {landResult.provisionalJudgment}
                                 </Badge>
@@ -1376,7 +1376,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <span className="text-muted-foreground">{check.criteriaName}</span>
                                         <Badge 
                                           variant={check.isMet ? "default" : "destructive"} 
-                                          className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}
+                                          className={`text-xs ${check.isMet ? "bg-emerald-600" : ""}`}
                                         >
                                           {check.isMet ? "충족" : "미충족"}
                                         </Badge>
@@ -1512,7 +1512,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                        <span className="text-green-700 font-medium">선택된 필지</span>
+                        <span className="text-emerald-700 font-medium">선택된 필지</span>
                       </div>
                     </div>
                   </div>
@@ -1620,7 +1620,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <Badge 
                                   variant="outline" 
                                   className={`text-xs shrink-0 ${
-                                    landResult.provisionalJudgment === "매수" ? "border-green-500 text-green-700 bg-green-50" : 
+                                    landResult.provisionalJudgment === "매수" ? "border-emerald-500 text-emerald-700 bg-emerald-50" : 
                                     landResult.provisionalJudgment === "매수불가" ? "border-red-500 text-red-700 bg-red-50" : 
                                     "border-amber-500 text-amber-700 bg-amber-50"
                                   }`}
@@ -1841,7 +1841,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               value={land.id}
                               className={`rounded-lg border px-4 ${
                                 aiResult?.provisionalJudgment === "매수"
-                                  ? "border-green-200 bg-green-50/50"
+                                  ? "border-emerald-200 bg-emerald-50/50"
                                   : "border-red-200 bg-red-50/50"
                               }`}
                             >
@@ -1849,7 +1849,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className="flex items-center justify-between w-full pr-2">
                                   <div className="flex items-center gap-2">
                                     <span className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-white ${
-                                      aiResult?.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"
+                                      aiResult?.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"
                                     }`}>
                                       {String.fromCharCode(65 + idx)}
                                     </span>
@@ -1859,7 +1859,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </div>
                                   </div>
                                   {aiResult?.provisionalJudgment && (
-                                    <Badge className={aiResult.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"}>
+                                    <Badge className={aiResult.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"}>
                                       {aiResult.provisionalJudgment}
                                     </Badge>
                                   )}
@@ -1990,7 +1990,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                             <span className="text-muted-foreground">{check.criteriaName}</span>
                                             <Badge 
                                               variant={check.isMet ? "default" : "destructive"} 
-                                              className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}
+                                              className={`text-xs ${check.isMet ? "bg-emerald-600" : ""}`}
                                             >
                                               {check.isMet ? "충족" : "미충족"}
                                             </Badge>
@@ -2097,7 +2097,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               value={landId}
                               className={`rounded-lg border px-4 ${
                                 result.provisionalJudgment === "매수"
-                                  ? "border-green-200 bg-green-50/50"
+                                  ? "border-emerald-200 bg-emerald-50/50"
                                   : "border-red-200 bg-red-50/50"
                               }`}
                             >
@@ -2105,7 +2105,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className="flex items-center justify-between w-full pr-2">
                                   <div className="flex items-center gap-2">
                                     <span className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-white ${
-                                      result.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"
+                                      result.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"
                                     }`}>
                                       {String.fromCharCode(65 + landIdx)}
                                     </span>
@@ -2114,7 +2114,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
                                     </div>
                                   </div>
-                                  <Badge className={`ml-2 ${result.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"}`}>
+                                  <Badge className={`ml-2 ${result.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"}`}>
                                     {result.provisionalJudgment}
                                   </Badge>
                                 </div>
@@ -2244,7 +2244,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                             <span className="text-muted-foreground">{check.criteriaName}</span>
                                             <Badge 
                                               variant={check.isMet ? "default" : "destructive"} 
-                                              className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}
+                                              className={`text-xs ${check.isMet ? "bg-emerald-600" : ""}`}
                                             >
                                               {check.isMet ? "충족" : "미충족"}
                                             </Badge>
@@ -2327,13 +2327,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <AccordionItem 
                       key={land.id} 
                       value={land.id}
-                      className={`rounded-lg border ${isReviewed ? 'border-green-200 bg-green-50/30' : 'border-gray-200'}`}
+                      className={`rounded-lg border ${isReviewed ? 'border-emerald-200 bg-emerald-50/30' : 'border-gray-200'}`}
                     >
                       <AccordionTrigger className="hover:no-underline px-4 py-3">
                         <div className="flex items-center justify-between w-full pr-2">
                           <div className="flex items-center gap-3">
                             <div className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white ${
-                              isReviewed ? 'bg-green-600' : 'bg-gray-400'
+                              isReviewed ? 'bg-emerald-600' : 'bg-gray-400'
                             }`}>
                               {idx + 1}
                             </div>
@@ -2350,7 +2350,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             )}
                             {landReview.landJudgment && (
                               <Badge className={
-                                landReview.landJudgment === "매수" ? "bg-green-600" :
+                                landReview.landJudgment === "매수" ? "bg-emerald-600" :
                                 landReview.landJudgment === "기각" ? "bg-red-500" : "bg-amber-500"
                               }>
                                 {landReview.landJudgment}
