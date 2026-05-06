@@ -1579,7 +1579,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className="flex items-start gap-2 pt-2 border-t border-emerald-200">
                                   <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
                                   <p className="text-xs text-emerald-600">
-                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결������니다.
+                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결��������니다.
                                   </p>
                                 </div>
                               </div>
@@ -1617,7 +1617,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               {/* 필지별 매수/불매수 Badge 표시 */}
                               {landResult && (
                                 <Badge className={`ml-2 shrink-0 ${
-                                  landResult.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"
+                                  landResult.provisionalJudgment === "매���" ? "bg-emerald-600" : "bg-red-500"
                                 }`}>
                                   {landResult.provisionalJudgment}
                                 </Badge>
@@ -2113,7 +2113,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   </div>
                                 )}
                                 
-                                {/* ��장확인 옵션 */}
+                                {/* 현장확인 옵션 */}
                                 <div className="space-y-1.5">
                                   <span className="text-xs text-muted-foreground font-medium">현장확인:</span>
                                   <div className="flex flex-col gap-2">
@@ -2219,7 +2219,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       현재 활용 지목 <span className="text-destructive">*</span>
                                     </label>
                                     <span className="text-xs text-muted-foreground">
-                                      공부상 지목: <span className="font-medium text-foreground">{adjacentLand.landCategory}</span>
+                                      공부상 지목: <span className="font-medium text-foreground">{adjacentLand.landType}</span>
                                     </span>
                                   </div>
                                   <Select 
