@@ -231,11 +231,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               <TableHeader>
                 <TableRow>
                   <TableHead>접수번호</TableHead>
-                  <TableHead>신청유형</TableHead>
                   <TableHead>신청인</TableHead>
                   <TableHead>신청일</TableHead>
                   <TableHead>대상 지번</TableHead>
                   <TableHead>토지 유형</TableHead>
+                  <TableHead>필지 수</TableHead>
                   <TableHead>면적</TableHead>
                   <TableHead>담당자</TableHead>
                   <TableHead>진행상황</TableHead>
@@ -252,29 +252,15 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     <TableCell className="font-medium">
                       {app.applicationNumber}
                     </TableCell>
-                    <TableCell>
-                      {(() => {
-                        // 일단지 판별: aiResult에 unifiedLandAnalysis가 있거나 applicationType이 unified인 경우
-                        const isUnified = app.aiResult?.unifiedLandAnalysis || 
-                          app.aiResult?.landJudgments?.some(lj => lj.unifiedGroupId);
-                        // 복수필지: additionalLands가 있는 경우
-                        const isMultiple = app.additionalLands && app.additionalLands.length > 0;
-                        
-                        if (isUnified) {
-                          return <span className="text-sm text-foreground">일단지</span>;
-                        } else if (isMultiple) {
-                          return <span className="text-sm text-foreground">복수필지 ({app.additionalLands!.length + 1})</span>;
-                        } else {
-                          return <span className="text-sm text-foreground">단일필지</span>;
-                        }
-                      })()}
-                    </TableCell>
                     <TableCell>{app.applicantName}</TableCell>
                     <TableCell>{app.appliedAt}</TableCell>
                     <TableCell className="max-w-[200px] truncate">
                       {app.landInfo.address}
                     </TableCell>
                     <TableCell>{app.landInfo.landType}</TableCell>
+                    <TableCell>
+                      {(app.additionalLands?.length || 0) + 1}필지
+                    </TableCell>
                     <TableCell>{app.landInfo.remainingArea.toLocaleString()}㎡</TableCell>
                     <TableCell>
                       <span className={app.adminName ? "text-foreground" : "text-muted-foreground"}>
