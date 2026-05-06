@@ -2842,47 +2842,36 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             area: 1234,
                             owner: "박OO",
                           },
-                        ].map((adjacent, adjIdx) => (
+                        ].map((adjacent) => (
                           <AccordionItem 
                             key={adjacent.id}
                             value={adjacent.id}
-                            className="rounded-lg border border-dashed border-amber-300 bg-amber-50/50 px-4"
+                            className="rounded-lg border border-slate-200 px-4"
                           >
-                            <AccordionTrigger className="hover:no-underline py-3">
-                              <div className="flex items-center justify-between w-full pr-2">
-                                <div className="flex items-center gap-2">
-                                  <div className="flex h-5 w-5 items-center justify-center rounded border-2 border-dashed border-amber-500 bg-amber-100 text-xs font-bold text-amber-700 shrink-0">
-                                    {String.fromCharCode(97 + adjIdx)}
-                                  </div>
-                                  <div className="text-left">
-                                    <div className="flex items-center gap-2">
-                                      <p className="font-medium text-sm text-amber-800">{adjacent.address}</p>
-                                      <Badge variant="outline" className="text-[10px] h-4 px-1 border-amber-400 text-amber-600 shrink-0">인접</Badge>
-                                    </div>
-                                    <p className="text-xs text-amber-600">{adjacent.landCategory} | {adjacent.area.toLocaleString()}m² | 소유자: {adjacent.owner}</p>
-                                  </div>
+                            <AccordionTrigger className="hover:no-underline py-3 flex items-center justify-between w-full">
+                              <div className="flex items-center justify-between w-full pr-2 flex-1">
+                                <div className="text-left flex-1">
+                                  <p className="font-medium text-sm">{adjacent.address}</p>
+                                  <p className="text-xs text-muted-foreground">{adjacent.landType} | {adjacent.landCategory}</p>
                                 </div>
                               </div>
                             </AccordionTrigger>
                             <AccordionContent className="pb-4">
-                              <div className="text-sm text-amber-700 space-y-2">
+                              <div className="text-sm space-y-2">
                                 <div className="grid grid-cols-2 gap-2 text-xs">
                                   <div>
-                                    <span className="text-amber-600">지목:</span> <span className="font-medium">{adjacent.landCategory}</span>
+                                    <span className="text-muted-foreground">지목:</span> <span className="font-medium ml-1">{adjacent.landCategory}</span>
                                   </div>
                                   <div>
-                                    <span className="text-amber-600">면적:</span> <span className="font-medium">{adjacent.area.toLocaleString()}m²</span>
+                                    <span className="text-muted-foreground">면적:</span> <span className="font-medium ml-1">{adjacent.area.toLocaleString()}m²</span>
                                   </div>
                                   <div>
-                                    <span className="text-amber-600">소유자:</span> <span className="font-medium">{adjacent.owner}</span>
+                                    <span className="text-muted-foreground">소유자:</span> <span className="font-medium ml-1">{adjacent.owner}</span>
                                   </div>
                                   <div>
-                                    <span className="text-amber-600">유형:</span> <span className="font-medium">{adjacent.landType}</span>
+                                    <span className="text-muted-foreground">유형:</span> <span className="font-medium ml-1">{adjacent.landType}</span>
                                   </div>
                                 </div>
-                                <p className="text-xs text-amber-600 pt-2 border-t border-amber-200">
-                                  ���접 필지는 일단지 판정 시 참고 자료로 활용됩니다.
-                                </p>
                               </div>
                             </AccordionContent>
                           </AccordionItem>
