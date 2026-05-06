@@ -182,7 +182,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미���력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -1834,7 +1834,37 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           };
                         });
                         
-return applicationParcels;
+                        // 인접 필지 데이터
+                        const adjacentParcels = [
+                          {
+                            id: "adjacent-001",
+                            address: "경기도 용인시 처인구 포곡읍 마성리 101",
+                            isIncluded: false,
+                            isOwned: false,
+                            isAdjacent: true,
+                            coordinates: [
+                              { lat: 37.2183, lng: 127.2953 },
+                              { lat: 37.2183, lng: 127.2957 },
+                              { lat: 37.2186, lng: 127.2957 },
+                              { lat: 37.2186, lng: 127.2953 },
+                            ],
+                          },
+                          {
+                            id: "adjacent-002",
+                            address: "경기도 용인시 처인구 포곡읍 마성리 102",
+                            isIncluded: false,
+                            isOwned: false,
+                            isAdjacent: true,
+                            coordinates: [
+                              { lat: 37.2177, lng: 127.2947 },
+                              { lat: 37.2177, lng: 127.2951 },
+                              { lat: 37.2180, lng: 127.2951 },
+                              { lat: 37.2180, lng: 127.2947 },
+                            ],
+                          },
+                        ];
+                        
+                        return [...applicationParcels, ...adjacentParcels];
                       })()}
                       selectedParcelIds={new Set(adminCheckedLandIds)}
                       onParcelClick={(parcelId) => {
@@ -1863,6 +1893,10 @@ return applicationParcels;
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
                         <span>신청 필지</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
+                        <span>인접 필지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
