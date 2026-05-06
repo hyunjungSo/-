@@ -567,7 +567,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경�����������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
+      // 농지 경�������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -723,7 +723,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "종래 사용 곤란",
         met: usageDifficulty,
-        description: usageDifficulty ? "위치/형상/접근 상태로 종래 사용 곤란" : "종래 사용 ���능"
+        description: usageDifficulty ? "위치/형상/접근 상태로 종래 사용 곤란" : "종래 ��용 ���능"
       });
       
       if (areaCheckMet || usageDifficulty) {
@@ -736,7 +736,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       }
     }
     
-    // 소규모 토지 추�� 검���
+    // 소규모 토지 추��� 검���
     if (isSmall) {
       criteriaChecks.push({
         name: "소규모 토지",
@@ -1087,7 +1087,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <p className="font-medium">{application.appliedAt}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">사��명</p>
+              <p className="text-xs text-muted-foreground">����명</p>
               <p className="font-medium">{application.landInfo.projectName}</p>
             </div>
           </div>
@@ -2182,7 +2182,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         const isAdjacentSelected = adminCheckedLandIds.includes(adjacent.id);
                         const isAdjacentHovered = hoveredLandId === adjacent.id;
                         const isAdjacentFocused = focusedLandId === adjacent.id;
-                        const adjacentOptions = adminLandOptionsPerLand[adjacent.id] || {
+                        const adjacentOptions = landOptionsPerLand[adjacent.id] || {
                           farmMachineDifficulty: false,
                           accessRoadLost: false,
                           waterChannelLost: false,
@@ -2255,8 +2255,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </span>
                                   </div>
                                   <Select 
-                                    value={adminCurrentUsagePerLand[adjacent.id] || ""} 
-                                    onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
+                                    value={currentUsagePerLand[adjacent.id] || ""} 
+                                    onValueChange={(value) => setCurrentUsagePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
                                   >
                                     <SelectTrigger className="h-8 bg-background text-sm border-amber-300">
                                       <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
@@ -2273,14 +2273,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </div>
                                 
                                 {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
-                                {adminCurrentUsagePerLand[adjacent.id] === "대" && (
+                                {currentUsagePerLand[adjacent.id] === "대" && (
                                   <div className="space-y-1.5 rounded bg-amber-100/50 p-2">
                                     <label className="text-xs font-medium text-amber-800">
                                       건축물 용도 선택 <span className="text-destructive">*</span>
                                     </label>
                                     <Select 
-                                      value={adminLandSubTypePerLand[adjacent.id] || ""} 
-                                      onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
+                                      value={landSubTypePerLand[adjacent.id] || ""} 
+                                      onValueChange={(value) => setLandSubTypePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
                                     >
                                       <SelectTrigger className="h-8 bg-background text-sm border-amber-300">
                                         <SelectValue placeholder="건축물 용도를 선택해 주세요" />
