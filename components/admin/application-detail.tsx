@@ -2413,7 +2413,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 mb-4 flex items-start gap-2">
                         <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
                         <p className="text-sm text-blue-700">
-                          현재 민원인 결과를 표시���고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분석을 실행하면 담당자 결과가 표시됩니다.
+                          현재 민원인 결과를 표시���고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분���을 실행하면 담당자 결과가 표시됩니다.
                         </p>
                       </div>
                       
@@ -3024,56 +3024,19 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             </AccordionTrigger>
                             <AccordionContent className="pb-4">
-                              <div className="space-y-3">
-                                {/* 현재 활용 지목 */}
-                                <div className="space-y-1.5">
-                                  <div className="flex items-center justify-between">
-                                    <label className="text-xs font-medium text-amber-800">
-                                      현재 활용 지목 <span className="text-destructive">*</span>
-                                    </label>
-                                    <span className="text-xs text-amber-600">
-                                      공부상 지목: <span className="font-medium text-amber-800">{adjacent.landCategory}</span>
-                                    </span>
+                              <div className="text-sm text-amber-700">
+                                <div className="grid grid-cols-2 gap-2 text-xs">
+                                  <div>
+                                    <span className="text-amber-600">지목:</span> {adjacent.landCategory}
                                   </div>
-                                  <Select 
-                                    value={currentUsagePerLand[adjacent.id] || ""} 
-                                    onValueChange={(value) => setCurrentUsagePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
-                                  >
-                                    <SelectTrigger className="h-8 bg-background text-sm border-amber-300">
-                                      <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="대">대 (택지)</SelectItem>
-                                      <SelectItem value="전">전 (밭)</SelectItem>
-                                      <SelectItem value="답">답 (논)</SelectItem>
-                                      <SelectItem value="임">임 (임야)</SelectItem>
-                                      <SelectItem value="잡">잡 (잡종지)</SelectItem>
-                                    </SelectContent>
-                                  </Select>
+                                  <div>
+                                    <span className="text-amber-600">면적:</span> {adjacent.area.toLocaleString()}m²
+                                  </div>
+                                  <div>
+                                    <span className="text-amber-600">소유자:</span> {adjacent.owner}
+                                  </div>
                                 </div>
-                                
-                                {/* 건축물 용도 선택 */}
-                                {currentUsagePerLand[adjacent.id] === "대" && (
-                                  <div className="space-y-1.5 rounded bg-amber-100/50 p-2">
-                                    <label className="text-xs font-medium text-amber-800">
-                                      건축물 용도 선택 <span className="text-destructive">*</span>
-                                    </label>
-                                    <Select 
-                                      value={landSubTypePerLand[adjacent.id] || ""} 
-                                      onValueChange={(value) => setLandSubTypePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
-                                    >
-                                      <SelectTrigger className="h-8 bg-background text-sm border-amber-300">
-                                        <SelectValue placeholder="건축물 용도를 선택해 주세요" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="residential-detached">주거용 - 단독주택</SelectItem>
-                                        <SelectItem value="residential-multi">주거용 - 연립/다세대</SelectItem>
-                                        <SelectItem value="commercial">상업용</SelectItem>
-                                        <SelectItem value="industrial">공업용</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </div>
-                                )}
+                                <p className="mt-2 text-xs text-amber-600">인접 필지는 지도에서 확인할 수 있습니다.</p>
                               </div>
                             </AccordionContent>
                           </AccordionItem>
