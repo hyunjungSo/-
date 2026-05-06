@@ -787,7 +787,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         results = ownerLandData.map((landData) => ({
           ...dummyLandInfoList[0],
           ...landData,
-          ownerName: ownerName || "홍길동",
+          ownerName: ownerName || "홍���동",
         }));
         
         setSearchResults(results);
@@ -1690,42 +1690,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         </div>
                       )}
 
-                      {/* 분석 프로세스 보기 버튼 */}
-                      <Button
-                        onClick={() => {
-                          const analysisData = {
-                            landAddress: selectedLand.address,
-                            landArea: selectedLand.remainingArea,
-                            currentUsage: currentUsage || "",
-                            analysisSteps: [
-                              {
-                                step: 1,
-                                title: "기본 정보 입력",
-                                description: `필지 위치: ${selectedLand.address}\n면적: ${selectedLand.remainingArea.toLocaleString()}m²\n현재 활용: ${currentUsage === "대" ? "대지" : currentUsage === "전" ? "밭" : currentUsage === "답" ? "논" : currentUsage}`,
-                                status: "completed"
-                              },
-                              {
-                                step: 2,
-                                title: "법적 기준 검토",
-                                description: aiResult.judgmentRationale?.legalBasis || "법적 기준 검토 중",
-                                status: "completed"
-                              },
-                              {
-                                step: 3,
-                                title: "적용 기준 확인",
-                                description: aiResult.judgmentRationale?.appliedCriteria.join("\n") || "적용 기준 확인 중",
-                                status: "completed"
-                              },
-                              {
-                                step: 4,
-                                title: "판정 결과",
-                                description: aiResult.provisionalJudgment === "매수" ? "매수 가능" : aiResult.provisionalJudgment === "심의위원회이관" ? "경계 사례 (심의위원회이관)" : "기준 미충족",
-                                status: "completed"
-                              }
-                            ]
-                          };
-                          console.log("[v0] Analysis data:", analysisData);
-                        }}
                       {/* 안내 문구 */}
                       <div className="flex items-start gap-2 pt-2">
                         <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
