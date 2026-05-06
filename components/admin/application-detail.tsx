@@ -247,13 +247,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     adminLandSubType?: string;   // 담당자가 선택한 건축물 용도
   }>>({});
   
-  // 관리자 재판독 일단지 그룹
-  const [adminUnifiedGroups, setAdminUnifiedGroups] = useState<Record<string, {
-    groupName: string;
-    landIds: string[];
-    combinedArea: number;
-    judgment: string;
-  }>>({});
+
   
   // 민원인이 신청한 필지 ID 목록 (application에서 가져옴, 읽기 전용)
   const citizenSelectedLandIds = allLands.map(l => l.id);
@@ -448,99 +442,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     return null;
   };
 
-// ===== [1단계] 일단지 판정 로직 =====
-  // 주소에서 읍면/동 및 지번 정보 추출
-  const parseAddress = (address: string) => {
-    const parts = address.split(" ");
-    const lastPart = parts[parts.length - 1];
-    const district = parts[parts.length - 2];
-    const [lotNumber, subNumber] = lastPart.includes("-") 
-      ? lastPart.split("-") 
-      : [lastPart, "0"];
-    return { district, lotNumber, subNumber: subNumber || "0" };
-  };
-  
-  // 소유자 동일 여부 확인
-  const checkSameOwner = (land1: typeof allLands[0], land2: typeof allLands[0]) => {
-    // 실제로는 소유자 정보 비교, 여기서는 동일 신청서 내 필지이므로 동일 소유자로 가정
-    return true;
-  };
-  
-  // 지반 연속 여부 확인 (인접 필지)
-  const checkContinuousGround = (land1: typeof allLands[0], land2: typeof allLands[0]) => {
-    const addr1 = parseAddress(land1.address);
-    const addr2 = parseAddress(land2.address);
-    
-    // 1. 같은 리/동이 아니면 연속 불가
-    if (addr1.district !== addr2.district) return false;
-    
-    // 2. 같은 본번이면 연속 (예: 200-1, 200-2)
-    if (addr1.lotNumber === addr2.lotNumber) return true;
-    
-    // 3. 본번이 연속이면 연속 (예: 200, 201)
-    const lot1 = parseInt(addr1.lotNumber);
-    const lot2 = parseInt(addr2.lotNumber);
-    if (Math.abs(lot1 - lot2) <= 1) return true;
-    
-    return false;
-  };
-  
-  // 용도 일체성 확인 (동일 지목 또는 유사 용도)
-  const checkUsageUnity = (land1: typeof allLands[0], land2: typeof allLands[0]) => {
-    // 동일 지목이면 일체
-    if (land1.landType === land2.landType) return true;
-    
-    // 유사 용도 그룹 (택지류, 농지류 등)
-    const residentialTypes = ["대지", "주택용지"];
-    const agriculturalTypes = ["농지", "전", "답", "과수원"];
-    const forestTypes = ["산지", "임야"];
-    
-    const getGroup = (type: string) => {
-      if (residentialTypes.includes(type)) return "택지";
-      if (agriculturalTypes.includes(type)) return "농지";
-      if (forestTypes.includes(type)) return "산지";
-      return "기타";
-    };
-    
-    return getGroup(land1.landType) === getGroup(land2.landType);
-  };
-  
-  // 일단지 여부 종합 판단 (소유자 동일 + 지반 연속 + 용도 일체성)
-  const isUnifiedLand = (land1: typeof allLands[0], land2: typeof allLands[0]) => {
-    return checkSameOwner(land1, land2) && 
-           checkContinuousGround(land1, land2) && 
-           checkUsageUnity(land1, land2);
-  };
-  
-  // 일단지 그룹 찾기 (BFS)
-  const findUnifiedGroups = (lands: typeof allLands) => {
-    const groups: string[][] = [];
-    const visited = new Set<string>();
-    
-    for (let i = 0; i < lands.length; i++) {
-      if (visited.has(lands[i].id)) continue;
-      
-      const group: string[] = [lands[i].id];
-      visited.add(lands[i].id);
-      
-      const queue = [i];
-      while (queue.length > 0) {
-        const current = queue.shift()!;
-        for (let j = 0; j < lands.length; j++) {
-          if (visited.has(lands[j].id)) continue;
-          if (isUnifiedLand(lands[current], lands[j])) {
-            group.push(lands[j].id);
-            visited.add(lands[j].id);
-            queue.push(j);
-          }
-        }
-      }
-      groups.push(group);
-    }
-    return groups;
-  };
-
-  // ===== [2단계] 대상 토지 상세 분석 (중앙토지수용위원회 기준) =====
+// ===== 대상 토지 상세 분석 (중앙토지수용위원회 기준) ===== 대상 토지 상세 분석 (중앙토지수용위원회 기준) =====
   
   // ���입 전 면적 기준 (㎡) - 초과 시 토지���형별 경로, 이하 시 소규모 토지 경로
   const AREA_THRESHOLD = {
@@ -808,174 +710,36 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     
     setTimeout(() => {
       const newResults: typeof adminLandAIResults = {};
-      const newGroups: typeof adminUnifiedGroups = {};
       
-      // 담당자가 선택한 필지들만 분석 대상으로 설정
+      // 담당자가 선택한 필지들만 분석 대상으로 설정 (일단지 판정 제외, 개별 필지만 분석)
       const selectedLands = allLands.filter(l => adminCheckedLandIds.includes(l.id));
       
-      // ===== [1단계] 일단지 판정 =====
-      // 소유자 동일, 지반 연속, 용도 일체성 확인하여 일단지 그룹 형성
-      const unifiedLandGroups = selectedLands.length >= 2 ? findUnifiedGroups(selectedLands) : selectedLands.length === 1 ? [[selectedLands[0].id]] : [];
-      let groupIndex = 0;
-      
-      unifiedLandGroups.forEach((groupLandIds) => {
-        const groupLands = selectedLands.filter(l => groupLandIds.includes(l.id));
-        const isUnified = groupLandIds.length >= 2;
+      // ===== 개별 필지 분석 (선택된 필지만) =====
+      selectedLands.forEach((land) => {
+        const landId = land.id;
+        const landIndex = allLands.findIndex(l => l.id === landId);
+        const landData = application.landDataList?.[landIndex];
         
-        if (isUnified) {
-          // ===== 일단지 병합 처리 =====
-          const groupId = `group-${Date.now()}-${groupIndex}`;
-          const combinedArea = groupLands.reduce((sum, l) => sum + l.remainingArea, 0);
-          const combinedOriginalArea = groupLands.reduce((sum, l) => sum + l.originalArea, 0);
-          const primaryLand = groupLands[0];
-          
-          // 일단지 판정 사유 기록
-          const unificationReasons = [
-            "소유자 동일",
-            `지반 연속 (${parseAddress(primaryLand.address).district})`,
-            `용도 일체 (${primaryLand.landType})`
-          ];
-          
-          // ===== [2단계] 일단지 합산 기준으로 대상 토지 분석 =====
-          // 편입 전 면적 기준 (합산) 확인
-          const landData = application.landDataList?.[allLands.findIndex(l => l.id === primaryLand.id)];
-          const criteria = getAreaCriteria(primaryLand, landData);
-          const isSmallScale = combinedOriginalArea <= 330; // 합산 기준 소규모 여부
-          
-          let groupJudgment: "매수" | "매수불가" | "검토필요" = "매수불가";
-          const analysisReasons: string[] = [];
-          
-          if (isSmallScale) {
-            // 소규모 토지 경로 (합산 편입전 330㎡ 이하)
-            const meetsAreaCriteria = combinedArea <= 330 || groupLands.some(l => l.remainingRatio <= 50);
-            const hasAccessDifficulty = groupLands.some(l => l.remainingRatio < 30);
-            const hasDividedLand = groupLands.some(l => l.remainingRatio < 50);
-            const hasShapeChange = groupLands.some(l => {
-              const check = checkShapeCriteria(l);
-              return check.met;
-            });
-            
-            if (meetsAreaCriteria) analysisReasons.push(`소규모 합산 ${combinedArea}㎡`);
-            if (hasAccessDifficulty) analysisReasons.push("진입 곤란");
-            if (hasDividedLand) analysisReasons.push("양분된 토지");
-            if (hasShapeChange) analysisReasons.push("형상 변경");
-            
-            groupJudgment = analysisReasons.length > 0 ? "매수" : "검토필요";
-            
-          } else {
-            // 토지유형별 경로 (합산 편입전 330㎡ 초과)
-            const landType = primaryLand.landType;
-            
-            // 합산 면적 기준 충족 여부
-            const effectiveLimit = criteria.relaxed * groupLandIds.length;
-            const meetsAreaCriteria = combinedArea <= effectiveLimit;
-            if (meetsAreaCriteria) {
-              analysisReasons.push(`합산 면적 ${combinedArea}㎡ ≤ ${effectiveLimit}㎡`);
-            }
-            
-            // 토지유형별 추가 조건 검토 + 관리자 현장 상황 옵션 반영 (필지별 옵션 사용)
-            // 그룹 내 필지들의 옵션 합산
-            const groupOptions = {
-              accessRoadLost: groupLandIds.some(id => adminAIOptionsPerLand[id]?.accessRoadLost),
-              waterChannelLost: groupLandIds.some(id => adminAIOptionsPerLand[id]?.waterChannelLost),
-              farmMachineDifficulty: groupLandIds.some(id => adminAIOptionsPerLand[id]?.farmMachineDifficulty),
-            };
-            
-            if (landType === "대지") {
-              // 택지 경로
-              const hasRoadLoss = groupOptions.accessRoadLost || groupLands.some(l => l.remainingRatio < 30);
-              const hasShapeChange = groupLands.some(l => checkShapeCriteria(l).met);
-              if (hasRoadLoss) analysisReasons.push("접면도로 상실" + (groupOptions.accessRoadLost ? " (관리자 확인)" : ""));
-              if (hasShapeChange) analysisReasons.push("형상 부정형 변경");
-              
-            } else if (landType === "농지") {
-              // 농지 경로 + 관리자 옵션 우선 반영
-              const hasRoadLoss = groupOptions.accessRoadLost || groupLands.some(l => {
-                const data = application.landDataList?.[allLands.findIndex(al => al.id === l.id)];
-                return data?.accessRoadLost || l.remainingRatio < 30;
-              });
-              const hasWaterLoss = groupOptions.waterChannelLost || groupLands.some(l => {
-                const data = application.landDataList?.[allLands.findIndex(al => al.id === l.id)];
-                return data?.waterChannelLost;
-              });
-              const hasFarmDifficulty = groupOptions.farmMachineDifficulty || groupLands.some(l => l.remainingArea < 200);
-              const hasShapeChange = groupLands.some(l => checkShapeCriteria(l).met);
-              
-              if (hasRoadLoss) analysisReasons.push("접면도로 상실" + (groupOptions.accessRoadLost ? " (관리자 확인)" : ""));
-              if (hasWaterLoss) analysisReasons.push("관개수로 상실" + (groupOptions.waterChannelLost ? " (관리자 확인)" : ""));
-              if (hasFarmDifficulty) analysisReasons.push("농기계 진입/회전 곤란" + (groupOptions.farmMachineDifficulty ? " (관리자 확인)" : ""));
-              if (hasShapeChange) analysisReasons.push("형상 부정형 변경");
-              
-            } else if (landType === "산지") {
-              // 산지 경로
-              const hasRoadLoss = groupOptions.accessRoadLost || groupLands.some(l => l.remainingRatio < 25);
-              if (hasRoadLoss) analysisReasons.push("접면도로 상실 (접근 불가)" + (groupOptions.accessRoadLost ? " (관리자 확인)" : ""));
-              
-            } else {
-              // 그 밖의 토지
-              const hasUsageDifficulty = groupOptions.accessRoadLost || groupOptions.farmMachineDifficulty || 
-                groupLands.some(l => l.remainingRatio < 40 || checkShapeCriteria(l).met);
-              if (hasUsageDifficulty) analysisReasons.push("종래 목적 사용 곤란");
-            }
-            
-            // 하나라도 해당 시 충족, 전체 미해당 시 미충족
-            groupJudgment = analysisReasons.length > 0 ? "매수" : "매수불가";
-          }
-          
-          // 각 필지별 결과 저장
-          groupLandIds.forEach(landId => {
-            const land = allLands.find(l => l.id === landId)!;
-            newResults[landId] = {
-              provisionalJudgment: groupJudgment === "검토필요" ? "매수불가" : groupJudgment,
-              landTypePath: land.landType,
-              accessRoadLost: land.remainingRatio < 30,
-              waterChannelLost: false,
-              confidence: 0.88 + Math.random() * 0.08,
-              analysisDate: new Date().toISOString().split("T")[0],
-              unifiedGroupId: groupId,
-              reason: `[일단지 ${String.fromCharCode(65 + groupIndex)}] ${analysisReasons.join(", ")}`,
-            };
-          });
-          
-          // 일단지 그룹 정보 저장
-          newGroups[groupId] = {
-            landIds: groupLandIds,
-            groupName: `일단지 ${String.fromCharCode(65 + groupIndex)}`,
-            combinedArea,
-            judgment: groupJudgment,
-          };
-          groupIndex++;
-          
-        } else {
-          // ===== 단독 필지 분석 =====
-          const landId = groupLandIds[0];
-          const land = allLands.find(l => l.id === landId)!;
-          const landIndex = allLands.findIndex(l => l.id === landId);
-          const landData = application.landDataList?.[landIndex];
-          
-          // [2단계] 개별 필지 상세 분석 (관리자 옵션 반영 - 해당 필지의 옵션 사용)
-          const landOptions = adminAIOptionsPerLand[landId] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
-          const adminCurrentUsage = adminCurrentUsagePerLand[landId];
-          const adminLandSubType = adminLandSubTypePerLand[landId];
-          const analysis = analyzeSingleLand(land, landData, landOptions, adminCurrentUsage, adminLandSubType);
-          const addr = parseAddress(land.address);
-          
-          newResults[landId] = {
-            provisionalJudgment: analysis.judgment === "검토필요" ? "매수불가" : analysis.judgment,
-            landTypePath: analysis.landTypePath,
-            accessRoadLost: analysis.accessRoadLost,
-            waterChannelLost: analysis.waterChannelLost,
-            confidence: analysis.confidence,
-            analysisDate: new Date().toISOString().split("T")[0],
-            unifiedGroupId: undefined,
-            reason: `[단독] ${analysis.reasons.join(", ")}`,
-            adminCurrentUsage: adminCurrentUsage, // 담당자가 선택한 현재 활용지목
-            adminLandSubType: adminLandSubType,   // 담당자가 선택한 건축물 용도
-          };
-        }
+        // 개별 필지 상세 분석 (관리자 옵션 반영)
+        const landOptions = adminAIOptionsPerLand[landId] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
+        const adminCurrentUsage = adminCurrentUsagePerLand[landId];
+        const adminLandSubType = adminLandSubTypePerLand[landId];
+        const analysis = analyzeSingleLand(land, landData, landOptions, adminCurrentUsage, adminLandSubType);
+        
+        newResults[landId] = {
+          provisionalJudgment: analysis.judgment === "검토필요" ? "매수불가" : analysis.judgment,
+          landTypePath: analysis.landTypePath,
+          accessRoadLost: analysis.accessRoadLost,
+          waterChannelLost: analysis.waterChannelLost,
+          confidence: analysis.confidence,
+          analysisDate: new Date().toISOString().split("T")[0],
+          reason: analysis.reasons.join(", "),
+          adminCurrentUsage: adminCurrentUsage,
+          adminLandSubType: adminLandSubType,
+        };
       });
       
-      // 관리자 재판독 결과로 저장 (민원인 결과는 유지)
+      // 관리자 재판독 결과로 저장
       const adminResults: typeof adminLandAIResults = {};
       Object.entries(newResults).forEach(([landId, result]) => {
         adminResults[landId] = {
@@ -985,9 +749,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         };
       });
       
-      setAdminUnifiedGroups(newGroups);
       setAdminLandAIResults(adminResults);
-      setAiResultViewMode("admin"); // 관리자 결과 탭으로 자동 전환
+      setAiResultViewMode("admin");
       setIsAIAnalyzing(false);
     }, 2000);
   };
@@ -1579,7 +1342,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className="flex items-start gap-2 pt-2 border-t border-green-700/20">
                                   <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
                                   <p className="text-xs text-emerald-600">
-                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 ��라 결����������������니다.
+                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 ��라 결�����������������니다.
                                   </p>
                                 </div>
                               </div>
