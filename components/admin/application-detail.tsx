@@ -98,13 +98,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     ? [application.landInfo, ...application.additionalLands]
     : [application.landInfo];
   
-  // 신청 유형 결정 - 테이블과 동일한 로직 사용
+  // 신청 유형 초기값 결정 - AI 분석 결과 기준
   // aiResult에 unifiedLandAnalysis가 있거나 landJudgments에 unifiedGroupId가 있으면 일단지
   const isUnifiedFromAiResult = application.aiResult?.unifiedLandAnalysis || 
     application.aiResult?.landJudgments?.some(lj => lj.unifiedGroupId);
-  const applicationType = isUnifiedFromAiResult
+  const initialApplicationType = isUnifiedFromAiResult
     ? "unified"
     : application.applicationType || (isMultipleLands ? "multiple" : "single");
+  
+  // 신청유형 상태 (담당자가 변경 가능)
+  const [applicationType, setApplicationType] = useState<"unified" | "multiple" | "single">(initialApplicationType as "unified" | "multiple" | "single");
   
   // 부분 일단지 여부 확인 (landJudgments에서 unifiedGroupId가 있는 필지가 있으면 부분 일단지)
   const partialUnifiedGroups = application.aiResult?.landJudgments?.reduce((groups, lj) => {
@@ -1103,23 +1106,26 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <p className="font-medium">{application.applicationNumber}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">신청유형</p>
-              <p className="font-medium">
-                {(() => {
-                  // 테이블과 동일한 로직 적용
-                  const isUnified = application.aiResult?.unifiedLandAnalysis || 
-                    application.aiResult?.landJudgments?.some(lj => lj.unifiedGroupId);
-                  const isMultiple = application.additionalLands && application.additionalLands.length > 0;
-                  
-                  if (isUnified) {
-                    return "일단지";
-                  } else if (isMultiple) {
-                    return `복수필지 (${application.additionalLands!.length + 1})`;
-                  } else {
-                    return "단일필지";
-                  }
-                })()}
-              </p>
+              <p className="text-xs text-muted-foreground mb-1">신청유형</p>
+              <Select 
+                value={applicationType} 
+                onValueChange={(value: "unified" | "multiple" | "single") => setApplicationType(value)}
+              >
+                <SelectTrigger className="h-8 w-[140px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {isMultipleLands && (
+                    <SelectItem value="unified">일단지</SelectItem>
+                  )}
+                  {isMultipleLands && (
+                    <SelectItem value="multiple">복수필지 ({allLands.length})</SelectItem>
+                  )}
+                  {!isMultipleLands && (
+                    <SelectItem value="single">단일필지</SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <p className="text-xs text-muted-foreground">신청사유</p>
