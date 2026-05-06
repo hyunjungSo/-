@@ -1228,7 +1228,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <Layers className="h-4 w-4" />
                               일단지 판정 결과
                             </h5>
-                            <Badge className={application.aiResult?.provisionalJudgment === "매수" || application.aiResult?.provisionalJudgment === "부분매수" ? "bg-emerald-600 hover:bg-emerald-600" : "bg-red-500 hover:bg-red-500"}>
+                            <Badge className={application.aiResult?.provisionalJudgment === "매수" ? "bg-emerald-600 hover:bg-emerald-600" : "bg-red-500 hover:bg-red-500"}>
                               {application.aiResult?.provisionalJudgment || "매수"}
                             </Badge>
                           </div>
@@ -1926,7 +1926,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <Layers className="h-4 w-4" />
                                   일단지 판정 결과
                                 </h5>
-                                <Badge className={application.aiResult?.provisionalJudgment === "매수" || application.aiResult?.provisionalJudgment === "부분매수" ? "bg-emerald-600 hover:bg-emerald-600" : "bg-red-500 hover:bg-red-500"}>
+                                <Badge className={application.aiResult?.provisionalJudgment === "매수" ? "bg-emerald-600 hover:bg-emerald-600" : "bg-red-500 hover:bg-red-500"}>
                                   {application.aiResult?.provisionalJudgment || "매수"}
                                 </Badge>
                               </div>
@@ -2144,7 +2144,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <div className="flex items-start gap-2 pt-2 border-t">
                                     <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                     <p className="text-xs text-muted-foreground">
-                                      AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                      AI 판독 결과는 참고용이며, ���종 판정은 담당자 검토에 따라 결정됩니다.
                                     </p>
                                   </div>
                                 </div>

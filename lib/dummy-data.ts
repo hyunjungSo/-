@@ -1026,7 +1026,7 @@ export const dummyLandInfoList: LandInfo[] = [
   // 4필지 중 2필지만 일단지 판정, 나머지 2필지는 개별 판정
   {
     id: "land-mixed-001",
-    address: "경기도 평택시 포승읍 내기리 200-1",
+    address: "경기��� 평택시 포승읍 내기리 200-1",
     originalArea: 500,
     includedArea: 350,
     remainingArea: 150,
@@ -2038,7 +2038,7 @@ export const dummyApplications: Application[] = [
           "농지 물리조건: 농기계 진입 곤란, 관개수로 상실",
           "형상 변화: 4필지 모두 비정형으로 변경",
         ],
-        detailedExplanation: "일단지 판정 4필지 혼합 토지\n\n[필지 1] 777-1 (대지): 300㎡ → 90㎡ (삼각형)\n[필지 2] 777-2 (전): 450㎡ → 130㎡ (자루형)\n[필지 3] 777-3 (답): 600㎡ → 170㎡ (역삼각형)\n[필지 4] 777-4 (잡): 200㎡ → 60㎡ (삼각형)\n\n합산 편입전: 1,550㎡ / 합산 잔여: 450㎡\n\n※ 주택을 중심으로 텃밭(농지)과 창고(잡종지)를 일체적으로 사용해 온 토지로, 도로 편입 후 각 필지가 비정형으로 변경되어 종래 용도로 사용이 불가능한 상태입니다.",
+        detailedExplanation: "일단지 판정 4필지 혼합 토지\n\n[필지 1] 777-1 (대지): 300㎡ → 90㎡ (삼각형)\n[필지 2] 777-2 (전): 450㎡ → 130㎡ (자루형)\n[필지 3] 777-3 (답): 600㎡ → 170㎡ (역삼각형)\n[필지 4] 777-4 (잡): 200㎡ → 60㎡ (삼각형)\n\n합산 편입전: 1,550㎡ / 합산 잔여: 450㎡\n\n※ 주택을 중심으로 텃밭(농지)과 창고(잡종지)를 일체적으로 사용해 온 토지로, 도로 편입 후 각 필지가 비정형으로 변경되어 종래 용도로 사용�� 불가능한 상태입니다.",
         manualCheckItems: ["일체적 사용 여부 현장 확인"],
       },
       unifiedParcelAnalysis: {
@@ -2077,7 +2077,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "용인-안성 고속도로 확장으로 인해 소유한 2개 대지 필지가 편입되었습니다. 각 필지의 잔여면적은 개별적으로는 면적 기준을 초과하나, 고속도로 편입으로 두 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 일단지로 일체 사용해 온 토지로, 합산하여 건축이 불가능한 상태이므로 일단지 인정을 통한 매수를 신청합니다.",
+    reason: "용인-안성 고속도로 확장으로 인해 ���유한 2개 대지 필지가 편입되었습니다. 각 필지의 잔여면적은 개별적으로는 면적 기준을 초과하나, 고속도로 편입으로 두 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 일단지로 일체 사용해 온 토지로, 합산하여 건축이 불가능한 상태이므로 일단지 인정을 통한 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "대" as const,
@@ -2218,7 +2218,7 @@ export const dummyApplications: Application[] = [
         waterChannelLost: false,
       },
     ],
-    attachments: ["토지대장_산101.pdf", "토지대장_산102.pdf", "토지대장_산103.pdf", "토지대장_산104.pdf", "토지대장_산105.pdf", "등기부등본.pdf", "산림경영계획서.pdf", "조림현황사진.jpg"],
+    attachments: ["토지대장_산101.pdf", "토지대장_산102.pdf", "토지대장_산103.pdf", "토지대장_산104.pdf", "토지대장_산105.pdf", "등기부등본.pdf", "산림경영��획서.pdf", "조림현황사진.jpg"],
     status: "검토중",
     adminStatus: "진행중",
     appliedAt: "2026-04-28",
@@ -2341,7 +2341,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "면적 기준 (55-1)", criteriaDescription: "잔여 600㎡ > 330㎡ (농지 기준 미충족)", isMet: false, autoDetected: true },
         { criteriaName: "면적 기준 (55-2)", criteriaDescription: "잔여 550㎡ > 330㎡ (농지 기준 미충족)", isMet: false, autoDetected: true },
       ],
-      provisionalJudgment: "부분매수",
+      provisionalJudgment: "매수",
       originalShapeIndex: 4.1,
       remainingShapeIndex: 5.0,
       shapeIndexChange: 0.9,
