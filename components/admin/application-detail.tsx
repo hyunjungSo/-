@@ -572,7 +572,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const checkShapeCriteria = (land: typeof allLands[0]) => {
     const shape = land.remainingShape;
     // 사각형 폭: 5m 이하, 삼각형 한 변: 11m 이하
-    // 형상지수 변화로 간접 판단 (실제 폭 데이터 없음)
+    // 형상지수 변화로 간접 판단 (실제 ��� 데이터 없음)
     const shapeIndexChange = land.remainingShapeIndex - land.originalShapeIndex;
     
     if (shape === "삼각형" || shape === "역삼각형") {
@@ -758,7 +758,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     
     // 필지별 순차 분석 시뮬레이션
     const simulateSequentialAnalysis = async () => {
-      // 각 필지를 순차적으로 분석 단계별로 진행
+      // 각 ���지를 순차적으로 분석 단계별로 진행
       for (let i = 0; i < adminCheckedLandIds.length; i++) {
         const landId = adminCheckedLandIds[i];
         setLandAnalysisStatus(prev => ({ ...prev, [landId]: 'analyzing' }));
@@ -1107,7 +1107,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </TabsTrigger>
             </TabsList>
             
-            {/* 민원인 결과 탭 */}
+            {/* 민원인 ��과 탭 */}
             <TabsContent value="citizen">
               {/* ���������인 경우 최상단에 일단지 판정 결과 표시 */}
               {applicationType === "unified" && (
@@ -2311,9 +2311,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardContent className="space-y-6">
           {/* 복수 필지인 경우 필지별 검토 */}
           {allLands.length > 1 && (
-            <div className="space-y-4">
+            <div className="rounded-xl border-2 border-slate-200 bg-gradient-to-b from-slate-50/80 to-white p-5 space-y-4">
               <div className="flex items-center justify-between">
-                <Label className="text-base font-semibold">필지별 검토</Label>
+                <div>
+                  <h4 className="font-semibold text-slate-800">필지별 검토</h4>
+                  <p className="text-sm text-slate-600">각 필지별로 판정과 검토 의견을 입력하세요</p>
+                </div>
                 <Badge variant="outline">
                   {landReviewDataList.filter(d => d.landJudgment !== null).length}/{allLands.length} 검토완료
                 </Badge>
@@ -2419,8 +2422,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           )}
 
           {/* 진행상황 선택 */}
-          <div className="space-y-2">
-            <Label>진행상황 설명</Label>
+          <div className="rounded-xl border-2 border-blue-200 bg-gradient-to-b from-blue-50/80 to-white p-5 space-y-4">
+            <div>
+              <h4 className="font-semibold text-blue-800">진행상황 선택</h4>
+              <p className="text-sm text-blue-600">민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다</p>
+            </div>
             <div className="flex flex-wrap gap-2">
               {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
                 const config = adminStatusConfig[status];
@@ -2442,9 +2448,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 );
               })}
             </div>
-              <p className="text-sm text-muted-foreground">
-                민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다.
-              </p>
           </div>
 
           {/* 최종 검토 섹션 */}
