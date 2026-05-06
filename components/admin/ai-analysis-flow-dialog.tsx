@@ -339,9 +339,9 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
               <div className="grid grid-cols-3 gap-3">
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
-                  finalJudgment === "매수" ? "border-success bg-success/5" : "border-gray-200 bg-gray-50"
+                  finalJudgment === "매수" ? "border-green-700 bg-green-50" : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className={cn("text-sm font-medium", finalJudgment === "매수" ? "text-success" : "text-gray-500")}>매수 판단</p>
+                  <p className={cn("text-sm font-medium", finalJudgment === "매수" ? "text-green-700" : "text-gray-500")}>매수 판단</p>
                 </div>
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
@@ -375,7 +375,7 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                   className={cn(
                     "rounded p-3 text-center text-sm font-semibold border transition-all",
                     finalJudgment === "매수" 
-                      ? "border-success bg-success text-white" 
+                      ? "border-green-700 bg-green-700 text-white" 
                       : "border-gray-200 bg-gray-50 text-gray-400"
                   )}
                 >
@@ -422,7 +422,7 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                 <span className="text-sm text-gray-400">/ 기준 {effectiveThreshold}㎡ {isRatioRelaxed && "(완화)"}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-base text-gray-500">잔여 비율</span>
+                <span className="text-base text-gray-500">잔��� 비율</span>
                 <span className="text-base font-semibold text-gray-800">{remainingRatio}%</span>
               </div>
             </div>
@@ -642,7 +642,7 @@ function PathColumn({
         </motion.div>
       )}
 
-      {/* 결과 배지 - 선택된 경로에만 ���시 */}
+      {/* 결과 배지 - 선택된 경로에만 ����시 */}
       {isActive && conditionStatus && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
