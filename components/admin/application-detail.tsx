@@ -266,7 +266,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 현재 탭에 따른 선택된 필지 ID (지도 표시용)
   const currentSelectedLandIds = aiResultViewMode === "citizen" ? citizenSelectedLandIds : adminCheckedLandIds;
   
-  // 담당자 탭 체크박스 선택 변경 핸들러
+  // 담당자 탭 ��크박스 선택 변경 핸들러
   const handleAdminCheckLand = (landId: string, checked: boolean) => {
     if (checked) {
       setAdminCheckedLandIds(prev => [...prev, landId]);
@@ -1255,7 +1255,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <div className="flex items-center justify-between mb-3">
                                 <h5 className="font-medium text-emerald-800 flex items-center gap-2">
                                   <Layers className="h-4 w-4" />
-                                  일단지 판정 결과 ({groupId.replace("group-", "그룹 ")})
+                                  일단지 판정 결과
                                 </h5>
                                 <Badge className={groupJudgment === "매수" ? "bg-emerald-600 hover:bg-emerald-600" : "bg-red-500 hover:bg-red-500"}>
                                   {groupJudgment}
@@ -1355,12 +1355,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               const landJudgment = application.aiResult?.landJudgments?.find(lj => lj.landId === land.id);
                               const isInUnifiedGroup = applicationType === "unified" || landJudgment?.unifiedGroupId;
                               if (!isInUnifiedGroup) return null;
-                              const groupName = landJudgment?.unifiedGroupId ? landJudgment.unifiedGroupId.replace("group-", "그룹 ") : "";
                               return (
                                 <div className="flex items-start gap-2 pt-3 mt-3 border-t text-blue-600">
                                   <Info className="mt-0.5 h-3 w-3 shrink-0" />
                                   <p className="text-xs">
-                                    이 필지는 일단지{groupName ? ` (${groupName})` : ""}로 판정되었습니다. 상세 분석 결과는 상단의 일단지 판정 결과를 참조하세요.
+                                    이 필지는 일단지로 판정되었습니다. 상세 분석 결과는 상단의 일단지 판정 결과를 참조하세요.
                                   </p>
                                 </div>
                               );
@@ -1953,7 +1952,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <div className="flex items-center justify-between mb-3">
                                     <h5 className="font-medium text-emerald-800 flex items-center gap-2">
                                       <Layers className="h-4 w-4" />
-                                      일단지 판정 결과 ({groupId.replace("group-", "그룹 ")})
+                                      일단지 판정 결과
                                     </h5>
                                     <Badge className={groupJudgment === "매수" ? "bg-emerald-600 hover:bg-emerald-600" : "bg-red-500 hover:bg-red-500"}>
                                       {groupJudgment}
@@ -2402,7 +2401,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <div className="rounded-lg bg-blue-50/80 p-3 border border-blue-200">
                                           <p className="text-xs font-medium text-blue-700 mb-2">적용된 현장 상황</p>
                                           <div className="flex flex-wrap gap-2">
-                                            {landOptions.accessRoadLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">접면도로 상실</Badge>}
+                                            {landOptions.accessRoadLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">접면도�� 상실</Badge>}
                                             {landOptions.waterChannelLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">관개수로 상실</Badge>}
                                             {landOptions.farmMachineDifficulty && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">농기계 진입 곤란</Badge>}
                                           </div>
