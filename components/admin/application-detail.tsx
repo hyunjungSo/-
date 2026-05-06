@@ -2217,9 +2217,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                               
                               <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium">{adjacentLand.address}</p>
+                                <p className="text-sm font-medium truncate">{adjacentLand.address.split(" ").slice(-2).join(" ")}</p>
                                 <p className="text-xs text-muted-foreground">
-                                  {adjacentLand.landType} | {adjacentLand.remainingArea.toLocaleString()}m² ({adjacentLand.remainingRatio}%)
+                                  {adjacentLand.landType} | 잔여 {adjacentLand.remainingArea.toLocaleString()}m²
                                 </p>
                               </div>
                               
@@ -3361,7 +3361,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
+            {(["접수���료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
               const config = adminStatusConfig[status];
               const Icon = config.icon;
               const isSelected = reviewData.adminStatus === status;
