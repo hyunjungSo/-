@@ -1579,7 +1579,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className="flex items-start gap-2 pt-2 border-t border-emerald-200">
                                   <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
                                   <p className="text-xs text-emerald-600">
-                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정���니다.
+                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결������니다.
                                   </p>
                                 </div>
                               </div>
@@ -2950,7 +2950,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <span className="text-muted-foreground">지목:</span> <span className="font-medium ml-1">{adjacent.landCategory}</span>
                                   </div>
                                   <div>
-                                    <span className="text-muted-foreground">면적:</span> <span className="font-medium ml-1">{adjacent.area.toLocaleString()}m²</span>
+                                    <span className="text-muted-foreground">면��:</span> <span className="font-medium ml-1">{adjacent.area.toLocaleString()}m²</span>
                                   </div>
                                   <div>
                                     <span className="text-muted-foreground">소유자:</span> <span className="font-medium ml-1">{adjacent.owner}</span>
@@ -2995,9 +2995,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         );
                       })}
                       
-                      {/* 필지별 분석 결과 - 아코디언 UI */}
+                      {/* 필지별 분석 결과 - 아코디언 UI (선택된 필지만 표시) */}
                       <Accordion type="multiple" defaultValue={[]} className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
-                        {Object.entries(adminLandAIResults).map(([landId, result]) => {
+                        {Object.entries(adminLandAIResults)
+                          .filter(([landId]) => adminCheckedLandIds.includes(landId))
+                          .map(([landId, result]) => {
                           const land = allLands.find(l => l.id === landId);
                           const landIdx = allLands.findIndex(l => l.id === landId);
                           if (!land) return null;
