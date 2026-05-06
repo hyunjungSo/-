@@ -383,7 +383,7 @@ export function ApplicationFormSection({
                   })}
                 </div>
                 
-                {/* ���계 */}
+                {/* 합계 */}
                 <div className="rounded-lg bg-muted/50 p-3 space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">총 필지 수</span>

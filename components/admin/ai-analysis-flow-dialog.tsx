@@ -642,7 +642,7 @@ function PathColumn({
         </motion.div>
       )}
 
-      {/* 결과 배지 - 선택된 경로에만 ���시 */}
+      {/* 결과 배지 - 선택된 경로에만 표시 */}
       {isActive && conditionStatus && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
