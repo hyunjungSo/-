@@ -182,7 +182,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미�������������력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미���������������력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -1579,7 +1579,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className="flex items-start gap-2 pt-2 border-t border-emerald-200">
                                   <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
                                   <p className="text-xs text-emerald-600">
-                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결��������������니다.
+                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 ��라 결��������������니다.
                                   </p>
                                 </div>
                               </div>
@@ -3001,11 +3001,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         );
                       })}
                       
-                      {/* 필지별 분석 결과 - 아코디언 UI (선택된 필지만 표시) */}
+                      {/* 필지별 분석 결과 - 아코디언 UI (AI 분석 실행된 필지만 표시) */}
                       <Accordion type="multiple" defaultValue={[]} className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
-                        {Object.entries(adminLandAIResults)
-                          .filter(([landId]) => adminCheckedLandIds.includes(landId))
-                          .map(([landId, result]) => {
+                        {Object.entries(adminLandAIResults).map(([landId, result]) => {
                           const land = allLands.find(l => l.id === landId);
                           const landIdx = allLands.findIndex(l => l.id === landId);
                           if (!land) return null;
@@ -3312,7 +3310,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             <div className="rounded-lg border border-amber-200 bg-amber-50 p-2 flex items-start gap-2">
                               <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
                               <p className="text-xs text-amber-700">
-                                AI 제안({aiResult.provisionalJudgment})과 다른 판정입니다. 검토 의견에 사유를 작성해주세요.
+                                AI 제안({aiResult.provisionalJudgment})과 다른 판정입니다. 검�� 의견에 사유를 작성해주세요.
                               </p>
                             </div>
                           )}
