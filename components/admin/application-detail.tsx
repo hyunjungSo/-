@@ -567,7 +567,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경�����������������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
+      // 농지 경�������������������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -1853,42 +1853,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           };
                         });
                         
-                        const adjacentParcels = [
-                          {
-                            id: "adjacent-001",
-                            address: "경기도 용인시 처인구 포곡읍 마성리 101",
-                            landCategory: "전",
-                            landType: "농경지",
-                            area: 856,
-                            owner: "김OO",
-                            isIncluded: false,
-                            isOwned: false,
-                            coordinates: [
-                              { lat: 37.2183, lng: 127.2953 },
-                              { lat: 37.2183, lng: 127.2957 },
-                              { lat: 37.2186, lng: 127.2957 },
-                              { lat: 37.2186, lng: 127.2953 },
-                            ],
-                          },
-                          {
-                            id: "adjacent-002",
-                            address: "경기도 용인시 처인구 포곡��� 마성리 102",
-                            landCategory: "답",
-                            landType: "농경지",
-                            area: 1234,
-                            owner: "박OO",
-                            isIncluded: false,
-                            isOwned: false,
-                            coordinates: [
-                              { lat: 37.2177, lng: 127.2947 },
-                              { lat: 37.2177, lng: 127.2951 },
-                              { lat: 37.2180, lng: 127.2951 },
-                              { lat: 37.2180, lng: 127.2947 },
-                            ],
-                          },
-                        ];
-                        
-                        return [...applicationParcels, ...adjacentParcels];
+return applicationParcels;
                       })()}
                       selectedParcelIds={new Set(adminCheckedLandIds)}
                       onParcelClick={(parcelId) => {
@@ -1916,11 +1881,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
-                        <span>민원인 신청 필지</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
-                        <span>인접 필지</span>
+                        <span>신청 필지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
@@ -2184,138 +2145,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </label>
                                   </div>
                                 </div>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                      
-                      {/* 인접 필지 */}
-                      {[
-                        {
-                          id: "adjacent-001",
-                          address: "경기도 용인시 처인구 포곡읍 마성리 101",
-                          landCategory: "전",
-                          landType: "농경지",
-                          area: 856,
-                          owner: "김OO",
-                        },
-                        {
-                          id: "adjacent-002",
-                          address: "경기도 용인시 처인구 포곡읍 마성리 102",
-                          landCategory: "답",
-                          landType: "농경지",
-                          area: 1234,
-                          owner: "박OO",
-                        },
-                      ].map((adjacent, adjIdx) => {
-                        const isAdjacentSelected = adminCheckedLandIds.includes(adjacent.id);
-                        const isAdjacentHovered = hoveredLandId === adjacent.id;
-                        const isAdjacentFocused = focusedLandId === adjacent.id;
-                        return (
-                          <div 
-                            key={adjacent.id}
-                            className={`border-b border-dashed border-amber-200 last:border-b-0 transition-colors ${
-                              isAdjacentHovered ? "bg-amber-100/50" :
-                              isAdjacentSelected ? "bg-amber-50/50" : 
-                              "bg-amber-50/30"
-                            }`}
-                            onMouseEnter={() => setHoveredLandId(adjacent.id)}
-                            onMouseLeave={() => setHoveredLandId(null)}
-                          >
-                            {/* 상단: 필지 정보 행 */}
-                            <div 
-                              className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer ${
-                                isAdjacentFocused ? "border-l-4 border-l-amber-500" : ""
-                              }`}
-                              onClick={() => setFocusedLandId(isAdjacentFocused ? null : adjacent.id)}
-                            >
-                              {/* 체크박스 */}
-                              <Checkbox
-                                checked={isAdjacentSelected}
-                                onCheckedChange={(checked) => {
-                                  if (checked) {
-                                    setAdminCheckedLandIds(prev => [...prev, adjacent.id]);
-                                  } else {
-                                    setAdminCheckedLandIds(prev => prev.filter(id => id !== adjacent.id));
-                                  }
-                                }}
-                                onClick={(e) => e.stopPropagation()}
-                                className="h-5 w-5 shrink-0 border-amber-400 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
-                              />
-                              
-                              {/* 인접 필지 마커 */}
-                              <div className="flex h-5 w-5 items-center justify-center rounded border-2 border-dashed border-amber-500 bg-amber-100 text-xs font-bold text-amber-700 shrink-0">
-                                {String.fromCharCode(97 + adjIdx)}
-                              </div>
-                              
-                              {/* 필지 정보 */}
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
-                                  <p className="text-sm font-medium text-amber-800 truncate">{adjacent.address}</p>
-                                  <Badge variant="outline" className="text-[10px] h-4 px-1 border-amber-400 text-amber-600 shrink-0">인접</Badge>
-                                </div>
-                                <p className="text-xs text-amber-600">
-                                  {adjacent.landCategory} | {adjacent.area.toLocaleString()}m² | 소유자: {adjacent.owner}
-                                </p>
-                              </div>
-                              
-                              {/* 펼침/접힘 아이콘 */}
-                              <ChevronDown className={`h-4 w-4 text-amber-500 transition-transform shrink-0 ${isAdjacentFocused ? "rotate-180" : ""}`} />
-                            </div>
-                            
-                            {/* 하단: 필지 상세 옵션 */}
-                            {isAdjacentFocused && (
-                              <div className="px-3 pb-3 ml-7 space-y-3 border-t border-amber-200 pt-3 bg-amber-50/50">
-                                {/* 현재 활용 지목 */}
-                                <div className="space-y-1.5">
-                                  <div className="flex items-center justify-between">
-                                    <label className="text-xs font-medium text-amber-800">
-                                      현재 활용 지목 <span className="text-destructive">*</span>
-                                    </label>
-                                    <span className="text-xs text-amber-600">
-                                      공부상 지목: <span className="font-medium text-amber-800">{adjacent.landCategory}</span>
-                                    </span>
-                                  </div>
-                                  <Select 
-                                    value={adminCurrentUsagePerLand[adjacent.id] || ""} 
-                                    onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
-                                  >
-                                    <SelectTrigger className="h-8 bg-background text-sm border-amber-300">
-                                      <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="대">대 (택지)</SelectItem>
-                                      <SelectItem value="전">전 (밭)</SelectItem>
-                                      <SelectItem value="답">답 (논)</SelectItem>
-                                      <SelectItem value="임">임 (임야)</SelectItem>
-                                      <SelectItem value="잡">잡 (잡종지)</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-                                
-                                {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
-                                {adminCurrentUsagePerLand[adjacent.id] === "대" && (
-                                  <div className="space-y-1.5 rounded bg-amber-100/50 p-2">
-                                    <label className="text-xs font-medium text-amber-800">
-                                      건축물 용도 선택 <span className="text-destructive">*</span>
-                                    </label>
-                                    <Select 
-                                      value={adminLandSubTypePerLand[adjacent.id] || ""} 
-                                      onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [adjacent.id]: value }))}
-                                    >
-                                      <SelectTrigger className="h-8 bg-background text-sm border-amber-300">
-                                        <SelectValue placeholder="건축물 용도를 선택해 주세요" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="residential-detached">주거용 - 단독주택</SelectItem>
-                                        <SelectItem value="residential-multi">주거용 - 연립/다세대</SelectItem>
-                                        <SelectItem value="commercial">상업용</SelectItem>
-                                        <SelectItem value="industrial">공업용</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </div>
-                                )}
                               </div>
                             )}
                           </div>
@@ -2946,65 +2775,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             </AccordionItem>
                           );
                         })}
-                        
-                        {/* 인접 필지 */}
-                        {[
-                          {
-                            id: "adjacent-001",
-                            address: "경기도 용인시 처인구 포곡읍 마��리 101",
-                            landCategory: "전",
-                            landType: "농경지",
-                            area: 856,
-                            owner: "김OO",
-                          },
-                          {
-                            id: "adjacent-002",
-                            address: "경기도 용인시 처인구 포곡읍 마성리 102",
-                            landCategory: "답",
-                            landType: "농경지",
-                            area: 1234,
-                            owner: "박OO",
-                          },
-                        ].map((adjacent, adjIdx) => (
-                          <AccordionItem 
-                            key={adjacent.id}
-                            value={adjacent.id}
-                            className="rounded-lg border border-dashed border-amber-300 bg-amber-50/50 px-4"
-                          >
-                            <AccordionTrigger className="hover:no-underline py-3">
-                              <div className="flex items-center justify-between w-full pr-2">
-                                <div className="flex items-center gap-2">
-                                  <div className="flex h-5 w-5 items-center justify-center rounded border-2 border-dashed border-amber-500 bg-amber-100 text-xs font-bold text-amber-700 shrink-0">
-                                    {String.fromCharCode(97 + adjIdx)}
-                                  </div>
-                                  <div className="text-left">
-                                    <div className="flex items-center gap-2">
-                                      <p className="font-medium text-sm text-amber-800">{adjacent.address}</p>
-                                      <Badge variant="outline" className="text-[10px] h-4 px-1 border-amber-400 text-amber-600 shrink-0">인접</Badge>
-                                    </div>
-                                    <p className="text-xs text-amber-600">{adjacent.landCategory} | {adjacent.area.toLocaleString()}m² | 소유자: {adjacent.owner}</p>
-                                  </div>
-                                </div>
-                              </div>
-                            </AccordionTrigger>
-                            <AccordionContent className="pb-4">
-                              <div className="text-sm text-amber-700">
-                                <div className="grid grid-cols-2 gap-2 text-xs">
-                                  <div>
-                                    <span className="text-amber-600">지목:</span> {adjacent.landCategory}
-                                  </div>
-                                  <div>
-                                    <span className="text-amber-600">면적:</span> {adjacent.area.toLocaleString()}m²
-                                  </div>
-                                  <div>
-                                    <span className="text-amber-600">소유자:</span> {adjacent.owner}
-                                  </div>
-                                </div>
-                                <p className="mt-2 text-xs text-amber-600">인접 필지는 지도에서 확인할 수 있습니다.</p>
-                              </div>
-                            </AccordionContent>
-                          </AccordionItem>
-                        ))}
                       </Accordion>
                     </>
                   ) : (
@@ -3077,7 +2847,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         </div>
                       )}
                       
-                      {/* 필지별 분석 결과 - 아코디언 UI */}
+                      {/* 필지별 분석 ���과 - 아코디언 UI */}
                       <Accordion type="multiple" defaultValue={[]} className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
                         {Object.entries(adminLandAIResults).map(([landId, result]) => {
                           const land = allLands.find(l => l.id === landId);
