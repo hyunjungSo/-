@@ -70,19 +70,8 @@ export default function ReviewDocumentPage({
   const [cadastralMapImage, setCadastralMapImage] = useState<string | null>(null);
   const [aerialPhotoImage, setAerialPhotoImage] = useState<string | null>(null);
 
-  // 현지상황 및 검토의견 (textarea로 편집 가능)
-  const [fieldConditionReview, setFieldConditionReview] = useState(`현황 : 지목(전, 임), 현황 임야
-토지모양 : 부정형 다각형, 세장형, 부정형다각형
-실제 이용상황 : 임
-농기계 진입, 회전 : -
-
-검토의견
-가운데 부분이 편입되고, 일부 잔여지 359-1(임) 및 359-8(임)은
-잔여 면적 및 잔여비율이 매우 커서 잔여지만 매수는 불가한 것으로
-판단되며, 359-4 및 359-10은 면적이 작고 진입이 곤란한 형상으로
-잔여지 활용이 현저히 어려워 매수가 타당하다고 판단됨.
-
-잔여지 보상비 : 359-1, 359-2, 359-8, 359-4, 359-10`);
+  // 현지상황 및 검토의견 (최종검토의견 textarea 내용이 자동 입력됨)
+  const [fieldConditionReview, setFieldConditionReview] = useState("");
 
   // 소유자 의견
   const [ownerOpinion, setOwnerOpinion] = useState(
@@ -144,6 +133,11 @@ export default function ReviewDocumentPage({
       },
       ]);
       setOwnerOpinion(found.reason || ownerOpinion);
+      
+      // 최종 검토 의견이 있으면 현지상황 및 검토의견에 반영
+      if (found.reviewerComment) {
+        setFieldConditionReview(found.reviewerComment);
+      }
     }
   }, [resolvedParams.id]);
 
