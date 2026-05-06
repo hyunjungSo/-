@@ -1837,7 +1837,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         size="icon"
                         onClick={handleResetAdminAIResults}
                         className="h-7 w-7 text-muted-foreground hover:text-destructive"
-                        title="재분석 결과 초기화"
+                        title="재분석 결과 ��기화"
                       >
                         <RotateCcw className="h-4 w-4" />
                       </Button>
@@ -2350,18 +2350,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </CardHeader>
           <CardContent>
             <Accordion type="multiple" className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-semibold text-slate-800">필지별 검토</h4>
-                  <p className="text-sm text-slate-600">각 필지별로 판정과 검토 의견을 입력하세요</p>
-                </div>
-                <Badge variant="outline">
-                  {landReviewDataList.filter(d => d.landJudgment !== null).length}/{allLands.length} 검토완료
-                </Badge>
-              </div>
-              
-              <Accordion type="multiple" className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
-                {allLands.map((land, idx) => {
+              {allLands.map((land, idx) => {
                   const landReview = landReviewDataList[idx];
                   const aiResult = adminLandAIResults[land.id] || application.aiResult;
                   const isReviewed = landReview.landJudgment !== null;
@@ -2454,11 +2443,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       </AccordionContent>
                     </AccordionItem>
                   );
-                })}
-              </Accordion>
-            </CardContent>
-          </Card>
-        )}
+              })}
+            </Accordion>
+          </CardContent>
+        </Card>
+      )}
 
       {/* 진행상황 선택 */}
       <Card>
