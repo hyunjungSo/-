@@ -231,6 +231,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               <TableHeader>
                 <TableRow>
                   <TableHead>접수번호</TableHead>
+                  <TableHead>신청유형</TableHead>
                   <TableHead>신청인</TableHead>
                   <TableHead>신청일</TableHead>
                   <TableHead>대상 지번</TableHead>
@@ -249,15 +250,37 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     onClick={() => onSelect(app)}
                   >
                     <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        {app.applicationNumber}
-                        {app.additionalLands && app.additionalLands.length > 0 && (
-                          <span className="flex items-center gap-0.5 rounded bg-primary/10 px-1.5 py-0.5 text-base text-primary" title="복수 필지">
-                            <Layers className="h-3 w-3" />
-                            {app.additionalLands.length + 1}
-                          </span>
-                        )}
-                      </div>
+                      {app.applicationNumber}
+                    </TableCell>
+                    <TableCell>
+                      {(() => {
+                        // 일단지 판별: aiResult에 unifiedLandAnalysis가 있거나 applicationType이 unified인 경우
+                        const isUnified = app.aiResult?.unifiedLandAnalysis || 
+                          app.aiResult?.landJudgments?.some(lj => lj.unifiedGroupId);
+                        // 복수필지: additionalLands가 있는 경우
+                        const isMultiple = app.additionalLands && app.additionalLands.length > 0;
+                        
+                        if (isUnified) {
+                          return (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                              일단지
+                            </span>
+                          );
+                        } else if (isMultiple) {
+                          return (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
+                              <Layers className="h-3 w-3" />
+                              복수필지 ({app.additionalLands!.length + 1})
+                            </span>
+                          );
+                        } else {
+                          return (
+                            <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+                              단일필지
+                            </span>
+                          );
+                        }
+                      })()}
                     </TableCell>
                     <TableCell>{app.applicantName}</TableCell>
                     <TableCell>{app.appliedAt}</TableCell>
@@ -296,13 +319,33 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     <span className="font-medium text-foreground">
                       {app.applicationNumber}
                     </span>
+                    {(() => {
+                      const isUnified = app.aiResult?.unifiedLandAnalysis || 
+                        app.aiResult?.landJudgments?.some(lj => lj.unifiedGroupId);
+                      const isMultiple = app.additionalLands && app.additionalLands.length > 0;
+                      
+                      if (isUnified) {
+                        return (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                            일단지
+                          </span>
+                        );
+                      } else if (isMultiple) {
+                        return (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
+                            <Layers className="h-3 w-3" />
+                            복수필지
+                          </span>
+                        );
+                      } else {
+                        return (
+                          <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+                            단일필지
+                          </span>
+                        );
+                      }
+                    })()}
                     <ProcessStatusBadge status={app.status} />
-                    {app.additionalLands && app.additionalLands.length > 0 && (
-                      <span className="flex items-center gap-0.5 rounded bg-primary/10 px-1.5 py-0.5 text-base text-primary">
-                        <Layers className="h-3 w-3" />
-                        복수필지
-                      </span>
-                    )}
                   </div>
                   <p className="text-base text-muted-foreground">
                     {app.applicantName} | {app.appliedAt}
