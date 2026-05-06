@@ -178,7 +178,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
   
-  // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
+  // 필��별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
   // 필지별 분석 단계 상세 (0: 대기, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
@@ -565,7 +565,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     }
   };
   
-  // 소규모 토지 여부 판단 (편입 전 면적 330㎡ 이하 또는 잔여비율 50% 이하)
+  // 소규모 토지 여부 판단 (편입 전 면적 330�� 이하 또는 잔여비율 50% 이하)
   const isSmallScaleLand = (land: typeof allLands[0]) => {
     return land.originalArea <= 330 || land.remainingRatio <= 50;
   };
@@ -2315,20 +2315,22 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* Section 04. 담당자 검토 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">
-            담당자 검토
-          </CardTitle>
-          <CardDescription>
-            AI 분석 결과를 확인하고 최종 판정을 내려주세요
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* 복수 필지인 경우 필지별 검토 */}
-          {allLands.length > 1 && (
-            <div className="rounded-xl border-2 border-slate-200 bg-gradient-to-b from-slate-50/80 to-white p-5 space-y-4">
+      {/* Section 04. 담당자 검토 - 필지별 검토 */}
+      {allLands.length > 1 && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-lg">필지별 검토</CardTitle>
+                <CardDescription>각 필지별로 판정과 검토 의견을 입력하세요</CardDescription>
+              </div>
+              <Badge variant="outline">
+                {landReviewDataList.filter(d => d.landJudgment !== null).length}/{allLands.length} 검토완료
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Accordion type="multiple" className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-semibold text-slate-800">필지별 검토</h4>
@@ -2435,56 +2437,57 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   );
                 })}
               </Accordion>
-            </div>
-          )}
+          </CardContent>
+        </Card>
+      )}
 
-          {/* 진행상황 선택 */}
-          <div className="rounded-xl border-2 border-blue-200 bg-gradient-to-b from-blue-50/80 to-white p-5 space-y-4">
-            <div>
-              <h4 className="font-semibold text-blue-800">진행상황 선택</h4>
-              <p className="text-sm text-blue-600">민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다</p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
-                const config = adminStatusConfig[status];
-                const Icon = config.icon;
-                const isSelected = reviewData.adminStatus === status;
-                return (
-                  <Button
-                    key={status}
-                    type="button"
-                    variant="outline"
-                    onClick={() =>
-                      setReviewData((prev) => ({ ...prev, adminStatus: status }))
-                    }
-                    className={`cursor-pointer border-2 ${isSelected ? "border-primary text-primary" : "border-[#E1E4E7] text-foreground"}`}
-                  >
-                    <Icon className={`mr-2 h-4 w-4 ${status === "진행중" && isSelected ? "animate-spin" : ""}`} />
-                    {config.label}
-                  </Button>
-                );
-              })}
-            </div>
+      {/* 진행상황 선택 */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">진행상황 선택</CardTitle>
+          <CardDescription>민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
+              const config = adminStatusConfig[status];
+              const Icon = config.icon;
+              const isSelected = reviewData.adminStatus === status;
+              return (
+                <Button
+                  key={status}
+                  type="button"
+                  variant="outline"
+                  onClick={() =>
+                    setReviewData((prev) => ({ ...prev, adminStatus: status }))
+                  }
+                  className={`cursor-pointer border-2 ${isSelected ? "border-primary text-primary" : "border-[#E1E4E7] text-foreground"}`}
+                >
+                  <Icon className={`mr-2 h-4 w-4 ${status === "진행중" && isSelected ? "animate-spin" : ""}`} />
+                  {config.label}
+                </Button>
+              );
+            })}
           </div>
+        </CardContent>
+      </Card>
 
-          {/* 최종 검토 섹션 */}
-          <div className="rounded-xl border-2 border-amber-200 bg-gradient-to-b from-amber-50/80 to-white p-5 space-y-4">
-            <div className="mb-2">
-              <h4 className="font-semibold text-amber-800">최종 검토</h4>
-              <p className="text-sm text-amber-600">전체 민원에 대한 최종 검토 의견을 작성해주세요</p>
-            </div>
-            
-            {/* 최종 검토 의견 */}
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">최종 검토 의견</Label>
-              <Textarea
-                placeholder="현지상황 및 종합 검토의견을 작성해주세요. 이 내용은 심의서에 자동 입력됩니다."
-                rows={4}
-                value={reviewData.reviewerComment || ""}
-                onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}
-                className="resize-none"
-              />
-            </div>
+      {/* 최종 검토 */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">최종 검토</CardTitle>
+          <CardDescription>전체 민원에 대한 최종 검토 의견을 작성해주세요</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">최종 검토 의견</Label>
+            <Textarea
+              placeholder="현지상황 및 종합 검토의견을 작성해주세요. 이 내용은 심의서에 자동 입력됩니다."
+              rows={4}
+              value={reviewData.reviewerComment || ""}
+              onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}
+              className="resize-none"
+            />
           </div>
 
           {/* 저장 버튼 */}
