@@ -240,7 +240,7 @@ const regionData = {
     // 세종특별자치시
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
-    "부강면": ["금산리", "노호리", "등곡리", "문���리", "산수��"],
+    "부강면": ["금산리", "노호리", "등곡리", "문����리", "산수��"],
     "��정면": ["송등�������", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
@@ -1012,7 +1012,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         </ol>
       </nav>
 
-      {/* 검색 필터 영역 - 고용24 스타일 테이블 형태 */}
+      {/* 검색 필터 영�� - 고용24 스타일 테이블 형태 */}
       <div className="mb-4 overflow-hidden rounded-lg border border-border">
         {/* 검색 방식 행 */}
         <div className="flex border-b border-border">
@@ -1607,7 +1607,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             className="px-3 py-1 text-sm font-bold"
                           >
                             {aiResult.provisionalJudgment === "매수" 
-                              ? "매�� 가능" 
+                              ? "매수가능" 
                               : aiResult.provisionalJudgment === "심의위원회이관"
                                 ? "경계 사례"
                                 : "기준 미충족"}
@@ -1975,7 +1975,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                         variant={item.aiResult.provisionalJudgment === "매수" ? "success" : "destructive"}
                                         className="text-xs"
                                       >
-                                        {item.aiResult.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
+                                        {item.aiResult.provisionalJudgment === "매수" ? "매수가능" : "기준 미충족"}
                                       </Badge>
                                     </div>
                                   </div>
