@@ -98,7 +98,7 @@ const regionData = {
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "���곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
     "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "내덕동", "율량동"],
@@ -235,13 +235,13 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["도고리", "시전리", "���수리", "금산리"],
+    "도고면": ["도고리", "���전리", "���수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
-    "소정면": ["송등�������", "대곡리", "소정리", "운담리"],
+    "��정면": ["송등�������", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -998,7 +998,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setHasSearched(false);
   };
   
-  // 검색 방식 변경 시 필지 목록 및 기본 정보 초기화
+  // 검색 방식 변경 시 필지 목록 및 기본 정보 초��화
   const handleSearchModeChange = (mode: "address" | "individual" | "corporation") => {
     setSearchMode(mode);
     setOwnerName("");
@@ -1404,15 +1404,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 </div>
               ) : (
                 <>
-                  {/* 인접 필지 추가 선택 안내 */}
-                  {searchResults.length > 1 && (
-                    <div className="border-b border-blue-200 bg-blue-50 px-3 py-2">
-                      <p className="flex items-start gap-1.5 text-xs text-blue-700">
-                        <Info className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                        <span><strong>인접 필지 추가 선택:</strong> 선택하신 토지와 붙어 있는 본인 소유 필지를 모두 선택해 주세요. 필지를 묶어서 신청해야 잔여지 매수 가능성이 높아집니다.</span>
-                      </p>
-                    </div>
-                  )}
                   <ul>
                     {searchResults.map((land, index) => {
                       const isOwned = ownedParcels.has(land.id);
@@ -1501,7 +1492,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     <div className="border-t bg-muted/30 px-3 py-3">
                       <div className="mb-2 flex items-center justify-between text-xs">
                         <span className="text-muted-foreground">
-                          선택: {ownedParcels.size || 1}필지
+                          선��: {ownedParcels.size || 1}필지
                         </span>
                         <span className="font-medium text-primary">
                           총 {searchResults.length}필지
