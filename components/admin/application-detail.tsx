@@ -1579,7 +1579,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className="flex items-start gap-2 pt-2 border-t border-emerald-200">
                                   <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
                                   <p className="text-xs text-emerald-600">
-                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결��������니다.
+                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결����������니다.
                                   </p>
                                 </div>
                               </div>
@@ -2184,29 +2184,48 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             onMouseEnter={() => setHoveredLandId(adjacentLand.id)}
                             onMouseLeave={() => setHoveredLandId(null)}
                           >
-                            {/* 상단: 기본 정보 */}
-                            <div className="flex items-center gap-3 cursor-pointer" onClick={() => setFocusedLandId(isFocused ? null : adjacentLand.id)}>
-                              {/* 체크박스 */}
+                            {/* 상단: 체크박스 + 필지 정보 */}
+                            <div className="flex items-center gap-3">
+                              {/* 체크박스 - 독립적인 클릭 영역 */}
                               <Checkbox 
                                 checked={isSelected}
                                 onCheckedChange={(checked) => handleAdminCheckLand(adjacentLand.id, checked as boolean)}
-                                className="shrink-0"
+                                className="h-6 w-6 shrink-0"
                               />
                               
-                              {/* 순서 마커 */}
-                              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-white shrink-0">
-                                {allLands.length + adjIdx + 1}
+                              {/* 필지 마커 + 정보 (클릭 시 확장/축소 토글) */}
+                              <div 
+                                className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer"
+                                onClick={() => setFocusedLandId(isFocused ? null : adjacentLand.id)}
+                              >
+                                <span 
+                                  className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white shrink-0"
+                                  style={{
+                                    backgroundColor: isSelected ? "#16a34a" : "#6b7280"
+                                  }}
+                                >
+                                  {String.fromCharCode(65 + allLands.length + adjIdx)}
+                                </span>
+                                
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium truncate">{adjacentLand.address.split(" ").slice(-2).join(" ")}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {adjacentLand.landType} | 잔여 {adjacentLand.remainingArea.toLocaleString()}m²
+                                  </p>
+                                </div>
                               </div>
                               
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium">{adjacentLand.address}</p>
-                                <p className="text-xs text-muted-foreground">
-                                  {adjacentLand.landType} | {adjacentLand.remainingArea.toLocaleString()}m² ({adjacentLand.remainingRatio}%)
-                                </p>
+                              {/* 아코디언 화살표 아이콘 */}
+                              <div 
+                                className="shrink-0 ml-2 cursor-pointer p-1 hover:bg-muted rounded"
+                                onClick={() => setFocusedLandId(isFocused ? null : adjacentLand.id)}
+                              >
+                                {isFocused ? (
+                                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                                ) : (
+                                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                                )}
                               </div>
-                              
-                              {/* 토글 아이콘 */}
-                              <ChevronDown className={`h-4 w-4 transition-transform shrink-0 ${isFocused ? "rotate-180" : ""}`} />
                             </div>
                             
                             {/* 하단: 필지 상세 옵션 */}
@@ -2266,13 +2285,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 
                                 {/* 현장확인 옵션 */}
                                 <div className="space-y-1.5">
-                                  <span className="text-xs text-muted-foreground font-medium">현장확���:</span>
+                                  <span className="text-xs text-muted-foreground font-medium">현장확인:</span>
                                   <div className="flex flex-col gap-2">
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
                                         checked={landOptions.farmMachineDifficulty}
                                         onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'farmMachineDifficulty', checked === true)}
-                                        className="h-[18px] w-[18px]"
                                       />
                                       <span className="text-xs">농기계 곤란</span>
                                     </label>
@@ -2280,7 +2298,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <Checkbox 
                                         checked={landOptions.accessRoadLost}
                                         onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'accessRoadLost', checked === true)}
-                                        className="h-[18px] w-[18px]"
                                       />
                                       <span className="text-xs">접면도로 상실</span>
                                     </label>
@@ -2288,7 +2305,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <Checkbox 
                                         checked={landOptions.waterChannelLost}
                                         onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'waterChannelLost', checked === true)}
-                                        className="h-[18px] w-[18px]"
                                       />
                                       <span className="text-xs">관개용수로 상실</span>
                                     </label>
@@ -2400,7 +2416,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               {/* 기본 정보 */}
                               <div className="grid grid-cols-3 gap-2 mb-3">
                                 <div className="rounded bg-white/80 p-2 text-center">
-                                  <p className="text-xs text-muted-foreground">포함 필지</p>
+                                  <p className="text-xs text-muted-foreground">포함 필���</p>
                                   <p className="font-semibold text-sm">{allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
                                 </div>
                                 <div className="rounded bg-white/80 p-2 text-center">
