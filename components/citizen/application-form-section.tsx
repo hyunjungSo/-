@@ -391,7 +391,7 @@ export function ApplicationFormSection({
                   })}
                 </div>
                 
-                {/* 총계 */}
+                {/* ���계 */}
                 <div className="rounded-lg bg-muted/50 p-3 space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">총 필지 수</span>
@@ -499,16 +499,7 @@ export function ApplicationFormSection({
                     </span>
                   </div>
                 </div>
-                
-                {/* AI 판독 결과 요약 (단일 필지도 복수 필지와 동일한 형태) */}
-                <div className={`mt-4 rounded-lg border-2 p-4 ${
-                  aiResult.provisionalJudgment === "매수" 
-                    ? "border-primary bg-primary/5" 
-                    : "border-red-500 bg-red-50"
-                }`}>
-                  <div className="mb-2">
-                    <span className="text-base font-semibold text-foreground">AI 판독 결과</span>
-                  </div>
+
                   <div className="flex items-center gap-2">
                     {aiResult.provisionalJudgment === "매수" ? (
                       <>
@@ -541,7 +532,7 @@ export function ApplicationFormSection({
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* 신청인 정보 - 깔끔한 스택형 레이아웃 */}
+              {/* 신청인 정보 - 깔끔한 ��택형 레이아웃 */}
               <div className="space-y-5">
                 <h4 className="border-b border-border pb-2 text-sm font-medium text-foreground">신청인 정보</h4>
                 
