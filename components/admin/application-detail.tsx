@@ -182,7 +182,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
   const [landAnalysisStatus, setLandAnalysisStatus] = useState<Record<string, 'pending' | 'analyzing' | 'done'>>({});
   
-  // 필지별 분석 단계 상세 (0: 대�����, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
+  // 필지별 분석 단계 상세 (0: 대기, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
   const [landAnalysisStep, setLandAnalysisStep] = useState<Record<string, number>>({});
   
   // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
@@ -543,7 +543,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     if (landType === "대지") {
       // 택지 경로: 세부 유형별 기준
       switch (subType) {
-        case "residential-detached": // 단��·다세대주택
+        case "residential-detached": // 단독·다세대주택
           return { base: 90, relaxed: remainingRatio <= 25 ? 112.5 : 90 }; // 25% 이하 시 1.25배 완화
         case "residential-apartment": // 아파트 (1,000㎡ 이하)
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
@@ -575,7 +575,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const checkShapeCriteria = (land: typeof allLands[0]) => {
     const shape = land.remainingShape;
     // 사각형 폭: 5m 이하, 삼각형 한 변: 11m 이하
-    // 형상지수 변화로 간접 판단 (실제 ��� 데이터 없음)
+    // 형상지수 변화로 간접 판단 (실제 현장 데이터 없음)
     const shapeIndexChange = land.remainingShapeIndex - land.originalShapeIndex;
     
     if (shape === "삼각형" || shape === "역삼각형") {
@@ -635,7 +635,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         description: shapeCriteria.description
       });
       
-      // 하나라도 해당 시 → 충��(매수), 전체 미해당 시 → 미충족(기각)
+      // 하나라도 해당 시 → 충족(매수), 전체 미해당 시 → 미충족(기각)
       if (areaCheckMet || roadLost || shapeCriteria.met) {
         judgment = "매수";
         if (areaCheckMet) reasons.push("면적 기준 충족");
@@ -772,7 +772,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     
     // 필지별 순차 분석 시뮬레이션
     const simulateSequentialAnalysis = async () => {
-      // 각 ���지를 순차적으로 분석 단계별로 진행
+      // 각 필지를 순차적으로 분석 단계별로 진행
       for (let i = 0; i < adminCheckedLandIds.length; i++) {
         const landId = adminCheckedLandIds[i];
         setLandAnalysisStatus(prev => ({ ...prev, [landId]: 'analyzing' }));
@@ -1699,7 +1699,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [land.id]: value }))}
                                   >
                                     <SelectTrigger className="h-8 bg-background text-sm">
-                                      <SelectValue placeholder="현재 활용 ���목을 선택해 주세요" />
+                                      <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
                                     </SelectTrigger>
                                     <SelectContent>
                                       <SelectItem value="대">대 (택지)</SelectItem>
@@ -1827,7 +1827,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 mb-4 flex items-start gap-2">
                         <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
                         <p className="text-sm text-blue-700">
-                          현��� 민원인 결과를 표시하고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분석을 실행하면 담당자 결과가 표시됩니다.
+                          현재 민원인 결과를 표시하고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분석을 실행하면 담당자 결과가 표시됩니다.
                         </p>
                       </div>
                       
@@ -2149,7 +2149,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <p className="font-semibold">{land.remainingRatio}%</p>
                                   </div>
                                   <div className="rounded bg-white/80 p-2 text-center">
-                                    <p className="text-xs text-muted-foreground">형상지수 변���</p>
+                                    <p className="text-xs text-muted-foreground">형상지수 변화</p>
                                     <p className="font-semibold">
                                       {result?.shapeIndexChange != null ? `+${result.shapeIndexChange.toFixed(1)}` : "-"}
                                     </p>
@@ -2173,7 +2173,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)</span>
                                     </div>
                                     <div>
-                                      <span className="text-muted-foreground">형상지��� 변화:</span>
+                                      <span className="text-muted-foreground">형상지수 변화:</span>
                                       <span className="ml-1 font-medium">{result?.shapeIndexChange != null ? `+${result.shapeIndexChange.toFixed(1)}` : "-"}</span>
                                     </div>
                                   </div>
