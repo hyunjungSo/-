@@ -1234,13 +1234,76 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               {application.aiResult?.provisionalJudgment || "매수"}
                             </Badge>
                           </div>
-                          <div className="text-sm space-y-1 text-emerald-700">
-                            <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
-                            <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
-                            <p className="text-xs text-emerald-600 mt-2">
+                          
+                          {/* 일단지 조건 체크 */}
+                          <div className="grid grid-cols-3 gap-2 mb-3">
+                            <div className={`flex items-center gap-1.5 text-xs rounded px-2 py-1 ${
+                              application.unifiedParcelCondition?.sameOwner ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"
+                            }`}>
+                              {application.unifiedParcelCondition?.sameOwner ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                              소유자 동일
+                            </div>
+                            <div className={`flex items-center gap-1.5 text-xs rounded px-2 py-1 ${
+                              application.unifiedParcelCondition?.continuous ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"
+                            }`}>
+                              {application.unifiedParcelCondition?.continuous ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                              지반 연속
+                            </div>
+                            <div className={`flex items-center gap-1.5 text-xs rounded px-2 py-1 ${
+                              application.unifiedParcelCondition?.sameUsage ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"
+                            }`}>
+                              {application.unifiedParcelCondition?.sameUsage ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                              용도 일체성
+                            </div>
+                          </div>
+
+                          {/* 기본 정보 */}
+                          <div className="grid grid-cols-3 gap-2 mb-3">
+                            <div className="rounded bg-white/80 p-2 text-center">
+                              <p className="text-xs text-muted-foreground">포함 필지</p>
+                              <p className="font-semibold text-sm">{allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
+                            </div>
+                            <div className="rounded bg-white/80 p-2 text-center">
+                              <p className="text-xs text-muted-foreground">합산 잔여면적</p>
+                              <p className="font-semibold text-sm">{allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
+                            </div>
+                            <div className="rounded bg-white/80 p-2 text-center">
+                              <p className="text-xs text-muted-foreground">형상지수</p>
+                              <p className="font-semibold text-sm">{application.aiResult?.remainingShapeIndex?.toFixed(1) || "-"}</p>
+                            </div>
+                          </div>
+
+                          {/* 추가 조건 */}
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            {application.aiResult?.farmMachineDifficulty && (
+                              <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                <AlertTriangle className="h-3 w-3" /> 농기계 진입 곤란
+                              </span>
+                            )}
+                            {application.aiResult?.waterChannelLost && (
+                              <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                <AlertTriangle className="h-3 w-3" /> 관개수로 상실
+                              </span>
+                            )}
+                            {application.aiResult?.accessRoadLost && (
+                              <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                <AlertTriangle className="h-3 w-3" /> 진입로 상실
+                              </span>
+                            )}
+                            {application.aiResult?.isBlindLand && (
+                              <span className="inline-flex items-center gap-1 text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded">
+                                <AlertTriangle className="h-3 w-3" /> 맹지 발생
+                              </span>
+                            )}
+                          </div>
+
+                          {/* 판정 근거 */}
+                          <div className="rounded-lg bg-white/60 p-3 border">
+                            <p className="text-xs font-medium text-muted-foreground mb-1">판정 근거</p>
+                            <p className="text-sm text-emerald-800">
                               {application.aiResult?.unifiedParcelAnalysis?.explanation || 
                                application.aiResult?.judgmentRationale?.summary ||
-                               "소유자 동일 + 지반 연속 + 용도 일체성 충족"}
+                               "소유자 동일 + 지반 연속 + 용도 일체성 충족으로 일단지 인정"}
                             </p>
                           </div>
                         </div>
@@ -1252,6 +1315,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             return { ...lj, landIdx, land: allLands[landIdx] };
                           }).filter(l => l.land);
                           const groupJudgment = lands[0]?.judgment || "매수";
+                          const totalRemainingArea = groupLands.reduce((sum, l) => sum + (l.land?.remainingArea || 0), 0);
                           return (
                             <div key={groupId} className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
                               <div className="flex items-center justify-between mb-3">
@@ -1263,10 +1327,62 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   {groupJudgment}
                                 </Badge>
                               </div>
-                              <div className="text-sm space-y-1 text-emerald-700">
-                                <p>포함 필지: {groupLands.map(l => String.fromCharCode(65 + l.landIdx)).join(", ")}</p>
-                                <p>합산 면적: {groupLands.reduce((sum, l) => sum + (l.land?.remainingArea || 0), 0).toLocaleString()}m²</p>
-                                <p className="text-xs text-emerald-600 mt-2">{lands[0]?.reason || "소유자 동일 + 지반 연속 + 용도 일체성 충족"}</p>
+                              
+                              {/* 일단지 조건 체크 */}
+                              <div className="grid grid-cols-3 gap-2 mb-3">
+                                <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-emerald-100 text-emerald-700">
+                                  <CheckCircle2 className="h-3 w-3" />
+                                  소유자 동일
+                                </div>
+                                <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-emerald-100 text-emerald-700">
+                                  <CheckCircle2 className="h-3 w-3" />
+                                  지반 연속
+                                </div>
+                                <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-emerald-100 text-emerald-700">
+                                  <CheckCircle2 className="h-3 w-3" />
+                                  용도 일체성
+                                </div>
+                              </div>
+
+                              {/* 기본 정보 */}
+                              <div className="grid grid-cols-3 gap-2 mb-3">
+                                <div className="rounded bg-white/80 p-2 text-center">
+                                  <p className="text-xs text-muted-foreground">포함 필지</p>
+                                  <p className="font-semibold text-sm">{groupLands.map(l => String.fromCharCode(65 + l.landIdx)).join(", ")}</p>
+                                </div>
+                                <div className="rounded bg-white/80 p-2 text-center">
+                                  <p className="text-xs text-muted-foreground">합산 잔여면적</p>
+                                  <p className="font-semibold text-sm">{totalRemainingArea.toLocaleString()}m²</p>
+                                </div>
+                                <div className="rounded bg-white/80 p-2 text-center">
+                                  <p className="text-xs text-muted-foreground">형상지수</p>
+                                  <p className="font-semibold text-sm">{application.aiResult?.remainingShapeIndex?.toFixed(1) || "5.0"}</p>
+                                </div>
+                              </div>
+
+                              {/* 추가 조건 */}
+                              <div className="flex flex-wrap gap-2 mb-3">
+                                {application.aiResult?.farmMachineDifficulty && (
+                                  <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                    <AlertTriangle className="h-3 w-3" /> 농기계 진입 곤란
+                                  </span>
+                                )}
+                                {application.aiResult?.waterChannelLost && (
+                                  <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                    <AlertTriangle className="h-3 w-3" /> 관개수로 상실
+                                  </span>
+                                )}
+                                {application.aiResult?.accessRoadLost && (
+                                  <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                    <AlertTriangle className="h-3 w-3" /> 진입로 상실
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* 판정 근거 */}
+                              <div className="rounded-lg bg-white/60 p-3 border">
+                                <p className="text-xs font-medium text-muted-foreground mb-1">판정 근거</p>
+                                <p className="text-sm text-emerald-800">{lands[0]?.reason || "동일 소유자, 연접 필지, 동일 용도로 일단지 인정"}</p>
                               </div>
                             </div>
                           );
@@ -1361,7 +1477,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className="flex items-start gap-2 pt-3 mt-3 border-t text-blue-600">
                                   <Info className="mt-0.5 h-3 w-3 shrink-0" />
                                   <p className="text-xs">
-                                    이 필지는 일단지로 판정��었��니다. 상세 분석 결과는 상단의 일단지 판정 결과를 참조하세요.
+                                    이 필지는 일단지로 판정���었��니다. 상세 분석 결과는 상단의 일단지 판정 결과를 참조하세요.
                                   </p>
                                 </div>
                               );
@@ -2001,13 +2117,76 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   {application.aiResult?.provisionalJudgment || "매수"}
                                 </Badge>
                               </div>
-                              <div className="text-sm space-y-1 text-emerald-700">
-                                <p>포함 필지: {allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
-                                <p>합산 면적: {allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
-                                <p className="text-xs text-emerald-600 mt-2">
+                              
+                              {/* 일단지 조건 체크 */}
+                              <div className="grid grid-cols-3 gap-2 mb-3">
+                                <div className={`flex items-center gap-1.5 text-xs rounded px-2 py-1 ${
+                                  application.unifiedParcelCondition?.sameOwner ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"
+                                }`}>
+                                  {application.unifiedParcelCondition?.sameOwner ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                                  소유자 동일
+                                </div>
+                                <div className={`flex items-center gap-1.5 text-xs rounded px-2 py-1 ${
+                                  application.unifiedParcelCondition?.continuous ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"
+                                }`}>
+                                  {application.unifiedParcelCondition?.continuous ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                                  지반 연속
+                                </div>
+                                <div className={`flex items-center gap-1.5 text-xs rounded px-2 py-1 ${
+                                  application.unifiedParcelCondition?.sameUsage ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"
+                                }`}>
+                                  {application.unifiedParcelCondition?.sameUsage ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                                  용도 일체성
+                                </div>
+                              </div>
+
+                              {/* 기본 정보 */}
+                              <div className="grid grid-cols-3 gap-2 mb-3">
+                                <div className="rounded bg-white/80 p-2 text-center">
+                                  <p className="text-xs text-muted-foreground">포함 필지</p>
+                                  <p className="font-semibold text-sm">{allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
+                                </div>
+                                <div className="rounded bg-white/80 p-2 text-center">
+                                  <p className="text-xs text-muted-foreground">합산 잔여면적</p>
+                                  <p className="font-semibold text-sm">{allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
+                                </div>
+                                <div className="rounded bg-white/80 p-2 text-center">
+                                  <p className="text-xs text-muted-foreground">형상지수</p>
+                                  <p className="font-semibold text-sm">{application.aiResult?.remainingShapeIndex?.toFixed(1) || "-"}</p>
+                                </div>
+                              </div>
+
+                              {/* 추가 조건 */}
+                              <div className="flex flex-wrap gap-2 mb-3">
+                                {application.aiResult?.farmMachineDifficulty && (
+                                  <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                    <AlertTriangle className="h-3 w-3" /> 농기계 진입 곤란
+                                  </span>
+                                )}
+                                {application.aiResult?.waterChannelLost && (
+                                  <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                    <AlertTriangle className="h-3 w-3" /> 관개수로 상실
+                                  </span>
+                                )}
+                                {application.aiResult?.accessRoadLost && (
+                                  <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                    <AlertTriangle className="h-3 w-3" /> 진입로 상실
+                                  </span>
+                                )}
+                                {application.aiResult?.isBlindLand && (
+                                  <span className="inline-flex items-center gap-1 text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded">
+                                    <AlertTriangle className="h-3 w-3" /> 맹지 발생
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* 판정 근거 */}
+                              <div className="rounded-lg bg-white/60 p-3 border">
+                                <p className="text-xs font-medium text-muted-foreground mb-1">판정 근거</p>
+                                <p className="text-sm text-emerald-800">
                                   {application.aiResult?.unifiedParcelAnalysis?.explanation || 
                                    application.aiResult?.judgmentRationale?.summary ||
-                                   "소유자 동일 + 지반 연속 + 용도 일체성 충족"}
+                                   "소유자 동일 + 지반 연속 + 용도 일체성 충족으로 일단지 인정"}
                                 </p>
                               </div>
                             </div>
@@ -2019,6 +2198,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 return { ...lj, landIdx, land: allLands[landIdx] };
                               }).filter(l => l.land);
                               const groupJudgment = lands[0]?.judgment || "매수";
+                              const totalRemainingArea = groupLands.reduce((sum, l) => sum + (l.land?.remainingArea || 0), 0);
                               return (
                                 <div key={groupId} className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
                                   <div className="flex items-center justify-between mb-3">
@@ -2030,10 +2210,62 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       {groupJudgment}
                                     </Badge>
                                   </div>
-                                  <div className="text-sm space-y-1 text-emerald-700">
-                                    <p>포함 필지: {groupLands.map(l => String.fromCharCode(65 + l.landIdx)).join(", ")}</p>
-                                    <p>합산 면적: {groupLands.reduce((sum, l) => sum + (l.land?.remainingArea || 0), 0).toLocaleString()}m²</p>
-                                    <p className="text-xs text-emerald-600 mt-2">{lands[0]?.reason || "소유자 동일 + 지반 연속 + 용도 일체성 충족"}</p>
+                                  
+                                  {/* 일단지 조건 체크 */}
+                                  <div className="grid grid-cols-3 gap-2 mb-3">
+                                    <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-emerald-100 text-emerald-700">
+                                      <CheckCircle2 className="h-3 w-3" />
+                                      소유자 동일
+                                    </div>
+                                    <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-emerald-100 text-emerald-700">
+                                      <CheckCircle2 className="h-3 w-3" />
+                                      지반 연속
+                                    </div>
+                                    <div className="flex items-center gap-1.5 text-xs rounded px-2 py-1 bg-emerald-100 text-emerald-700">
+                                      <CheckCircle2 className="h-3 w-3" />
+                                      용도 일체성
+                                    </div>
+                                  </div>
+
+                                  {/* 기본 정보 */}
+                                  <div className="grid grid-cols-3 gap-2 mb-3">
+                                    <div className="rounded bg-white/80 p-2 text-center">
+                                      <p className="text-xs text-muted-foreground">포함 필지</p>
+                                      <p className="font-semibold text-sm">{groupLands.map(l => String.fromCharCode(65 + l.landIdx)).join(", ")}</p>
+                                    </div>
+                                    <div className="rounded bg-white/80 p-2 text-center">
+                                      <p className="text-xs text-muted-foreground">합산 잔여면적</p>
+                                      <p className="font-semibold text-sm">{totalRemainingArea.toLocaleString()}m²</p>
+                                    </div>
+                                    <div className="rounded bg-white/80 p-2 text-center">
+                                      <p className="text-xs text-muted-foreground">형상지수</p>
+                                      <p className="font-semibold text-sm">{application.aiResult?.remainingShapeIndex?.toFixed(1) || "5.0"}</p>
+                                    </div>
+                                  </div>
+
+                                  {/* 추가 조건 */}
+                                  <div className="flex flex-wrap gap-2 mb-3">
+                                    {application.aiResult?.farmMachineDifficulty && (
+                                      <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                        <AlertTriangle className="h-3 w-3" /> 농기계 진입 곤란
+                                      </span>
+                                    )}
+                                    {application.aiResult?.waterChannelLost && (
+                                      <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                        <AlertTriangle className="h-3 w-3" /> 관개수로 상실
+                                      </span>
+                                    )}
+                                    {application.aiResult?.accessRoadLost && (
+                                      <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                        <AlertTriangle className="h-3 w-3" /> 진입로 상실
+                                      </span>
+                                    )}
+                                  </div>
+
+                                  {/* 판정 근거 */}
+                                  <div className="rounded-lg bg-white/60 p-3 border">
+                                    <p className="text-xs font-medium text-muted-foreground mb-1">판정 근거</p>
+                                    <p className="text-sm text-emerald-800">{lands[0]?.reason || "동일 소유자, 연접 필지, 동일 용도로 일단지 인정"}</p>
                                   </div>
                                 </div>
                               );
@@ -2222,7 +2454,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <div className="flex items-start gap-2 pt-2 border-t">
                                     <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                     <p className="text-xs text-muted-foreground">
-                                      AI 판독 결과는 참고용이며, ���종 판정은 담당자 검토에 따라 결정됩니다.
+                                      AI 판독 결과는 참고용이며, ���종 판정�� 담당자 검토에 따라 결정됩니다.
                                     </p>
                                   </div>
                                 </div>
