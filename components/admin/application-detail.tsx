@@ -268,7 +268,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     farmMachineDifficulty: adminCheckedLandIds.some(id => adminAIOptionsPerLand[id]?.farmMachineDifficulty),
   };
   
-  // 현재 탭에 따른 선택된 필지 ID (지도 표시용)
+  // 현재 탭에 ��른 선택된 필지 ID (지도 표시용)
   const currentSelectedLandIds = aiResultViewMode === "citizen" ? citizenSelectedLandIds : adminCheckedLandIds;
   
   // 담당자 탭 체크박스 선택 변경 핸들러
@@ -566,7 +566,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
         case "commercial": // 상업용
           return { base: 150, relaxed: remainingRatio <= 25 ? 187.5 : 150 };
-        case "industrial": // 공업용
+        case "industrial": // ��업용
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
         default:
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
@@ -1080,7 +1080,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardContent>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <div>
-              <p className="text-xs text-muted-foreground">신청인</p>
+              <p className="text-xs text-muted-foreground">신��인</p>
               <p className="font-medium">{application.applicantName}</p>
             </div>
             <div>
@@ -2778,6 +2778,70 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             </AccordionItem>
                           );
                         })}
+                        
+                        {/* 인접 필지 */}
+                        {[
+                          {
+                            id: "adjacent-001",
+                            address: "경기도 용인시 처인구 포곡읍 마성리 101",
+                            landCategory: "전",
+                            landType: "농경지",
+                            area: 856,
+                            owner: "김OO",
+                          },
+                          {
+                            id: "adjacent-002",
+                            address: "경기도 용인시 처인구 포곡읍 마성리 102",
+                            landCategory: "답",
+                            landType: "농경지",
+                            area: 1234,
+                            owner: "박OO",
+                          },
+                        ].map((adjacent, adjIdx) => (
+                          <AccordionItem 
+                            key={adjacent.id}
+                            value={adjacent.id}
+                            className="rounded-lg border border-dashed border-amber-300 bg-amber-50/50 px-4"
+                          >
+                            <AccordionTrigger className="hover:no-underline py-3">
+                              <div className="flex items-center justify-between w-full pr-2">
+                                <div className="flex items-center gap-2">
+                                  <div className="flex h-5 w-5 items-center justify-center rounded border-2 border-dashed border-amber-500 bg-amber-100 text-xs font-bold text-amber-700 shrink-0">
+                                    {String.fromCharCode(97 + adjIdx)}
+                                  </div>
+                                  <div className="text-left">
+                                    <div className="flex items-center gap-2">
+                                      <p className="font-medium text-sm text-amber-800">{adjacent.address}</p>
+                                      <Badge variant="outline" className="text-[10px] h-4 px-1 border-amber-400 text-amber-600 shrink-0">인접</Badge>
+                                    </div>
+                                    <p className="text-xs text-amber-600">{adjacent.landCategory} | {adjacent.area.toLocaleString()}m² | 소유자: {adjacent.owner}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </AccordionTrigger>
+                            <AccordionContent className="pb-4">
+                              <div className="text-sm text-amber-700 space-y-2">
+                                <div className="grid grid-cols-2 gap-2 text-xs">
+                                  <div>
+                                    <span className="text-amber-600">지목:</span> <span className="font-medium">{adjacent.landCategory}</span>
+                                  </div>
+                                  <div>
+                                    <span className="text-amber-600">면적:</span> <span className="font-medium">{adjacent.area.toLocaleString()}m²</span>
+                                  </div>
+                                  <div>
+                                    <span className="text-amber-600">소유자:</span> <span className="font-medium">{adjacent.owner}</span>
+                                  </div>
+                                  <div>
+                                    <span className="text-amber-600">유형:</span> <span className="font-medium">{adjacent.landType}</span>
+                                  </div>
+                                </div>
+                                <p className="text-xs text-amber-600 pt-2 border-t border-amber-200">
+                                  인접 필지는 일단지 판정 시 참고 자료로 활용됩니다.
+                                </p>
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        ))}
                       </Accordion>
                     </>
                   ) : (
