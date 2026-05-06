@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { LeafletMap } from "@/components/leaflet-map";
 import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult, JudgmentRationale, ApplicationCartItem } from "@/lib/types";
-import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ClipboardList, Plus, Trash2, X, User, Layers } from "lucide-react";
+import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ClipboardList, Plus, Trash2, X, User, Layers, PlayCircle } from "lucide-react";
 import { AIIcon } from "@/components/ui/ai-icon";
 
 
@@ -179,7 +179,7 @@ const regionData = {
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
     "향남읍": ["구문천리", "도이리", "발안리", "상신리", "제암리", "평리", "행정리"],
     "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "어천리"],
-    "비봉면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
+    "비��면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
     "마도면": ["백곡리", "송정리", "쌍송리", "청원리", "해문리"],
     "남양읍": ["남양리", "문호리", "북양리", "송림리", "신남리"],
     // 경기도 - 평택시
@@ -235,13 +235,13 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["도고리", "시전리", "봉수리", "금산리"],
+    "도고면": ["도고리", "시전리", "���수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
-    "소정면": ["송등�����", "대곡리", "소정리", "운담리"],
+    "소정면": ["송등�������", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -493,7 +493,7 @@ function generateJudgmentRationale(
 - 잔여지 형상: ${land.remainingShape} (형상지수 ${land.remainingShapeIndex})
 - 형상지수 변화: +${shapeIndexChange.toFixed(1)}
 
-4. 충족 기준
+4. 충족 ���준
 ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 
 5. 판정 결과
@@ -1890,6 +1890,49 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           </div>
                         </div>
                       )}
+
+                      {/* 분석 프로세스 보기 버튼 */}
+                      <Button
+                        onClick={() => {
+                          const analysisData = {
+                            landAddress: selectedLand.address,
+                            landArea: selectedLand.remainingArea,
+                            currentUsage: currentUsage || "",
+                            analysisSteps: [
+                              {
+                                step: 1,
+                                title: "기본 정보 입력",
+                                description: `필지 위치: ${selectedLand.address}\n면적: ${selectedLand.remainingArea.toLocaleString()}m²\n현재 활용: ${currentUsage === "대" ? "대지" : currentUsage === "전" ? "밭" : currentUsage === "답" ? "논" : currentUsage}`,
+                                status: "completed"
+                              },
+                              {
+                                step: 2,
+                                title: "법적 기준 검토",
+                                description: aiResult.judgmentRationale?.legalBasis || "법적 기준 검토 중",
+                                status: "completed"
+                              },
+                              {
+                                step: 3,
+                                title: "적용 기준 확인",
+                                description: aiResult.judgmentRationale?.appliedCriteria.join("\n") || "적용 기준 확인 중",
+                                status: "completed"
+                              },
+                              {
+                                step: 4,
+                                title: "판정 결과",
+                                description: aiResult.provisionalJudgment === "매수" ? "매수 가능" : aiResult.provisionalJudgment === "심의위원회이관" ? "경계 사례 (심의위원회이관)" : "기준 미충족",
+                                status: "completed"
+                              }
+                            ]
+                          };
+                          console.log("[v0] Analysis data:", analysisData);
+                        }}
+                        variant="outline"
+                        className="w-full gap-2"
+                      >
+                        <PlayCircle className="h-4 w-4" />
+                        분석 프로세스 상세 보기
+                      </Button>
 
                       {/* 안내 문구 */}
                       <div className="flex items-start gap-2 pt-2">
