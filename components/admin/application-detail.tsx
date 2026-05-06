@@ -364,7 +364,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 기존 로직: 전체 일단지 또는 개별
+        // 기존 로직: 전��� 일단지 또는 개별
         const hasUnifiedAnalysis = application.aiResult.unifiedParcelAnalysis?.isUnifiedParcel;
         allLands.forEach(land => {
           initial[land.id] = {
@@ -610,7 +610,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     landData?: typeof application.landDataList[0], 
     adminOptions?: typeof adminAIOptions,
     adminCurrentUsage?: string, // 담당자가 선택한 현재 활용지목
-    adminLandSubType?: string   // 담당자가 선택한 건축물 용도
+    adminLandSubType?: string   // 담당자가 선택한 건��물 용도
   ) => {
     // 담당자가 선택한 현재 활용지목 우선 적용, 없으면 원래 지목 사용
     const effectiveLandType = adminCurrentUsage 
@@ -2605,18 +2605,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               key={land.id}
                               value={land.id}
                               className={`rounded-lg border px-4 ${
-                                isInUnifiedGroup
-                                  ? "border-blue-200 bg-blue-50/50"
-                                  : landResult?.provisionalJudgment === "매수"
-                                    ? "border-emerald-200 bg-emerald-50/50"
-                                    : landResult?.provisionalJudgment === "매수불가"
-                                      ? "border-red-200 bg-red-50/50"
-                                      : "border-slate-200 bg-slate-50/50"
+                                landResult?.provisionalJudgment === "매수"
+                                  ? "border-emerald-200 bg-emerald-50/50"
+                                  : landResult?.provisionalJudgment === "매수불가"
+                                    ? "border-red-200 bg-red-50/50"
+                                    : "border-slate-200 bg-slate-50/50"
                               }`}
                             >
-                              <AccordionTrigger className="hover:no-underline py-3">
-                                <div className="flex items-center justify-between w-full pr-2">
-                                  <div className="flex items-center gap-2">
+                              <AccordionTrigger className="hover:no-underline py-3 flex items-center justify-between w-full">
+                                <div className="flex items-center justify-between w-full pr-2 flex-1">
+                                  <div className="text-left flex-1">
                                     <div className="text-left">
                                       <p className="font-medium text-sm">{land.address}</p>
                                       <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
@@ -2836,7 +2834,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   </div>
                                 </div>
                                 <p className="text-xs text-amber-600 pt-2 border-t border-amber-200">
-                                  인접 필지는 일단지 판정 시 참고 자료로 활용됩니다.
+                                  ���접 필지는 일단지 판정 시 참고 자료로 활용됩니다.
                                 </p>
                               </div>
                             </AccordionContent>
