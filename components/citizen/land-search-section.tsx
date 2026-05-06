@@ -241,7 +241,7 @@ const regionData = {
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
-    "소정면": ["송등리", "대곡리", "소정리", "운담리"],
+    "소정면": ["송등���", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -1681,28 +1681,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 {/* AI 판독 결과 - 복수 필지 통합 뷰 (선택된 필지가 AI 판독된 경우에만 표시) */}
                 {parcelAiResults.size > 0 && aiResult && (
                   <div className="space-y-4">
-                    {/* 일단지 판정 결과 - 복수 필지인 경우만 표시 */}
-                    {parcelAiResults.size > 1 && (
-                      <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4">
-                        <div className="flex items-center justify-between mb-3">
-                          <h5 className="font-medium text-emerald-800 flex items-center gap-2">
-                            <Layers className="h-4 w-4" />
-                            일단지 판정 결과
-                          </h5>
-                          <Badge className="bg-emerald-600 hover:bg-emerald-600">매수</Badge>
-                        </div>
-                        <div className="text-sm space-y-1 text-emerald-700">
-                          <p>포함 필지: {Array.from(parcelAiResults.keys()).map((id, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
-                          <p>합산 면적: {Array.from(parcelAiResults.entries()).reduce((sum, [id]) => {
-                            const land = searchResults.find(l => l.id === id);
-                            return sum + (land?.remainingArea || 0);
-                          }, 0).toLocaleString()}m²</p>
-                          <p className="text-xs text-emerald-600 mt-2">소유자 동일 + 지반 연속 + 용도 일체성 충족</p>
-                        </div>
-                      </div>
-                    )}
-
-{/* 필지별 판독 결과 요약 리스트 */}
+                    {/* 필지별 판독 결과 요약 리스트 */}
                     <div className="rounded-lg border bg-background">
                       <div className="border-b bg-muted/50 px-4 py-2">
                         <span className="text-sm font-semibold">필지별 AI 판독 결과</span>
