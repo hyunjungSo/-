@@ -178,7 +178,7 @@ const regionData = {
     "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "음양리"],
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
     "향남읍": ["구문천리", "도이리", "발안리", "상신리", "제암리", "평리", "행정리"],
-    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "어��리"],
+    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "어���리"],
     "비��면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
     "마도면": ["백곡리", "송정리", "쌍송리", "청원리", "해문리"],
     "남양읍": ["남양리", "문호리", "북양리", "송림리", "신남리"],
@@ -235,7 +235,7 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["도고���", "���전리", "���수리", "금산리"],
+    "도고면": ["도������", "���전리", "���수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
@@ -787,7 +787,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         results = ownerLandData.map((landData) => ({
           ...dummyLandInfoList[0],
           ...landData,
-          ownerName: ownerName || "홍���동",
+          ownerName: ownerName || "홍�����동",
         }));
         
         setSearchResults(results);
@@ -902,11 +902,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     if (!selectedLand) return;
     
     setAiAnalyzing(true);
-    
-    // 기존 AI 판독 결과 초기화
-    setParcelAiResults(new Map());
     setAiResult(null);
-    setCheckedParcelsForCart(new Set());
     
     setTimeout(() => {
       // 단일 필지 AI 분석 실행
@@ -927,10 +923,12 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         explanation: "단일 필지 분석입니다.",
       };
       
-      // 결과 저장
-      const newResults = new Map<string, AIAnalysisResult>();
-      newResults.set(selectedLand.id, result);
-      setParcelAiResults(newResults);
+      // 기존 결과 유지하면서 새 결과 추가
+      setParcelAiResults(prev => {
+        const newResults = new Map(prev);
+        newResults.set(selectedLand.id, result);
+        return newResults;
+      });
       setAiResult(result);
       
       setAiAnalyzing(false);
