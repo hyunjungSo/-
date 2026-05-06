@@ -223,7 +223,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지별 건축물 용도 상태
   const [adminLandSubTypePerLand, setAdminLandSubTypePerLand] = useState<Record<string, string>>({});
   
-  // 필지별 현장확인 옵션 상태
+  // 필지별 현장확인 옵션 상태 (민원인 결과 탭용)
   const [adminLandOptionsPerLand, setAdminLandOptionsPerLand] = useState<Record<string, {
     farmMachineDifficulty: boolean;
     accessRoadLost: boolean;
@@ -694,7 +694,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "농기계 진입/회전",
         met: farmDifficulty,
-        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : "") : "농기계 사용 가능"
+        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : "") : "���기계 사용 가능"
       });
       
       criteriaChecks.push({
@@ -2120,7 +2120,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <p className="text-[10px] text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
                                 </div>
                                 
-                                {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
+                                {/* 건축물 용도 ��택 - 현재 활용 지목이 "대"인 경우만 표시 */}
                                 {adminCurrentUsagePerLand[land.id] === "대" && (
                                   <div className="space-y-1.5 rounded bg-muted/30 p-2">
                                     <label className="text-xs font-medium text-foreground">
