@@ -567,7 +567,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경���������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
+      // 농지 경�����������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -1614,16 +1614,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
                                 </div>
                               </div>
-                              {/* 일단지 신청건인 경우 "일단지" Badge 표시, 아닌 경우 매수/불매수 Badge 표시 */}
+                              {/* 개별 필지인 경우에만 매수/불매수 Badge 표시 */}
                               {(() => {
                                 const isInUnifiedGroup = applicationType === "unified" || application.aiResult?.landJudgments?.find(lj => lj.landId === land.id)?.unifiedGroupId;
-                                if (isInUnifiedGroup) {
-                                  return (
-                                    <Badge variant="outline" className="ml-2 border-blue-400 text-blue-600 bg-blue-50">
-                                      일단지
-                                    </Badge>
-                                  );
-                                } else if (landResult) {
+                                if (!isInUnifiedGroup && landResult) {
                                   return (
                                     <Badge className={`ml-2 ${
                                       landResult.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"
@@ -2642,17 +2636,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
                                     </div>
                                   </div>
-                                  {isInUnifiedGroup ? (
-                                    <Badge variant="outline" className="ml-2 border-blue-400 text-blue-600 bg-blue-50">
-                                      일단지
-                                    </Badge>
-                                  ) : landResult ? (
+                                  {!isInUnifiedGroup && landResult && (
                                     <Badge className={`ml-2 ${
                                       landResult.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"
                                     }`}>
                                       {landResult.provisionalJudgment}
                                     </Badge>
-                                  ) : null}
+                                  )}
                                 </div>
                               </AccordionTrigger>
                               <AccordionContent className="pb-4">
