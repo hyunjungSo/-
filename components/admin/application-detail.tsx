@@ -98,11 +98,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     : [application.landInfo];
   
   // 신청 유형 결정 (하위 호환: applicationType이 없으면 필지 수로 추론)
-  const applicationType = application.applicationType || (
-    isMultipleLands 
-      ? (application.unifiedParcelCondition?.isUnifiedParcel ? "unified" : "multiple")
-      : "single"
-  );
+  // applicationType이 "unified"이거나, unifiedParcelCondition?.isUnifiedParcel이 true이면 일단지로 판단
+  const applicationType = application.applicationType === "unified" || application.unifiedParcelCondition?.isUnifiedParcel
+    ? "unified"
+    : application.applicationType || (isMultipleLands ? "multiple" : "single");
 
   // 필지별 검토 데이터 초기화
   const initializeLandReviewData = (): LandReviewData[] => {
@@ -748,7 +747,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     };
   };
 
-  // AI 판독 실행 핸들러 (2단계 프로세스) - 담당���가 선택한 필지만 분석
+  // AI 판독 실행 핸들러 (2단계 프로세스) - 담������가 선택한 필지만 분석
   const handleRunAIAnalysis = () => {
     // 선택된 필지가 없으면 알림
     if (adminCheckedLandIds.length === 0) {
@@ -1185,7 +1184,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     />
                   </div>
                   
-                  {/* 지도 범례 */}
+                  {/* 지��� 범례 */}
                   <div className="rounded-lg border bg-white/80 p-2">
                     <p className="text-xs font-medium text-muted-foreground mb-2">범례</p>
                     <div className="flex flex-wrap gap-3 text-xs">
