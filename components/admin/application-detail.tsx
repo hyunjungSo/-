@@ -723,7 +723,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "종래 사용 곤란",
         met: usageDifficulty,
-        description: usageDifficulty ? "위치/형상/접근 상태로 종래 사용 곤란" : "종래 사용 가능"
+        description: usageDifficulty ? "위치/형상/접근 상태로 종래 사용 곤란" : "종래 사용 ���능"
       });
       
       if (areaCheckMet || usageDifficulty) {
@@ -1741,7 +1741,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <div className="flex items-start gap-2">
                                     <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                                     <div>
-                                      <h4 className="text-sm font-semibold text-foreground">���세 분석</h4>
+                                      <h4 className="text-sm font-semibold text-foreground">�����세 분석</h4>
                                       <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                                         {landResult.judgmentRationale.detailedExplanation}
                                       </pre>
@@ -1749,37 +1749,36 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   </div>
                                 )}
                                 
-{/* 판정 기준 충족 여부 */}
-                                      {landResult?.criteriaChecks && landResult.criteriaChecks.length > 0 && (
-                                        <div className="rounded-lg bg-white/60 p-3 border">
-                                          <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
-                                          <div className="space-y-2">
-                                            {landResult.criteriaChecks.map((check, cIdx) => (
-                                              <div key={cIdx} className="flex items-center justify-between text-sm">
-                                                <span className="text-muted-foreground">{check.criteriaName}</span>
-                                                <Badge 
-                                                  variant={check.isMet ? "default" : "destructive"} 
-                                                  className={`text-xs ${check.isMet ? "bg-emerald-600" : ""}`}
-                                                >
-                                                  {check.isMet ? "충족" : "미충족"}
-                                                </Badge>
-                                              </div>
-                                            ))}
-                                          </div>
+                                {/* 판정 기준 충족 여부 */}
+                                {landResult?.criteriaChecks && landResult.criteriaChecks.length > 0 && (
+                                  <div className="rounded-lg bg-white/60 p-3 border">
+                                    <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
+                                    <div className="space-y-2">
+                                      {landResult.criteriaChecks.map((check, cIdx) => (
+                                        <div key={cIdx} className="flex items-center justify-between text-sm">
+                                          <span className="text-muted-foreground">{check.criteriaName}</span>
+                                          <Badge 
+                                            variant={check.isMet ? "default" : "destructive"} 
+                                            className={`text-xs ${check.isMet ? "bg-emerald-600" : ""}`}
+                                          >
+                                            {check.isMet ? "충족" : "미충족"}
+                                          </Badge>
                                         </div>
-                                      )}
-
-                                      {/* 안내 문구 */}
-                                      <div className="flex items-start gap-2 pt-2 border-t">
-                                        <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
-                                        <p className="text-xs text-muted-foreground">
-                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
-                                        </p>
-                                      </div>
+                                      ))}
                                     </div>
-                                  </>
+                                  </div>
                                 )}
-                              </AccordionContent>
+
+                                {/* 안내 문구 */}
+                                <div className="flex items-start gap-2 pt-2 border-t">
+                                  <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
+                                  <p className="text-xs text-muted-foreground">
+                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                          </AccordionContent>
                         </AccordionItem>
                       );
                     })}
@@ -2625,7 +2624,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </div>
                                   </div>
 
-                                  {/* 추가 조건 */}
+                                  {/* 추가 조�� */}
                                   <div className="flex flex-wrap gap-2 mb-3">
                                     {application.aiResult?.farmMachineDifficulty && (
                                       <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
