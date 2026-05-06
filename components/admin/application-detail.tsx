@@ -736,7 +736,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       }
     }
     
-    // 소규모 토지 추가 검���
+    // 소규모 토지 추�� 검���
     if (isSmall) {
       criteriaChecks.push({
         name: "소규모 토지",
@@ -1087,7 +1087,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <p className="font-medium">{application.appliedAt}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">사업명</p>
+              <p className="text-xs text-muted-foreground">사��명</p>
               <p className="font-medium">{application.landInfo.projectName}</p>
             </div>
           </div>
@@ -2886,7 +2886,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         </div>
                                       )}
 
-{/* 수동 확인 항목 */}
+                                      {/* 수동 확인 항목 */}
                                       {landResult?.judgmentRationale?.manualCheckItems && landResult.judgmentRationale.manualCheckItems.length > 0 && (
                                         <div className="flex items-start gap-2">
                                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
