@@ -262,20 +262,20 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                         
                         if (isUnified) {
                           return (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-sky-100 px-2.5 py-1 text-xs font-medium text-sky-700 border border-sky-200">
                               일단지
                             </span>
                           );
                         } else if (isMultiple) {
                           return (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-2.5 py-1 text-xs font-medium text-violet-700 border border-violet-200">
                               <Layers className="h-3 w-3" />
                               복수필지 ({app.additionalLands!.length + 1})
                             </span>
                           );
                         } else {
                           return (
-                            <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700 border border-emerald-200">
                               단일필지
                             </span>
                           );
@@ -326,20 +326,20 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       
                       if (isUnified) {
                         return (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-sky-100 px-2.5 py-1 text-xs font-medium text-sky-700 border border-sky-200">
                             일단지
                           </span>
                         );
                       } else if (isMultiple) {
                         return (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-2.5 py-1 text-xs font-medium text-violet-700 border border-violet-200">
                             <Layers className="h-3 w-3" />
                             복수필지
                           </span>
                         );
                       } else {
                         return (
-                          <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700 border border-emerald-200">
                             단일필지
                           </span>
                         );
