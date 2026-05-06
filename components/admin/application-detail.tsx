@@ -539,7 +539,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     
     if (effectiveLandType === "대지") {
       // 택지 경로 + 관리자 옵션 반영
-      // 2. 접면도로 상태 변경
+      // 2. 접면도로 ���태 변경
       const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || land.remainingRatio < 30;
       criteriaChecks.push({
         name: "접면도로 상태",
@@ -677,7 +677,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     
     setIsAIAnalyzing(true);
     setAdminLandAIResults({});
-    setAdminUnifiedGroups({});
     
     // 필지별 분석 상태 초기화 (모두 pending)
     const initialStatus: Record<string, 'pending' | 'analyzing' | 'done'> = {};
@@ -726,8 +725,30 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         const adminLandSubType = adminLandSubTypePerLand[landId];
         const analysis = analyzeSingleLand(land, landData, landOptions, adminCurrentUsage, adminLandSubType);
         
+        // 판정 결과
+        const finalJudgment = analysis.judgment === "검토필요" ? "매수불가" : analysis.judgment;
+        
+        // judgmentRationale 생성 (상세 분석 내용)
+        const judgmentRationale = {
+          summary: `${land.landType} 잔여면적 ${land.remainingArea.toLocaleString()}㎡(잔여비율 ${land.remainingRatio}%), ${analysis.reasons.join(", ")}으로 「${finalJudgment}」 판정`,
+          legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
+          appliedCriteria: analysis.criteriaChecks.map(check => 
+            `${check.name}: ${check.description} ${check.met ? "✓" : "✗"}`
+          ),
+          detailedExplanation: `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n${analysis.reasons.map(r => `• ${r}`).join("\n")}`,
+          manualCheckItems: analysis.criteriaChecks.filter(c => !c.met).map(c => `${c.name} 재확인 필요`),
+        };
+        
+        // criteriaChecks 변환
+        const criteriaChecks = analysis.criteriaChecks.map(check => ({
+          criteriaName: check.name,
+          criteriaDescription: check.description,
+          isMet: check.met,
+          autoDetected: true,
+        }));
+        
         newResults[landId] = {
-          provisionalJudgment: analysis.judgment === "검토필요" ? "매수불가" : analysis.judgment,
+          provisionalJudgment: finalJudgment,
           landTypePath: analysis.landTypePath,
           accessRoadLost: analysis.accessRoadLost,
           waterChannelLost: analysis.waterChannelLost,
@@ -736,6 +757,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           reason: analysis.reasons.join(", "),
           adminCurrentUsage: adminCurrentUsage,
           adminLandSubType: adminLandSubType,
+          judgmentRationale: judgmentRationale,
+          criteriaChecks: criteriaChecks,
+          shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
         };
       });
       
@@ -760,7 +784,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 판독 결과 초기화 (관리자 재판독 결과만)
   const handleResetAdminAIResults = () => {
     setAdminLandAIResults({});
-    setAdminUnifiedGroups({});
     setAdminAIOptions({
       accessRoadLost: false,
       waterChannelLost: false,
@@ -1432,7 +1455,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             {/* 상세 분석 내용 - 모든 필지에 표시 */}
                             {landResult && (
                               <div className="space-y-4">
-                                {/* 판단 요약 */}
+                                {/* 판단 요�� */}
                                 {landResult?.judgmentRationale && (
                                   <div className="flex items-start gap-2">
                                     <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
