@@ -539,7 +539,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
   // ===== [2단계] 대상 토지 상세 분석 (중앙토지수용위원회 기준) =====
   
-  // 편입 전 면적 기준 (㎡) - 초과 시 토지유형별 ��로, 이하 시 소규모 토지 경로
+  // 편입 전 면적 기준 (㎡) - 초과 시 토지유형별 경로, 이하 시 소규모 토지 경로
   const AREA_THRESHOLD = {
     residential: { detached: 90, apartment: 330, commercial: 150, industrial: 330 },
     agricultural: 330,
@@ -569,7 +569,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경로: 기본 330㎡, ��여비율 25% 이하 시 495㎡ (완화)
+      // 농지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -2999,7 +2999,7 @@ return applicationParcels;
                                     }
                                   })()}
 
-                                  {/* 안��� 문구 */}
+                                  {/* 안내 문구 */}
                                   <div className="flex items-start gap-2 pt-2 border-t">
                                     <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                     <p className="text-xs text-muted-foreground">
