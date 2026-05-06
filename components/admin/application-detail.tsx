@@ -1567,19 +1567,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             onMouseLeave={() => setHoveredLandId(null)}
                           >
                             {/* 상단: 체크박스 + 필지 정보 */}
-                            <div 
-                              className="flex items-center gap-3 cursor-pointer"
-                              onClick={() => {
-                                if (isSelected) {
-                                  setAdminCheckedLandIds(prev => prev.filter(id => id !== land.id));
-                                } else {
-                                  setAdminCheckedLandIds(prev => [...prev, land.id]);
-                                }
-                                setSelectedLandIndex(idx);
-                                setFocusedLandId(land.id);
-                              }}
-                            >
-                              {/* 체크박스 */}
+                            <div className="flex items-center gap-3">
+                              {/* 체크박스 - 독립적인 클릭 영역 */}
                               <Checkbox
                                 checked={isSelected}
                                 onCheckedChange={(checked) => {
@@ -1589,26 +1578,32 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     setAdminCheckedLandIds(prev => prev.filter(id => id !== land.id));
                                   }
                                 }}
-                                onClick={(e) => e.stopPropagation()}
                                 className="h-6 w-6 shrink-0"
                               />
                               
-                              {/* 필지 마커 */}
-                              <span 
-                                className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white shrink-0"
-                                style={{
-                                  backgroundColor: isSelected ? "#16a34a" : "#6b7280"
+                              {/* 필지 마커 + 정보 (클릭 시 확장/축소) */}
+                              <div 
+                                className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer"
+                                onClick={() => {
+                                  setSelectedLandIndex(idx);
+                                  setFocusedLandId(land.id);
                                 }}
                               >
-                                {String.fromCharCode(65 + idx)}
-                              </span>
-                              
-                              {/* 필지 정보 */}
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium truncate">{land.address.split(" ").slice(-2).join(" ")}</p>
-                                <p className="text-xs text-muted-foreground">
-                                  {land.landType} | 잔여 {land.remainingArea.toLocaleString()}m²
-                                </p>
+                                <span 
+                                  className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white shrink-0"
+                                  style={{
+                                    backgroundColor: isSelected ? "#16a34a" : "#6b7280"
+                                  }}
+                                >
+                                  {String.fromCharCode(65 + idx)}
+                                </span>
+                                
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium truncate">{land.address.split(" ").slice(-2).join(" ")}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {land.landType} | 잔여 {land.remainingArea.toLocaleString()}m²
+                                  </p>
+                                </div>
                               </div>
                               
                               {/* AI 분석 상태 표시 */}
