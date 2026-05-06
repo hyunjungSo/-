@@ -492,24 +492,6 @@ export function ApplicationFormSection({
                   </div>
                 </div>
 
-                  <div className="flex items-center gap-2">
-                    {aiResult.provisionalJudgment === "매수" ? (
-                      <>
-                        <CheckCircle2 className="h-5 w-5 text-primary" />
-                        <span className="text-base font-bold text-primary">매수 가능</span>
-                      </>
-                    ) : (
-                      <>
-                        <XCircle className="h-5 w-5 text-red-600" />
-                        <span className="text-base font-bold text-red-600">기준 미충족</span>
-                      </>
-                    )}
-</div>
-                <p className="mt-2 text-sm text-muted-foreground">
-                    총 1필지 중 {aiResult?.provisionalJudgment === "매수" ? "1" : "0"}필지 매수 가능
-                  </p>
-                </div>
-              </div>
             )}
           </CardContent>
         </Card>
