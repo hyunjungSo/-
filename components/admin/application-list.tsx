@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Application, AdminStatus } from "@/lib/types";
-import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, Layers, TrendingUp, AlertCircle, Brain, FileCheck } from "lucide-react";
+import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, Brain, FileCheck } from "lucide-react";
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { Progress } from "@/components/ui/progress";
 
@@ -261,24 +261,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                         const isMultiple = app.additionalLands && app.additionalLands.length > 0;
                         
                         if (isUnified) {
-                          return (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-sky-100 px-2.5 py-1 text-xs font-medium text-sky-700 border border-sky-200">
-                              일단지
-                            </span>
-                          );
+                          return <span className="text-sm text-foreground">일단지</span>;
                         } else if (isMultiple) {
-                          return (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-2.5 py-1 text-xs font-medium text-violet-700 border border-violet-200">
-                              <Layers className="h-3 w-3" />
-                              복수필지 ({app.additionalLands!.length + 1})
-                            </span>
-                          );
+                          return <span className="text-sm text-foreground">복수필지 ({app.additionalLands!.length + 1})</span>;
                         } else {
-                          return (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700 border border-emerald-200">
-                              단일필지
-                            </span>
-                          );
+                          return <span className="text-sm text-foreground">단일필지</span>;
                         }
                       })()}
                     </TableCell>
@@ -325,24 +312,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       const isMultiple = app.additionalLands && app.additionalLands.length > 0;
                       
                       if (isUnified) {
-                        return (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-sky-100 px-2.5 py-1 text-xs font-medium text-sky-700 border border-sky-200">
-                            일단지
-                          </span>
-                        );
+                        return <span className="text-sm text-foreground">일단지</span>;
                       } else if (isMultiple) {
-                        return (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-2.5 py-1 text-xs font-medium text-violet-700 border border-violet-200">
-                            <Layers className="h-3 w-3" />
-                            복수필지
-                          </span>
-                        );
+                        return <span className="text-sm text-foreground">복수필지 ({app.additionalLands!.length + 1})</span>;
                       } else {
-                        return (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700 border border-emerald-200">
-                            단일필지
-                          </span>
-                        );
+                        return <span className="text-sm text-foreground">단일필지</span>;
                       }
                     })()}
                     <ProcessStatusBadge status={app.status} />
