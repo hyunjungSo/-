@@ -1361,7 +1361,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className="flex items-start gap-2 pt-3 mt-3 border-t text-blue-600">
                                   <Info className="mt-0.5 h-3 w-3 shrink-0" />
                                   <p className="text-xs">
-                                    이 필지는 일단지로 판정되었��니다. 상세 분석 결과는 상단의 일단지 판정 결과를 참조하세요.
+                                    이 필지는 일단지로 판정��었��니다. 상세 분석 결과는 상단의 일단지 판정 결과를 참조하세요.
                                   </p>
                                 </div>
                               );
@@ -1879,23 +1879,52 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             area: 1234,
                             owner: "박OO",
                           },
-                        ].map((adjacent) => (
-                          <div 
-                            key={adjacent.id}
-                            className="px-3 py-2 hover:bg-amber-50/50 transition-colors"
-                            onMouseEnter={() => setHoveredLandId(adjacent.id)}
-                            onMouseLeave={() => setHoveredLandId(null)}
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-amber-800 truncate">{adjacent.address}</p>
-                                <p className="text-xs text-amber-600">
-                                  {adjacent.landCategory} | {adjacent.area.toLocaleString()}m² | 소유자: {adjacent.owner}
-                                </p>
+                        ].map((adjacent, adjIdx) => {
+                          const isAdjacentSelected = adminCheckedLandIds.includes(adjacent.id);
+                          const isAdjacentHovered = hoveredLandId === adjacent.id;
+                          return (
+                            <div 
+                              key={adjacent.id}
+                              className={`px-3 py-2.5 transition-colors ${
+                                isAdjacentHovered ? "bg-amber-100" :
+                                isAdjacentSelected ? "bg-amber-50 border-l-4 border-l-amber-500" : 
+                                "hover:bg-amber-50/50"
+                              }`}
+                              onMouseEnter={() => setHoveredLandId(adjacent.id)}
+                              onMouseLeave={() => setHoveredLandId(null)}
+                            >
+                              <div className="flex items-center gap-3">
+                                {/* 체크박스 */}
+                                <Checkbox
+                                  checked={isAdjacentSelected}
+                                  onCheckedChange={(checked) => {
+                                    if (checked) {
+                                      setAdminCheckedLandIds(prev => [...prev, adjacent.id]);
+                                    } else {
+                                      setAdminCheckedLandIds(prev => prev.filter(id => id !== adjacent.id));
+                                    }
+                                  }}
+                                  className="h-6 w-6 shrink-0 border-amber-400 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
+                                />
+                                
+                                {/* 인접 필지 마커 */}
+                                <div 
+                                  className="flex h-6 w-6 items-center justify-center rounded border-2 border-dashed border-amber-500 bg-amber-100 text-xs font-bold text-amber-700 shrink-0"
+                                >
+                                  {String.fromCharCode(97 + adjIdx)}
+                                </div>
+                                
+                                {/* 필지 정보 */}
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium text-amber-800 truncate">{adjacent.address}</p>
+                                  <p className="text-xs text-amber-600">
+                                    {adjacent.landCategory} | {adjacent.area.toLocaleString()}m² | 소유자: {adjacent.owner}
+                                  </p>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                     
