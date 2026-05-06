@@ -182,7 +182,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미���������력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미�����������력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -2257,7 +2257,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 
                                 {/* 현장확인 옵션 */}
                                 <div className="space-y-1.5">
-                                  <span className="text-xs text-muted-foreground font-medium">현장확인:</span>
+                                  <span className="text-xs text-muted-foreground font-medium">현장확���:</span>
                                   <div className="flex flex-col gap-2">
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
@@ -2968,7 +2968,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         분석 프로세스 상세 보기
                       </Button>
                       
-                      {/* 적용된 옵션 - 필지별 현장 상황 옵션 표시 */}
+                      {/* 적용된 옵션 - 필지별 현�� 상황 옵션 표시 */}
                       {allLands.map((land, idx) => {
                         const landOptions = adminAIOptionsPerLand[land.id] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
                         if (!landOptions.accessRoadLost && !landOptions.waterChannelLost && !landOptions.farmMachineDifficulty) {
@@ -3195,7 +3195,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* Section 04. 담당자 검토 - 필지별 검토 */}
+      {/* Section 04. 담당자 검토 - 필지별 검��� */}
       {allLands.length > 1 && (
         <Card>
           <CardHeader>
@@ -3318,7 +3318,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {(["���수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
+            {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
               const config = adminStatusConfig[status];
               const Icon = config.icon;
               const isSelected = reviewData.adminStatus === status;
@@ -3345,7 +3345,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">최종 검토</CardTitle>
-          <CardDescription>전체 민원에 ���한 최종 검토 의견을 작성해주세요</CardDescription>
+          <CardDescription>전체 민원에 ���한 최종 검토 의견을 작성해���세요</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
