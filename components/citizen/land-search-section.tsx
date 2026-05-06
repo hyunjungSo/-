@@ -1726,13 +1726,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           };
                           console.log("[v0] Analysis data:", analysisData);
                         }}
-                        variant="outline"
-                        className="w-full gap-2"
-                      >
-                        <PlayCircle className="h-4 w-4" />
-                        분석 프로세스 상세 보기
-                      </Button>
-
                       {/* 안내 문구 */}
                       <div className="flex items-start gap-2 pt-2">
                         <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
