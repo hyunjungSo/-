@@ -539,7 +539,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     
     if (effectiveLandType === "대지") {
       // 택지 경로 + 관리자 옵션 반영
-      // 2. 접면도로 ���태 변경
+      // 2. 접면도�� ���태 변경
       const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || land.remainingRatio < 30;
       criteriaChecks.push({
         name: "접면도로 상태",
@@ -2039,7 +2039,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <SelectItem value="전">전 (밭)</SelectItem>
                                       <SelectItem value="답">답 (논)</SelectItem>
                                       <SelectItem value="임">임 (임야)</SelectItem>
-                                      <SelectItem value="잡">잡 (잡종지)</SelectItem>
+                                      <SelectItem value="잡">잡 (잡���지)</SelectItem>
                                     </SelectContent>
                                   </Select>
                                   <p className="text-[10px] text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
@@ -2723,59 +2723,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             </AccordionItem>
                           );
                         })}
-                        
-                        {/* 인접 필지 */}
-                        {[
-                          {
-                            id: "adjacent-001",
-                            address: "경기도 용인시 처인구 포곡읍 마성리 101",
-                            landCategory: "전",
-                            landType: "농경지",
-                            area: 856,
-                            owner: "김OO",
-                          },
-                          {
-                            id: "adjacent-002",
-                            address: "경기도 용인시 처인구 포곡읍 마성리 102",
-                            landCategory: "답",
-                            landType: "농경지",
-                            area: 1234,
-                            owner: "박OO",
-                          },
-                        ].map((adjacent) => (
-                          <AccordionItem 
-                            key={adjacent.id}
-                            value={adjacent.id}
-                            className="rounded-lg border border-slate-200 px-4"
-                          >
-                            <AccordionTrigger className="hover:no-underline py-3 flex items-center justify-between w-full">
-                              <div className="flex items-center justify-between w-full pr-2 flex-1">
-                                <div className="text-left flex-1">
-                                  <p className="font-medium text-sm">{adjacent.address}</p>
-                                  <p className="text-xs text-muted-foreground">{adjacent.landType} | {adjacent.landCategory}</p>
-                                </div>
-                              </div>
-                            </AccordionTrigger>
-                            <AccordionContent className="pb-4">
-                              <div className="text-sm space-y-2">
-                                <div className="grid grid-cols-2 gap-2 text-xs">
-                                  <div>
-                                    <span className="text-muted-foreground">지목:</span> <span className="font-medium ml-1">{adjacent.landCategory}</span>
-                                  </div>
-                                  <div>
-                                    <span className="text-muted-foreground">면��:</span> <span className="font-medium ml-1">{adjacent.area.toLocaleString()}m²</span>
-                                  </div>
-                                  <div>
-                                    <span className="text-muted-foreground">소유자:</span> <span className="font-medium ml-1">{adjacent.owner}</span>
-                                  </div>
-                                  <div>
-                                    <span className="text-muted-foreground">유형:</span> <span className="font-medium ml-1">{adjacent.landType}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </AccordionContent>
-                          </AccordionItem>
-                        ))}
                       </Accordion>
                     </>
                   ) : (
