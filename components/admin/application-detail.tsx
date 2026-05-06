@@ -567,7 +567,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경�������������������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
+      // 농지 경���������������������������: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -805,7 +805,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       const newResults: typeof adminLandAIResults = {};
       const newGroups: typeof adminUnifiedGroups = {};
       
-      // 담당자가 선택한 필지들만 분석 대상으로 설정
+      // 담당자가 선택한 필지들만 분석 대상��로 설정
       const selectedLands = allLands.filter(l => adminCheckedLandIds.includes(l.id));
       
       // ===== [1단계] 일단지 판정 =====
@@ -1626,20 +1626,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
                                 </div>
                               </div>
-                              {/* 개별 필지인 경우에만 매수/불매수 Badge 표시 */}
-                              {(() => {
-                                const isInUnifiedGroup = applicationType === "unified" || application.aiResult?.landJudgments?.find(lj => lj.landId === land.id)?.unifiedGroupId;
-                                if (!isInUnifiedGroup && landResult) {
-                                  return (
-                                    <Badge className={`ml-2 ${
-                                      landResult.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"
-                                    }`}>
-                                      {landResult.provisionalJudgment}
-                                    </Badge>
-                                  );
-                                }
-                                return null;
-                              })()}
+                              {/* 필지별 매수/불매수 Badge 표시 */}
+                              {landResult && (
+                                <Badge className={`ml-2 ${
+                                  landResult.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"
+                                }`}>
+                                  {landResult.provisionalJudgment}
+                                </Badge>
+                              )}
                             </div>
                           </AccordionTrigger>
                           <AccordionContent className="pb-4">
@@ -2607,7 +2601,7 @@ return applicationParcels;
                                       <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
                                     </div>
                                   </div>
-                                  {!isInUnifiedGroup && landResult && (
+                                  {landResult && (
                                     <Badge className={`ml-2 ${
                                       landResult.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"
                                     }`}>
@@ -3202,7 +3196,7 @@ return applicationParcels;
         </CardContent>
       </Card>
 
-      {/* 최종 검토 */}
+      {/* 최종 ���토 */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">최종 검토</CardTitle>
