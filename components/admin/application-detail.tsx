@@ -1264,7 +1264,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <p className="font-semibold text-sm">{allLands.map((_, idx) => String.fromCharCode(65 + idx)).join(", ")}</p>
                             </div>
                             <div className="rounded bg-white/80 p-2 text-center">
-                              <p className="text-xs text-muted-foreground">합산 잔여면적</p>
+                              <p className="text-xs text-muted-foreground">합산 잔여���적</p>
                               <p className="font-semibold text-sm">{allLands.reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²</p>
                             </div>
                             <div className="rounded bg-white/80 p-2 text-center">
@@ -1605,13 +1605,26 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
                                 </div>
                               </div>
-                              {landResult && (
-                                <Badge className={`ml-2 ${
-                                  landResult.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"
-                                }`}>
-                                  {landResult.provisionalJudgment}
-                                </Badge>
-                              )}
+                              {/* 일단지 신청건인 경우 "일단지" Badge 표시, 아닌 경우 매수/불매수 Badge 표시 */}
+                              {(() => {
+                                const isInUnifiedGroup = applicationType === "unified" || application.aiResult?.landJudgments?.find(lj => lj.landId === land.id)?.unifiedGroupId;
+                                if (isInUnifiedGroup) {
+                                  return (
+                                    <Badge variant="outline" className="ml-2 border-blue-400 text-blue-600 bg-blue-50">
+                                      일단지
+                                    </Badge>
+                                  );
+                                } else if (landResult) {
+                                  return (
+                                    <Badge className={`ml-2 ${
+                                      landResult.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"
+                                    }`}>
+                                      {landResult.provisionalJudgment}
+                                    </Badge>
+                                  );
+                                }
+                                return null;
+                              })()}
                             </div>
                           </AccordionTrigger>
                           <AccordionContent className="pb-4">
@@ -2219,7 +2232,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 mb-4 flex items-start gap-2">
                         <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
                         <p className="text-sm text-blue-700">
-                          현재 민원인 결과를 표시하고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분석을 실행하면 담당자 결과가 표시됩니다.
+                          현재 민원인 결과를 표시���고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분석을 실행하면 담당자 결과가 표시됩니다.
                         </p>
                       </div>
                       
