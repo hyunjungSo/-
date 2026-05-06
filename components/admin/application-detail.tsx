@@ -1579,7 +1579,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className="flex items-start gap-2 pt-2 border-t border-emerald-200">
                                   <Info className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
                                   <p className="text-xs text-emerald-600">
-                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결����������니다.
+                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결������������니다.
                                   </p>
                                 </div>
                               </div>
@@ -2201,7 +2201,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <span 
                                   className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white shrink-0"
                                   style={{
-                                    backgroundColor: isSelected ? "#16a34a" : "#6b7280"
+                                    backgroundColor: "#dc2626"
                                   }}
                                 >
                                   {String.fromCharCode(65 + allLands.length + adjIdx)}
