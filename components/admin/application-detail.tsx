@@ -1217,6 +1217,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 <div className="space-y-4">
                   <h4 className="font-medium">분석결과</h4>
                   
+                  {/* 스크롤 컨테이너 - 일단지 판정 결과와 필지별 분석 결과 함께 스크롤 */}
+                  <div className="max-h-[550px] overflow-y-auto space-y-4 pr-1">
                   {/* 일단지 또는 부분 일단지인 경우 최상단에 일단지 판정 결과 표시 */}
                   {(applicationType === "unified" || hasUnifiedGroups) && (
                     <div className="space-y-3 mb-4">
@@ -1274,7 +1276,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   )}
                   
                   {/* 필지별 분석 결과 */}
-                  <Accordion type="multiple" className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
+                  <Accordion type="multiple" className="space-y-3">
                     {allLands.map((land, idx) => {
                       const landResult = landAIResults[land.id];
                       // 민원인이 실행한 AI 분석 결과 (application.aiResult 직접 사용)
@@ -1477,6 +1479,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       );
                     })}
                   </Accordion>
+                  </div>
                 </div>
               </div>
             </TabsContent>
@@ -2119,7 +2122,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </div>
                                   )}
                                   
-                                  {/* 판정 기준 충족 여부 */}
+                                  {/* 판정 기준 충족 여��� */}
                                   {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
                                     <div className="rounded-lg bg-white/60 p-3 border">
                                       <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
