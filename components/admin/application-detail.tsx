@@ -567,7 +567,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           return { base: 330, relaxed: remainingRatio <= 25 ? 412.5 : 330 };
       }
     } else if (landType === "농지") {
-      // 농지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
+      // 농지 경���: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
       return { base: 330, relaxed: remainingRatio <= 25 ? 495 : 330 };
     } else if (landType === "산지") {
       // 산지 경로: 기본 330㎡, 잔여비율 25% 이하 시 495㎡ (완화)
@@ -609,7 +609,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   ) => {
     // 담당자가 선택한 현재 활용지목 우선 적용, 없으면 원래 지목 사용
     const effectiveLandType = adminCurrentUsage 
-      ? (adminCurrentUsage === "대" ? "대지" : adminCurrentUsage === "전" || adminCurrentUsage === "답" ? "농지" : adminCurrentUsage === "임" ? "임야" : "기타")
+      ? (adminCurrentUsage === "대" ? "대지" : adminCurrentUsage === "��" || adminCurrentUsage === "답" ? "농지" : adminCurrentUsage === "임" ? "임야" : "기타")
       : land.landType;
     
     const criteria = getAreaCriteria(land, landData, adminLandSubType);
@@ -1977,16 +1977,20 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <Accordion type="multiple" defaultValue={[]} className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
                         {allLands.map((land, idx) => {
                           const landResult = landAIResults[land.id];
+                          const landJudgment = application.aiResult?.landJudgments?.find(lj => lj.landId === land.id);
+                          const isInUnifiedGroup = applicationType === "unified" || landJudgment?.unifiedGroupId;
                           return (
                             <AccordionItem 
                               key={land.id}
                               value={land.id}
                               className={`rounded-lg border px-4 ${
-                                landResult?.provisionalJudgment === "매수"
-                                  ? "border-emerald-200 bg-emerald-50/50"
-                                  : landResult?.provisionalJudgment === "매수불가"
-                                    ? "border-red-200 bg-red-50/50"
-                                    : "border-slate-200 bg-slate-50/50"
+                                isInUnifiedGroup
+                                  ? "border-blue-200 bg-blue-50/50"
+                                  : landResult?.provisionalJudgment === "매수"
+                                    ? "border-emerald-200 bg-emerald-50/50"
+                                    : landResult?.provisionalJudgment === "매수불가"
+                                      ? "border-red-200 bg-red-50/50"
+                                      : "border-slate-200 bg-slate-50/50"
                               }`}
                             >
                               <AccordionTrigger className="hover:no-underline py-3">
@@ -1997,13 +2001,17 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
                                     </div>
                                   </div>
-                                  {landResult && (
+                                  {isInUnifiedGroup ? (
+                                    <Badge variant="outline" className="ml-2 border-blue-400 text-blue-600 bg-blue-50">
+                                      일단지
+                                    </Badge>
+                                  ) : landResult ? (
                                     <Badge className={`ml-2 ${
                                       landResult.provisionalJudgment === "매수" ? "bg-emerald-600" : "bg-red-500"
                                     }`}>
                                       {landResult.provisionalJudgment}
                                     </Badge>
-                                  )}
+                                  ) : null}
                                 </div>
                               </AccordionTrigger>
                               <AccordionContent className="pb-4">
