@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "�������입력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "���������입력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -525,7 +525,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
         judgment = "기각";
-        reasons.push("모�� 기준 미충족");
+        reasons.push("���� 기준 미충족");
       }
       
     } else if (effectiveLandType === "농지") {
@@ -1726,7 +1726,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [adjacentLand.id]: value }))}
                                   >
                                     <SelectTrigger className="h-8 bg-background text-sm">
-                                      <SelectValue placeholder="현재 활용 지목을 선택해 주���요" />
+                                      <SelectValue placeholder="현재 활용 지목을 선택해 주����요" />
                                     </SelectTrigger>
                                     <SelectContent>
                                       <SelectItem value="대">대 (택지)</SelectItem>
@@ -2781,7 +2781,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       {/* 하단 저장 버튼 */}
       <div className="fixed bottom-0 left-0 right-0 w-screen bg-background border-t py-4 px-6 mt-6 z-[9999]">
         <div className="flex justify-end gap-3">
-          <Button variant="outline" onClick={onBack}>
+          <Button variant="ghost" className="text-foreground hover:text-foreground" onClick={onBack}>
             취소
           </Button>
           <Button onClick={handleSave}>
