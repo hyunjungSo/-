@@ -907,7 +907,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
-            <AIIcon className="h-5 w-5" />
             AI 분석
           </CardTitle>
           <CardDescription>
@@ -1071,7 +1070,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             
                             {/* 상세 분석 내용 - 모든 필지에 표시 */}
                             <div className="space-y-4">
-                              {/* 판단 요약 */}
+                              {/* 판�� 요약 */}
                               <div className="flex items-start gap-2">
                                 <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                                 <div>
