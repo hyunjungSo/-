@@ -1023,7 +1023,7 @@ export const dummyLandInfoList: LandInfo[] = [
     ],
   },
   // ===== 혼합 케이스 (일부 매수 + 일부 미해당) =====
-  // 4필지 중 2필지 매수, 나머지 2필지 미해당
+  // 4필지 중 2필지 ��수, 나머지 2필지 미해당
   {
     id: "land-mixed-001",
     address: "경기도 평택시 포승읍 내기리 200-1",
@@ -1288,10 +1288,10 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   const physicalConditionMet = criteriaChecks.some(c => !c.autoDetected && c.isMet);
   
   // PRD 판정 원칙:
-  // - AI 판정은 "매수", "기각", "심의위원회 이관" 세 가지
+  // - AI 판정은 "매수", "매수불가", "심의위원회 이관" 세 가지
   // - 물리 조건 중 하나라도 해당 시 '수용 조건 충족'(=매수)
-  // - 전체 조건 미해당시 '수용 조건 미충족'(=기각)
-  let provisionalJudgment: "매수" | "기각" | "심의위원회 이관";
+  // - 전체 조건 미해당시 '수용 조건 미충족'(=매수불가)
+  let provisionalJudgment: "매수" | "매수불가" | "심의위원회 이관";
   
   // 면적 기준 충족 여부
   const coreCriteriaMet = areaMet;
@@ -1303,8 +1303,8 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
     // 면적 기준만 충족 또는 형상 조건만 충족 → 매수 (검토 필요하지만 AI는 매수 판정)
     provisionalJudgment = "매수";
   } else {
-    // 전체 조건 미해당 → 기각
-    provisionalJudgment = "기각";
+    // 전체 조건 미해당 → 매수불가
+    provisionalJudgment = "매수불가";
   }
   
   const metAutoCriteria = criteriaChecks.filter(c => c.autoDetected && c.isMet).length;
@@ -1866,7 +1866,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 진입이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 ���지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 진입이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,

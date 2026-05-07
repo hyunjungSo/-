@@ -721,7 +721,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            // 필지 분석 오류 처������
+            // 필�� 분석 오류 처������
           }
         });
         
@@ -807,7 +807,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         remainingRatio: land.remainingRatio,
         judgment: result?.provisionalJudgment || "분석중",
         purchaseDecision: result?.provisionalJudgment === "매수" ? "O" as const : 
-                          result?.provisionalJudgment === "기각" ? "X" as const : 
+                          result?.provisionalJudgment === "매수불가" ? "X" as const : 
                           "-" as const,
       };
     });
@@ -1581,7 +1581,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <SelectItem value="잡">잡 (잡종지)</SelectItem>
                                     </SelectContent>
                                   </Select>
-                                  <p className="text-xs text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
+                                  <p className="text-xs text-muted-foreground">실제 토지 활용 상황에 따�� 선택해 주세요.</p>
                                 </div>
                                 
                                 {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
@@ -1608,7 +1608,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   </div>
                                 )}
                                 
-                                {/* 현장확인 옵션 */}
+                                {/* 현장���인 옵션 */}
                                 <div className="space-y-1.5">
                                   <span className="text-xs text-muted-foreground font-medium">현장확인:</span>
                                   <div className="flex flex-col gap-2">
@@ -2544,7 +2544,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 reviewData.finalJudgment && Object.keys(adminLandAIResults).length > 0 && (() => {
                   const results = Object.values(adminLandAIResults);
                   const aiJudgment = results.every(r => r.provisionalJudgment === "매수") ? "매수" : 
-                                    results.every(r => r.provisionalJudgment !== "매수") ? "기각" : "mixed";
+                                    results.every(r => r.provisionalJudgment !== "매수") ? "매수불가" : "mixed";
                   const isDifferent = reviewData.finalJudgment !== aiJudgment && aiJudgment !== "mixed";
                   return isDifferent && !adminOverrideReason.trim();
                 })()

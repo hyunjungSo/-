@@ -3,7 +3,9 @@
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-export type JudgmentType = "매수" | "기각" | "심의위원회 이관" | "분석중";
+// AI 판정: 매수, 매수불가, 심의위원회 이관
+// 최종 결정: 매수, 기각, 심의위원회 이관
+export type JudgmentType = "매수" | "매수불가" | "기각" | "심의위원회 이관" | "분석중";
 
 interface JudgmentStatusProps {
   judgment: JudgmentType | string;
@@ -32,7 +34,8 @@ export function JudgmentStatus({
           badge: "bg-green-600 text-white hover:bg-green-600",
           text: "text-green-600"
         };
-      case "기각":
+      case "매수불가": // AI 판정
+      case "기각": // 최종 결정
         return {
           badge: "bg-red-500 text-white hover:bg-red-500",
           text: "text-red-500"

@@ -400,13 +400,13 @@ function simulateAIAnalysis(
   const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
-  // AI 1차 판독: 매수/기각/심의위원회 이관 판정
-  let provisionalJudgment: "매수" | "기각" | "심의위원회 이관";
+  // AI 1차 판독: 매수/매수불가/심의위원회 이관 판정
+  let provisionalJudgment: "매수" | "매수불가" | "심의위원회 이관";
   
   if (metAutoCriteria >= 1) {
     provisionalJudgment = "매수";
   } else {
-    provisionalJudgment = "기각";
+    provisionalJudgment = "매수불가";
   }
 
   const judgmentRationale: JudgmentRationale = generateJudgmentRationale(
@@ -1013,7 +1013,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 onChange={() => handleSearchModeChange("address")}
                 className="h-4 w-4 accent-gray-900"
               />
-              <span className="text-sm">지번으로 검색</span>
+              <span className="text-sm">��번으로 검색</span>
             </label>
             <label className="flex cursor-pointer items-center gap-2">
               <input
@@ -1126,7 +1126,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               <div className="flex flex-1 items-center bg-background px-4 py-2">
                 <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <Info className="h-3.5 w-3.5 shrink-0" />
-                  법인 신청 시, 사업자등록증 및 법인인감증명���가 필요합니다.
+                  법인 신청 시, 사업자등록증 �� 법인인감증명���가 필요합니다.
                 </p>
               </div>
             </div>
@@ -1386,7 +1386,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                       className={`text-xs px-1.5 py-0 ${
                                         landAiResult?.provisionalJudgment === "매수" 
                                           ? "bg-green-600 text-white" 
-                                          : landAiResult?.provisionalJudgment === "기각"
+                                          : landAiResult?.provisionalJudgment === "매수불가"
                                             ? "bg-red-500 text-white"
                                             : "bg-amber-500 text-white"
                                       }`}
@@ -1730,7 +1730,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     );
                   }
                   
-                  if (aiResult.provisionalJudgment !== "기각") {
+                  if (aiResult.provisionalJudgment !== "매수불가") {
                     const isAlreadyInCart = cartItems.some(c => c.landInfo.id === selectedLand.id);
                     
                     return (
