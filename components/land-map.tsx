@@ -367,35 +367,29 @@ export function LandMap({
     <div className="relative w-full overflow-hidden rounded-lg border border-border bg-muted">
       {/* 지도 컨트롤 */}
       <div className="absolute left-3 top-3 z-10 flex gap-2">
-        {/* 배경지도 선택 */}
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" size="sm" className="h-8 gap-1.5 border-gray-300 bg-white/95 text-[#222222] shadow-sm hover:bg-white">
-              <MapIcon className="h-4 w-4" />
-              <span className="text-sm">배경지도</span>
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-36 p-2" align="start">
-            <div className="space-y-1">
-              <button
-                onClick={() => setBaseMap("normal")}
-                className={`w-full rounded px-2 py-1.5 text-left text-base ${
-                  baseMap === "normal" ? "bg-primary text-white" : "hover:bg-muted"
-                }`}
-              >
-                일반
-              </button>
-              <button
-                onClick={() => setBaseMap("satellite")}
-                className={`w-full rounded px-2 py-1.5 text-left text-base ${
-                  baseMap === "satellite" ? "bg-primary text-white" : "hover:bg-muted"
-                }`}
-              >
-                위성
-              </button>
-            </div>
-          </PopoverContent>
-        </Popover>
+        {/* 배경지도 토글 */}
+        <div className="flex items-center gap-1 rounded-md bg-white/95 p-1 shadow-sm border border-gray-300">
+          <button
+            onClick={() => setBaseMap("normal")}
+            className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
+              baseMap === "normal" 
+                ? "bg-primary text-white" 
+                : "text-muted-foreground hover:bg-muted"
+            }`}
+          >
+            일반
+          </button>
+          <button
+            onClick={() => setBaseMap("satellite")}
+            className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
+              baseMap === "satellite" 
+                ? "bg-primary text-white" 
+                : "text-muted-foreground hover:bg-muted"
+            }`}
+          >
+            위성
+          </button>
+        </div>
 
         {/* 거리 측정 */}
         <Button 
