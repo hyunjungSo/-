@@ -721,7 +721,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            // 필지 분석 오류 처리
+            // 필지 분��� 오류 처리
           }
         });
         
@@ -807,7 +807,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         remainingRatio: land.remainingRatio,
         judgment: result?.provisionalJudgment || "분석중",
         purchaseDecision: result?.provisionalJudgment === "매수" ? "O" as const : 
-                          result?.provisionalJudgment === "매수불가" ? "X" as const : 
+                          result?.provisionalJudgment === "기각" ? "X" as const : 
                           "-" as const,
       };
     });
@@ -2544,7 +2544,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 reviewData.finalJudgment && Object.keys(adminLandAIResults).length > 0 && (() => {
                   const results = Object.values(adminLandAIResults);
                   const aiJudgment = results.every(r => r.provisionalJudgment === "매수") ? "매수" : 
-                                    results.every(r => r.provisionalJudgment !== "매수") ? "매수불가" : "mixed";
+                                    results.every(r => r.provisionalJudgment !== "매수") ? "기각" : "mixed";
                   const isDifferent = reviewData.finalJudgment !== aiJudgment && aiJudgment !== "mixed";
                   return isDifferent && !adminOverrideReason.trim();
                 })()

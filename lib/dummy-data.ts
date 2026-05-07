@@ -1288,10 +1288,10 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   const physicalConditionMet = criteriaChecks.some(c => !c.autoDetected && c.isMet);
   
   // PRD 판정 원칙:
-  // - AI 판정은 "매수", "매수불가", "심의위원회 이관" 세 가지
+  // - AI 판정은 "매수", "기각", "심의위원회 이관" 세 가지
   // - 물리 조건 중 하나라도 해당 시 '수용 조건 충족'(=매수)
-  // - 전체 조건 미해당시 '수용 조건 미충족'(=매수불가)
-  let provisionalJudgment: "매수" | "매수불가" | "심의위원회 이관";
+  // - 전체 조건 미해당시 '수용 조건 미충족'(=기각)
+  let provisionalJudgment: "매수" | "기각" | "심의위원회 이관";
   
   // 면적 기준 충족 여부
   const coreCriteriaMet = areaMet;
@@ -1303,8 +1303,8 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
     // 면적 기준만 충족 또는 형상 조건만 충족 → 매수 (검토 필요하지만 AI는 매수 판정)
     provisionalJudgment = "매수";
   } else {
-    // 전체 조건 미해당 → 매수불가
-    provisionalJudgment = "매수불가";
+    // 전체 조건 미해당 → 기각
+    provisionalJudgment = "기각";
   }
   
   const metAutoCriteria = criteriaChecks.filter(c => c.autoDetected && c.isMet).length;
@@ -1373,7 +1373,7 @@ function generateRationale(
     const areaThreshold = land.landType === "대지" ? 90 : 330;
     const rejectionReason = `잔여면적 ${land.remainingArea}㎡(기준 ${areaThreshold}㎡ 초과), 잔여비율 ${land.remainingRatio}%(기준 초과), 물리조건 미해당`;
     summary = `${land.landType} 수용 조건 미충족으로 「기각」 판정`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조건 전체 미해당`;
+    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n��� 면적/비율 기준 및 물리조건 전체 미해당`;
   }
 
   return {
@@ -1570,7 +1570,7 @@ export const dummyApplications: Application[] = [
     reportedShape: "자루형",
     farmMachineDifficulty: false,
     reason: "도로 편입으로 토지가 자루형으로 변형되었습니다. 면적 기준은 애매하여 실측이 필요합니다.",
-    attachments: ["토지대장.pdf", "지적도.pdf", "현황사진.jpg"],
+    attachments: ["토지대장.pdf", "지적��.pdf", "현황사진.jpg"],
     status: "검토중",
     adminStatus: "진행중",
     appliedAt: "2026-04-21",
@@ -1866,7 +1866,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 진입이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 ��해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 진입이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -2017,7 +2017,7 @@ export const dummyApplications: Application[] = [
         summary: "4필지 혼합 토지 - 각 필지별 매수 기준 충족으로 「매수」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
-          "토지유형: 혼합 (대지+농지+잡종지)",
+          "토지유형: ���합 (대지+농지+잡종지)",
           "잔여면적: 450㎡ (개별 필지 기준 각각 충족)",
           "대지 물리조건: 접면도로 상실로 건축 불가",
           "농지 물리조건: 농기계 진입 곤란, 관개수로 상실",
@@ -2180,7 +2180,7 @@ export const dummyApplications: Application[] = [
     aiResult: {
       landTypePath: "산지",
       criteriaChecks: [
-        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100㎡로 조림지 분단", isMet: true, autoDetected: true },
+        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100㎡로 조��지 분단", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },
       ],
@@ -2315,7 +2315,7 @@ export const dummyApplications: Application[] = [
         combinedArea: 1480,
         explanation: "4필지 개별 분석 결과: 내기리 200-1, 200-2는 면적 기준 충족 및 형상 불량으로 매수 판정. 만호리 55-1, 55-2는 면적 기준 미충족, 형상 양호로 미해당 판정.",
       },
-      // 필지별 판정 결과 (개별 분석)
+      // 필지별 판정 결과 (개별 분��)
       landJudgments: [
         { landId: "land-mixed-001", judgment: "매수", unifiedGroupId: null, reason: "내기리 200-1: 잔여 150㎡ ≤ 330㎡, 형상지수 5.0(불량), 농기계 진입곤란" },
         { landId: "land-mixed-002", judgment: "매수", unifiedGroupId: null, reason: "내기리 200-2: 잔여 180㎡ ≤ 330㎡, 형상지수 4.8(불량), 관개수로 상실" },
@@ -2491,7 +2491,7 @@ export const landShapes = {
     { value: "세로장방형", label: "세로장방형" },
   ],
   irregular: [
-    { value: "변형사다리형", label: "변형사다리형" },
+    { value: "변형사다리형", label: "변��사다리형" },
     { value: "역사다리형", label: "역사다리형" },
     { value: "사다리형", label: "사다리형" },
     { value: "삼각형", label: "삼각형" },
