@@ -1023,7 +1023,7 @@ export const dummyLandInfoList: LandInfo[] = [
     ],
   },
   // ===== 혼합 케이스 (일부 매수 + 일부 미해당) =====
-  // 4필지 중 2필지 매���, 나머지 2필지 미해당
+  // 4필지 중 2필지 매수, 나머지 2필지 미해당
   {
     id: "land-mixed-001",
     address: "경기도 평택시 포승읍 내기리 200-1",
@@ -1386,7 +1386,7 @@ function generateRationale(
     const areaThreshold = land.landType === "택지" ? 90 : 330;
     const rejectionReason = `잔여면적 ${land.remainingArea}㎡(기준 ${areaThreshold}㎡ 초과), 잔여비율 ${land.remainingRatio}%(기준 초과), 물리조건 미해당`;
     summary = `${land.landType} 수용 조건 미충족으로 「기각」 판정`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n��� 면적/비율 ���준 및 물리조건 전체 미해당`;
+    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조건 전체 미해당`;
   }
 
   return {
@@ -2030,7 +2030,7 @@ export const dummyApplications: Application[] = [
         summary: "4필지 혼합 토지 - 각 필지별 매수 기준 충족으로 「매수」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
-          "토지유형: ���합 (대지+농지+잡종지)",
+          "토지유형: 혼합 (대지+농지+잡종지)",
           "잔여면적: 450㎡ (개별 필지 기준 각각 충족)",
           "대지 물리조건: 접면도로 상실로 건축 불가",
           "농지 물리조건: 농기계 진입 곤란, 관개수로 상실",
@@ -2115,7 +2115,7 @@ export const dummyApplications: Application[] = [
       },
     },
     finalJudgment: "매수",
-    reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 양 필지 모두 접면도로 상실 확���.",
+    reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 양 필지 모두 접면도로 상실 확인.",
     finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2필지 대지입니다. 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
     adminName: "김철수",
     statusUpdatedAt: "2026-04-29",

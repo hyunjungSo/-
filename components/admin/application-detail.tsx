@@ -160,7 +160,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 호버된 필지 ID (지도-리스트 연동)
   const [hoveredLandId, setHoveredLandId] = useState<string | null>(null);
   
-  // 포커스된 필지 ID (지도 중심 이동용)
+  // ��커스된 필지 ID (지도 중심 이동용)
   const [focusedLandId, setFocusedLandId] = useState<string | null>(null);
   
   // 선택된 인접 필지 정보 표시용
@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "��������������������������력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -277,7 +277,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
 
   
-  // 민원인��� 신청한 필지 ID 목록 (application에서 가져옴, 읽기 전용)
+  // 민원인이 신청한 필지 ID 목록 (application에서 가져옴, 읽기 전용)
   const citizenSelectedLandIds = allLands.map(l => l.id);
   
   // 담당자가 선택한 필지 ID 목록 (수정 가능, 초기값: 민원인 신청 필지와 동일)
@@ -525,7 +525,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
         judgment = "기각";
-        reasons.push("���든 기준 미충족");
+        reasons.push("모든 기준 미충족");
       }
       
     } else if (effectiveLandType === "농지") {
@@ -583,11 +583,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
       } else {
         judgment = "기각";
-        reasons.push("모든 기준 미충족");
+        reasons.push("모든 기준 미충��");
       }
       
     } else {
-      // ��� 밖의 ��지 + 관리자 ���션 반영
+      // 그 밖의 토지 + 관리자 옵션 반영
       // 종래 목적 사용 곤란 여부 (위치, 형상, 접근 상태 고려)
       const usageDifficulty = adminOptions?.accessRoadLost || adminOptions?.farmMachineDifficulty || land.remainingRatio < 40 || shapeCriteria.met;
       criteriaChecks.push({
@@ -720,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            // ��지 분��������� 오류 처리
+            // 토지 분석 오류 처리
           }
         });
         
@@ -1502,7 +1502,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 />
                               ) : null}
                               
-                              {/* 아코디언 화살표 아이콘 */}
+                              {/* 아코디언 화��표 아이콘 */}
                               <div 
                                 className="shrink-0 ml-2 cursor-pointer p-1 hover:bg-muted rounded"
                                 onClick={() => {
@@ -1583,7 +1583,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <SelectItem value="잡">잡 (잡종지)</SelectItem>
                                     </SelectContent>
                                   </Select>
-                                  <p className="text-xs text-muted-foreground">실제 토지 ���용 상황에 따라 선택해 주세요.</p>
+                                  <p className="text-xs text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
                                 </div>
                                 
                                 {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
@@ -1730,8 +1730,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </SelectTrigger>
                                     <SelectContent>
                                       <SelectItem value="대">대 (택지)</SelectItem>
-                                      <SelectItem value="전">�� (밭)</SelectItem>
-                                      <SelectItem value="답">��� (논)</SelectItem>
+                                      <SelectItem value="전">전 (밭)</SelectItem>
+                                      <SelectItem value="답">답 (논)</SelectItem>
                                       <SelectItem value="임">임 (임야)</SelectItem>
                                       <SelectItem value="잡">잡 (잡종지)</SelectItem>
                                     </SelectContent>
@@ -2074,7 +2074,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                             {(() => {
                                               const explanation = landResult?.judgmentRationale?.detailedExplanation;
                                               if (!explanation) {
-                                                return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔��� 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분��� 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
+                                                return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
                                               }
                                               
                                               // If this is multi-parcel and explanation contains all parcels info,
@@ -2319,7 +2319,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     if (landOptions.accessRoadLost || landOptions.waterChannelLost || landOptions.farmMachineDifficulty) {
                                       return (
                                         <div className="rounded-lg bg-blue-50/80 p-3 border border-blue-200">
-                                          <p className="text-xs font-medium text-blue-700 mb-2">적���된 현장 상황</p>
+                                          <p className="text-xs font-medium text-blue-700 mb-2">적용된 현장 상황</p>
                                           <div className="flex flex-wrap gap-2">
                                             {landOptions.accessRoadLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">접면도로 상실</Badge>}
                                             {landOptions.waterChannelLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">관개수로 상실</Badge>}

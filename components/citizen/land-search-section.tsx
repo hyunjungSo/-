@@ -98,7 +98,7 @@ const regionData = {
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "���곡면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
     "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "내덕동", "율량동"],
@@ -235,7 +235,7 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["봉농리", "효���리", "금수리", "금산리"],
+    "도고면": ["봉농리", "효자리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
@@ -794,7 +794,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return;
       }
       
-      // 지번 검색: 선택된 지역에 해당하는 토지 ��터링
+      // 지번 검색: 선택된 지역에 해당하는 토지 필터링
       results = dummyLandInfoList.filter(land => {
         // 시군구 포함 여부
         if (!land.address.includes(selectedSigungu)) return false;
@@ -1508,7 +1508,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="대">대 (택��)</SelectItem>
+                            <SelectItem value="대">대 (택지)</SelectItem>
                             <SelectItem value="전">전 (밭)</SelectItem>
                             <SelectItem value="답">답 (논)</SelectItem>
                             <SelectItem value="임">임 (임야)</SelectItem>
@@ -1764,7 +1764,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         onClick={() => onAddToCart(selectedLand, aiResult!)}
                         className="w-full cursor-pointer py-1 text-xs text-muted-foreground/60 underline-offset-2 transition-colors hover:text-muted-foreground hover:underline"
                       >
-                        ���래도 신청 목록에 추가하기
+                        그래도 신청 목록에 추가하기
                       </button>
                     </div>
                   );
