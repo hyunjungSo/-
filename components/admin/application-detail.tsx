@@ -1787,31 +1787,50 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* AI 분석 버튼 */}
                   {(() => {
-                    // 선택된 모든 필지가 현재 활용 ��목을 선택했는지 확인
+                    // 선택된 모든 필지가 현재 활용 지목을 선택했는지 확인
                     const allSelectedLandsHaveCurrentUsage = adminCheckedLandIds.every(
                       id => adminCurrentUsagePerLand[id] && adminCurrentUsagePerLand[id].trim() !== ""
                     );
                     const isDisabled = isAIAnalyzing || adminCheckedLandIds.length === 0 || !allSelectedLandsHaveCurrentUsage;
                     
+                    // 안내 문구 결정
+                    const getGuideMessage = () => {
+                      if (adminCheckedLandIds.length === 0) {
+                        return "분석할 필지를 선택해 주세요";
+                      }
+                      if (!allSelectedLandsHaveCurrentUsage) {
+                        return "현재 활용 지목을 선택해 주세요";
+                      }
+                      return null;
+                    };
+                    const guideMessage = getGuideMessage();
+                    
                     return (
-                      <Button
-                        onClick={handleRunAIAnalysis}
-                        disabled={isDisabled}
-                        className="w-full gap-2 bg-blue-600 hover:bg-blue-700"
-                        title={!allSelectedLandsHaveCurrentUsage ? "모든 선택된 필지의 현재 활용 지목을 선택해주세요" : ""}
-                      >
-                    {isAIAnalyzing ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        AI 분석 중...
-                      </>
-                    ) : (
-                      <>
-                        <AIIcon className="h-4 w-4" />
-                        AI 분석 실행 ({adminCheckedLandIds.length}필지)
-                      </>
-                    )}
-                      </Button>
+                      <div className="space-y-1.5">
+                        <Button
+                          onClick={handleRunAIAnalysis}
+                          disabled={isDisabled}
+                          className="w-full gap-2 bg-blue-600 hover:bg-blue-700"
+                          title={!allSelectedLandsHaveCurrentUsage ? "모든 선택된 필지의 현재 활용 지목을 선택해주세요" : ""}
+                        >
+                          {isAIAnalyzing ? (
+                            <>
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                              AI 분석 중...
+                            </>
+                          ) : (
+                            <>
+                              <AIIcon className="h-4 w-4" />
+                              AI 분석 실행 ({adminCheckedLandIds.length}필지)
+                            </>
+                          )}
+                        </Button>
+                        {guideMessage && (
+                          <p className="text-xs text-center text-amber-600">
+                            {guideMessage}
+                          </p>
+                        )}
+                      </div>
                     );
                   })()}
                 </div>
