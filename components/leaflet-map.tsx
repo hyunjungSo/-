@@ -363,9 +363,9 @@ export function LeafletMap({
       
       if (isAdjacentParcel) {
         if (isSelected || isOwned) {
-          // 선택된 인접 필지: 신청필지 선택과 동일하게 진한 녹색 실선
-          polygonColor = "#16a34a"; // 진한 녹색
-          fillColor = "#bbf7d0"; // 연한 녹색 배경
+          // 선택된 인접 필지: 진한 파란색 실선
+          polygonColor = "#2563eb"; // 진한 파란색
+          fillColor = "#dbeafe"; // 연한 파란색 배경
           weight = 4;
           fillOpacity = 0.45;
           dashArray = undefined; // 선택 시 실선
@@ -378,9 +378,9 @@ export function LeafletMap({
           dashArray = "6, 4"; // 점선 스타일
         }
       } else if (isSelected || isOwned) {
-        // 선택된 신청 필지: 진한 녹색 실선
-        polygonColor = "#16a34a"; // 진한 녹색
-        fillColor = "#bbf7d0"; // 연한 녹색 배경
+        // 선택된 신청 필지: 진한 파란색 실선
+        polygonColor = "#2563eb"; // 진한 파란색
+        fillColor = "#dbeafe"; // 연한 파란색 배경
         weight = 4;
         fillOpacity = 0.45;
       }

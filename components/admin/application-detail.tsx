@@ -540,7 +540,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "농기계 진입/회전",
         met: farmDifficulty,
-        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 ���인)" : "") : "농기계 사용 가능"
+        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 �����인)" : "") : "농기계 사용 가능"
       });
       
       criteriaChecks.push({
@@ -984,8 +984,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <p className="text-xs font-medium text-muted-foreground mb-2">범례</p>
                     <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                        <span className="text-green-600 font-medium">신청필지</span>
+                        <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
+                        <span className="text-blue-600 font-medium">신청필지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
@@ -1374,8 +1374,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         <span>인접 필지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                        <span className="text-green-600 font-medium">선택된 필지</span>
+                        <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
+                        <span className="text-blue-600 font-medium">선택된 필지</span>
                       </div>
                     </div>
                   </div>
@@ -1461,7 +1461,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <span 
                                   className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white shrink-0"
                                   style={{
-                                    backgroundColor: isSelected ? "#16a34a" : "#6b7280"
+                                    backgroundColor: isSelected ? "#2563eb" : "#6b7280"
                                   }}
                                 >
                                   {String.fromCharCode(65 + idx)}
