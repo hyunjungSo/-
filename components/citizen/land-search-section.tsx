@@ -98,7 +98,7 @@ const regionData = {
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "���곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
     "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "내덕동", "율량동"],
@@ -235,7 +235,7 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["봉농리", "효전리", "금수리", "금산리"],
+    "도고면": ["봉농리", "효���리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
@@ -794,7 +794,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return;
       }
       
-      // 지번 검색: 선택된 지역에 해당하는 토지 필터링
+      // 지번 검색: 선택된 지역에 해���하는 토지 필터링
       results = dummyLandInfoList.filter(land => {
         // 시군구 포함 여부
         if (!land.address.includes(selectedSigungu)) return false;
@@ -953,7 +953,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setHasSearched(false);
   };
 
-  // 드롭다��� 옵션
+  // 드롭다����� 옵션
   const sigunguOptions = selectedSido ? regionData.시군구[selectedSido as keyof typeof regionData.시군구] || [] : [];
   
   const eupmyeondongOptions = selectedSigungu ? regionData.읍면동[selectedSigungu as keyof typeof regionData.읍면동] || [] : [];
@@ -1126,7 +1126,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               <div className="flex flex-1 items-center bg-background px-4 py-2">
                 <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <Info className="h-3.5 w-3.5 shrink-0" />
-                  법인 신청 시, 사업자등록증 및 법인인감증명서가 필요합니다.
+                  법인 신청 시, 사업자등록증 및 법인인감증명���가 필요합니다.
                 </p>
               </div>
             </div>
@@ -1714,8 +1714,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   if (isAlreadyInCart) {
                     return (
                       <div className="space-y-2">
-                        <div className="flex items-center justify-center gap-2 rounded-lg bg-primary/10 p-3">
-                          <CheckCircle2 className="h-5 w-5 text-primary" />
+                        <div className="flex h-[38px] items-center justify-center gap-2 rounded-lg bg-primary/10 px-3 py-2">
+                          <CheckCircle2 className="h-5 w-5 shrink-0 text-primary" />
                           <span className="text-sm font-medium text-primary">신청 목록에 추가됨</span>
                         </div>
                         <Button 
