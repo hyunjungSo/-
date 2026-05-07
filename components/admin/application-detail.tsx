@@ -540,7 +540,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "농기계 진입/회전",
         met: farmDifficulty,
-        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 �������인)" : "") : "농기계 사용 가능"
+        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 ���������인)" : "") : "농기계 사용 가능"
       });
       
       criteriaChecks.push({
@@ -1035,28 +1035,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             </div>
                           </AccordionTrigger>
                           <AccordionContent className="pb-4">
-                            {/* 기본 정보 */}
-                            <div className="grid grid-cols-3 gap-3 text-sm mb-4">
-                              <div className="rounded bg-white/80 p-2 text-center">
-                                <p className="text-xs text-muted-foreground">잔여 면적</p>
-                                <p className="font-semibold">{land.remainingArea.toLocaleString()}m²</p>
-                              </div>
-                              <div className="rounded bg-white/80 p-2 text-center">
-                                <p className="text-xs text-muted-foreground">잔여 비율</p>
-                                <p className="font-semibold">{land.remainingRatio}%</p>
-                              </div>
-                              <div className="rounded bg-white/80 p-2 text-center">
-                                <p className="text-xs text-muted-foreground">형상지수 변화</p>
-                                <p className="font-semibold">
-                                  {landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}
-                                </p>
-                              </div>
-                            </div>
-
-                            {/* 편입 정보 */}
+                            {/* 편입 정보 - 통합 */}
                             <div className="rounded-lg bg-white/60 p-3 border mb-4">
                               <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
-                              <div className="grid grid-cols-2 gap-2 text-sm">
+                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
                                 <div>
                                   <span className="text-muted-foreground">편입 전 면적:</span>
                                   <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}㎡</span>
@@ -1064,6 +1046,18 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div>
                                   <span className="text-muted-foreground">편입 면적:</span>
                                   <span className="ml-1 font-medium">{(land.includedArea ?? ((land.originalArea ?? 0) - (land.remainingArea ?? 0))).toLocaleString()}m²</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground">잔여 면적:</span>
+                                  <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m²</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground">잔여 비율:</span>
+                                  <span className="ml-1 font-medium">{land.remainingRatio}%</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground">형상지수 변화:</span>
+                                  <span className="ml-1 font-medium">{landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}</span>
                                 </div>
                               </div>
                             </div>
@@ -1809,7 +1803,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         return "분석할 필지를 선택해 주세요";
                       }
                       if (!allSelectedLandsHaveCurrentUsage) {
-                        return "현재 활용 지목을 선택해 주세요";
+                        return "현재 활용 지목�� 선택해 주세요";
                       }
                       return null;
                     };
@@ -1906,35 +1900,29 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </div>
                               </AccordionTrigger>
                               <AccordionContent className="pb-4">
-                                {/* 기본 정보 */}
-                                    <div className="grid grid-cols-3 gap-3 text-sm mb-4">
-                                      <div className="rounded bg-white/80 p-2 text-center">
-                                        <p className="text-xs text-muted-foreground">잔여 면적</p>
-                                        <p className="font-semibold">{land.remainingArea.toLocaleString()}m²</p>
-                                      </div>
-                                      <div className="rounded bg-white/80 p-2 text-center">
-                                        <p className="text-xs text-muted-foreground">잔여 비율</p>
-                                        <p className="font-semibold">{land.remainingRatio}%</p>
-                                      </div>
-                                      <div className="rounded bg-white/80 p-2 text-center">
-                                        <p className="text-xs text-muted-foreground">형상지수 변화</p>
-                                        <p className="font-semibold">
-                                          {landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}
-                                        </p>
-                                      </div>
-                                    </div>
-
-                                    {/* 편입 정보 */}
+                                    {/* 편입 정보 - 통합 */}
                                     <div className="rounded-lg bg-white/60 p-3 border mb-4">
                                       <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
-                                      <div className="grid grid-cols-2 gap-2 text-sm">
+                                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
                                         <div>
                                           <span className="text-muted-foreground">편입 전 면적:</span>
-                                          <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}m²</span>
+                                          <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}㎡</span>
                                         </div>
                                         <div>
                                           <span className="text-muted-foreground">편입 면적:</span>
                                           <span className="ml-1 font-medium">{(land.includedArea ?? ((land.originalArea ?? 0) - (land.remainingArea ?? 0))).toLocaleString()}m²</span>
+                                        </div>
+                                        <div>
+                                          <span className="text-muted-foreground">잔여 면적:</span>
+                                          <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m²</span>
+                                        </div>
+                                        <div>
+                                          <span className="text-muted-foreground">잔여 비율:</span>
+                                          <span className="ml-1 font-medium">{land.remainingRatio}%</span>
+                                        </div>
+                                        <div>
+                                          <span className="text-muted-foreground">형상지수 변화:</span>
+                                          <span className="ml-1 font-medium">{landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}</span>
                                         </div>
                                       </div>
                                     </div>
@@ -2174,35 +2162,29 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </div>
                               </AccordionTrigger>
                               <AccordionContent className="pb-4">
-                                {/* 기본 정보 */}
-                                <div className="grid grid-cols-3 gap-3 text-sm mb-4">
-                                  <div className="rounded bg-white/80 p-2 text-center">
-                                    <p className="text-xs text-muted-foreground">잔여 면적</p>
-                                    <p className="font-semibold">{land.remainingArea.toLocaleString()}m²</p>
-                                  </div>
-                                  <div className="rounded bg-white/80 p-2 text-center">
-                                    <p className="text-xs text-muted-foreground">잔여 비율</p>
-                                    <p className="font-semibold">{land.remainingRatio}%</p>
-                                  </div>
-                                  <div className="rounded bg-white/80 p-2 text-center">
-                                    <p className="text-xs text-muted-foreground">형상지수 변화</p>
-                                    <p className="font-semibold">
-                                      {result?.shapeIndexChange != null ? `+${result.shapeIndexChange.toFixed(1)}` : "-"}
-                                    </p>
-                                  </div>
-                                </div>
-
-                                {/* 편입 정보 */}
+                                {/* 편입 정보 - 통합 */}
                                 <div className="rounded-lg bg-white/60 p-3 border mb-4">
                                   <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
-                                  <div className="grid grid-cols-2 gap-2 text-sm">
+                                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
                                     <div>
                                       <span className="text-muted-foreground">편입 전 면적:</span>
-                                      <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}m²</span>
+                                      <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}㎡</span>
                                     </div>
                                     <div>
                                       <span className="text-muted-foreground">편입 면적:</span>
                                       <span className="ml-1 font-medium">{(land.includedArea ?? ((land.originalArea ?? 0) - (land.remainingArea ?? 0))).toLocaleString()}m²</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-muted-foreground">잔여 면적:</span>
+                                      <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m²</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-muted-foreground">잔여 비율:</span>
+                                      <span className="ml-1 font-medium">{land.remainingRatio}%</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-muted-foreground">형상지수 변화:</span>
+                                      <span className="ml-1 font-medium">{result?.shapeIndexChange != null ? `+${result.shapeIndexChange.toFixed(1)}` : "-"}</span>
                                     </div>
                                   </div>
                                 </div>
