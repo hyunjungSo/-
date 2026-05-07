@@ -88,6 +88,25 @@ export default function ReviewDocumentPage({
     { role: "최종결정", decision: "", signature: "" },
   ]);
 
+  // 심의서 데이터 저장 함수
+  const saveReviewDocumentData = (parcels: LandParcel[]) => {
+    try {
+      const savedReviewDocuments = JSON.parse(localStorage.getItem('reviewDocuments') || '{}');
+      savedReviewDocuments[resolvedParams.id] = {
+        landParcels: parcels,
+        ownerInfo,
+        ownerOpinion,
+        fieldConditionReview,
+        committeeDecisions,
+        documentMeta,
+        savedAt: new Date().toISOString(),
+      };
+      localStorage.setItem('reviewDocuments', JSON.stringify(savedReviewDocuments));
+    } catch (e) {
+      console.error('Failed to save review document:', e);
+    }
+  };
+
   useEffect(() => {
     // localStorage에서 업데이트된 데이터를 먼저 확인
     let found: Application | undefined;
@@ -112,12 +131,33 @@ export default function ReviewDocumentPage({
         ownerName: found.applicantName,
       });
       
-      // 필지별 판정 결과가 있으면 사용, 없으면 기본값 사용
+      // 1. 먼저 심의서 자체 저장 데이터가 있는지 확인 (이전에 심의서에서 수정한 데이터)
+      let savedReviewData = null;
+      try {
+        const savedReviewDocuments = JSON.parse(localStorage.getItem('reviewDocuments') || '{}');
+        if (savedReviewDocuments[resolvedParams.id]) {
+          savedReviewData = savedReviewDocuments[resolvedParams.id];
+        }
+      } catch (e) {
+        console.error('Failed to read review document from localStorage:', e);
+      }
+      
+      // 심의서 자체 저장 데이터가 있으면 해당 데이터 사용 (연동 없이 독립적 수정)
+      if (savedReviewData && savedReviewData.landParcels && savedReviewData.landParcels.length > 0) {
+        setLandParcels(savedReviewData.landParcels);
+        if (savedReviewData.ownerOpinion) setOwnerOpinion(savedReviewData.ownerOpinion);
+        if (savedReviewData.fieldConditionReview) setFieldConditionReview(savedReviewData.fieldConditionReview);
+        if (savedReviewData.committeeDecisions) setCommitteeDecisions(savedReviewData.committeeDecisions);
+        if (savedReviewData.documentMeta) setDocumentMeta(savedReviewData.documentMeta);
+        return; // 심의서 자체 데이터 사용 시 관리자 검토 데이터 연동하지 않음
+      }
+      
+      // 2. 심의서 자체 데이터가 없으면 관리자 검토 판정값을 초기값으로 사용
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const savedJudgments = (found as any).landJudgmentsForReview;
       
       if (savedJudgments && savedJudgments.length > 0) {
-        // 관리자 검토에서 저장된 필지별 판정 결과 사용
+        // 관리자 검토에서 저장된 필지별 판정 결과를 초기값으로 사용
         const parcelsFromJudgments: LandParcel[] = savedJudgments.map((lj: {
           address: string;
           landCategory: string;
@@ -185,6 +225,8 @@ export default function ReviewDocumentPage({
   }, [resolvedParams.id]);
 
   const handleGenerate = () => {
+    // 완료 시 심의서 데이터 저장
+    saveReviewDocumentData(landParcels);
     setIsGenerated(true);
     setIsEditing(false);
   };
@@ -195,11 +237,14 @@ export default function ReviewDocumentPage({
 
   // 필지별 매수여부 변경 핸들러
   const handlePurchaseDecisionChange = (index: number, decision: "O" | "X" | "-" | "선택") => {
-    setLandParcels((prev) =>
-      prev.map((parcel, i) =>
+    setLandParcels((prev) => {
+      const updated = prev.map((parcel, i) =>
         i === index ? { ...parcel, purchaseDecision: decision } : parcel
-      )
-    );
+      );
+      // 변경 시 심의서 데이터 자동 저장
+      saveReviewDocumentData(updated);
+      return updated;
+    });
   };
 
   if (!application) {
