@@ -413,7 +413,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 토지 유형별 면적 기준 (㎡)
   const getAreaCriteria = (land: typeof allLands[0], landData?: typeof application.landDataList[0], adminLandSubType?: string) => {
     const landType = land.landType;
-    // 담당자가 선택한 건축물 용도 우선 적용, 없으면 신청 시 입력된 값 사용
+    // 담당자가 선택한 건축물 용도 우�� 적용, 없으면 신청 시 입력된 값 사용
     const subType = adminLandSubType || landData?.landSubType || "";
     const remainingRatio = land.remainingRatio;
     
@@ -1353,7 +1353,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
-                        <span>신청 필지</span>
+                        <span>신청 ���지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
@@ -2310,7 +2310,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   {/* 분석 프로세스 상세 보기 버튼 */}
                                   <Button
                                     variant="outline"
-                                    className="w-full gap-2 mt-3"
+                                    className="w-full gap-2 mt-3 bg-black text-white hover:bg-gray-800 hover:text-white border-black"
                                     onClick={() => {
                                       setSelectedLandIndex(landIdx);
                                       setShowAnalysisFlow(true);
