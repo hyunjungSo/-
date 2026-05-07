@@ -720,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            // 필지 분석 오류 처���
+            // 필지 분석 오류 처����
           }
         });
         
@@ -1603,7 +1603,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
                                         <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
                                         <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
-                                        <SelectItem value="industrial">공업�� (���준: 330㎡)</SelectItem>
+                                        <SelectItem value="industrial">공���� (���준: 330㎡)</SelectItem>
                                       </SelectContent>
                                     </Select>
                                   </div>
@@ -1809,7 +1809,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* AI 분석 버튼 */}
                   {(() => {
-                    // 선택된 모든 필지가 현재 활용 지목을 선택���는지 확인
+                    // 선택된 모든 필지가 현재 활용 지목을 ���택���는지 확인
                     const allSelectedLandsHaveCurrentUsage = adminCheckedLandIds.every(
                       id => adminCurrentUsagePerLand[id] && adminCurrentUsagePerLand[id].trim() !== ""
                     );
@@ -2624,7 +2624,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <CheckCircle2 className="h-4 w-4" />
                       판단 요약
                     </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <p className="text-[15px] text-muted-foreground leading-relaxed">
                       {(() => {
                         const land = allLands[expandedLandIndex];
                         const result = citizenLandAIResults[land?.id];
@@ -2640,7 +2640,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <FileText className="h-4 w-4" />
                       법적 근거
                     </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <p className="text-[15px] text-muted-foreground leading-relaxed">
                       {(() => {
                         const land = allLands[expandedLandIndex];
                         const result = citizenLandAIResults[land?.id];
@@ -2666,7 +2666,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           "접면도로 상태 변경 여부"
                         ];
                         return criteria.map((c: string, i: number) => (
-                          <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <li key={i} className="flex items-start gap-2 text-[15px] text-muted-foreground">
                             <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
                             {c}
                           </li>
