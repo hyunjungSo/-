@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "�����������입력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "�������������입력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -1278,39 +1278,63 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             {/* 담당자 결과 탭 */}
             <TabsContent value="admin">
-              {/* 필지 선택 UI */}
-              <div className="mb-6 p-4 bg-muted/30 rounded-lg border">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Label className="text-sm font-medium">필지 선택</Label>
+              {/* 필지 선택 UI - 최상단 고정 */}
+              <div className="mb-6 p-4 bg-white rounded-lg border shadow-sm sticky top-0 z-10">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span 
+                        className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-white shrink-0"
+                        style={{ backgroundColor: selectedLandIndex < applicationLands.length ? "#2563eb" : "#d97706" }}
+                      >
+                        {String.fromCharCode(65 + selectedLandIndex)}
+                      </span>
+                      <Badge variant={selectedLandIndex < applicationLands.length ? "default" : "outline"} className="text-xs">
+                        {selectedLandIndex < applicationLands.length ? "신청 필지" : "인접 필지"}
+                      </Badge>
+                    </div>
                     <Select
                       value={selectedLandIndex.toString()}
                       onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
                     >
-                      <SelectTrigger className="w-[400px]">
+                      <SelectTrigger className="flex-1 max-w-[500px] h-10">
                         <SelectValue placeholder="필지를 선택하세요" />
                       </SelectTrigger>
                       <SelectContent>
-                        {allLands.map((land, index) => (
+                        <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-b">신청 필지</div>
+                        {applicationLands.map((land, index) => (
                           <SelectItem key={land.id} value={index.toString()}>
                             <div className="flex items-center gap-2">
-                              <Badge variant={index < applicationLands.length ? "default" : "outline"} className="text-xs">
-                                {index < applicationLands.length ? "신청" : "인접"}
-                              </Badge>
-                              <span>{land.address.split(" ").slice(-1)[0]}</span>
-                              <span className="text-muted-foreground">| {land.landCategory} | {land.remainingArea.toLocaleString()}㎡</span>
+                              <span className="font-medium">{String.fromCharCode(65 + index)}</span>
+                              <span>{land.address.split(" ").slice(-2).join(" ")}</span>
+                              <span className="text-muted-foreground text-xs">| {land.landCategory} | {land.remainingArea.toLocaleString()}㎡</span>
                             </div>
                           </SelectItem>
                         ))}
+                        {adjacentLands.length > 0 && (
+                          <>
+                            <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-b border-t mt-1">인접 필지</div>
+                            {adjacentLands.map((land, index) => (
+                              <SelectItem key={land.id} value={(applicationLands.length + index).toString()}>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium">{String.fromCharCode(65 + applicationLands.length + index)}</span>
+                                  <span>{land.address.split(" ").slice(-2).join(" ")}</span>
+                                  <span className="text-muted-foreground text-xs">| {land.landCategory} | {land.remainingArea.toLocaleString()}㎡</span>
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </>
+                        )}
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline">{selectedLandIndex + 1} / {allLands.length} 필지</Badge>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm text-muted-foreground">{selectedLandIndex + 1} / {allLands.length}</span>
                     <div className="flex gap-1">
                       <Button
                         variant="outline"
-                        size="sm"
+                        size="icon"
+                        className="h-8 w-8"
                         onClick={() => setSelectedLandIndex(Math.max(0, selectedLandIndex - 1))}
                         disabled={selectedLandIndex === 0}
                       >
@@ -1318,7 +1342,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       </Button>
                       <Button
                         variant="outline"
-                        size="sm"
+                        size="icon"
+                        className="h-8 w-8"
                         onClick={() => setSelectedLandIndex(Math.min(allLands.length - 1, selectedLandIndex + 1))}
                         disabled={selectedLandIndex === allLands.length - 1}
                       >
@@ -1326,6 +1351,21 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       </Button>
                     </div>
                   </div>
+                </div>
+                {/* 선택된 필지 요약 정보 */}
+                <div className="mt-3 pt-3 border-t flex items-center justify-between">
+                  <div className="flex items-center gap-4 text-sm">
+                    <span><span className="text-muted-foreground">주소:</span> <span className="font-medium">{allLands[selectedLandIndex]?.address}</span></span>
+                    <span><span className="text-muted-foreground">지목:</span> <span className="font-medium">{allLands[selectedLandIndex]?.landCategory}</span></span>
+                    <span><span className="text-muted-foreground">잔여면적:</span> <span className="font-medium">{allLands[selectedLandIndex]?.remainingArea.toLocaleString()}㎡</span></span>
+                  </div>
+                  {adminLandAIResults[allLands[selectedLandIndex]?.id]?.provisionalJudgment && (
+                    <JudgmentStatus 
+                      judgment={adminLandAIResults[allLands[selectedLandIndex]?.id]?.provisionalJudgment} 
+                      variant="badge" 
+                      size="sm"
+                    />
+                  )}
                 </div>
               </div>
 
@@ -1435,457 +1475,138 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                   </div>
                   
-                  {/* 필지 리스트 (체크박스 + 지도 연동) */}
+                  {/* 선택된 필지 옵션 설정 */}
                   <div className="rounded-lg border bg-white">
                     {/* 헤더 */}
-                    <div className="flex items-center justify-between border-b bg-muted/30 px-3 py-2">
-                      <span className="text-sm font-medium flex items-center gap-1.5">
-                        <ListChecks className="h-3.5 w-3.5" />
-                        필지 목록
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 px-2 text-xs"
-                          onClick={() => setAdminCheckedLandIds(allLands.map(l => l.id))}
+                    <div className="flex items-center justify-between border-b bg-muted/30 px-3 py-2.5">
+                      <span className="text-sm font-medium flex items-center gap-2">
+                        <span 
+                          className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white"
+                          style={{ backgroundColor: selectedLandIndex < applicationLands.length ? "#2563eb" : "#d97706" }}
                         >
-                          전체 선택
-                        </Button>
-                        {adminCheckedLandIds.length > 0 && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 px-2 text-xs text-muted-foreground"
-                            onClick={() => setAdminCheckedLandIds([])}
-                          >
-                            전체 해제
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                    
-                    {/* 필지 리스트 */}
-                    <div className="divide-y max-h-[320px] overflow-y-auto">
-                      {/* 신청 필지 섹션 */}
-                      <div className="px-3 py-2 bg-gray-50/50 border-b border-gray-200/50">
-                        <p className="text-xs font-medium text-gray-700">신청 필지</p>
-                        <p className="text-[10px] text-gray-500 mt-0.5">민원인이 매수를 신청한 필지</p>
-                      </div>
-                      {applicationLands.map((land, idx) => {
-                        const isSelected = adminCheckedLandIds.includes(land.id);
-                        const isHovered = hoveredLandId === land.id;
-                        const landResult = adminLandAIResults[land.id];
-                        const landOptions = adminAIOptionsPerLand[land.id] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
-                        
-                        return (
-                          <div 
-                            key={land.id} 
-                            className={`px-3 py-2.5 transition-colors ${
-                              isHovered ? "bg-blue-50" :
-                              isSelected ? "bg-primary/5 border-l-4 border-l-primary" : 
-                              "hover:bg-muted/50"
-                            }`}
-                            onMouseEnter={() => setHoveredLandId(land.id)}
-                            onMouseLeave={() => setHoveredLandId(null)}
-                          >
-                            {/* 상단: 체크박스 + 필지 정보 */}
-                            <div className="flex items-center gap-3">
-                              {/* 체크박스 - 독립적인 클릭 영역 */}
-                              <Checkbox
-                                checked={isSelected}
-                                onCheckedChange={(checked) => {
-                                  if (checked) {
-                                    setAdminCheckedLandIds(prev => [...prev, land.id]);
-                                  } else {
-                                    setAdminCheckedLandIds(prev => prev.filter(id => id !== land.id));
-                                  }
-                                }}
-                                className="h-6 w-6 shrink-0"
-                              />
-                              
-                              {/* 필지 마커 + 정보 (클릭 시 확장/축소 토글) */}
-                              <div 
-                                className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer"
-                                onClick={() => {
-                                  // 같은 필지 클릭 시 닫기, 다른 필지 클릭 시 열기
-                                  if (focusedLandId === land.id) {
-                                    setFocusedLandId(null);
-                                  } else {
-                                    setSelectedLandIndex(idx);
-                                    setFocusedLandId(land.id);
-                                  }
-                                }}
-                              >
-                                <span 
-                                  className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white shrink-0"
-                                  style={{
-                                    backgroundColor: isSelected ? "#2563eb" : "#6b7280"
-                                  }}
-                                >
-                                  {String.fromCharCode(65 + idx)}
-                                </span>
-                                
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-medium truncate">{land.address.split(" ").slice(-2).join(" ")}</p>
-                                  <p className="text-xs text-muted-foreground">
-                                    {land.landType} | 잔여 {land.remainingArea.toLocaleString()}m²
-                                  </p>
-                                </div>
-                              </div>
-                              
-                              {/* AI 분석 상태 표시 */}
-                              {landAnalysisStatus[land.id] === 'analyzing' ? (
-                                <Badge variant="outline" className="text-xs shrink-0 border-blue-500 text-blue-700 bg-blue-50 gap-1">
-                                  <Loader2 className="h-3 w-3 animate-spin" />
-                                  분석중
-                                </Badge>
-                              ) : landAnalysisStatus[land.id] === 'pending' && isAIAnalyzing ? (
-                                <Badge variant="outline" className="text-xs shrink-0 border-gray-300 text-gray-500 bg-gray-50">
-                                  대기중
-                                </Badge>
-                              ) : landResult?.provisionalJudgment ? (
-                                <JudgmentStatus 
-                                  judgment={landResult.provisionalJudgment} 
-                                  variant="badge" 
-                                  size="sm"
-                                  className="shrink-0"
-                                />
-                              ) : null}
-                              
-                              {/* 아코디언 화��표 아이콘 */}
-                              <div 
-                                className="shrink-0 ml-2 cursor-pointer p-1 hover:bg-muted rounded"
-                                onClick={() => {
-                                  if (focusedLandId === land.id) {
-                                    setFocusedLandId(null);
-                                  } else {
-                                    setSelectedLandIndex(idx);
-                                    setFocusedLandId(land.id);
-                                  }
-                                }}
-                              >
-                                {focusedLandId === land.id ? (
-                                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                                ) : (
-                                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                                )}
-                              </div>
-                            </div>
-                            
-                            {/* AI 분석 진행 단계 상세 (분석중일 때만 표시) */}
-                            {landAnalysisStatus[land.id] === 'analyzing' && (
-                              <div className="mt-2 ml-7 p-2 rounded-lg bg-blue-50/50 border border-blue-100">
-                                <div className="space-y-1.5">
-                                  {[
-                                    { step: 1, label: "형상지수 계산" },
-                                    { step: 2, label: "면적 비율 분석" },
-                                    { step: 3, label: "법적 기준 검토" },
-                                    { step: 4, label: "종합 판정" },
-                                    { step: 5, label: "결과 저장" },
-                                  ].map((item) => {
-                                    const currentStep = landAnalysisStep[land.id] || 0;
-                                    const isActive = currentStep === item.step;
-                                    const isDone = currentStep > item.step;
-                                    return (
-                                      <div key={item.step} className="flex items-center gap-2 text-xs">
-                                        {isDone ? (
-                                          <CheckCircle2 className="h-3.5 w-3.5 text-blue-600" />
-                                        ) : isActive ? (
-                                          <Loader2 className="h-3.5 w-3.5 text-blue-600 animate-spin" />
-                                        ) : (
-                                          <div className="h-3.5 w-3.5 rounded-full border border-gray-300" />
-                                        )}
-                                        <span className={isDone ? "text-blue-600" : isActive ? "text-blue-700 font-medium" : "text-gray-400"}>
-                                          {item.label}
-                                        </span>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              </div>
-                            )}
-                            
-                            {/* 하단: 필지 상세 옵션 (포커스된 필지만 표시 - 아코디언 토글) */}
-                            {focusedLandId === land.id && (
-                              <div className="mt-3 ml-7 space-y-3 border-t pt-3">
-                                {/* 현재 활용 지목 */}
-                                <div className="space-y-1.5">
-                                  <div className="flex items-center justify-between">
-                                    <label className="text-xs font-medium text-foreground">
-                                      현재 활용 지목 <span className="text-destructive">*</span>
-                                    </label>
-                                    <span className="text-xs text-muted-foreground">
-                                      공부상 지목: <span className="font-medium text-foreground">{land.landType}</span>
-                                    </span>
-                                  </div>
-                                  <Select 
-                                    value={adminCurrentUsagePerLand[land.id] || ""} 
-                                    onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [land.id]: value }))}
-                                  >
-                                    <SelectTrigger className="h-8 bg-background text-sm">
-                                      <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="대">대 (택지)</SelectItem>
-                                      <SelectItem value="전">전 (��)</SelectItem>
-                                      <SelectItem value="답">답 (논)</SelectItem>
-                                      <SelectItem value="임">임 (임야)</SelectItem>
-                                      <SelectItem value="잡">잡 (잡종지)</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                  <p className="text-xs text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
-                                </div>
-                                
-                                {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
-                                {adminCurrentUsagePerLand[land.id] === "대" && (
-                                  <div className="space-y-1.5 rounded bg-muted/30 px-0 py-2">
-                                    <label className="text-xs font-medium text-foreground">
-                                      건축물 용도 선택 <span className="text-destructive">*</span>
-                                    </label>
-                                    <Select 
-                                      value={adminLandSubTypePerLand[land.id] || ""} 
-                                      onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [land.id]: value }))}
-                                    >
-                                      <SelectTrigger className="h-8 bg-background text-sm">
-                                        <SelectValue placeholder="건축물 용도를 선택해 주세요" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
-                                        <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
-                                        <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
-                                        <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
-                                        <SelectItem value="industrial">공업용 (기준: 330��)</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </div>
-                                )}
-                                
-                                {/* ��장확인 옵션 */}
-                                <div className="space-y-1.5">
-                                  <span className="text-xs font-medium text-foreground">현장확인:</span>
-                                  <div className="flex flex-col gap-2">
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                      <Checkbox 
-                                        checked={landOptions.farmMachineDifficulty}
-                                        onCheckedChange={(checked) => updateLandOption(land.id, 'farmMachineDifficulty', checked === true)}
-                                        className="h-[18px] w-[18px]"
-                                      />
-                                      <span className="text-base">농기계 회전 곤란</span>
-                                    </label>
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                      <Checkbox 
-                                        checked={landOptions.accessRoadLost}
-                                        onCheckedChange={(checked) => updateLandOption(land.id, 'accessRoadLost', checked === true)}
-                                        className="h-[18px] w-[18px]"
-                                      />
-                                      <span className="text-base">접면도로 상실</span>
-                                    </label>
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                      <Checkbox 
-                                        checked={landOptions.waterChannelLost}
-                                        onCheckedChange={(checked) => updateLandOption(land.id, 'waterChannelLost', checked === true)}
-                                        className="h-[18px] w-[18px]"
-                                      />
-                                      <span className="text-base">관개수로 상실</span>
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                      
-                      {/* 인접 필지 섹션 */}
-                      {adjacentLands.map((adjacentLand, adjIdx) => {
-                        const isSelected = adminCheckedLandIds.includes(adjacentLand.id);
-                        const isHovered = hoveredLandId === adjacentLand.id;
-                        const isFocused = focusedLandId === adjacentLand.id;
-                        const landOptions = adminAIOptionsPerLand[adjacentLand.id] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
-                        
-                        return (
-                          <div 
-                            key={adjacentLand.id} 
-                            className={`px-3 py-2.5 transition-colors ${
-                              isHovered ? "bg-blue-50" :
-                              isSelected ? "bg-primary/5 border-l-4 border-l-primary" : 
-                              "hover:bg-muted/50"
-                            }`}
-                            onMouseEnter={() => setHoveredLandId(adjacentLand.id)}
-                            onMouseLeave={() => setHoveredLandId(null)}
-                          >
-                            {/* 상단: 체크박스 + 필지 정보 */}
-                            <div className="flex items-center gap-3">
-                              {/* 체크박스 - 독립적인 클릭 영역 */}
-                              <Checkbox 
-                                checked={isSelected}
-                                onCheckedChange={(checked) => handleAdminCheckLand(adjacentLand.id, checked as boolean)}
-                                className="h-6 w-6 shrink-0"
-                              />
-                              
-                              {/* 필지 마커 + 정보 (클릭 시 확장/축소 토글) */}
-                              <div 
-                                className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer"
-                                onClick={() => setFocusedLandId(isFocused ? null : adjacentLand.id)}
-                              >
-                                <span 
-                                  className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white shrink-0"
-                                  style={{
-                                    backgroundColor: "#dc2626"
-                                  }}
-                                >
-                                  {String.fromCharCode(65 + allLands.length + adjIdx)}
-                                </span>
-                                
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-medium truncate">{adjacentLand.address.split(" ").slice(-2).join(" ")}</p>
-                                  <p className="text-xs text-muted-foreground">
-                                    {adjacentLand.landType} | 잔여 {adjacentLand.remainingArea.toLocaleString()}m²
-                                  </p>
-                                </div>
-                              </div>
-                              
-                              {/* 아코디언 화살표 아이콘 */}
-                              <div 
-                                className="shrink-0 ml-2 cursor-pointer p-1 hover:bg-muted rounded"
-                                onClick={() => setFocusedLandId(isFocused ? null : adjacentLand.id)}
-                              >
-                                {isFocused ? (
-                                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                                ) : (
-                                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                                )}
-                              </div>
-                            </div>
-                            
-                            {/* 하단: 필지 상세 옵션 */}
-                            {isFocused && (
-                              <div className="mt-3 ml-7 space-y-3 border-t pt-3">
-                                {/* 현재 활용 지목 */}
-                                <div className="space-y-1.5">
-                                  <div className="flex items-center justify-between">
-                                    <label className="text-xs font-medium text-foreground">
-                                      현재 활용 지목 <span className="text-destructive">*</span>
-                                    </label>
-                                    <span className="text-xs text-muted-foreground">
-                                      공부상 지목: <span className="font-medium text-foreground">{adjacentLand.landType}</span>
-                                    </span>
-                                  </div>
-                                  <Select 
-                                    value={adminCurrentUsagePerLand[adjacentLand.id] || ""} 
-                                    onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [adjacentLand.id]: value }))}
-                                  >
-                                    <SelectTrigger className="h-8 bg-background text-sm">
-                                      <SelectValue placeholder="현재 활용 지목을 선택해 ������요" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="대">대 (택지)</SelectItem>
-                                      <SelectItem value="전">전 (밭)</SelectItem>
-                                      <SelectItem value="답">답 (논)</SelectItem>
-                                      <SelectItem value="임">임 (임야)</SelectItem>
-                                      <SelectItem value="잡">잡 (잡종지)</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                  <p className="text-xs text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
-                                </div>
-                                
-                                {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
-                                {adminCurrentUsagePerLand[adjacentLand.id] === "대" && (
-                                  <div className="space-y-1.5 rounded bg-muted/30 p-2">
-                                    <label className="text-xs font-medium text-foreground">
-                                      건축물 용도 선택 <span className="text-destructive">*</span>
-                                    </label>
-                                    <Select 
-                                      value={adminLandSubTypePerLand[adjacentLand.id] || ""} 
-                                      onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [adjacentLand.id]: value }))}
-                                    >
-                                      <SelectTrigger className="h-8 bg-background text-sm">
-                                        <SelectValue placeholder="건축물 용도를 선택해 주세요" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
-                                        <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
-                                        <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
-                                        <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
-                                        <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </div>
-                                )}
-                                
-                                {/* 현장확인 옵션 */}
-                                <div className="space-y-1.5">
-                                  <label className="text-xs font-medium text-foreground">현장확인:</label>
-                                  <div className="flex flex-col gap-2">
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                      <Checkbox 
-                                        checked={landOptions.farmMachineDifficulty}
-                                        onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'farmMachineDifficulty', checked === true)}
-                                      />
-                                      <span className="text-base">농기계 회전 곤란</span>
-                                    </label>
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                      <Checkbox 
-                                        checked={landOptions.accessRoadLost}
-                                        onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'accessRoadLost', checked === true)}
-                                      />
-                                      <span className="text-base">접면도로 상실</span>
-                                    </label>
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                      <Checkbox 
-                                        checked={landOptions.waterChannelLost}
-                                        onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'waterChannelLost', checked === true)}
-                                      />
-                                      <span className="text-base">관개수로 상실</span>
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                    
-                    {/* 선택 요약 */}
-                    <div className="border-t bg-muted/30 px-3 py-2">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground">{adminCheckedLandIds.length}필지 선택됨</span>
-                        <span className="font-medium">
-                          합계: {allLands.filter(l => adminCheckedLandIds.includes(l.id)).reduce((sum, l) => sum + l.remainingArea, 0).toLocaleString()}m²
+                          {String.fromCharCode(65 + selectedLandIndex)}
                         </span>
-                      </div>
+                        필지 검토 옵션
+                      </span>
+                      <Badge variant={selectedLandIndex < applicationLands.length ? "default" : "outline"}>
+                        {selectedLandIndex < applicationLands.length ? "신청 필지" : "인접 필지"}
+                      </Badge>
+                    </div>
+                    
+                    {/* 선택된 필지 옵션 설정 */}
+                    <div className="p-4 space-y-4">
+                      {(() => {
+                        const selectedLand = allLands[selectedLandIndex];
+                        if (!selectedLand) return null;
+                        const landOptions = adminAIOptionsPerLand[selectedLand.id] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
+                        
+                        return (
+                          <>
+                            {/* 현재 활용 지목 */}
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between">
+                                <label className="text-sm font-medium text-foreground">
+                                  현재 활용 지목 <span className="text-destructive">*</span>
+                                </label>
+                                <span className="text-sm text-muted-foreground">
+                                  공부상 지목: <span className="font-medium text-foreground">{selectedLand.landType}</span>
+                                </span>
+                              </div>
+                              <Select 
+                                value={adminCurrentUsagePerLand[selectedLand.id] || ""} 
+                                onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [selectedLand.id]: value }))}
+                              >
+                                <SelectTrigger className="h-10 bg-background">
+                                  <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="대">대 (택지)</SelectItem>
+                                  <SelectItem value="전">전 (밭)</SelectItem>
+                                  <SelectItem value="답">답 (논)</SelectItem>
+                                  <SelectItem value="임">임 (임야)</SelectItem>
+                                  <SelectItem value="잡">잡 (잡종지)</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            
+                            {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
+                            {adminCurrentUsagePerLand[selectedLand.id] === "대" && (
+                              <div className="space-y-2 p-3 rounded-lg bg-muted/30">
+                                <label className="text-sm font-medium text-foreground">
+                                  건축물 용도 선택 <span className="text-destructive">*</span>
+                                </label>
+                                <Select 
+                                  value={adminLandSubTypePerLand[selectedLand.id] || ""} 
+                                  onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [selectedLand.id]: value }))}
+                                >
+                                  <SelectTrigger className="h-10 bg-background">
+                                    <SelectValue placeholder="건축물 용도를 선택해 주세요" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
+                                    <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
+                                    <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
+                                    <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
+                                    <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            )}
+                            
+                            {/* 현장확인 옵션 */}
+                            <div className="space-y-3 pt-2 border-t">
+                              <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
+                              <div className="space-y-2">
+                                <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-muted/50">
+                                  <Checkbox 
+                                    checked={landOptions.farmMachineDifficulty}
+                                    onCheckedChange={(checked) => updateLandOption(selectedLand.id, 'farmMachineDifficulty', checked === true)}
+                                    className="h-5 w-5"
+                                  />
+                                  <span className="text-sm">농기계 회전 곤란</span>
+                                </label>
+                                <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-muted/50">
+                                  <Checkbox 
+                                    checked={landOptions.accessRoadLost}
+                                    onCheckedChange={(checked) => updateLandOption(selectedLand.id, 'accessRoadLost', checked === true)}
+                                    className="h-5 w-5"
+                                  />
+                                  <span className="text-sm">접면도로 상실</span>
+                                </label>
+                                <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-muted/50">
+                                  <Checkbox 
+                                    checked={landOptions.waterChannelLost}
+                                    onCheckedChange={(checked) => updateLandOption(selectedLand.id, 'waterChannelLost', checked === true)}
+                                    className="h-5 w-5"
+                                  />
+                                  <span className="text-sm">관개수로 상실</span>
+                                </label>
+                              </div>
+                            </div>
+                          </>
+                        );
+                      })()}
+                      
                     </div>
                   </div>
                   
                   {/* AI 분석 버튼 */}
                   {(() => {
-                    // 선�����된 ���든 필지가 현재 활��� 지목을 선택���는지 확인
-                    const allSelectedLandsHaveCurrentUsage = adminCheckedLandIds.every(
-                      id => adminCurrentUsagePerLand[id] && adminCurrentUsagePerLand[id].trim() !== ""
-                    );
-                    const isDisabled = isAIAnalyzing || adminCheckedLandIds.length === 0 || !allSelectedLandsHaveCurrentUsage;
-                    
-                    // 안내 문구 결정
-                    const getGuideMessage = () => {
-                      if (adminCheckedLandIds.length === 0) {
-                        return "분석할 필지를 선택해 주세요";
-                      }
-                      if (!allSelectedLandsHaveCurrentUsage) {
-                        return "현재 활용 지목을 선택해 주세요";
-                      }
-                      return null;
-                    };
-                    const guideMessage = getGuideMessage();
+                    const selectedLand = allLands[selectedLandIndex];
+                    const hasCurrentUsage = selectedLand && adminCurrentUsagePerLand[selectedLand.id] && adminCurrentUsagePerLand[selectedLand.id].trim() !== "";
+                    const isDisabled = isAIAnalyzing || !hasCurrentUsage;
                     
                     return (
                       <div className="space-y-1.5">
                         <Button
-                          onClick={handleRunAIAnalysis}
+                          onClick={() => {
+                            if (selectedLand) {
+                              setAdminCheckedLandIds([selectedLand.id]);
+                              handleRunAIAnalysis();
+                            }
+                          }}
                           disabled={isDisabled}
                           className="h-12 w-full gap-2 text-base bg-blue-600 hover:bg-blue-700"
-                          title={!allSelectedLandsHaveCurrentUsage ? "모든 선택된 필지의 현재 활용 지목을 선택해주세요" : ""}
                         >
                           {isAIAnalyzing ? (
                             <>
@@ -1895,13 +1616,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           ) : (
                             <>
                               <AIIcon className="h-4 w-4" />
-                              AI 분석 실행 ({adminCheckedLandIds.length}필지)
+                              이 필지 AI 분석 실행
                             </>
                           )}
                         </Button>
-                        {guideMessage && (
+                        {!hasCurrentUsage && (
                           <p className="text-xs text-center text-red-600">
-                            {guideMessage}
+                            현재 활용 지목을 선택해 주세요
                           </p>
                         )}
                       </div>
