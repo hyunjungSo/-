@@ -292,7 +292,7 @@ export function AIAnalysisFlowDialog({
             <PathColumn
               type="그밖의토지"
               icon={Star}
-              isActive={currentLandType === "그밖의토���"}
+              isActive={currentLandType === "그밖의토지"}
               animationStep={animationStep}
               criteria={[
                 {
@@ -319,7 +319,7 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                 {
                   title: "양분된 토지 / 형상 변경",
                   items: [
-                    { label: "��단의 토지가 양분되어 잔여지 발생", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && includedArea > 0,
+                    { label: "일단의 토지가 양분되어 잔여지 발생", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && includedArea > 0,
                       explanationMet: `편입면적 ${includedArea.toLocaleString()}㎡로 토지 양분됨`,
                       explanationUnmet: "편입 없음 - 토지 양분 미발생" },
                     { label: "형상: 잔여지 폭이 기준 이하로 변경", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged, subLabel: "주거용 5m, 상업용 7m, 공업용/농지/산지 10m",

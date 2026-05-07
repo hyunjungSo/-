@@ -589,7 +589,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       
     } else {
       // 그 밖의 토지 + 관리자 옵션 반영
-      // ���래 목적 사용 곤란 여부 (위치, 형상, 접근 상태 고려)
+      // 종래 목적 사용 곤란 여부 (위치, 형상, 접근 상태 고려)
       const usageDifficulty = adminOptions?.accessRoadLost || adminOptions?.farmMachineDifficulty || land.remainingRatio < 40 || shapeCriteria.met;
       criteriaChecks.push({
         name: "종래 사용 곤란",
@@ -721,7 +721,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            // 필�� 분석 오류 처������
+            // 필지 분석 오류 처리
           }
         });
         
@@ -934,7 +934,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div className="flex items-center justify-between">
                     <h4 className="font-medium">지적도</h4>
                     <Badge variant="outline" className="font-normal">
-                      {allLands.length}���지
+                      {allLands.length}필지
                     </Badge>
                   </div>
                   
@@ -1581,7 +1581,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <SelectItem value="잡">잡 (잡종지)</SelectItem>
                                     </SelectContent>
                                   </Select>
-                                  <p className="text-xs text-muted-foreground">실제 토지 활용 상황에 따�� 선택해 주세요.</p>
+                                  <p className="text-xs text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
                                 </div>
                                 
                                 {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
@@ -1602,13 +1602,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
                                         <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
                                         <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
-                                        <SelectItem value="industrial">공���� (���준: 330㎡)</SelectItem>
+                                        <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
                                       </SelectContent>
                                     </Select>
                                   </div>
                                 )}
                                 
-                                {/* 현장���인 옵션 */}
+                                {/* 현장확인 옵션 */}
                                 <div className="space-y-1.5">
                                   <span className="text-xs text-muted-foreground font-medium">현장확인:</span>
                                   <div className="flex flex-col gap-2">
@@ -1808,7 +1808,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* AI 분석 버튼 */}
                   {(() => {
-                    // 선택된 모든 필지가 현재 활용 지����� ���택���는지 확인
+                    // 선택된 모든 필지가 현재 활용 지목을 선택했는지 확인
                     const allSelectedLandsHaveCurrentUsage = adminCheckedLandIds.every(
                       id => adminCurrentUsagePerLand[id] && adminCurrentUsagePerLand[id].trim() !== ""
                     );
@@ -1875,7 +1875,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {Object.keys(adminLandAIResults).length === 0 ? (
                     <>
-                      {/* 재분석 ��실행 안내 */}
+                      {/* 재분석 미실행 안내 */}
                       <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 mb-4 flex items-start gap-2">
                         <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
                         <p className="text-sm text-blue-700">

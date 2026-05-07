@@ -80,7 +80,7 @@ const regionData = {
     // 부산광역시
     "해운대구": ["반송동", "반여동", "석대동", "송정동", "우동", "좌동", "재송동", "중동"],
     "기장군": ["기장읍", "장안읍", "정관읍", "일광면", "철마면"],
-    "금정구": ["구서동", "금��동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
+    "금정구": ["구서동", "금사동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
     // 경기도
     "용인시 처인구": ["양지면", "백암면", "원삼면", "이동읍", "남사읍", "포곡읍", "모현읍"],
     "용인시 기흥구": ["구갈동", "마북동", "보라동", "상갈동", "상하동", "서농동", "신갈동", "언남동", "영덕동", "중동", "지곡동", "청덕동", "하갈동"],
@@ -98,7 +98,7 @@ const regionData = {
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "�������곡면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
     "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "내덕동", "율량동"],
@@ -178,7 +178,7 @@ const regionData = {
     "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "음양리"],
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
     "향남읍": ["구문천리", "도이리", "발안리", "상신리", "제암리", "평리", "행정리"],
-    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "��우리"],
+    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "천우리"],
     "비봉면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
     "마도면": ["백곡리", "송정리", "쌍송리", "청원리", "해문리"],
     "남양읍": ["남양리", "문호리", "북양리", "송림리", "신남리"],
@@ -235,7 +235,7 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["봉농���", "효���리", "금수리", "금산리"],
+    "도고면": ["봉농리", "효자리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
@@ -794,7 +794,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return;
       }
       
-      // 지번 검색: 선택된 ��역에 해���하는 토지 필터링
+      // 지번 검색: 선택된 지역에 해당하는 토지 필터링
       results = dummyLandInfoList.filter(land => {
         // 시군구 포함 여부
         if (!land.address.includes(selectedSigungu)) return false;
@@ -953,7 +953,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setHasSearched(false);
   };
 
-  // 드롭다����� 옵션
+  // 드롭다운 옵션
   const sigunguOptions = selectedSido ? regionData.시군구[selectedSido as keyof typeof regionData.시군구] || [] : [];
   
   const eupmyeondongOptions = selectedSigungu ? regionData.읍면동[selectedSigungu as keyof typeof regionData.읍면동] || [] : [];
@@ -1013,7 +1013,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 onChange={() => handleSearchModeChange("address")}
                 className="h-4 w-4 accent-gray-900"
               />
-              <span className="text-sm">��번으로 검색</span>
+              <span className="text-sm">지번으로 검색</span>
             </label>
             <label className="flex cursor-pointer items-center gap-2">
               <input
@@ -1126,7 +1126,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               <div className="flex flex-1 items-center bg-background px-4 py-2">
                 <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <Info className="h-3.5 w-3.5 shrink-0" />
-                  법인 신청 시, 사업자등록증 �� 법인인감증명���가 필요합니다.
+                  법인 신청 시, 사업자등록증 및 법인인감증명서가 필요합니다.
                 </p>
               </div>
             </div>
