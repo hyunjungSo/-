@@ -172,7 +172,7 @@ export default function ReviewDocumentPage({
           
           return {
             originalLotNumber: lotNumber,
-            landCategory: lj.landCategory === "대지" ? "대" : 
+            landCategory: lj.landCategory === "택지" ? "대" : 
                          lj.landCategory === "전" ? "전" :
                          lj.landCategory === "답" ? "답" :
                          lj.landCategory === "임야" ? "임" : lj.landCategory,
@@ -199,7 +199,7 @@ export default function ReviewDocumentPage({
           
           return {
             originalLotNumber: lotNumber,
-            landCategory: land.landCategory === "대지" ? "대" : 
+            landCategory: land.landCategory === "택지" ? "대" : 
                          land.landCategory === "전" ? "전" :
                          land.landCategory === "답" ? "답" :
                          land.landCategory === "임야" ? "임" : land.landCategory,

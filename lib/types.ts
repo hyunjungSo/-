@@ -1,5 +1,5 @@
 // 토지 유형
-export type LandType = "대지" | "농지" | "산지" | "그밖의토지";
+export type LandType = "택지" | "농지" | "산지" | "그밖의토지";
 
 // 토지 형상
 export type LandShape =

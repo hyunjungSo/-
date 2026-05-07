@@ -30,10 +30,10 @@ interface AIAnalysisFlowDialogProps {
   isAdminResult?: boolean; // 관리자 재판독 결과 여부
 }
 
-type LandType = "대지" | "농지" | "산지" | "그밖의토지";
+type LandType = "택지" | "농지" | "산지" | "그밖의토지";
 
 const landTypeIcons: Record<LandType, typeof Home> = {
-  "대지": Home,
+  "택지": Home,
   "농지": Wheat,
   "산지": TreePine,
   "그밖의토지": Star,
@@ -51,7 +51,7 @@ export function AIAnalysisFlowDialog({
   // 토지 유형 매핑 (다양한 표기를 표준화)
   const mapLandType = (type: string): LandType => {
     if (type === "농경지" || type === "농지" || type === "전" || type === "답") return "농지";
-    if (type === "대지" || type === "주거" || type === "상업" || type === "공업") return "대지";
+    if (type === "택지" || type === "주거" || type === "상업" || type === "공업") return "택지";
     if (type === "산지" || type === "임야" || type === "산림") return "산지";
     return "그밖의토지";
   };
@@ -73,7 +73,7 @@ export function AIAnalysisFlowDialog({
   
   // 면적 기준 계산 (PRD 기준)
   const getAreaThreshold = (type: LandType, zone: string) => {
-    if (type === "대지") {
+    if (type === "택지") {
       if (zone.includes("상업")) return { base: 150, relaxed: 225, label: "상업" };
       if (zone.includes("공업")) return { base: 330, relaxed: 495, label: "공업" };
       return { base: 90, relaxed: 135, label: "주거" };
@@ -157,23 +157,23 @@ export function AIAnalysisFlowDialog({
             </div>
             {/* 4개 경로 컬럼 */}
             <div className="grid grid-cols-4 gap-3">
-            {/* 대지 경로 */}
+            {/* 택지 경로 */}
             <PathColumn
-              type="대지"
+              type="택지"
               icon={Home}
-              isActive={currentLandType === "대지"}
+              isActive={currentLandType === "택지"}
               animationStep={animationStep}
               criteria={[
                 {
                   title: "면적 기준 미달 여부",
                   items: [
-                    { label: "주거", subLabel: "단독·다세대 90㎡, 연립 330㎡, 아파트 1,000㎡", isSelected: currentLandType === "대지" && areaThreshold.label === "주거", isMet: currentLandType === "대지" && areaThreshold.label === "주거" && areaMet, aiSupported: true,
+                    { label: "주거", subLabel: "단독·다세대 90㎡, 연립 330㎡, 아파트 1,000㎡", isSelected: currentLandType === "택지" && areaThreshold.label === "주거", isMet: currentLandType === "택지" && areaThreshold.label === "주거" && areaMet, aiSupported: true,
                       explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}`,
                       explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}` },
-                    { label: "상업", value: "150㎡ 이하", isSelected: currentLandType === "대지" && areaThreshold.label === "상업", isMet: currentLandType === "대지" && areaThreshold.label === "상업" && areaMet, aiSupported: true,
+                    { label: "상업", value: "150㎡ 이하", isSelected: currentLandType === "택지" && areaThreshold.label === "상업", isMet: currentLandType === "택지" && areaThreshold.label === "상업" && areaMet, aiSupported: true,
                       explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}`,
                       explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}` },
-                    { label: "공업", value: "330㎡ 이하", isSelected: currentLandType === "대지" && areaThreshold.label === "공업", isMet: currentLandType === "대지" && areaThreshold.label === "공업" && areaMet, aiSupported: true,
+                    { label: "공업", value: "330㎡ 이하", isSelected: currentLandType === "택지" && areaThreshold.label === "공업", isMet: currentLandType === "택지" && areaThreshold.label === "공업" && areaMet, aiSupported: true,
                       explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}`,
                       explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}` },
                   ],
@@ -183,7 +183,7 @@ export function AIAnalysisFlowDialog({
                 {
                   title: "접면도로 상태 변경",
                   items: [
-                    { label: "접면도로 상태 변경으로 건축허가 불가", isSelected: currentLandType === "대지", isMet: currentLandType === "대지" && accessRoadLost, aiSupported: true,
+                    { label: "접면도로 상태 변경으로 건축허가 불가", isSelected: currentLandType === "택지", isMet: currentLandType === "택지" && accessRoadLost, aiSupported: true,
                       explanationMet: "접면도로 상태 변경으로 건축 불가 상태 확인됨",
                       explanationUnmet: "접면도로 상태 변경 없음 - 건축 가능 상태" },
                   ],
@@ -192,17 +192,17 @@ export function AIAnalysisFlowDialog({
                 {
                   title: "형상 부정형으로 변경",
                   items: [
-                    { label: "사각형 폭: 5m 이하", isSelected: currentLandType === "대지", isMet: currentLandType === "대지" && shapeChanged, aiSupported: true,
+                    { label: "사각형 폭: 5m 이하", isSelected: currentLandType === "택지", isMet: currentLandType === "택지" && shapeChanged, aiSupported: true,
                       explanationMet: `형상 변경: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})`,
                       explanationUnmet: `형상 유지: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})` },
-                    { label: "삼각형 한 변: 11m 이하", isSelected: currentLandType === "대지", isMet: currentLandType === "대지" && shapeChanged, aiSupported: true,
+                    { label: "삼각형 한 변: 11m 이하", isSelected: currentLandType === "택지", isMet: currentLandType === "택지" && shapeChanged, aiSupported: true,
                       explanationMet: `비정형 형상(${remainingShape})으로 기준 충족`,
                       explanationUnmet: `정형 형상(${remainingShape}) 유지 - 형상 기준 미해당` },
                   ],
                   showStep: 4,
                 },
               ]}
-              conditionStatus={currentLandType === "대지" ? conditionStatus : null}
+              conditionStatus={currentLandType === "택지" ? conditionStatus : null}
             />
 
             {/* 농지 경로 */}

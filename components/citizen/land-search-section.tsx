@@ -136,7 +136,7 @@ const regionData = {
     "양산시": ["동면", "물금읍", "상북면", "웅상읍", "원동면", "하북면"],
     // 제주특별자치도
     "제주시": ["구좌읍", "애월읍", "우도면", "조천읍", "추자면", "한경면", "한림읍", "아라동", "건입동", "노형동", "봉개동", "삼도동", "연동", "오라동", "외도동", "용담동", "이도동", "이호동", "일도동", "화북동"],
-    "서귀포시": ["남원읍", "대정읍", "성산읍", "안덕면", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "월평동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
+    "서귀포시": ["남원읍", "대정읍", "성산읍", "안덕면", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "월평동", "색달동", "상효��", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
   },
   리: {
     // 경기도 - 용인시 처인구
@@ -178,7 +178,7 @@ const regionData = {
     "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "음양리"],
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
     "향남읍": ["구문천리", "도이리", "발안리", "상신리", "제암리", "평리", "행정리"],
-    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "천우리"],
+    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "천우��"],
     "비봉면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
     "마도면": ["백곡리", "송정리", "쌍송리", "청원리", "해문리"],
     "남양읍": ["남양리", "문호리", "북양리", "송림리", "신남리"],
@@ -325,7 +325,7 @@ function simulateAIAnalysis(
   ];
 
   // 토지 유형별 물리 조건 (PRD 기준)
-  // 대지(택지)인 경우
+  // 택지인 경우
   if (currentUsage === "대") {
     criteriaChecks.push({
       criteriaName: "접면도로 상실",
@@ -559,7 +559,7 @@ function getUsageDifficultyDescription(landType: string, area: number, shape: st
   switch (landType) {
     case "농지":
       return `이는 농지로서의 사용이 현저히 곤란한 경우(농기계 진입·회전 곤란)로 예상되어`;
-    case "대지":
+    case "택지":
       return `이는 택지로서 건축물의 건축이 현저히 곤란한 경우로 예상되어`;
     case "산지":
       return `이는 산지로서의 종래 목적대로 사용이 현저히 곤란한 경우로 예상되어`;
@@ -719,7 +719,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             incorporatedArea: 750,
             remainingArea: 230,
             remainingRatio: 23.5,
-            landType: "대지",
+            landType: "택지",
             landCategory: "대",
             businessUnit: "부산울산",
             projectName: "해운대 도시재생사업",
@@ -756,7 +756,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             incorporatedArea: 550,
             remainingArea: 230,
             remainingRatio: 29.5,
-            landType: "대지",
+            landType: "택지",
             landCategory: "대",
             businessUnit: "강진광주",
             projectName: "광주 도시개발사업",
@@ -794,7 +794,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return;
       }
       
-      // 지번 검색: 선택된 지역에 해당하는 토지 필터링
+      // 지번 검색: 선택된 지역에 해당하는 토지 ��터링
       results = dummyLandInfoList.filter(land => {
         // 시군구 포함 여부
         if (!land.address.includes(selectedSigungu)) return false;
@@ -894,7 +894,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     if (noIncludedLand) return;
     // 현재 활용 지목 필수
     if (!currentUsage) return;
-    // 현재 활용 지목이 "대"(대지)인 경우 세부 유형이 필수
+    // 현재 활용 지목이 "대"(택지)인 경우 세부 유형이 필수
     if (currentUsage === "대" && !landSubType) return;
     
     // 현재 선택된 단일 필지만 분석 (복수 분석 불가)
@@ -1508,7 +1508,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="대">대 (택지)</SelectItem>
+                            <SelectItem value="대">대 (택��)</SelectItem>
                             <SelectItem value="전">전 (밭)</SelectItem>
                             <SelectItem value="답">답 (논)</SelectItem>
                             <SelectItem value="임">임 (임야)</SelectItem>
@@ -1533,7 +1533,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   </div>
                 )}
 
-                {/* 택지(대지) 세부 유형 선택 - 현재 활용 지목이 "대"인 경우 */}
+                {/* 택지 세부 유형 선택 - 현재 활용 지목이 "대"인 경우 */}
                 {!noIncludedLand && !aiResult && currentUsage === "대" && (
                   <div className="rounded border border-border bg-muted/30 p-3">
                     <Label htmlFor="landSubType" className="mb-2 block text-sm font-medium">

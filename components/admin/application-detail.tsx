@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "������������력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "��������������력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -423,7 +423,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     const subType = adminLandSubType || landData?.landSubType || "";
     const remainingRatio = land.remainingRatio;
     
-    if (landType === "대지") {
+    if (landType === "택지") {
       // 택지 경로: 세부 유형별 기준
       switch (subType) {
         case "residential-detached": // 단독·다세대주택
@@ -480,7 +480,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   ) => {
     // 담당자가 선택한 현재 활용지목 우선 적용, 없으면 원래 지목 사용
     const effectiveLandType = adminCurrentUsage 
-      ? (adminCurrentUsage === "대" ? "대지" : adminCurrentUsage === "전" || adminCurrentUsage === "답" ? "농지" : adminCurrentUsage === "임" ? "임야" : "기타")
+      ? (adminCurrentUsage === "대" ? "택지" : adminCurrentUsage === "전" || adminCurrentUsage === "답" ? "농지" : adminCurrentUsage === "임" ? "임야" : "기타")
       : land.landType;
     
     const criteria = getAreaCriteria(land, landData, adminLandSubType);
@@ -500,7 +500,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       description: `잔여 ${land.remainingArea}㎡ ${areaCheckMet ? "≤" : ">"} ${effectiveLimit}㎡`
     });
     
-    if (effectiveLandType === "대지") {
+    if (effectiveLandType === "택지") {
       // 택지 경로 + 관리자 옵션 반영
       // 2. 접면도로 상태 변경
       const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || land.remainingRatio < 30;
@@ -587,7 +587,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       }
       
     } else {
-      // 그 밖의 ��지 + 관리자 ���션 반영
+      // ��� 밖의 ��지 + 관리자 ���션 반영
       // 종래 목적 사용 곤란 여부 (위치, 형상, 접근 상태 고려)
       const usageDifficulty = adminOptions?.accessRoadLost || adminOptions?.farmMachineDifficulty || land.remainingRatio < 40 || shapeCriteria.met;
       criteriaChecks.push({

@@ -198,7 +198,7 @@ export function ApplicationFormSection({
     allLands.map(createInitialLandData)
   );
 
-  // 토지별 데이터 업데이트 함수
+  // 토지별 데이터 업데이트 함��
   const updateLandData = (index: number, field: keyof LandSpecificData, value: LandSpecificData[keyof LandSpecificData]) => {
     setLandDataList(prev => {
       const newList = [...prev];
@@ -732,7 +732,7 @@ export function ApplicationFormSection({
                         </div>
                       </div>
 
-                      {/* 택지(대지) 선택 시 세부 유형 */}
+                      {/* 택지 선택 시 세부 유형 */}
                       {landData.currentUsage === "대" && (
                         <div className="grid gap-4 sm:grid-cols-3">
                           <div className="space-y-1.5">

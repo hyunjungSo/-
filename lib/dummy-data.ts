@@ -9,7 +9,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 850,
     remainingArea: 350,
     remainingRatio: 29.2,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "가로장방형",
     remainingShape: "삼각형",
@@ -110,7 +110,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 230,
     remainingArea: 70,
     remainingRatio: 23.3,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "정방형",
     remainingShape: "삼각형",
@@ -136,7 +136,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 380,
     remainingArea: 120,
     remainingRatio: 24.0,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "정방형",
     remainingShape: "자루형",
@@ -162,7 +162,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 200,
     remainingArea: 1800,
     remainingRatio: 90.0,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "정방형",
     remainingShape: "가로장방형",
@@ -188,7 +188,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 0,
     remainingArea: 600,
     remainingRatio: 100,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "정방형",
     remainingShape: "정방형",
@@ -239,7 +239,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 280,
     remainingArea: 120,
     remainingRatio: 30.0,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "가로장방형",
     remainingShape: "삼각형",
@@ -266,7 +266,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 350,
     remainingArea: 150,
     remainingRatio: 30.0,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "정방형",
     remainingShape: "삼각형",
@@ -292,7 +292,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 280,
     remainingArea: 120,
     remainingRatio: 30.0,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "가로장방형",
     remainingShape: "부정형",
@@ -318,7 +318,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 450,
     remainingArea: 150,
     remainingRatio: 25.0,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "세로장방형",
     remainingShape: "자루형",
@@ -344,7 +344,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 300,
     remainingArea: 150,
     remainingRatio: 33.3,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "정방형",
     remainingShape: "역삼각형",
@@ -371,7 +371,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 200,
     remainingArea: 150,
     remainingRatio: 42.9,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "세로장방형",
     remainingShape: "부정형",
@@ -449,7 +449,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 500,
     remainingArea: 2500,
     remainingRatio: 83.3,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "정방형",
     remainingShape: "세로장방형",
@@ -475,7 +475,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 350,
     remainingArea: 150,
     remainingRatio: 30.0,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "가로장방형",
     remainingShape: "삼각형",
@@ -500,7 +500,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 280,
     remainingArea: 140,
     remainingRatio: 33.3,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "세로장방형",
     remainingShape: "부정형",
@@ -525,7 +525,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 250,
     remainingArea: 130,
     remainingRatio: 34.2,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "정방형",
     remainingShape: "자루형",
@@ -751,7 +751,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 210,
     remainingArea: 90,
     remainingRatio: 30.0,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "가로장방형",
     remainingShape: "삼각형",
@@ -853,7 +853,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 100,
     remainingArea: 80,
     remainingRatio: 44.4,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "가로장방형",
     remainingShape: "삼각형",
@@ -878,7 +878,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 90,
     remainingArea: 60,
     remainingRatio: 40.0,
-    landType: "대지",
+    landType: "택지",
     landCategory: "대",
     originalShape: "세로장방형",
     remainingShape: "자루형",
@@ -1129,8 +1129,8 @@ export const dummyLandInfoList: LandInfo[] = [
 // 토지분류별 면적 기준 (PRD v2.0 기준 - 중앙토지수용위원회 참고기준)
 // 잔여비율 25% 이하 시 면적 기준 1.5배 완화 적용
 const LAND_TYPE_CRITERIA = {
-  // 대지(택지): 주거 90㎡ / 상업 150㎡ / 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)
-  대지: {
+  // 택지: 주거 90㎡ / 상업 150㎡ / 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)
+  택지: {
     "residential-detached": { areaThreshold: 90, ratioThreshold: 25, label: "주거용" },
     "residential-multi": { areaThreshold: 90, ratioThreshold: 25, label: "주거용" },
     "residential-apartment": { areaThreshold: 90, ratioThreshold: 25, label: "주거용" },
@@ -1174,9 +1174,9 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   // 잔여비율 25% 이하 여부 확인 (완화 조건)
   const isLowRemainingRatio = landInfo.remainingRatio <= 25;
   
-  if (landInfo.landType === "대지") {
+  if (landInfo.landType === "택지") {
     const subTypeKey = landSubType || "default";
-    const subTypeCriteria = LAND_TYPE_CRITERIA.대지[subTypeKey as keyof typeof LAND_TYPE_CRITERIA.대지] || LAND_TYPE_CRITERIA.대지.default;
+    const subTypeCriteria = LAND_TYPE_CRITERIA.택지[subTypeKey as keyof typeof LAND_TYPE_CRITERIA.택지] || LAND_TYPE_CRITERIA.택지.default;
     baseAreaThreshold = subTypeCriteria.areaThreshold;
     // 택지: 잔여비율 25% 이하 시 1.5배 완화
     effectiveAreaThreshold = isLowRemainingRatio ? baseAreaThreshold * 1.5 : baseAreaThreshold;
@@ -1236,7 +1236,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   // 토지유형별 물리 조건 (PRD 기준)
   const isBlindLand = landInfo.remainingRatio <= ratioThreshold;
   
-  if (landInfo.landType === "대지") {
+  if (landInfo.landType === "택지") {
     // 택지: ① 접면도로 상태 변경으로 건축허가 불가 ② 형상 부정형으로 변경
     criteriaChecks.push({
       criteriaName: "접면도로 상실",
@@ -1304,7 +1304,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
     } else {
       provisionalJudgment = "기각";
     }
-  } else if (landInfo.landType === "대지" || landInfo.landType === "농지") {
+  } else if (landInfo.landType === "택지" || landInfo.landType === "농지") {
     // 택지/농지: 면적 기준 + 형상 조건 적용
     if (coreCriteriaMet || isIrregularShape || shapeIndexMet) {
       provisionalJudgment = "매수";
@@ -1358,7 +1358,7 @@ function generateRationale(
   if (land.landType === "농지") {
     landTypeCriteria = "농지 기준: 면적 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
     physicalConditions = "물리조건: ①도로/수로 상실로 농지 사용 불가 ②농기계 진입/회전 곤란 ③형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
-  } else if (land.landType === "대지") {
+  } else if (land.landType === "택지") {
     landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)";
     physicalConditions = "물리조건: ①접면도로 상실로 건축허가 불가 ②형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "임야") {
@@ -1383,10 +1383,10 @@ function generateRationale(
     detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n충족기준: ${metCriteriaNames.join(", ")}\n\n※ 물리 조건 중 하나 이상 해당으로 수용 조건 충족`;
   } else {
     // 기각
-    const areaThreshold = land.landType === "대지" ? 90 : 330;
+    const areaThreshold = land.landType === "택지" ? 90 : 330;
     const rejectionReason = `잔여면적 ${land.remainingArea}㎡(기준 ${areaThreshold}㎡ 초과), 잔여비율 ${land.remainingRatio}%(기준 초과), 물리조건 미해당`;
     summary = `${land.landType} 수용 조건 미충족으로 「기각」 판정`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n��� 면적/비율 기준 및 물리조건 전체 미해당`;
+    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n��� 면적/비율 ���준 및 물리조건 전체 미해당`;
   }
 
   return {
@@ -1588,7 +1588,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "진행중",
     appliedAt: "2026-04-21",
     aiResult: {
-      landTypePath: "대지",
+      landTypePath: "택지",
       criteriaChecks: [
         { criteriaName: "면적 기준", criteriaDescription: "택지(주거) 기준 90㎡ 이하 (완화: 135㎡)", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (자루형)", isMet: true, autoDetected: true },
@@ -2011,7 +2011,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "진행중",
     appliedAt: "2026-04-26",
     aiResult: {
-      landTypePath: "대지",
+      landTypePath: "택지",
       criteriaChecks: [
         { criteriaName: "면적 기준", criteriaDescription: "대지 기준 90㎡ 이하 (완화: 135㎡)", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 자루형, 역삼각형)", isMet: true, autoDetected: true },
@@ -2088,7 +2088,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "심사완료",
     appliedAt: "2026-04-27",
     aiResult: {
-      landTypePath: "대지",
+      landTypePath: "택지",
       criteriaChecks: [
         { criteriaName: "면적 기준", criteriaDescription: "잔여면적 140㎡로 건축 곤란", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 자루형)", isMet: true, autoDetected: true },
@@ -2322,7 +2322,7 @@ export const dummyApplications: Application[] = [
         adjacentParcels: 2, // 내기리 200-1, 200-2만 연접
         conditions: {
           sameOwner: true,
-          continuous: false, // 전체는 연접 아님
+          continuous: false, // 전체는 ��접 아님
           sameUsage: false, // 전체는 용도 불일치 (답/전)
         },
         combinedArea: 1480,
@@ -2352,7 +2352,7 @@ export const dummyApplications: Application[] = [
       pnu: "4146325027100200001",
       address: "경기도 용인시 처인구 포곡읍 둔전리 200-1",
       landCategory: "대",
-      landType: "대지",
+      landType: "택지",
       originalArea: 450,
       remainingArea: 180,
       remainingRatio: 40,
@@ -2366,7 +2366,7 @@ export const dummyApplications: Application[] = [
         pnu: "4146325027100200002",
         address: "경기도 용인시 처인구 포곡읍 둔전리 200-2",
         landCategory: "대",
-        landType: "대지",
+        landType: "택지",
         originalArea: 380,
         remainingArea: 150,
         remainingRatio: 39.5,
@@ -2481,7 +2481,7 @@ export const landCategories = [
   { value: "과", label: "과수원" },
   { value: "구", label: "구거" },
   { value: "답", label: "답" },
-  { value: "대", label: "대지" },
+  { value: "대", label: "택지" },
   { value: "도", label: "도로" },
   { value: "목", label: "목장용지" },
   { value: "묘", label: "묘지" },
