@@ -1288,10 +1288,10 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   const physicalConditionMet = criteriaChecks.some(c => !c.autoDetected && c.isMet);
   
   // PRD 판정 원칙:
-  // - AI 판정은 "매수", "매수불가", "심의위원회 이관" 세 가지
+  // - AI 판정은 "매수", "기각", "심의위원회 이관" 세 가지
   // - 물리 조건 중 하나라도 해당 시 '수용 조건 충족'(=매수)
-  // - 전체 조건 미해당시 '수용 조건 미충족'(=매수불가)
-  let provisionalJudgment: "매수" | "매수불가" | "심의위원회 이관";
+  // - 전체 조건 미해당시 '수용 조건 미충족'(=기각)
+  let provisionalJudgment: "매수" | "기각" | "심의위원회 이관";
   
   // 면적 기준 충족 여부
   const coreCriteriaMet = areaMet;
@@ -1303,8 +1303,8 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
     // 면적 기준만 충족 또는 형상 조건만 충족 → 매수 (검토 필요하지만 AI는 매수 판정)
     provisionalJudgment = "매수";
   } else {
-    // 전체 조건 미해당 → 매수불가
-    provisionalJudgment = "매수불가";
+    // 전체 조건 미해당 → 기각
+    provisionalJudgment = "기각";
   }
   
   const metAutoCriteria = criteriaChecks.filter(c => c.autoDetected && c.isMet).length;
@@ -1330,7 +1330,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
 // 판단 근거 생성 헬퍼 함수 (PRD v2.0 기준 - 중앙토지수용위원회 참고문서)
 function generateRationale(
   land: LandInfo,
-  judgment: "매수" | "매수불가" | "심의위원회 이관",
+  judgment: "매수" | "기각" | "심의위원회 이관",
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],
@@ -1486,7 +1486,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "도로 편입으로 인접한 2개 필지가 모두 불규칙한 형태로 남아 건축이 불가능합니다. 각 필지별로 매수 검토를 요청드립니다.",
+    reason: "도로 편입으로 인접한 2개 필지가 모두 불규칙한 형태로 ���아 건축이 불가능합니다. 각 필지별로 매수 검토를 요청드립니다.",
     // 토지별 민원인 입력 데이터
     landDataList: [
       {
@@ -1570,7 +1570,7 @@ export const dummyApplications: Application[] = [
     reportedShape: "자루형",
     farmMachineDifficulty: false,
     reason: "도로 편입으로 토지가 자루형으로 변형되었습니다. 면적 기준은 애매하여 실측이 필요합니다.",
-    attachments: ["토지대장.pdf", "지적도.pdf", "현황사진.jpg"],
+    attachments: ["토지대장.pdf", "��적도.pdf", "현황사진.jpg"],
     status: "검토중",
     adminStatus: "진행중",
     appliedAt: "2026-04-21",
@@ -1623,7 +1623,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "심사완료",
     appliedAt: "2026-04-07",
     aiResult: generateAIResult(dummyLandInfoList[9]),
-    finalJudgment: "매수불가",
+    finalJudgment: "기각",
     reviewerComment: "잔여비율 90%로 매수 기준(30% 이하)을 크게 초과하며, 형상지수 변화도 0.1로 미미하여 종래 용도 사용에 지장이 없음. 매수 기준 미충족으로 기각 처리.",
     adminName: "박담당",
     statusUpdatedAt: "2026-04-18",
@@ -2017,7 +2017,7 @@ export const dummyApplications: Application[] = [
         summary: "4필지 혼합 토지 - 각 필지별 매수 기준 충족으로 「매수」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
-          "토지유형: 혼합 (대지+농지+잡종지)",
+          "토��유형: 혼합 (대지+농지+잡종지)",
           "잔여면적: 450㎡ (개별 필지 기준 각각 충족)",
           "대지 물리조건: 접면도로 상실로 건축 불가",
           "농지 물리조건: 농기계 진입 곤란, 관개수로 상실",
@@ -2180,7 +2180,7 @@ export const dummyApplications: Application[] = [
     aiResult: {
       landTypePath: "산지",
       criteriaChecks: [
-        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100㎡로 조림지 분단", isMet: true, autoDetected: true },
+        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100��로 조림지 분단", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },
       ],
@@ -2315,7 +2315,7 @@ export const dummyApplications: Application[] = [
         combinedArea: 1480,
         explanation: "4필지 개별 분석 결과: 내기리 200-1, 200-2는 면적 기준 충족 및 형상 불량으로 매수 판정. 만호리 55-1, 55-2는 면적 기준 미충족, 형상 양호로 미해당 판정.",
       },
-      // 필지별 판정 결과 (개별 분석)
+      // 필지별 판정 결과 (��별 분석)
       landJudgments: [
         { landId: "land-mixed-001", judgment: "매수", unifiedGroupId: null, reason: "내기리 200-1: 잔여 150㎡ ≤ 330㎡, 형상지수 5.0(불량), 농기계 진입곤란" },
         { landId: "land-mixed-002", judgment: "매수", unifiedGroupId: null, reason: "내기리 200-2: 잔여 180㎡ ≤ 330㎡, 형상지수 4.8(불량), 관개수로 상실" },
@@ -2419,7 +2419,7 @@ export const dummyApplications: Application[] = [
           "200-2: 잔여 150㎡, 형상지수 3.2 → 매수",
           "접면도로 상실: 인정 ✓",
         ],
-        detailedExplanation: "둔전리 200-1(대지, 450㎡→180㎡): 잔여 180㎡로 소규모 토지 기준 충족, 형상지수 4.5(불량)로 건축이 곤란합니다.\n둔전리 200-2(대지, 380㎡→150㎡): 잔여 150㎡로 소규모 토지 기준 충족, 형상지수 3.2(불량)로 건축이 곤란합니다.",
+        detailedExplanation: "둔전리 200-1(대지, 450㎡→180㎡): 잔여 180㎡로 소규모 토지 기준 충족, 형상지수 4.5(불량)로 건축이 곤란합니다.\n둔전리 200-2(대지, 380㎡→150㎡): 잔여 150���로 소규모 토지 기준 충족, 형상지수 3.2(불량)로 건축이 곤란합니다.",
         manualCheckItems: ["현장 형상 확인", "건축 가능 여부 검토"],
       },
       landJudgments: [

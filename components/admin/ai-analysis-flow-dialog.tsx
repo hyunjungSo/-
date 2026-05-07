@@ -292,7 +292,7 @@ export function AIAnalysisFlowDialog({
             <PathColumn
               type="그밖의토지"
               icon={Star}
-              isActive={currentLandType === "그밖의토지"}
+              isActive={currentLandType === "그밖의토��"}
               animationStep={animationStep}
               criteria={[
                 {
@@ -319,7 +319,7 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                 {
                   title: "양분된 토지 / 형상 변경",
                   items: [
-                    { label: "일단의 토지가 양분되어 잔여지 발생", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && includedArea > 0,
+                    { label: "��단의 토지가 양분되어 잔여지 발생", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && includedArea > 0,
                       explanationMet: `편입면적 ${includedArea.toLocaleString()}㎡로 토지 양분됨`,
                       explanationUnmet: "편입 없음 - 토지 양분 미발생" },
                     { label: "형상: 잔여지 폭이 기준 이하로 변경", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged, subLabel: "주거용 5m, 상업용 7m, 공업용/농지/산지 10m",
@@ -353,9 +353,9 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                 </div>
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
-                  finalJudgment === "매수불가" ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50"
+                  finalJudgment === "기각" ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className={cn("text-sm font-medium", finalJudgment === "매수불가" ? "text-red-500" : "text-gray-500")}>매수불가 판단</p>
+                  <p className={cn("text-sm font-medium", finalJudgment === "기각" ? "text-red-500" : "text-gray-500")}>기각 판단</p>
                 </div>
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
@@ -390,10 +390,10 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                   매수
                 </motion.div>
                 <motion.div 
-                  animate={{ scale: (finalJudgment === "매수불가" || finalJudgment === "매수불가") && animationStep >= 7 ? 1.02 : 1 }}
+                  animate={{ scale: (finalJudgment === "기각" || finalJudgment === "기각") && animationStep >= 7 ? 1.02 : 1 }}
                   className={cn(
                     "rounded p-3 text-center text-sm font-semibold border transition-all",
-                    (finalJudgment === "매수불가" || finalJudgment === "매수불가")
+                    (finalJudgment === "기각" || finalJudgment === "기각")
                       ? "border-red-500 bg-red-500 text-white" 
                       : "border-gray-200 bg-gray-50 text-gray-400"
                   )}
@@ -439,7 +439,7 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
               <span className={cn(
                 "text-base font-bold px-4 py-1.5 rounded",
                 finalJudgment === "매수" ? "bg-green-600 text-white" :
-                (finalJudgment === "매수불가" || finalJudgment === "매수불가") ? "bg-red-500 text-white" :
+                (finalJudgment === "기각" || finalJudgment === "기각") ? "bg-red-500 text-white" :
                 "bg-amber-500 text-white"
               )}>
                 {finalJudgment}

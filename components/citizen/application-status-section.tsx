@@ -188,7 +188,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
             </div>
             <div className="flex flex-1 items-center gap-3 px-4 py-4">
               {application.finalJudgment === "매수" && <CheckCircle2 className="h-5 w-5 text-green-600" />}
-              {application.finalJudgment === "매수불가" && <AlertTriangle className="h-5 w-5 text-red-500" />}
+              {application.finalJudgment === "기각" && <AlertTriangle className="h-5 w-5 text-red-500" />}
               {application.finalJudgment === "심의위원회 이관" && <Info className="h-5 w-5 text-amber-500" />}
               <JudgmentStatus 
                 judgment={application.finalJudgment} 
@@ -280,7 +280,7 @@ export function ApplicationStatusSection() {
                           <span className={`text-xs font-medium ${
                             app.finalJudgment === "매수" 
                               ? "text-green-600" 
-                              : app.finalJudgment === "매수불가"
+                              : app.finalJudgment === "기각"
                                 ? "text-red-500"
                                 : "text-amber-500"
                           }`}>

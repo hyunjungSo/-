@@ -59,7 +59,7 @@ interface ApplicationDetailProps {
 
 const judgmentConfig = {
   매수: { label: "매수", icon: CheckCircle2, borderColor: "border-green-600", textColor: "text-green-600", color: "text-green-600" },
-  매수불가: { label: "매수불가", icon: XCircle, borderColor: "border-red-500", textColor: "text-red-500", color: "text-red-500" },
+  기각: { label: "기각", icon: XCircle, borderColor: "border-red-500", textColor: "text-red-500", color: "text-red-500" },
   "심의위원회 이관": { label: "심의위원회 이관", icon: AlertTriangle, borderColor: "border-amber-500", textColor: "text-amber-500", color: "text-amber-500" },
 };
 
@@ -489,7 +489,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     const shapeCriteria = checkShapeCriteria(land);
     
     const criteriaChecks: Array<{ name: string; met: boolean; description: string }> = [];
-    let judgment: "매수" | "매수불가" | "심의위원회 이관" = "매수불가";
+    let judgment: "매수" | "기각" | "심의위원회 이관" = "기각";
     let reasons: string[] = [];
     
     // 1. 면적 기준 미달 여부
@@ -525,7 +525,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
-        judgment = "매수불가";
+        judgment = "기각";
         reasons.push("모든 기준 미충족");
       }
       
@@ -564,7 +564,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
-        judgment = "매수불가";
+        judgment = "기각";
         reasons.push("모든 기준 미충족");
       }
       
@@ -583,7 +583,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (areaCheckMet) reasons.push("면적 기준 충족");
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
       } else {
-        judgment = "매수불가";
+        judgment = "기각";
         reasons.push("모든 기준 미충족");
       }
       
@@ -602,7 +602,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (areaCheckMet) reasons.push("면적 기준 충족");
         if (usageDifficulty) reasons.push("종래 사용 곤란");
       } else {
-        judgment = "매수불가";
+        judgment = "기각";
         reasons.push("모든 기준 미충족");
       }
     }
@@ -614,7 +614,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         met: true,
         description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규모 해당)`
       });
-      if (judgment === "매수불가") {
+      if (judgment === "기각") {
         judgment = "심의위원회 이관";
         reasons.push("소규모 토지로 심의위원회 검토 필요");
       }
@@ -807,7 +807,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         remainingRatio: land.remainingRatio,
         judgment: result?.provisionalJudgment || "분석중",
         purchaseDecision: result?.provisionalJudgment === "매수" ? "O" as const : 
-                          result?.provisionalJudgment === "매수불가" ? "X" as const : 
+                          result?.provisionalJudgment === "기각" ? "X" as const : 
                           "-" as const,
       };
     });
@@ -1022,7 +1022,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           className={`rounded-lg border px-4 ${
                             judgment === "매수"
                               ? "border-green-600/20 bg-green-600/5"
-                              : judgment === "매수불가"
+                              : judgment === "기각"
                                 ? "border-red-200 bg-red-50/50"
                                 : "border-slate-200 bg-slate-50/50"
                           }`}
@@ -1895,7 +1895,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               className={`rounded-lg border px-4 ${
                                 judgment === "매수"
                                   ? "border-green-600/20 bg-green-600/5"
-                                  : judgment === "매수불가"
+                                  : judgment === "기각"
                                     ? "border-red-200 bg-red-50/50"
                                     : "border-slate-200 bg-slate-50/50"
                               }`}
@@ -2418,7 +2418,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             {landReview.landJudgment && (
                               <Badge className={
                                 landReview.landJudgment === "매수" ? "bg-green-600" :
-                                landReview.landJudgment === "매수불가" ? "bg-red-500" : "bg-amber-500"
+                                landReview.landJudgment === "기각" ? "bg-red-500" : "bg-amber-500"
                               }>
                                 {landReview.landJudgment}
                               </Badge>
@@ -2432,7 +2432,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           <div className="space-y-2">
                             <Label className="text-sm font-medium">매수 판정</Label>
                             <div className="flex flex-wrap gap-2">
-                              {(["매수", "매수불가", "심의위원회 이관"] as JudgmentResult[]).map((judgment) => {
+                              {(["매수", "기각", "심의위원회 이관"] as JudgmentResult[]).map((judgment) => {
                                 const config = judgmentConfig[judgment];
                                 const Icon = config.icon;
                                 const isSelected = landReview.landJudgment === judgment;
@@ -2544,7 +2544,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 reviewData.finalJudgment && Object.keys(adminLandAIResults).length > 0 && (() => {
                   const results = Object.values(adminLandAIResults);
                   const aiJudgment = results.every(r => r.provisionalJudgment === "매수") ? "매수" : 
-                                    results.every(r => r.provisionalJudgment !== "매수") ? "매수불가" : "mixed";
+                                    results.every(r => r.provisionalJudgment !== "매수") ? "기각" : "mixed";
                   const isDifferent = reviewData.finalJudgment !== aiJudgment && aiJudgment !== "mixed";
                   return isDifferent && !adminOverrideReason.trim();
                 })()

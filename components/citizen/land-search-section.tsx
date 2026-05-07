@@ -80,7 +80,7 @@ const regionData = {
     // 부산광역시
     "해운대구": ["반송동", "반여동", "석대동", "송정동", "우동", "좌동", "재송동", "중동"],
     "기장군": ["기장읍", "장안읍", "정관읍", "일광면", "철마면"],
-    "금정구": ["구서동", "금사동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
+    "금정구": ["구서동", "금��동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
     // 경기도
     "용인시 처인구": ["양지면", "백암면", "원삼면", "이동읍", "남사읍", "포곡읍", "모현읍"],
     "용인시 기흥구": ["구갈동", "마북동", "보라동", "상갈동", "상하동", "서농동", "신갈동", "언남동", "영덕동", "중동", "지곡동", "청덕동", "하갈동"],
@@ -98,7 +98,7 @@ const regionData = {
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "�����곡면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "�������곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
     "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "내덕동", "율량동"],
@@ -178,7 +178,7 @@ const regionData = {
     "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "음양리"],
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
     "향남읍": ["구문천리", "도이리", "발안리", "상신리", "제암리", "평리", "행정리"],
-    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "어우리"],
+    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "��우리"],
     "비봉면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
     "마도면": ["백곡리", "송정리", "쌍송리", "청원리", "해문리"],
     "남양읍": ["남양리", "문호리", "북양리", "송림리", "신남리"],
@@ -235,7 +235,7 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["봉농리", "효���리", "금수리", "금산리"],
+    "도고면": ["봉농���", "효���리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
@@ -400,13 +400,13 @@ function simulateAIAnalysis(
   const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
-  // AI 1차 판독: 매수/매수불가/심의위원회 이관 판정
-  let provisionalJudgment: "매수" | "매수불가" | "심의위원회 이관";
+  // AI 1차 판독: 매수/기각/심의위원회 이관 판정
+  let provisionalJudgment: "매수" | "기각" | "심의위원회 이관";
   
   if (metAutoCriteria >= 1) {
     provisionalJudgment = "매수";
   } else {
-    provisionalJudgment = "매수불가";
+    provisionalJudgment = "기각";
   }
 
   const judgmentRationale: JudgmentRationale = generateJudgmentRationale(
@@ -438,7 +438,7 @@ function simulateAIAnalysis(
 // 중앙토지수용위원회 기준 기반 판단 근거 설명 생성 함수
 function generateJudgmentRationale(
   land: LandInfo,
-  judgment: "매수" | "매수불가",
+  judgment: "매수" | "기각",
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],
@@ -499,7 +499,7 @@ ${metCriteriaNames.map((name, i) => `${i + 1}) ${name}`).join("\n")}
 5. 판정 결과
 ${summary}`;
   } else {
-    // 매수불가
+    // 기각
     summary = `본 토지는 잔여지 면적 및 형상상 종래 목적대로 사용 가능한 것으로 판단되어 매수청구 대상에 해당하지 않습니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
@@ -1386,7 +1386,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                       className={`text-xs px-1.5 py-0 ${
                                         landAiResult?.provisionalJudgment === "매수" 
                                           ? "bg-green-600 text-white" 
-                                          : landAiResult?.provisionalJudgment === "매수불가"
+                                          : landAiResult?.provisionalJudgment === "기각"
                                             ? "bg-red-500 text-white"
                                             : "bg-amber-500 text-white"
                                       }`}
@@ -1730,7 +1730,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     );
                   }
                   
-                  if (aiResult.provisionalJudgment !== "매수불가") {
+                  if (aiResult.provisionalJudgment !== "기각") {
                     const isAlreadyInCart = cartItems.some(c => c.landInfo.id === selectedLand.id);
                     
                     return (

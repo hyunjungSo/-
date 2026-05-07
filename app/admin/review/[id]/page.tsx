@@ -480,7 +480,7 @@ export default function ReviewDocumentPage({
                                         O (매수)
                                       </SelectItem>
                                       <SelectItem value="X" className="font-bold text-destructive">
-                                        X (매수불가)
+                                        X (기각)
                                       </SelectItem>
                                       <SelectItem value="-" className="text-muted-foreground">
                                         - (미정)
@@ -531,7 +531,7 @@ export default function ReviewDocumentPage({
                           className="border border-foreground bg-muted px-2 py-1 text-center text-base font-medium text-foreground"
                         >
                           심의위원회결정{" "}
-                          <span className="text-muted-foreground">(매수시 O, 매수불가시 X표시)</span>
+                          <span className="text-muted-foreground">(매수시 O, 기각시 X표시)</span>
                         </td>
                       </tr>
                       <tr>

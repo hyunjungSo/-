@@ -13,7 +13,7 @@ interface ApplicationResultSectionProps {
 
 const judgmentConfig = {
   매수: { label: "매수 결정", variant: "outline" as const, className: "border-green-600 text-green-600" },
-  매수불가: { label: "매수불가", variant: "outline" as const, className: "border-red-500 text-red-500" },
+  기각: { label: "기각", variant: "outline" as const, className: "border-red-500 text-red-500" },
   "심의위원회 이관": { label: "심의위원회 이관", variant: "outline" as const, className: "border-amber-500 text-amber-500" },
 };
 
