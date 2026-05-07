@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "����������������력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "������������������력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -1617,7 +1617,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         onCheckedChange={(checked) => updateLandOption(land.id, 'farmMachineDifficulty', checked === true)}
                                         className="h-[18px] w-[18px]"
                                       />
-                                      <span className="text-xs">농기계 회전곤란</span>
+                                      <span className="text-xs">농기계 회전 곤란</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
@@ -1727,7 +1727,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </SelectTrigger>
                                     <SelectContent>
                                       <SelectItem value="대">대 (택지)</SelectItem>
-                                      <SelectItem value="전">전 (밭)</SelectItem>
+                                      <SelectItem value="전">�� (밭)</SelectItem>
                                       <SelectItem value="답">��� (논)</SelectItem>
                                       <SelectItem value="임">임 (임야)</SelectItem>
                                       <SelectItem value="잡">잡 (잡종지)</SelectItem>
@@ -1769,7 +1769,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         checked={landOptions.farmMachineDifficulty}
                                         onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'farmMachineDifficulty', checked === true)}
                                       />
-                                      <span className="text-xs">농기계 회전곤란</span>
+                                      <span className="text-xs">농기계 회전 곤란</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
@@ -1855,7 +1855,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   })()}
                 </div>
                 
-                {/* 우측: 분석결과 */}
+                {/* 우측: 분석결�� */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h4 className="font-medium">분석결과</h4>
@@ -2071,7 +2071,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                             {(() => {
                                               const explanation = landResult?.judgmentRationale?.detailedExplanation;
                                               if (!explanation) {
-                                                return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분��� 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
+                                                return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔��� 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분��� 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
                                               }
                                               
                                               // If this is multi-parcel and explanation contains all parcels info,
