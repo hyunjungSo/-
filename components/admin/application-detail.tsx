@@ -449,7 +449,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     const criteria = getAreaCriteria(land, landData, adminLandSubType);
     const isSmall = isSmallScaleLand(land);
     const shapeCriteria = checkShapeCriteria(land);
-    const addr = parseAddress(land.address);
     
     const criteriaChecks: Array<{ name: string; met: boolean; description: string }> = [];
     let judgment: "매수" | "매수불가" | "심의위원회 이관" = "매수불가";
@@ -684,7 +683,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            console.error("[v0] 필지 분석 오류:", landError);
+            // 필지 분석 오류 처리
           }
         });
         
@@ -697,12 +696,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           };
         });
         
-        console.log("[v0] 분석 결과:", adminResults);
         setAdminLandAIResults(adminResults);
         setAiResultViewMode("admin");
         setIsAIAnalyzing(false);
       } catch (error) {
-        console.error("[v0] 분석 결과 생성 오류:", error);
+        // 분석 결과 생성 오류 처리
         setIsAIAnalyzing(false);
       }
     };
