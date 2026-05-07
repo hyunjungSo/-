@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "��������력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "����������력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -587,7 +587,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       }
       
     } else {
-      // 그 밖의 토지 + 관리자 ���션 반영
+      // 그 밖의 ��지 + 관리자 ���션 반영
       // 종래 목적 사용 곤란 여부 (위치, 형상, 접근 상태 고려)
       const usageDifficulty = adminOptions?.accessRoadLost || adminOptions?.farmMachineDifficulty || land.remainingRatio < 40 || shapeCriteria.met;
       criteriaChecks.push({
@@ -1580,7 +1580,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <SelectItem value="잡">잡 (잡종지)</SelectItem>
                                     </SelectContent>
                                   </Select>
-                                  <p className="text-xs text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
+                                  <p className="text-xs text-muted-foreground">실제 토지 ���용 상황에 따라 선택해 주세요.</p>
                                 </div>
                                 
                                 {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
@@ -2516,7 +2516,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       {/* 최종 검토 */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">최종 검토</CardTitle>
+          <CardTitle className="text-lg">최종 검토 의견</CardTitle>
           <CardDescription>전체 민원에 대한 최종 검토 의견을 작성해주세요</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
