@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "���입력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "�����입력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -1612,7 +1612,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 
                                 {/* ��장확인 옵션 */}
                                 <div className="space-y-1.5">
-                                  <span className="text-xs text-muted-foreground font-medium">현장확인:</span>
+                                  <span className="text-xs font-medium text-foreground">현장확인:</span>
                                   <div className="flex flex-col gap-2">
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
@@ -1726,7 +1726,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [adjacentLand.id]: value }))}
                                   >
                                     <SelectTrigger className="h-8 bg-background text-sm">
-                                      <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+                                      <SelectValue placeholder="현재 활용 지목을 선택해 주���요" />
                                     </SelectTrigger>
                                     <SelectContent>
                                       <SelectItem value="대">대 (택지)</SelectItem>
@@ -2542,7 +2542,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
         aiResult={(() => {
-          // 선택된 필지의 관리��� 재판독 결과가 있으면 우선 사용
+          // 선택된 ���지의 관리��� 재판독 결과가 있으면 우선 사용
           const selectedLandId = allLands[selectedLandIndex]?.id;
           if (selectedLandId && adminLandAIResults[selectedLandId]) {
             return adminLandAIResults[selectedLandId];
@@ -2618,7 +2618,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         const land = allLands[expandedLandIndex];
                         const result = citizenLandAIResults[land?.id];
                         return result?.judgmentRationale?.legalBasis || 
-                          "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조";
+                          "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법��」 제74조 및 동법 시행규칙 제34조";
                       })()}
                     </p>
                   </div>
