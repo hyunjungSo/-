@@ -524,7 +524,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (areaCheckMet) reasons.push("면적 기준 충족");
         if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
-        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (������� �������)" : ""));
+        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (������� ��������)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부��형 변경");
       } else {
         judgment = "매수불가";
@@ -615,24 +615,25 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     setLandAnalysisStatus(initialStatus);
     setLandAnalysisStep(initialStep);
     
-    // 필지별 순차 분석 시뮬레이션
-    const simulateSequentialAnalysis = async () => {
-      // 각 필지를 순차적으로 분석 단계별로 진행
-      for (let i = 0; i < adminCheckedLandIds.length; i++) {
-        const landId = adminCheckedLandIds[i];
+    // 필지별 병렬 분석 시뮬레이션 (속도 개선)
+    const simulateParallelAnalysis = async () => {
+      // 모든 필지를 병렬로 분석 시작
+      const analysisPromises = adminCheckedLandIds.map(async (landId) => {
         setLandAnalysisStatus(prev => ({ ...prev, [landId]: 'analyzing' }));
         
-        // 단계별 진행 (각 단계당 100ms)
+        // 단계별 진행 (각 단계당 50ms, 총 250ms/필지)
         for (let step = 1; step <= 5; step++) {
           setLandAnalysisStep(prev => ({ ...prev, [landId]: step }));
-          await new Promise(resolve => setTimeout(resolve, 100));
+          await new Promise(resolve => setTimeout(resolve, 50));
         }
         
         setLandAnalysisStatus(prev => ({ ...prev, [landId]: 'done' }));
-      }
+      });
+      
+      await Promise.all(analysisPromises);
     };
     
-    simulateSequentialAnalysis();
+    simulateParallelAnalysis();
     
     setTimeout(() => {
       const newResults: typeof adminLandAIResults = {};
@@ -703,12 +704,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       setAdminLandAIResults(adminResults);
       setAiResultViewMode("admin");
       setIsAIAnalyzing(false);
-    }, 600);
+    }, 300);
   };
   
   
   
-  // 판독 결과 초기��� (관리자 재판독 결과만)
+  // 판독 결과 초����� (관리자 재판독 결과만)
   const handleResetAdminAIResults = () => {
     setAdminLandAIResults({});
     setAdminAIOptions({
@@ -2494,7 +2495,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">진행상황 선택</CardTitle>
-          <CardDescription>민원인이 신청 현황 조회 �� 이 진행상황이 표시됩니다</CardDescription>
+          <CardDescription>민원인이 신청 현�� 조회 �� 이 진행상황이 표시됩니다</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
