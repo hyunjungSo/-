@@ -1620,7 +1620,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         onCheckedChange={(checked) => updateLandOption(land.id, 'farmMachineDifficulty', checked === true)}
                                         className="h-[18px] w-[18px]"
                                       />
-                                      <span className="text-sm">농기계 회전 곤란</span>
+                                      <span className="text-base">농기계 회전 곤란</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
@@ -1628,7 +1628,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         onCheckedChange={(checked) => updateLandOption(land.id, 'accessRoadLost', checked === true)}
                                         className="h-[18px] w-[18px]"
                                       />
-                                      <span className="text-sm">접면도로 상실</span>
+                                      <span className="text-base">접면도로 상실</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
@@ -1636,7 +1636,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         onCheckedChange={(checked) => updateLandOption(land.id, 'waterChannelLost', checked === true)}
                                         className="h-[18px] w-[18px]"
                                       />
-                                      <span className="text-sm">관개수로 상실</span>
+                                      <span className="text-base">관개수로 상실</span>
                                     </label>
                                   </div>
                                 </div>
@@ -1772,21 +1772,21 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         checked={landOptions.farmMachineDifficulty}
                                         onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'farmMachineDifficulty', checked === true)}
                                       />
-                                      <span className="text-sm">농기계 회전 곤란</span>
+                                      <span className="text-base">농기계 회전 곤란</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
                                         checked={landOptions.accessRoadLost}
                                         onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'accessRoadLost', checked === true)}
                                       />
-                                      <span className="text-sm">접면도로 상실</span>
+                                      <span className="text-base">접면도로 상실</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
                                         checked={landOptions.waterChannelLost}
                                         onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'waterChannelLost', checked === true)}
                                       />
-                                      <span className="text-sm">관개수로 상실</span>
+                                      <span className="text-base">관개수로 상실</span>
                                     </label>
                                   </div>
                                 </div>
@@ -2542,7 +2542,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
         aiResult={(() => {
-          // 선��된 ���지의 관리��� 재판독 결과가 있으면 우선 사용
+          // 선���된 ���지의 관리��� 재판독 결과가 있으면 우선 사용
           const selectedLandId = allLands[selectedLandIndex]?.id;
           if (selectedLandId && adminLandAIResults[selectedLandId]) {
             return adminLandAIResults[selectedLandId];
