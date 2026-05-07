@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "������������������력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "��������������������력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -2696,7 +2696,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* 지적도 이미지 */}
                   <div className="rounded-lg border bg-background overflow-hidden">
-                    <div className="aspect-square relative">
+                    <div className="aspect-square relative z-0">
                       <LeafletMap
                         parcels={allLands.map((l, i) => ({
                           id: l.id,
@@ -2776,7 +2776,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       )}
 
       {/* 하단 저장 버튼 */}
-      <div className="sticky bottom-0 left-0 right-0 bg-background border-t py-4 px-6 -mx-6 mt-6">
+      <div className="sticky bottom-0 left-0 right-0 bg-background border-t py-4 px-6 -mx-6 mt-6 z-50">
         <div className="flex justify-end gap-3">
           <Button variant="outline" onClick={onBack}>
             취소
