@@ -113,28 +113,25 @@ function LandInfoSection({ application }: { application: Application }) {
         
         return (
           <Collapsible defaultOpen={false}>
-            <div className="flex">
-              <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
-                <span className="text-sm font-medium">AI 판정</span>
-              </div>
-              <div className="flex flex-1 items-center justify-between px-4 py-3">
-                <div className="flex items-center gap-2">
-                  <JudgmentStatus 
-                    judgment={landAIResult.provisionalJudgment} 
-                    variant="badge" 
-                    size="sm"
-                  />
+            <CollapsibleTrigger asChild>
+              <div className="flex cursor-pointer hover:bg-muted/50 transition-colors">
+                <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+                  <span className="text-sm font-medium">AI 판정</span>
                 </div>
-                {landAIResult.judgmentRationale && (
-                  <CollapsibleTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground">
-                      <span>판정 근거</span>
-                      <ChevronDown className="h-3.5 w-3.5 transition-transform duration-200 [[data-state=open]_&]:rotate-180" />
-                    </Button>
-                  </CollapsibleTrigger>
-                )}
+                <div className="flex flex-1 items-center justify-between px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <JudgmentStatus 
+                      judgment={landAIResult.provisionalJudgment} 
+                      variant="badge" 
+                      size="sm"
+                    />
+                  </div>
+                  {landAIResult.judgmentRationale && (
+                    <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform duration-200 [[data-state=open]_&]:rotate-180" />
+                  )}
+                </div>
               </div>
-            </div>
+            </CollapsibleTrigger>
             {/* AI 판정 근거 아코디언 내용 */}
             {landAIResult.judgmentRationale && (
               <CollapsibleContent>
