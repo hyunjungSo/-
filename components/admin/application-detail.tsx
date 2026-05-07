@@ -524,7 +524,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (areaCheckMet) reasons.push("면적 기준 충족");
         if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
-        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (������� ��������)" : ""));
+        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (������� ���������)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부��형 변경");
       } else {
         judgment = "매수불가";
@@ -785,16 +785,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       landJudgmentsForReview,
     };
 
+    // 저장 완료 토스트 메시지 즉시 노출 (3초 후 사라짐)
+    toast({
+      title: "저장 완료",
+      description: "검토 내용이 저장되었습니다.",
+      duration: 3000,
+    });
+
     setTimeout(() => {
       setIsSaving(false);
       onSave(updatedApplication);
-      
-      // 저장 완료 토스트 메시지 (3.5초 후 사라짐)
-      toast({
-        title: "저장 완료",
-        description: "검토 내용이 저장되었습니다.",
-        duration: 3500,
-      });
     }, 1000);
   };
 
@@ -1041,7 +1041,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             </div>
                             
-                            {/* 상세 분석 내용 - 모든 필지에 표시 */}
+                            {/* 상세 분석 내용 - 모든 필지에 표�� */}
                             <div className="space-y-4">
                               {/* 판단 요약 */}
                               <div className="flex items-start gap-2">
@@ -1332,7 +1332,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
-                        <span>신청 필지</span>
+                        <span>��청 필지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
@@ -2294,7 +2294,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <div className="flex items-start gap-2">
                                       <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                                       <div>
-                                        <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
+                                        <h4 className="text-sm font-semibold text-foreground">상세 분��</h4>
                                         <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                                           {result.judgmentRationale.detailedExplanation}
                                         </pre>
