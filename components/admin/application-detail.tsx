@@ -634,67 +634,77 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       
       await Promise.all(analysisPromises);
       
-      // 분석 결과 생성
-      const newResults: typeof adminLandAIResults = {};
-      const selectedLands = allLands.filter(l => adminCheckedLandIds.includes(l.id));
-      
-      selectedLands.forEach((land) => {
-        const landId = land.id;
-        const landIndex = allLands.findIndex(l => l.id === landId);
-        const landData = application.landDataList?.[landIndex];
+      try {
+        // 분석 결과 생성
+        const newResults: typeof adminLandAIResults = {};
+        const selectedLands = allLands.filter(l => adminCheckedLandIds.includes(l.id));
         
-        const landOptions = adminAIOptionsPerLand[landId] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
-        const adminCurrentUsage = adminCurrentUsagePerLand[landId];
-        const adminLandSubType = adminLandSubTypePerLand[landId];
-        const analysis = analyzeSingleLand(land, landData, landOptions, adminCurrentUsage, adminLandSubType);
+        selectedLands.forEach((land) => {
+          try {
+            const landId = land.id;
+            const landIndex = allLands.findIndex(l => l.id === landId);
+            const landData = application.landDataList?.[landIndex];
+            
+            const landOptions = adminAIOptionsPerLand[landId] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
+            const adminCurrentUsage = adminCurrentUsagePerLand[landId];
+            const adminLandSubType = adminLandSubTypePerLand[landId];
+            const analysis = analyzeSingleLand(land, landData, landOptions, adminCurrentUsage, adminLandSubType);
+            
+            const finalJudgment = analysis.judgment;
+            
+            const judgmentRationale = {
+              summary: `${land.landType} 잔여면적 ${land.remainingArea.toLocaleString()}㎡(잔여비율 ${land.remainingRatio}%), ${analysis.reasons.join(", ")}으로 「${finalJudgment}」 판정`,
+              legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
+              appliedCriteria: analysis.criteriaChecks.map(check => 
+                `${check.name}: ${check.description} ${check.met ? "✓" : "✗"}`
+              ),
+              detailedExplanation: `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n${analysis.reasons.map(r => `• ${r}`).join("\n")}`,
+              manualCheckItems: analysis.criteriaChecks.filter(c => !c.met).map(c => `${c.name} 재확인 필요`),
+            };
+            
+            const criteriaChecks = analysis.criteriaChecks.map(check => ({
+              criteriaName: check.name,
+              criteriaDescription: check.description,
+              isMet: check.met,
+              autoDetected: true,
+            }));
+            
+            newResults[landId] = {
+              provisionalJudgment: finalJudgment,
+              landTypePath: analysis.landTypePath,
+              accessRoadLost: analysis.accessRoadLost,
+              waterChannelLost: analysis.waterChannelLost,
+              confidence: analysis.confidence,
+              analysisDate: new Date().toISOString().split("T")[0],
+              reason: analysis.reasons.join(", "),
+              adminCurrentUsage: adminCurrentUsage,
+              adminLandSubType: adminLandSubType,
+              judgmentRationale: judgmentRationale,
+              criteriaChecks: criteriaChecks,
+              shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
+            };
+          } catch (landError) {
+            console.error("[v0] 필지 분석 오류:", landError);
+          }
+        });
         
-        const finalJudgment = analysis.judgment;
+        const adminResults: typeof adminLandAIResults = {};
+        Object.entries(newResults).forEach(([landId, result]) => {
+          adminResults[landId] = {
+            ...result,
+            farmMachineDifficulty: adminAIOptions.farmMachineDifficulty,
+            adminOptions: { ...adminAIOptions }
+          };
+        });
         
-        const judgmentRationale = {
-          summary: `${land.landType} 잔여면적 ${land.remainingArea.toLocaleString()}㎡(잔여비율 ${land.remainingRatio}%), ${analysis.reasons.join(", ")}으로 「${finalJudgment}」 판정`,
-          legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
-          appliedCriteria: analysis.criteriaChecks.map(check => 
-            `${check.name}: ${check.description} ${check.met ? "✓" : "✗"}`
-          ),
-          detailedExplanation: `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n${analysis.reasons.map(r => `• ${r}`).join("\n")}`,
-          manualCheckItems: analysis.criteriaChecks.filter(c => !c.met).map(c => `${c.name} 재확인 필요`),
-        };
-        
-        const criteriaChecks = analysis.criteriaChecks.map(check => ({
-          criteriaName: check.name,
-          criteriaDescription: check.description,
-          isMet: check.met,
-          autoDetected: true,
-        }));
-        
-        newResults[landId] = {
-          provisionalJudgment: finalJudgment,
-          landTypePath: analysis.landTypePath,
-          accessRoadLost: analysis.accessRoadLost,
-          waterChannelLost: analysis.waterChannelLost,
-          confidence: analysis.confidence,
-          analysisDate: new Date().toISOString().split("T")[0],
-          reason: analysis.reasons.join(", "),
-          adminCurrentUsage: adminCurrentUsage,
-          adminLandSubType: adminLandSubType,
-          judgmentRationale: judgmentRationale,
-          criteriaChecks: criteriaChecks,
-          shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
-        };
-      });
-      
-      const adminResults: typeof adminLandAIResults = {};
-      Object.entries(newResults).forEach(([landId, result]) => {
-        adminResults[landId] = {
-          ...result,
-          farmMachineDifficulty: adminAIOptions.farmMachineDifficulty,
-          adminOptions: { ...adminAIOptions }
-        };
-      });
-      
-      setAdminLandAIResults(adminResults);
-      setAiResultViewMode("admin");
-      setIsAIAnalyzing(false);
+        console.log("[v0] 분석 결과:", adminResults);
+        setAdminLandAIResults(adminResults);
+        setAiResultViewMode("admin");
+        setIsAIAnalyzing(false);
+      } catch (error) {
+        console.error("[v0] 분석 결과 생성 오류:", error);
+        setIsAIAnalyzing(false);
+      }
     };
     
     runAnalysis().catch(() => {
@@ -715,7 +725,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     setAiResultViewMode("citizen");
   };
   
-  // 필지 포함/제외 상태 (민원인 소유 확인용)
+  // 필지 포함/제외 상태 (민원인 소유 ��인용)
   const [excludedLands, setExcludedLands] = useState<Set<string>>(new Set());
   
   // 필지 포함/제외 토글
@@ -1151,7 +1161,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     {(() => {
                                       const explanation = landResult?.judgmentRationale?.detailedExplanation;
                                       if (!explanation) {
-                                        return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
+                                        return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}�� (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
                                       }
                                       
                                       // If this is multi-parcel and explanation contains all parcels info,
@@ -1286,7 +1296,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           },
                           {
                             id: "adjacent-002",
-                            address: "경기도 용인시 처인구 포곡읍 마성리 102",
+                            address: "경기도 용인시 처���구 포곡읍 마성리 102",
                             isIncluded: false,
                             isOwned: false,
                             isAdjacent: true,
