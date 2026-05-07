@@ -263,7 +263,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     }
   };
   
-  // 담당자 탭 전체 선택 핸들러
+  // 담당자 탭 ���체 선택 핸들러
   const handleAdminCheckAll = (checked: boolean) => {
     if (checked) {
       setAdminCheckedLandIds(allLands.map(l => l.id));
@@ -2360,7 +2360,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             <Accordion type="multiple" className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
               {allLands.map((land, idx) => {
                   const landReview = landReviewDataList[idx];
-                  const aiResult = adminLandAIResults[land.id] || application.aiResult;
+                  // 담당자 AI 분석 결과 우선, 없으면 민원인 AI 분석 결과 사용
+                  const adminResult = adminLandAIResults[land.id];
+                  const citizenResult = landAIResults[land.id] || application.aiResult;
+                  const aiResult = adminResult || citizenResult;
                   const isReviewed = landReview.landJudgment !== null;
                   
                   return (
@@ -2384,8 +2387,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           </div>
                           <div className="flex items-center gap-2">
                             {aiResult?.provisionalJudgment && (
-                              <Badge variant="outline" className="text-xs">
-                                AI: {aiResult.provisionalJudgment}
+                              <Badge variant="outline" className={`text-xs ${
+                                adminResult ? "border-blue-500 text-blue-700" : "border-gray-400 text-gray-600"
+                              }`}>
+                                {adminResult ? "담당자 AI" : "민원인 AI"}: {aiResult.provisionalJudgment}
                               </Badge>
                             )}
                             {landReview.landJudgment && (
@@ -2498,7 +2503,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <div className="space-y-2">
             <Label className="text-sm font-medium">최종 검토 의견</Label>
             <Textarea
-              placeholder="현지상황 및 종합 검토의견을 작성해주세요. 이 내용은 심의서에 자동 입력됩니다."
+              placeholder="현지상황 및 종합 검토의견을 작성해주��요. 이 내용은 심의서에 자동 입력됩니다."
               rows={4}
               value={reviewData.reviewerComment || ""}
               onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}
