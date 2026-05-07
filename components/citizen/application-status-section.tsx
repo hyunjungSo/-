@@ -266,7 +266,7 @@ export function ApplicationStatusSection() {
                       <p className="mt-1.5 truncate text-xs text-muted-foreground">
                         {app.landInfo.address}
                         {isMultipleLands && (
-                          <span className="ml-1 font-medium text-violet-600">외 {app.additionalLands.length}필지</span>
+                          <span className="ml-1 font-medium text-black">외 {app.additionalLands.length}필지</span>
                         )}
                       </p>
 
