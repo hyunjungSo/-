@@ -452,7 +452,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     const addr = parseAddress(land.address);
     
     const criteriaChecks: Array<{ name: string; met: boolean; description: string }> = [];
-    let judgment: "매수" | "매수불가" | "검토필요" = "매수불가";
+    let judgment: "매수" | "매수불가" | "심의위원회 이관" = "매수불가";
     let reasons: string[] = [];
     
     // 1. 면적 기준 미달 여부
@@ -524,8 +524,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (areaCheckMet) reasons.push("면적 기준 충족");
         if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
-        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (������� ����������)" : ""));
-        if (shapeCriteria.met) reasons.push("형상 부��형 변경");
+        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
+        if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
         judgment = "매수불가";
         reasons.push("모든 기준 미충족");
@@ -578,8 +578,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규모 해당)`
       });
       if (judgment === "매수불가") {
-        judgment = "검토필요";
-        reasons.push("소규모 토지로 추가 검토 필요");
+        judgment = "심의위원회 이관";
+        reasons.push("소규모 토지로 심의위원회 검토 필요");
       }
     }
     
@@ -697,7 +697,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       setIsAIAnalyzing(false);
     };
     
-    runAnalysis();
+    runAnalysis().catch(() => {
+      setIsAIAnalyzing(false);
+    });
   };
   
   
@@ -1040,7 +1042,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <div className="flex items-start gap-2">
                                 <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                                 <div>
-                                  <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
+                                  <h4 className="text-sm font-semibold text-foreground">판단 요���</h4>
                                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                                     {(() => {
                                       const summary = landResult?.judgmentRationale?.summary;
@@ -2419,7 +2421,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             {landReview.landJudgment && (
                               <Badge className={
                                 landReview.landJudgment === "매수" ? "bg-green-700" :
-                                landReview.landJudgment === "매수불가" ? "bg-red-500" : "bg-amber-500"
+                                landReview.landJudgment === "���수불가" ? "bg-red-500" : "bg-amber-500"
                               }>
                                 {landReview.landJudgment}
                               </Badge>
