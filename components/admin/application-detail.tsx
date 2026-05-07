@@ -1551,7 +1551,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <p className="text-[10px] text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
                                 </div>
                                 
-                                {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
+                                {/* 건축물 용도 선택 - ���재 활용 지목이 "대"인 경우만 표시 */}
                                 {adminCurrentUsagePerLand[land.id] === "대" && (
                                   <div className="space-y-1.5 rounded bg-muted/30 p-2">
                                     <label className="text-xs font-medium text-foreground">
@@ -1612,24 +1612,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       })}
                       
                       {/* 인접 필지 */}
-                      {[
-                        {
-                          id: "adjacent-001",
-                          address: "경기도 용인시 처인구 포곡읍 마성리 101",
-                          landType: "농경지",
-                          landCategory: "전",
-                          remainingArea: 856,
-                          remainingRatio: 100,
-                        },
-                        {
-                          id: "adjacent-002",
-                          address: "경기도 용인시 처인구 포곡읍 마성리 102",
-                          landType: "농경지",
-                          landCategory: "답",
-                          remainingArea: 1234,
-                          remainingRatio: 100,
-                        },
-                      ].map((adjacentLand, adjIdx) => {
+                      {adjacentLands.map((adjacentLand, adjIdx) => {
                         const isSelected = adminCheckedLandIds.includes(adjacentLand.id);
                         const isHovered = hoveredLandId === adjacentLand.id;
                         const isFocused = focusedLandId === adjacentLand.id;
