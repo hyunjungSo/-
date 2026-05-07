@@ -540,7 +540,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "농기계 진입/회전",
         met: farmDifficulty,
-        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 �����인)" : "") : "농기계 사용 가능"
+        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 �������인)" : "") : "농기계 사용 가능"
       });
       
       criteriaChecks.push({
@@ -1064,14 +1064,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div>
                                   <span className="text-muted-foreground">편입 면적:</span>
                                   <span className="ml-1 font-medium">{(land.includedArea ?? ((land.originalArea ?? 0) - (land.remainingArea ?? 0))).toLocaleString()}m²</span>
-                                </div>
-                                <div>
-                                  <span className="text-muted-foreground">잔여 면적:</span>
-                                  <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)</span>
-                                </div>
-                                <div>
-                                  <span className="text-muted-foreground">형상지수 변화:</span>
-                                  <span className="ml-1 font-medium">{landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}</span>
                                 </div>
                               </div>
                             </div>
@@ -1944,14 +1936,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <span className="text-muted-foreground">편입 면적:</span>
                                           <span className="ml-1 font-medium">{(land.includedArea ?? ((land.originalArea ?? 0) - (land.remainingArea ?? 0))).toLocaleString()}m²</span>
                                         </div>
-                                        <div>
-                                          <span className="text-muted-foreground">잔여 면적:</span>
-                                          <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)</span>
-                                        </div>
-                                        <div>
-                                          <span className="text-muted-foreground">형상지수 변화:</span>
-                                          <span className="ml-1 font-medium">{landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}</span>
-                                        </div>
                                       </div>
                                     </div>
 
@@ -2219,14 +2203,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <div>
                                       <span className="text-muted-foreground">편입 면적:</span>
                                       <span className="ml-1 font-medium">{(land.includedArea ?? ((land.originalArea ?? 0) - (land.remainingArea ?? 0))).toLocaleString()}m²</span>
-                                    </div>
-                                    <div>
-                                      <span className="text-muted-foreground">잔여 면적:</span>
-                                      <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m² ({land.remainingRatio}%)</span>
-                                    </div>
-                                    <div>
-                                      <span className="text-muted-foreground">형상지수 변화:</span>
-                                      <span className="ml-1 font-medium">{result?.shapeIndexChange != null ? `+${result.shapeIndexChange.toFixed(1)}` : "-"}</span>
                                     </div>
                                   </div>
                                 </div>
