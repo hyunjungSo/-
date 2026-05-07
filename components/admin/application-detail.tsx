@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "�������������입력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "���������������입력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -914,6 +914,97 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* 필지 선택 UI - 페이지 전체에 적용 */}
+          <div className="mb-6 p-4 bg-muted/30 rounded-lg border">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4 flex-1">
+                <div className="flex items-center gap-2">
+                  <span 
+                    className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-white shrink-0"
+                    style={{ backgroundColor: selectedLandIndex < applicationLands.length ? "#2563eb" : "#d97706" }}
+                  >
+                    {String.fromCharCode(65 + selectedLandIndex)}
+                  </span>
+                  <Badge variant={selectedLandIndex < applicationLands.length ? "default" : "outline"} className="text-xs">
+                    {selectedLandIndex < applicationLands.length ? "신청 필지" : "인접 필지"}
+                  </Badge>
+                </div>
+                <Select
+                  value={selectedLandIndex.toString()}
+                  onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
+                >
+                  <SelectTrigger className="flex-1 max-w-[500px] h-10">
+                    <SelectValue placeholder="필지를 선택하세요" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-b">신청 필지</div>
+                    {applicationLands.map((land, index) => (
+                      <SelectItem key={land.id} value={index.toString()}>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{String.fromCharCode(65 + index)}</span>
+                          <span>{land.address.split(" ").slice(-2).join(" ")}</span>
+                          <span className="text-muted-foreground text-xs">| {land.landCategory} | {land.remainingArea.toLocaleString()}㎡</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                    {adjacentLands.length > 0 && (
+                      <>
+                        <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-b border-t mt-1">인접 필지</div>
+                        {adjacentLands.map((land, index) => (
+                          <SelectItem key={land.id} value={(applicationLands.length + index).toString()}>
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium">{String.fromCharCode(65 + applicationLands.length + index)}</span>
+                              <span>{land.address.split(" ").slice(-2).join(" ")}</span>
+                              <span className="text-muted-foreground text-xs">| {land.landCategory} | {land.remainingArea.toLocaleString()}㎡</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-muted-foreground">{selectedLandIndex + 1} / {allLands.length}</span>
+                <div className="flex gap-1">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => setSelectedLandIndex(Math.max(0, selectedLandIndex - 1))}
+                    disabled={selectedLandIndex === 0}
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => setSelectedLandIndex(Math.min(allLands.length - 1, selectedLandIndex + 1))}
+                    disabled={selectedLandIndex === allLands.length - 1}
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+            {/* 선택된 필지 요약 정보 */}
+            <div className="mt-3 pt-3 border-t flex items-center justify-between">
+              <div className="flex items-center gap-4 text-sm">
+                <span><span className="text-muted-foreground">주소:</span> <span className="font-medium">{allLands[selectedLandIndex]?.address}</span></span>
+                <span><span className="text-muted-foreground">지목:</span> <span className="font-medium">{allLands[selectedLandIndex]?.landCategory}</span></span>
+                <span><span className="text-muted-foreground">잔여면적:</span> <span className="font-medium">{allLands[selectedLandIndex]?.remainingArea.toLocaleString()}㎡</span></span>
+              </div>
+              {adminLandAIResults[allLands[selectedLandIndex]?.id]?.provisionalJudgment && (
+                <JudgmentStatus 
+                  judgment={adminLandAIResults[allLands[selectedLandIndex]?.id]?.provisionalJudgment} 
+                  variant="badge" 
+                  size="sm"
+                />
+              )}
+            </div>
+          </div>
+
           <Tabs defaultValue="citizen" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="citizen">
@@ -1278,97 +1369,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             {/* 담당자 결과 탭 */}
             <TabsContent value="admin">
-              {/* 필지 선택 UI - 최상단 고정 */}
-              <div className="mb-6 p-4 bg-white rounded-lg border shadow-sm sticky top-0 z-10">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-4 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span 
-                        className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-white shrink-0"
-                        style={{ backgroundColor: selectedLandIndex < applicationLands.length ? "#2563eb" : "#d97706" }}
-                      >
-                        {String.fromCharCode(65 + selectedLandIndex)}
-                      </span>
-                      <Badge variant={selectedLandIndex < applicationLands.length ? "default" : "outline"} className="text-xs">
-                        {selectedLandIndex < applicationLands.length ? "신청 필지" : "인접 필지"}
-                      </Badge>
-                    </div>
-                    <Select
-                      value={selectedLandIndex.toString()}
-                      onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
-                    >
-                      <SelectTrigger className="flex-1 max-w-[500px] h-10">
-                        <SelectValue placeholder="필지를 선택하세요" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-b">신청 필지</div>
-                        {applicationLands.map((land, index) => (
-                          <SelectItem key={land.id} value={index.toString()}>
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">{String.fromCharCode(65 + index)}</span>
-                              <span>{land.address.split(" ").slice(-2).join(" ")}</span>
-                              <span className="text-muted-foreground text-xs">| {land.landCategory} | {land.remainingArea.toLocaleString()}㎡</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                        {adjacentLands.length > 0 && (
-                          <>
-                            <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-b border-t mt-1">인접 필지</div>
-                            {adjacentLands.map((land, index) => (
-                              <SelectItem key={land.id} value={(applicationLands.length + index).toString()}>
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium">{String.fromCharCode(65 + applicationLands.length + index)}</span>
-                                  <span>{land.address.split(" ").slice(-2).join(" ")}</span>
-                                  <span className="text-muted-foreground text-xs">| {land.landCategory} | {land.remainingArea.toLocaleString()}㎡</span>
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </>
-                        )}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm text-muted-foreground">{selectedLandIndex + 1} / {allLands.length}</span>
-                    <div className="flex gap-1">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => setSelectedLandIndex(Math.max(0, selectedLandIndex - 1))}
-                        disabled={selectedLandIndex === 0}
-                      >
-                        <ArrowLeft className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => setSelectedLandIndex(Math.min(allLands.length - 1, selectedLandIndex + 1))}
-                        disabled={selectedLandIndex === allLands.length - 1}
-                      >
-                        <ArrowRight className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                {/* 선택된 필지 요약 정보 */}
-                <div className="mt-3 pt-3 border-t flex items-center justify-between">
-                  <div className="flex items-center gap-4 text-sm">
-                    <span><span className="text-muted-foreground">주소:</span> <span className="font-medium">{allLands[selectedLandIndex]?.address}</span></span>
-                    <span><span className="text-muted-foreground">지목:</span> <span className="font-medium">{allLands[selectedLandIndex]?.landCategory}</span></span>
-                    <span><span className="text-muted-foreground">잔여면적:</span> <span className="font-medium">{allLands[selectedLandIndex]?.remainingArea.toLocaleString()}㎡</span></span>
-                  </div>
-                  {adminLandAIResults[allLands[selectedLandIndex]?.id]?.provisionalJudgment && (
-                    <JudgmentStatus 
-                      judgment={adminLandAIResults[allLands[selectedLandIndex]?.id]?.provisionalJudgment} 
-                      variant="badge" 
-                      size="sm"
-                    />
-                  )}
-                </div>
-              </div>
-
               <div className="grid gap-6 lg:grid-cols-2">
                 {/* 좌측: 지적도 + 필지 리스트 */}
                 <div className="space-y-4">
