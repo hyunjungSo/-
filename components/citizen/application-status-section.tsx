@@ -110,25 +110,32 @@ function LandInfoSection({ application }: { application: Application }) {
         if (!landAIResult?.provisionalJudgment) return null;
         
         return (
-          <div className="flex">
-            <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
-              <span className="text-sm font-medium">AI 판정</span>
-            </div>
-            <div className="flex flex-1 items-center gap-2 px-4 py-3">
-              <JudgmentStatus 
-                judgment={landAIResult.provisionalJudgment} 
-                variant="badge" 
-                size="sm"
-              />
-              {landAIResult.judgmentRationale && (
-                <RationaleCard 
-                  rationale={landAIResult.judgmentRationale} 
-                  provisionalJudgment={landAIResult.provisionalJudgment}
-                  variant="modal-trigger"
+          <>
+            <div className="flex border-b border-border">
+              <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+                <span className="text-sm font-medium">AI 판정</span>
+              </div>
+              <div className="flex flex-1 items-center gap-2 px-4 py-3">
+                <JudgmentStatus 
+                  judgment={landAIResult.provisionalJudgment} 
+                  variant="badge" 
+                  size="sm"
                 />
-              )}
+              </div>
             </div>
-          </div>
+            {/* AI 판정 근거 전체 노출 */}
+            {landAIResult.judgmentRationale && (
+              <div className="border-t border-border">
+                <div className="bg-muted/20 px-4 py-3">
+                  <RationaleCard 
+                    rationale={landAIResult.judgmentRationale} 
+                    provisionalJudgment={landAIResult.provisionalJudgment}
+                    variant="expanded"
+                  />
+                </div>
+              </div>
+            )}
+          </>
         );
       })()}
     </div>
