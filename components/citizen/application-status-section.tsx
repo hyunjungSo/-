@@ -183,12 +183,12 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               <span className="text-sm font-medium">최종 판정</span>
             </div>
             <div className="flex flex-1 items-center gap-3 px-4 py-4">
-              {application.finalJudgment === "매수" && <CheckCircle2 className="h-5 w-5 text-emerald-600" />}
-              {application.finalJudgment === "매수불가" && <AlertTriangle className="h-5 w-5 text-red-600" />}
-              {application.finalJudgment === "심의위원회 이관" && <Info className="h-5 w-5 text-amber-600" />}
+              {application.finalJudgment === "매수" && <CheckCircle2 className="h-5 w-5 text-green-600" />}
+              {application.finalJudgment === "매수불가" && <AlertTriangle className="h-5 w-5 text-red-500" />}
+              {application.finalJudgment === "심의위원회 이관" && <Info className="h-5 w-5 text-amber-500" />}
               <span className={`font-bold ${
-                application.finalJudgment === "매수" ? "text-emerald-700" : 
-                application.finalJudgment === "매수불가" ? "text-red-700" : "text-amber-700"
+                application.finalJudgment === "매수" ? "text-green-600" : 
+                application.finalJudgment === "매수불가" ? "text-red-500" : "text-amber-500"
               }`}>{application.finalJudgment}</span>
             </div>
           </div>

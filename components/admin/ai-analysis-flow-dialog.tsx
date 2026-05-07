@@ -347,7 +347,7 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                   "border rounded p-3 text-center transition-all",
                   finalJudgment === "매수불가" ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className={cn("text-sm font-medium", finalJudgment === "매수불가" ? "text-red-700" : "text-gray-500")}>매수불가 판단</p>
+                  <p className={cn("text-sm font-medium", finalJudgment === "매수불가" ? "text-red-500" : "text-gray-500")}>매수불가 판단</p>
                 </div>
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
@@ -430,7 +430,7 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
               <span className="text-base text-gray-500">AI 잠정 판정:</span>
               <span className={cn(
                 "text-base font-bold px-4 py-1.5 rounded",
-                finalJudgment === "매수" ? "bg-green-700 text-white" :
+                finalJudgment === "매수" ? "bg-green-600 text-white" :
                 (finalJudgment === "매수불가" || finalJudgment === "매수불가") ? "bg-red-500 text-white" :
                 "bg-amber-500 text-white"
               )}>
@@ -632,7 +632,7 @@ function PathColumn({
           <p className={cn(
             conditionStatus === "미충족" ? "text-red-600 font-medium" : "text-gray-400"
           )}>
-            전체 미해당 시 조건 <span className="text-red-600">미충족</span> → 수용
+            전체 미해당 시 ��건 <span className="text-red-600">미충족</span> → 수용
           </p>
           <p className={cn(
             conditionStatus === "심의위원회 이관" ? "text-amber-600 font-medium" : "text-gray-400"
@@ -642,7 +642,7 @@ function PathColumn({
         </motion.div>
       )}
 
-      {/* 결과 배지 - 선택된 경로에만 표시 */}
+      {/* 결��� 배지 - 선택된 경로에만 표시 */}
       {isActive && conditionStatus && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -651,7 +651,7 @@ function PathColumn({
         >
           <span className={cn(
             "px-4 py-1.5 rounded-full text-sm font-bold",
-            conditionStatus === "충족" ? "bg-green-500 text-white" :
+            conditionStatus === "충족" ? "bg-green-600 text-white" :
             conditionStatus === "미충족" ? "bg-red-500 text-white" :
             "bg-amber-500 text-white"
           )}>

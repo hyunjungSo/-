@@ -80,7 +80,7 @@ const regionData = {
     // 부산광역시
     "해운대구": ["반송동", "반여동", "석대동", "송정동", "우동", "좌동", "재송동", "중동"],
     "기장군": ["기장읍", "장안읍", "정관읍", "일광면", "철마면"],
-    "금정구": ["구서동", "금사동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
+    "금정구": ["구서동", "금��동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
     // 경기도
     "용인시 처인구": ["양지면", "백암면", "원삼면", "이동읍", "남사읍", "포곡읍", "모현읍"],
     "용인시 기흥구": ["구갈동", "마북동", "보라동", "상갈동", "상하동", "서농동", "신갈동", "언남동", "영덕동", "중동", "지곡동", "청덕동", "하갈동"],
@@ -1957,7 +1957,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                       <span>|</span>
                                       <span>{item.landInfo.landType}</span>
                                       <Badge 
-                                        className={`text-xs ${item.aiResult.provisionalJudgment === "매수" ? "bg-green-700 text-white" : "bg-red-500 text-white"}`}
+                                        className={`text-xs ${item.aiResult.provisionalJudgment === "매수" ? "bg-green-600 text-white" : "bg-red-500 text-white"}`}
                                       >
                                         {item.aiResult.provisionalJudgment === "매수" ? "매수가능" : "기준 미충족"}
                                       </Badge>

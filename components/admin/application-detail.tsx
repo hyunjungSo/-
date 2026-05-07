@@ -55,9 +55,9 @@ interface ApplicationDetailProps {
 }
 
 const judgmentConfig = {
-  매수: { label: "매수", icon: CheckCircle2, borderColor: "border-green-700", textColor: "text-green-700", color: "text-green-700" },
-  매수불가: { label: "매수불가", icon: XCircle, borderColor: "border-red-600", textColor: "text-red-700", color: "text-red-700" },
-  "심의위원회 이관": { label: "심의위원회 이관", icon: AlertTriangle, borderColor: "border-amber-600", textColor: "text-amber-700", color: "text-amber-700" },
+  매수: { label: "매수", icon: CheckCircle2, borderColor: "border-green-600", textColor: "text-green-600", color: "text-green-600" },
+  매수불가: { label: "매수불가", icon: XCircle, borderColor: "border-red-500", textColor: "text-red-500", color: "text-red-500" },
+  "심의위원회 이관": { label: "심의위원회 이관", icon: AlertTriangle, borderColor: "border-amber-500", textColor: "text-amber-500", color: "text-amber-500" },
 };
 
 const adminStatusConfig: Record<AdminStatus, { 
@@ -985,7 +985,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                        <span className="text-green-700 font-medium">신청필지</span>
+                        <span className="text-green-600 font-medium">신청필지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
@@ -1014,7 +1014,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           value={land.id}
                           className={`rounded-lg border px-4 ${
                             judgment === "매수"
-                              ? "border-green-700/20 bg-green-700/5"
+                              ? "border-green-600/20 bg-green-600/5"
                               : judgment === "매수불가"
                                 ? "border-red-200 bg-red-50/50"
                                 : "border-slate-200 bg-slate-50/50"
@@ -1028,7 +1028,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                               {/* 필지별 매수/불매수 Badge 표시 - 항상 표시 */}
                               <Badge className={`ml-2 shrink-0 ${
-                                (landResult?.provisionalJudgment || aiResult?.provisionalJudgment) === "매수" ? "bg-green-700" : "bg-red-500"
+                                (landResult?.provisionalJudgment || aiResult?.provisionalJudgment) === "매수" ? "bg-green-600" : "bg-red-500"
                               }`}>
                                 {landResult?.provisionalJudgment || aiResult?.provisionalJudgment || "분석중"}
                               </Badge>
@@ -1244,7 +1244,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <span className="text-muted-foreground">{check.criteriaName}</span>
                                           <Badge 
                                             variant={check.isMet ? "default" : "destructive"} 
-                                            className={`text-xs ${check.isMet ? "bg-green-700" : ""}`}
+                                            className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}
                                           >
                                             {check.isMet ? "충족" : "미충족"}
                                           </Badge>
@@ -1375,7 +1375,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#16a34a] bg-[#bbf7d0]" />
-                        <span className="text-green-700 font-medium">선택된 필지</span>
+                        <span className="text-green-600 font-medium">선택된 필지</span>
                       </div>
                     </div>
                   </div>
@@ -1489,8 +1489,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <Badge 
                                   variant="outline" 
                                   className={`text-xs shrink-0 ${
-                                    landResult.provisionalJudgment === "매수" ? "border-emerald-500 text-green-700 bg-emerald-50" : 
-                                    landResult.provisionalJudgment === "매수불가" ? "border-red-500 text-red-700 bg-red-50" : 
+                                    landResult.provisionalJudgment === "매수" ? "border-green-600 text-green-600 bg-green-50" : 
+                                    landResult.provisionalJudgment === "매수불가" ? "border-red-500 text-red-500 bg-red-50" : 
                                     "border-amber-500 text-amber-700 bg-amber-50"
                                   }`}
                                 >
@@ -1806,7 +1806,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* AI 분석 버튼 */}
                   {(() => {
-                    // 선택된 모든 필지가 현재 활용 지목을 선택했는지 확인
+                    // 선택된 모든 필지가 현재 활용 ��목을 선택했는지 확인
                     const allSelectedLandsHaveCurrentUsage = adminCheckedLandIds.every(
                       id => adminCurrentUsagePerLand[id] && adminCurrentUsagePerLand[id].trim() !== ""
                     );
@@ -1892,7 +1892,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               value={land.id}
                               className={`rounded-lg border px-4 ${
                                 judgment === "매수"
-                                  ? "border-green-700/20 bg-green-700/5"
+                                  ? "border-green-600/20 bg-green-600/5"
                                   : judgment === "매수불가"
                                     ? "border-red-200 bg-red-50/50"
                                     : "border-slate-200 bg-slate-50/50"
@@ -1908,7 +1908,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   </div>
                                   {/* 필지별 매수/불매수 Badge 표시 - 항상 표시 */}
                                   <Badge className={`ml-2 ${
-                                    (landResult?.provisionalJudgment || application.aiResult?.provisionalJudgment) === "매수" ? "bg-green-700" : "bg-red-500"
+                                    (landResult?.provisionalJudgment || application.aiResult?.provisionalJudgment) === "매수" ? "bg-green-600" : "bg-red-500"
                                   }`}>
                                     {landResult?.provisionalJudgment || application.aiResult?.provisionalJudgment || "분석중"}
                                   </Badge>
@@ -2124,7 +2124,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                                 <span className="text-muted-foreground">{check.criteriaName}</span>
                                                 <Badge 
                                                   variant={check.isMet ? "default" : "destructive"} 
-                                                  className={`text-xs ${check.isMet ? "bg-green-700" : ""}`}
+                                                  className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}
                                                 >
                                                   {check.isMet ? "충족" : "미충족"}
                                                 </Badge>
@@ -2164,7 +2164,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               value={landId}
                               className={`rounded-lg border px-4 ${
                                 result.provisionalJudgment === "매수"
-                                  ? "border-green-700/20 bg-green-700/5"
+                                  ? "border-green-600/20 bg-green-600/5"
                                   : "border-red-200 bg-red-50/50"
                               }`}
                             >
@@ -2172,7 +2172,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className="flex items-center justify-between w-full pr-2">
                                   <div className="flex items-center gap-2">
                                     <span className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-white ${
-                                      result.provisionalJudgment === "매수" ? "bg-green-700" : "bg-red-500"
+                                      result.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"
                                     }`}>
                                       {String.fromCharCode(65 + landIdx)}
                                     </span>
@@ -2181,7 +2181,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
                                     </div>
                                   </div>
-                                  <Badge className={`ml-2 ${result.provisionalJudgment === "매수" ? "bg-green-700" : "bg-red-500"}`}>
+                                  <Badge className={`ml-2 ${result.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"}`}>
                                     {result.provisionalJudgment}
                                   </Badge>
                                 </div>
@@ -2311,7 +2311,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                             <span className="text-muted-foreground">{check.criteriaName}</span>
                                             <Badge 
                                               variant={check.isMet ? "default" : "destructive"} 
-                                              className={`text-xs ${check.isMet ? "bg-green-700" : ""}`}
+                                              className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}
                                             >
                                               {check.isMet ? "충족" : "미충족"}
                                             </Badge>
@@ -2402,13 +2402,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <AccordionItem 
                       key={land.id} 
                       value={land.id}
-                      className={`rounded-lg border ${isReviewed ? 'border-green-700/20 bg-emerald-50/30' : 'border-gray-200'}`}
+                      className={`rounded-lg border ${isReviewed ? 'border-green-600/20 bg-green-50/30' : 'border-gray-200'}`}
                     >
                       <AccordionTrigger className="hover:no-underline px-4 py-3">
                         <div className="flex items-center justify-between w-full pr-2">
                           <div className="flex items-center gap-3">
                             <div className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white ${
-                              isReviewed ? 'bg-green-700' : 'bg-gray-400'
+                              isReviewed ? 'bg-green-600' : 'bg-gray-400'
                             }`}>
                               {idx + 1}
                             </div>
@@ -2427,7 +2427,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             )}
                             {landReview.landJudgment && (
                               <Badge className={
-                                landReview.landJudgment === "매수" ? "bg-green-700" :
+                                landReview.landJudgment === "매수" ? "bg-green-600" :
                                 landReview.landJudgment === "매수불가" ? "bg-red-500" : "bg-amber-500"
                               }>
                                 {landReview.landJudgment}
