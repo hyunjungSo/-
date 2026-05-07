@@ -449,7 +449,7 @@ export function LeafletMap({
         html: `<div style="
           background: transparent;
           color: #333;
-          font-size: 11px;
+          font-size: 12px;
           font-weight: 500;
           white-space: nowrap;
           text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;

@@ -98,7 +98,7 @@ const regionData = {
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "���곡면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "�����곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
     "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "내덕동", "율량동"],
@@ -794,7 +794,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return;
       }
       
-      // 지번 검색: 선택된 지역에 해���하는 토지 필터링
+      // 지번 검색: 선택된 ��역에 해���하는 토지 필터링
       results = dummyLandInfoList.filter(land => {
         // 시군구 포함 여부
         if (!land.address.includes(selectedSigungu)) return false;
@@ -1383,7 +1383,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                   {/* AI 판독 완료 뱃지 */}
                                   {hasAiResult && (
                                     <Badge 
-                                      className={`text-[10px] px-1.5 py-0 ${
+                                      className={`text-xs px-1.5 py-0 ${
                                         landAiResult?.provisionalJudgment === "매수" 
                                           ? "bg-green-600 text-white" 
                                           : landAiResult?.provisionalJudgment === "매수불가"
@@ -1698,7 +1698,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   )}
                 </Button>
                 {(!currentUsage || (currentUsage === "대" && !landSubType)) && (
-                  <p className="mt-1.5 text-center text-[11px] text-muted-foreground">
+                  <p className="mt-1.5 text-center text-xs text-muted-foreground">
                     활용 지목을 선택하세요
                   </p>
                 )}

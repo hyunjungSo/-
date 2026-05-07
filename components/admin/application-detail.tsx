@@ -720,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            // 필지 분석 오류 처����
+            // 필지 분석 오류 처�����
           }
         });
         
@@ -1582,7 +1582,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <SelectItem value="잡">잡 (잡종지)</SelectItem>
                                     </SelectContent>
                                   </Select>
-                                  <p className="text-[10px] text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
+                                  <p className="text-xs text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
                                 </div>
                                 
                                 {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
@@ -1735,7 +1735,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <SelectItem value="잡">잡 (잡종지)</SelectItem>
                                     </SelectContent>
                                   </Select>
-                                  <p className="text-[10px] text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
+                                  <p className="text-xs text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
                                 </div>
                                 
                                 {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
@@ -1809,7 +1809,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* AI 분석 버튼 */}
                   {(() => {
-                    // 선택된 모든 필지가 현재 활용 지목을 ���택���는지 확인
+                    // 선택된 모든 필지가 현재 활용 지��을 ���택���는지 확인
                     const allSelectedLandsHaveCurrentUsage = adminCheckedLandIds.every(
                       id => adminCurrentUsagePerLand[id] && adminCurrentUsagePerLand[id].trim() !== ""
                     );
@@ -2694,7 +2694,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         );
                       })()}
                       <span className="text-sm text-muted-foreground">
-                        신뢰도: {(() => {
+                        ��뢰도: {(() => {
                           const land = allLands[expandedLandIndex];
                           const result = citizenLandAIResults[land?.id];
                           return result?.confidence ? `${result.confidence}%` : "-";
