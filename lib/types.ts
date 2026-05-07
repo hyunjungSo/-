@@ -129,7 +129,7 @@ export interface LandSpecificData {
   landSubType: "" | "residential-detached" | "residential-multi" | "residential-apartment" | "commercial" | "industrial"; // 택지 세부 유형
   actualUsage: LandCategory; // 공부상 지목
   reportedShape: LandShape; // 토지 모양
-  farmMachineDifficulty: boolean; // 농기계 진입 곤란
+  farmMachineDifficulty: boolean; // 농기계 회전 곤란
   accessRoadLost: boolean; // 접면도로 상실
   waterChannelLost: boolean; // 관개수로 상실
 }
@@ -147,7 +147,7 @@ export interface Application {
   unifiedParcelCondition?: UnifiedParcelCondition; // 일단지 판정 조건
   actualUsage: LandCategory; // 실제 이용 상황
   reportedShape: LandShape; // 신청인 입력 토지 모양
-  farmMachineDifficulty?: boolean; // 농기계 진입·회전 곤란
+  farmMachineDifficulty?: boolean; // 농기계 회전 곤란
   reason: string; // 신청 사유
   attachments: string[]; // 첨부 서류
   status: ProcessStatus;
@@ -188,7 +188,7 @@ export interface AIAnalysisResult {
   isBlindLand: boolean; // 맹지 여부
   accessRoadLost: boolean; // 접면도로 상실 (직접확인)
   waterChannelLost: boolean; // 수로 상실 (직접확인)
-  farmMachineDifficulty: boolean; // 농기계 진입/회전 곤란 (직접확인)
+  farmMachineDifficulty: boolean; // 농기계 회전 곤란 (직접확인)
   judgmentRationale: JudgmentRationale; // 판단 근거 설명
   unifiedParcelAnalysis?: UnifiedParcelAnalysis; // 일단지 판정 결과
   landJudgments?: LandJudgment[]; // 필지별 판정 결과 (혼합 케이스용)

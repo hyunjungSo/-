@@ -136,7 +136,7 @@ const regionData = {
     "양산시": ["동면", "물금읍", "상북면", "웅상읍", "원동면", "하북면"],
     // 제주특별자치도
     "제주시": ["구좌읍", "애월읍", "우도면", "조천읍", "추자면", "한경면", "한림읍", "아라동", "건입동", "노형동", "봉개동", "삼도동", "연동", "오라동", "외도동", "용담동", "이도동", "이호동", "일도동", "화북동"],
-    "서귀포시": ["남원읍", "대정읍", "성산읍", "안덕면", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "월평동", "색달동", "상효��", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
+    "서귀포시": ["남원읍", "대정읍", "성산읍", "안덕면", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도��동", "월평동", "색달동", "상효��", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
   },
   리: {
     // 경기도 - 용인시 처인구
@@ -178,7 +178,7 @@ const regionData = {
     "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "음양리"],
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
     "향남읍": ["구문천리", "도이리", "발안리", "상신리", "제암리", "평리", "행정리"],
-    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "천우��"],
+    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "천우���"],
     "비봉면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
     "마도면": ["백곡리", "송정리", "쌍송리", "청원리", "해문리"],
     "남양읍": ["남양리", "문호리", "북양리", "송림리", "신남리"],
@@ -241,7 +241,7 @@ const regionData = {
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
-    "소��면": ["송등리", "대곡리", "소정리", "운담리"],
+    "����면": ["송등리", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -350,8 +350,8 @@ function simulateAIAnalysis(
       autoDetected: false,
     });
     criteriaChecks.push({
-      criteriaName: "농기계 진입/회전 곤란",
-      criteriaDescription: "농기계 진입 및 회전이 곤란하여 영농이 불가능한 경우",
+      criteriaName: "농기계 회전 곤란",
+      criteriaDescription: "농기계 회전이 곤란하여 영농이 불가능한 경우",
       isMet: false,
       autoDetected: false,
     });
@@ -457,7 +457,7 @@ function generateJudgmentRationale(
     const criteria = LAND_SUB_TYPE_CRITERIA[landSubType];
     appliedCriteria.push(`택지(현재 활용 지목: 대) 면적 기준: ${criteria.label} ${criteria.maxArea}㎡ 이하`);
   } else if (currentUsage === "전" || currentUsage === "답") {
-    appliedCriteria.push(`농지(현재 활용 지목: ${currentUsage}) 면적 기준: 330㎡(약 100평) 이하이거나, 폭 5m 이하의 부정형으로서 농기계 진입·회전이 곤란한 경우`);
+    appliedCriteria.push(`농지(현재 활용 지목: ${currentUsage}) 면적 기준: 330㎡(약 100평) 이하이거나, 폭 5m 이하의 부정형으로서 농기계 회전이 곤란한 경우`);
   } else if (currentUsage === "임") {
     appliedCriteria.push(`산지(현재 활용 지목: 임) 면적 기준: 990㎡(약 300평) 이하`);
   } else {
@@ -558,7 +558,7 @@ function getShapeDescription(shape: string, area: number): string {
 function getUsageDifficultyDescription(landType: string, area: number, shape: string): string {
   switch (landType) {
     case "농지":
-      return `이는 농지로서의 사용이 현저히 곤란한 경우(농기계 진입·회전 곤란)로 예상되어`;
+      return `이는 농지로서의 사용이 현저히 곤란한 경우(농기계 회전 곤란)로 예상되어`;
     case "택지":
       return `이는 택지로서 건축물의 건축이 현저히 곤란한 경우로 예상되어`;
     case "산지":
@@ -1764,7 +1764,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         onClick={() => onAddToCart(selectedLand, aiResult!)}
                         className="w-full cursor-pointer py-1 text-xs text-muted-foreground/60 underline-offset-2 transition-colors hover:text-muted-foreground hover:underline"
                       >
-                        그래도 신청 목록에 추가하기
+                        그래도 신청 목��에 추가하기
                       </button>
                     </div>
                   );

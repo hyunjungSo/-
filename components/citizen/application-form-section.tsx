@@ -802,7 +802,7 @@ export function ApplicationFormSection({
                                   checked={landData.farmMachineDifficulty}
                                   onCheckedChange={(checked) => updateLandData(index, "farmMachineDifficulty", checked === true)}
                                 />
-                                <span className="text-sm">농기계 진입 곤란</span>
+                                <span className="text-sm">농기계 회전 곤란</span>
                               </label>
                             </>
                           )}
