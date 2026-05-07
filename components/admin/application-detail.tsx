@@ -277,7 +277,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 담당자가 선택한 필지 ID 목록 (수정 가능, 초기값: 민원인 신청 필지와 동일)
   const [adminCheckedLandIds, setAdminCheckedLandIds] = useState<string[]>(() => allLands.map(l => l.id));
   
-  // 기존 호환성을 위한 adminAIOptions (선택된 필지들의 옵션 합산)
+  // ���존 호환성을 위한 adminAIOptions (선택된 필지들의 옵션 합산)
   const adminAIOptions = {
     accessRoadLost: adminCheckedLandIds.some(id => adminAIOptionsPerLand[id]?.accessRoadLost),
     waterChannelLost: adminCheckedLandIds.some(id => adminAIOptionsPerLand[id]?.waterChannelLost),
@@ -927,7 +927,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div className="flex items-center justify-between">
                     <h4 className="font-medium">지적도</h4>
                     <Badge variant="outline" className="font-normal">
-                      {allLands.length}필지
+                      {allLands.length}���지
                     </Badge>
                   </div>
                   
@@ -1487,11 +1487,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </Badge>
                               ) : landResult?.provisionalJudgment ? (
                                 <Badge 
-                                  variant="outline" 
                                   className={`text-xs shrink-0 ${
-                                    landResult.provisionalJudgment === "매수" ? "border-green-600 text-green-600 bg-green-50" : 
-                                    landResult.provisionalJudgment === "매수불가" ? "border-red-500 text-red-500 bg-red-50" : 
-                                    "border-amber-500 text-amber-700 bg-amber-50"
+                                    landResult.provisionalJudgment === "매수" ? "bg-green-600 text-white" : 
+                                    landResult.provisionalJudgment === "매수불가" ? "bg-red-500 text-white" : 
+                                    "bg-amber-500 text-white"
                                   }`}
                                 >
                                   {landResult.provisionalJudgment}
@@ -1806,7 +1805,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* AI 분석 버튼 */}
                   {(() => {
-                    // 선택된 모든 필지가 현재 활용 지목을 선택했는지 확인
+                    // 선택된 모든 필지가 현재 활용 지목을 선택했는지 ���인
                     const allSelectedLandsHaveCurrentUsage = adminCheckedLandIds.every(
                       id => adminCurrentUsagePerLand[id] && adminCurrentUsagePerLand[id].trim() !== ""
                     );
@@ -2181,7 +2180,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
                                     </div>
                                   </div>
-                                  <Badge className={`ml-2 ${result.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"}`}>
+                                  <Badge className={`ml-2 ${
+                                    result.provisionalJudgment === "매수" ? "bg-green-600 text-white" : 
+                                    result.provisionalJudgment === "심의위원회 이관" ? "bg-amber-500 text-white" : 
+                                    "bg-red-500 text-white"
+                                  }`}>
                                     {result.provisionalJudgment}
                                   </Badge>
                                 </div>

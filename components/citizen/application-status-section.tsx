@@ -150,13 +150,15 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               <span className="text-sm font-medium">AI 판정</span>
             </div>
             <div className="flex flex-1 items-center gap-2 px-4 py-3">
-              <span className={`text-sm font-medium ${
+              <Badge className={`text-sm font-medium ${
                 application.aiResult.provisionalJudgment === "매수" 
-                  ? "text-primary" 
-                  : "text-destructive"
+                  ? "bg-green-600 text-white" 
+                  : application.aiResult.provisionalJudgment === "심의위원회 이관"
+                    ? "bg-amber-500 text-white"
+                    : "bg-red-500 text-white"
               }`}>
                 {application.aiResult.provisionalJudgment}
-              </span>
+              </Badge>
               {application.aiResult.judgmentRationale && (
                 <RationaleCard 
                   rationale={application.aiResult.judgmentRationale} 

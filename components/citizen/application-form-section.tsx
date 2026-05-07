@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -370,13 +371,13 @@ export function ApplicationFormSection({
                               <span>{land.ownerName}</span>
                             </div>
                           </div>
-                          <div className={`shrink-0 rounded px-2 py-0.5 text-xs font-medium ${
+                          <Badge className={`shrink-0 text-xs font-medium ${
                             result?.provisionalJudgment === "매수" 
-                              ? "bg-primary/10 text-primary" 
-                              : "bg-red-100 text-red-700"
+                              ? "bg-green-600 text-white" 
+                              : "bg-red-500 text-white"
                           }`}>
-                            {result?.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
-                          </div>
+                            {result?.provisionalJudgment}
+                          </Badge>
                         </div>
                       </div>
                     );
@@ -461,13 +462,13 @@ export function ApplicationFormSection({
                           <span>{landInfo.ownerName}</span>
                         </div>
                       </div>
-                      <div className={`shrink-0 rounded px-2 py-0.5 text-xs font-medium ${
+                      <Badge className={`shrink-0 text-xs font-medium ${
                         aiResult?.provisionalJudgment === "매수" 
-                          ? "bg-primary/10 text-primary" 
-                          : "bg-red-100 text-red-700"
+                          ? "bg-green-600 text-white" 
+                          : "bg-red-500 text-white"
                       }`}>
-                        {aiResult?.provisionalJudgment === "매수" ? "매수 가능" : "기준 미충족"}
-                      </div>
+                        {aiResult?.provisionalJudgment}
+                      </Badge>
                     </div>
                   </div>
                 </div>

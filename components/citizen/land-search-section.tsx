@@ -52,7 +52,7 @@ const regionData = {
   },
   읍면동: {
     // 서울특별시
-    "강남구": ["개포동", "논현동", "대치동", "도곡동", "삼성동", "세곡동", "수서동", "신사동", "압구정동", "역삼동", "율현동", "일원동", "자곡동", "청담동"],
+    "강남구": ["개포동", "논현동", "대치동", "도곡동", "삼성동", "세곡동", "수서동", "신사동", "압구정동", "역삼동", "율현동", "일원동", "자곡동", "청���동"],
     "강동구": ["강일동", "고덕동", "길동", "둔촌동", "명일동", "상일동", "성내동", "암사동", "천호동"],
     "강북구": ["미아동", "번동", "수유동", "우이동"],
     "강서구": ["가양동", "개화동", "공항동", "과해동", "내발산동", "등촌동", "마곡동", "방화동", "염창동", "오곡동", "오쇠동", "외발산동", "화곡동"],
@@ -80,7 +80,7 @@ const regionData = {
     // 부산광역시
     "해운대구": ["반송동", "반여동", "석대동", "송정동", "우동", "좌동", "재송동", "중동"],
     "기장군": ["기장읍", "장안읍", "정관읍", "일광면", "철마면"],
-    "금정구": ["구서동", "금사동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
+    "금정구": ["구서동", "금��동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
     // 경기도
     "용인시 처인구": ["양지면", "백암면", "원삼면", "이동읍", "남사읍", "포곡읍", "모현읍"],
     "용인시 기흥구": ["구갈동", "마북동", "보라동", "상갈동", "상하동", "서농동", "신갈동", "언남동", "영덕동", "중동", "지곡동", "청덕동", "하갈동"],
@@ -1383,20 +1383,15 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                   {/* AI 판독 완료 뱃지 */}
                                   {hasAiResult && (
                                     <Badge 
-                                      variant={landAiResult?.provisionalJudgment === "매수" ? "default" : "secondary"}
                                       className={`text-[10px] px-1.5 py-0 ${
                                         landAiResult?.provisionalJudgment === "매수" 
-                                          ? "bg-green-100 text-green-700 border-green-200" 
+                                          ? "bg-green-600 text-white" 
                                           : landAiResult?.provisionalJudgment === "매수불가"
-                                            ? "bg-red-100 text-red-700 border-red-200"
-                                            : "bg-amber-100 text-amber-700 border-amber-200"
+                                            ? "bg-red-500 text-white"
+                                            : "bg-amber-500 text-white"
                                       }`}
                                     >
-                                      {landAiResult?.provisionalJudgment === "매수" 
-                                        ? "판독완료" 
-                                        : landAiResult?.provisionalJudgment === "매수불가"
-                                          ? "미충족"
-                                          : "심의이상"}
+                                      {landAiResult?.provisionalJudgment}
                                     </Badge>
                                   )}
                                 </div>
@@ -1581,21 +1576,15 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             <p className="text-xs text-muted-foreground mt-0.5">{selectedLand.address}</p>
                           </div>
                           <Badge 
-                            variant={
+                            className={`px-3 py-1 text-sm font-bold ${
                               aiResult.provisionalJudgment === "매수" 
-                                ? "success" 
+                                ? "bg-green-600 text-white" 
                                 : aiResult.provisionalJudgment === "심의위원회 이관"
-                                  ? "warning"
-                                  : "destructive"
-                            }
-                            size="lg"
-                            className="px-3 py-1 text-sm font-bold"
+                                  ? "bg-amber-500 text-white"
+                                  : "bg-red-500 text-white"
+                            }`}
                           >
-                            {aiResult.provisionalJudgment === "매수" 
-                              ? "매수가능" 
-                              : aiResult.provisionalJudgment === "심의위원회 이관"
-                                ? "경계 사례"
-                                : "기준 미충족"}
+                            {aiResult.provisionalJudgment}
                           </Badge>
                         </div>
 
