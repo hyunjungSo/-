@@ -2354,7 +2354,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <Button
                                     variant="outline"
                                     className="w-full gap-2 mt-3"
-                                    onClick={() => setShowAnalysisFlow(true)}
+                                    onClick={() => {
+                                      setSelectedLandIndex(landIdx);
+                                      setShowAnalysisFlow(true);
+                                    }}
                                   >
                                     <PlayCircle className="h-4 w-4" />
                                     분석 프로세스 상세 보기
