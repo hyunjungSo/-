@@ -632,7 +632,7 @@ function PathColumn({
           <p className={cn(
             conditionStatus === "미충족" ? "text-red-600 font-medium" : "text-gray-400"
           )}>
-            전체 미해당 시 ��건 <span className="text-red-600">미충족</span> → 수용
+            전체 미해당 시 조건 <span className="text-red-600">미충족</span> → 수용
           </p>
           <p className={cn(
             conditionStatus === "심의위원회 이관" ? "text-amber-600 font-medium" : "text-gray-400"
@@ -642,7 +642,7 @@ function PathColumn({
         </motion.div>
       )}
 
-      {/* 결��� 배지 - 선택된 경로에만 표시 */}
+      {/* 결과 배지 - 선택된 경로에만 표시 */}
       {isActive && conditionStatus && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}

@@ -555,7 +555,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
-        if (shapeCriteria.met) reasons.push("형상 부정��� 변��");
+        if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
         judgment = "매수불가";
         reasons.push("모든 기준 미충족");
@@ -1082,7 +1082,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <div className="flex items-start gap-2">
                                 <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                                 <div>
-                                  <h4 className="text-sm font-semibold text-foreground">판단 ��약</h4>
+                                  <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
                                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                                     {(() => {
                                       const summary = landResult?.judgmentRationale?.summary;
@@ -1582,7 +1582,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <p className="text-[10px] text-muted-foreground">실제 토지 활용 상황에 따라 선택해 주세요.</p>
                                 </div>
                                 
-                                {/* 건축물 용도 선택 - ���재 활용 지목이 "대"인 경우만 표시 */}
+                                {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
                                 {adminCurrentUsagePerLand[land.id] === "대" && (
                                   <div className="space-y-1.5 rounded bg-muted/30 p-2">
                                     <label className="text-xs font-medium text-foreground">
@@ -1761,7 +1761,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 
                                 {/* 현장확인 옵션 */}
                                 <div className="space-y-1.5">
-                                  <span className="text-xs text-muted-foreground font-medium">��장확인:</span>
+                                  <span className="text-xs text-muted-foreground font-medium">현장확인:</span>
                                   <div className="flex flex-col gap-2">
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
@@ -1806,7 +1806,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* AI 분석 버튼 */}
                   {(() => {
-                    // 선택된 모든 필지가 현재 활용 ��목을 선택했는지 확인
+                    // 선택된 모든 필지가 현재 활용 지목을 선택했는지 확인
                     const allSelectedLandsHaveCurrentUsage = adminCheckedLandIds.every(
                       id => adminCurrentUsagePerLand[id] && adminCurrentUsagePerLand[id].trim() !== ""
                     );
@@ -2044,7 +2044,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         </div>
                                       </div>
 
-                                      {/* 수동 확��� 항목 */}
+                                      {/* 수동 확인 항목 */}
                                       {landResult?.judgmentRationale?.manualCheckItems && landResult.judgmentRationale.manualCheckItems.length > 0 && (
                                         <div className="flex items-start gap-2">
                                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
@@ -2373,7 +2373,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* Section 04. 담당자 검토 - 필지별 검�� */}
+      {/* Section 04. 담당자 검토 - 필지별 검토 */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
