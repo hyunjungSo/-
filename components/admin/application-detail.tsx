@@ -523,7 +523,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (������� ������)" : ""));
-        if (shapeCriteria.met) reasons.push("형상 부정형 변경");
+        if (shapeCriteria.met) reasons.push("형상 부��형 변경");
       } else {
         judgment = "매수불가";
         reasons.push("모든 기준 미충족");
@@ -955,9 +955,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <h4 className="font-medium">분석결과</h4>
                   
                   {/* 스크롤 컨테이너 - 필지별 분석 결과 */}
-                  <div className="max-h-[550px] overflow-y-auto space-y-4 pr-1">
-                  {/* 필지별 분석 결과 */}
-                  <Accordion type="multiple" className="space-y-3">
+<div className="overflow-y-auto space-y-4 pr-1">
+                    {/* 필지별 분석 결과 */}
+                    <Accordion type="multiple" className="space-y-3">
                     {allLands.map((land, idx) => {
                       const landResult = landAIResults[land.id];
                       // 민원인이 실행한 AI 분석 결과 (application.aiResult 직접 사용)
@@ -1835,7 +1835,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       </div>
                       
                       {/* 민원인 결과를 기본으로 표시 */}
-                      <Accordion type="multiple" defaultValue={[]} className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
+                      <Accordion type="multiple" defaultValue={[]} className="space-y-3 overflow-y-auto">
                         {allLands.map((land, idx) => {
                           const landResult = landAIResults[land.id];
                           const judgment = landResult?.provisionalJudgment || application.aiResult?.provisionalJudgment;
@@ -2121,8 +2121,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         );
                       })}
                       
-                      {/* 필지별 분석 결과 - 아코디언 UI (필지목록에서 선택되고 AI 분석이 실행된 필지만 표시) */}
-                      <Accordion type="multiple" defaultValue={[]} className="space-y-3 max-h-[550px] overflow-y-auto pb-4">
+  {/* 필지별 분석 결과 - 아코디언 UI (필지목록에서 선택되고 AI 분석이 실행된 필지만 표시) */}
+  <Accordion type="multiple" defaultValue={[]} className="space-y-3 overflow-y-auto">
                         {Object.entries(adminLandAIResults)
                           .filter(([landId]) => adminCheckedLandIds.includes(landId))
                           .map(([landId, result]) => {
