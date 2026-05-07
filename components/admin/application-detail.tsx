@@ -2774,6 +2774,18 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
         </div>
       )}
+
+      {/* 하단 저장 버튼 */}
+      <div className="sticky bottom-0 left-0 right-0 bg-background border-t py-4 px-6 -mx-6 mt-6">
+        <div className="flex justify-end gap-3">
+          <Button variant="outline" onClick={onBack}>
+            취소
+          </Button>
+          <Button onClick={handleSave}>
+            저장
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
