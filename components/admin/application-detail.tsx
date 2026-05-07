@@ -378,7 +378,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     other: 330,
   };
   
-  // ����지 유형별 면적 기준 (㎡)
+  // �����지 유형별 면적 기준 (㎡)
   const getAreaCriteria = (land: typeof allLands[0], landData?: typeof application.landDataList[0], adminLandSubType?: string) => {
     const landType = land.landType;
     // 담당자가 선택한 건축물 용도 우선 적용, 없으면 신청 시 입력된 값 사용
@@ -523,7 +523,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (areaCheckMet) reasons.push("면적 기준 충족");
         if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
-        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리�� ������)" : ""));
+        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (관���� ������)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
         judgment = "매수불가";
@@ -746,6 +746,28 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     
     const selectedAssignee = assigneeList.find(a => a.id === reviewData.assigneeId);
     
+    // 필지별 판정 결과 생성 (심의서 연동용)
+    const landJudgmentsForReview = allLands.map((land, idx) => {
+      const adminResult = adminLandAIResults[land.id];
+      const citizenResult = landAIResults[land.id];
+      const result = adminResult || citizenResult;
+      
+      return {
+        landId: land.id,
+        landIndex: idx,
+        address: land.address,
+        landType: land.landType,
+        landCategory: land.landCategory,
+        originalArea: land.originalArea,
+        remainingArea: land.remainingArea,
+        remainingRatio: land.remainingRatio,
+        judgment: result?.provisionalJudgment || "분석중",
+        purchaseDecision: result?.provisionalJudgment === "매수" ? "O" as const : 
+                          result?.provisionalJudgment === "매수불가" ? "X" as const : 
+                          "-" as const,
+      };
+    });
+    
     const updatedApplication: Application = {
       ...application,
       actualUsage: reviewData.actualUsage,
@@ -757,6 +779,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       status: reviewData.adminStatus === "심사완료" ? "처리완료" : application.status,
       adminName: selectedAssignee?.name || application.adminName,
       statusUpdatedAt: new Date().toISOString().split("T")[0],
+      // 필지별 판정 결과 저장 (심의서 연동)
+      landJudgmentsForReview,
     };
 
     setTimeout(() => {

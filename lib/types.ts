@@ -160,6 +160,21 @@ export interface Application {
   adminName?: string; // 담당자명
   statusUpdatedAt?: string; // 상태 변경일
   landDataList?: LandSpecificData[]; // 토지별 민원인 입력 데이터 (복수 필지)
+  landJudgmentsForReview?: LandJudgmentForReview[]; // 필지별 판정 결과 (심의서 연동용)
+}
+
+// 심의서 연동용 필지별 판정 결과
+export interface LandJudgmentForReview {
+  landId: string;
+  landIndex: number;
+  address: string;
+  landType: LandType;
+  landCategory: LandCategory;
+  originalArea: number;
+  remainingArea: number;
+  remainingRatio: number;
+  judgment: string;
+  purchaseDecision: "O" | "X" | "-";
 }
 
 // AI 분석 결과

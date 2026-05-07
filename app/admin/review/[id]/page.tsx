@@ -111,42 +111,70 @@ export default function ReviewDocumentPage({
         address: found.landInfo.address.split(" ").slice(0, -1).join(" "),
         ownerName: found.applicantName,
       });
-      // 필지 데이터 생성
-      setLandParcels([
-        {
-          originalLotNumber: "359-1",
-          landCategory: "대",
-          originalArea: 650,
-          includedLotNumber: "359-6",
-          includedArea: 97,
-          remainingLotNumber: "359-1",
-          remainingArea: 260,
-          remainingRatio: 40.0,
-      purchaseDecision: "선택",
-      },
-      {
-        originalLotNumber: "359-2",
-        landCategory: "대",
-        originalArea: 780,
-        includedLotNumber: "359-7",
-        includedArea: 325,
-        remainingLotNumber: "359-2",
-        remainingArea: 195,
-        remainingRatio: 23.2,
-        purchaseDecision: "선택",
-      },
-      {
-        originalLotNumber: "359-4",
-        landCategory: "대",
-        originalArea: 585,
-        includedLotNumber: "359-9",
-        includedArea: 357,
-        remainingLotNumber: "359-4",
-        remainingArea: 227,
-        remainingRatio: 30.6,
-        purchaseDecision: "선택",
-      },
-      ]);
+      
+      // 필지별 판정 결과가 있으면 사용, 없으면 기본값 사용
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const savedJudgments = (found as any).landJudgmentsForReview;
+      
+      if (savedJudgments && savedJudgments.length > 0) {
+        // 관리자 검토에서 저장된 필지별 판정 결과 사용
+        const parcelsFromJudgments: LandParcel[] = savedJudgments.map((lj: {
+          address: string;
+          landCategory: string;
+          originalArea: number;
+          remainingArea: number;
+          remainingRatio: number;
+          purchaseDecision: "O" | "X" | "-";
+        }) => {
+          // 주소에서 지번 추출
+          const addressParts = lj.address.split(" ");
+          const lotNumber = addressParts[addressParts.length - 1] || lj.address;
+          
+          return {
+            originalLotNumber: lotNumber,
+            landCategory: lj.landCategory === "대지" ? "대" : 
+                         lj.landCategory === "전" ? "전" :
+                         lj.landCategory === "답" ? "답" :
+                         lj.landCategory === "임야" ? "임" : lj.landCategory,
+            originalArea: lj.originalArea,
+            includedLotNumber: lotNumber + "-편입",
+            includedArea: lj.originalArea - lj.remainingArea,
+            remainingLotNumber: lotNumber,
+            remainingArea: lj.remainingArea,
+            remainingRatio: lj.remainingRatio,
+            purchaseDecision: lj.purchaseDecision || "선택",
+          };
+        });
+        setLandParcels(parcelsFromJudgments);
+      } else {
+        // 기본 필지 데이터 (연동된 판정 결과가 없는 경우)
+        // 실제 신청서의 토지 정보를 기반으로 생성
+        const allLands = found.additionalLands 
+          ? [found.landInfo, ...found.additionalLands]
+          : [found.landInfo];
+        
+        const defaultParcels: LandParcel[] = allLands.map((land) => {
+          const addressParts = land.address.split(" ");
+          const lotNumber = addressParts[addressParts.length - 1] || land.address;
+          
+          return {
+            originalLotNumber: lotNumber,
+            landCategory: land.landCategory === "대지" ? "대" : 
+                         land.landCategory === "전" ? "전" :
+                         land.landCategory === "답" ? "답" :
+                         land.landCategory === "임야" ? "임" : land.landCategory,
+            originalArea: land.originalArea,
+            includedLotNumber: lotNumber + "-편입",
+            includedArea: land.originalArea - land.remainingArea,
+            remainingLotNumber: lotNumber,
+            remainingArea: land.remainingArea,
+            remainingRatio: land.remainingRatio,
+            purchaseDecision: "선택" as const,
+          };
+        });
+        setLandParcels(defaultParcels);
+      }
+      
       setOwnerOpinion(found.reason || ownerOpinion);
       
       // 최종 검토 의견이 있으면 현지상황 및 검토의견에 반영
