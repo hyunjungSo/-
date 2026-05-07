@@ -33,6 +33,8 @@ import {
   Loader2,
   RotateCcw,
   X,
+  Maximize2,
+  Image as ImageIcon,
   Split,
   Edit3,
   History,
@@ -244,6 +246,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
   const [aiResultViewMode, setAiResultViewMode] = useState<"citizen" | "admin">("citizen");
+  
+  // 상세 판독 결과 확장 패널 상태
+  const [isDetailPanelExpanded, setIsDetailPanelExpanded] = useState(false);
+  const [expandedLandIndex, setExpandedLandIndex] = useState<number | null>(null);
   
   // 관리자 재판독 결과 (별도 저장)
   const [adminLandAIResults, setAdminLandAIResults] = useState<Record<string, {
@@ -927,7 +933,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div className="flex items-center justify-between">
                     <h4 className="font-medium">지적도</h4>
                     <Badge variant="outline" className="font-normal">
-                      {allLands.length}필지
+                      {allLands.length}���지
                     </Badge>
                   </div>
                   
@@ -1169,10 +1175,22 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               )}
 
                               {/* 상세 분석 */}
-                              <div className="flex items-start gap-2">
+                              <div 
+                                className="flex items-start gap-2 p-3 -mx-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors group"
+                                onClick={() => {
+                                  setExpandedLandIndex(idx);
+                                  setIsDetailPanelExpanded(true);
+                                }}
+                              >
                                 <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
-                                <div>
-                                  <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between">
+                                    <h4 className="text-sm font-semibold text-foreground">상세 판독 결과</h4>
+                                    <Button variant="ghost" size="sm" className="h-6 px-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <Maximize2 className="h-3 w-3 mr-1" />
+                                      확대 보기
+                                    </Button>
+                                  </div>
                                   <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                                     {(() => {
                                       const explanation = landResult?.judgmentRationale?.detailedExplanation;
@@ -1858,7 +1876,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {Object.keys(adminLandAIResults).length === 0 ? (
                     <>
-                      {/* 재분석 미실행 안내 */}
+                      {/* 재분석 ��실행 안내 */}
                       <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 mb-4 flex items-start gap-2">
                         <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
                         <p className="text-sm text-blue-700">
@@ -2034,10 +2052,22 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       )}
 
                                       {/* 상세 분석 */}
-                                      <div className="flex items-start gap-2">
+                                      <div 
+                                        className="flex items-start gap-2 p-3 -mx-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors group"
+                                        onClick={() => {
+                                          setExpandedLandIndex(landIdx);
+                                          setIsDetailPanelExpanded(true);
+                                        }}
+                                      >
                                         <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
-                                        <div>
-                                          <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
+                                        <div className="flex-1">
+                                          <div className="flex items-center justify-between">
+                                            <h4 className="text-sm font-semibold text-foreground">상세 판독 결과</h4>
+                                            <Button variant="ghost" size="sm" className="h-6 px-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                                              <Maximize2 className="h-3 w-3 mr-1" />
+                                              확대 보기
+                                            </Button>
+                                          </div>
                                           <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                                             {(() => {
                                               const explanation = landResult?.judgmentRationale?.detailedExplanation;
@@ -2553,6 +2583,229 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         landInfo={allLands[selectedLandIndex]}
         isAdminResult={!!adminLandAIResults[allLands[selectedLandIndex]?.id]}
       />
+
+      {/* 상세 판독 결과 확장 패널 (Drawer) */}
+      {isDetailPanelExpanded && expandedLandIndex !== null && (
+        <div className="fixed inset-0 z-50 flex">
+          {/* 배경 오버레이 */}
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => setIsDetailPanelExpanded(false)}
+          />
+          
+          {/* 확장 패널 */}
+          <div className="relative flex w-full max-w-6xl bg-background shadow-2xl animate-in slide-in-from-left duration-300">
+            {/* 닫기 버튼 */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-4 top-4 z-10"
+              onClick={() => setIsDetailPanelExpanded(false)}
+            >
+              <X className="h-5 w-5" />
+            </Button>
+            
+            {/* 패널 내용 - 2단 레이아웃 */}
+            <div className="flex flex-1 overflow-hidden">
+              {/* 왼쪽: 텍스트 정보 (판단 요약, 법적 근거) */}
+              <div className="w-1/2 border-r overflow-y-auto p-6">
+                <div className="space-y-6">
+                  {/* 헤더 */}
+                  <div>
+                    <h2 className="text-xl font-bold text-foreground">상세 판독 결과</h2>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {allLands[expandedLandIndex]?.address}
+                    </p>
+                  </div>
+
+                  {/* 판단 요약 */}
+                  <div className="rounded-lg border bg-muted/30 p-4">
+                    <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4" />
+                      판단 요약
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {(() => {
+                        const land = allLands[expandedLandIndex];
+                        const result = citizenLandAIResults[land?.id];
+                        return result?.judgmentRationale?.summary || 
+                          `본 필지는 ${land?.landType} 유형으로, 잔여면적 ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)입니다.`;
+                      })()}
+                    </p>
+                  </div>
+
+                  {/* 법적 근거 */}
+                  <div className="rounded-lg border bg-muted/30 p-4">
+                    <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                      <FileText className="h-4 w-4" />
+                      법적 근거
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {(() => {
+                        const land = allLands[expandedLandIndex];
+                        const result = citizenLandAIResults[land?.id];
+                        return result?.judgmentRationale?.legalBasis || 
+                          "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조";
+                      })()}
+                    </p>
+                  </div>
+
+                  {/* 적용 기준 */}
+                  <div className="rounded-lg border bg-muted/30 p-4">
+                    <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                      <AlertTriangle className="h-4 w-4" />
+                      적용 기준
+                    </h3>
+                    <ul className="space-y-2">
+                      {(() => {
+                        const land = allLands[expandedLandIndex];
+                        const result = citizenLandAIResults[land?.id];
+                        const criteria = result?.judgmentRationale?.appliedCriteria || [
+                          "잔여지 면적 기준 미달 여부",
+                          "잔여지 형상 변화 (정형 → 부정형)",
+                          "접면도로 상태 변경 여부"
+                        ];
+                        return criteria.map((c: string, i: number) => (
+                          <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                            <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+                            {c}
+                          </li>
+                        ));
+                      })()}
+                    </ul>
+                  </div>
+
+                  {/* 판정 결과 */}
+                  <div className="rounded-lg border p-4">
+                    <h3 className="text-sm font-semibold text-foreground mb-3">AI 판정 결과</h3>
+                    <div className="flex items-center gap-3">
+                      {(() => {
+                        const land = allLands[expandedLandIndex];
+                        const result = citizenLandAIResults[land?.id];
+                        const judgment = result?.provisionalJudgment || "분석 필요";
+                        return (
+                          <Badge className={`text-sm px-3 py-1 ${
+                            judgment === "매수" ? "bg-green-600 text-white" : 
+                            judgment === "매수불가" ? "bg-red-500 text-white" : 
+                            "bg-amber-500 text-white"
+                          }`}>
+                            {judgment}
+                          </Badge>
+                        );
+                      })()}
+                      <span className="text-sm text-muted-foreground">
+                        신뢰도: {(() => {
+                          const land = allLands[expandedLandIndex];
+                          const result = citizenLandAIResults[land?.id];
+                          return result?.confidence ? `${result.confidence}%` : "-";
+                        })()}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* 상세 설명 */}
+                  <div className="rounded-lg border bg-muted/30 p-4">
+                    <h3 className="text-sm font-semibold text-foreground mb-3">상세 분석 내용</h3>
+                    <pre className="whitespace-pre-wrap text-sm text-muted-foreground leading-relaxed">
+                      {(() => {
+                        const land = allLands[expandedLandIndex];
+                        const result = citizenLandAIResults[land?.id];
+                        return result?.judgmentRationale?.detailedExplanation || 
+                          `[필지 정보]\n주소: ${land?.address}\n지목: ${land?.landType} (${land?.landCategory})\n편입 전 면적: ${land?.originalArea?.toLocaleString()}㎡\n잔여 면적: ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)`;
+                      })()}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+
+              {/* 오른쪽: AI 판독 분석 이미지 */}
+              <div className="w-1/2 bg-muted/20 p-6 overflow-y-auto">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                    <ImageIcon className="h-5 w-5" />
+                    AI 판독 분석 이미지
+                  </h3>
+                  
+                  {/* 지적도 이미지 */}
+                  <div className="rounded-lg border bg-background overflow-hidden">
+                    <div className="aspect-square relative">
+                      <LeafletMap
+                        parcels={allLands.map((l, i) => ({
+                          id: l.id,
+                          coordinates: [
+                            [37.5665 + (i * 0.001), 126.9780],
+                            [37.5665 + (i * 0.001), 126.9790],
+                            [37.5675 + (i * 0.001), 126.9790],
+                            [37.5675 + (i * 0.001), 126.9780],
+                          ],
+                          address: l.address,
+                          landCategory: l.landCategory,
+                          area: l.remainingArea,
+                          owner: application.applicantName,
+                          isOwned: true,
+                          lotNumber: l.address.split(" ").pop() || "",
+                        }))}
+                        selectedParcelIds={[allLands[expandedLandIndex]?.id]}
+                        onParcelSelect={() => {}}
+                        height="100%"
+                        showControls={false}
+                      />
+                    </div>
+                    <div className="p-3 border-t bg-muted/30">
+                      <p className="text-xs text-muted-foreground text-center">
+                        편입 전후 토지 형상 분석
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* 분석 시각화 */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="rounded-lg border bg-background p-4">
+                      <p className="text-xs text-muted-foreground mb-2">잔여 면적</p>
+                      <p className="text-2xl font-bold text-foreground">
+                        {allLands[expandedLandIndex]?.remainingArea?.toLocaleString()}
+                        <span className="text-sm font-normal text-muted-foreground ml-1">㎡</span>
+                      </p>
+                      <div className="mt-2 h-2 rounded-full bg-muted overflow-hidden">
+                        <div 
+                          className="h-full bg-primary rounded-full transition-all"
+                          style={{ width: `${allLands[expandedLandIndex]?.remainingRatio || 0}%` }}
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        원래 면적의 {allLands[expandedLandIndex]?.remainingRatio}%
+                      </p>
+                    </div>
+                    
+                    <div className="rounded-lg border bg-background p-4">
+                      <p className="text-xs text-muted-foreground mb-2">형상지수 변화</p>
+                      <p className="text-2xl font-bold text-foreground">
+                        {(() => {
+                          const land = allLands[expandedLandIndex];
+                          const result = citizenLandAIResults[land?.id];
+                          return result?.shapeIndexChange != null ? `+${result.shapeIndexChange.toFixed(1)}` : "-";
+                        })()}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        {allLands[expandedLandIndex]?.remainingShape === "부정형" ? "정형 → 부정형 변화" : "형상 유지"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* 참고 안내 */}
+                  <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 border border-amber-200">
+                    <Info className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
+                    <p className="text-xs text-amber-700">
+                      AI 판독 분석 이미지는 참고용이며, 실제 측량 결과와 다를 수 있습니다.
+                      최종 판정은 담당자의 현장 확인 및 검토에 따라 결정됩니다.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
