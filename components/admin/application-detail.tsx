@@ -720,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            // 필지 분석 오류 처리
+            // 필지 분석 오류 처��
           }
         });
         
@@ -1603,7 +1603,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
                                         <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
                                         <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
-                                        <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
+                                        <SelectItem value="industrial">공업용 (���준: 330㎡)</SelectItem>
                                       </SelectContent>
                                     </Select>
                                   </div>
@@ -1832,7 +1832,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         <Button
                           onClick={handleRunAIAnalysis}
                           disabled={isDisabled}
-                          className="w-full gap-2 bg-blue-600 hover:bg-blue-700"
+                          className="h-12 w-full gap-2 text-base bg-blue-600 hover:bg-blue-700"
                           title={!allSelectedLandsHaveCurrentUsage ? "모든 선택된 필지의 현재 활용 지목을 선택해주세요" : ""}
                         >
                           {isAIAnalyzing ? (
@@ -2340,7 +2340,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   {/* 분석 프로세스 상세 보기 버튼 */}
                                   <Button
                                     variant="outline"
-                                    className="w-full gap-2 mt-3 bg-black text-white hover:bg-gray-800 hover:text-white border-black"
+                                    className="h-12 w-full gap-2 mt-3 text-base bg-black text-white hover:bg-gray-800 hover:text-white border-black"
                                     onClick={() => {
                                       setSelectedLandIndex(landIdx);
                                       setShowAnalysisFlow(true);

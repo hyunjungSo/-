@@ -953,7 +953,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setHasSearched(false);
   };
 
-  // 드롭다운 옵션
+  // 드롭다��� 옵션
   const sigunguOptions = selectedSido ? regionData.시군구[selectedSido as keyof typeof regionData.시군구] || [] : [];
   
   const eupmyeondongOptions = selectedSigungu ? regionData.읍면동[selectedSigungu as keyof typeof regionData.읍면동] || [] : [];
@@ -1681,7 +1681,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               <div className="shrink-0 border-t bg-background p-3">
                 <Button 
                   onClick={handleAIAnalysis}
-                  className="h-10 w-full gap-2 text-sm"
+                  className="h-12 w-full gap-2 text-base"
                   variant="default"
                   disabled={aiAnalyzing || !currentUsage || (currentUsage === "대" && !landSubType) || !selectedLand}
                 >
@@ -1721,7 +1721,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         <Button 
                           onClick={() => onRemoveFromCart(selectedLand.id)}
                           variant="destructive"
-                          className="h-10 w-full"
+                          className="h-12 w-full text-base"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
                           신청 목록에서 제거

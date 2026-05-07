@@ -936,7 +936,7 @@ export function ApplicationFormSection({
               <Button
                 type="submit"
                 size="lg"
-                className="mx-auto flex w-full max-w-[600px] items-center justify-center gap-2"
+                className="mx-auto flex h-12 w-full max-w-[600px] items-center justify-center gap-2 text-base"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
