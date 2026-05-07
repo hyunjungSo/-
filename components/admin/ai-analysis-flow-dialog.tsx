@@ -48,7 +48,15 @@ export function AIAnalysisFlowDialog({
 }: AIAnalysisFlowDialogProps) {
   const [animationStep, setAnimationStep] = useState(0);
 
-  const currentLandType = (landInfo.landType || "그밖의토지") as LandType;
+  // 토지 유형 매핑 (다양한 표기를 표준화)
+  const mapLandType = (type: string): LandType => {
+    if (type === "농경지" || type === "농지" || type === "전" || type === "답") return "농지";
+    if (type === "대지" || type === "주거" || type === "상업" || type === "공업") return "대지";
+    if (type === "산지" || type === "임야" || type === "산림") return "산지";
+    return "그밖의토지";
+  };
+  
+  const currentLandType = mapLandType(landInfo.landType || "그밖의토지");
   const remainingArea = landInfo.remainingArea || 0;
   const originalArea = landInfo.originalArea || 0;
   const includedArea = landInfo.includedArea || 0;
