@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "���������입력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "�����������입력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -587,7 +587,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       }
       
     } else {
-      // 그 밖의 토지 + 관��자 ���션 반영
+      // 그 밖�� 토지 + 관��자 ���션 반영
       // 종래 목적 사용 곤란 여부 (위치, 형상, 접근 상태 고려)
       const usageDifficulty = adminOptions?.accessRoadLost || adminOptions?.farmMachineDifficulty || land.remainingRatio < 40 || shapeCriteria.met;
       criteriaChecks.push({
@@ -1278,6 +1278,57 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             {/* 담당자 결과 탭 */}
             <TabsContent value="admin">
+              {/* 필지 선택 UI */}
+              <div className="mb-6 p-4 bg-muted/30 rounded-lg border">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Label className="text-sm font-medium">필지 선택</Label>
+                    <Select
+                      value={selectedLandIndex.toString()}
+                      onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
+                    >
+                      <SelectTrigger className="w-[400px]">
+                        <SelectValue placeholder="필지를 선택하세요" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {allLands.map((land, index) => (
+                          <SelectItem key={land.id} value={index.toString()}>
+                            <div className="flex items-center gap-2">
+                              <Badge variant={index < applicationLands.length ? "default" : "outline"} className="text-xs">
+                                {index < applicationLands.length ? "신청" : "인접"}
+                              </Badge>
+                              <span>{land.address.split(" ").slice(-1)[0]}</span>
+                              <span className="text-muted-foreground">| {land.landCategory} | {land.remainingArea.toLocaleString()}㎡</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline">{selectedLandIndex + 1} / {allLands.length} 필지</Badge>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSelectedLandIndex(Math.max(0, selectedLandIndex - 1))}
+                        disabled={selectedLandIndex === 0}
+                      >
+                        <ArrowLeft className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSelectedLandIndex(Math.min(allLands.length - 1, selectedLandIndex + 1))}
+                        disabled={selectedLandIndex === allLands.length - 1}
+                      >
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="grid gap-6 lg:grid-cols-2">
                 {/* 좌측: 지적도 + 필지 리스트 */}
                 <div className="space-y-4">
@@ -1726,7 +1777,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [adjacentLand.id]: value }))}
                                   >
                                     <SelectTrigger className="h-8 bg-background text-sm">
-                                      <SelectValue placeholder="현재 활용 지목을 선택해 주����요" />
+                                      <SelectValue placeholder="현재 활용 지목을 선택해 ������요" />
                                     </SelectTrigger>
                                     <SelectContent>
                                       <SelectItem value="대">대 (택지)</SelectItem>
@@ -1810,7 +1861,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* AI 분석 버튼 */}
                   {(() => {
-                    // 선���된 ���든 필지가 현재 활��� 지목을 선택���는지 확인
+                    // 선�����된 ���든 필지가 현재 활��� 지목을 선택���는지 확인
                     const allSelectedLandsHaveCurrentUsage = adminCheckedLandIds.every(
                       id => adminCurrentUsagePerLand[id] && adminCurrentUsagePerLand[id].trim() !== ""
                     );
