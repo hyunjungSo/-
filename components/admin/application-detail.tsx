@@ -46,6 +46,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
 
 interface ApplicationDetailProps {
   application: Application;
@@ -175,6 +176,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
   const [isSaving, setIsSaving] = useState(false);
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
+  const { toast } = useToast();
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
   
   // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
@@ -785,6 +787,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     setTimeout(() => {
       setIsSaving(false);
       onSave(updatedApplication);
+      
+      // 저장 완료 토스트 메시지 (3.5초 후 사라짐)
+      toast({
+        title: "저장 완료",
+        description: "검토 내용이 저장되었습니다.",
+        duration: 3500,
+      });
     }, 1000);
   };
 
@@ -2496,7 +2505,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       {/* 최종 검토 */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">최종 검토</CardTitle>
+          <CardTitle className="text-lg">최종 검���</CardTitle>
           <CardDescription>전체 민원에 대한 최종 검토 의견을 작성해주세요</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
