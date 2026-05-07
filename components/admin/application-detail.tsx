@@ -1413,7 +1413,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     {/* 필지 리스트 */}
                     <div className="divide-y max-h-[320px] overflow-y-auto">
                       {/* 신청 필지 목록 */}
-                      {allLands.map((land, idx) => {
+                      {applicationLands.map((land, idx) => {
                         const isSelected = adminCheckedLandIds.includes(land.id);
                         const isHovered = hoveredLandId === land.id;
                         const landResult = adminLandAIResults[land.id];
