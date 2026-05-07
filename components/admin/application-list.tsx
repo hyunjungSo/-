@@ -168,13 +168,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
             </div>
 
-            {/* AI 분석률 */}
-            <div className="pt-2 border-t border-border">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">AI 분석 완료율</span>
-                <span className="font-medium">{stats.total > 0 ? Math.round((stats.aiAnalyzed / stats.total) * 100) : 0}%</span>
-              </div>
-            </div>
+
           </CardContent>
         </Card>
       </div>
