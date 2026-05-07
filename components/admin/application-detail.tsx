@@ -93,9 +93,40 @@ interface LandReviewData {
 export function ApplicationDetail({ application, onBack, onSave }: ApplicationDetailProps) {
 // 복수 필지 여부 확인
   const isMultipleLands = application.additionalLands && application.additionalLands.length > 0;
-  const allLands = isMultipleLands
+  
+  // 신청 필지
+  const applicationLands = isMultipleLands
     ? [application.landInfo, ...application.additionalLands]
     : [application.landInfo];
+  
+  // 인접 필지 데이터
+  const adjacentLands = [
+    {
+      id: "adjacent-001",
+      address: "경기도 용인시 처인구 포곡읍 마성리 101",
+      landType: "농경지",
+      landCategory: "전",
+      originalArea: 856,
+      remainingArea: 856,
+      remainingRatio: 100,
+      incorporatedArea: 0,
+      remainingShape: "정형" as const,
+    },
+    {
+      id: "adjacent-002",
+      address: "경기도 용인시 처인구 포곡읍 마성리 102",
+      landType: "농경지",
+      landCategory: "답",
+      originalArea: 1234,
+      remainingArea: 1234,
+      remainingRatio: 100,
+      incorporatedArea: 0,
+      remainingShape: "정형" as const,
+    },
+  ];
+  
+  // 전체 필지 (신청 필지 + 인접 필지)
+  const allLands = [...applicationLands, ...adjacentLands];
   
   // 신청 유형 초기값 결정 - 일단지 판정 제거됨, 개별 필지 분석만 지원
   const initialApplicationType = application.applicationType || (isMultipleLands ? "multiple" : "single");
@@ -1730,7 +1761,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 
                                 {/* 현장확인 옵션 */}
                                 <div className="space-y-1.5">
-                                  <span className="text-xs text-muted-foreground font-medium">현장확인:</span>
+                                  <span className="text-xs text-muted-foreground font-medium">��장확인:</span>
                                   <div className="flex flex-col gap-2">
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
