@@ -1647,12 +1647,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       })}
                       
                       {/* 인접 필지 섹션 */}
-                      {adjacentLands.length > 0 && (
-                        <div className="px-3 py-2 bg-amber-50/50 border-y border-amber-200/50">
-                          <p className="text-xs font-medium text-amber-700">인접 필지 (미신청)</p>
-                          <p className="text-[10px] text-amber-600/80 mt-0.5">신청 필지에 인접하나 민원인이 선택하지 않은 필지</p>
-                        </div>
-                      )}
                       {adjacentLands.map((adjacentLand, adjIdx) => {
                         const isSelected = adminCheckedLandIds.includes(adjacentLand.id);
                         const isHovered = hoveredLandId === adjacentLand.id;
