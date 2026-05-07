@@ -696,7 +696,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           };
         });
         
-        setAdminLandAIResults(adminResults);
+        // 기존 결과에 새 결과를 누적 (같은 필지는 최신 결과로 덮어씀)
+        setAdminLandAIResults(prev => ({ ...prev, ...adminResults }));
         setAiResultViewMode("admin");
         setIsAIAnalyzing(false);
       } catch (error) {
@@ -1050,7 +1051,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <div className="flex items-start gap-2">
                                 <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                                 <div>
-                                  <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
+                                  <h4 className="text-sm font-semibold text-foreground">판단 ��약</h4>
                                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                                     {(() => {
                                       const summary = landResult?.judgmentRationale?.summary;
@@ -2029,7 +2030,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         </div>
                                       </div>
 
-                                      {/* 수동 확인 항목 */}
+                                      {/* 수동 확��� 항목 */}
                                       {landResult?.judgmentRationale?.manualCheckItems && landResult.judgmentRationale.manualCheckItems.length > 0 && (
                                         <div className="flex items-start gap-2">
                                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
@@ -2358,7 +2359,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* Section 04. 담당자 검토 - 필지별 검토 */}
+      {/* Section 04. 담당자 검토 - 필지별 검�� */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
