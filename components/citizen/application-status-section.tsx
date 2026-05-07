@@ -13,8 +13,10 @@ import {
   Layers,
   CheckCircle2,
   AlertTriangle,
-  Info
+  Info,
+  ChevronDown
 } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { AdminStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { JudgmentStatus } from "@/components/ui/judgment-status";
 
@@ -103,39 +105,49 @@ function LandInfoSection({ application }: { application: Application }) {
         </div>
       </div>
       
-      {/* 필지별 AI 판정 행 */}
+      {/* 필지별 AI 판정 행 - 아코디언 UI */}
       {(() => {
         // 필지별 AI 결과 가져오기
         const landAIResult = application.landAIResults?.[selectedLand.id] || application.aiResult;
         if (!landAIResult?.provisionalJudgment) return null;
         
         return (
-          <>
-            <div className="flex border-b border-border">
+          <Collapsible defaultOpen={false}>
+            <div className="flex">
               <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
                 <span className="text-sm font-medium">AI 판정</span>
               </div>
-              <div className="flex flex-1 items-center gap-2 px-4 py-3">
-                <JudgmentStatus 
-                  judgment={landAIResult.provisionalJudgment} 
-                  variant="badge" 
-                  size="sm"
-                />
+              <div className="flex flex-1 items-center justify-between px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <JudgmentStatus 
+                    judgment={landAIResult.provisionalJudgment} 
+                    variant="badge" 
+                    size="sm"
+                  />
+                </div>
+                {landAIResult.judgmentRationale && (
+                  <CollapsibleTrigger asChild>
+                    <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground">
+                      <span>판정 근거</span>
+                      <ChevronDown className="h-3.5 w-3.5 transition-transform duration-200 [[data-state=open]_&]:rotate-180" />
+                    </Button>
+                  </CollapsibleTrigger>
+                )}
               </div>
             </div>
-            {/* AI 판정 근거 전체 노출 */}
+            {/* AI 판정 근거 아코디언 내용 */}
             {landAIResult.judgmentRationale && (
-              <div className="border-t border-border">
-                <div className="bg-muted/20 px-4 py-3">
+              <CollapsibleContent>
+                <div className="border-t border-border bg-muted/20 px-4 py-3">
                   <RationaleCard 
                     rationale={landAIResult.judgmentRationale} 
                     provisionalJudgment={landAIResult.provisionalJudgment}
                     variant="expanded"
                   />
                 </div>
-              </div>
+              </CollapsibleContent>
             )}
-          </>
+          </Collapsible>
         );
       })()}
     </div>
