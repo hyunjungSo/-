@@ -160,7 +160,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 호버된 필지 ID (지도-리스트 연동)
   const [hoveredLandId, setHoveredLandId] = useState<string | null>(null);
   
-  // ��커스된 필지 ID (지도 중심 이동용)
+  // ����커스된 필지 ID (지도 중심 이동용)
   const [focusedLandId, setFocusedLandId] = useState<string | null>(null);
   
   // 선택된 인접 필지 정보 표시용
@@ -587,7 +587,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       }
       
     } else {
-      // 그 밖의 토지 + 관리자 옵션 반영
+      // 그 밖의 토지 + 관리자 ���션 반영
       // 종래 목적 사용 곤란 여부 (위치, 형상, 접근 상태 고려)
       const usageDifficulty = adminOptions?.accessRoadLost || adminOptions?.farmMachineDifficulty || land.remainingRatio < 40 || shapeCriteria.met;
       criteriaChecks.push({
@@ -1588,7 +1588,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 
                                 {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
                                 {adminCurrentUsagePerLand[land.id] === "대" && (
-                                  <div className="space-y-1.5 rounded bg-muted/30 p-2">
+                                  <div className="space-y-1.5 rounded bg-muted/30 px-0 py-2">
                                     <label className="text-xs font-medium text-foreground">
                                       건축물 용도 선택 <span className="text-destructive">*</span>
                                     </label>
@@ -1604,7 +1604,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
                                         <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
                                         <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
-                                        <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
+                                        <SelectItem value="industrial">공업용 (기준: 330��)</SelectItem>
                                       </SelectContent>
                                     </Select>
                                   </div>
@@ -1810,7 +1810,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* AI 분석 버튼 */}
                   {(() => {
-                    // 선택된 모든 필지가 현재 활용 지목을 선택했는지 확인
+                    // 선택된 모든 필지가 현재 활용 지목을 선택���는지 확인
                     const allSelectedLandsHaveCurrentUsage = adminCheckedLandIds.every(
                       id => adminCurrentUsagePerLand[id] && adminCurrentUsagePerLand[id].trim() !== ""
                     );
