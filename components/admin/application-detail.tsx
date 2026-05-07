@@ -587,7 +587,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       }
       
     } else {
-      // 그 밖의 토지 + 관��자 ���션 반영
+      // 그 밖의 ��지 + 관��자 ���션 반영
       // 종래 목적 사용 곤란 여부 (위치, 형상, 접근 상태 고려)
       const usageDifficulty = adminOptions?.accessRoadLost || adminOptions?.farmMachineDifficulty || land.remainingRatio < 40 || shapeCriteria.met;
       criteriaChecks.push({
@@ -1620,7 +1620,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         onCheckedChange={(checked) => updateLandOption(land.id, 'farmMachineDifficulty', checked === true)}
                                         className="h-[18px] w-[18px]"
                                       />
-                                      <span className="text-xs">농기계 회전 곤란</span>
+                                      <span className="text-sm">농기계 회전 곤란</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
@@ -1772,7 +1772,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         checked={landOptions.farmMachineDifficulty}
                                         onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'farmMachineDifficulty', checked === true)}
                                       />
-                                      <span className="text-xs">농기계 회전 곤란</span>
+                                      <span className="text-sm">농기계 회전 곤란</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
@@ -2542,7 +2542,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
         aiResult={(() => {
-          // 선택된 ���지의 관리��� 재판독 결과가 있으면 우선 사용
+          // 선��된 ���지의 관리��� 재판독 결과가 있으면 우선 사용
           const selectedLandId = allLands[selectedLandIndex]?.id;
           if (selectedLandId && adminLandAIResults[selectedLandId]) {
             return adminLandAIResults[selectedLandId];
