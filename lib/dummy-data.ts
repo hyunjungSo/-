@@ -1245,7 +1245,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
       autoDetected: false,
     });
   } else if (landInfo.landType === "농지") {
-    // 농지: ① 도로/수로 상실 ② 농기계 진입/회전 곤란 ③ 축사부지 건축 불가
+    // 농지: ① 도로/수로 상실 ② 농기계 회전 곤란 ③ 축사부지 건축 불가
     criteriaChecks.push({
       criteriaName: "도로/수로 상실",
       criteriaDescription: "도로/수로 상실로 농지로서의 사용 불가",
@@ -1253,8 +1253,8 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
       autoDetected: false,
     });
     criteriaChecks.push({
-      criteriaName: "농기계 진입/회전 곤란",
-      criteriaDescription: "농기계 진입 및 회전이 곤란하여 영농 불가",
+      criteriaName: "농기계 회전 곤란",
+      criteriaDescription: "농기계 회전이 곤란하여 영농 불가",
       isMet: false,
       autoDetected: false,
     });
@@ -1357,7 +1357,7 @@ function generateRationale(
   
   if (land.landType === "농지") {
     landTypeCriteria = "농지 기준: 면적 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
-    physicalConditions = "물리조건: ①도로/수로 상실로 농지 사용 불가 ②농기계 진입/회전 곤란 ③형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
+    physicalConditions = "물리조건: ①도로/수로 상실로 농지 사용 불가 ②농기계 회전 곤란 ③형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "택지") {
     landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)";
     physicalConditions = "물리조건: ①접면도로 상실로 건축허가 불가 ②형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
@@ -1386,7 +1386,7 @@ function generateRationale(
     const areaThreshold = land.landType === "택지" ? 90 : 330;
     const rejectionReason = `잔여면적 ${land.remainingArea}㎡(기준 ${areaThreshold}㎡ 초과), 잔여비율 ${land.remainingRatio}%(기준 초과), 물리조건 미해당`;
     summary = `${land.landType} 수용 조건 미충족으로 「기각」 판정`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조건 전체 미해당`;
+    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조��� 전체 미해당`;
   }
 
   return {
@@ -1430,7 +1430,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "부정형",
     farmMachineDifficulty: true,
-    reason: "도로 편입으로 농지가 분할되어 농기계 진입 및 회전이 불가능해졌습니다. 남은 면적으로는 농업 활동이 어렵습니다.",
+    reason: "도로 편입으로 농지가 분할되어 농기계 회전이 불가능해졌습니다. 남은 면적으로는 농업 활동이 어렵습니다.",
     attachments: ["토지대장.pdf", "농지원부.pdf"],
     status: "검토중",
     adminStatus: "진행중",
@@ -1812,7 +1812,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "부정형",
     farmMachineDifficulty: true,
-    reason: "농기계 진입이 불가하여 농업 활동이 불가능합니다.",
+    reason: "농기계 회전이 불가하여 농업 활동이 불가능합니다.",
     attachments: ["토지대장.pdf", "농지원부.pdf"],
     status: "AI분석완료",
     adminStatus: "접수완료",
@@ -1879,7 +1879,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 ��해 소유한 3�� 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 진입이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -1920,7 +1920,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형)", isMet: true, autoDetected: true },
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "도로/수로 상실", criteriaDescription: "관개수로 상실로 농지 사용 불가", isMet: true, autoDetected: false },
-        { criteriaName: "농기계 진입 곤란", criteriaDescription: "농기계 진입/회전 곤란으로 경작 불가", isMet: true, autoDetected: false },
+        { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란으로 경작 불가", isMet: true, autoDetected: false },
       ],
       provisionalJudgment: "매수",
       originalShapeIndex: 4.2,
@@ -1936,7 +1936,7 @@ export const dummyApplications: Application[] = [
         appliedCriteria: [
           "토지유형: 농지",
           "잔여면적: 570㎡ (개별 필지 기준 각각 충족)",
-          "농지 물리조건: 관개수로 상실, 농기계 진입 곤란",
+          "농지 물리조건: 관개수로 상실, 농기계 회전 곤란",
           "형상 변화: 3필지 모두 비정형으로 변경",
         ],
         detailedExplanation: "3필지 농지\n\n[필지 1] 501-1: 800㎡ → 250㎡ (삼각형)\n[필지 2] 501-2: 650㎡ → 170㎡ (역삼각형)\n[필지 3] 501-3: 550㎡ → 150㎡ (부정형)\n\n도로 편입 후 관개수로가 단절되고 형상이 불규칙하게 변경되어 농업 활동이 불가능한 상태입니다.",
@@ -1945,7 +1945,7 @@ export const dummyApplications: Application[] = [
     },
     finalJudgment: "매수",
     reviewerComment: "3필지 농지로 확인됨. 관개수로 단절 및 형상 변경으로 농업 활동 불가. 매수 기준 충족으로 매수 결정.",
-    finalReviewOpinion: "안성-천안 국도확장사업으로 편입된 3필지 농지입니다. 현장 확인 결과, 도로 편입 후 관개수로가 단절되고, 각 필지가 삼각형, 역삼각형, 부정형으로 변경되어 농기계 진입 및 회전이 불가능한 상태입니다. 매수 기준 충족하여 매수가 적정합니다.",
+    finalReviewOpinion: "안성-천안 국도확장사업으로 편입된 3필지 농지입니다. 현장 확인 결과, 도로 편입 후 관개수로가 단절되고, 각 필지가 삼각형, 역삼각형, 부정형으로 변경되어 농기계 회전이 불가능한 상태입니다. 매수 기준 충족하여 매수가 적정합니다.",
     adminName: "홍길동",
     statusUpdatedAt: "2026-04-28",
   },
@@ -2033,7 +2033,7 @@ export const dummyApplications: Application[] = [
           "토지유형: 혼합 (대지+농지+잡종지)",
           "잔여면적: 450㎡ (개별 필지 기준 각각 충족)",
           "대지 물리조건: 접면도로 상실로 건축 불가",
-          "농지 물리조건: 농기계 진입 곤란, 관개수로 상실",
+          "농지 물리조건: 농기계 회전 곤란, 관개수로 상실",
           "형상 변화: 4필지 모두 비정형으로 변경",
         ],
         detailedExplanation: "4필지 혼합 토지\n\n[필지 1] 777-1 (대지): 300㎡ → 90㎡ (삼각형)\n[필지 2] 777-2 (전): 450㎡ → 130㎡ (자루형)\n[필지 3] 777-3 (답): 600㎡ → 170㎡ (역삼각형)\n[필지 4] 777-4 (잡): 200㎡ → 60㎡ (삼각형)\n\n도로 편입 후 각 필지가 비정형으로 변경되어 종래 용도로 사용이 불가능한 상태입니다.",
@@ -2104,7 +2104,7 @@ export const dummyApplications: Application[] = [
       farmMachineDifficulty: false,
       judgmentRationale: {
         summary: "2필지 대지 - 맹지 판정으로 「매수」 인정",
-        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
+        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 ���률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
           "토지유형: 대지 (주거용)",
           "잔여면적: 140㎡ (건축 곤란)",
@@ -2264,7 +2264,7 @@ export const dummyApplications: Application[] = [
       {
         currentUsage: "전" as const,
         landSubType: "" as const,
-        actualUsage: "전" as const,
+        actualUsage: "��" as const,
         reportedShape: "정방형" as const,
         farmMachineDifficulty: false,
         accessRoadLost: false,
@@ -2307,13 +2307,13 @@ export const dummyApplications: Application[] = [
         summary: "4필지 개별 판정 - 2필지(내기리) 「매수」, 2필지(만호리) 「미해당」",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
-          "내기리 200-1: 잔여 150㎡ ≤ 330㎡, 형상지수 5.0(불량), 농기계 진입곤란 → 매수",
+          "내기리 200-1: 잔여 150㎡ ≤ 330㎡, 형상지수 5.0(불량), 농기계 회전곤란 → 매수",
           "내기리 200-2: 잔여 180㎡ ≤ 330㎡, 형상지수 4.8(불량), 관개수로 상실 → 매수",
           "만호리 55-1: 면적 기준 미충족(600㎡>330㎡), 형상 양호(1.2), 종래 사용 가능 → 미해당",
           "만호리 55-2: 면적 기준 미충족(550㎡>330㎡), 형상 양호(1.3), 종래 사용 가능 → 미해당",
         ],
-        detailedExplanation: "4필지 개별 판정\n\n[매수 판정]\n• 내기리 200-1(답): 500㎡→150㎡, 삼각형, 형상지수 5.0(불량)\n• 내기리 200-2(답): 600㎡→180㎡, 역삼각형, 형상지수 4.8(불량)\n→ 면적 기준 충족, 형상 불량, 관개수로 상실, 농기계 진입 곤란\n\n[미해당 판정]\n• 만호리 55-1(전): 800㎡→600㎡, 형상지수 1.2, 정방형\n• 만호리 55-2(전): 700㎡→550㎡, 형상지수 1.3, 장방형\n→ 면적 기준 미충족, 형상 양호, 종래 용도 사용 가능",
-        manualCheckItems: ["만호리 필지 현장 확인", "농기계 진입로 상태 확인"],
+        detailedExplanation: "4필지 개별 판정\n\n[매수 판정]\n• 내기리 200-1(답): 500㎡→150㎡, 삼각형, 형상지수 5.0(불량)\n• 내기리 200-2(답): 600㎡→180㎡, 역삼각형, 형상지수 4.8(불량)\n→ 면적 기준 충족, 형상 불량, 관개수로 상실, 농기계 회전 곤란\n\n[미해당 판정]\n• 만호리 55-1(전): 800㎡→600㎡, 형상지수 1.2, 정방형\n• 만호리 55-2(전): 700㎡→550㎡, 형상지수 1.3, 장방형\n→ 면적 기준 미충족, 형상 양호, 종래 용도 사용 가능",
+        manualCheckItems: ["만호리 필지 현장 확인", "농기계 회전 상태 확인"],
       },
       unifiedParcelAnalysis: {
         isUnifiedParcel: false,
@@ -2330,7 +2330,7 @@ export const dummyApplications: Application[] = [
       },
       // 필지별 판정 결과 (개별 분��)
       landJudgments: [
-        { landId: "land-mixed-001", judgment: "매수", unifiedGroupId: null, reason: "내기리 200-1: 잔여 150㎡ ≤ 330㎡, 형상지수 5.0(불량), 농기계 진입곤란" },
+        { landId: "land-mixed-001", judgment: "매수", unifiedGroupId: null, reason: "내기리 200-1: 잔여 150㎡ ≤ 330㎡, 형상지수 5.0(불량), 농기계 회전곤란" },
         { landId: "land-mixed-002", judgment: "매수", unifiedGroupId: null, reason: "내기리 200-2: 잔여 180㎡ ≤ 330㎡, 형상지수 4.8(불량), 관개수로 상실" },
         { landId: "land-mixed-003", judgment: "미해당", unifiedGroupId: null, reason: "면적 기준 미충족(600㎡>330㎡), 형상지수 1.2(양호), 종래 사용 가능" },
         { landId: "land-mixed-004", judgment: "미해당", unifiedGroupId: null, reason: "면적 기준 미충족(550㎡>330㎡), 형상지수 1.3(양호), 종래 사용 가능" },
