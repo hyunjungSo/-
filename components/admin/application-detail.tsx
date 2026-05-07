@@ -587,7 +587,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       }
       
     } else {
-      // 그 밖의 ��지 + 관��자 ���션 반영
+      // 그 밖의 토지 + 관��자 ���션 반영
       // 종래 목적 사용 곤란 여부 (위치, 형상, 접근 상태 고려)
       const usageDifficulty = adminOptions?.accessRoadLost || adminOptions?.farmMachineDifficulty || land.remainingRatio < 40 || shapeCriteria.met;
       criteriaChecks.push({
@@ -1628,7 +1628,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         onCheckedChange={(checked) => updateLandOption(land.id, 'accessRoadLost', checked === true)}
                                         className="h-[18px] w-[18px]"
                                       />
-                                      <span className="text-xs">접면도로 상실</span>
+                                      <span className="text-sm">접면도로 상실</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
@@ -1636,7 +1636,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         onCheckedChange={(checked) => updateLandOption(land.id, 'waterChannelLost', checked === true)}
                                         className="h-[18px] w-[18px]"
                                       />
-                                      <span className="text-xs">관개수로 상실</span>
+                                      <span className="text-sm">관개수로 상실</span>
                                     </label>
                                   </div>
                                 </div>
@@ -1779,14 +1779,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         checked={landOptions.accessRoadLost}
                                         onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'accessRoadLost', checked === true)}
                                       />
-                                      <span className="text-xs">접면도로 상실</span>
+                                      <span className="text-sm">접면도로 상실</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
                                         checked={landOptions.waterChannelLost}
                                         onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'waterChannelLost', checked === true)}
                                       />
-                                      <span className="text-xs">관개용수로 상실</span>
+                                      <span className="text-sm">관개수로 상실</span>
                                     </label>
                                   </div>
                                 </div>
