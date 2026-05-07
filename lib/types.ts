@@ -44,11 +44,11 @@ export type ProcessStatus = "접수완료" | "AI분석완료" | "검토중" | "�
 // 담당자 진행상황
 export type AdminStatus = "접수완료" | "진행중" | "심사완료";
 
-// AI 1차 판독 결과 (매수/매수불가만 가능)
-export type AIJudgmentResult = "매수" | "매수불가";
+// AI 1차 판독 결과 (매수/기각/심의위원회 이관)
+export type AIJudgmentResult = "매수" | "기각" | "심의위원회 이관";
 
-// 최종 판정 결과 (담당자-민원인 의견 충돌 시 심의위원회이관 가능)
-export type FinalJudgmentResult = "매수" | "기각" | "심의위원회이관";
+// 최종 판정 결과 (매수/기각/심의위원회 이관)
+export type FinalJudgmentResult = "매수" | "기각" | "심의위원회 이관";
 
 // 판정 결과 (하위 호환용)
 export type JudgmentResult = FinalJudgmentResult;
@@ -197,7 +197,7 @@ export interface AIAnalysisResult {
 // 필지별 판정 결과 (일부 일단지 + 일부 미해당 혼합 케이스)
 export interface LandJudgment {
   landId: string; // 토지 ID
-  judgment: "매수" | "매수불가" | "미해당" | "부분매수"; // 판정 결과
+  judgment: "매수" | "기각" | "심의위원회 이관"; // 판정 결과
   unifiedGroupId: string | null; // 일단지 그룹 ID (null이면 미해당)
   reason: string; // 판정 사유
 }

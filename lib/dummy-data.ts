@@ -1288,10 +1288,10 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   const physicalConditionMet = criteriaChecks.some(c => !c.autoDetected && c.isMet);
   
   // PRD 판정 원칙:
-  // - AI 판정은 "매수" 또는 "매수불가" 두 가지만 존재
+  // - AI 판정은 "매수", "기각", "심의위원회 이관" 세 가지
   // - 물리 조건 중 하나라도 해당 시 '수용 조건 충족'(=매수)
-  // - 전체 조건 미해당시 '수용 조건 미충족'(=매수불가)
-  let provisionalJudgment: "매수" | "매수불가";
+  // - 전체 조건 미해당시 '수용 조건 미충족'(=기각)
+  let provisionalJudgment: "매수" | "기각" | "심의위원회 이관";
   
   // 면적 기준 충족 여부
   const coreCriteriaMet = areaMet;
@@ -1303,8 +1303,8 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
     // 면적 기준만 충족 또는 형상 조건만 충족 → 매수 (검토 필요하지만 AI는 매수 판정)
     provisionalJudgment = "매수";
   } else {
-    // 전체 조건 미해당 → 매수불가
-    provisionalJudgment = "매수불가";
+    // 전체 조건 미해당 → 기각
+    provisionalJudgment = "기각";
   }
   
   const metAutoCriteria = criteriaChecks.filter(c => c.autoDetected && c.isMet).length;
@@ -1330,7 +1330,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
 // 판단 근거 생성 헬퍼 함수 (PRD v2.0 기준 - 중앙토지수용위원회 참고문서)
 function generateRationale(
   land: LandInfo,
-  judgment: "매수" | "매수불가",
+  judgment: "매수" | "기각" | "심의위원회 이관",
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],
@@ -1365,15 +1365,15 @@ function generateRationale(
   let summary: string;
   let detailedExplanation: string;
 
-  if (judgment === "매수") {
-    summary = `${land.landType} 수용 조건 충족으로 「매수」 판정 - 사용이 현저히 곤란한 경우로 예상`;
+  if (judgment === "매수" || judgment === "심의위원회 이관") {
+    summary = `${land.landType} 수용 조건 충족으로 「${judgment}」 판정 - 사용이 현저히 곤란한 경우로 예상`;
     detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n충족기준: ${metCriteriaNames.join(", ")}\n\n※ 물리 조건 중 하나 이상 해당으로 수용 조건 충족`;
   } else {
-    // 매수불가
+    // 기각
     const areaThreshold = land.landType === "대지" ? 90 : 330;
     const rejectionReason = `잔여면적 ${land.remainingArea}㎡(기준 ${areaThreshold}㎡ 초과), 잔여비율 ${land.remainingRatio}%(기준 초과), 물리조건 미해당`;
-    summary = `${land.landType} 수용 조건 미충족으로 「매수불가」 판정`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n매수불가사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조건 전체 미해당`;
+    summary = `${land.landType} 수용 조건 미충족으로 「기각」 판정`;
+    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조건 전체 미해당`;
   }
 
   return {
@@ -1582,7 +1582,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 불가", isMet: false, autoDetected: false },
       ],
-      provisionalJudgment: "검토필요",
+      provisionalJudgment: "심의위원회 이관",
       originalShapeIndex: 4.0,
       remainingShapeIndex: 5.2,
       shapeIndexChange: 1.2,
@@ -1591,7 +1591,7 @@ export const dummyApplications: Application[] = [
       waterChannelLost: false,
       farmMachineDifficulty: false,
       judgmentRationale: {
-        summary: "대지 수용 조건 일부 충족으로 「검토필요」 판정 - 실측 및 추가 검토 필요",
+        summary: "대지 수용 조건 일부 충족으로 「심의위원회 이관」 판정 - 실측 및 추가 검토 필요",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
           "택지 기준: 주거 90㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)",
@@ -1866,7 +1866,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 진입이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 ��지가 불규칙한 형태로 남아 농기계 진입이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -2103,7 +2103,7 @@ export const dummyApplications: Application[] = [
     },
     finalJudgment: "매수",
     reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 양 필지 모두 접면도로 상실 확인.",
-    finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2필지 대지입니다. 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
+    finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2��지 대지입니다. 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
     adminName: "김철수",
     statusUpdatedAt: "2026-04-29",
   },

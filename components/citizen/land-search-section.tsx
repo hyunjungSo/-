@@ -80,7 +80,7 @@ const regionData = {
     // 부산광역시
     "해운대구": ["반송동", "반여동", "석대동", "송정동", "우동", "좌동", "재송동", "중동"],
     "기장군": ["기장읍", "장안읍", "정관읍", "일광면", "철마면"],
-    "금정구": ["구서동", "금사동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
+    "금정구": ["구서동", "금��동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
     // 경기도
     "용인시 처인구": ["양지면", "백암면", "원삼면", "이동읍", "남사읍", "포곡읍", "모현읍"],
     "용인시 기흥구": ["구갈동", "마북동", "보라동", "상갈동", "상하동", "서농동", "신갈동", "언남동", "영덕동", "중동", "지곡동", "청덕동", "하갈동"],
@@ -400,13 +400,13 @@ function simulateAIAnalysis(
   const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
-  // AI 1차 판독: 매수 또는 매수불가만 판정
-  let provisionalJudgment: "매수" | "매수불가";
+  // AI 1차 판독: 매수/기각/심의위원회 이관 판정
+  let provisionalJudgment: "매수" | "기각" | "심의위원회 이관";
   
   if (metAutoCriteria >= 1) {
     provisionalJudgment = "매수";
   } else {
-    provisionalJudgment = "매수불가";
+    provisionalJudgment = "기각";
   }
 
   const judgmentRationale: JudgmentRationale = generateJudgmentRationale(
@@ -438,7 +438,7 @@ function simulateAIAnalysis(
 // 중앙토지수용위원회 기준 기반 판단 근거 설명 생성 함수
 function generateJudgmentRationale(
   land: LandInfo,
-  judgment: "매수" | "매수불가",
+  judgment: "매수" | "기각",
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],
@@ -1387,14 +1387,14 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                       className={`text-[10px] px-1.5 py-0 ${
                                         landAiResult?.provisionalJudgment === "매수" 
                                           ? "bg-green-100 text-green-700 border-green-200" 
-                                          : landAiResult?.provisionalJudgment === "매수불가"
+                                          : landAiResult?.provisionalJudgment === "기각"
                                             ? "bg-red-100 text-red-700 border-red-200"
                                             : "bg-amber-100 text-amber-700 border-amber-200"
                                       }`}
                                     >
                                       {landAiResult?.provisionalJudgment === "매수" 
                                         ? "판독완료" 
-                                        : landAiResult?.provisionalJudgment === "매수불가"
+                                        : landAiResult?.provisionalJudgment === "기각"
                                           ? "미충족"
                                           : "심의이상"}
                                     </Badge>
@@ -1741,7 +1741,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     );
                   }
                   
-                  if (aiResult.provisionalJudgment !== "매수불가") {
+                  if (aiResult.provisionalJudgment !== "기각") {
                     const isAlreadyInCart = cartItems.some(c => c.landInfo.id === selectedLand.id);
                     
                     return (

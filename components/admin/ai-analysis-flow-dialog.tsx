@@ -91,16 +91,16 @@ export function AIAnalysisFlowDialog({
   const shapeChanged = shapeIndexChange >= 1.0 || isIrregularShape;
 
   // 최종 판정
-  const finalJudgment = aiResult?.provisionalJudgment || "검토필요";
+  const finalJudgment = aiResult?.provisionalJudgment || "심의위원회 이관";
   const anyConditionMet = areaMet || accessRoadLost || shapeChanged;
 
   // 조건 상태 결정 (AI 판정 결과 우선 적용)
   const getConditionStatus = () => {
-    // AI 판정이 검토필요인 경우 검토필요 반환
-    if (finalJudgment === "검토필요") return "검토필요";
+    // AI 판정이 심의위원회 이관인 경우 심의위원회 이관 반환
+    if (finalJudgment === "심의위원회 이관") return "심의위원회 이관";
     // AI 판정이 매수인 경우 충족 반환
     if (finalJudgment === "매수") return "충족";
-    // AI 판정이 매수불가/기각인 경우 미충족 반환
+    // AI 판정이 기각인 경우 미충족 반환
     return "미충족";
   };
   const conditionStatus = getConditionStatus();
@@ -314,7 +314,7 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                     { label: "일단의 토지가 양분되어 잔여지 발생", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && includedArea > 0,
                       explanationMet: `편입면적 ${includedArea.toLocaleString()}㎡로 토지 양분됨`,
                       explanationUnmet: "편입 없음 - 토지 양분 미발생" },
-                    { label: "��형: 잔여지 폭이 기준 이하로 변경", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged, subLabel: "주거용 5m, 상업용 7m, 공업용/농지/산지 10m",
+                    { label: "��형: 잔여지 폭이 기준 이하로 변경", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged, subLabel: "주거용 5m, 상��용 7m, 공업용/농지/산지 10m",
                       explanationMet: `형상 변경: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})`,
                       explanationUnmet: `형상 유지: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})` },
                   ],
@@ -345,15 +345,15 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                 </div>
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
-                  (finalJudgment === "매수불가" || finalJudgment === "기각") ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50"
+                  (finalJudgment === "기각" || finalJudgment === "기각") ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className={cn("text-sm font-medium", (finalJudgment === "매수불가" || finalJudgment === "기각") ? "text-red-700" : "text-gray-500")}>기각 판단</p>
+                  <p className={cn("text-sm font-medium", (finalJudgment === "기각" || finalJudgment === "기각") ? "text-red-700" : "text-gray-500")}>기각 판단</p>
                 </div>
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
-                  finalJudgment === "검토필요" ? "border-amber-500 bg-amber-50" : "border-gray-200 bg-gray-50"
+                  finalJudgment === "심의위원회 이관" ? "border-amber-500 bg-amber-50" : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className={cn("text-sm font-medium", finalJudgment === "검토필요" ? "text-amber-700" : "text-gray-500")}>토지보상심의위원회 이관 판단</p>
+                  <p className={cn("text-sm font-medium", finalJudgment === "심의위원회 이관" ? "text-amber-700" : "text-gray-500")}>토지보상심의위원회 이관 판단</p>
                 </div>
               </div>
             </div>
@@ -382,10 +382,10 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                   매수
                 </motion.div>
                 <motion.div 
-                  animate={{ scale: (finalJudgment === "매수불가" || finalJudgment === "기각") && animationStep >= 7 ? 1.02 : 1 }}
+                  animate={{ scale: (finalJudgment === "기각" || finalJudgment === "기각") && animationStep >= 7 ? 1.02 : 1 }}
                   className={cn(
                     "rounded p-3 text-center text-sm font-semibold border transition-all",
-                    (finalJudgment === "매수불가" || finalJudgment === "기각")
+                    (finalJudgment === "기각" || finalJudgment === "기각")
                       ? "border-red-500 bg-red-500 text-white" 
                       : "border-gray-200 bg-gray-50 text-gray-400"
                   )}
@@ -393,10 +393,10 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                   기각
                 </motion.div>
                 <motion.div 
-                  animate={{ scale: finalJudgment === "검토필요" && animationStep >= 7 ? 1.02 : 1 }}
+                  animate={{ scale: finalJudgment === "심의위원회 이관" && animationStep >= 7 ? 1.02 : 1 }}
                   className={cn(
                     "rounded p-3 text-center text-sm font-semibold border transition-all",
-                    finalJudgment === "검토필요"
+                    finalJudgment === "심의위원회 이관"
                       ? "border-amber-500 bg-amber-500 text-white" 
                       : "border-gray-200 bg-gray-50 text-gray-400"
                   )}
@@ -422,7 +422,7 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                 <span className="text-sm text-gray-400">/ 기준 {effectiveThreshold}㎡ {isRatioRelaxed && "(완화)"}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-base text-gray-500">잔여 비율</span>
+                <span className="text-base text-gray-500">���여 비율</span>
                 <span className="text-base font-semibold text-gray-800">{remainingRatio}%</span>
               </div>
             </div>
@@ -431,7 +431,7 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
               <span className={cn(
                 "text-base font-bold px-4 py-1.5 rounded",
                 finalJudgment === "매수" ? "bg-green-700 text-white" :
-                (finalJudgment === "매수불가" || finalJudgment === "기각") ? "bg-red-500 text-white" :
+                (finalJudgment === "기각" || finalJudgment === "기각") ? "bg-red-500 text-white" :
                 "bg-amber-500 text-white"
               )}>
                 {finalJudgment}
@@ -635,14 +635,14 @@ function PathColumn({
             전체 미해당 시 조건 <span className="text-red-600">미충족</span> → 수용
           </p>
           <p className={cn(
-            conditionStatus === "검토필요" ? "text-amber-600 font-medium" : "text-gray-400"
+            conditionStatus === "심의위원회 이관" ? "text-amber-600 font-medium" : "text-gray-400"
           )}>
             실측 및 추가 검토 필요시 → <span className="text-amber-600">검토필요</span>
           </p>
         </motion.div>
       )}
 
-      {/* 결과 배지 - 선택된 경로에만 표시 */}
+      {/* 결과 배지 - 선택된 경로에만 표�� */}
       {isActive && conditionStatus && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
