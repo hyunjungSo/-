@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "���입력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "������력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -720,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            // 필지 분��������� 오류 처리
+            // ��지 분��������� 오류 처리
           }
         });
         
@@ -2535,29 +2535,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* 저장 버튼 */}
-      <div className="flex justify-end gap-3 pt-1">
-        <Button 
-          onClick={handleSave} 
-          disabled={isSaving || (
-            // AI 결과와 다르게 결정 시 사유 필수
-            reviewData.finalJudgment && Object.keys(adminLandAIResults).length > 0 && (() => {
-              const results = Object.values(adminLandAIResults);
-              const aiJudgment = results.every(r => r.provisionalJudgment === "매수") ? "매수" : 
-                                results.every(r => r.provisionalJudgment !== "매수") ? "기각" : "mixed";
-              const isDifferent = reviewData.finalJudgment !== aiJudgment && aiJudgment !== "mixed";
-              return isDifferent && !adminOverrideReason.trim();
-            })()
-          )}
-        >
-          {isSaving ? (
-            "저장 중..."
-          ) : (
-            "저장"
-          )}
-        </Button>
-      </div>
-
       {/* AI 분석 프로세스 다이얼로그 - 관리자 재판독 결과 우선 표시 */}
       <AIAnalysisFlowDialog
         open={showAnalysisFlow}
@@ -2697,7 +2674,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
                   {/* 상세 설명 */}
                   <div className="rounded-lg border bg-muted/30 p-4">
-                    <h3 className="text-sm font-semibold text-foreground mb-3">상세 분석 내용</h3>
+                    <h3 className="text-sm font-semibold text-foreground mb-3">상세 분석 ��용</h3>
                     <pre className="whitespace-pre-wrap text-sm text-muted-foreground leading-relaxed">
                       {(() => {
                         const land = allLands[expandedLandIndex];
