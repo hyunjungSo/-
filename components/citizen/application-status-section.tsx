@@ -103,7 +103,34 @@ function LandInfoSection({ application }: { application: Application }) {
         </div>
       </div>
       
-      
+      {/* 필지별 AI 판정 행 */}
+      {(() => {
+        // 필지별 AI 결과 가져오기
+        const landAIResult = application.landAIResults?.[selectedLand.id] || application.aiResult;
+        if (!landAIResult?.provisionalJudgment) return null;
+        
+        return (
+          <div className="flex">
+            <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+              <span className="text-sm font-medium">AI 판정</span>
+            </div>
+            <div className="flex flex-1 items-center gap-2 px-4 py-3">
+              <JudgmentStatus 
+                judgment={landAIResult.provisionalJudgment} 
+                variant="badge" 
+                size="sm"
+              />
+              {landAIResult.judgmentRationale && (
+                <RationaleCard 
+                  rationale={landAIResult.judgmentRationale} 
+                  provisionalJudgment={landAIResult.provisionalJudgment}
+                  variant="modal-trigger"
+                />
+              )}
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
@@ -144,28 +171,6 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           </div>
         </div>
         
-        {/* AI 판정 행 */}
-        {application.aiResult?.provisionalJudgment && (
-          <div className="flex">
-            <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
-              <span className="text-sm font-medium">AI 판정</span>
-            </div>
-            <div className="flex flex-1 items-center gap-2 px-4 py-3">
-              <JudgmentStatus 
-                judgment={application.aiResult.provisionalJudgment} 
-                variant="badge" 
-                size="md"
-              />
-              {application.aiResult.judgmentRationale && (
-                <RationaleCard 
-                  rationale={application.aiResult.judgmentRationale} 
-                  provisionalJudgment={application.aiResult.provisionalJudgment}
-                  variant="modal-trigger"
-                />
-              )}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* 토지 정보 요약 - 셀렉트박스로 필지 선택 */}
