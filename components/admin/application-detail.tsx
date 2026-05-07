@@ -378,7 +378,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     other: 330,
   };
   
-  // ��지 유형별 면적 기준 (㎡)
+  // ���지 유형별 면적 기준 (㎡)
   const getAreaCriteria = (land: typeof allLands[0], landData?: typeof application.landDataList[0], adminLandSubType?: string) => {
     const landType = land.landType;
     // 담당자가 선택한 건축물 용도 우선 적용, 없으면 신청 시 입력된 값 사용
@@ -523,7 +523,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (areaCheckMet) reasons.push("면적 기준 충족");
         if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
-        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확���)" : ""));
+        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 ������)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
         judgment = "매수불가";
@@ -1029,7 +1029,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
                                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                                     {landResult?.judgmentRationale?.legalBasis || 
-                                      "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조"}
+                                      "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 ��행규칙 제34조"}
                                   </p>
                                 </div>
                               </div>
@@ -1087,8 +1087,48 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div>
                                   <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
                                   <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
-                                    {landResult?.judgmentRationale?.detailedExplanation || 
-                                      `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`}
+                                    {(() => {
+                                      const explanation = landResult?.judgmentRationale?.detailedExplanation;
+                                      if (!explanation) {
+                                        return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
+                                      }
+                                      
+                                      // If this is multi-parcel and explanation contains all parcels info,
+                                      // extract only the current parcel's info
+                                      if (isMultipleLands && explanation.includes("[필지")) {
+                                        const lines = explanation.split("\n");
+                                        const currentLandIndex = selectedLandIndex;
+                                        const landMarkerRegex = new RegExp(`\\[필지\\s*${currentLandIndex + 1}\\]`);
+                                        const nextLandRegex = /\[필지\s*\d+\]/;
+                                        
+                                        let startIdx = -1;
+                                        let endIdx = lines.length;
+                                        
+                                        // Find the current parcel's section
+                                        for (let i = 0; i < lines.length; i++) {
+                                          if (landMarkerRegex.test(lines[i])) {
+                                            startIdx = i;
+                                          } else if (startIdx !== -1 && nextLandRegex.test(lines[i])) {
+                                            endIdx = i;
+                                            break;
+                                          }
+                                        }
+                                        
+                                        if (startIdx !== -1) {
+                                          // Extract current parcel info and add general analysis
+                                          const currentParcelLines = lines.slice(startIdx, endIdx);
+                                          
+                                          // Find the summary/general part (부분 above first [필지])
+                                          const summaryEndIdx = lines.findIndex(l => l.includes("[필지"));
+                                          const summaryLines = summaryEndIdx > 0 ? lines.slice(0, summaryEndIdx).filter(l => l.trim()) : [];
+                                          
+                                          const filtered = [...summaryLines, ...currentParcelLines].join("\n").trim();
+                                          return filtered || explanation;
+                                        }
+                                      }
+                                      
+                                      return explanation;
+                                    })()}
                                   </pre>
                                 </div>
                               </div>
@@ -1892,8 +1932,48 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <div>
                                           <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
                                           <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
-                                            {landResult?.judgmentRationale?.detailedExplanation || 
-                                              `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`}
+                                            {(() => {
+                                              const explanation = landResult?.judgmentRationale?.detailedExplanation;
+                                              if (!explanation) {
+                                                return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
+                                              }
+                                              
+                                              // If this is multi-parcel and explanation contains all parcels info,
+                                              // extract only the current parcel's info
+                                              if (isMultipleLands && explanation.includes("[필지")) {
+                                                const lines = explanation.split("\n");
+                                                const currentLandIndex = selectedLandIndex;
+                                                const landMarkerRegex = new RegExp(`\\[필지\\s*${currentLandIndex + 1}\\]`);
+                                                const nextLandRegex = /\[필지\s*\d+\]/;
+                                                
+                                                let startIdx = -1;
+                                                let endIdx = lines.length;
+                                                
+                                                // Find the current parcel's section
+                                                for (let i = 0; i < lines.length; i++) {
+                                                  if (landMarkerRegex.test(lines[i])) {
+                                                    startIdx = i;
+                                                  } else if (startIdx !== -1 && nextLandRegex.test(lines[i])) {
+                                                    endIdx = i;
+                                                    break;
+                                                  }
+                                                }
+                                                
+                                                if (startIdx !== -1) {
+                                                  // Extract current parcel info and add general analysis
+                                                  const currentParcelLines = lines.slice(startIdx, endIdx);
+                                                  
+                                                  // Find the summary/general part (above first [필지])
+                                                  const summaryEndIdx = lines.findIndex(l => l.includes("[필지"));
+                                                  const summaryLines = summaryEndIdx > 0 ? lines.slice(0, summaryEndIdx).filter(l => l.trim()) : [];
+                                                  
+                                                  const filtered = [...summaryLines, ...currentParcelLines].join("\n").trim();
+                                                  return filtered || explanation;
+                                                }
+                                              }
+                                              
+                                              return explanation;
+                                            })()}
                                           </pre>
                                         </div>
                                       </div>
