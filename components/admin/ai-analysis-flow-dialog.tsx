@@ -546,45 +546,72 @@ function PathColumn({
               {/* 카드 타이틀 + 체크박스 + 뱃지 */}
               <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-2">
-                  {/* 체크박스 - 충족시 체크, 미충족시 X 표시 */}
+                  {/* 체크박스 - 활성 경로에서 충족시 체크, 미충족시 X 표시 */}
                   <div className={cn(
                     "flex-shrink-0 w-4 h-4 rounded-sm flex items-center justify-center border",
-                    isActive && conditionStatus && c.items.some(item => item.isMet) 
-                      ? "bg-green-500 border-green-500" 
-                      : isActive && conditionStatus && !c.items.some(item => item.isMet)
+                    isActive && c.items.some(item => item.isMet) 
+                      ? "bg-green-600 border-green-600" 
+                      : isActive && !c.items.some(item => item.isMet)
                         ? "bg-red-500 border-red-500"
                         : "border-gray-300 bg-white"
                   )}>
-                    {isActive && conditionStatus && c.items.some(item => item.isMet) && (
+                    {isActive && c.items.some(item => item.isMet) && (
                       <Check className="h-3 w-3 text-white" />
                     )}
-                    {isActive && conditionStatus && !c.items.some(item => item.isMet) && (
+                    {isActive && !c.items.some(item => item.isMet) && (
                       <X className="h-3 w-3 text-white" />
                     )}
                   </div>
-                  <p className="text-sm font-semibold text-gray-700">
+                  <p className={cn(
+                    "text-sm font-semibold",
+                    isActive ? "text-gray-700" : "text-gray-400"
+                  )}>
                     {c.title}
                   </p>
                 </div>
               </div>
 
               {/* 기준 항목들 */}
-              <div className="space-y-1 pl-6">
+              <div className="space-y-1.5 pl-6">
                 {c.items.map((item, itemIdx) => (
                   <div 
                     key={itemIdx}
                     className={cn(
-                      "flex items-start gap-2 text-sm py-0.5 rounded",
-                      showHighlight ? bgColor : "bg-transparent"
+                      "flex items-start gap-2 text-sm py-1 px-2 rounded",
+                      isActive && item.isSelected 
+                        ? (item.isMet ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200")
+                        : "bg-transparent"
                     )}
                   >
+                    {/* 충족/미충족 아이콘 */}
+                    {isActive && item.isSelected && (
+                      <div className={cn(
+                        "flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center mt-0.5",
+                        item.isMet ? "bg-green-600" : "bg-red-500"
+                      )}>
+                        {item.isMet ? (
+                          <Check className="h-2.5 w-2.5 text-white" />
+                        ) : (
+                          <X className="h-2.5 w-2.5 text-white" />
+                        )}
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1 flex-wrap">
-                        <span className="text-gray-700">
+                        <span className={cn(
+                          isActive && item.isSelected 
+                            ? (item.isMet ? "text-green-700 font-medium" : "text-red-600 font-medium")
+                            : "text-gray-500"
+                        )}>
                           {item.label}
                         </span>
                         {item.value && (
-                          <span className="text-sm text-gray-400">
+                          <span className={cn(
+                            "text-sm",
+                            isActive && item.isSelected 
+                              ? (item.isMet ? "text-green-600" : "text-red-500")
+                              : "text-gray-400"
+                          )}>
                             {item.value}
                           </span>
                         )}
@@ -592,15 +619,15 @@ function PathColumn({
                       {item.subLabel && (
                         <p className="text-sm text-gray-400 mt-0.5">{item.subLabel}</p>
                       )}
-                      {/* 충족/미충족 상세 설명 - 여기에만 컬러 적용 */}
-                      {item.isSelected && item.isMet && item.explanationMet && (
-                        <p className="text-sm text-green-600 mt-0.5">
-                          {item.explanationMet}
+                      {/* 충족/미충족 상세 설명 */}
+                      {isActive && item.isSelected && item.isMet && item.explanationMet && (
+                        <p className="text-sm text-green-600 mt-1 font-medium">
+                          → {item.explanationMet}
                         </p>
                       )}
-                      {item.isSelected && !item.isMet && item.explanationUnmet && (
-                        <p className="text-sm text-red-500 mt-0.5">
-                          {item.explanationUnmet}
+                      {isActive && item.isSelected && !item.isMet && item.explanationUnmet && (
+                        <p className="text-sm text-red-500 mt-1 font-medium">
+                          → {item.explanationUnmet}
                         </p>
                       )}
                     </div>
@@ -642,7 +669,7 @@ function PathColumn({
         </motion.div>
       )}
 
-      {/* 결��� 배지 - 선택된 경로에만 표시 */}
+      {/* 결과 배지 - 선택된 경로에만 표시 */}
       {isActive && conditionStatus && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
