@@ -522,7 +522,7 @@ export function ApplicationFormSection({
             <form onSubmit={handleSubmitClick} className="space-y-6">
               {/* 신청인 정보 - 깔끔한 선택형 레이아웃 */}
               <div className="space-y-5">
-                <h4 className="border-b border-border pb-2 text-sm font-medium text-foreground">신청인 정보</h4>
+                <h4 className="border-b border-border pb-2 text-base font-medium text-foreground">신청인 정보</h4>
                 
                 {/* 신청 구분 */}
                 <div className="space-y-2">
