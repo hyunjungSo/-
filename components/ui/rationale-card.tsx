@@ -10,7 +10,7 @@ import { AIIcon } from "@/components/ui/ai-icon";
 
 interface RationaleCardProps {
   rationale: JudgmentRationale;
-  provisionalJudgment?: "매수" | "기각" | "심의위원회 이관";
+  provisionalJudgment?: "매수" | "매수불가" | "심의위원회 이관";
   defaultOpen?: boolean;
   variant?: "collapsible" | "expanded" | "modal-trigger";
 }

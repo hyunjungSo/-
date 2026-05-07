@@ -241,7 +241,7 @@ const regionData = {
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
-    "소정면": ["송등리", "대곡리", "소정리", "운담리"],
+    "소정���": ["송등리", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -400,13 +400,13 @@ function simulateAIAnalysis(
   const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
-  // AI 1차 판독: 매수/기각/심의위원회 이관 판정
-  let provisionalJudgment: "매수" | "기각" | "심의위원회 이관";
+  // AI 1차 판독: 매수/매수불가/심의위원회 이관 판정
+  let provisionalJudgment: "매수" | "매수불가" | "심의위원회 이관";
   
   if (metAutoCriteria >= 1) {
     provisionalJudgment = "매수";
   } else {
-    provisionalJudgment = "기각";
+    provisionalJudgment = "매수불가";
   }
 
   const judgmentRationale: JudgmentRationale = generateJudgmentRationale(
@@ -438,7 +438,7 @@ function simulateAIAnalysis(
 // 중앙토지수용위원회 기준 기반 판단 근거 설명 생성 함수
 function generateJudgmentRationale(
   land: LandInfo,
-  judgment: "매수" | "기각",
+  judgment: "매수" | "매수불가",
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],
@@ -794,7 +794,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return;
       }
       
-      // 지번 검색: 선택된 지역에 해당하는 토지 필터링
+      // 지번 검색: 선택된 지역에 해당하는 토지 필��링
       results = dummyLandInfoList.filter(land => {
         // 시군구 포함 여부
         if (!land.address.includes(selectedSigungu)) return false;
@@ -1126,7 +1126,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               <div className="flex flex-1 items-center bg-background px-4 py-2">
                 <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <Info className="h-3.5 w-3.5 shrink-0" />
-                  법인 신청 시, 사업자등록증 및 법인인감증명서가 필요합니다.
+                  법인 신청 시, 사업자등록증 및 법인인감증���서가 필요합니다.
                 </p>
               </div>
             </div>
@@ -1387,14 +1387,14 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                       className={`text-[10px] px-1.5 py-0 ${
                                         landAiResult?.provisionalJudgment === "매수" 
                                           ? "bg-green-100 text-green-700 border-green-200" 
-                                          : landAiResult?.provisionalJudgment === "기각"
+                                          : landAiResult?.provisionalJudgment === "매수불가"
                                             ? "bg-red-100 text-red-700 border-red-200"
                                             : "bg-amber-100 text-amber-700 border-amber-200"
                                       }`}
                                     >
                                       {landAiResult?.provisionalJudgment === "매수" 
                                         ? "판독완료" 
-                                        : landAiResult?.provisionalJudgment === "기각"
+                                        : landAiResult?.provisionalJudgment === "매수불가"
                                           ? "미충족"
                                           : "심의이상"}
                                     </Badge>
@@ -1570,7 +1570,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       <div className={`rounded-lg border-2 p-4 ${
                         aiResult.provisionalJudgment === "매수" 
                           ? "border-success bg-success/5" 
-                          : aiResult.provisionalJudgment === "심의위원회이관"
+                          : aiResult.provisionalJudgment === "심의위원회 이관"
                             ? "border-warning bg-warning/5"
                             : "border-destructive bg-destructive/5"
                       }`}>
@@ -1584,7 +1584,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             variant={
                               aiResult.provisionalJudgment === "매수" 
                                 ? "success" 
-                                : aiResult.provisionalJudgment === "심의위원회이관"
+                                : aiResult.provisionalJudgment === "심의위원회 이관"
                                   ? "warning"
                                   : "destructive"
                             }
@@ -1593,7 +1593,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           >
                             {aiResult.provisionalJudgment === "매수" 
                               ? "매수가능" 
-                              : aiResult.provisionalJudgment === "심의위원회이관"
+                              : aiResult.provisionalJudgment === "심의위원회 이관"
                                 ? "경계 사례"
                                 : "기준 미충족"}
                           </Badge>
@@ -1646,7 +1646,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         <div className="flex items-start gap-2">
                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                           <div>
-                            <h4 className="text-base font-semibold text-foreground">수동 확인 항목</h4>
+                            <h4 className="text-base font-semibold text-foreground">수�� 확인 항목</h4>
                             <ul className="mt-1 space-y-1">
                               {aiResult.judgmentRationale.manualCheckItems.map((item, idx) => (
                                 <li key={idx} className="flex items-center gap-1.5 text-base text-muted-foreground">
@@ -1741,7 +1741,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     );
                   }
                   
-                  if (aiResult.provisionalJudgment !== "기각") {
+                  if (aiResult.provisionalJudgment !== "매수불가") {
                     const isAlreadyInCart = cartItems.some(c => c.landInfo.id === selectedLand.id);
                     
                     return (

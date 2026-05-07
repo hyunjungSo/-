@@ -56,8 +56,7 @@ interface ApplicationDetailProps {
 const judgmentConfig = {
   매수: { label: "매수", icon: CheckCircle2, borderColor: "border-green-700", textColor: "text-green-700", color: "text-green-700" },
   매수불가: { label: "매수불가", icon: XCircle, borderColor: "border-red-600", textColor: "text-red-700", color: "text-red-700" },
-  기각: { label: "기각", icon: XCircle, borderColor: "border-red-600", textColor: "text-red-700", color: "text-red-700" },
-  심의위원회이관: { label: "심의위원회 이관", icon: AlertTriangle, borderColor: "border-amber-600", textColor: "text-amber-700", color: "text-amber-700" },
+  "심의위원회 이관": { label: "심의위원회 이관", icon: AlertTriangle, borderColor: "border-amber-600", textColor: "text-amber-700", color: "text-amber-700" },
 };
 
 const adminStatusConfig: Record<AdminStatus, { 
@@ -378,7 +377,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     other: 330,
   };
   
-  // ������지 유형별 면적 기준 (㎡)
+  // �������지 유형별 면적 기준 (㎡)
   const getAreaCriteria = (land: typeof allLands[0], landData?: typeof application.landDataList[0], adminLandSubType?: string) => {
     const landType = land.landType;
     // 담당자가 선택한 건축물 용도 우선 적용, 없으면 신청 시 입력된 값 사용
@@ -2392,7 +2391,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             {landReview.landJudgment && (
                               <Badge className={
                                 landReview.landJudgment === "매수" ? "bg-green-700" :
-                                landReview.landJudgment === "기각" ? "bg-red-500" : "bg-amber-500"
+                                landReview.landJudgment === "매수불가" ? "bg-red-500" : "bg-amber-500"
                               }>
                                 {landReview.landJudgment}
                               </Badge>
@@ -2406,7 +2405,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           <div className="space-y-2">
                             <Label className="text-sm font-medium">매수 판정</Label>
                             <div className="flex flex-wrap gap-2">
-                              {(["매수", "기각", "심의위원회이관"] as JudgmentResult[]).map((judgment) => {
+                              {(["매수", "매수불가", "심의위원회 이관"] as JudgmentResult[]).map((judgment) => {
                                 const config = judgmentConfig[judgment];
                                 const Icon = config.icon;
                                 const isSelected = landReview.landJudgment === judgment;
@@ -2519,7 +2518,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 reviewData.finalJudgment && Object.keys(adminLandAIResults).length > 0 && (() => {
                   const results = Object.values(adminLandAIResults);
                   const aiJudgment = results.every(r => r.provisionalJudgment === "매수") ? "매수" : 
-                                    results.every(r => r.provisionalJudgment !== "매수") ? "기각" : "mixed";
+                                    results.every(r => r.provisionalJudgment !== "매수") ? "매수불가" : "mixed";
                   const isDifferent = reviewData.finalJudgment !== aiJudgment && aiJudgment !== "mixed";
                   return isDifferent && !adminOverrideReason.trim();
                 })()

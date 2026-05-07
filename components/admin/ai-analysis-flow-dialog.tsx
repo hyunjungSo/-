@@ -345,9 +345,9 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                 </div>
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
-                  (finalJudgment === "기각" || finalJudgment === "기각") ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50"
+                  finalJudgment === "매수불가" ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className={cn("text-sm font-medium", (finalJudgment === "기각" || finalJudgment === "기각") ? "text-red-700" : "text-gray-500")}>기각 판단</p>
+                  <p className={cn("text-sm font-medium", finalJudgment === "매수불가" ? "text-red-700" : "text-gray-500")}>매수불가 판단</p>
                 </div>
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
@@ -382,10 +382,10 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                   매수
                 </motion.div>
                 <motion.div 
-                  animate={{ scale: (finalJudgment === "기각" || finalJudgment === "기각") && animationStep >= 7 ? 1.02 : 1 }}
+                  animate={{ scale: (finalJudgment === "매수불가" || finalJudgment === "매수불가") && animationStep >= 7 ? 1.02 : 1 }}
                   className={cn(
                     "rounded p-3 text-center text-sm font-semibold border transition-all",
-                    (finalJudgment === "기각" || finalJudgment === "기각")
+                    (finalJudgment === "매수불가" || finalJudgment === "매수불가")
                       ? "border-red-500 bg-red-500 text-white" 
                       : "border-gray-200 bg-gray-50 text-gray-400"
                   )}
@@ -431,7 +431,7 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
               <span className={cn(
                 "text-base font-bold px-4 py-1.5 rounded",
                 finalJudgment === "매수" ? "bg-green-700 text-white" :
-                (finalJudgment === "기각" || finalJudgment === "기각") ? "bg-red-500 text-white" :
+                (finalJudgment === "매수불가" || finalJudgment === "매수불가") ? "bg-red-500 text-white" :
                 "bg-amber-500 text-white"
               )}>
                 {finalJudgment}

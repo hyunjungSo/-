@@ -1288,10 +1288,10 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   const physicalConditionMet = criteriaChecks.some(c => !c.autoDetected && c.isMet);
   
   // PRD 판정 원칙:
-  // - AI 판정은 "매수", "기각", "심의위원회 이관" 세 가지
+  // - AI 판정은 "매수", "매수불가", "심의위원회 이관" 세 가지
   // - 물리 조건 중 하나라도 해당 시 '수용 조건 충족'(=매수)
-  // - 전체 조건 미해당시 '수용 조건 미충족'(=기각)
-  let provisionalJudgment: "매수" | "기각" | "심의위원회 이관";
+  // - 전체 조건 미해당시 '수용 조건 미충족'(=매수불가)
+  let provisionalJudgment: "매수" | "매수불가" | "심의위원회 이관";
   
   // 면적 기준 충족 여부
   const coreCriteriaMet = areaMet;
@@ -1303,8 +1303,8 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
     // 면적 기준만 충족 또는 형상 조건만 충족 → 매수 (검토 필요하지만 AI는 매수 판정)
     provisionalJudgment = "매수";
   } else {
-    // 전체 조건 미해당 → 기각
-    provisionalJudgment = "기각";
+    // 전체 조건 미해당 → 매수불가
+    provisionalJudgment = "매수불가";
   }
   
   const metAutoCriteria = criteriaChecks.filter(c => c.autoDetected && c.isMet).length;
@@ -1330,7 +1330,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
 // 판단 근거 생성 헬퍼 함수 (PRD v2.0 기준 - 중앙토지수용위원회 참고문서)
 function generateRationale(
   land: LandInfo,
-  judgment: "매수" | "기각" | "심의위원회 이관",
+  judgment: "매수" | "매수불가" | "심의위원회 이관",
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],
@@ -1623,7 +1623,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "심사완료",
     appliedAt: "2026-04-07",
     aiResult: generateAIResult(dummyLandInfoList[9]),
-    finalJudgment: "기각",
+    finalJudgment: "매수불가",
     reviewerComment: "잔여비율 90%로 매수 기준(30% 이하)을 크게 초과하며, 형상지수 변화도 0.1로 미미하여 종래 용도 사용에 지장이 없음. 매수 기준 미충족으로 기각 처리.",
     adminName: "박담당",
     statusUpdatedAt: "2026-04-18",
@@ -1866,7 +1866,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3�� 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 ��지가 불규칙한 형태로 남아 농기계 진입이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 ���유한 3�� 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 ��지가 불규칙한 형태로 남아 농기계 진입이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
