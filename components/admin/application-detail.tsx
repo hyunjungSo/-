@@ -720,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            // 필지 분석 오류 처��
+            // 필지 분석 오류 처���
           }
         });
         
@@ -1603,7 +1603,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
                                         <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
                                         <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
-                                        <SelectItem value="industrial">공업용 (���준: 330㎡)</SelectItem>
+                                        <SelectItem value="industrial">공업�� (���준: 330㎡)</SelectItem>
                                       </SelectContent>
                                     </Select>
                                   </div>
@@ -1809,7 +1809,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* AI 분석 버튼 */}
                   {(() => {
-                    // 선택된 모든 필지가 현재 활용 지목을 선택했는지 확인
+                    // 선택된 모든 필지가 현재 활용 지목을 선택���는지 확인
                     const allSelectedLandsHaveCurrentUsage = adminCheckedLandIds.every(
                       id => adminCurrentUsagePerLand[id] && adminCurrentUsagePerLand[id].trim() !== ""
                     );
@@ -2608,7 +2608,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             {/* 패널 내용 - 2단 레이아웃 */}
             <div className="flex flex-1 overflow-hidden">
               {/* 왼쪽: 텍스트 정보 (판단 요약, 법적 근거) */}
-              <div className="w-1/2 border-r overflow-y-auto p-6">
+              <div className="w-3/4 border-r overflow-y-auto p-6">
                 <div className="space-y-6">
                   {/* 헤더 */}
                   <div>
@@ -2719,7 +2719,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </div>
 
               {/* 오른쪽: AI 판독 분석 이미지 */}
-              <div className="w-1/2 bg-muted/20 p-6 overflow-y-auto">
+              <div className="w-1/4 bg-muted/20 p-6 overflow-y-auto">
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
                     <ImageIcon className="h-5 w-5" />
