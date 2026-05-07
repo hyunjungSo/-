@@ -524,7 +524,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (areaCheckMet) reasons.push("면적 기준 충족");
         if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
-        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (������� ������)" : ""));
+        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (������� �������)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부��형 변경");
       } else {
         judgment = "매수불가";
@@ -622,10 +622,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         const landId = adminCheckedLandIds[i];
         setLandAnalysisStatus(prev => ({ ...prev, [landId]: 'analyzing' }));
         
-        // 단계별 진행 (각 단계당 300ms)
+        // 단계별 진행 (각 단계당 100ms)
         for (let step = 1; step <= 5; step++) {
           setLandAnalysisStep(prev => ({ ...prev, [landId]: step }));
-          await new Promise(resolve => setTimeout(resolve, 300));
+          await new Promise(resolve => setTimeout(resolve, 100));
         }
         
         setLandAnalysisStatus(prev => ({ ...prev, [landId]: 'done' }));
@@ -703,12 +703,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       setAdminLandAIResults(adminResults);
       setAiResultViewMode("admin");
       setIsAIAnalyzing(false);
-    }, 2000);
+    }, 600);
   };
   
   
   
-  // 판독 결과 초기화 (관리자 재판독 결과만)
+  // 판독 결과 초기��� (관리자 재판독 결과만)
   const handleResetAdminAIResults = () => {
     setAdminLandAIResults({});
     setAdminAIOptions({
@@ -2119,7 +2119,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <div className="flex items-start gap-2 pt-2 border-t">
                                         <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                         <p className="text-xs text-muted-foreground">
-                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                          AI ��독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                                         </p>
                                       </div>
                                     </div>
@@ -2494,7 +2494,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">진행상황 선택</CardTitle>
-          <CardDescription>민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다</CardDescription>
+          <CardDescription>민원인이 신청 현황 조회 �� 이 진행상황이 표시됩니다</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
