@@ -277,7 +277,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
 
   
-  // 민원인이 신청한 필지 ID 목록 (application에서 가져옴, 읽기 전용)
+  // 민원인��� 신청한 필지 ID 목록 (application에서 가져옴, 읽기 전용)
   const citizenSelectedLandIds = allLands.map(l => l.id);
   
   // 담당자가 선택한 필지 ID 목록 (수정 가능, 초기값: 민원인 신청 필지와 동일)
@@ -587,7 +587,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       }
       
     } else {
-      // 그 밖의 토지 + 관리자 옵션 반영
+      // 그 밖의 토지 + 관리자 ���션 반영
       // 종래 목적 사용 곤란 여부 (위치, 형상, 접근 상태 고려)
       const usageDifficulty = adminOptions?.accessRoadLost || adminOptions?.farmMachineDifficulty || land.remainingRatio < 40 || shapeCriteria.met;
       criteriaChecks.push({
@@ -720,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            // 필지 분������� 오류 처리
+            // 필지 분��������� 오류 처리
           }
         });
         
@@ -2071,7 +2071,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                             {(() => {
                                               const explanation = landResult?.judgmentRationale?.detailedExplanation;
                                               if (!explanation) {
-                                                return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
+                                                return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분��� 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
                                               }
                                               
                                               // If this is multi-parcel and explanation contains all parcels info,
@@ -2531,33 +2531,32 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             />
           </div>
 
-          {/* 저장 버튼 */}
-          <div className="flex justify-end gap-3">
-            <Button variant="outline" onClick={onBack}>
-              취소
-            </Button>
-            <Button 
-              onClick={handleSave} 
-              disabled={isSaving || (
-                // AI 결과와 다르게 결정 시 사유 필수
-                reviewData.finalJudgment && Object.keys(adminLandAIResults).length > 0 && (() => {
-                  const results = Object.values(adminLandAIResults);
-                  const aiJudgment = results.every(r => r.provisionalJudgment === "매수") ? "매수" : 
-                                    results.every(r => r.provisionalJudgment !== "매수") ? "기각" : "mixed";
-                  const isDifferent = reviewData.finalJudgment !== aiJudgment && aiJudgment !== "mixed";
-                  return isDifferent && !adminOverrideReason.trim();
-                })()
-              )}
-            >
-              {isSaving ? (
-                "저장 중..."
-              ) : (
-                "검토 완료 및 저장"
-              )}
-            </Button>
-          </div>
+
         </CardContent>
       </Card>
+
+      {/* 저장 버튼 */}
+      <div className="flex justify-end gap-3 pt-1">
+        <Button 
+          onClick={handleSave} 
+          disabled={isSaving || (
+            // AI 결과와 다르게 결정 시 사유 필수
+            reviewData.finalJudgment && Object.keys(adminLandAIResults).length > 0 && (() => {
+              const results = Object.values(adminLandAIResults);
+              const aiJudgment = results.every(r => r.provisionalJudgment === "매수") ? "매수" : 
+                                results.every(r => r.provisionalJudgment !== "매수") ? "기각" : "mixed";
+              const isDifferent = reviewData.finalJudgment !== aiJudgment && aiJudgment !== "mixed";
+              return isDifferent && !adminOverrideReason.trim();
+            })()
+          )}
+        >
+          {isSaving ? (
+            "저장 중..."
+          ) : (
+            "저장"
+          )}
+        </Button>
+      </div>
 
       {/* AI 분석 프로세스 다이얼로그 - 관리자 재판독 결과 우선 표시 */}
       <AIAnalysisFlowDialog
