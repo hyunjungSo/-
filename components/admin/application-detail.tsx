@@ -721,7 +721,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            // 필지 분��� 오류 처리
+            // 필지 분����� 오류 처리
           }
         });
         
@@ -2533,7 +2533,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
 
           {/* 저장 버튼 */}
-          <div className="flex justify-end gap-3 border-t border-border pt-4">
+          <div className="flex justify-end gap-3">
             <Button variant="outline" onClick={onBack}>
               취소
             </Button>
