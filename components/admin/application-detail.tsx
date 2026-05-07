@@ -277,7 +277,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 담당자가 선택한 필지 ID 목록 (수정 가능, 초기값: 민원인 신청 필지와 동일)
   const [adminCheckedLandIds, setAdminCheckedLandIds] = useState<string[]>(() => allLands.map(l => l.id));
   
-  // ���존 호환성을 위한 adminAIOptions (선택된 필지들의 옵션 합산)
+  // 기존 호환성을 위한 adminAIOptions (선택된 필지들의 옵션 합산)
   const adminAIOptions = {
     accessRoadLost: adminCheckedLandIds.some(id => adminAIOptionsPerLand[id]?.accessRoadLost),
     waterChannelLost: adminCheckedLandIds.some(id => adminAIOptionsPerLand[id]?.waterChannelLost),
@@ -413,7 +413,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 토지 유형별 면적 기준 (㎡)
   const getAreaCriteria = (land: typeof allLands[0], landData?: typeof application.landDataList[0], adminLandSubType?: string) => {
     const landType = land.landType;
-    // 담당자가 선택한 건축물 용도 우�� 적용, 없으면 신청 시 입력된 값 사용
+    // 담당자가 선택한 건축물 용도 우선 적용, 없으면 신청 시 입력된 값 사용
     const subType = adminLandSubType || landData?.landSubType || "";
     const remainingRatio = land.remainingRatio;
     
@@ -540,7 +540,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "농기계 진입/회전",
         met: farmDifficulty,
-        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 ���������인)" : "") : "농기계 사용 가능"
+        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : "") : "농기계 사용 가능"
       });
       
       criteriaChecks.push({
@@ -927,7 +927,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div className="flex items-center justify-between">
                     <h4 className="font-medium">지적도</h4>
                     <Badge variant="outline" className="font-normal">
-                      {allLands.length}���지
+                      {allLands.length}필지
                     </Badge>
                   </div>
                   
@@ -1353,7 +1353,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
-                        <span>신청 ���지</span>
+                        <span>신청 필지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
@@ -1791,7 +1791,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* AI 분석 버튼 */}
                   {(() => {
-                    // 선택된 모든 필지가 현재 활용 지목을 선택했는지 ���인
+                    // 선택된 모든 필지가 현재 활용 지목을 선택했는지 확인
                     const allSelectedLandsHaveCurrentUsage = adminCheckedLandIds.every(
                       id => adminCurrentUsagePerLand[id] && adminCurrentUsagePerLand[id].trim() !== ""
                     );
@@ -1803,7 +1803,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         return "분석할 필지를 선택해 주세요";
                       }
                       if (!allSelectedLandsHaveCurrentUsage) {
-                        return "현재 활용 지목�� 선택해 주세요";
+                        return "현재 활용 지목을 선택해 주세요";
                       }
                       return null;
                     };

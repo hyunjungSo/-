@@ -435,7 +435,7 @@ export function LeafletMap({
 
       polygon.addTo(polygonLayer);
 
-      // 필지 중앙에 지번 라벨 추��
+      // 필지 중앙에 지번 라벨 추가
       const bounds = polygon.getBounds();
       const center = bounds.getCenter();
       
