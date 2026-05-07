@@ -720,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            // 토지 분석 오류 처리
+            // ��지 분석 오류 처리
           }
         });
         
@@ -1765,7 +1765,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 
                                 {/* 현장확인 옵션 */}
                                 <div className="space-y-1.5">
-                                  <span className="text-xs text-muted-foreground font-medium">현장확인:</span>
+                                  <label className="text-xs font-medium text-foreground">현장확인:</label>
                                   <div className="flex flex-col gap-2">
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
