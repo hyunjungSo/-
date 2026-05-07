@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "��������������력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "����������������력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -1617,7 +1617,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         onCheckedChange={(checked) => updateLandOption(land.id, 'farmMachineDifficulty', checked === true)}
                                         className="h-[18px] w-[18px]"
                                       />
-                                      <span className="text-xs">농기계 곤란</span>
+                                      <span className="text-xs">농기계 회전곤란</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
@@ -1769,7 +1769,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         checked={landOptions.farmMachineDifficulty}
                                         onCheckedChange={(checked) => updateLandOption(adjacentLand.id, 'farmMachineDifficulty', checked === true)}
                                       />
-                                      <span className="text-xs">농기계 곤란</span>
+                                      <span className="text-xs">농기계 회전곤란</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <Checkbox 
