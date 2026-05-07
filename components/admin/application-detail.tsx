@@ -524,7 +524,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
-        if (shapeCriteria.met) reasons.push("형상 부정형 변경");
+        if (shapeCriteria.met) reasons.push("형상 부정형 변��");
       } else {
         judgment = "매수불가";
         reasons.push("모든 기준 미충족");
@@ -2153,10 +2153,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         );
                       })}
                       
-  {/* 필지별 분석 결과 - 아코디언 UI (필지목록에서 선택되고 AI 분석이 실행된 필지만 표시) */}
+  {/* 필지별 분석 결과 - 아코디언 UI (AI 분석 실행 버튼 클릭 시 분석된 필지만 표시, 체크박스 해제와 무관) */}
   <Accordion type="multiple" defaultValue={[]} className="space-y-3 overflow-y-auto">
                         {Object.entries(adminLandAIResults)
-                          .filter(([landId]) => adminCheckedLandIds.includes(landId))
                           .map(([landId, result]) => {
                           const land = allLands.find(l => l.id === landId);
                           const landIdx = allLands.findIndex(l => l.id === landId);
