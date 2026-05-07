@@ -378,7 +378,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     other: 330,
   };
   
-  // ���지 유형별 면적 기준 (㎡)
+  // ����지 유형별 면적 기준 (㎡)
   const getAreaCriteria = (land: typeof allLands[0], landData?: typeof application.landDataList[0], adminLandSubType?: string) => {
     const landType = land.landType;
     // 담당자가 선택한 건축물 용도 우선 적용, 없으면 신청 시 입력된 값 사용
@@ -523,7 +523,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (areaCheckMet) reasons.push("면적 기준 충족");
         if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
-        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 ������)" : ""));
+        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리�� ������)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
         judgment = "매수불가";
@@ -1016,8 +1016,41 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div>
                                   <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
                                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                                    {landResult?.judgmentRationale?.summary || 
-                                      `${land.landType} 잔여면적 ${land.remainingArea.toLocaleString()}㎡(잔여비율 ${land.remainingRatio}%)로 「${landResult?.provisionalJudgment || "분석중"}」 판정`}
+                                    {(() => {
+                                      const summary = landResult?.judgmentRationale?.summary;
+                                      if (!summary) {
+                                        return `${land.landType} 잔여면적 ${land.remainingArea.toLocaleString()}㎡(잔여비율 ${land.remainingRatio}%)로 「${landResult?.provisionalJudgment || "분석중"}」 판정`;
+                                      }
+                                      
+                                      // If this is multi-parcel, extract only current parcel's summary
+                                      if (isMultipleLands && (summary.includes("필지") || summary.includes("-"))) {
+                                        // Look for pattern like "200-1:" or "필지 1:" in the summary
+                                        const summaryParts = summary.split(" - ");
+                                        if (summaryParts.length > 1) {
+                                          // Multi-line summary format
+                                          for (const part of summaryParts) {
+                                            if (part.includes(land.landNumber || land.id) || part.includes(land.address?.split("-").pop())) {
+                                              return part.trim();
+                                            }
+                                          }
+                                        }
+                                        
+                                        // Look for address/land number patterns
+                                        const addressParts = land.address?.split("-") || [];
+                                        const landNum = addressParts[addressParts.length - 1];
+                                        if (landNum && summary.includes(landNum)) {
+                                          // Extract the sentence containing this land number
+                                          const sentences = summary.split("→");
+                                          for (const sentence of sentences) {
+                                            if (sentence.includes(landNum)) {
+                                              return sentence.trim() + (sentence.includes("→") ? "" : "");
+                                            }
+                                          }
+                                        }
+                                      }
+                                      
+                                      return summary;
+                                    })()}
                                   </p>
                                 </div>
                               </div>
@@ -1855,17 +1888,50 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
                                     {/* 상세 분석 내용 */}
                                     <div className="space-y-4">
-                                      {/* 판단 요약 */}
-                                      <div className="flex items-start gap-2">
-                                        <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                                        <div>
-                                          <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
-                                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                                            {landResult?.judgmentRationale?.summary || 
-                                              `${land.landType} 잔여면적 ${land.remainingArea.toLocaleString()}㎡(잔여비율 ${land.remainingRatio}%)로 「${landResult?.provisionalJudgment || "분석중"}」 판정`}
-                                          </p>
-                                        </div>
-                                      </div>
+                                  {/* 판단 요약 */}
+                                  <div className="flex items-start gap-2">
+                                    <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                    <div>
+                                      <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
+                                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                                        {(() => {
+                                          const summary = landResult?.judgmentRationale?.summary;
+                                          if (!summary) {
+                                            return `${land.landType} 잔여면적 ${land.remainingArea.toLocaleString()}㎡(잔여비율 ${land.remainingRatio}%)로 「${landResult?.provisionalJudgment || "분석중"}」 판정`;
+                                          }
+                                          
+                                          // If this is multi-parcel, extract only current parcel's summary
+                                          if (isMultipleLands && (summary.includes("필지") || summary.includes("-"))) {
+                                            // Look for pattern like "200-1:" or "필지 1:" in the summary
+                                            const summaryParts = summary.split(" - ");
+                                            if (summaryParts.length > 1) {
+                                              // Multi-line summary format
+                                              for (const part of summaryParts) {
+                                                if (part.includes(land.landNumber || land.id) || part.includes(land.address?.split("-").pop())) {
+                                                  return part.trim();
+                                                }
+                                              }
+                                            }
+                                            
+                                            // Look for address/land number patterns
+                                            const addressParts = land.address?.split("-") || [];
+                                            const landNum = addressParts[addressParts.length - 1];
+                                            if (landNum && summary.includes(landNum)) {
+                                              // Extract the sentence containing this land number
+                                              const sentences = summary.split("→");
+                                              for (const sentence of sentences) {
+                                                if (sentence.includes(landNum)) {
+                                                  return sentence.trim() + (sentence.includes("→") ? "" : "");
+                                                }
+                                              }
+                                            }
+                                          }
+                                          
+                                          return summary;
+                                        })()}
+                                      </p>
+                                    </div>
+                                  </div>
 
                                       {/* 법적 근거 */}
                                       <div className="flex items-start gap-2">
