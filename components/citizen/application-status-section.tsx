@@ -127,7 +127,7 @@ function LandInfoSection({ application }: { application: Application }) {
                     />
                   </div>
                   {landAIResult.judgmentRationale && (
-                    <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform duration-200 [[data-state=open]_&]:rotate-180" />
+                    <ChevronDown className="h-6 w-6 text-muted-foreground transition-transform duration-200 [[data-state=open]_&]:rotate-180" />
                   )}
                 </div>
               </div>
