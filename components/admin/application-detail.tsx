@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "��������������������력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "����������������������력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -2316,7 +2316,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     if (landOptions.accessRoadLost || landOptions.waterChannelLost || landOptions.farmMachineDifficulty) {
                                       return (
                                         <div className="rounded-lg bg-blue-50/80 p-3 border border-blue-200">
-                                          <p className="text-xs font-medium text-blue-700 mb-2">적용된 현장 상황</p>
+                                          <p className="text-xs font-medium text-blue-700 mb-2">적���된 현장 상황</p>
                                           <div className="flex flex-wrap gap-2">
                                             {landOptions.accessRoadLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">접면도로 상실</Badge>}
                                             {landOptions.waterChannelLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">관개수로 상실</Badge>}
@@ -2765,7 +2765,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <Info className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
                     <p className="text-xs text-amber-700">
                       AI 판독 분석 이미지는 참고용이며, 실제 측량 결과와 다를 수 있습니다.
-                      최종 판정은 담당자의 현장 확인 및 검토에 따라 결정됩니다.
+                      최종 판정은 ��당자의 현장 확인 및 검토에 따라 결정됩니다.
                     </p>
                   </div>
                 </div>
@@ -2776,7 +2776,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       )}
 
       {/* 하단 저장 버튼 */}
-      <div className="sticky bottom-0 left-0 right-0 bg-background border-t py-4 px-6 -mx-6 mt-6 z-50">
+      <div className="sticky bottom-0 left-0 right-0 w-full bg-background border-t py-4 px-6 -mx-6 mt-6 z-50">
         <div className="flex justify-end gap-3">
           <Button variant="outline" onClick={onBack}>
             취소
