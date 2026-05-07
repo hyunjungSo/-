@@ -2343,19 +2343,20 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       </Card>
 
       {/* Section 04. 담당자 검토 - 필지별 검토 */}
-      {allLands.length > 1 && (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-lg">필지별 검토</CardTitle>
-                <CardDescription>각 필지별로 판정과 검토 의견을 입력하세요</CardDescription>
-              </div>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-lg">{allLands.length > 1 ? "필지별 검토" : "매수 판정"}</CardTitle>
+              <CardDescription>{allLands.length > 1 ? "각 필지별로 판정과 검토 의견을 입력하세요" : "해당 필지의 매수 판정을 선택하세요"}</CardDescription>
+            </div>
+            {allLands.length > 1 && (
               <Badge variant="outline">
                 {landReviewDataList.filter(d => d.landJudgment !== null).length}/{allLands.length} 검토완료
               </Badge>
-            </div>
-          </CardHeader>
+            )}
+          </div>
+        </CardHeader>
           <CardContent>
             <Accordion type="multiple" className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
               {allLands.map((land, idx) => {
@@ -2460,7 +2461,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </Accordion>
           </CardContent>
         </Card>
-      )}
 
       {/* 진행상황 선택 */}
       <Card>
