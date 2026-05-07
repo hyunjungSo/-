@@ -314,7 +314,7 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                     { label: "일단의 토지가 양분되어 잔여지 발생", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && includedArea > 0,
                       explanationMet: `편입면적 ${includedArea.toLocaleString()}㎡로 토지 양분됨`,
                       explanationUnmet: "편입 없음 - 토지 양분 미발생" },
-                    { label: "��형: 잔여지 폭이 기준 이하로 변경", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged, subLabel: "주거용 5m, 상��용 7m, 공업용/농지/산지 10m",
+                    { label: "형상: 잔여지 폭이 기준 이하로 변경", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged, subLabel: "주거용 5m, 상업용 7m, 공업용/농지/산지 10m",
                       explanationMet: `형상 변경: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})`,
                       explanationUnmet: `형상 유지: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})` },
                   ],
@@ -422,7 +422,7 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                 <span className="text-sm text-gray-400">/ 기준 {effectiveThreshold}㎡ {isRatioRelaxed && "(완화)"}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-base text-gray-500">���여 비율</span>
+                <span className="text-base text-gray-500">잔여 비율</span>
                 <span className="text-base font-semibold text-gray-800">{remainingRatio}%</span>
               </div>
             </div>
@@ -642,7 +642,7 @@ function PathColumn({
         </motion.div>
       )}
 
-      {/* 결과 배지 - 선택된 경로에만 표�� */}
+      {/* 결과 배지 - 선택된 경로에만 표시 */}
       {isActive && conditionStatus && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}

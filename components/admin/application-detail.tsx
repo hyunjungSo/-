@@ -265,7 +265,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     }
   };
   
-  // 담당자 탭 ���체 선택 핸들러
+  // 담당자 탭 전체 선택 핸들러
   const handleAdminCheckAll = (checked: boolean) => {
     if (checked) {
       setAdminCheckedLandIds(allLands.map(l => l.id));
@@ -379,7 +379,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     other: 330,
   };
   
-  // �������지 유형별 면적 기준 (㎡)
+  // 토지 유형별 면적 기준 (㎡)
   const getAreaCriteria = (land: typeof allLands[0], landData?: typeof application.landDataList[0], adminLandSubType?: string) => {
     const landType = land.landType;
     // 담당자가 선택한 건축물 용도 우선 적용, 없으면 신청 시 입력된 값 사용
@@ -725,7 +725,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     setAiResultViewMode("citizen");
   };
   
-  // 필지 포함/제외 상태 (민원인 소유 ��인용)
+  // 필지 포함/제외 상태 (민원인 소유 확인용)
   const [excludedLands, setExcludedLands] = useState<Set<string>>(new Set());
   
   // 필지 포함/제외 토글
@@ -1029,7 +1029,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <div className="grid grid-cols-2 gap-2 text-sm">
                                 <div>
                                   <span className="text-muted-foreground">편입 전 면적:</span>
-                                  <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}m��</span>
+                                  <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}㎡</span>
                                 </div>
                                 <div>
                                   <span className="text-muted-foreground">편입 면적:</span>
@@ -1046,13 +1046,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             </div>
                             
-                            {/* 상세 분석 내용 - 모든 필지에 표��� */}
+                            {/* 상세 분석 내용 - 모든 필지에 표시 */}
                             <div className="space-y-4">
                               {/* 판단 요약 */}
                               <div className="flex items-start gap-2">
                                 <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                                 <div>
-                                  <h4 className="text-sm font-semibold text-foreground">판단 요���</h4>
+                                  <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
                                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                                     {(() => {
                                       const summary = landResult?.judgmentRationale?.summary;
@@ -1100,7 +1100,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
                                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                                     {landResult?.judgmentRationale?.legalBasis || 
-                                      "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 ��행규칙 제34조"}
+                                      "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조"}
                                   </p>
                                 </div>
                               </div>
@@ -1161,7 +1161,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     {(() => {
                                       const explanation = landResult?.judgmentRationale?.detailedExplanation;
                                       if (!explanation) {
-                                        return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}�� (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
+                                        return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
                                       }
                                       
                                       // If this is multi-parcel and explanation contains all parcels info,
@@ -1296,7 +1296,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           },
                           {
                             id: "adjacent-002",
-                            address: "경기도 용인시 처���구 포곡읍 마성리 102",
+                            address: "경기도 용인시 처인구 포곡읍 마성리 102",
                             isIncluded: false,
                             isOwned: false,
                             isAdjacent: true,
@@ -1337,7 +1337,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
-                        <span>���청 필지</span>
+                        <span>신청 필지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
@@ -1740,7 +1740,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
                                         <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
                                         <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
-                                        <SelectItem value="industrial">공���용 (기준: 330㎡)</SelectItem>
+                                        <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
                                       </SelectContent>
                                     </Select>
                                   </div>
@@ -1841,7 +1841,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   })()}
                 </div>
                 
-                {/* 우측: 분��결과 */}
+                {/* 우측: 분석결과 */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h4 className="font-medium">분석결과</h4>
@@ -2125,7 +2125,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <div className="flex items-start gap-2 pt-2 border-t">
                                         <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                         <p className="text-xs text-muted-foreground">
-                                          AI ��독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                                         </p>
                                       </div>
                                     </div>
@@ -2299,7 +2299,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <div className="flex items-start gap-2">
                                       <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                                       <div>
-                                        <h4 className="text-sm font-semibold text-foreground">상세 ����</h4>
+                                        <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
                                         <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                                           {result.judgmentRationale.detailedExplanation}
                                         </pre>
@@ -2431,7 +2431,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             {landReview.landJudgment && (
                               <Badge className={
                                 landReview.landJudgment === "매수" ? "bg-green-700" :
-                                landReview.landJudgment === "���수불가" ? "bg-red-500" : "bg-amber-500"
+                                landReview.landJudgment === "매수불가" ? "bg-red-500" : "bg-amber-500"
                               }>
                                 {landReview.landJudgment}
                               </Badge>
@@ -2500,7 +2500,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">진행상황 선택</CardTitle>
-          <CardDescription>민원인이 신청 현�� 조회 �� 이 진행상황이 표시됩니다</CardDescription>
+          <CardDescription>민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
@@ -2530,14 +2530,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       {/* 최종 검토 */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">최종 검���</CardTitle>
+          <CardTitle className="text-lg">최종 검토</CardTitle>
           <CardDescription>전체 민원에 대한 최종 검토 의견을 작성해주세요</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label className="text-sm font-medium">최종 검토 의견</Label>
             <Textarea
-              placeholder="현지상황 및 종합 검토의견을 작성해주��요. 이 내용은 심의서에 자동 입력됩니다."
+              placeholder="현지상황 및 종합 검토의견을 작성해주세요. 이 내용은 심의서에 자동 입력됩니다."
               rows={4}
               value={reviewData.reviewerComment || ""}
               onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}

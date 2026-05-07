@@ -1022,11 +1022,11 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.3175, lng: 127.9540 },
     ],
   },
-  // ===== 혼합 케이스 (일��� 매수 + 일부 미해당) =====
+  // ===== 혼합 케이스 (일부 매수 + 일부 미해당) =====
   // 4필지 중 2필지 매수, 나머지 2필지 미해당
   {
     id: "land-mixed-001",
-    address: "경기����� 평택시 포승읍 내기리 200-1",
+    address: "경기도 평택시 포승읍 내기리 200-1",
     originalArea: 500,
     includedArea: 350,
     remainingArea: 150,
@@ -1373,7 +1373,7 @@ function generateRationale(
     const areaThreshold = land.landType === "대지" ? 90 : 330;
     const rejectionReason = `잔여면적 ${land.remainingArea}㎡(기준 ${areaThreshold}㎡ 초과), 잔여비율 ${land.remainingRatio}%(기준 초과), 물리조건 미해당`;
     summary = `${land.landType} 수용 조건 미충족으로 「기각」 판정`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n※ 면적/비율 ���준 및 물리조건 전체 미해당`;
+    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조건 전체 미해당`;
   }
 
   return {
@@ -1866,7 +1866,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 ���유한 3�� 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 ��지가 불규칙한 형태로 남아 농기계 진입이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 진입이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -2097,13 +2097,13 @@ export const dummyApplications: Application[] = [
           "잔여면적: 140㎡ (건축 곤란)",
           "맹지 판정: 양 필지 모두 접면도로 상실로 건축허가 불가",
         ],
-        detailedExplanation: "2필지 대지\n\n[필지 1] 123-1: 180㎡ → 80㎡ (삼각형)\n[필�� 2] 123-2: 150㎡ → 60㎡ (자루형)\n\n고속도로 편입으�� 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 인정됩니다.",
+        detailedExplanation: "2필지 대지\n\n[필지 1] 123-1: 180㎡ → 80㎡ (삼각형)\n[필지 2] 123-2: 150㎡ → 60㎡ (자루형)\n\n고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 인정됩니다.",
         manualCheckItems: [],
       },
     },
     finalJudgment: "매수",
-    reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 양 필지 모두 접면도로 상실 확���.",
-    finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2��지 대지입니다. 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
+    reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 양 필지 모두 접면도로 상실 확인.",
+    finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2필지 대지입니다. 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
     adminName: "김철수",
     statusUpdatedAt: "2026-04-29",
   },
@@ -2173,7 +2173,7 @@ export const dummyApplications: Application[] = [
         waterChannelLost: false,
       },
     ],
-    attachments: ["토지대장_산101.pdf", "토지대���_산102.pdf", "토지대장_산103.pdf", "토지대장_산104.pdf", "토지대장_산105.pdf", "등기부등본.pdf", "산림경영계획서.pdf", "조림현황사진.jpg"],
+    attachments: ["토지대장_산101.pdf", "토지대장_산102.pdf", "토지대장_산103.pdf", "토지대장_산104.pdf", "토지대장_산105.pdf", "등기부등본.pdf", "산림경영계획서.pdf", "조림현황사진.jpg"],
     status: "검토중",
     adminStatus: "진행중",
     appliedAt: "2026-04-28",
@@ -2414,7 +2414,7 @@ export const dummyApplications: Application[] = [
         summary: "대지 2필지 개별 분석 - 200-1: 잔여 180㎡, 형상지수 4.5(불량)로 매수 기준 충족",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
-          "200-1: 잔여 180㎡ ≤ 200㎡(소규모 기준 충��) ✓",
+          "200-1: 잔여 180㎡ ≤ 200㎡(소규모 기준 충족) ✓",
           "형상지수: 4.5 (불량) ✓",
           "200-2: 잔여 150㎡, 형상지수 3.2 → 매수",
           "접면도로 상실: 인정 ✓",
@@ -2450,7 +2450,7 @@ export const dummyApplications: Application[] = [
           "형상지수: 3.2 (불량) ✓",
           "200-2: 잔여 150㎡(소규모), 형상지수 2.5(양호) → 미해당",
         ],
-        detailedExplanation: "둔전리 200-1(대지): 잔여 180㎡로 소���모 토지 기준 충족, 형상지수 3.2(불량)로 건축 곤란하여 매수 기준 충족.\n둔전리 200-2(대지): 잔여 150㎡로 소규모 토지 기준 충족하나, 형상지수 2.5(양호)로 건축 가능하여 미해당.",
+        detailedExplanation: "둔전리 200-1(대지): 잔여 180㎡로 소규모 토지 기준 충족, 형상지수 3.2(불량)로 건축 곤란하여 매수 기준 충족.\n둔전리 200-2(대지): 잔여 150㎡로 소규모 토지 기준 충족하나, 형상지수 2.5(양호)로 건축 가능하여 미해당.",
         manualCheckItems: ["200-2 건축 가능 여부 현장 확인"],
       },
       landJudgments: [
