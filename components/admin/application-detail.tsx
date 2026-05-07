@@ -24,7 +24,6 @@ import {
   CheckCircle2,
   XCircle,
   AlertTriangle,
-  Save,
   Clock,
   PlayCircle,
   Info,
@@ -198,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "���입력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -721,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            // 필지 분����� 오류 처리
+            // 필지 분������� 오류 처리
           }
         });
         
@@ -1729,7 +1728,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <SelectContent>
                                       <SelectItem value="대">대 (택지)</SelectItem>
                                       <SelectItem value="전">전 (밭)</SelectItem>
-                                      <SelectItem value="답">답 (논)</SelectItem>
+                                      <SelectItem value="답">��� (논)</SelectItem>
                                       <SelectItem value="임">임 (임야)</SelectItem>
                                       <SelectItem value="잡">잡 (잡종지)</SelectItem>
                                     </SelectContent>
@@ -2553,10 +2552,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               {isSaving ? (
                 "저장 중..."
               ) : (
-                <>
-                  <Save className="mr-2 h-4 w-4" />
-                  검토 완료 및 저장
-                </>
+                "검토 완료 및 저장"
               )}
             </Button>
           </div>
