@@ -2347,8 +2347,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-lg">{allLands.length > 1 ? "필지별 검토" : "매수 판정"}</CardTitle>
-              <CardDescription>{allLands.length > 1 ? "각 필지별로 판정과 검토 의견을 입력하세요" : "해당 필지의 매수 판정을 선택하세요"}</CardDescription>
+              <CardTitle className="text-lg">필지별 검토</CardTitle>
+              <CardDescription>{allLands.length > 1 ? "각 필지별로 판정과 검토 의견을 입력하세요" : "해당 필지의 판정과 검토 의견을 입력하세요"}</CardDescription>
             </div>
             {allLands.length > 1 && (
               <Badge variant="outline">
