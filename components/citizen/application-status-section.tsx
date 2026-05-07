@@ -276,10 +276,10 @@ export function ApplicationStatusSection() {
                         {app.adminStatus === "심사완료" && app.finalJudgment && (
                           <span className={`text-xs font-medium ${
                             app.finalJudgment === "매수" 
-                              ? "text-emerald-600" 
+                              ? "text-green-600" 
                               : app.finalJudgment === "매수불가"
-                                ? "text-red-600"
-                                : "text-amber-600"
+                                ? "text-red-500"
+                                : "text-amber-500"
                           }`}>
                             {app.finalJudgment}
                           </span>

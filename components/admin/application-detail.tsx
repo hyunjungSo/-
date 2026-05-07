@@ -540,7 +540,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "농기계 진입/회전",
         met: farmDifficulty,
-        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : "") : "농기계 사용 가능"
+        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 ���인)" : "") : "농기계 사용 가능"
       });
       
       criteriaChecks.push({
@@ -1125,7 +1125,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
                               {/* 법적 근거 */}
                               <div className="flex items-start gap-2">
-                                <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                                 <div>
                                   <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
                                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
@@ -1167,7 +1167,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               {/* 수동 확인 항목 */}
                               {landResult?.judgmentRationale?.manualCheckItems && landResult.judgmentRationale.manualCheckItems.length > 0 && (
                                 <div className="flex items-start gap-2">
-                                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                                   <div>
                                     <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
                                     <ul className="mt-1 space-y-1">
@@ -1844,7 +1844,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           )}
                         </Button>
                         {guideMessage && (
-                          <p className="text-xs text-center text-amber-600">
+                          <p className="text-xs text-center text-amber-500">
                             {guideMessage}
                           </p>
                         )}
@@ -2004,7 +2004,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
                                       {/* 법적 근거 */}
                                       <div className="flex items-start gap-2">
-                                        <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                        <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                                         <div>
                                           <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
                                           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
@@ -2046,7 +2046,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       {/* 수동 확인 항목 */}
                                       {landResult?.judgmentRationale?.manualCheckItems && landResult.judgmentRationale.manualCheckItems.length > 0 && (
                                         <div className="flex items-start gap-2">
-                                          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                                           <div>
                                             <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
                                             <ul className="mt-1 space-y-1">
@@ -2247,7 +2247,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   {/* 법적 근거 */}
                                   {result.judgmentRationale && (
                                     <div className="flex items-start gap-2">
-                                      <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                      <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                                       <div>
                                         <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
                                         <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{result.judgmentRationale.legalBasis}</p>
@@ -2276,7 +2276,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   {/* 수동 확인 항목 */}
                                   {result.judgmentRationale?.manualCheckItems && result.judgmentRationale.manualCheckItems.length > 0 && (
                                     <div className="flex items-start gap-2">
-                                      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                                       <div>
                                         <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
                                         <ul className="mt-1 space-y-1">
@@ -2470,8 +2470,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           {landReview.landJudgment && aiResult?.provisionalJudgment && 
                             landReview.landJudgment !== aiResult.provisionalJudgment && (
                             <div className="rounded-lg border border-amber-200 bg-amber-50 p-2 flex items-start gap-2">
-                              <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
-                              <p className="text-xs text-amber-700">
+                              <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
+                              <p className="text-xs text-amber-500">
                                 AI 제안({aiResult.provisionalJudgment})과 다른 판정입니다. 검토 의견에 사유를 작성해주세요.
                               </p>
                             </div>

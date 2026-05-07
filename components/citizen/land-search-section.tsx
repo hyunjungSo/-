@@ -98,7 +98,7 @@ const regionData = {
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승���", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
     "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "내덕동", "율량동"],
@@ -178,7 +178,7 @@ const regionData = {
     "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "음양리"],
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
     "향남읍": ["구문천리", "도이리", "발안리", "상신리", "제암리", "평리", "행정리"],
-    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "어우리"],
+    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "어��리"],
     "비봉면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
     "마도면": ["백곡리", "송정리", "쌍송리", "청원리", "해문리"],
     "남양읍": ["남양리", "문호리", "북양리", "송림리", "신남리"],
@@ -241,7 +241,7 @@ const regionData = {
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
-    "소정면": ["송등리", "대곡리", "소정리", "운담리"],
+    "��정면": ["송등리", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -794,7 +794,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return;
       }
       
-      // 지번 검색: 선택된 지역에 해당하는 토지 필터링
+      // 지번 검색: 선택��� 지역에 해당하는 토지 필터링
       results = dummyLandInfoList.filter(land => {
         // 시군구 포함 여부
         if (!land.address.includes(selectedSigungu)) return false;
@@ -1126,7 +1126,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               <div className="flex flex-1 items-center bg-background px-4 py-2">
                 <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <Info className="h-3.5 w-3.5 shrink-0" />
-                  법인 신청 시, 사업자등록증 및 법인인감증명서가 필요합니다.
+                  법인 신청 시, 사업자등록증 및 법인인감증���서가 필요합니다.
                 </p>
               </div>
             </div>
@@ -1604,7 +1604,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       {/* 법적 근거 */}
                       {aiResult.judgmentRationale && (
                         <div className="flex items-start gap-2">
-                          <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                          <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                           <div>
                             <h4 className="text-base font-semibold text-foreground">법적 근거</h4>
                             <p className="mt-1 text-base leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
@@ -1633,7 +1633,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       {/* 수동 확인 항목 */}
                       {aiResult.judgmentRationale?.manualCheckItems && aiResult.judgmentRationale.manualCheckItems.length > 0 && (
                         <div className="flex items-start gap-2">
-                          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                           <div>
                             <h4 className="text-base font-semibold text-foreground">수동 확인 항목</h4>
                             <ul className="mt-1 space-y-1">

@@ -451,8 +451,8 @@ export function LandMap({
               
               {/* 레이어 가시화 안내 */}
               <div className="flex items-start gap-1.5 rounded bg-amber-50 p-2">
-                <Info className="mt-0.5 h-3 w-3 shrink-0 text-amber-600" />
-                <p className="text-base leading-relaxed text-amber-700">
+                <Info className="mt-0.5 h-3 w-3 shrink-0 text-amber-500" />
+                <p className="text-base leading-relaxed text-amber-500">
                   국토수급, 도로구역 레이어는 {LAYER_MIN_ZOOM}Level 부터 가시화됩니다. 
                   현재 지도 Zoom Level은 <strong>{zoomLevel}Level</strong> 입니다.
                 </p>

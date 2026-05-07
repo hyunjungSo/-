@@ -141,7 +141,7 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
                 <strong className="text-destructive">기각:</strong> 매수 기준 미충족. 사유가 안내됩니다.
               </li>
               <li>
-                <strong className="text-amber-600">심의위원회 이관:</strong> 추가 심의가 필요한 경우입니다.
+                <strong className="text-amber-500">심의위원회 이관:</strong> 추가 심의가 필요한 경우입니다.
               </li>
             </ul>
           </div>

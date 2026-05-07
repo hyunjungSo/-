@@ -353,7 +353,7 @@ explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 33
                   "border rounded p-3 text-center transition-all",
                   finalJudgment === "심의위원회 이관" ? "border-amber-500 bg-amber-50" : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className={cn("text-sm font-medium", finalJudgment === "심의위원회 이관" ? "text-amber-700" : "text-gray-500")}>토지보상심의위원회 이관 판단</p>
+                  <p className={cn("text-sm font-medium", finalJudgment === "심의위원회 이관" ? "text-amber-500" : "text-gray-500")}>토지보상심의위원회 이관 판단</p>
                 </div>
               </div>
             </div>
@@ -495,10 +495,10 @@ function PathColumn({
     ? (isMet ? "border-green-200" : isUnmet ? "border-red-200" : "border-amber-200")
     : "border-gray-100";
   const iconColor = showHighlight 
-    ? (isMet ? "text-green-600" : isUnmet ? "text-red-600" : "text-amber-600")
+    ? (isMet ? "text-green-600" : isUnmet ? "text-red-500" : "text-amber-500")
     : "text-gray-400";
   const titleColor = showHighlight 
-    ? (isMet ? "text-green-800" : isUnmet ? "text-red-800" : "text-amber-800")
+    ? (isMet ? "text-green-600" : isUnmet ? "text-red-500" : "text-amber-500")
     : "text-gray-500";
 
   return (
@@ -630,19 +630,19 @@ function PathColumn({
             어느 하나라도 해당 시 조건 <span className="text-green-600">충족</span> → 수용
           </p>
           <p className={cn(
-            conditionStatus === "미충족" ? "text-red-600 font-medium" : "text-gray-400"
+            conditionStatus === "미충족" ? "text-red-500 font-medium" : "text-gray-400"
           )}>
-            전체 미해당 시 조건 <span className="text-red-600">미충족</span> → 수용
+            전체 미해당 시 조건 <span className="text-red-500">미충족</span> → 수용
           </p>
           <p className={cn(
-            conditionStatus === "심의위원회 이관" ? "text-amber-600 font-medium" : "text-gray-400"
+            conditionStatus === "심의위원회 이관" ? "text-amber-500 font-medium" : "text-gray-400"
           )}>
-            실측 및 추가 검토 필요시 → <span className="text-amber-600">검토필요</span>
+            실측 및 추가 검토 필요시 → <span className="text-amber-500">검토필요</span>
           </p>
         </motion.div>
       )}
 
-      {/* 결과 배지 - 선택된 경로에만 표시 */}
+      {/* 결��� 배지 - 선택된 경로에만 표시 */}
       {isActive && conditionStatus && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}

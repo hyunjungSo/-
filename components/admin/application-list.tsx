@@ -113,9 +113,9 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
               <div className="flex flex-col items-center rounded-lg bg-amber-50 p-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100">
-                  <Clock className="h-4 w-4 text-amber-700" />
+                  <Clock className="h-4 w-4 text-amber-500" />
                 </div>
-                <span className="mt-2 text-xl font-bold text-amber-700">{stats.접수완료}</span>
+                <span className="mt-2 text-xl font-bold text-amber-500">{stats.접수완료}</span>
                 <span className="text-xs text-muted-foreground">접수완료</span>
               </div>
               <div className="flex flex-col items-center rounded-lg bg-sky-50 p-3">
@@ -127,9 +127,9 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
               <div className="flex flex-col items-center rounded-lg bg-emerald-50 p-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-700" />
+                  <CheckCircle2 className="h-4 w-4 text-green-600" />
                 </div>
-                <span className="mt-2 text-xl font-bold text-emerald-700">{stats.심사완료}</span>
+                <span className="mt-2 text-xl font-bold text-green-600">{stats.심사완료}</span>
                 <span className="text-xs text-muted-foreground">심사완료</span>
               </div>
             </div>
@@ -157,14 +157,14 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <div className="h-2 w-2 rounded-full bg-emerald-500" />
                   <span className="text-sm">매수 판정</span>
                 </div>
-                <span className="font-semibold text-emerald-700">{stats.aiPurchase}건</span>
+                <span className="font-semibold text-green-600">{stats.aiPurchase}건</span>
               </div>
               <div className="flex items-center justify-between rounded-md bg-red-50 px-3 py-2">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-red-500" />
                   <span className="text-sm">매수불가 판정</span>
                 </div>
-                <span className="font-semibold text-red-700">{stats.aiReject}건</span>
+                <span className="font-semibold text-red-500">{stats.aiReject}건</span>
               </div>
             </div>
 
