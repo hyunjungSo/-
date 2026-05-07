@@ -167,7 +167,7 @@ export function AIAnalysisFlowDialog({
                 {
                   title: "면적 기준 미달 여부",
                   items: [
-                    { label: "주거", value: "90㎡ 이하", isSelected: currentLandType === "대지" && areaThreshold.label === "주거", isMet: currentLandType === "대지" && areaThreshold.label === "주거" && areaMet, 
+                    { label: "주거", subLabel: "단독·다세대 90㎡, 연립 330㎡, 아파트 1,000㎡", isSelected: currentLandType === "대지" && areaThreshold.label === "주거", isMet: currentLandType === "대지" && areaThreshold.label === "주거" && areaMet, 
                       explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}`,
                       explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 ${effectiveThreshold.toLocaleString()}㎡${isRatioRelaxed ? " (완화적용)" : ""}` },
                     { label: "상업", value: "150㎡ 이하", isSelected: currentLandType === "대지" && areaThreshold.label === "상업", isMet: currentLandType === "대지" && areaThreshold.label === "상업" && areaMet,
@@ -283,18 +283,6 @@ export function AIAnalysisFlowDialog({
                   ],
                   showStep: 3,
                 },
-                {
-                  title: "형상 부정형 변경 / 조림지 분단",
-                  items: [
-                    { label: "잔여지 폭: 10m 이하", isSelected: currentLandType === "산지", isMet: currentLandType === "산지" && shapeChanged,
-                      explanationMet: `형상 변경: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})`,
-                      explanationUnmet: `형상 유지: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})` },
-                    { label: "조림지가 양분되어 산림경영 곤란", isSelected: currentLandType === "산지", isMet: currentLandType === "산지" && (includedArea > 0 && isIrregularShape),
-                      explanationMet: `편입면적 ${includedArea.toLocaleString()}㎡로 조림지 양분됨`,
-                      explanationUnmet: "조림지 분단 미발생" },
-                  ],
-                  showStep: 4,
-                },
               ]}
               conditionStatus={currentLandType === "산지" ? conditionStatus : null}
             />
@@ -303,7 +291,7 @@ export function AIAnalysisFlowDialog({
             <PathColumn
               type="그밖의토지"
               icon={Star}
-              isActive={currentLandType === "그밖의토���"}
+              isActive={currentLandType === "그밖의토지"}
               animationStep={animationStep}
               criteria={[
                 {
@@ -311,36 +299,40 @@ export function AIAnalysisFlowDialog({
                   items: [
                     { label: "기본 면적", value: "330㎡ 이하", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && areaMet,
                       explanationMet: `잔여면적 ${remainingArea.toLocaleString()}㎡ ≤ 기준 330㎡`,
-explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 330㎡` },
+                      explanationUnmet: `잔여면적 ${remainingArea.toLocaleString()}㎡ > 기준 330㎡` },
                     { label: "또는", value: "잔여 비율 50% 이하", isSelected: currentLandType === "그밖의토지" && remainingRatio <= 50, isMet: currentLandType === "그밖의토지" && remainingRatio <= 50,
-                      explanationMet: `잔여비율 ${remainingRatio.toFixed(1)}% <= 기준 50%`,
+                      explanationMet: `잔여비율 ${remainingRatio.toFixed(1)}% ≤ 기준 50%`,
                       explanationUnmet: `잔여비율 ${remainingRatio.toFixed(1)}% > 기준 50%` },
                   ],
                   showStep: 2,
                 },
                 {
-                  title: "진입 곤란",
+                  title: "종래의 목적 사용 곤란 여부",
                   items: [
-                    { label: "절토 및 성토/옹벽 설치 등", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && accessRoadLost,
+                    { label: "진입 곤란: 절토 및 성토/옹벽 설치 등", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && accessRoadLost,
                       explanationMet: "절토/성토/옹벽 설치로 진입 곤란 확인됨",
                       explanationUnmet: "진입 가능 - 진입 곤란 기준 미해당" },
+                    { label: "양분된 토지: 일단의 토지가 양분됨", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && includedArea > 0,
+                      explanationMet: `편입면적 ${includedArea.toLocaleString()}㎡로 토지 양분됨`,
+                      explanationUnmet: "편입 없음 - 토지 양분 미발생" },
                   ],
                   showStep: 3,
                 },
                 {
-                  title: "양분된 토지 / 형상 변경",
+                  title: "형상 변경",
                   items: [
-                    { label: "일���의 토지가 양분되어 잔여지 발생", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && includedArea > 0,
-                      explanationMet: `편입면적 ${includedArea.toLocaleString()}㎡로 토지 양분됨`,
-                      explanationUnmet: "편입 없음 - 토지 양분 미발생" },
-                    { label: "형상: 잔여지 폭이 기준 이하로 변경", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged, subLabel: "주거용 5m, 상업용 7m, 공업용/농지/산지 10m",
-                      explanationMet: `형상 변경: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})`,
-                      explanationUnmet: `형상 유지: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})` },
+                    { label: "정형: 잔여지 폭이 기준 이하로 변경", subLabel: "주거용 5m, 상업용 7m, 공업용/농지/산지 10m", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeChanged,
+                      explanationMet: `형상 변경: ${originalShape} → ${remainingShape}`,
+                      explanationUnmet: `형상 유지: ${originalShape} → ${remainingShape}` },
+                    { label: "비정형: 형상 지수가 1.0 이상 상승", isSelected: currentLandType === "그밖의토지", isMet: currentLandType === "그밖의토지" && shapeIndexChange >= 1.0,
+                      explanationMet: `형상지수 +${shapeIndexChange.toFixed(1)} (1.0 이상 상승)`,
+                      explanationUnmet: `형상지수 +${shapeIndexChange.toFixed(1)} (1.0 미만)` },
                   ],
                   showStep: 4,
                 },
               ]}
               conditionStatus={currentLandType === "그밖의토지" ? conditionStatus : null}
+              note="*택지/농지/산지 중 가장 유사한 용도의 기준으로 참작"
             />
             </div>
           </motion.div>
@@ -490,6 +482,7 @@ function PathColumn({
   animationStep,
   criteria,
   conditionStatus,
+  note,
 }: {
   type: LandType;
   icon: typeof Home;
@@ -497,6 +490,7 @@ function PathColumn({
   animationStep: number;
   criteria: Criteria[];
   conditionStatus: string | null;
+  note?: string;
 }) {
   const showHighlight = isActive && animationStep >= 1;
   // 충족/미충족 상태에 따른 색상 결정
@@ -704,6 +698,11 @@ function PathColumn({
             {conditionStatus}
           </span>
         </motion.div>
+      )}
+
+      {/* 경로 참고사항 */}
+      {note && (
+        <p className="text-xs text-gray-400 mt-2 italic">{note}</p>
       )}
     </motion.div>
   );

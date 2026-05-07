@@ -1023,7 +1023,7 @@ export const dummyLandInfoList: LandInfo[] = [
     ],
   },
   // ===== 혼합 케이스 (일부 매수 + 일부 미해당) =====
-  // 4필지 중 2필지 매수, 나머지 2필지 미해당
+  // 4필지 중 2필지 매���, 나머지 2필지 미해당
   {
     id: "land-mixed-001",
     address: "경기도 평택시 포승읍 내기리 200-1",
@@ -1296,15 +1296,28 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   // 면적 기준 충족 여부
   const coreCriteriaMet = areaMet;
   
-  if (coreCriteriaMet && (isIrregularShape || shapeIndexMet)) {
-    // 면적 기준 + 형상 조건 충족 → 매수
-    provisionalJudgment = "매수";
-  } else if (coreCriteriaMet || (isIrregularShape && shapeIndexMet)) {
-    // 면적 기준만 충족 또는 형상 조건만 충족 → 매수 (검토 필요하지만 AI는 매수 판정)
-    provisionalJudgment = "매수";
+  // 토지 유형별 판정 로직 (PDF 기준)
+  if (landInfo.landType === "임야") {
+    // 산지: 면적 기준 + 접면 도로 상실만 (형상 조건 없음!)
+    if (coreCriteriaMet) {
+      provisionalJudgment = "매수";
+    } else {
+      provisionalJudgment = "기각";
+    }
+  } else if (landInfo.landType === "대지" || landInfo.landType === "농지") {
+    // 택지/농지: 면적 기준 + 형상 조건 적용
+    if (coreCriteriaMet || isIrregularShape || shapeIndexMet) {
+      provisionalJudgment = "매수";
+    } else {
+      provisionalJudgment = "기각";
+    }
   } else {
-    // 전체 조건 미해당 → 기각
-    provisionalJudgment = "기각";
+    // 그 밖의 토지: 면적 기준 + 잔여비율 50% 이하 + 형상 변경
+    if (coreCriteriaMet || isBlindLand || isIrregularShape || shapeIndexMet) {
+      provisionalJudgment = "매수";
+    } else {
+      provisionalJudgment = "기각";
+    }
   }
   
   const metAutoCriteria = criteriaChecks.filter(c => c.autoDetected && c.isMet).length;
@@ -1866,7 +1879,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 ��해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 진입이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 ��해 소유한 3�� 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 진입이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -2102,7 +2115,7 @@ export const dummyApplications: Application[] = [
       },
     },
     finalJudgment: "매수",
-    reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 양 필지 모두 접면도로 상실 확인.",
+    reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 양 필지 모두 접면도로 상실 확���.",
     finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2필지 대지입니다. 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
     adminName: "김철수",
     statusUpdatedAt: "2026-04-29",
