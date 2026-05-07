@@ -524,7 +524,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
-        if (shapeCriteria.met) reasons.push("형상 부정형 변��");
+        if (shapeCriteria.met) reasons.push("형상 부정��� 변��");
       } else {
         judgment = "매수불가";
         reasons.push("모든 기준 미충족");
@@ -2135,24 +2135,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </>
                   ) : (
                     <>
-                      {/* 적용된 옵션 - 필지별 현장 상황 옵션 표시 */}
-                      {allLands.map((land, idx) => {
-                        const landOptions = adminAIOptionsPerLand[land.id] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
-                        if (!landOptions.accessRoadLost && !landOptions.waterChannelLost && !landOptions.farmMachineDifficulty) {
-                          return null;
-                        }
-                        return (
-                          <div key={land.id} className="rounded-lg bg-blue-50 border border-blue-200 p-3">
-                            <p className="text-xs font-medium text-blue-700 mb-2">{String.fromCharCode(65 + idx)}: 적용된 현장 상황 옵션</p>
-                            <div className="flex flex-wrap gap-2">
-                              {landOptions.accessRoadLost && <Badge className="bg-blue-600">접면도로 상실</Badge>}
-                              {landOptions.waterChannelLost && <Badge className="bg-blue-600">관개수로 상실</Badge>}
-                              {landOptions.farmMachineDifficulty && <Badge className="bg-blue-600">농기계 진입 곤란</Badge>}
-                            </div>
-                          </div>
-                        );
-                      })}
-                      
   {/* 필지별 분석 결과 - 아코디언 UI (AI 분석 실행 버튼 클릭 시 분석된 필지만 표시, 체크박스 해제와 무관) */}
   <Accordion type="multiple" defaultValue={[]} className="space-y-3 overflow-y-auto">
                         {Object.entries(adminLandAIResults)
