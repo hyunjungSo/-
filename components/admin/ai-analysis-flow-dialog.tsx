@@ -239,9 +239,9 @@ export function AIAnalysisFlowDialog({
                 {
                   title: "농기계 회전 곤란, 형상 부정형 변경",
                   items: [
-                    { label: "농기계 회전 곤란", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && farmMachineDifficulty,
-                      explanationMet: "민원인 확인: 농기계 회전 곤란 상태",
-                      explanationUnmet: "농기계 회전 가능 상태" },
+                    { label: "농기계 진입 및 회전 곤란", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && farmMachineDifficulty,
+                      explanationMet: "민원인 확인: 농기계 진입/회전 곤란 상태",
+                      explanationUnmet: "농기계 진입/회전 가능 상태" },
                     { label: "사각형 폭: 5m 이하", isSelected: currentLandType === "농지", isMet: currentLandType === "농지" && shapeChanged,
                       explanationMet: `형상 변경: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})`,
                       explanationUnmet: `형상 유지: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})` },

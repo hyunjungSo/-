@@ -21,6 +21,16 @@ import type { LandInfo, Application, LandCategory, LandShape, AIAnalysisResult }
 import { ArrowLeft, Upload, Send, Bot, CheckCircle2, XCircle, X, Loader2, ChevronDown, AlertTriangle } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { JudgmentStatus } from "@/components/ui/judgment-status";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface ApplicationFormSectionProps {
   landInfo: LandInfo;
@@ -198,7 +208,7 @@ export function ApplicationFormSection({
     allLands.map(createInitialLandData)
   );
 
-  // 토지별 데이터 업데이트 함��
+  // 토지별 데이터 업데이트 함���
   const updateLandData = (index: number, field: keyof LandSpecificData, value: LandSpecificData[keyof LandSpecificData]) => {
     setLandDataList(prev => {
       const newList = [...prev];
@@ -216,9 +226,15 @@ export function ApplicationFormSection({
   const MAX_FILES = 10;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmitClick = (e: React.FormEvent) => {
     e.preventDefault();
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmSubmit = () => {
+    setShowConfirmDialog(false);
     setIsSubmitting(true);
 
     // 첫 번째 토지의 데이터 사용 (단일 필지의 경우)
@@ -503,7 +519,7 @@ export function ApplicationFormSection({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmitClick} className="space-y-6">
               {/* 신청인 정보 - 깔끔한 선택형 레이아웃 */}
               <div className="space-y-5">
                 <h4 className="border-b border-border pb-2 text-sm font-medium text-foreground">신청인 정보</h4>
@@ -786,7 +802,7 @@ export function ApplicationFormSection({
                                   checked={landData.farmMachineDifficulty}
                                   onCheckedChange={(checked) => updateLandData(index, "farmMachineDifficulty", checked === true)}
                                 />
-                                <span className="text-sm">농기계 회전 곤란</span>
+                                <span className="text-sm">농기계 진입 곤란</span>
                               </label>
                             </>
                           )}
@@ -949,6 +965,26 @@ export function ApplicationFormSection({
           </CardContent>
         </Card>
       </div>
+
+      {/* 제출 확인 다이얼로그 */}
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>매수 신청서를 제출하시겠습니까?</AlertDialogTitle>
+            <AlertDialogDescription>
+              입력하신 내용으로 매수 신청서가 제출됩니다.
+              <br />
+              <span className="font-medium text-foreground">제출 후에는 내용 수정이 불가</span>하오니, 신청 내용을 다시 한번 확인해 주세요.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>취소</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmSubmit}>
+              신청서 제출
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

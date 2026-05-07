@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "�������입력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "�����입력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -222,7 +222,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [adminAIOptionsPerLand, setAdminAIOptionsPerLand] = useState<Record<string, {
     accessRoadLost: boolean;      // 접면도로 상실
     waterChannelLost: boolean;    // 관개수로 상실
-    farmMachineDifficulty: boolean; // 농기계 회전 곤란
+    farmMachineDifficulty: boolean; // 농기계 진입 곤란
   }>>({});
   
   // 필지별 옵션 업데이트 헬퍼
@@ -544,9 +544,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       // 3. 농기계 회전 곤란, 형상 부정형 변경
       const farmDifficulty = adminOptions?.farmMachineDifficulty || landData?.farmMachineDifficulty || land.remainingArea < 200;
       criteriaChecks.push({
-        name: "농기계 회전",
+        name: "농기계 진입/회전",
         met: farmDifficulty,
-        description: farmDifficulty ? "농기계 회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : "") : "농기계 사용 가능"
+        description: farmDifficulty ? "농기계 진입/회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : "") : "농기계 사용 가능"
       });
       
       criteriaChecks.push({
@@ -560,7 +560,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (areaCheckMet) reasons.push("면적 기준 충족");
         if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
-        if (farmDifficulty) reasons.push("농기계 회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
+        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
         judgment = "기각";
@@ -1726,7 +1726,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [adjacentLand.id]: value }))}
                                   >
                                     <SelectTrigger className="h-8 bg-background text-sm">
-                                      <SelectValue placeholder="현재 활용 지목을 선택�� 주���요" />
+                                      <SelectValue placeholder="현재 활용 지목을 선택해 주���요" />
                                     </SelectTrigger>
                                     <SelectContent>
                                       <SelectItem value="대">대 (택지)</SelectItem>
@@ -1810,7 +1810,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* AI 분석 버튼 */}
                   {(() => {
-                    // 선택된 ���든 필지가 현재 활��� 지목을 선택���는지 확인
+                    // 선택된 모든 필지가 현재 활��� 지목을 선택���는지 확인
                     const allSelectedLandsHaveCurrentUsage = adminCheckedLandIds.every(
                       id => adminCurrentUsagePerLand[id] && adminCurrentUsagePerLand[id].trim() !== ""
                     );
@@ -2323,7 +2323,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <div className="flex flex-wrap gap-2">
                                             {landOptions.accessRoadLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">접면도로 상실</Badge>}
                                             {landOptions.waterChannelLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">관개수로 상실</Badge>}
-                                            {landOptions.farmMachineDifficulty && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">농기계 회전 곤란</Badge>}
+                                            {landOptions.farmMachineDifficulty && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">농기계 진입 곤란</Badge>}
                                           </div>
                                         </div>
                                       );
