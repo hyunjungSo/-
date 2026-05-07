@@ -524,7 +524,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (areaCheckMet) reasons.push("면적 기준 충족");
         if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
-        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (������� ���������)" : ""));
+        if (farmDifficulty) reasons.push("농기계 진입 곤란" + (adminOptions?.farmMachineDifficulty ? " (������� ����������)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부��형 변경");
       } else {
         judgment = "매수불가";
@@ -615,48 +615,41 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     setLandAnalysisStatus(initialStatus);
     setLandAnalysisStep(initialStep);
     
-    // 필지별 병렬 분석 시뮬레이션 (속도 개선)
-    const simulateParallelAnalysis = async () => {
-      // 모든 필지를 병렬로 분석 시작
+    // 분석 실행 (최대 5초 이내 완료 보장)
+    const runAnalysis = async () => {
+      const totalLands = adminCheckedLandIds.length;
+      const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수에 따라 동적 조절
+      
+      // 모든 필지를 병렬로 분석
       const analysisPromises = adminCheckedLandIds.map(async (landId) => {
         setLandAnalysisStatus(prev => ({ ...prev, [landId]: 'analyzing' }));
         
-        // 단계별 진행 (각 단계당 50ms, 총 250ms/필지)
         for (let step = 1; step <= 5; step++) {
           setLandAnalysisStep(prev => ({ ...prev, [landId]: step }));
-          await new Promise(resolve => setTimeout(resolve, 50));
+          await new Promise(resolve => setTimeout(resolve, stepDelay));
         }
         
         setLandAnalysisStatus(prev => ({ ...prev, [landId]: 'done' }));
       });
       
       await Promise.all(analysisPromises);
-    };
-    
-    simulateParallelAnalysis();
-    
-    setTimeout(() => {
-      const newResults: typeof adminLandAIResults = {};
       
-      // 담당자가 선택한 필지들만 분석 대상으로 설정 (일단지 판정 제외, 개별 필지만 분석)
+      // 분석 결과 생성
+      const newResults: typeof adminLandAIResults = {};
       const selectedLands = allLands.filter(l => adminCheckedLandIds.includes(l.id));
       
-      // ===== 개별 필지 분석 (선택된 필지만) =====
       selectedLands.forEach((land) => {
         const landId = land.id;
         const landIndex = allLands.findIndex(l => l.id === landId);
         const landData = application.landDataList?.[landIndex];
         
-        // 개별 필지 상세 분석 (관리자 옵션 반영)
         const landOptions = adminAIOptionsPerLand[landId] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
         const adminCurrentUsage = adminCurrentUsagePerLand[landId];
         const adminLandSubType = adminLandSubTypePerLand[landId];
         const analysis = analyzeSingleLand(land, landData, landOptions, adminCurrentUsage, adminLandSubType);
         
-        // 판정 결과
-        const finalJudgment = analysis.judgment === "검토필요" ? "매수불가" : analysis.judgment;
+        const finalJudgment = analysis.judgment;
         
-        // judgmentRationale 생성 (상세 분석 내용)
         const judgmentRationale = {
           summary: `${land.landType} 잔여면적 ${land.remainingArea.toLocaleString()}㎡(잔여비율 ${land.remainingRatio}%), ${analysis.reasons.join(", ")}으로 「${finalJudgment}」 판정`,
           legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
@@ -667,7 +660,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           manualCheckItems: analysis.criteriaChecks.filter(c => !c.met).map(c => `${c.name} 재확인 필요`),
         };
         
-        // criteriaChecks 변환
         const criteriaChecks = analysis.criteriaChecks.map(check => ({
           criteriaName: check.name,
           criteriaDescription: check.description,
@@ -691,7 +683,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         };
       });
       
-      // 관리자 재판독 결과로 저장
       const adminResults: typeof adminLandAIResults = {};
       Object.entries(newResults).forEach(([landId, result]) => {
         adminResults[landId] = {
@@ -704,12 +695,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       setAdminLandAIResults(adminResults);
       setAiResultViewMode("admin");
       setIsAIAnalyzing(false);
-    }, 300);
+    };
+    
+    runAnalysis();
   };
   
   
   
-  // 판독 결과 초����� (관리자 재판독 결과만)
+  // 판독 결과 초기화 (관리자 재판독 결과만)
   const handleResetAdminAIResults = () => {
     setAdminLandAIResults({});
     setAdminAIOptions({
@@ -1041,7 +1034,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                             </div>
                             
-                            {/* 상세 분석 내용 - 모든 필지에 표�� */}
+                            {/* 상세 분석 내용 - 모든 필지에 표��� */}
                             <div className="space-y-4">
                               {/* 판단 요약 */}
                               <div className="flex items-start gap-2">
@@ -1332,7 +1325,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
-                        <span>��청 필지</span>
+                        <span>���청 필지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
@@ -2294,7 +2287,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <div className="flex items-start gap-2">
                                       <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                                       <div>
-                                        <h4 className="text-sm font-semibold text-foreground">상세 분��</h4>
+                                        <h4 className="text-sm font-semibold text-foreground">상세 ����</h4>
                                         <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                                           {result.judgmentRationale.detailedExplanation}
                                         </pre>
