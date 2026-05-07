@@ -522,7 +522,7 @@ export function ApplicationFormSection({
             <form onSubmit={handleSubmitClick} className="space-y-6">
               {/* 신청인 정보 - 깔끔한 선택형 레이아웃 */}
               <div className="space-y-5">
-                <h4 className="border-b border-border pb-2 text-base font-medium text-foreground">신청인 정보</h4>
+                <h4 className="border-b border-border pb-2 text-sm font-medium text-foreground">신청인 정보</h4>
                 
                 {/* 신청 구분 */}
                 <div className="space-y-2">
@@ -674,7 +674,7 @@ export function ApplicationFormSection({
               <div className="pt-6 space-y-4">
                 {/* 토지 정보 타이틀 */}
                 <div className="border-b border-border pb-2">
-                  <h4 className="text-sm font-medium text-foreground">토지 정보</h4>
+                  <h4 className="text-base font-medium text-foreground">토지 정보</h4>
                   <p className="mt-1 text-xs text-muted-foreground">
                     AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지의 실제 활용 상황을 입력해 주세요.
                   </p>
