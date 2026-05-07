@@ -283,7 +283,18 @@ export function AIAnalysisFlowDialog({
                   ],
                   showStep: 3,
                 },
-                
+                {
+                  title: "형상 부정형 변경 / 조림지 분단",
+                  items: [
+                    { label: "잔여지 폭: 10m 이하", isSelected: currentLandType === "산지", isMet: currentLandType === "산지" && shapeChanged,
+                      explanationMet: `형상 변경: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})`,
+                      explanationUnmet: `형상 유지: ${originalShape} → ${remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})` },
+                    { label: "조림지가 양분되어 산림경영 곤란", isSelected: currentLandType === "산지", isMet: currentLandType === "산지" && (includedArea > 0 && isIrregularShape),
+                      explanationMet: `편입면적 ${includedArea.toLocaleString()}㎡로 조림지 양분됨`,
+                      explanationUnmet: "조림지 분단 미발생" },
+                  ],
+                  showStep: 4,
+                },
               ]}
               conditionStatus={currentLandType === "산지" ? conditionStatus : null}
             />
@@ -292,7 +303,7 @@ export function AIAnalysisFlowDialog({
             <PathColumn
               type="그밖의토지"
               icon={Star}
-              isActive={currentLandType === "그밖의토��"}
+              isActive={currentLandType === "그밖의토���"}
               animationStep={animationStep}
               criteria={[
                 {
