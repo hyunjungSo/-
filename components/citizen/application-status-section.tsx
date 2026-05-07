@@ -16,6 +16,7 @@ import {
   Info
 } from "lucide-react";
 import { AdminStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
+import { JudgmentStatus } from "@/components/ui/judgment-status";
 
 // 토지 정보 섹션 컴포넌트 (고용24 스타일 테이블 형태)
 function LandInfoSection({ application }: { application: Application }) {
@@ -150,15 +151,11 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               <span className="text-sm font-medium">AI 판정</span>
             </div>
             <div className="flex flex-1 items-center gap-2 px-4 py-3">
-              <Badge className={`text-sm font-medium ${
-                application.aiResult.provisionalJudgment === "매수" 
-                  ? "bg-green-600 text-white" 
-                  : application.aiResult.provisionalJudgment === "심의위원회 이관"
-                    ? "bg-amber-500 text-white"
-                    : "bg-red-500 text-white"
-              }`}>
-                {application.aiResult.provisionalJudgment}
-              </Badge>
+              <JudgmentStatus 
+                judgment={application.aiResult.provisionalJudgment} 
+                variant="badge" 
+                size="md"
+              />
               {application.aiResult.judgmentRationale && (
                 <RationaleCard 
                   rationale={application.aiResult.judgmentRationale} 
@@ -188,10 +185,11 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               {application.finalJudgment === "매수" && <CheckCircle2 className="h-5 w-5 text-green-600" />}
               {application.finalJudgment === "매수불가" && <AlertTriangle className="h-5 w-5 text-red-500" />}
               {application.finalJudgment === "심의위원회 이관" && <Info className="h-5 w-5 text-amber-500" />}
-              <span className={`font-bold ${
-                application.finalJudgment === "매수" ? "text-green-600" : 
-                application.finalJudgment === "매수불가" ? "text-red-500" : "text-amber-500"
-              }`}>{application.finalJudgment}</span>
+              <JudgmentStatus 
+                judgment={application.finalJudgment} 
+                variant="text" 
+                size="lg"
+              />
             </div>
           </div>
           {application.reviewerComment && (

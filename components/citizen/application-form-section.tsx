@@ -20,6 +20,7 @@ import { landCategories, landShapes } from "@/lib/dummy-data";
 import type { LandInfo, Application, LandCategory, LandShape, AIAnalysisResult } from "@/lib/types";
 import { ArrowLeft, Upload, Send, Bot, CheckCircle2, XCircle, X, Loader2, ChevronDown, AlertTriangle } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { JudgmentStatus } from "@/components/ui/judgment-status";
 
 interface ApplicationFormSectionProps {
   landInfo: LandInfo;
@@ -371,13 +372,11 @@ export function ApplicationFormSection({
                               <span>{land.ownerName}</span>
                             </div>
                           </div>
-                          <Badge className={`shrink-0 text-xs font-medium ${
-                            result?.provisionalJudgment === "매수" 
-                              ? "bg-green-600 text-white" 
-                              : "bg-red-500 text-white"
-                          }`}>
-                            {result?.provisionalJudgment}
-                          </Badge>
+                          <JudgmentStatus 
+                            judgment={result?.provisionalJudgment || "분석중"} 
+                            variant="badge" 
+                            size="sm"
+                          />
                         </div>
                       </div>
                     );
@@ -462,13 +461,11 @@ export function ApplicationFormSection({
                           <span>{landInfo.ownerName}</span>
                         </div>
                       </div>
-                      <Badge className={`shrink-0 text-xs font-medium ${
-                        aiResult?.provisionalJudgment === "매수" 
-                          ? "bg-green-600 text-white" 
-                          : "bg-red-500 text-white"
-                      }`}>
-                        {aiResult?.provisionalJudgment}
-                      </Badge>
+                      <JudgmentStatus 
+                        judgment={aiResult?.provisionalJudgment || "분석중"} 
+                        variant="badge" 
+                        size="sm"
+                      />
                     </div>
                   </div>
                 </div>

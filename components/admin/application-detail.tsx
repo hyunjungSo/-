@@ -14,6 +14,7 @@ import { LandMap } from "@/components/land-map";
 import { LeafletMap } from "@/components/leaflet-map";
 import { AIAnalysisFlowDialog } from "@/components/admin/ai-analysis-flow-dialog";
 import { AIIcon } from "@/components/ui/ai-icon";
+import { JudgmentStatus } from "@/components/ui/judgment-status";
 import { landShapes, landCategories } from "@/lib/dummy-data";
 import type { Application, JudgmentResult, LandShape, LandCategory, AdminStatus } from "@/lib/types";
 import {
@@ -588,7 +589,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       
     } else {
       // 그 밖의 토지 + 관리자 옵션 반영
-      // 종래 목적 사용 곤란 여부 (위치, 형상, 접근 상태 고려)
+      // ���래 목적 사용 곤란 여부 (위치, 형상, 접근 상태 고려)
       const usageDifficulty = adminOptions?.accessRoadLost || adminOptions?.farmMachineDifficulty || land.remainingRatio < 40 || shapeCriteria.met;
       criteriaChecks.push({
         name: "종래 사용 곤란",
@@ -720,7 +721,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            // 필지 분석 오류 처�����
+            // 필지 분석 오류 처������
           }
         });
         
@@ -1033,11 +1034,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
                               </div>
                               {/* 필지별 매수/불매수 Badge 표시 - 항상 표시 */}
-                              <Badge className={`ml-2 shrink-0 ${
-                                (landResult?.provisionalJudgment || aiResult?.provisionalJudgment) === "매수" ? "bg-green-600" : "bg-red-500"
-                              }`}>
-                                {landResult?.provisionalJudgment || aiResult?.provisionalJudgment || "분석중"}
-                              </Badge>
+                              <JudgmentStatus 
+                                judgment={landResult?.provisionalJudgment || aiResult?.provisionalJudgment || "분석중"} 
+                                variant="badge" 
+                                size="sm"
+                                className="ml-2 shrink-0"
+                              />
                             </div>
                           </AccordionTrigger>
                           <AccordionContent className="pb-4">
@@ -1490,15 +1492,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   대기중
                                 </Badge>
                               ) : landResult?.provisionalJudgment ? (
-                                <Badge 
-                                  className={`text-xs shrink-0 ${
-                                    landResult.provisionalJudgment === "매수" ? "bg-green-600 text-white" : 
-                                    landResult.provisionalJudgment === "매수불가" ? "bg-red-500 text-white" : 
-                                    "bg-amber-500 text-white"
-                                  }`}
-                                >
-                                  {landResult.provisionalJudgment}
-                                </Badge>
+                                <JudgmentStatus 
+                                  judgment={landResult.provisionalJudgment} 
+                                  variant="badge" 
+                                  size="sm"
+                                  className="shrink-0"
+                                />
                               ) : null}
                               
                               {/* 아코디언 화살표 아이콘 */}
@@ -1809,7 +1808,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* AI 분석 버튼 */}
                   {(() => {
-                    // 선택된 모든 필지가 현재 활용 지��을 ���택���는지 확인
+                    // 선택된 모든 필지가 현재 활용 지����� ���택���는지 확인
                     const allSelectedLandsHaveCurrentUsage = adminCheckedLandIds.every(
                       id => adminCurrentUsagePerLand[id] && adminCurrentUsagePerLand[id].trim() !== ""
                     );
@@ -1910,11 +1909,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </div>
                                   </div>
                                   {/* 필지별 매수/불매수 Badge 표시 - 항상 표시 */}
-                                  <Badge className={`ml-2 ${
-                                    (landResult?.provisionalJudgment || application.aiResult?.provisionalJudgment) === "매수" ? "bg-green-600" : "bg-red-500"
-                                  }`}>
-                                    {landResult?.provisionalJudgment || application.aiResult?.provisionalJudgment || "분석중"}
-                                  </Badge>
+                                  <JudgmentStatus 
+                                    judgment={landResult?.provisionalJudgment || application.aiResult?.provisionalJudgment || "분석중"} 
+                                    variant="badge" 
+                                    size="sm"
+                                    className="ml-2"
+                                  />
                                 </div>
                               </AccordionTrigger>
                               <AccordionContent className="pb-4">
@@ -2182,13 +2182,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
                                     </div>
                                   </div>
-                                  <Badge className={`ml-2 ${
-                                    result.provisionalJudgment === "매수" ? "bg-green-600 text-white" : 
-                                    result.provisionalJudgment === "심의위원회 이관" ? "bg-amber-500 text-white" : 
-                                    "bg-red-500 text-white"
-                                  }`}>
-                                    {result.provisionalJudgment}
-                                  </Badge>
+                                  <JudgmentStatus 
+                                    judgment={result.provisionalJudgment} 
+                                    variant="badge" 
+                                    size="sm"
+                                    className="ml-2"
+                                  />
                                 </div>
                               </AccordionTrigger>
                               <AccordionContent className="pb-4">
@@ -2684,17 +2683,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         const result = citizenLandAIResults[land?.id];
                         const judgment = result?.provisionalJudgment || "분석 필요";
                         return (
-                          <Badge className={`text-sm px-3 py-1 ${
-                            judgment === "매수" ? "bg-green-600 text-white" : 
-                            judgment === "매수불가" ? "bg-red-500 text-white" : 
-                            "bg-amber-500 text-white"
-                          }`}>
-                            {judgment}
-                          </Badge>
+                          <JudgmentStatus 
+                            judgment={judgment} 
+                            variant="badge" 
+                            size="md"
+                          />
                         );
                       })()}
                       <span className="text-sm text-muted-foreground">
-                        ��뢰도: {(() => {
+                        신뢰도: {(() => {
                           const land = allLands[expandedLandIndex];
                           const result = citizenLandAIResults[land?.id];
                           return result?.confidence ? `${result.confidence}%` : "-";
