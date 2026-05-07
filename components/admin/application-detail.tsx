@@ -1574,7 +1574,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </SelectTrigger>
                                     <SelectContent>
                                       <SelectItem value="대">대 (택지)</SelectItem>
-                                      <SelectItem value="전">전 (밭)</SelectItem>
+                                      <SelectItem value="전">전 (��)</SelectItem>
                                       <SelectItem value="답">답 (논)</SelectItem>
                                       <SelectItem value="임">임 (임야)</SelectItem>
                                       <SelectItem value="잡">잡 (잡종지)</SelectItem>
@@ -2455,9 +2455,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           {/* AI 판정과 다른 경우 경고 */}
                           {landReview.landJudgment && aiResult?.provisionalJudgment && 
                             landReview.landJudgment !== aiResult.provisionalJudgment && (
-                            <div className="rounded-lg border border-amber-200 bg-amber-50 p-2 flex items-start gap-2">
-                              <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
-                              <p className="text-xs text-amber-500">
+                            <div className="flex items-start gap-2">
+                              <AlertTriangle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+                              <p className="text-sm text-red-600">
                                 AI 제안({aiResult.provisionalJudgment})과 다른 판정입니다. 검토 의견에 사유를 작성해주세요.
                               </p>
                             </div>
