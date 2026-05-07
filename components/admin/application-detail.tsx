@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "������������������������력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "��������������������������력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -525,7 +525,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
         judgment = "기각";
-        reasons.push("모든 기준 미충족");
+        reasons.push("���든 기준 미충족");
       }
       
     } else if (effectiveLandType === "농지") {
@@ -1376,7 +1376,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
-                        <span>인접 필지</span>
+                        <span>인접 필지 (미신청)</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
@@ -1417,7 +1417,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     
                     {/* 필지 리스트 */}
                     <div className="divide-y max-h-[320px] overflow-y-auto">
-                      {/* 신청 필지 목록 */}
+                      {/* 신청 필지 섹션 */}
+                      <div className="px-3 py-2 bg-gray-50/50 border-b border-gray-200/50">
+                        <p className="text-xs font-medium text-gray-700">신청 필지</p>
+                        <p className="text-[10px] text-gray-500 mt-0.5">민원인이 매수를 신청한 필지</p>
+                      </div>
                       {applicationLands.map((land, idx) => {
                         const isSelected = adminCheckedLandIds.includes(land.id);
                         const isHovered = hoveredLandId === land.id;
@@ -1643,7 +1647,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         );
                       })}
                       
-                      {/* 인접 필지 */}
+                      {/* 인접 필지 섹션 */}
+                      {adjacentLands.length > 0 && (
+                        <div className="px-3 py-2 bg-amber-50/50 border-y border-amber-200/50">
+                          <p className="text-xs font-medium text-amber-700">인접 필지 (미신청)</p>
+                          <p className="text-[10px] text-amber-600/80 mt-0.5">신청 필지에 인접하나 민원인이 선택하지 않은 필지</p>
+                        </div>
+                      )}
                       {adjacentLands.map((adjacentLand, adjIdx) => {
                         const isSelected = adminCheckedLandIds.includes(adjacentLand.id);
                         const isHovered = hoveredLandId === adjacentLand.id;
