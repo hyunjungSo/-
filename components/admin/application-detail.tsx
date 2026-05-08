@@ -919,7 +919,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 <SelectValue placeholder="필지를 선택하세요" />
               </SelectTrigger>
               <SelectContent>
-                <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-b">신청 필지</div>
                 {applicationLands.map((land, index) => (
                   <SelectItem key={land.id} value={index.toString()}>
                     <div className="flex items-center gap-2">
@@ -929,20 +928,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                   </SelectItem>
                 ))}
-                {adjacentLands.length > 0 && (
-                  <>
-                    <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-b border-t mt-1">인접 필지</div>
-                    {adjacentLands.map((land, index) => (
-                      <SelectItem key={land.id} value={(applicationLands.length + index).toString()}>
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{String.fromCharCode(65 + applicationLands.length + index)}</span>
-                          <span>{land.address.split(" ").slice(-2).join(" ")}</span>
-                          <span className="text-muted-foreground text-xs">| {land.landCategory} | {land.remainingArea.toLocaleString()}㎡</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </>
-                )}
               </SelectContent>
             </Select>
             <div className="flex items-center gap-2">
@@ -955,13 +940,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               >
                 <ArrowLeft className="h-4 w-4" />
               </Button>
-              <span className="text-sm text-muted-foreground whitespace-nowrap">{selectedLandIndex + 1} / {allLands.length}</span>
+              <span className="text-sm text-muted-foreground whitespace-nowrap">{selectedLandIndex + 1} / {applicationLands.length}</span>
               <Button
                 variant="outline"
                 size="icon"
                 className="h-8 w-8"
-                onClick={() => setSelectedLandIndex(Math.min(allLands.length - 1, selectedLandIndex + 1))}
-                disabled={selectedLandIndex === allLands.length - 1}
+                onClick={() => setSelectedLandIndex(Math.min(applicationLands.length - 1, selectedLandIndex + 1))}
+                disabled={selectedLandIndex === applicationLands.length - 1}
               >
                 <ArrowRight className="h-4 w-4" />
               </Button>
@@ -969,19 +954,19 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
 
           {/* 선택된 필지 상세 정보 */}
-          {allLands[selectedLandIndex] && (
+          {applicationLands[selectedLandIndex] && (
             <div className="grid grid-cols-3 gap-6 pt-4 border-t">
               <div>
                 <span className="text-sm text-muted-foreground">토지유형</span>
-                <p className="font-medium text-sm">{allLands[selectedLandIndex].landCategory}</p>
+                <p className="font-medium text-sm">{applicationLands[selectedLandIndex].landCategory}</p>
               </div>
               <div>
                 <span className="text-sm text-muted-foreground">대상 지번</span>
-                <p className="font-medium text-sm">{allLands[selectedLandIndex].address}</p>
+                <p className="font-medium text-sm">{applicationLands[selectedLandIndex].address}</p>
               </div>
               <div>
                 <span className="text-sm text-muted-foreground">면적</span>
-                <p className="font-medium text-sm">{allLands[selectedLandIndex].remainingArea.toLocaleString()}㎡</p>
+                <p className="font-medium text-sm">{applicationLands[selectedLandIndex].remainingArea.toLocaleString()}㎡</p>
               </div>
             </div>
           )}
