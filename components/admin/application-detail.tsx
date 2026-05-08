@@ -384,7 +384,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지별 분���
+        // 개별 필지별 분����
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -539,7 +539,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         met: waterLost || roadLost,
         description: waterLost 
           ? "관개수로 상실로 농지 사용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
-          : (roadLost ? "접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "도로/수로 유지")
+          : (roadLost ? "접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "도로/수�� 유지")
       });
       
       // 3. 농기계 회전 곤란, 형상 부정형 변경
@@ -853,7 +853,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       <div className="flex items-center justify-between">
         <Button variant="ghost" onClick={onBack} className="h-auto px-0 text-muted-foreground hover:bg-transparent hover:text-foreground">
           <ArrowLeft className="mr-1.5 h-4 w-4" />
@@ -952,9 +952,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </div>
           </div>
         </CardHeader>
-        <CardContent className="space-y-8">
+        <CardContent className="space-y-12">
           {/* 2-1. 토지정보 */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             <h3 className="text-base font-semibold ">토지정보</h3>
             {applicationLands[selectedLandIndex] && (
               <div className="rounded-lg border overflow-hidden">
@@ -1025,7 +1025,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
 
           {/* 2-2. AI 분석 */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             <h3 className="text-base font-semibold ">AI 분석</h3>
             <p className="text-sm text-muted-foreground">민원인 신청 결과와 담당자 분석 결과를 확인합니다.</p>
             <Tabs defaultValue="citizen" className="w-full">
@@ -1309,7 +1309,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     {(() => {
                                       const explanation = landResult?.judgmentRationale?.detailedExplanation;
                                       if (!explanation) {
-                                        return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면��: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
+                                        return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면��: ${land.originalArea.toLocaleString()}㎡\n잔여 ���적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
                                       }
                                       
                                       // If this is multi-parcel and explanation contains all parcels info,
@@ -2113,7 +2113,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
 
           {/* 2-3. 담당자 검토 */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             <h3 className="text-base font-semibold ">담당자 검토</h3>
             <p className="text-sm text-muted-foreground">선택된 필지의 판정과 검토 의견을 입력하세요</p>
           {(() => {
@@ -2191,7 +2191,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
 
           {/* 2-4. 진행상황 선택 */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             <h3 className="text-base font-semibold ">진행상황 선택</h3>
             <p className="text-sm text-muted-foreground">민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다</p>
             <div className="flex flex-wrap gap-2">
