@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지��������������������������������������� 분석
+        // 개별 필지������������������������������������� 분석
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -876,7 +876,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <CardTitle className="text-lg">신청인 정보</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 auto-cols-fr">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             <div>
               <span className="text-sm text-muted-foreground">접수번호</span>
               <p className="font-medium">2026-05-001</p>
@@ -904,7 +904,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       </Card>
 
       {/* Section 02. 필지선택 */}
-      <Card className="border border-gray-100">
+      <Card className="border" style={{ borderColor: 'lab(91.6229 -0.159115 -2.26791)' }}>
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">대상 필지 분석 및 검토</CardTitle>
@@ -1010,7 +1010,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <tr>
                       <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground align-top">신청 사유</td>
                       <td className="px-4 py-3" colSpan={3}>
-                        <p className="text-sm leading-relaxed">도로 개설로 인해 토지가 분할되어 잔여지의 형상이 불규칙하고, 농기계 진입이 어려워 농업 활용이 곤란합니다. 또한 기존 접면도로가 상실되어 토지 이용에 심각한 제한이 발생하였습니다.</p>
+                        <p className="text-sm leading-relaxed">도로 개설로 인��� 토지가 분할되어 잔여지의 형상이 불규칙하고, 농기계 진입이 어려워 농업 활용이 곤란합니다. 또한 기존 접면도로가 상실되어 토지 이용에 심각한 제한이 발생하였습니다.</p>
                       </td>
                     </tr>
                     <tr>
@@ -1353,7 +1353,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </div>
             </TabsContent>
             
-            {/* 담당자 ���과 탭 */}
+            {/* 담당자 결과 탭 */}
             <TabsContent value="admin">
               <div className="space-y-6">
                 {/* 섹션 1: 지적도 */}
@@ -2061,7 +2061,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardHeader>
           <CardTitle className="text-lg">진행상황 선택</CardTitle>
           <CardDescription>
-            민원인이 ���청 ���� 조회 시 이 진행상황이 표시됩니다
+            민원인이 신청 현�� 조회 시 이 진행상황이 표시됩니다
           </CardDescription>
         </CardHeader>
         <CardContent>
