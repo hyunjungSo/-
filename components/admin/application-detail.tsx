@@ -891,10 +891,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* Section 03. 필지 정보 */}
+      {/* Section 03. 토지 정보 */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">필지 정보</CardTitle>
+          <CardTitle className="text-lg">토지 정보</CardTitle>
         </CardHeader>
         <CardContent>
           {/* 필지 선택 */}
@@ -943,18 +943,73 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
           {/* 선택된 필지 상세 정보 */}
           {applicationLands[selectedLandIndex] && (
-            <div className="grid grid-cols-3 gap-6 pt-4 border-t">
-              <div>
-                <span className="text-sm text-muted-foreground">토지유형</span>
-                <p className="font-medium text-sm">{applicationLands[selectedLandIndex].landCategory}</p>
+            <div className="space-y-6 pt-4 border-t">
+              {/* 기본 정보 */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                <div>
+                  <span className="text-sm text-muted-foreground">토지유형</span>
+                  <p className="font-medium text-sm">{applicationLands[selectedLandIndex].landType || "-"}</p>
+                </div>
+                <div>
+                  <span className="text-sm text-muted-foreground">대상 지번</span>
+                  <p className="font-medium text-sm">{applicationLands[selectedLandIndex].address}</p>
+                </div>
+                <div>
+                  <span className="text-sm text-muted-foreground">잔여면적</span>
+                  <p className="font-medium text-sm">{applicationLands[selectedLandIndex].remainingArea.toLocaleString()}㎡</p>
+                </div>
               </div>
-              <div>
-                <span className="text-sm text-muted-foreground">대상 지번</span>
-                <p className="font-medium text-sm">{applicationLands[selectedLandIndex].address}</p>
+
+              {/* 추가 정보 */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                <div>
+                  <span className="text-sm text-muted-foreground">토지 모양</span>
+                  <p className="font-medium text-sm">{applicationLands[selectedLandIndex].shape || "-"}</p>
+                </div>
+                <div>
+                  <span className="text-sm text-muted-foreground">활용지목</span>
+                  <p className="font-medium text-sm">{applicationLands[selectedLandIndex].currentUse || "-"}</p>
+                </div>
+                <div>
+                  <span className="text-sm text-muted-foreground">공부상 지목</span>
+                  <p className="font-medium text-sm">{applicationLands[selectedLandIndex].landCategory}</p>
+                </div>
               </div>
-              <div>
-                <span className="text-sm text-muted-foreground">면적</span>
-                <p className="font-medium text-sm">{applicationLands[selectedLandIndex].remainingArea.toLocaleString()}㎡</p>
+
+              {/* 확인 항목 */}
+              <div className="space-y-2">
+                <span className="text-sm text-muted-foreground block">확인항목</span>
+                {applicationLands[selectedLandIndex].confirmationItems ? (
+                  <div className="flex flex-wrap gap-2">
+                    {applicationLands[selectedLandIndex].confirmationItems.map((item, idx) => (
+                      <Badge key={idx} variant="outline">{item}</Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">-</p>
+                )}
+              </div>
+
+              {/* 신청 사유 */}
+              <div className="space-y-2">
+                <span className="text-sm text-muted-foreground block">신청 사유</span>
+                <p className="text-sm bg-muted/30 p-3 rounded">{applicationLands[selectedLandIndex].applicationReason || "-"}</p>
+              </div>
+
+              {/* 첨부서류 */}
+              <div className="space-y-2">
+                <span className="text-sm text-muted-foreground block">첨부서류</span>
+                {applicationLands[selectedLandIndex].attachments && applicationLands[selectedLandIndex].attachments.length > 0 ? (
+                  <div className="space-y-2">
+                    {applicationLands[selectedLandIndex].attachments.map((attachment, idx) => (
+                      <div key={idx} className="flex items-center gap-2 p-2 bg-muted/30 rounded">
+                        <span className="text-sm">{attachment.name || `파일 ${idx + 1}`}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">-</p>
+                )}
               </div>
             </div>
           )}
