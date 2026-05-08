@@ -969,7 +969,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {applicationLands[selectedLandIndex]?.address.split(" ").slice(-2).join(" ")}
               </span>
             </div>
-            <span className="text-xs text-muted-foreground">아래 정보는 선택한 필지에 대한 내용입니다</span>
+            <span className="text-xs text-muted-foreground">아래정보는 선택한필지 ({applicationLands[selectedLandIndex]?.address}) 에 대한 내용입니다.</span>
           </div>
         </CardHeader>
         <CardContent className="space-y-12">
@@ -1949,7 +1949,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       {/* 판정 기준 충족 여부 */}
                                       {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
                                         <div className="rounded-lg bg-white/60 p-3 border">
-                                          <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
+                                          <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충��� 여부</p>
                                           <div className="space-y-2">
                                             {aiResult.criteriaChecks.map((check, cIdx) => (
                                               <div key={cIdx} className="flex items-center justify-between text-sm">
