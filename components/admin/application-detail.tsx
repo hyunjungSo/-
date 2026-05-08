@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지��������������������� 분석
+        // 개별 필지����������������������� 분석
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1057,7 +1057,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           {/* 2-2. AI 분석 */}
           <div className="space-y-4">
             <h3 className="text-base font-semibold">AI 분석</h3>
-            <p className="text-sm text-muted-foreground">민원인 신청 결과와 ���당자 분석 결과를 확인합니다.</p>
+            <p className="text-sm text-muted-foreground">민원인 신청 결과와 담당자 분석 결과를 확인합니다.</p>
             <Tabs defaultValue="citizen" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="citizen">
