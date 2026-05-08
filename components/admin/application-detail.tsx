@@ -2162,8 +2162,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           </div>
                         );
                       })()}
-                    </>
-                  )}
                     </div>
                   </div>
                 </div>
@@ -2519,7 +2517,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         />
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">
-                        원래 면적의 {allLands[expandedLandIndex]?.remainingRatio}%
+                        ���래 면적의 {allLands[expandedLandIndex]?.remainingRatio}%
                       </p>
                     </div>
                     
