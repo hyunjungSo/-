@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ��지별 분�������
+        // 개별 ���지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -540,7 +540,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         met: waterLost || roadLost,
         description: waterLost 
           ? "관개수로 상실로 농지 사용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
-          : (roadLost ? "접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "도로/���� 유지")
+          : (roadLost ? "접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리�� 확인)" : "") : "도로/���� 유지")
       });
       
       // 3. 농기계 회전 곤란, 형상 부정형 변경
@@ -1642,10 +1642,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   })()}
                 </div>
                 
-                {/* 우측: 분석결�� */}
+                {/* 우측: Step 4. 분석결과 확인 */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium">분석결과</h4>
+                    <h4 className="font-medium flex items-center gap-2">
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">4</span>
+                      분석결과 확인
+                    </h4>
                     {Object.keys(adminLandAIResults).length > 0 && (
                       <Button
                         variant="ghost"
