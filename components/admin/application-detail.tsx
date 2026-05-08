@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ��������������������지별 분�������
+        // 개별 ���������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -582,7 +582,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || roadLost) {
         judgment = "매수";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (���리자 확인)" : ""));
+        if (roadLost) reasons.push("���면도로 상실" + (adminOptions?.accessRoadLost ? " (���리자 확인)" : ""));
       } else {
         judgment = "기각";
         reasons.push("모든 기준 미충��");
@@ -1358,7 +1358,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   {/* 필지 선택 + 지적도 한 행 배치 */}
                   <div className="flex gap-3">
                     {/* 필지 선택 목록 */}
-                    <div className="w-[220px] shrink-0 rounded-lg border bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
+                    <div className="w-[35%] shrink-0 rounded-lg border bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
                       {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지�� ���시 */}
                       {applicationLands[selectedLandIndex] && (
                         <div 
@@ -1440,7 +1440,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                     
                     {/* 지적도 맵 */}
-                    <div className="flex-1 relative h-[420px] rounded-lg overflow-hidden border">
+                    <div className="w-[65%] relative h-[420px] rounded-lg overflow-hidden border">
                     <div className="absolute inset-0">
                     <LeafletMap
                       parcels={(() => {
@@ -1611,7 +1611,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </Select>
                             </div>
                             
-                            {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
+                            {/* 건축물 용도 선택 - 현재 활용 지목이 "대"��� 경우만 표시 */}
                             {adminCurrentUsagePerLand[currentParcelId] === "대" && (
                               <div className="space-y-2 p-3 rounded-lg bg-muted/30">
                                 <label className="text-sm font-medium text-foreground">
