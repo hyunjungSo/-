@@ -904,12 +904,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       </Card>
 
       {/* Section 02. 필지선택 */}
-      <Card>
+      <Card className="border-none">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">대상 필지 분석 및 검토</CardTitle>
             {/* 필지 선택 - 강조된 UI */}
-            <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
+            <div className="flex items-center gap-3 bg-blue-50 border border-gray-200 rounded-lg px-3 py-2">
               <div className="flex items-center gap-2">
                 <div className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white font-bold text-sm">
                   {String.fromCharCode(65 + selectedLandIndex)}
@@ -1741,7 +1741,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                   ) : (
                     <>
-                      {/* 선택된 필지의 분석 결과 표시 */}
+                      {/* 선택된 필지의 분석 결과 표�� */}
                       {(() => {
                         const currentParcelId = selectedAdjacentParcel?.id || applicationLands[selectedLandIndex]?.id;
                         const land = selectedAdjacentParcel || applicationLands[selectedLandIndex];
