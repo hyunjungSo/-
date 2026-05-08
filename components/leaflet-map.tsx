@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Layers, Map as MapIcon, Plus, Minus, Info, Locate, Ruler, X } from "lucide-react";
+import { Layers, Plus, Minus, Info, Locate, Ruler, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Popover,
   PopoverContent,
@@ -721,35 +722,20 @@ export function LeafletMap({
 
       {/* 지도 컨트롤 - 배경지도/거리측정/레이어 */}
       <div className="absolute right-14 top-3 z-[1000] flex flex-col gap-2">
-        {/* 배경지도 선택 */}
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="secondary" size="sm" className="h-8 gap-1.5 bg-white text-[#292929] shadow-md hover:bg-gray-100 active:bg-[#292929] active:text-white [&_svg]:text-[#292929] active:[&_svg]:text-white">
-              <MapIcon className="h-4 w-4" />
-              <span className="text-sm">배경지도</span>
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="z-[1001] w-36 p-2" align="start" sideOffset={5}>
-            <div className="space-y-1">
-              <button
-                onClick={() => setBaseMap("normal")}
-                className={`w-full rounded px-3 py-2 text-left text-base ${
-                  baseMap === "normal" ? "bg-primary text-white" : "hover:bg-muted"
-                }`}
-              >
-                일반
-              </button>
-              <button
-                onClick={() => setBaseMap("satellite")}
-                className={`w-full rounded px-3 py-2 text-left text-base ${
-                  baseMap === "satellite" ? "bg-primary text-white" : "hover:bg-muted"
-                }`}
-              >
-                위성
-              </button>
-            </div>
-          </PopoverContent>
-        </Popover>
+        {/* 배경지도 토글 스위치 */}
+        <div className="flex items-center gap-2 rounded-md bg-white px-3 py-1.5 shadow-md">
+          <span className={`text-sm font-medium ${baseMap === "normal" ? "text-foreground" : "text-muted-foreground"}`}>
+            일반
+          </span>
+          <Switch
+            checked={baseMap === "satellite"}
+            onCheckedChange={(checked) => setBaseMap(checked ? "satellite" : "normal")}
+            className="data-[state=checked]:bg-primary"
+          />
+          <span className={`text-sm font-medium ${baseMap === "satellite" ? "text-foreground" : "text-muted-foreground"}`}>
+            위성
+          </span>
+        </div>
         
         {/* 거리 측정 */}
         <Button 
