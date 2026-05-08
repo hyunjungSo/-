@@ -998,7 +998,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <td className="px-4 py-3">{applicationLands[selectedLandIndex].landCategory}</td>
                     </tr>
                     <tr>
-                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground align-top">확인��목</td>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground align-top">확인항목</td>
                       <td className="px-4 py-3" colSpan={3}>
                         <div className="flex flex-wrap gap-2">
                           <Badge variant="secondary">농기계 진입 곤란</Badge>
