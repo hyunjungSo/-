@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ������������지별 분�������
+        // 개별 �������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1147,7 +1147,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     const judgment = landResult?.provisionalJudgment || aiResult?.provisionalJudgment;
                     
                     return (
-                      <div className={`rounded-lg border p-4 max-h-[480px] overflow-y-auto ${
+                      <div className={`rounded-lg border p-4 ${
                         judgment === "매수"
                           ? "border-green-600/20 bg-green-600/5"
                           : judgment === "기각"
@@ -1580,7 +1580,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <SelectContent>
                                   <SelectItem value="대">대 (택지)</SelectItem>
                                   <SelectItem value="전">전 (밭)</SelectItem>
-                                  <SelectItem value="답">답 (논)</SelectItem>
+                                  <SelectItem value="답">답 (��)</SelectItem>
                                   <SelectItem value="임">임 (임야)</SelectItem>
                                   <SelectItem value="잡">잡 (잡종지)</SelectItem>
                                 </SelectContent>
