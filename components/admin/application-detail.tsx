@@ -904,12 +904,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       </Card>
 
       {/* Section 02. 필지선택 */}
-      <Card>
+      <Card className="border-none">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-xl">대상 필지 분석 및 검토</CardTitle>
+            <CardTitle className="text-lg">대상 필지 분석 및 검토</CardTitle>
             {/* 필지 선택 - 강조된 UI */}
-            <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
+            <div className="flex items-center gap-3 bg-blue-50 border border-gray-200 rounded-lg px-3 py-2">
               <div className="flex items-center gap-2">
                 <div className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white font-bold text-sm">
                   {String.fromCharCode(65 + selectedLandIndex)}
@@ -960,12 +960,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
           {/* 선택된 필지 연결 표시 */}
           <div className="flex items-center gap-2 mt-3 pt-3 border-t border-blue-100">
-            <div className="flex items-center gap-1.5 text-blue-600">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-              </svg>
-              <span className="text-sm font-medium">선택된 필지 정보</span>
-            </div>
+            <span className="text-sm font-medium text-blue-600">선택된 필지 정보</span>
             <div className="flex items-center gap-2 bg-blue-100 rounded-full px-3 py-1">
               <span className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-xs">
                 {String.fromCharCode(65 + selectedLandIndex)}
@@ -980,7 +975,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardContent className="space-y-12">
           {/* 2-1. 토지정보 */}
           <div className="space-y-4">
-            <h3 className="text-base font-semibold">토지정보</h3>
+            <h3 className="text-lg font-semibold">토지정보</h3>
             {applicationLands[selectedLandIndex] && (
               <div className="rounded-lg border overflow-hidden">
                 <table className="w-full text-sm">
@@ -1004,7 +999,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <td className="px-4 py-3">{applicationLands[selectedLandIndex].landCategory}</td>
                     </tr>
                     <tr>
-                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground align-top">확인항목</td>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground align-top">확인��목</td>
                       <td className="px-4 py-3" colSpan={3}>
                         <div className="flex flex-wrap gap-2">
                           <Badge variant="secondary">농기계 진입 곤란</Badge>
@@ -1052,7 +1047,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           {/* 2-2. AI 분석 */}
           <div className="space-y-4">
             <h3 className="text-base font-semibold">AI 분석</h3>
-            <p className="text-sm text-muted-foreground">민원��� 신�� 결���와 ���당자 분석 결과를 확인합니다.</p>
+            <p className="text-sm text-muted-foreground">���원��� 신청 결과와 ���당자 분석 결과를 확인합니다.</p>
             <Tabs defaultValue="citizen" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="citizen">
@@ -1318,7 +1313,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                               <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                                 {aiResult?.judgmentRationale?.detailedExplanation || 
-                                  `[필지 ���보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`}
+                                  `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`}
                               </pre>
                             </div>
                           </div>
@@ -1347,7 +1342,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         <div className="flex items-start gap-2 pt-2 border-t">
                           <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                           <p className="text-xs text-muted-foreground">
-                            AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                            AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩���다.
                           </p>
                         </div>
                       </div>
@@ -1488,7 +1483,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           },
                           {
                             id: "adjacent-002",
-                            address: "경기도 용인시 처인구 포곡읍 마성리 102",
+                            address: "경기도 용인시 처인구 포곡읍 ��성리 102",
                             isIncluded: false,
                             isOwned: false,
                             isAdjacent: true,
@@ -1741,7 +1736,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                   ) : (
                     <>
-                      {/* 선택된 필지의 분석 결과 표시 */}
+                      {/* 선택된 필지�� 분석 결과 표�� */}
                       {(() => {
                         const currentParcelId = selectedAdjacentParcel?.id || applicationLands[selectedLandIndex]?.id;
                         const land = selectedAdjacentParcel || applicationLands[selectedLandIndex];
@@ -1951,7 +1946,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         </div>
                                       </div>
                                       
-                                      {/* 판정 기��� 충족 여부 */}
+                                      {/* 판정 기준 충족 여부 */}
                                       {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
                                         <div className="rounded-lg bg-white/60 p-3 border">
                                           <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
@@ -1994,7 +1989,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
           {/* 2-3. 담당자 검토 */}
           <div className="space-y-4">
-            <h3 className="text-base font-semibold mb-[6px]">담당자 검토</h3>
+            <h3 className="text-base font-semibold">담당자 검토</h3>
             <p className="text-sm text-muted-foreground">선택된 필지의 판정과 검토 의견을 입력하세요</p>
           {(() => {
             const landReview = landReviewDataList[selectedLandIndex];
