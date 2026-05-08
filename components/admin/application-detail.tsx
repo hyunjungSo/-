@@ -1704,20 +1704,18 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 
                     {/* 우측: 분석결과 확인 */}
                     <div className="w-1/2 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-lg font-semibold">분석결과 확인</h4>
-                    {Object.keys(adminLandAIResults).length > 0 && (
+                  {Object.keys(adminLandAIResults).length > 0 && (
+                    <div className="flex justify-end">
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={handleResetAdminAIResults}
-                        className="h-7 w-7 text-muted-foreground hover:text-destructive"
-                        title="재분석 결과 초기화"
+                        className="h-6 w-6"
                       >
-                        <RotateCcw className="h-4 w-4" />
+                        <X className="h-4 w-4" />
                       </Button>
-                    )}
-                  </div>
+                    </div>
+                  )}
                   
                   {Object.keys(adminLandAIResults).length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center rounded-lg border bg-muted/20">
