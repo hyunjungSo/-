@@ -974,7 +974,7 @@ export function ApplicationFormSection({
             <AlertDialogDescription>
               입력하신 내용으로 매수 신청서가 제출됩니다.
               <br />
-              <span className="font-medium text-foreground">제출 후에는 내용 수정이 어려우니</span> 신청 내용을 다시 한번 확인해 주세요.
+              <span className="font-medium text-foreground">제출 후에는 내용 수정이 불가</span>하오니, 신청 내용을 다시 한번 확인해 주세요.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
