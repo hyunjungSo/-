@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 �������������������������������지별 분�������
+        // 개별 ��������������������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1634,7 +1634,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <span className="text-sm">관개수로 상실</span>
                                 </label>
                               </div>
-                            </div>
                             </div>
                           </>
                         );
