@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ��������지별 분�������
+        // 개별 ���������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1359,7 +1359,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 표시 */}
                       {applicationLands[selectedLandIndex] && (
                         <div 
-                          className={`flex items-center justify-between p-2 rounded-md border-2 cursor-pointer transition-colors ${
+                          className={`flex items-center gap-2 p-2 rounded-md border-2 cursor-pointer transition-colors ${
                             !selectedAdjacentParcel 
                               ? "border-[#2563eb] bg-[#dbeafe]/50 ring-2 ring-[#2563eb] ring-offset-1" 
                               : "border-[#2563eb] bg-[#dbeafe]/20 hover:bg-[#dbeafe]/40"
@@ -1368,24 +1368,22 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           onMouseEnter={() => setHoveredLandId(applicationLands[selectedLandIndex].id)}
                           onMouseLeave={() => setHoveredLandId(null)}
                         >
-                          <div className="flex items-center gap-2">
-                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#2563eb] text-[10px] font-bold text-white">
-                              {selectedLandIndex + 1}
-                            </span>
-                            <div>
-                              <p className="text-sm font-medium text-blue-700">
-                                {applicationLands[selectedLandIndex].address.split(" ").slice(-2).join(" ")}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {applicationLands[selectedLandIndex].landType} | {applicationLands[selectedLandIndex].originalArea.toLocaleString()}㎡
-                              </p>
-                            </div>
+                          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#2563eb] text-[10px] font-bold text-white">
+                            {selectedLandIndex + 1}
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-blue-700 truncate">
+                              {applicationLands[selectedLandIndex].address.split(" ").slice(-2).join(" ")}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {applicationLands[selectedLandIndex].landType} | {applicationLands[selectedLandIndex].originalArea.toLocaleString()}㎡
+                            </p>
                           </div>
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex shrink-0 items-center gap-1.5">
                             {!selectedAdjacentParcel && (
-                              <span className="text-[10px] text-blue-600 font-medium">선택됨</span>
+                              <span className="text-[10px] text-blue-600 font-medium whitespace-nowrap">선택됨</span>
                             )}
-                            <Badge className="bg-blue-600 text-white text-xs">필지{selectedLandIndex + 1}</Badge>
+                            <Badge className="bg-blue-600 text-white text-xs whitespace-nowrap">필지{selectedLandIndex + 1}</Badge>
                           </div>
                         </div>
                       )}
@@ -1400,7 +1398,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         return (
                           <div 
                             key={adjacent.id}
-                            className={`flex items-center justify-between p-2 rounded-md border cursor-pointer transition-colors ${
+                            className={`flex items-center gap-2 p-2 rounded-md border cursor-pointer transition-colors ${
                               isSelected 
                                 ? "border-2 border-[#d97706] bg-[#fef3c7]/50 ring-2 ring-[#d97706] ring-offset-1" 
                                 : "border-dashed border-[#d97706] bg-[#fef3c7]/20 hover:bg-[#fef3c7]/40"
@@ -1416,24 +1414,22 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             onMouseEnter={() => setHoveredLandId(adjacent.id)}
                             onMouseLeave={() => setHoveredLandId(null)}
                           >
-                            <div className="flex items-center gap-2">
-                              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#d97706] text-[10px] font-bold text-white">
-                                {adjacentNumber}
-                              </span>
-                              <div>
-                                <p className="text-sm font-medium text-amber-700">
-                                  {adjacent.address.split(" ").slice(-2).join(" ")}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                  {adjacent.landType} | {adjacent.area.toLocaleString()}㎡
-                                </p>
-                              </div>
+                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#d97706] text-[10px] font-bold text-white">
+                              {adjacentNumber}
+                            </span>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm font-medium text-amber-700 truncate">
+                                {adjacent.address.split(" ").slice(-2).join(" ")}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {adjacent.landType} | {adjacent.area.toLocaleString()}㎡
+                              </p>
                             </div>
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex shrink-0 items-center gap-1.5">
                               {isSelected && (
-                                <span className="text-[10px] text-amber-600 font-medium">선택됨</span>
+                                <span className="text-[10px] text-amber-600 font-medium whitespace-nowrap">선택됨</span>
                               )}
-                              <Badge variant="outline" className="border-amber-600 text-amber-700 text-xs">필지{adjacentNumber}</Badge>
+                              <Badge variant="outline" className="border-amber-600 text-amber-700 text-xs whitespace-nowrap">필지{adjacentNumber}</Badge>
                             </div>
                           </div>
                         );
@@ -2558,7 +2554,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 border border-amber-200">
                     <Info className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
                     <p className="text-xs text-amber-700">
-                      AI 판독 분석 이���지는 참고용이며, 실제 측량 결과와 다를 수 있습니다.
+                      AI 판독 분석 이���지는 참고용이며, 실제 ��량 결과와 다를 수 있습니다.
                       최종 판정은 ��당자의 현장 확인 및 검토에 따라 결정됩니다.
                     </p>
                   </div>
