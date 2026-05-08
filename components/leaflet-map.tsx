@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Layers, Plus, Minus, Info, Locate, Ruler, X } from "lucide-react";
+import { Layers, Plus, Minus, Info, Locate, Ruler, X, Circle, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -778,31 +778,47 @@ export function LeafletMap({
           </button>
         </div>
         
-        {/* 거리 측정 */}
-        <Button 
-          variant="secondary" 
-          size="sm" 
-          className={`h-7 gap-1 px-2 shadow-md text-xs ${
-            measureMode 
-              ? "text-white hover:opacity-90" 
-              : "bg-white text-[#292929] hover:bg-gray-100 [&_svg]:text-[#292929]"
-          }`}
-          style={measureMode ? { backgroundColor: '#ff3478' } : undefined}
-          onClick={toggleMeasureMode}
-        >
-          <Ruler className="h-3.5 w-3.5" />
-          <span>거리</span>
-        </Button>
+        {/* 측정 도구 - 세로 카드 형태 */}
+        <div className="flex flex-col rounded-lg bg-white shadow-md overflow-hidden">
+          {/* 반경 */}
+          <button
+            className="flex flex-col items-center justify-center py-2.5 px-3 hover:bg-gray-50 transition-colors border-b border-gray-100"
+          >
+            <Circle className="h-5 w-5 text-gray-700 mb-1" />
+            <span className="text-xs text-gray-700 font-medium">반경</span>
+          </button>
+          
+          {/* 면적 */}
+          <button
+            className="flex flex-col items-center justify-center py-2.5 px-3 hover:bg-gray-50 transition-colors border-b border-gray-100"
+          >
+            <Square className="h-5 w-5 text-gray-700 mb-1" />
+            <span className="text-xs text-gray-700 font-medium">면적</span>
+          </button>
+          
+          {/* 거리 */}
+          <button
+            onClick={toggleMeasureMode}
+            className={`flex flex-col items-center justify-center py-2.5 px-3 transition-colors ${
+              measureMode 
+                ? "bg-pink-500 text-white" 
+                : "hover:bg-gray-50 text-gray-700"
+            }`}
+          >
+            <Ruler className={`h-5 w-5 mb-1 ${measureMode ? "text-white" : "text-gray-700"}`} />
+            <span className={`text-xs font-medium ${measureMode ? "text-white" : "text-gray-700"}`}>거리</span>
+          </button>
+        </div>
 
         {/* 레이어 선택 */}
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="secondary" size="sm" className="h-7 gap-1 px-2 bg-white text-[#292929] shadow-md hover:bg-gray-100 text-xs [&_svg]:text-[#292929]">
-              <Layers className="h-3.5 w-3.5" />
-              <span>레이어</span>
-            </Button>
+            <button className="flex flex-col items-center justify-center py-2.5 px-3 rounded-lg bg-white shadow-md hover:bg-gray-50 transition-colors">
+              <Layers className="h-5 w-5 text-gray-700 mb-1" />
+              <span className="text-xs text-gray-700 font-medium">레이어</span>
+            </button>
           </PopoverTrigger>
-          <PopoverContent className="z-[1001] w-52 p-3" align="start" sideOffset={5}>
+          <PopoverContent className="z-[1001] w-52 p-3" align="end" sideOffset={5}>
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Checkbox
