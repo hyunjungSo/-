@@ -893,7 +893,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">토지 정보</CardTitle>
+            <CardTitle className="text-lg">필지 선택</CardTitle>
             {/* 필지 선택 */}
             <div className="flex items-center gap-4">
               <Select
@@ -2459,7 +2459,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 border border-amber-200">
                     <Info className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
                     <p className="text-xs text-amber-700">
-                      AI 판독 분석 이미지는 참고용이며, 실제 측량 결과와 다를 수 있습니다.
+                      AI 판독 분석 이���지는 참고용이며, 실제 측량 결과와 다를 수 있습니다.
                       최종 판정은 ��당자의 현장 확인 및 검토에 따라 결정됩니다.
                     </p>
                   </div>
