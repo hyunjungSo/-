@@ -1057,13 +1057,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </TabsTrigger>
             </TabsList>
             
-            {/* 민������ 결과 탭 */}
+            {/* 민원인 결과 탭 */}
             <TabsContent value="citizen">
               <div className="grid gap-6 lg:grid-cols-2">
                 {/* 좌측: 지적도 - 선택된 필지만 표시 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-semibold" style={{ fontSize: '16px' }}>지적도</h4>
+                    <h4 className="text-lg font-semibold">지적도</h4>
                   </div>
                   
                   {/* 지적도 - 선택된 필지만 표시 */}
@@ -1132,7 +1132,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 우측: 분석결과 - 선택된 필지만 표시 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-semibold" style={{ fontSize: '16px' }}>분석결과</h4>
+                    <h4 className="text-lg font-semibold">분석결과</h4>
                     {(() => {
                       const land = applicationLands[selectedLandIndex];
                       if (!land) return null;
@@ -1275,7 +1275,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             </div>
                           </div>
 
-                          {/* ���� 확인 항목 */}
+                          {/* 자동 확인 항목 */}
                           {aiResult?.judgmentRationale?.manualCheckItems && aiResult.judgmentRationale.manualCheckItems.length > 0 && (
                             <div className="flex items-start gap-2">
                               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
@@ -1358,7 +1358,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 섹션 1: 지적도 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-semibold" style={{ fontSize: '16px' }}>지적도</h4>
+                    <h4 className="text-lg font-semibold">지적도</h4>
                     <Badge variant="outline" className="font-normal text-xs">
                       {applicationLands.length + 2}개 필지
                     </Badge>
@@ -1367,7 +1367,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   {/* 필지 선택 + 지적도 한 행 배치 */}
                   <div className="flex gap-3">
                     {/* 필지 선택 목록 */}
-                    <div className="w-[35%] shrink-0 rounded-lg bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
+                    <div className="w-[35%] shrink-0 rounded-lg border bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
                       {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 표시 */}
                       {applicationLands[selectedLandIndex] && (
                         <div 
@@ -1545,7 +1545,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 섹션 2: 분석 설정 및 결과 - 좌우 레이아웃 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-semibold" style={{ fontSize: '16px' }}>분석 설정 및 결과</h4>
+                    <h4 className="text-lg font-semibold">분석 설정 및 결과</h4>
                   </div>
                   
                   <div className="flex gap-4">
@@ -1583,7 +1583,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className={`grid gap-2 ${isAdjacentParcel ? "grid-cols-2" : "grid-cols-3"}`}>
                                   {!isAdjacentParcel && (
                                     <div className="text-center p-2 rounded-md bg-blue-50 border border-blue-100">
-                                      <p className="text-xs text-muted-foreground mb-0.5">민원인 ���택</p>
+                                      <p className="text-xs text-muted-foreground mb-0.5">민원인 선택</p>
                                       <p className="text-sm font-semibold text-blue-700">{citizenUsage || "-"}</p>
                                     </div>
                                   )}
@@ -1948,7 +1948,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       {/* 판정 기준 충족 여부 */}
                                       {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
                                         <div className="rounded-lg bg-white/60 p-3 border">
-                                          <p className="text-xs font-medium text-muted-foreground mb-2">판정 기��� 충족 여부</p>
+                                          <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
                                           <div className="space-y-2">
                                             {aiResult.criteriaChecks.map((check, cIdx) => (
                                               <div key={cIdx} className="flex items-center justify-between text-sm">
