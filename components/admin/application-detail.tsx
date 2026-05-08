@@ -1583,7 +1583,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className={`grid gap-2 ${isAdjacentParcel ? "grid-cols-2" : "grid-cols-3"}`}>
                                   {!isAdjacentParcel && (
                                     <div className="text-center p-2 rounded-md bg-blue-50 border border-blue-100">
-                                      <p className="text-xs text-muted-foreground mb-0.5">민원인 ����택</p>
+                                      <p className="text-xs text-muted-foreground mb-0.5">민원인 �����택</p>
                                       <p className="text-sm font-semibold text-blue-700">{citizenUsage || "-"}</p>
                                     </div>
                                   )}
@@ -2060,7 +2060,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardHeader>
           <CardTitle className="text-lg">진행상황 선택</CardTitle>
           <CardDescription>
-            민원인이 신청 현�� 조회 시 이 진행상황이 표시���니다
+            민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다
           </CardDescription>
         </CardHeader>
         <CardContent>
