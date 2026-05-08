@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 �����������������������������������지별 분�������
+        // 개별 ������������������������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1575,37 +1575,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </SelectContent>
                               </Select>
                             </div>
-                                    )}
-                                    <div className="text-center p-2 rounded-md bg-purple-50 border border-purple-100">
-                                      <p className="text-[10px] text-muted-foreground mb-0.5">AI 판단</p>
-                                      <p className="text-sm font-semibold text-purple-700">{aiUsage || "-"}</p>
-                                    </div>
-                                    <div className="text-center p-2 rounded-md bg-slate-50 border border-slate-200">
-                                      <p className="text-[10px] text-muted-foreground mb-0.5">공부상 지목</p>
-                                      <p className="text-sm font-semibold text-slate-700">{currentParcelLandType || "-"}</p>
-                                    </div>
-                                  </div>
-                                );
-                              })()}
-                              
-                              <Select 
-                                value={adminCurrentUsagePerLand[currentParcelId] || ""} 
-                                onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
-                              >
-                                <SelectTrigger className="h-10 bg-background">
-                                  <SelectValue placeholder="현재 활용 지목을 선택해 주��요" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="대">대 (택지)</SelectItem>
-                                  <SelectItem value="전">전 (밭)</SelectItem>
-                                  <SelectItem value="답">답 (논)</SelectItem>
-                                  <SelectItem value="임">임 (임야)</SelectItem>
-                                  <SelectItem value="잡">잡 (잡종지)</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
                             
-                            {/* 건축물 용도 선택 - 현재 활용 지목이 "대"��� 경우만 표시 */}
+                            {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
                             {adminCurrentUsagePerLand[currentParcelId] === "대" && (
                               <div className="space-y-2 p-3 rounded-lg bg-muted/30">
                                 <label className="text-sm font-medium text-foreground">
