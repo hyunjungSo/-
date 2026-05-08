@@ -1053,11 +1053,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 민원인 결과
               </TabsTrigger>
               <TabsTrigger value="admin">
-                ���당자 결과
+                담당자 결과
               </TabsTrigger>
             </TabsList>
             
-            {/* 민원인 결과 탭 */}
+            {/* 민��인 결과 탭 */}
             <TabsContent value="citizen">
               <div className="grid gap-6 lg:grid-cols-2">
                 {/* 좌측: 지적도 - 선택된 필지만 표시 */}
@@ -1275,7 +1275,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             </div>
                           </div>
 
-                          {/* 수동 확인 항목 */}
+                          {/* 수�� 확인 항목 */}
                           {aiResult?.judgmentRationale?.manualCheckItems && aiResult.judgmentRationale.manualCheckItems.length > 0 && (
                             <div className="flex items-start gap-2">
                               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
@@ -1312,7 +1312,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                               <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                                 {aiResult?.judgmentRationale?.detailedExplanation || 
-                                  `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n���입 전 ���적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 ��과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔���비율 ${land.remainingRatio}%`}
+                                  `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`}
                               </pre>
                             </div>
                           </div>
@@ -1948,7 +1948,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       {/* 판정 기준 충족 여부 */}
                                       {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
                                         <div className="rounded-lg bg-white/60 p-3 border">
-                                          <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충��� 여부</p>
+                                          <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
                                           <div className="space-y-2">
                                             {aiResult.criteriaChecks.map((check, cIdx) => (
                                               <div key={cIdx} className="flex items-center justify-between text-sm">
