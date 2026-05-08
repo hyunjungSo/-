@@ -1323,7 +1323,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         <div className="flex items-start gap-2 pt-2 border-t">
                           <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                           <p className="text-xs text-muted-foreground">
-                            AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                            AI 판��� 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                           </p>
                         </div>
                       </div>
@@ -1641,16 +1641,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* AI 분석 버튼 */}
                   {(() => {
-                    const selectedLand = allLands[selectedLandIndex];
-                    const hasCurrentUsage = selectedLand && adminCurrentUsagePerLand[selectedLand.id] && adminCurrentUsagePerLand[selectedLand.id].trim() !== "";
+                    const currentParcelId = selectedAdjacentParcel?.id || applicationLands[selectedLandIndex]?.id;
+                    const hasCurrentUsage = currentParcelId && adminCurrentUsagePerLand[currentParcelId] && adminCurrentUsagePerLand[currentParcelId].trim() !== "";
                     const isDisabled = isAIAnalyzing || !hasCurrentUsage;
                     
                     return (
                       <div className="space-y-1.5">
                         <Button
                           onClick={() => {
-                            if (selectedLand) {
-                              setAdminCheckedLandIds([selectedLand.id]);
+                            if (currentParcelId) {
+                              setAdminCheckedLandIds([currentParcelId]);
                               handleRunAIAnalysis();
                             }
                           }}
@@ -2412,7 +2412,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </ul>
                   </div>
 
-                  {/* 판정 결��� */}
+                  {/* 판정 결���� */}
                   <div className="rounded-lg border p-4">
                     <h3 className="text-sm font-semibold text-foreground mb-3">AI 판정 결과</h3>
                     <div className="flex items-center gap-3">
