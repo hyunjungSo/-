@@ -384,7 +384,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지별 분��
+        // 개별 필지별 분���
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -955,7 +955,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardContent className="space-y-8">
           {/* 2-1. 토지정보 */}
           <div className="space-y-3">
-            <h3 className="text-base font-semibold border-l-4 border-primary pl-3">토지정보</h3>
+            <h3 className="text-base font-semibold ">토지정보</h3>
             {applicationLands[selectedLandIndex] && (
               <div className="rounded-lg border overflow-hidden">
                 <table className="w-full text-sm">
@@ -1026,7 +1026,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
           {/* 2-2. AI 분석 */}
           <div className="space-y-3">
-            <h3 className="text-base font-semibold border-l-4 border-primary pl-3">AI 분석</h3>
+            <h3 className="text-base font-semibold ">AI 분석</h3>
             <p className="text-sm text-muted-foreground">민원인 신청 결과와 담당자 분석 결과를 확인합니다.</p>
             <Tabs defaultValue="citizen" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
@@ -1309,7 +1309,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     {(() => {
                                       const explanation = landResult?.judgmentRationale?.detailedExplanation;
                                       if (!explanation) {
-                                        return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
+                                        return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면��: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
                                       }
                                       
                                       // If this is multi-parcel and explanation contains all parcels info,
@@ -2114,7 +2114,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
           {/* 2-3. 담당자 검토 */}
           <div className="space-y-3">
-            <h3 className="text-base font-semibold border-l-4 border-primary pl-3">담당자 검토</h3>
+            <h3 className="text-base font-semibold ">담당자 검토</h3>
             <p className="text-sm text-muted-foreground">선택된 필지의 판정과 검토 의견을 입력하세요</p>
           {(() => {
             const landReview = landReviewDataList[selectedLandIndex];
@@ -2192,7 +2192,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
           {/* 2-4. 진행상황 선택 */}
           <div className="space-y-3">
-            <h3 className="text-base font-semibold border-l-4 border-primary pl-3">진행상황 선택</h3>
+            <h3 className="text-base font-semibold ">진행상황 선택</h3>
             <p className="text-sm text-muted-foreground">민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다</p>
             <div className="flex flex-wrap gap-2">
               {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
