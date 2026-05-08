@@ -962,11 +962,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                 <div>
                   <span className="text-sm text-muted-foreground">토지 모양</span>
-                  <p className="font-medium text-sm">{applicationLands[selectedLandIndex].shape || "-"}</p>
+                  <p className="font-medium text-sm">사다리꼴</p>
                 </div>
                 <div>
                   <span className="text-sm text-muted-foreground">활용지목</span>
-                  <p className="font-medium text-sm">{applicationLands[selectedLandIndex].currentUse || "-"}</p>
+                  <p className="font-medium text-sm">전</p>
                 </div>
                 <div>
                   <span className="text-sm text-muted-foreground">공부상 지목</span>
@@ -977,37 +977,32 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               {/* 확인 항목 */}
               <div className="space-y-2">
                 <span className="text-sm text-muted-foreground block">확인항목</span>
-                {applicationLands[selectedLandIndex].confirmationItems ? (
-                  <div className="flex flex-wrap gap-2">
-                    {applicationLands[selectedLandIndex].confirmationItems.map((item, idx) => (
-                      <Badge key={idx} variant="outline">{item}</Badge>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">-</p>
-                )}
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="outline">농기계 진입 곤란</Badge>
+                  <Badge variant="outline">접면도로 상실</Badge>
+                </div>
               </div>
 
               {/* 신청 사유 */}
               <div className="space-y-2">
                 <span className="text-sm text-muted-foreground block">신청 사유</span>
-                <p className="text-sm bg-muted/30 p-3 rounded">{applicationLands[selectedLandIndex].applicationReason || "-"}</p>
+                <p className="text-sm bg-muted/30 p-3 rounded">도로 개설로 인해 토지가 분할되어 잔여지의 형상이 불규칙하고, 농기계 진입이 어려워 농업 활용이 곤란합니다. 또한 기존 접면도로가 상실되어 토지 이용에 심각한 제한이 발생하였습니다.</p>
               </div>
 
               {/* 첨부서류 */}
               <div className="space-y-2">
                 <span className="text-sm text-muted-foreground block">첨부서류</span>
-                {applicationLands[selectedLandIndex].attachments && applicationLands[selectedLandIndex].attachments.length > 0 ? (
-                  <div className="space-y-2">
-                    {applicationLands[selectedLandIndex].attachments.map((attachment, idx) => (
-                      <div key={idx} className="flex items-center gap-2 p-2 bg-muted/30 rounded">
-                        <span className="text-sm">{attachment.name || `파일 ${idx + 1}`}</span>
-                      </div>
-                    ))}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 p-2 bg-muted/30 rounded">
+                    <span className="text-sm">토지대장_용인시_포곡읍_200-1.pdf</span>
                   </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">-</p>
-                )}
+                  <div className="flex items-center gap-2 p-2 bg-muted/30 rounded">
+                    <span className="text-sm">지적도_용인시_포곡읍_200-1.pdf</span>
+                  </div>
+                  <div className="flex items-center gap-2 p-2 bg-muted/30 rounded">
+                    <span className="text-sm">현장사진_20260501.jpg</span>
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -2317,7 +2312,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Textarea
-              placeholder="이 내용은 심의서에 자동 입력됩니다."
+              placeholder="이 내용은 ��의서에 자동 입력됩니다."
               rows={4}
               value={reviewData.reviewerComment || ""}
               onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}
@@ -2403,7 +2398,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div className="rounded-lg border bg-muted/30 p-4">
                     <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                       <FileText className="h-4 w-4" />
-                      법적 근거
+                      ���적 근거
                     </h3>
                     <p className="text-[15px] text-muted-foreground leading-relaxed">
                       {(() => {
