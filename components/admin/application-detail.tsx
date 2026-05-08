@@ -1222,7 +1222,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             <div>
                               <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
                               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                                {landResult?.judgmentRationale?.legalBasis || 
+                                {aiResult?.judgmentRationale?.legalBasis || 
                                   "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조"}
                               </p>
                             </div>
@@ -1234,8 +1234,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             <div>
                               <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
                               <ul className="mt-1 space-y-1">
-                                {landResult?.judgmentRationale?.appliedCriteria ? (
-                                  landResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
+                                {aiResult?.judgmentRationale?.appliedCriteria ? (
+                                  aiResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
                                     <li key={cIdx} className="flex items-start gap-1.5 text-sm text-muted-foreground">
                                       <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
                                       <span>{criteria}</span>
@@ -1258,13 +1258,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           </div>
 
                           {/* 수동 확인 항목 */}
-                          {landResult?.judgmentRationale?.manualCheckItems && landResult.judgmentRationale.manualCheckItems.length > 0 && (
+                          {aiResult?.judgmentRationale?.manualCheckItems && aiResult.judgmentRationale.manualCheckItems.length > 0 && (
                             <div className="flex items-start gap-2">
                               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                               <div>
                                 <h4 className="text-sm font-semibold text-foreground">자동 확인 항목</h4>
                                 <ul className="mt-1 space-y-1">
-                                  {landResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
+                                  {aiResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
                                     <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
                                       <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
                                       <span>{item}</span>
@@ -1293,18 +1293,18 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </Button>
                               </div>
                               <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
-                                {landResult?.judgmentRationale?.detailedExplanation || 
+                                {aiResult?.judgmentRationale?.detailedExplanation || 
                                   `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`}
                               </pre>
                             </div>
                           </div>
                             
                           {/* 판정 기준 충족 여부 */}
-                          {landResult?.criteriaChecks && landResult.criteriaChecks.length > 0 && (
+                          {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
                             <div className="rounded-lg bg-white/60 p-3 border">
                               <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
                               <div className="space-y-2">
-                                {landResult.criteriaChecks.map((check, cIdx) => (
+                                {aiResult.criteriaChecks.map((check, cIdx) => (
                                   <div key={cIdx} className="flex items-center justify-between text-sm">
                                     <span className="text-muted-foreground">{check.criteriaName}</span>
                                     <Badge 
@@ -1720,22 +1720,27 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                   
                   {Object.keys(adminLandAIResults).length === 0 ? (
-                    <>
-                      {/* 재분석 미실행 안내 */}
-                      <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 mb-4 flex items-start gap-2">
-                        <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
-                        <p className="text-sm text-blue-700">
-                          현재 민원인 결과를 표시하고 있습니다. 좌측에서 현장 상황 옵션을 설정하고 AI 재분석을 실행하면 담당자 결과가 표시됩니다.
-                        </p>
+                    <div className="flex flex-col items-center justify-center py-12 text-center rounded-lg border bg-muted/20">
+                      <div className="rounded-full bg-muted/50 p-4 mb-4">
+                        <FileText className="h-8 w-8 text-muted-foreground" />
                       </div>
-                      
-                      {/* 선택된 필지의 민원인 결과 표시 */}
+                      <p className="text-lg font-medium text-muted-foreground mb-2">결과없음</p>
+                      <p className="text-sm text-muted-foreground max-w-xs">
+                        좌측에서 검토 옵션을 설정하고 AI 분석을 실행해 주세요.
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      {/* 선택된 필지의 분석 결과 표시 */}
                       {(() => {
-                        const land = applicationLands[selectedLandIndex];
+                        const currentParcelId = selectedAdjacentParcel?.id || applicationLands[selectedLandIndex]?.id;
+                        const land = selectedAdjacentParcel || applicationLands[selectedLandIndex];
                         if (!land) return null;
                         
-                        const landResult = landAIResults[land.id];
-                        const judgment = landResult?.provisionalJudgment || application.aiResult?.provisionalJudgment;
+                        const adminResult = adminLandAIResults[currentParcelId];
+                        const landResult = landAIResults[currentParcelId];
+                        const aiResult = adminResult || landResult;
+                        const judgment = aiResult?.provisionalJudgment || application.aiResult?.provisionalJudgment;
                         
                         return (
                           <div className={`rounded-lg border p-4 ${
@@ -1747,43 +1752,43 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           }`}>
                             {/* 편입 정보 */}
                             <div className="rounded-lg bg-white/60 p-3 border mb-4">
-                                      <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
-                                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
-                                        <div>
-                                          <span className="text-muted-foreground">편입 전 면적:</span>
-                                          <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}㎡</span>
-                                        </div>
-                                        <div>
-                                          <span className="text-muted-foreground">편입 면적:</span>
-                                          <span className="ml-1 font-medium">{(land.includedArea ?? ((land.originalArea ?? 0) - (land.remainingArea ?? 0))).toLocaleString()}m²</span>
-                                        </div>
-                                        <div>
-                                          <span className="text-muted-foreground">잔여 면적:</span>
-                                          <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m²</span>
-                                        </div>
-                                        <div>
-                                          <span className="text-muted-foreground">잔여지 비율:</span>
-                                          <span className="ml-1 font-medium">{land.remainingRatio}%</span>
-                                        </div>
-                                        <div>
-                                          <span className="text-muted-foreground">형상지수 변화:</span>
-                                          <span className="ml-1 font-medium">{landResult?.shapeIndexChange != null ? `+${landResult.shapeIndexChange.toFixed(1)}` : "-"}</span>
-                                        </div>
-                                      </div>
-                                    </div>
+                              <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
+                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
+                                <div>
+                                  <span className="text-muted-foreground">편입 전 면적:</span>
+                                  <span className="ml-1 font-medium">{land.originalArea?.toLocaleString() || "-"}㎡</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground">편입 면적:</span>
+                                  <span className="ml-1 font-medium">{(land.includedArea ?? ((land.originalArea ?? 0) - (land.remainingArea ?? 0))).toLocaleString()}m²</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground">잔여 면적:</span>
+                                  <span className="ml-1 font-medium">{land.remainingArea?.toLocaleString() || "-"}m²</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground">잔여지 비율:</span>
+                                  <span className="ml-1 font-medium">{land.remainingRatio || "-"}%</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground">형상지수 변화:</span>
+                                  <span className="ml-1 font-medium">{aiResult?.shapeIndexChange != null ? `+${aiResult.shapeIndexChange.toFixed(1)}` : "-"}</span>
+                                </div>
+                              </div>
+                            </div>
 
-                                    {/* 상세 분석 내용 */}
-                                    <div className="space-y-4">
-                                  {/* 판단 요약 */}
-                                  <div className="flex items-start gap-2">
-                                    <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                                    <div>
-                                      <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
-                                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                                        {(() => {
-                                          const summary = landResult?.judgmentRationale?.summary;
+                            {/* 상세 분석 내용 */}
+                            <div className="space-y-4">
+                              {/* 판단 요약 */}
+                              <div className="flex items-start gap-2">
+                                <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                <div>
+                                  <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
+                                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                                    {(() => {
+                                      const summary = aiResult?.judgmentRationale?.summary;
                                           if (!summary) {
-                                            return `${land.landType} 잔여면적 ${land.remainingArea.toLocaleString()}㎡(잔여비율 ${land.remainingRatio}%)로 「${landResult?.provisionalJudgment || "분석중"}」 판정`;
+                                            return `${land.landType || "토지"} 잔여면적 ${land.remainingArea?.toLocaleString() || "-"}㎡(잔여비율 ${land.remainingRatio || "-"}%)로 「${aiResult?.provisionalJudgment || "분석중"}」 판정`;
                                           }
                                           
                                           // If this is multi-parcel, extract only current parcel's summary
@@ -1825,7 +1830,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <div>
                                           <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
                                           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                                            {landResult?.judgmentRationale?.legalBasis || 
+                                            {aiResult?.judgmentRationale?.legalBasis || 
                                               "「공익사업을 위한 토지 등의 취득 및 보상에 관한 ���률」 제74조 및 동법 시행규칙 제34조"}
                                           </p>
                                         </div>
@@ -1837,8 +1842,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         <div>
                                           <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
                                           <ul className="mt-1 space-y-1">
-                                            {landResult?.judgmentRationale?.appliedCriteria ? (
-                                              landResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
+                                            {aiResult?.judgmentRationale?.appliedCriteria ? (
+                                              aiResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
                                                 <li key={cIdx} className="flex items-start gap-1.5 text-sm text-muted-foreground">
                                                   <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
                                                   <span>{criteria}</span>
@@ -1861,13 +1866,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       </div>
 
                                       {/* 수동 확인 항목 */}
-                                      {landResult?.judgmentRationale?.manualCheckItems && landResult.judgmentRationale.manualCheckItems.length > 0 && (
+                                      {aiResult?.judgmentRationale?.manualCheckItems && aiResult.judgmentRationale.manualCheckItems.length > 0 && (
                                         <div className="flex items-start gap-2">
                                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                                           <div>
                                             <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
                                             <ul className="mt-1 space-y-1">
-                                              {landResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
+                                              {aiResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
                                                 <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
                                                   <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
                                                   <span>{item}</span>
@@ -1897,7 +1902,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           </div>
                                           <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                                             {(() => {
-                                              const explanation = landResult?.judgmentRationale?.detailedExplanation;
+                                              const explanation = aiResult?.judgmentRationale?.detailedExplanation;
                                               if (!explanation) {
                                                 return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
                                               }
@@ -1943,11 +1948,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       </div>
                                       
                                       {/* 판정 기준 충족 여부 */}
-                                      {landResult?.criteriaChecks && landResult.criteriaChecks.length > 0 && (
+                                      {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
                                         <div className="rounded-lg bg-white/60 p-3 border">
                                           <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
                                           <div className="space-y-2">
-                                            {landResult.criteriaChecks.map((check, cIdx) => (
+                                            {aiResult.criteriaChecks.map((check, cIdx) => (
                                               <div key={cIdx} className="flex items-center justify-between text-sm">
                                                 <span className="text-muted-foreground">{check.criteriaName}</span>
                                                 <Badge 
@@ -1984,7 +1989,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         const result = adminLandAIResults[land.id];
                         // 재분석 결과가 없으면 민원인 결과 사용
                         const landResult = result || landAIResults[land.id];
-                        const judgment = result?.provisionalJudgment || landResult?.provisionalJudgment || application.aiResult?.provisionalJudgment;
+                        const judgment = result?.provisionalJudgment || aiResult?.provisionalJudgment || application.aiResult?.provisionalJudgment;
                         
                         return (
                           <div className={`rounded-lg border p-4 ${
@@ -2032,7 +2037,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             {/* 상세 분석 내용 - 담당자 또는 민원인 결과 */}
                             <div className="space-y-4">
                               {/* 판단 요약 */}
-                              {(landResult?.judgmentRationale || result?.judgmentRationale) && (
+                              {(aiResult?.judgmentRationale || result?.judgmentRationale) && (
                                 <div className="flex items-start gap-2">
                                   <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                                   <div>
@@ -2043,7 +2048,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               )}
 
                               {/* 법적 근거 */}
-                              {(landResult?.judgmentRationale || result?.judgmentRationale) && (
+                              {(aiResult?.judgmentRationale || result?.judgmentRationale) && (
                                 <div className="flex items-start gap-2">
                                   <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                                   <div>
@@ -2054,7 +2059,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               )}
 
                               {/* 적용 기준 */}
-                              {(landResult?.judgmentRationale || result?.judgmentRationale) && (
+                              {(aiResult?.judgmentRationale || result?.judgmentRationale) && (
                                 <div className="flex items-start gap-2">
                                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                                   <div>
