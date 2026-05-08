@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ��������������������������지별 분�������
+        // 개별 ���������������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1373,9 +1373,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               {applicationLands[selectedLandIndex].landType} | {applicationLands[selectedLandIndex].originalArea.toLocaleString()}㎡
                             </p>
                           </div>
-                          {!selectedAdjacentParcel && (
-                            <span className="text-[10px] text-blue-600 font-medium whitespace-nowrap shrink-0">선택됨</span>
-                          )}
                         </div>
                       )}
                       
@@ -1416,9 +1413,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 {adjacent.landType} | {adjacent.area.toLocaleString()}㎡
                               </p>
                             </div>
-                            {isSelected && (
-                              <span className="text-[10px] text-amber-600 font-medium whitespace-nowrap shrink-0">선택됨</span>
-                            )}
                           </div>
                         );
                       })}
