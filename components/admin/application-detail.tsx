@@ -45,6 +45,7 @@ import {
   Brain,
   ListChecks,
   Locate,
+  Download,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -384,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지별 분������
+        // 개별 필지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -2081,7 +2082,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <Badge variant="outline" className={`text-sm ${
                       adminResult ? "border-blue-500 text-blue-700" : "border-gray-400 text-gray-600"
                     }`}>
-                      {adminResult ? "담당자 AI 판정" : "민원인 AI 판정"}: {aiResult.provisionalJudgment}
+                      {adminResult ? "담당자 AI 판정" : "민원��� AI 판정"}: {aiResult.provisionalJudgment}
                     </Badge>
                   </div>
                 )}
@@ -2464,11 +2465,28 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </div>
       </div>
 
-      {/* PDF 미리보기 Dialog */}
+      {/* 파일 미리보기 Dialog */}
       <Dialog open={showPdfPreview} onOpenChange={setShowPdfPreview}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
+          <DialogHeader className="flex flex-row items-center justify-between">
             <DialogTitle>{selectedAttachment?.name}</DialogTitle>
+            <Button
+              size="sm"
+              onClick={() => {
+                if (selectedAttachment) {
+                  const link = document.createElement('a');
+                  link.href = selectedAttachment.url;
+                  link.download = selectedAttachment.name;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }
+              }}
+              className="ml-auto"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              다운로드
+            </Button>
           </DialogHeader>
           <div className="mt-4 flex flex-col gap-4">
             {selectedAttachment && (
@@ -2480,17 +2498,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <div className="text-center">
                         <p className="font-semibold text-foreground">{selectedAttachment.name}</p>
                         <p className="text-sm text-muted-foreground mt-2">
-                          PDF 미리보기 (실제 환경에서는 PDF Viewer 라이브러리 사용)
+                          PDF 문서
                         </p>
-                        <Button 
-                          className="mt-4"
-                          onClick={() => {
-                            // 실제 환경에서는 파일 다운로드 또는 새 창에서 열기
-                            window.open(selectedAttachment.url, '_blank');
-                          }}
-                        >
-                          파일 열기
-                        </Button>
                       </div>
                     </div>
                   </div>
@@ -2501,16 +2510,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <div className="text-center">
                         <p className="font-semibold text-foreground">{selectedAttachment.name}</p>
                         <p className="text-sm text-muted-foreground mt-2">
-                          이미지 미리보기
+                          이미지 문서
                         </p>
-                        <Button 
-                          className="mt-4"
-                          onClick={() => {
-                            window.open(selectedAttachment.url, '_blank');
-                          }}
-                        >
-                          이미지 열기
-                        </Button>
                       </div>
                     </div>
                   </div>
