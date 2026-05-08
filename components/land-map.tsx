@@ -457,7 +457,7 @@ export function LandMap({
       </div>
       
       {/* 줌 컨트롤 */}
-      <div className="absolute right-3 top-3 z-10 flex flex-col gap-1">
+      <div className="absolute right-0 top-3 z-10 flex flex-col gap-1 pr-3">
         <div className="flex flex-col overflow-hidden rounded-md bg-white/90 shadow-sm">
           <Button 
             variant="ghost" 
