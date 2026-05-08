@@ -2184,17 +2184,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             return (
               <div className="space-y-6">
-                {/* AI 판정 정보 */}
-                {aiResult?.provisionalJudgment && (
-                  <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
-                    <Badge variant="outline" className={`text-sm ${
-                      adminResult ? "border-blue-500 text-blue-700" : "border-gray-400 text-gray-600"
-                    }`}>
-                      {adminResult ? "담당자 AI 판정" : "민원인 AI 판정"}: {aiResult.provisionalJudgment}
-                    </Badge>
-                  </div>
-                )}
-                
                 {/* 매수 판정 */}
                 <div className="space-y-3">
                   <Label className="text-sm font-medium">매수 판정</Label>
