@@ -426,45 +426,6 @@ export function LandMap({
         </Popover>
       </div>
 
-      {/* 배경지도 타입 선택 - 우측 하단 */}
-      <div className="absolute right-0 bottom-3 z-10 flex gap-1 pr-3">
-        <button
-          onClick={() => setBaseMap("normal")}
-          className={`relative flex flex-col items-center w-[60px] h-10 rounded-md shadow overflow-hidden transition-all ${
-            baseMap === "normal" 
-              ? "ring-2 ring-blue-500" 
-              : "ring-1 ring-gray-200 hover:ring-gray-300"
-          }`}
-        >
-          <div className="relative w-full h-[26px] overflow-hidden bg-[#f0ede8]">
-            <div className="absolute top-1 left-1 right-1 h-[2px] bg-[#ffd54f] rounded-full" />
-            <div className="absolute top-2.5 left-0.5 w-[14px] h-[1px] bg-white" />
-            <div className="absolute bottom-1 left-1.5 w-[10px] h-[8px] bg-[#d4e8d4] rounded-sm" />
-            <div className="absolute bottom-0.5 right-1 w-[12px] h-[6px] bg-[#c5daf0] rounded-sm" />
-          </div>
-          <span className={`text-[9px] font-medium leading-[14px] ${baseMap === "normal" ? "text-blue-600" : "text-gray-600"}`}>
-            일반지도
-          </span>
-        </button>
-        <button
-          onClick={() => setBaseMap("satellite")}
-          className={`relative flex flex-col items-center w-[60px] h-10 rounded-md shadow overflow-hidden transition-all ${
-            baseMap === "satellite" 
-              ? "ring-2 ring-blue-500" 
-              : "ring-1 ring-gray-200 hover:ring-gray-300"
-          }`}
-        >
-          <div className="relative w-full h-[26px] overflow-hidden bg-gradient-to-br from-[#1a3d1a] via-[#2d5a2d] to-[#1a4a2a]">
-            <div className="absolute top-0.5 left-0.5 right-0.5 h-[1px] bg-[#3a3a3a]/40" />
-            <div className="absolute top-2 left-1 w-[8px] h-[6px] bg-[#4a5a4a] rounded-sm" />
-            <div className="absolute bottom-1 right-0.5 w-[14px] h-[7px] bg-[#3a4a3a] rounded-sm" />
-          </div>
-          <span className={`text-[9px] font-medium leading-[14px] ${baseMap === "satellite" ? "text-blue-600" : "text-gray-600"}`}>
-            위성지도
-          </span>
-        </button>
-      </div>
-
       {/* 줌 컨트롤 */}
       <div className="absolute right-0 top-3 z-10 flex flex-col gap-1 pr-3">
         <div className="flex flex-col overflow-hidden rounded-md bg-white/90 shadow-sm">

@@ -697,7 +697,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 `${check.name}: ${check.description} ${check.met ? "✓" : "✗"}`
               ),
               detailedExplanation: `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n${analysis.reasons.map(r => `• ${r}`).join("\n")}`,
-              manualCheckItems: analysis.criteriaChecks.filter(c => !c.met).map(c => `${c.name} 재확인 필요`),
+              manualCheckItems: analysis.criteriaChecks.filter(c => !c.met).map(c => `${c.name} 재확인 필���`),
             };
             
             const criteriaChecks = analysis.criteriaChecks.map(check => ({
@@ -1628,7 +1628,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             )}
                             
                             {/* 현장확인 옵션 */}
-                            <div className="space-y-3 pt-2">
+                            <div className="space-y-3 pt-2 border-t">
                               <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
                               <div className="space-y-2">
                                 <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-muted/50">
@@ -1668,7 +1668,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         const isDisabled = isAIAnalyzing || !hasCurrentUsage;
                         
                         return (
-                          <div className="space-y-1.5 pt-2 border-t mt-2">
+                          <div className="space-y-1.5 pt-2 mt-2">
                             <Button
                               onClick={() => {
                                 if (currentParcelId) {
