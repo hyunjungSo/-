@@ -1045,8 +1045,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
           {/* 2-2. AI 분석 */}
           <div className="space-y-4">
-            <h3 className="text-base font-semibold">AI 분석</h3>
-            <p className="text-sm text-muted-foreground">민원인 신청 ��과와 담당자 분석 결과를 확인합니다.</p>
+            <h3 className="text-base font-semibold" style={{ fontSize: '18px' }}>AI 분석</h3>
+            <p className="text-sm text-muted-foreground">민원인 신청 결과와 담당자 분석 결과를 확인합니다.</p>
             <Tabs defaultValue="citizen" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="citizen">
@@ -1057,7 +1057,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </TabsTrigger>
             </TabsList>
             
-            {/* 민����� 결과 탭 */}
+            {/* 민������ 결과 탭 */}
             <TabsContent value="citizen">
               <div className="grid gap-6 lg:grid-cols-2">
                 {/* 좌측: 지적도 - 선택된 필지만 표시 */}
@@ -1275,7 +1275,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             </div>
                           </div>
 
-                          {/* 수�� 확인 항목 */}
+                          {/* ���� 확인 항목 */}
                           {aiResult?.judgmentRationale?.manualCheckItems && aiResult.judgmentRationale.manualCheckItems.length > 0 && (
                             <div className="flex items-start gap-2">
                               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
