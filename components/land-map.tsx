@@ -367,27 +367,58 @@ export function LandMap({
     <div className="relative w-full overflow-hidden rounded-lg border border-border bg-muted">
       {/* 지도 컨트롤 */}
       <div className="absolute left-3 top-3 z-10 flex gap-2">
-        {/* 배경지도 토글 */}
-        <div className="flex items-center gap-1 rounded-md bg-white/95 p-1 shadow-sm border border-gray-300">
+        {/* 배경지도 타입 선택 - 네이버지도 스타일 */}
+        <div className="flex gap-1.5 bg-white rounded-lg p-1.5 shadow">
           <button
             onClick={() => setBaseMap("normal")}
-            className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
+            className={`relative flex flex-col items-center rounded-md overflow-hidden transition-all ${
               baseMap === "normal" 
-                ? "bg-primary text-white" 
-                : "text-muted-foreground hover:bg-muted"
+                ? "ring-2 ring-blue-500" 
+                : "ring-1 ring-gray-200 hover:ring-gray-300"
             }`}
           >
-            일반
+            <div className="relative w-[60px] h-[42px] overflow-hidden bg-[#f0ede8]">
+              {/* 지도 썸네일 - 도로와 건물 표현 */}
+              <div className="absolute inset-0">
+                <div className="absolute top-2 left-2 right-2 h-[3px] bg-[#ffd54f] rounded-full" />
+                <div className="absolute top-4 left-1 w-[20px] h-[2px] bg-white" />
+                <div className="absolute bottom-3 left-3 w-[15px] h-[12px] bg-[#d4e8d4] rounded-sm" />
+                <div className="absolute bottom-2 right-2 w-[18px] h-[8px] bg-[#c5daf0] rounded-sm" />
+                <div className="absolute top-[18px] left-[50%] w-[2px] h-[20px] bg-white transform -translate-x-1/2" />
+              </div>
+              {/* 상단 아이콘 */}
+              <div className="absolute top-0.5 left-1/2 transform -translate-x-1/2">
+                <div className="bg-white rounded-sm p-0.5 shadow-sm">
+                  <svg className="w-2.5 h-2.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <span className={`text-[11px] font-medium py-1 ${baseMap === "normal" ? "text-blue-600" : "text-gray-600"}`}>
+              일반지도
+            </span>
           </button>
           <button
             onClick={() => setBaseMap("satellite")}
-            className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
+            className={`relative flex flex-col items-center rounded-md overflow-hidden transition-all ${
               baseMap === "satellite" 
-                ? "bg-primary text-white" 
-                : "text-muted-foreground hover:bg-muted"
+                ? "ring-2 ring-blue-500" 
+                : "ring-1 ring-gray-200 hover:ring-gray-300"
             }`}
           >
-            위성
+            <div className="relative w-[60px] h-[42px] overflow-hidden">
+              {/* 위성 썸네일 */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#1a3d1a] via-[#2d5a2d] to-[#1a4a2a]">
+                <div className="absolute top-1 left-1 right-1 h-[2px] bg-[#3a3a3a]/40" />
+                <div className="absolute top-3 left-2 w-[12px] h-[8px] bg-[#4a5a4a] rounded-sm" />
+                <div className="absolute bottom-2 right-1 w-[20px] h-[10px] bg-[#3a4a3a] rounded-sm" />
+                <div className="absolute top-[50%] left-0 right-0 h-[1px] bg-[#5a5a5a]/30" />
+              </div>
+            </div>
+            <span className={`text-[11px] font-medium py-1 ${baseMap === "satellite" ? "text-blue-600" : "text-gray-600"}`}>
+              위성지도
+            </span>
           </button>
         </div>
 
