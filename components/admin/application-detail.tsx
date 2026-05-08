@@ -1878,13 +1878,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       >
                                         <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                                         <div className="flex-1">
-                                          <div className="flex items-center justify-between">
-                                            <h4 className="text-sm font-semibold text-foreground">상세 판독 결과</h4>
-                                            <Button variant="ghost" size="sm" className="h-6 px-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity">
-                                              <Maximize2 className="h-3 w-3 mr-1" />
-                                              확대 보기
-                                            </Button>
-                                          </div>
+                                          <h4 className="text-sm font-semibold text-foreground">상세 판독 결과</h4>
                                           <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                                             {(() => {
                                               const explanation = aiResult?.judgmentRationale?.detailedExplanation;
