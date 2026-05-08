@@ -162,7 +162,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 호버된 필지 ID (지도-리스트 연동)
   const [hoveredLandId, setHoveredLandId] = useState<string | null>(null);
   
-  // �����커스된 필지 ID (지도 중심 이동용)
+  // 포커스된 필지 ID (지도 중심 이동용)
   const [focusedLandId, setFocusedLandId] = useState<string | null>(null);
   
   // 선택된 인접 필지 정보 표시용
@@ -199,7 +199,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "���������������������입력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "미입력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -279,7 +279,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
 
   
-  // 민원인�� 신청한 필지 ID 목록 (application에서 가져옴, 읽기 전용)
+  // 민원인이 신청한 필지 ID 목록 (application에서 가져옴, 읽기 전용)
   const citizenSelectedLandIds = allLands.map(l => l.id);
   
   // 담당자가 선택한 필지 ID 목록 (수정 가능, 초기값: 민원인 신청 필지와 동일)
