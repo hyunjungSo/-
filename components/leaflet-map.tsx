@@ -368,35 +368,35 @@ export function LeafletMap({
       if (isAdjacentParcel) {
         // 미신청 인접지
         if (isSelected || isOwned) {
-          // 3. (미신청 인접지) 선택 시: 주황색 실선
+          // 3. (미신청 인접지) 선택 시: 주황색 실선, 배경은 보더색상 10%
           polygonColor = "#d97706"; // 주황색
-          fillColor = "#ffedd5"; // 연한 주황색 배경
+          fillColor = "#d97706"; // 보더와 동일한 색상
           weight = 4;
-          fillOpacity = 0.45;
+          fillOpacity = 0.1; // 10% 투명도
           dashArray = undefined; // 실선
         } else {
           // 4. (미신청 인접지) 미선택 시: 주황색 점선
           polygonColor = "#d97706"; // 주황색
-          fillColor = "#fef3c7"; // 연한 노란색 배경
+          fillColor = "#d97706"; // 보더와 동일한 색상
           weight = 2;
-          fillOpacity = 0.15;
+          fillOpacity = 0.05; // 미선택시 더 연하게
           dashArray = "6, 4"; // 점선 스타일
         }
       } else {
         // 민원인 신청 필지
         if (isSelected || isOwned) {
-          // 1. 민원인 신청 필지 선택 시: 파란색 실선
+          // 1. 민원인 신청 필지 선택 시: 파란색 실선, 배경은 보더색상 10%
           polygonColor = "#2563eb"; // 파란색
-          fillColor = "#dbeafe"; // 연한 파란색 배경
+          fillColor = "#2563eb"; // 보더와 동일한 색상
           weight = 4;
-          fillOpacity = 0.45;
+          fillOpacity = 0.1; // 10% 투명도
           dashArray = undefined; // 실선
         } else {
           // 2. 민원인 신청 필지 미선택 시: 회색 실선
           polygonColor = "#6b7280"; // 회색
-          fillColor = "#f3f4f6"; // 연한 회색 배경
+          fillColor = "#6b7280"; // 보더와 동일한 색상
           weight = 3;
-          fillOpacity = 0.3;
+          fillOpacity = 0.05; // 미선택시 더 연하게
           dashArray = undefined; // 실선
         }
       }
@@ -404,18 +404,18 @@ export function LeafletMap({
       // 호버 시 스타일 오버라이드
       if (isHovered) {
         if (isAdjacentParcel) {
-          // 인접 필지 호버: 진한 주황색
+          // 인접 필지 호버: 진한 주황색, 배경은 보더색상 15%
           polygonColor = "#c2410c";
-          fillColor = "#ffedd5";
+          fillColor = "#c2410c";
           weight = 4;
-          fillOpacity = 0.4;
+          fillOpacity = 0.15;
           dashArray = undefined;
         } else {
-          // 신청 필지 호버: 진한 파란색
+          // 신청 필지 호버: 진한 파란색, 배경은 보더색상 15%
           polygonColor = "#1d4ed8";
-          fillColor = "#dbeafe";
+          fillColor = "#1d4ed8";
           weight = 4;
-          fillOpacity = 0.5;
+          fillOpacity = 0.15;
           dashArray = undefined;
         }
       }
@@ -442,7 +442,7 @@ export function LeafletMap({
         }
       });
 
-      // 클릭 이벤트
+      // 클릭 ��벤트
       polygon.on("click", () => {
         if (onParcelClick) {
           onParcelClick(parcel.id);
