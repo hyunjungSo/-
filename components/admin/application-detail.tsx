@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ����������������������������지별 분�������
+        // 개별 �����������������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1511,17 +1511,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     {/* 헤더 - 필지 선택과 연동 */}
                     <div className="flex items-center justify-between border-b bg-muted/30 px-3 py-2.5">
                       <span className="text-sm font-medium flex items-center gap-2">
-                        <span 
-                          className="flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white"
-                          style={{ backgroundColor: selectedAdjacentParcel ? "#d97706" : "#2563eb" }}
+                        <Badge 
+                          className={`text-xs ${selectedAdjacentParcel ? "bg-[#d97706] text-white" : "bg-[#2563eb] text-white"}`}
                         >
-                          {selectedAdjacentParcel ? selectedAdjacentParcel.parcelNumber || (applicationLands.length + 1) : selectedLandIndex + 1}
-                        </span>
-                        필지{selectedAdjacentParcel ? (selectedAdjacentParcel.parcelNumber || applicationLands.length + 1) : selectedLandIndex + 1} 검토 옵션
+                          필지{selectedAdjacentParcel ? (selectedAdjacentParcel.parcelNumber || (applicationLands.length + 1)) : 1}
+                        </Badge>
+                        검토 옵션
                       </span>
                       <Badge 
-                        variant={selectedAdjacentParcel ? "outline" : "default"} 
-                        className={`text-xs ${selectedAdjacentParcel ? "border-amber-600 text-amber-700" : ""}`}
+                        variant="outline"
+                        className={`text-xs ${selectedAdjacentParcel ? "border-amber-600 text-amber-700" : "border-blue-600 text-blue-700"}`}
                       >
                         {selectedAdjacentParcel ? "인접 필지" : "신청 필지"}
                       </Badge>
@@ -1578,7 +1577,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
                               >
                                 <SelectTrigger className="h-10 bg-background">
-                                  <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+                                  <SelectValue placeholder="현재 활용 지목을 선택해 주��요" />
                                 </SelectTrigger>
                                 <SelectContent>
                                   <SelectItem value="대">대 (택지)</SelectItem>
