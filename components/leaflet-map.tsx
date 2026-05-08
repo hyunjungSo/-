@@ -140,21 +140,16 @@ export function LeafletMap({
         center: [center.lat, center.lng],
         zoom: zoom,
         zoomControl: false,
+        attributionControl: false,
       });
 
       // 타일 레이어 추가 (OpenStreetMap 기본, ESRI 위성)
       const normalTile = L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-          attribution: "© OpenStreetMap contributors",
-        }
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       );
 
       const satelliteTile = L.tileLayer(
-        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-        {
-          attribution: "© Esri, Maxar, Earthstar Geographics",
-        }
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
       );
 
       // ref에 저장
@@ -852,7 +847,7 @@ export function LeafletMap({
       </div>
 
       {/* 줌 컨트롤 */}
-      <div className="absolute right-0 bottom-3 z-[1000] flex flex-col gap-1 pr-3">
+      <div className="absolute left-3 top-3 z-[1000] flex flex-col gap-1">
         <div className="flex flex-col overflow-hidden rounded-md bg-white shadow-md">
           <Button
             variant="ghost"
