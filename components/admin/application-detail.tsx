@@ -2152,125 +2152,94 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* Section 04. 담당자 검토 - 필지별 검토 */}
+      {/* Section 04. 담당자 검토 */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-lg">필지별 검토</CardTitle>
-              <CardDescription>{allLands.length > 1 ? "각 필지별로 판정과 검토 의견을 입력하세요" : "해당 필지의 판정과 검토 의견을 입력하세요"}</CardDescription>
+              <CardTitle className="text-lg">담당자 검토</CardTitle>
+              <CardDescription>선택된 필지의 판정과 검토 의견을 입력하세요</CardDescription>
             </div>
-            {allLands.length > 1 && (
-              <Badge variant="outline">
-                {landReviewDataList.filter(d => d.landJudgment !== null).length}/{allLands.length} 검토완료
-              </Badge>
-            )}
+            <Badge variant="outline">
+              {landReviewDataList.filter(d => d.landJudgment !== null).length}/{applicationLands.length} 검토완료
+            </Badge>
           </div>
         </CardHeader>
-          <CardContent>
-            <Accordion type="multiple" className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
-              {allLands.map((land, idx) => {
-                  const landReview = landReviewDataList[idx];
-                  // 담당자 AI 분석 결과 우선, 없으면 민원인 AI 분석 결과 사용
-                  const adminResult = adminLandAIResults[land.id];
-                  const citizenResult = landAIResults[land.id] || application.aiResult;
-                  const aiResult = adminResult || citizenResult;
-                  const isReviewed = landReview.landJudgment !== null;
-                  
-                  return (
-                    <AccordionItem 
-                      key={land.id} 
-                      value={land.id}
-                      className={`rounded-lg border ${isReviewed ? 'border-green-600/20 bg-green-50/30' : 'border-gray-200'}`}
-                    >
-                      <AccordionTrigger className="hover:no-underline px-4 py-3">
-                        <div className="flex items-center justify-between w-full pr-2">
-                          <div className="flex items-center gap-3">
-                            <div className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white ${
-                              isReviewed ? 'bg-green-600' : 'bg-gray-400'
-                            }`}>
-                              {idx + 1}
-                            </div>
-                            <div className="text-left">
-                              <p className="text-sm font-medium">{land.address}</p>
-                              <p className="text-xs text-muted-foreground">{land.landType} | 잔여 {land.remainingArea.toLocaleString()}m²</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            {aiResult?.provisionalJudgment && (
-                              <Badge variant="outline" className={`text-xs ${
-                                adminResult ? "border-blue-500 text-blue-700" : "border-gray-400 text-gray-600"
-                              }`}>
-                                {adminResult ? "담당자 AI" : "민원인 AI"}: {aiResult.provisionalJudgment}
-                              </Badge>
-                            )}
-                            {landReview.landJudgment && (
-                              <Badge className={
-                                landReview.landJudgment === "매수" ? "bg-green-600" :
-                                landReview.landJudgment === "기각" ? "bg-red-500" : "bg-amber-500"
-                              }>
-                                {landReview.landJudgment}
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="px-4 pb-4">
-                        <div className="space-y-4 pt-2">
-                          {/* 매수 판정 */}
-                          <div className="space-y-2">
-                            <Label className="text-sm font-medium">매수 판정</Label>
-                            <div className="flex flex-wrap gap-2">
-                              {(["매수", "기각", "심의위원회 이관"] as JudgmentResult[]).map((judgment) => {
-                                const config = judgmentConfig[judgment];
-                                const Icon = config.icon;
-                                const isSelected = landReview.landJudgment === judgment;
-                                return (
-                                  <Button
-                                    key={judgment}
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => updateLandReviewData(idx, 'landJudgment', judgment)}
-                                    className={`cursor-pointer border-2 ${isSelected ? `${config.borderColor} ${config.textColor}` : "border-gray-200"}`}
-                                  >
-                                    <Icon className="mr-1.5 h-3.5 w-3.5" />
-                                    {config.label}
-                                  </Button>
-                                );
-                              })}
-                            </div>
-                          </div>
-                          
-                          {/* AI 판정과 다른 경우 경고 */}
-                          {landReview.landJudgment && aiResult?.provisionalJudgment && 
-                            landReview.landJudgment !== aiResult.provisionalJudgment && (
-                            <div className="flex items-start gap-2">
-                              <AlertTriangle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
-                              <p className="text-sm text-red-600">
-                                AI 제안({aiResult.provisionalJudgment})과 다른 판정입니다. 검토 의견에 사유를 작성해주세요.
-                              </p>
-                            </div>
-                          )}
-                          
-                          {/* 필지별 검토 의견 */}
-                          <div className="space-y-2">
-                            <Label className="text-sm font-medium">검토 의견</Label>
-                            <Textarea
-                              placeholder="해당 필지에 대한 검토 의견을 입력하세요..."
-                              value={landReview.landComment}
-                              onChange={(e) => updateLandReviewData(idx, 'landComment', e.target.value)}
-                              className="min-h-[80px] resize-none"
-                            />
-                          </div>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  );
-              })}
-            </Accordion>
-          </CardContent>
-        </Card>
+        <CardContent>
+          {(() => {
+            const landReview = landReviewDataList[selectedLandIndex];
+            const land = applicationLands[selectedLandIndex];
+            if (!land || !landReview) return null;
+            
+            // 담당자 AI 분석 결과 우선, 없으면 민원인 AI 분석 결과 사용
+            const adminResult = adminLandAIResults[land.id];
+            const citizenResult = landAIResults[land.id] || application.aiResult;
+            const aiResult = adminResult || citizenResult;
+            
+            return (
+              <div className="space-y-6">
+                {/* AI 판정 정보 */}
+                {aiResult?.provisionalJudgment && (
+                  <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
+                    <Badge variant="outline" className={`text-sm ${
+                      adminResult ? "border-blue-500 text-blue-700" : "border-gray-400 text-gray-600"
+                    }`}>
+                      {adminResult ? "담당자 AI 판정" : "민원인 AI 판정"}: {aiResult.provisionalJudgment}
+                    </Badge>
+                  </div>
+                )}
+                
+                {/* 매수 판정 */}
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">매수 판정</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {(["매수", "기각", "심의위원회 이관"] as JudgmentResult[]).map((judgment) => {
+                      const config = judgmentConfig[judgment];
+                      const Icon = config.icon;
+                      const isSelected = landReview.landJudgment === judgment;
+                      return (
+                        <Button
+                          key={judgment}
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => updateLandReviewData(selectedLandIndex, 'landJudgment', judgment)}
+                          className={`cursor-pointer border-2 ${isSelected ? `${config.borderColor} ${config.textColor}` : "border-gray-200"}`}
+                        >
+                          <Icon className="mr-1.5 h-3.5 w-3.5" />
+                          {config.label}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                </div>
+                
+                {/* AI 판정과 다른 경우 경고 */}
+                {landReview.landJudgment && aiResult?.provisionalJudgment && 
+                  landReview.landJudgment !== aiResult.provisionalJudgment && (
+                  <div className="flex items-start gap-2 p-3 bg-red-50 rounded-lg border border-red-200">
+                    <AlertTriangle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+                    <p className="text-sm text-red-600">
+                      AI 제안({aiResult.provisionalJudgment})과 다른 판정입니다. 검토 의견에 사유를 작성해주세요.
+                    </p>
+                  </div>
+                )}
+                
+                {/* 검토 의견 */}
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">검토 의견</Label>
+                  <Textarea
+                    placeholder="해당 필지에 대한 검토 의견을 입력하세요..."
+                    value={landReview.landComment}
+                    onChange={(e) => updateLandReviewData(selectedLandIndex, 'landComment', e.target.value)}
+                    className="min-h-[100px] resize-none"
+                  />
+                </div>
+              </div>
+            );
+          })()}
+        </CardContent>
+      </Card>
 
       {/* 진행상황 선택 */}
       <Card>
