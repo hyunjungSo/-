@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ����������지별 분�������
+        // 개별 �����������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -2153,7 +2153,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   )}
                 </div>
               </div>
-              </div>
             </TabsContent>
             </Tabs>
           </div>
@@ -2409,7 +2408,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         const criteria = result?.judgmentRationale?.appliedCriteria || [
                           "잔여지 면적 기준 미달 여부",
                           "잔여지 형상 변화 (정형 → 부정형)",
-                          "접면도로 상태 변경 여부"
+                          "접면도로 상태 ��경 여부"
                         ];
                         return criteria.map((c: string, i: number) => (
                           <li key={i} className="flex items-start gap-2 text-[15px] text-muted-foreground">
