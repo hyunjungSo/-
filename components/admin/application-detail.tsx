@@ -1057,13 +1057,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </TabsTrigger>
             </TabsList>
             
-            {/* 민������ 결과 탭 */}
+            {/* 민원인 결과 탭 */}
             <TabsContent value="citizen">
               <div className="grid gap-6 lg:grid-cols-2">
                 {/* 좌측: 지적도 - 선택된 필지만 표시 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-semibold" style={{ fontSize: '16px' }}>지적도</h4>
+                    <h4 className="text-lg font-semibold">지적도</h4>
                   </div>
                   
                   {/* 지적도 - 선택된 필지만 표시 */}
@@ -1132,7 +1132,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 우측: 분석결과 - 선택된 필지만 표시 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-semibold" style={{ fontSize: '16px' }}>분석결과</h4>
+                    <h4 className="text-lg font-semibold">분석결과</h4>
                     {(() => {
                       const land = applicationLands[selectedLandIndex];
                       if (!land) return null;
@@ -1275,7 +1275,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             </div>
                           </div>
 
-                          {/* ���� 확인 항목 */}
+                          {/* 자동 확인 항목 */}
                           {aiResult?.judgmentRationale?.manualCheckItems && aiResult.judgmentRationale.manualCheckItems.length > 0 && (
                             <div className="flex items-start gap-2">
                               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
@@ -1358,7 +1358,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 섹션 1: 지적도 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-semibold" style={{ fontSize: '16px' }}>지적도</h4>
+                    <h4 className="text-lg font-semibold">지적도</h4>
                     <Badge variant="outline" className="font-normal text-xs">
                       {applicationLands.length + 2}개 필지
                     </Badge>
@@ -1545,7 +1545,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 섹션 2: 분석 설정 및 결과 - 좌우 레이아웃 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-semibold" style={{ fontSize: '16px' }}>분석 설정 및 결과</h4>
+                    <h4 className="text-lg font-semibold">분석 설정 및 결과</h4>
                   </div>
                   
                   <div className="flex gap-4">
