@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지������������������������������������� 분석
+        // 개별 필지����������������������������������� 분석
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -904,7 +904,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       </Card>
 
       {/* Section 02. 필지선택 */}
-      <Card className="border border-gray-100">
+      <Card className="border-none">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">대상 필지 분석 및 검토</CardTitle>
