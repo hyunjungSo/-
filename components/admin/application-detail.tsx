@@ -892,53 +892,52 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       {/* Section 02. 필지선택 */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">토지 정보</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {/* 필지 선택 */}
-          <div className="flex items-center gap-4 mb-4">
-            <Select
-              value={selectedLandIndex.toString()}
-              onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
-            >
-              <SelectTrigger className="w-full max-w-[500px] h-10">
-                <SelectValue placeholder="필지를 선택하세요" />
-              </SelectTrigger>
-              <SelectContent>
-                {applicationLands.map((land, index) => (
-                  <SelectItem key={land.id} value={index.toString()}>
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">{String.fromCharCode(65 + index)}</span>
-                      <span>{land.address.split(" ").slice(-2).join(" ")}</span>
-                      <span className="text-muted-foreground text-xs">| {land.landCategory} | {land.remainingArea.toLocaleString()}㎡</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => setSelectedLandIndex(Math.max(0, selectedLandIndex - 1))}
-                disabled={selectedLandIndex === 0}
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg">토지 정보</CardTitle>
+            {/* 필지 선택 */}
+            <div className="flex items-center gap-4">
+              <Select
+                value={selectedLandIndex.toString()}
+                onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
               >
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-              <span className="text-sm text-muted-foreground whitespace-nowrap">{selectedLandIndex + 1} / {applicationLands.length}</span>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => setSelectedLandIndex(Math.min(applicationLands.length - 1, selectedLandIndex + 1))}
-                disabled={selectedLandIndex === applicationLands.length - 1}
-              >
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+                <SelectTrigger className="w-full max-w-[500px] h-10">
+                  <SelectValue placeholder="필지를 선택하세요" />
+                </SelectTrigger>
+                <SelectContent>
+                  {applicationLands.map((land, index) => (
+                    <SelectItem key={land.id} value={index.toString()}>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">{String.fromCharCode(65 + index)}</span>
+                        <span>{land.address.split(" ").slice(-2).join(" ")}</span>
+                        <span className="text-muted-foreground text-xs">| {land.landCategory} | {land.remainingArea.toLocaleString()}㎡</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => setSelectedLandIndex(Math.max(0, selectedLandIndex - 1))}
+                  disabled={selectedLandIndex === 0}
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+                <span className="text-sm text-muted-foreground whitespace-nowrap">{selectedLandIndex + 1} / {applicationLands.length}</span>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => setSelectedLandIndex(Math.min(applicationLands.length - 1, selectedLandIndex + 1))}
+                  disabled={selectedLandIndex === applicationLands.length - 1}
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
-
         </CardHeader>
         <CardContent className="space-y-8">
           {/* 2-1. 토지정보 */}
@@ -1347,17 +1346,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
                                 {/* 안내 문구 */}
                                 <div className="flex items-start gap-2 pt-2 border-t">
-                                  <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
-                                  <p className="text-xs text-muted-foreground">
-                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
-                                  </p>
-                                </div>
+                              <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
+                              <p className="text-xs text-muted-foreground">
+                                AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                              </p>
                             </div>
-                          </AccordionContent>
-                        </AccordionItem>
+                          </div>
+                        </div>
                       );
-                    })}
-                  </Accordion>
+                    })()}
                   </div>
                 </div>
               </div>
@@ -1366,41 +1363,42 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             {/* 담당자 결과 탭 */}
             <TabsContent value="admin">
               <div className="grid gap-6 lg:grid-cols-2">
-                {/* 좌측: 지적도 + 필지 리스트 */}
+                {/* 좌측: 지적도 - 선택된 필지 */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h4 className="font-medium">지적도</h4>
                     <Badge variant="outline" className="font-normal">
-                      {allLands.length}필지
+                      {applicationLands[selectedLandIndex]?.address.split(" ").slice(-2).join(" ")}
                     </Badge>
                   </div>
                   
-                  {/* 지적도 */}
+                  {/* 지적도 - 선택된 필지와 인접지 */}
                   <div className="relative h-[450px] rounded-lg overflow-hidden border">
-                    {/* 지적도 */}
                     <div className="absolute inset-0">
                     <LeafletMap
                       parcels={(() => {
-                        const applicationParcels = allLands.map((land, idx) => {
-                          const baseLat = 37.2180 + (idx * 0.0008);
-                          const baseLng = 127.2950 + (idx * 0.0005);
-                          const offset = 0.0003;
-                          
-                          return {
-                            id: land.id,
-                            address: land.address,
-                            isIncluded: true,
-                            isOwned: adminCheckedLandIds.includes(land.id),
-                            coordinates: [
-                              { lat: baseLat, lng: baseLng },
-                              { lat: baseLat, lng: baseLng + offset * 1.2 },
-                              { lat: baseLat + offset, lng: baseLng + offset * 1.2 },
-                              { lat: baseLat + offset, lng: baseLng },
-                            ],
-                          };
-                        });
+                        const selectedLand = applicationLands[selectedLandIndex];
+                        if (!selectedLand) return [];
                         
-                        // 인접 필지 데이터
+                        // 선택된 필지
+                        const baseLat = 37.2180 + (selectedLandIndex * 0.0008);
+                        const baseLng = 127.2950 + (selectedLandIndex * 0.0005);
+                        const offset = 0.0003;
+                        
+                        const selectedParcel = {
+                          id: selectedLand.id,
+                          address: selectedLand.address,
+                          isIncluded: true,
+                          isOwned: adminCheckedLandIds.includes(selectedLand.id),
+                          coordinates: [
+                            { lat: baseLat, lng: baseLng },
+                            { lat: baseLat, lng: baseLng + offset * 1.2 },
+                            { lat: baseLat + offset, lng: baseLng + offset * 1.2 },
+                            { lat: baseLat + offset, lng: baseLng },
+                          ],
+                        };
+                        
+                        // 인접지 (미선택 상태)
                         const adjacentParcels = [
                           {
                             id: "adjacent-001",
@@ -1409,10 +1407,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             isOwned: false,
                             isAdjacent: true,
                             coordinates: [
-                              { lat: 37.2183, lng: 127.2953 },
-                              { lat: 37.2183, lng: 127.2957 },
-                              { lat: 37.2186, lng: 127.2957 },
-                              { lat: 37.2186, lng: 127.2953 },
+                              { lat: baseLat + offset * 1.1, lng: baseLng },
+                              { lat: baseLat + offset * 1.1, lng: baseLng + offset * 1.2 },
+                              { lat: baseLat + offset * 2.1, lng: baseLng + offset * 1.2 },
+                              { lat: baseLat + offset * 2.1, lng: baseLng },
                             ],
                           },
                           {
@@ -1422,28 +1420,18 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             isOwned: false,
                             isAdjacent: true,
                             coordinates: [
-                              { lat: 37.2177, lng: 127.2947 },
-                              { lat: 37.2177, lng: 127.2951 },
-                              { lat: 37.2180, lng: 127.2951 },
-                              { lat: 37.2180, lng: 127.2947 },
+                              { lat: baseLat, lng: baseLng + offset * 1.3 },
+                              { lat: baseLat, lng: baseLng + offset * 2.5 },
+                              { lat: baseLat + offset, lng: baseLng + offset * 2.5 },
+                              { lat: baseLat + offset, lng: baseLng + offset * 1.3 },
                             ],
                           },
                         ];
                         
-                        return [...applicationParcels, ...adjacentParcels];
+                        return [selectedParcel, ...adjacentParcels];
                       })()}
-                      selectedParcelIds={new Set(adminCheckedLandIds)}
-                      onParcelClick={(parcelId) => {
-                        if (adminCheckedLandIds.includes(parcelId)) {
-                          setAdminCheckedLandIds(prev => prev.filter(id => id !== parcelId));
-                        } else {
-                          setAdminCheckedLandIds(prev => [...prev, parcelId]);
-                        }
-                        const landIdx = allLands.findIndex(l => l.id === parcelId);
-                        if (landIdx !== -1) {
-                          setSelectedLandIndex(landIdx);
-                        }
-                      }}
+                      selectedParcelIds={new Set([applicationLands[selectedLandIndex]?.id].filter(Boolean))}
+                      onParcelClick={() => {}}
                       hoveredParcelId={hoveredLandId}
                       onParcelHover={(parcelId) => setHoveredLandId(parcelId)}
                       focusedParcelId={focusedLandId}
@@ -1457,12 +1445,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <p className="text-xs font-medium text-muted-foreground mb-2">범례</p>
                     <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-3 rounded-sm border-2 border-[#6b7280] bg-[#f3f4f6]" />
-                        <span>신청 필지</span>
+                        <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
+                        <span className="text-blue-600 font-medium">선택 필지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
-                        <span>인접 필지 (미신청)</span>
+                        <span>인접지 (미선택)</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
@@ -1653,43 +1641,24 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         </p>
                       </div>
                       
-                      {/* 민원인 결과를 기본으로 표시 */}
-                      <Accordion type="multiple" defaultValue={[]} className="space-y-3 overflow-y-auto">
-                        {allLands.map((land, idx) => {
-                          const landResult = landAIResults[land.id];
-                          const judgment = landResult?.provisionalJudgment || application.aiResult?.provisionalJudgment;
-                          return (
-                            <AccordionItem 
-                              key={land.id}
-                              value={land.id}
-                              className={`rounded-lg border px-4 ${
-                                judgment === "매수"
-                                  ? "border-green-600/20 bg-green-600/5"
-                                  : judgment === "기각"
-                                    ? "border-red-200 bg-red-50/50"
-                                    : "border-slate-200 bg-slate-50/50"
-                              }`}
-                            >
-                              <AccordionTrigger className="hover:no-underline py-3 flex items-center justify-between w-full">
-                                <div className="flex items-center justify-between w-full pr-2 flex-1">
-                                  <div className="text-left flex-1">
-                                    <div className="text-left">
-                                      <p className="font-medium text-sm">{land.address}</p>
-                                      <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
-                                    </div>
-                                  </div>
-                                  {/* 필지별 매수/불매수 Badge 표시 - 항상 표시 */}
-                                  <JudgmentStatus 
-                                    judgment={landResult?.provisionalJudgment || application.aiResult?.provisionalJudgment || "분석중"} 
-                                    variant="badge" 
-                                    size="sm"
-                                    className="ml-2"
-                                  />
-                                </div>
-                              </AccordionTrigger>
-                              <AccordionContent className="pb-4">
-                                    {/* 편입 정보 - 통합 */}
-                                    <div className="rounded-lg bg-white/60 p-3 border mb-4">
+                      {/* 선택된 필지의 민원인 결과 표시 */}
+                      {(() => {
+                        const land = applicationLands[selectedLandIndex];
+                        if (!land) return null;
+                        
+                        const landResult = landAIResults[land.id];
+                        const judgment = landResult?.provisionalJudgment || application.aiResult?.provisionalJudgment;
+                        
+                        return (
+                          <div className={`rounded-lg border p-4 ${
+                            judgment === "매수"
+                              ? "border-green-600/20 bg-green-600/5"
+                              : judgment === "기각"
+                                ? "border-red-200 bg-red-50/50"
+                                : "border-slate-200 bg-slate-50/50"
+                          }`}>
+                            {/* 편입 정보 */}
+                            <div className="rounded-lg bg-white/60 p-3 border mb-4">
                                       <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
                                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
                                         <div>
@@ -1905,65 +1874,49 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         </div>
                                       )}
 
-                                      {/* 안내 문구 */}
-                                      <div className="flex items-start gap-2 pt-2 border-t">
-                                        <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
-                                        <p className="text-xs text-muted-foreground">
-                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
-                                        </p>
-                                      </div>
-                                    </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          );
-                        })}
-                      </Accordion>
+                              {/* 안내 문구 */}
+                              <div className="flex items-start gap-2 pt-2 border-t">
+                                <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
+                                <p className="text-xs text-muted-foreground">
+                                  AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </>
                   ) : (
                     <>
-  {/* 필지별 분석 결과 - 아코디언 UI (AI 분석 실행 버튼 클릭 시 분석된 필지만 표시, 체크박스 해제와 무관) */}
-  <Accordion type="multiple" defaultValue={[]} className="space-y-3 overflow-y-auto">
-                        {Object.entries(adminLandAIResults)
-                          .map(([landId, result]) => {
-                          const land = allLands.find(l => l.id === landId);
-                          const landIdx = allLands.findIndex(l => l.id === landId);
-                          if (!land) return null;
-                          
-                          return (
-                            <AccordionItem 
-                              key={landId}
-                              value={landId}
-                              className={`rounded-lg border px-4 ${
-                                result.provisionalJudgment === "매수"
-                                  ? "border-green-600/20 bg-green-600/5"
-                                  : "border-red-200 bg-red-50/50"
-                              }`}
-                            >
-                              <AccordionTrigger className="hover:no-underline py-3">
-                                <div className="flex items-center justify-between w-full pr-2">
-                                  <div className="flex items-center gap-2">
-                                    <span className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-white ${
-                                      result.provisionalJudgment === "매수" ? "bg-green-600" : "bg-red-500"
-                                    }`}>
-                                      {String.fromCharCode(65 + landIdx)}
-                                    </span>
-                                    <div className="text-left">
-                                      <p className="font-medium text-sm">{land.address}</p>
-                                      <p className="text-xs text-muted-foreground">{land.landType} | {land.landCategory}</p>
-                                    </div>
-                                  </div>
-                                  <JudgmentStatus 
-                                    judgment={result.provisionalJudgment} 
-                                    variant="badge" 
-                                    size="sm"
-                                    className="ml-2"
-                                  />
-                                </div>
-                              </AccordionTrigger>
-                              <AccordionContent className="pb-4">
-                                {/* 편입 정보 - 통합 */}
-                                <div className="rounded-lg bg-white/60 p-3 border mb-4">
-                                  <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
+                      {/* 선택된 필지의 담당자 재분석 결과 표시 */}
+                      {(() => {
+                        const land = applicationLands[selectedLandIndex];
+                        if (!land) return null;
+                        
+                        const result = adminLandAIResults[land.id];
+                        // 재분석 결과가 없으면 민원인 결과 사용
+                        const landResult = result || landAIResults[land.id];
+                        const judgment = result?.provisionalJudgment || landResult?.provisionalJudgment || application.aiResult?.provisionalJudgment;
+                        
+                        return (
+                          <div className={`rounded-lg border p-4 ${
+                            judgment === "매수"
+                              ? "border-green-600/20 bg-green-600/5"
+                              : judgment === "기각"
+                                ? "border-red-200 bg-red-50/50"
+                                : "border-slate-200 bg-slate-50/50"
+                          }`}>
+                            {result && (
+                              <div className="flex items-center gap-2 mb-3 pb-2 border-b">
+                                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                                  담당자 재분석 결과
+                                </Badge>
+                              </div>
+                            )}
+                            
+                            {/* 편입 정보 */}
+                            <div className="rounded-lg bg-white/60 p-3 border mb-4">
+                              <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
                                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
                                     <div>
                                       <span className="text-muted-foreground">편입 전 면적:</span>
@@ -1981,105 +1934,105 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <span className="text-muted-foreground">잔여 비율:</span>
                                       <span className="ml-1 font-medium">{land.remainingRatio}%</span>
                                     </div>
-                                    <div>
-                                      <span className="text-muted-foreground">형상지수 변화:</span>
-                                      <span className="ml-1 font-medium">{result?.shapeIndexChange != null ? `+${result.shapeIndexChange.toFixed(1)}` : "-"}</span>
-                                    </div>
+                                <div>
+                                  <span className="text-muted-foreground">형상지수 변화:</span>
+                                  <span className="ml-1 font-medium">{(result || landResult)?.shapeIndexChange != null ? `+${(result || landResult).shapeIndexChange.toFixed(1)}` : "-"}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* 상세 분석 내용 - 담당자 또는 민원인 결과 */}
+                            <div className="space-y-4">
+                              {/* 판단 요약 */}
+                              {(landResult?.judgmentRationale || result?.judgmentRationale) && (
+                                <div className="flex items-start gap-2">
+                                  <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                  <div>
+                                    <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
+                                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{(result || landResult)?.judgmentRationale?.summary}</p>
                                   </div>
                                 </div>
+                              )}
 
-                                {/* 상세 분석 내용 - 민원인 화면과 동일 */}
-                                <div className="space-y-4">
-                                  {/* 판단 요약 */}
-                                  {result.judgmentRationale && (
-                                    <div className="flex items-start gap-2">
-                                      <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                                      <div>
-                                        <h4 className="text-sm font-semibold text-foreground">판단 요약</h4>
-                                        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{result.judgmentRationale.summary}</p>
-                                      </div>
-                                    </div>
-                                  )}
+                              {/* 법적 근거 */}
+                              {(landResult?.judgmentRationale || result?.judgmentRationale) && (
+                                <div className="flex items-start gap-2">
+                                  <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+                                  <div>
+                                    <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
+                                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{(result || landResult)?.judgmentRationale?.legalBasis}</p>
+                                  </div>
+                                </div>
+                              )}
 
-                                  {/* 법적 근거 */}
-                                  {result.judgmentRationale && (
-                                    <div className="flex items-start gap-2">
-                                      <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
-                                      <div>
-                                        <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
-                                        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{result.judgmentRationale.legalBasis}</p>
-                                      </div>
-                                    </div>
-                                  )}
-
-                                  {/* 적용 기준 */}
-                                  {result.judgmentRationale && (
-                                    <div className="flex items-start gap-2">
-                                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                                      <div>
-                                        <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
-                                        <ul className="mt-1 space-y-1">
-                                          {result.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
-                                            <li key={cIdx} className="flex items-start gap-1.5 text-sm text-muted-foreground">
-                                              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
-                                              <span>{criteria}</span>
-                                            </li>
-                                          ))}
+                              {/* 적용 기준 */}
+                              {(landResult?.judgmentRationale || result?.judgmentRationale) && (
+                                <div className="flex items-start gap-2">
+                                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                  <div>
+                                    <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
+                                    <ul className="mt-1 space-y-1">
+                                      {((result || landResult)?.judgmentRationale?.appliedCriteria || []).map((criteria, cIdx) => (
+                                        <li key={cIdx} className="flex items-start gap-1.5 text-sm text-muted-foreground">
+                                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
+                                          <span>{criteria}</span>
+                                        </li>
+                                      ))}
                                         </ul>
                                       </div>
                                     </div>
                                   )}
 
-                                  {/* 수동 확인 항목 */}
-                                  {result.judgmentRationale?.manualCheckItems && result.judgmentRationale.manualCheckItems.length > 0 && (
-                                    <div className="flex items-start gap-2">
-                                      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
-                                      <div>
-                                        <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
-                                        <ul className="mt-1 space-y-1">
-                                          {result.judgmentRationale.manualCheckItems.map((item, mIdx) => (
-                                            <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                                              <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
-                                              <span>{item}</span>
-                                            </li>
-                                          ))}
-                                        </ul>
-                                      </div>
-                                    </div>
-                                  )}
+                              {/* 수동 확인 항목 */}
+                              {((result || landResult)?.judgmentRationale?.manualCheckItems?.length ?? 0) > 0 && (
+                                <div className="flex items-start gap-2">
+                                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+                                  <div>
+                                    <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
+                                    <ul className="mt-1 space-y-1">
+                                      {((result || landResult)?.judgmentRationale?.manualCheckItems || []).map((item, mIdx) => (
+                                        <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                                          <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
+                                          <span>{item}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                </div>
+                              )}
 
-                                  {/* 상세 분석 */}
-                                  {result.judgmentRationale?.detailedExplanation && (
-                                    <div className="flex items-start gap-2">
-                                      <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
-                                      <div>
-                                        <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
-                                        <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
-                                          {result.judgmentRationale.detailedExplanation}
-                                        </pre>
+                              {/* 상세 분석 */}
+                              {(result || landResult)?.judgmentRationale?.detailedExplanation && (
+                                <div className="flex items-start gap-2">
+                                  <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                                  <div>
+                                    <h4 className="text-sm font-semibold text-foreground">상세 분석</h4>
+                                    <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
+                                      {(result || landResult)?.judgmentRationale?.detailedExplanation}
+                                    </pre>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* 판정 기준 충족 여부 */}
+                              {((result || landResult)?.criteriaChecks?.length ?? 0) > 0 && (
+                                <div className="rounded-lg bg-white/60 p-3 border">
+                                  <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
+                                  <div className="space-y-2">
+                                    {((result || landResult)?.criteriaChecks || []).map((check, cIdx) => (
+                                      <div key={cIdx} className="flex items-center justify-between text-sm">
+                                        <span className="text-muted-foreground">{check.criteriaName}</span>
+                                        <Badge 
+                                          variant={check.isMet ? "default" : "destructive"} 
+                                          className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}
+                                        >
+                                          {check.isMet ? "충족" : "미충족"}
+                                        </Badge>
                                       </div>
-                                    </div>
-                                  )}
-                                  
-                                  {/* 판정 기준 충족 여부 */}
-                                  {result.criteriaChecks && result.criteriaChecks.length > 0 && (
-                                    <div className="rounded-lg bg-white/60 p-3 border">
-                                      <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
-                                      <div className="space-y-2">
-                                        {result.criteriaChecks.map((check, cIdx) => (
-                                          <div key={cIdx} className="flex items-center justify-between text-sm">
-                                            <span className="text-muted-foreground">{check.criteriaName}</span>
-                                            <Badge 
-                                              variant={check.isMet ? "default" : "destructive"} 
-                                              className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}
-                                            >
-                                              {check.isMet ? "충족" : "미충족"}
-                                            </Badge>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    </div>
-                                  )}
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
                                   
                                   {/* 적용된 현장 상황 옵션 - 필지별 */}
                                   {(() => {
@@ -2106,24 +2059,21 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </p>
                                   </div>
                                   
-                                  {/* 분석 프로세스 상세 보기 버튼 */}
-                                  <Button
-                                    variant="outline"
-                                    className="h-12 w-full gap-2 mt-3 text-base bg-black text-white hover:bg-gray-800 hover:text-white border-black"
-                                    onClick={() => {
-                                      setSelectedLandIndex(landIdx);
-                                      setShowAnalysisFlow(true);
-                                    }}
-                                  >
-                                    <PlayCircle className="h-4 w-4" />
-                                    분석 프로세스 상세 보기
-                                  </Button>
-                                </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          );
-                        })}
-                      </Accordion>
+                              {/* 분석 프로세스 상세 보기 버튼 */}
+                              <Button
+                                variant="outline"
+                                className="h-12 w-full gap-2 mt-3 text-base bg-black text-white hover:bg-gray-800 hover:text-white border-black"
+                                onClick={() => {
+                                  setShowAnalysisFlow(true);
+                                }}
+                              >
+                                <PlayCircle className="h-4 w-4" />
+                                분석 프로세스 상세 보기
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </>
                   )}
                 </div>
