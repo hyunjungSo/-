@@ -391,32 +391,30 @@ export function LandMap({
           </button>
         </div>
 
+
+      
+      {/* 지도 컨트롤 - 거리, 레이어 */}
+      <div className="absolute right-0 top-3 z-[1000] flex flex-col gap-1.5 pr-2">
         {/* 거리 측정 */}
-        <Button 
-          variant={measureMode ? "default" : "outline"} 
-          size="sm" 
-          className={cn(
-            "h-8 gap-1.5 shadow-sm",
-            measureMode 
-              ? "text-white hover:opacity-90" 
-              : "border-gray-300 bg-white/95 text-[#222222] hover:bg-white"
-          )}
-          style={measureMode ? { backgroundColor: '#ff3478' } : undefined}
+        <button
           onClick={toggleMeasureMode}
+          className={`flex flex-col items-center justify-center w-[42px] h-11 rounded-md shadow transition-colors ${
+            measureMode ? "bg-pink-500" : "bg-white hover:bg-gray-100"
+          }`}
         >
-          <Ruler className="h-4 w-4" />
-          <span className="text-sm">거리 측정</span>
-        </Button>
+          <Ruler className={`h-[18px] w-[18px] mb-1 ${measureMode ? "text-white" : "text-gray-700"}`} strokeWidth={1.5} />
+          <span className={`text-[11px] font-medium ${measureMode ? "text-white" : "text-gray-700"}`}>거리</span>
+        </button>
 
         {/* 레이어 선택 */}
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" size="sm" className="h-8 gap-1.5 border-gray-300 bg-white/95 text-[#222222] shadow-sm hover:bg-white">
-              <Layers className="h-4 w-4" />
-              <span className="text-sm">레이어</span>
-            </Button>
+            <button className="flex flex-col items-center justify-center w-[42px] h-11 bg-white rounded-md shadow hover:bg-gray-100 transition-colors">
+              <Layers className="h-[18px] w-[18px] text-gray-700 mb-1" strokeWidth={1.5} />
+              <span className="text-[11px] text-gray-700 font-medium">레이어</span>
+            </button>
           </PopoverTrigger>
-          <PopoverContent className="w-52 p-3" align="start">
+          <PopoverContent className="w-52 p-3" align="end" sideOffset={5}>
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Checkbox
@@ -455,7 +453,7 @@ export function LandMap({
           </PopoverContent>
         </Popover>
       </div>
-      
+
       {/* 줌 컨트롤 */}
       <div className="absolute right-0 top-3 z-10 flex flex-col gap-1 pr-3">
         <div className="flex flex-col overflow-hidden rounded-md bg-white/90 shadow-sm">
