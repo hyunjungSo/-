@@ -903,7 +903,42 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* Section 02. 필지 정보 */}
+      {/* Section 02. 신청인 정보 */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">신청인 정보</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+            <div>
+              <span className="text-sm text-muted-foreground">접수번호</span>
+              <p className="font-medium">{application.id}</p>
+            </div>
+            <div>
+              <span className="text-sm text-muted-foreground">신청 구분</span>
+              <p className="font-medium">
+                <Badge variant={application.applicationType === "본인 신청" ? "default" : "outline"}>
+                  {application.applicationType || "본인 신청"}
+                </Badge>
+              </p>
+            </div>
+            <div>
+              <span className="text-sm text-muted-foreground">신청인</span>
+              <p className="font-medium">{application.applicantName}</p>
+            </div>
+            <div>
+              <span className="text-sm text-muted-foreground">주소</span>
+              <p className="font-medium">{application.applicantAddress || "-"}</p>
+            </div>
+            <div>
+              <span className="text-sm text-muted-foreground">신청일</span>
+              <p className="font-medium">{application.createdAt}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Section 03. 필지 정보 */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">필지 정보</CardTitle>
@@ -2319,7 +2354,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           
           {/* 확장 패널 */}
           <div className="relative flex w-full max-w-6xl bg-background shadow-2xl animate-in slide-in-from-left duration-300">
-            {/* 닫기 버튼 */}
+            {/* ��기 버튼 */}
             <Button
               variant="ghost"
               size="icon"
