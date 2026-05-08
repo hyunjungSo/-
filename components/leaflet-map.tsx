@@ -392,11 +392,11 @@ export function LeafletMap({
           fillOpacity = 0.1; // 10% 투명도
           dashArray = undefined; // 실선
         } else {
-          // 2. 민원인 신청 필지 미선택 시: 회색 실선
-          polygonColor = "#6b7280"; // 회색
-          fillColor = "#6b7280"; // 보더와 동일한 색상
+          // 2. 민원인 신청 필지 미선택 시: 파란색 실선, 배경 없음
+          polygonColor = "#2563eb"; // 파란색
+          fillColor = "transparent"; // 배경 없음
           weight = 3;
-          fillOpacity = 0.05; // 미선택시 더 연하게
+          fillOpacity = 0; // 배경 투명
           dashArray = undefined; // 실선
         }
       }
