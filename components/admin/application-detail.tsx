@@ -941,68 +941,56 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
           {/* 선택된 필지 상세 정보 */}
           {applicationLands[selectedLandIndex] && (
-            <div className="space-y-6 pt-4 border-t">
-              {/* 기본 정보 */}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                <div>
-                  <span className="text-sm text-muted-foreground">토지유형</span>
-                  <p className="font-medium text-sm">{applicationLands[selectedLandIndex].landType || "-"}</p>
-                </div>
-                <div>
-                  <span className="text-sm text-muted-foreground">대상 지번</span>
-                  <p className="font-medium text-sm">{applicationLands[selectedLandIndex].address}</p>
-                </div>
-                <div>
-                  <span className="text-sm text-muted-foreground">잔여면적</span>
-                  <p className="font-medium text-sm">{applicationLands[selectedLandIndex].remainingArea.toLocaleString()}㎡</p>
-                </div>
-              </div>
-
-              {/* 추가 정보 */}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                <div>
-                  <span className="text-sm text-muted-foreground">토지 모양</span>
-                  <p className="font-medium text-sm">사다리꼴</p>
-                </div>
-                <div>
-                  <span className="text-sm text-muted-foreground">활용지목</span>
-                  <p className="font-medium text-sm">전</p>
-                </div>
-                <div>
-                  <span className="text-sm text-muted-foreground">공부상 지목</span>
-                  <p className="font-medium text-sm">{applicationLands[selectedLandIndex].landCategory}</p>
-                </div>
-              </div>
-
-              {/* 확인 항목 */}
-              <div className="space-y-2">
-                <span className="text-sm text-muted-foreground block">확인항목</span>
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline">농기계 진입 곤란</Badge>
-                  <Badge variant="outline">접면도로 상실</Badge>
-                </div>
-              </div>
-
-              {/* 신청 사유 */}
-              <div className="space-y-2">
-                <span className="text-sm text-muted-foreground block">신청 사유</span>
-                <p className="text-sm bg-muted/30 p-3 rounded">도로 개설로 인해 토지가 분할되어 잔여지의 형상이 불규칙하고, 농기계 진입이 어려워 농업 활용이 곤란합니다. 또한 기존 접면도로가 상실되어 토지 이용에 심각한 제한이 발생하였습니다.</p>
-              </div>
-
-              {/* 첨부서류 */}
-              <div className="space-y-2">
-                <span className="text-sm text-muted-foreground block">첨부서류</span>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 p-2 bg-muted/30 rounded">
-                    <span className="text-sm">토지대장_용인시_포곡읍_200-1.pdf</span>
-                  </div>
-                  <div className="flex items-center gap-2 p-2 bg-muted/30 rounded">
-                    <span className="text-sm">지적도_용인시_포곡읍_200-1.pdf</span>
-                  </div>
-                  <div className="flex items-center gap-2 p-2 bg-muted/30 rounded">
-                    <span className="text-sm">현장사진_20260501.jpg</span>
-                  </div>
-                </div>
+            <div className="pt-4 border-t">
+              {/* 기본 정보 테이블 */}
+              <div className="rounded-lg border overflow-hidden">
+                <table className="w-full text-sm">
+                  <tbody className="divide-y">
+                    <tr>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground w-32">토지유형</td>
+                      <td className="px-4 py-3">{applicationLands[selectedLandIndex].landType || "-"}</td>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground w-32">대상 지번</td>
+                      <td className="px-4 py-3">{applicationLands[selectedLandIndex].address}</td>
+                    </tr>
+                    <tr>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">잔여면적</td>
+                      <td className="px-4 py-3">{applicationLands[selectedLandIndex].remainingArea.toLocaleString()}㎡</td>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">토지 모양</td>
+                      <td className="px-4 py-3">사다리꼴</td>
+                    </tr>
+                    <tr>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">활용지목</td>
+                      <td className="px-4 py-3">전</td>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">공부상 지목</td>
+                      <td className="px-4 py-3">{applicationLands[selectedLandIndex].landCategory}</td>
+                    </tr>
+                    <tr>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground align-top">확인항목</td>
+                      <td className="px-4 py-3" colSpan={3}>
+                        <div className="flex flex-wrap gap-2">
+                          <Badge variant="secondary">농기계 진입 곤란</Badge>
+                          <Badge variant="secondary">접면도로 상실</Badge>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground align-top">신청 사유</td>
+                      <td className="px-4 py-3" colSpan={3}>
+                        <p className="text-sm leading-relaxed">도로 개설로 인해 토지가 분할되어 잔여지의 형상이 불규칙하고, 농기계 진입이 어려워 농업 활용이 곤란합니다. 또한 기존 접면도로가 상실되어 토지 이용에 심각한 제한이 발생하였습니다.</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground align-top">첨부서류</td>
+                      <td className="px-4 py-3" colSpan={3}>
+                        <div className="flex flex-wrap gap-2">
+                          <Badge variant="outline" className="font-normal">토지대장_용인시_포곡읍_200-1.pdf</Badge>
+                          <Badge variant="outline" className="font-normal">지적도_용인시_포곡읍_200-1.pdf</Badge>
+                          <Badge variant="outline" className="font-normal">현장사진_20260501.jpg</Badge>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
@@ -2336,7 +2324,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             {/* 패널 내용 - 2단 레이아웃 */}
             <div className="flex flex-1 overflow-hidden">
-              {/* 왼쪽: 텍스트 정보 (판단 요약, 법적 근거) */}
+              {/* 왼쪽: ���스트 정보 (판단 요약, 법적 근거) */}
               <div className="w-3/4 border-r overflow-y-auto p-6">
                 <div className="space-y-6">
                   {/* 헤더 */}
