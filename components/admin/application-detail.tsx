@@ -197,7 +197,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [reviewData, setReviewData] = useState({
     actualUsage: application.actualUsage as LandCategory,
     landShape: application.reportedShape as LandShape,
-    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "�������������������입력" as "미입력" | "해당" | "해당없음",
+    farmMachineDifficulty: application.farmMachineDifficulty ? "해당" : "���������������������입력" as "미입력" | "해당" | "해당없음",
     accessRoadLost: application.aiResult?.accessRoadLost || false,
     waterChannelLost: application.aiResult?.waterChannelLost || false,
     reviewerComment: application.reviewerComment || "",
@@ -970,32 +970,18 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
           {/* 선택된 필지 상세 정보 */}
           {allLands[selectedLandIndex] && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
+            <div className="grid grid-cols-3 gap-6 pt-4 border-t">
               <div>
-                <span className="text-sm text-muted-foreground">주소</span>
-                <p className="font-medium text-sm">{allLands[selectedLandIndex].address}</p>
-              </div>
-              <div>
-                <span className="text-sm text-muted-foreground">지목</span>
+                <span className="text-sm text-muted-foreground">토지유형</span>
                 <p className="font-medium text-sm">{allLands[selectedLandIndex].landCategory}</p>
               </div>
               <div>
-                <span className="text-sm text-muted-foreground">잔여면적</span>
-                <p className="font-medium text-sm">{allLands[selectedLandIndex].remainingArea.toLocaleString()}㎡</p>
+                <span className="text-sm text-muted-foreground">대상 지번</span>
+                <p className="font-medium text-sm">{allLands[selectedLandIndex].address}</p>
               </div>
               <div>
-                <span className="text-sm text-muted-foreground">AI 판정</span>
-                <div className="mt-0.5">
-                  {adminLandAIResults[allLands[selectedLandIndex]?.id]?.provisionalJudgment ? (
-                    <JudgmentStatus 
-                      judgment={adminLandAIResults[allLands[selectedLandIndex]?.id]?.provisionalJudgment} 
-                      variant="badge" 
-                      size="sm"
-                    />
-                  ) : (
-                    <span className="text-sm text-muted-foreground">-</span>
-                  )}
-                </div>
+                <span className="text-sm text-muted-foreground">면적</span>
+                <p className="font-medium text-sm">{allLands[selectedLandIndex].remainingArea.toLocaleString()}㎡</p>
               </div>
             </div>
           )}
@@ -1630,7 +1616,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         </Button>
                         {!hasCurrentUsage && (
                           <p className="text-xs text-center text-red-600">
-                            현재 활용 지목을 선택해 주세요
+                            현재 활�� 지목을 선택해 주세요
                           </p>
                         )}
                       </div>
@@ -2322,7 +2308,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
         aiResult={(() => {
-          // 선���된 ���지의 관리��� 재판독 결과가 있으면 우선 사용
+          // 선����된 ���지의 관리��� 재판독 결과가 있으면 우선 사용
           const selectedLandId = allLands[selectedLandIndex]?.id;
           if (selectedLandId && adminLandAIResults[selectedLandId]) {
             return adminLandAIResults[selectedLandId];
