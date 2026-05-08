@@ -716,7 +716,7 @@ export function LeafletMap({
   }, [measurePoints, isMapReady]);
 
   return (
-    <div className="relative h-full w-full overflow-visible rounded-lg border border-border">
+    <div className="relative h-full w-full overflow-hidden rounded-lg border border-border">
       {/* 지도 컨테이너 */}
       <div ref={mapRef} className="h-full w-full" />
 

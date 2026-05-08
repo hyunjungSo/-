@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지��������� 분석
+        // 개별 필지����������� 분석
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -897,7 +897,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </div>
             <div>
               <span className="text-sm text-muted-foreground">신청일</span>
-              <p className="font-medium">{application.createdAt}</p>
+              <p className="font-medium">{application.appliedAt || "2026-05-01"}</p>
             </div>
           </div>
         </CardContent>
