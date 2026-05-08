@@ -1391,14 +1391,17 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 ? "border-2 border-[#d97706] bg-[#fef3c7]/50 ring-2 ring-[#d97706] ring-offset-1" 
                                 : "border-dashed border-[#d97706] bg-[#fef3c7]/20 hover:bg-[#fef3c7]/40"
                             }`}
-                            onClick={() => setSelectedAdjacentParcel({
-                              id: adjacent.id,
-                              address: adjacent.address,
-                              landCategory: adjacent.landCategory,
-                              landType: adjacent.landType,
-                              area: adjacent.area,
-                              parcelNumber: adjacentNumber,
-                            })}
+                            onClick={() => {
+                              setSelectedAdjacentParcel({
+                                id: adjacent.id,
+                                address: adjacent.address,
+                                landCategory: adjacent.landCategory,
+                                landType: adjacent.landType,
+                                area: adjacent.area,
+                                parcelNumber: adjacentNumber,
+                              });
+                              setFocusedLandId(adjacent.id);
+                            }}
                             onMouseEnter={() => setHoveredLandId(adjacent.id)}
                             onMouseLeave={() => setHoveredLandId(null)}
                           >
@@ -2331,7 +2334,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       {/* 상세 판독 결과 확장 패널 (Drawer) */}
       {isDetailPanelExpanded && expandedLandIndex !== null && (
         <div className="fixed inset-0 z-50 flex">
-          {/* 배경 오버레이 */}
+          {/* ��경 오버레이 */}
           <div 
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setIsDetailPanelExpanded(false)}
