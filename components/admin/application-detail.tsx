@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지����������������������������������� 분석
+        // 개별 필지��������������������������������������� 분석
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -876,7 +876,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <CardTitle className="text-lg">신청인 정보</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 auto-cols-fr">
             <div>
               <span className="text-sm text-muted-foreground">접수번호</span>
               <p className="font-medium">2026-05-001</p>
@@ -904,7 +904,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       </Card>
 
       {/* Section 02. 필지선택 */}
-      <Card className="border-none">
+      <Card className="border border-gray-100">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">대상 필지 분석 및 검토</CardTitle>
@@ -1353,7 +1353,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </div>
             </TabsContent>
             
-            {/* 담당자 결과 탭 */}
+            {/* 담당자 ���과 탭 */}
             <TabsContent value="admin">
               <div className="space-y-6">
                 {/* 섹션 1: 지적도 */}
@@ -2061,7 +2061,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardHeader>
           <CardTitle className="text-lg">진행상황 선택</CardTitle>
           <CardDescription>
-            민원인이 신청 현�� 조회 시 이 진행상황이 표시됩니다
+            민원인이 ���청 ���� 조회 시 이 진행상황이 표시됩니다
           </CardDescription>
         </CardHeader>
         <CardContent>
