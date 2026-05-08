@@ -716,7 +716,7 @@ export function LeafletMap({
   }, [measurePoints, isMapReady]);
 
   return (
-    <div className="relative h-full w-full overflow-visible rounded-lg border border-border">
+    <div className="relative h-full w-full overflow-hidden rounded-lg border border-border">
       {/* 지도 컨테이너 */}
       <div ref={mapRef} className="h-full w-full" />
 
@@ -795,7 +795,7 @@ export function LeafletMap({
           }`}
         >
           <Ruler className={`h-4 w-4 mb-0.5 ${measureMode ? "text-white" : "text-gray-700"}`} strokeWidth={1.5} />
-          <span className={`text-[11px] font-medium ${measureMode ? "text-white" : "text-gray-700"}`}>거리</span>
+          <span className={`text-[10px] font-medium ${measureMode ? "text-white" : "text-gray-700"}`}>거리</span>
         </button>
 
         {/* 레이어 선택 */}
@@ -803,7 +803,7 @@ export function LeafletMap({
           <PopoverTrigger asChild>
             <button className="flex flex-col items-center justify-center w-[38px] h-10 bg-white rounded-md shadow hover:bg-gray-100 transition-colors self-end">
               <Layers className="h-4 w-4 text-gray-700 mb-0.5" strokeWidth={1.5} />
-              <span className="text-[11px] text-gray-700 font-medium">레이어</span>
+              <span className="text-[10px] text-gray-700 font-medium">레이어</span>
             </button>
           </PopoverTrigger>
           <PopoverContent className="z-[1001] w-52 p-3" align="end" sideOffset={5}>

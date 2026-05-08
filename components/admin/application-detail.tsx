@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지����������� 분석
+        // 개별 필지������������������� 분석
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -897,7 +897,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </div>
             <div>
               <span className="text-sm text-muted-foreground">신청일</span>
-              <p className="font-medium">{application.createdAt}</p>
+              <p className="font-medium">{application.appliedAt || "2026-05-01"}</p>
             </div>
           </div>
         </CardContent>
@@ -905,44 +905,51 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
       {/* Section 02. 필지선택 */}
       <Card>
-        <CardHeader>
+        <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">대상 필지 분석 및 검토</CardTitle>
-            {/* 필지 선택 */}
-            <div className="flex items-center gap-4">
+            {/* 필지 선택 - 강조된 UI */}
+            <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white font-bold text-sm">
+                  {String.fromCharCode(65 + selectedLandIndex)}
+                </div>
+                <span className="text-sm font-medium text-blue-900">필지 선택</span>
+              </div>
               <Select
                 value={selectedLandIndex.toString()}
                 onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
               >
-                <SelectTrigger className="w-full max-w-[500px] h-10">
+                <SelectTrigger className="w-[320px] h-10 bg-white border-blue-300 focus:ring-blue-500 font-medium">
                   <SelectValue placeholder="필지를 선택하세요" />
                 </SelectTrigger>
                 <SelectContent>
                   {applicationLands.map((land, index) => (
                     <SelectItem key={land.id} value={index.toString()}>
                       <div className="flex items-center gap-2">
-                        <span>{land.address.split(" ").slice(-2).join(" ")}</span>
+                        <span className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-700 font-bold text-xs">{String.fromCharCode(65 + index)}</span>
+                        <span className="font-medium">{land.address.split(" ").slice(-2).join(" ")}</span>
                         <span className="text-muted-foreground text-xs">| {land.landCategory} | {land.remainingArea.toLocaleString()}㎡</span>
                       </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-8 w-8"
+                  className="h-8 w-8 border-blue-300 hover:bg-blue-100"
                   onClick={() => setSelectedLandIndex(Math.max(0, selectedLandIndex - 1))}
                   disabled={selectedLandIndex === 0}
                 >
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
-                <span className="text-sm text-muted-foreground whitespace-nowrap">{selectedLandIndex + 1} / {applicationLands.length}</span>
+                <span className="text-sm font-medium text-blue-700 whitespace-nowrap px-1">{selectedLandIndex + 1} / {applicationLands.length}</span>
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-8 w-8"
+                  className="h-8 w-8 border-blue-300 hover:bg-blue-100"
                   onClick={() => setSelectedLandIndex(Math.min(applicationLands.length - 1, selectedLandIndex + 1))}
                   disabled={selectedLandIndex === applicationLands.length - 1}
                 >
@@ -951,11 +958,34 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </div>
             </div>
           </div>
+          {/* 선택된 필지 연결 표시 */}
+          <div className="flex items-center gap-2 mt-3 pt-3 border-t border-blue-100">
+            <div className="flex items-center gap-1.5 text-blue-600">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+              <span className="text-sm font-medium">선택된 필지 정보</span>
+            </div>
+            <div className="flex items-center gap-2 bg-blue-100 rounded-full px-3 py-1">
+              <span className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-xs">
+                {String.fromCharCode(65 + selectedLandIndex)}
+              </span>
+              <span className="text-sm font-medium text-blue-800">
+                {applicationLands[selectedLandIndex]?.address.split(" ").slice(-2).join(" ")}
+              </span>
+            </div>
+            <span className="text-xs text-muted-foreground">아래 정보는 선택한 필지에 대한 내용입니다</span>
+          </div>
         </CardHeader>
-        <CardContent className="space-y-12">
+        <CardContent className="space-y-12 border-l-4 border-blue-200 ml-4 pl-4">
           {/* 2-1. 토지정보 */}
           <div className="space-y-4">
-            <h3 className="text-base font-semibold">토지정보</h3>
+            <h3 className="text-base font-semibold flex items-center gap-2">
+              <span className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-700 font-bold text-xs">
+                {String.fromCharCode(65 + selectedLandIndex)}
+              </span>
+              토지정보
+            </h3>
             {applicationLands[selectedLandIndex] && (
               <div className="rounded-lg border overflow-hidden">
                 <table className="w-full text-sm">
@@ -1676,7 +1706,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 }
                               }}
                               disabled={isDisabled}
-                              className="h-10 w-full gap-2 bg-blue-600 hover:bg-blue-700"
+                              variant="default"
+                              className="h-12 w-full gap-2 text-base"
                             >
                               {isAIAnalyzing ? (
                                 <>
