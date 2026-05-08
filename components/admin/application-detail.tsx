@@ -1057,7 +1057,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </TabsTrigger>
             </TabsList>
             
-            {/* 민���� 결과 탭 */}
+            {/* 민����� 결과 탭 */}
             <TabsContent value="citizen">
               <div className="grid gap-6 lg:grid-cols-2">
                 {/* 좌측: 지적도 - 선택된 필지만 표시 */}
@@ -2065,7 +2065,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {(["���수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
+            {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
               const config = adminStatusConfig[status];
               const Icon = config.icon;
               const isSelected = reviewData.adminStatus === status;
