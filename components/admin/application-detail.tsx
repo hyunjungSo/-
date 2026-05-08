@@ -960,7 +960,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </div>
           {/* 선택된 필지 연결 표시 */}
           <div className="flex items-center gap-2 mt-3 pt-3 border-t border-blue-100">
-            <span className="text-sm font-medium text-blue-600">선택된 필지 정보</span>
             <div className="flex items-center gap-2 bg-blue-100 rounded-full px-3 py-1">
               <span className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-xs">
                 {String.fromCharCode(65 + selectedLandIndex)}
@@ -1047,7 +1046,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           {/* 2-2. AI 분석 */}
           <div className="space-y-4">
             <h3 className="text-base font-semibold">AI 분석</h3>
-            <p className="text-sm text-muted-foreground">민원인 신청 결과와 담당자 분석 결과를 확인합니다.</p>
+            <p className="text-sm text-muted-foreground">민원인 신청 ��과와 담당자 분석 결과를 확인합니다.</p>
             <Tabs defaultValue="citizen" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="citizen">
