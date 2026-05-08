@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ������지별 분�������
+        // 개별 �������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1357,43 +1357,54 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     
                     <div className="rounded-lg border bg-white p-3 space-y-2 max-h-[400px] overflow-y-auto">
                       {/* 신청 필지 */}
-                      {applicationLands[selectedLandIndex] && (
-                        <div 
-                          className={`flex items-center justify-between p-2 rounded-md border-2 cursor-pointer transition-colors ${
-                            !selectedAdjacentParcel 
-                              ? "border-[#2563eb] bg-[#dbeafe]/50 ring-2 ring-[#2563eb] ring-offset-1" 
-                              : "border-[#2563eb] bg-[#dbeafe]/20 hover:bg-[#dbeafe]/40"
-                          }`}
-                          onClick={() => setSelectedAdjacentParcel(null)}
-                          onMouseEnter={() => setHoveredLandId(applicationLands[selectedLandIndex].id)}
-                          onMouseLeave={() => setHoveredLandId(null)}
-                        >
-                          <div className="flex items-center gap-2">
-                            <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
-                            <div>
-                              <p className="text-sm font-medium text-blue-700">
-                                {applicationLands[selectedLandIndex].address.split(" ").slice(-2).join(" ")}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {applicationLands[selectedLandIndex].landType} | {applicationLands[selectedLandIndex].originalArea.toLocaleString()}㎡
-                              </p>
+                      {/* 신청 필지 목록 */}
+                      {applicationLands.map((land, index) => {
+                        const isSelected = !selectedAdjacentParcel && selectedLandIndex === index;
+                        return (
+                          <div 
+                            key={land.id}
+                            className={`flex items-center justify-between p-2 rounded-md border-2 cursor-pointer transition-colors ${
+                              isSelected 
+                                ? "border-[#2563eb] bg-[#dbeafe]/50 ring-2 ring-[#2563eb] ring-offset-1" 
+                                : "border-[#2563eb] bg-[#dbeafe]/20 hover:bg-[#dbeafe]/40"
+                            }`}
+                            onClick={() => {
+                              setSelectedLandIndex(index);
+                              setSelectedAdjacentParcel(null);
+                            }}
+                            onMouseEnter={() => setHoveredLandId(land.id)}
+                            onMouseLeave={() => setHoveredLandId(null)}
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#2563eb] text-[10px] font-bold text-white">
+                                {index + 1}
+                              </span>
+                              <div>
+                                <p className="text-sm font-medium text-blue-700">
+                                  {land.address.split(" ").slice(-2).join(" ")}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  {land.landType} | {land.originalArea.toLocaleString()}㎡
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              {isSelected && (
+                                <span className="text-[10px] text-blue-600 font-medium">선택됨</span>
+                              )}
+                              <Badge className="bg-blue-600 text-white text-xs">필지{index + 1}</Badge>
                             </div>
                           </div>
-                          <div className="flex items-center gap-1.5">
-                            {!selectedAdjacentParcel && (
-                              <span className="text-[10px] text-blue-600 font-medium">선택됨</span>
-                            )}
-                            <Badge className="bg-blue-600 text-white text-xs">신청</Badge>
-                          </div>
-                        </div>
-                      )}
+                        );
+                      })}
                       
                       {/* 인접 필지 */}
                       {[
                         { id: "adjacent-001", address: "경기도 용인시 처인구 포곡읍 마성리 101", landType: "전", landCategory: "농지", area: 1250 },
                         { id: "adjacent-002", address: "경기도 용인시 처인구 포곡읍 마성리 102", landType: "답", landCategory: "농지", area: 980 },
-                      ].map((adjacent) => {
+                      ].map((adjacent, index) => {
                         const isSelected = selectedAdjacentParcel?.id === adjacent.id;
+                        const adjacentNumber = applicationLands.length + index + 1;
                         return (
                           <div 
                             key={adjacent.id}
@@ -1408,12 +1419,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               landCategory: adjacent.landCategory,
                               landType: adjacent.landType,
                               area: adjacent.area,
+                              parcelNumber: adjacentNumber,
                             })}
                             onMouseEnter={() => setHoveredLandId(adjacent.id)}
                             onMouseLeave={() => setHoveredLandId(null)}
                           >
                             <div className="flex items-center gap-2">
-                              <div className={`h-3 w-3 rounded-sm border-2 ${isSelected ? "border-[#d97706]" : "border-dashed border-[#d97706]"} bg-[#fef3c7]`} />
+                              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#d97706] text-[10px] font-bold text-white">
+                                {adjacentNumber}
+                              </span>
                               <div>
                                 <p className="text-sm font-medium text-amber-700">
                                   {adjacent.address.split(" ").slice(-2).join(" ")}
@@ -1427,7 +1441,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               {isSelected && (
                                 <span className="text-[10px] text-amber-600 font-medium">선택됨</span>
                               )}
-                              <Badge variant="outline" className="border-amber-600 text-amber-700 text-xs">인접</Badge>
+                              <Badge variant="outline" className="border-amber-600 text-amber-700 text-xs">필지{adjacentNumber}</Badge>
                             </div>
                           </div>
                         );
@@ -1547,9 +1561,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           className="flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white"
                           style={{ backgroundColor: selectedAdjacentParcel ? "#d97706" : "#2563eb" }}
                         >
-                          {selectedAdjacentParcel ? "B" : "A"}
+                          {selectedAdjacentParcel ? selectedAdjacentParcel.parcelNumber || (applicationLands.length + 1) : selectedLandIndex + 1}
                         </span>
-                        필지 검토 옵션
+                        필지{selectedAdjacentParcel ? (selectedAdjacentParcel.parcelNumber || applicationLands.length + 1) : selectedLandIndex + 1} 검토 옵션
                       </span>
                       <Badge 
                         variant={selectedAdjacentParcel ? "outline" : "default"} 
