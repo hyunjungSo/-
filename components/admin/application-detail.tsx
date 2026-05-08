@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 �����������������지별 분�������
+        // 개별 ������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1359,7 +1359,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div className="flex gap-3">
                     {/* 필지 선택 목록 */}
                     <div className="w-[200px] shrink-0 rounded-lg border bg-white p-2.5 space-y-1.5 max-h-[300px] overflow-y-auto">
-                      {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 표시 */}
+                      {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 ���시 */}
                       {applicationLands[selectedLandIndex] && (
                         <div 
                           className={`flex items-center gap-2 p-2 rounded-md border-2 cursor-pointer transition-colors ${
@@ -1605,22 +1605,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <SelectItem value="대">대 (택지)</SelectItem>
                                   <SelectItem value="전">전 (밭)</SelectItem>
                                   <SelectItem value="답">답 (논)</SelectItem>
-                                  <SelectItem value="임">임 (임야)</SelectItem>
-                                  <SelectItem value="잡">잡 (잡종지)</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                              <Select 
-                                value={adminCurrentUsagePerLand[currentParcelId] || ""} 
-                                onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
-                              >
-                                <SelectTrigger className="h-10 bg-background">
-                                  <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="대">대 (택지)</SelectItem>
-                                  <SelectItem value="전">전 (밭)</SelectItem>
-                                  <SelectItem value="답">답 (��)</SelectItem>
                                   <SelectItem value="임">임 (임야)</SelectItem>
                                   <SelectItem value="잡">잡 (잡종지)</SelectItem>
                                 </SelectContent>
