@@ -1352,10 +1352,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </p>
                               </div>
                             </div>
-                          </div>
-                        );
-                      })()}
-                    </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      );
+                    })}
+                  </Accordion>
                   </div>
                 </div>
               </div>
