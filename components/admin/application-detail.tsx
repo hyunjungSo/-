@@ -865,14 +865,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             <div>
               <span className="text-sm text-muted-foreground">접수번호</span>
-              <p className="font-medium">{application.id}</p>
+              <p className="font-medium">2026-05-001</p>
             </div>
             <div>
               <span className="text-sm text-muted-foreground">신청 구분</span>
               <p className="font-medium">
-                <Badge variant={application.applicationType === "본인 신청" ? "default" : "outline"}>
-                  {application.applicationType || "본인 신청"}
-                </Badge>
+                <Badge variant="default">본인 신청</Badge>
               </p>
             </div>
             <div>
