@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Layers, Plus, Minus, Info, Locate, Ruler, X, Circle, Square } from "lucide-react";
+import { Layers, Plus, Minus, Info, Locate, Ruler, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -778,26 +778,16 @@ export function LeafletMap({
           </button>
         </div>
         
-        {/* 측정 도구 - 네이버지도 스타일 */}
-        <div className="flex flex-col bg-white rounded-md shadow">
-          <button className="flex flex-col items-center justify-center w-12 py-2.5 hover:bg-gray-100 transition-colors border-b border-gray-200">
-            <Circle className="h-[18px] w-[18px] text-gray-700 mb-1" strokeWidth={1.5} />
-            <span className="text-[11px] text-gray-700 font-medium">반경</span>
-          </button>
-          <button className="flex flex-col items-center justify-center w-12 py-2.5 hover:bg-gray-100 transition-colors border-b border-gray-200">
-            <Square className="h-[18px] w-[18px] text-gray-700 mb-1" strokeWidth={1.5} />
-            <span className="text-[11px] text-gray-700 font-medium">면적</span>
-          </button>
-          <button
-            onClick={toggleMeasureMode}
-            className={`flex flex-col items-center justify-center w-12 py-2.5 transition-colors ${
-              measureMode ? "bg-blue-500" : "hover:bg-gray-100"
-            }`}
-          >
-            <Ruler className={`h-[18px] w-[18px] mb-1 ${measureMode ? "text-white" : "text-gray-700"}`} strokeWidth={1.5} />
-            <span className={`text-[11px] font-medium ${measureMode ? "text-white" : "text-gray-700"}`}>거리</span>
-          </button>
-        </div>
+        {/* 거리 측정 */}
+        <button
+          onClick={toggleMeasureMode}
+          className={`flex flex-col items-center justify-center w-12 py-2.5 rounded-md shadow transition-colors ${
+            measureMode ? "bg-blue-500" : "bg-white hover:bg-gray-100"
+          }`}
+        >
+          <Ruler className={`h-[18px] w-[18px] mb-1 ${measureMode ? "text-white" : "text-gray-700"}`} strokeWidth={1.5} />
+          <span className={`text-[11px] font-medium ${measureMode ? "text-white" : "text-gray-700"}`}>거리</span>
+        </button>
 
         {/* 레이어 선택 */}
         <Popover>
