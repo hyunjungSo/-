@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 �������지별 분�������
+        // 개별 ��������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -540,7 +540,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         met: waterLost || roadLost,
         description: waterLost 
           ? "관개수로 상실로 농지 사용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
-          : (roadLost ? "접면도로 상실" + (adminOptions?.accessRoadLost ? " (��리�� 확인)" : "") : "도로/���� 유지")
+          : (roadLost ? "접면도로 상실" + (adminOptions?.accessRoadLost ? " (����리�� 확인)" : "") : "도로/���� 유지")
       });
       
       // 3. 농기계 회전 곤란, 형상 부정형 변경
@@ -1356,47 +1356,39 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                     
                     <div className="rounded-lg border bg-white p-3 space-y-2 max-h-[400px] overflow-y-auto">
-                      {/* 신청 필지 */}
-                      {/* 신청 필지 목록 */}
-                      {applicationLands.map((land, index) => {
-                        const isSelected = !selectedAdjacentParcel && selectedLandIndex === index;
-                        return (
-                          <div 
-                            key={land.id}
-                            className={`flex items-center justify-between p-2 rounded-md border-2 cursor-pointer transition-colors ${
-                              isSelected 
-                                ? "border-[#2563eb] bg-[#dbeafe]/50 ring-2 ring-[#2563eb] ring-offset-1" 
-                                : "border-[#2563eb] bg-[#dbeafe]/20 hover:bg-[#dbeafe]/40"
-                            }`}
-                            onClick={() => {
-                              setSelectedLandIndex(index);
-                              setSelectedAdjacentParcel(null);
-                            }}
-                            onMouseEnter={() => setHoveredLandId(land.id)}
-                            onMouseLeave={() => setHoveredLandId(null)}
-                          >
-                            <div className="flex items-center gap-2">
-                              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#2563eb] text-[10px] font-bold text-white">
-                                {index + 1}
-                              </span>
-                              <div>
-                                <p className="text-sm font-medium text-blue-700">
-                                  {land.address.split(" ").slice(-2).join(" ")}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                  {land.landType} | {land.originalArea.toLocaleString()}㎡
-                                </p>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                              {isSelected && (
-                                <span className="text-[10px] text-blue-600 font-medium">선택됨</span>
-                              )}
-                              <Badge className="bg-blue-600 text-white text-xs">필지{index + 1}</Badge>
+                      {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 표시 */}
+                      {applicationLands[selectedLandIndex] && (
+                        <div 
+                          className={`flex items-center justify-between p-2 rounded-md border-2 cursor-pointer transition-colors ${
+                            !selectedAdjacentParcel 
+                              ? "border-[#2563eb] bg-[#dbeafe]/50 ring-2 ring-[#2563eb] ring-offset-1" 
+                              : "border-[#2563eb] bg-[#dbeafe]/20 hover:bg-[#dbeafe]/40"
+                          }`}
+                          onClick={() => setSelectedAdjacentParcel(null)}
+                          onMouseEnter={() => setHoveredLandId(applicationLands[selectedLandIndex].id)}
+                          onMouseLeave={() => setHoveredLandId(null)}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#2563eb] text-[10px] font-bold text-white">
+                              {selectedLandIndex + 1}
+                            </span>
+                            <div>
+                              <p className="text-sm font-medium text-blue-700">
+                                {applicationLands[selectedLandIndex].address.split(" ").slice(-2).join(" ")}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {applicationLands[selectedLandIndex].landType} | {applicationLands[selectedLandIndex].originalArea.toLocaleString()}㎡
+                              </p>
                             </div>
                           </div>
-                        );
-                      })}
+                          <div className="flex items-center gap-1.5">
+                            {!selectedAdjacentParcel && (
+                              <span className="text-[10px] text-blue-600 font-medium">선택됨</span>
+                            )}
+                            <Badge className="bg-blue-600 text-white text-xs">필지{selectedLandIndex + 1}</Badge>
+                          </div>
+                        </div>
+                      )}
                       
                       {/* 인접 필지 */}
                       {[
@@ -1625,7 +1617,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <SelectValue placeholder="건축물 용도를 선택해 주세요" />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
+                                    <SelectItem value="residential-detached">주거용 - ��독주택 (기준: 90㎡)</SelectItem>
                                     <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
                                     <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
                                     <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
@@ -2336,7 +2328,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* AI 분석 프로세스 다이얼로그 - 관리자 재판독 결과 우선 표시 */}
+      {/* AI 분석 프로세스 다이얼���그 - 관리자 재판독 결과 우선 표시 */}
       <AIAnalysisFlowDialog
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
