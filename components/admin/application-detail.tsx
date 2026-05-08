@@ -543,7 +543,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           : (roadLost ? "접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "도로/수로 유지")
       });
       
-      // 3. 농기계 회전 곤란, 형상 부정형 변경
+      // 3. 농기계 회전 곤��, 형상 부정형 변경
       const farmDifficulty = adminOptions?.farmMachineDifficulty || landData?.farmMachineDifficulty || land.remainingArea < 200;
       criteriaChecks.push({
         name: "농기계 회전",
@@ -1531,8 +1531,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                   
                   <div className="flex gap-4">
-                  {/* 좌측: 검토 옵션 */}
-                  <div className="w-[40%] rounded-lg border bg-white">
+                    {/* 좌측: 검토 옵션 */}
+                    <div className="w-1/2 rounded-lg border bg-white">
                     {/* 헤더 - 필지 선택과 연동 */}
                     <div className="flex items-center gap-2 border-b bg-muted/30 px-3 py-2.5">
                       <Badge 
@@ -1661,51 +1661,49 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         );
                       })()}
                       
+                      {/* AI 분석 버튼 - 검토 옵션 하단 */}
+                      {(() => {
+                        const currentParcelId = selectedAdjacentParcel?.id || applicationLands[selectedLandIndex]?.id;
+                        const hasCurrentUsage = currentParcelId && adminCurrentUsagePerLand[currentParcelId] && adminCurrentUsagePerLand[currentParcelId].trim() !== "";
+                        const isDisabled = isAIAnalyzing || !hasCurrentUsage;
+                        
+                        return (
+                          <div className="space-y-1.5 pt-2 border-t mt-2">
+                            <Button
+                              onClick={() => {
+                                if (currentParcelId) {
+                                  setAdminCheckedLandIds([currentParcelId]);
+                                  handleRunAIAnalysis();
+                                }
+                              }}
+                              disabled={isDisabled}
+                              className="h-10 w-full gap-2 bg-blue-600 hover:bg-blue-700"
+                            >
+                              {isAIAnalyzing ? (
+                                <>
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                  AI 분석 중...
+                                </>
+                              ) : (
+                                <>
+                                  <AIIcon className="h-4 w-4" />
+                                  이 필지 AI 분석 실행
+                                </>
+                              )}
+                            </Button>
+                            {!hasCurrentUsage && (
+                              <p className="text-xs text-center text-red-600">
+                                현재 활용 지목을 선택해 주세요
+                              </p>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </div>
                   </div>
-                  
-                  {/* AI 분석 버튼 */}
-                  {(() => {
-                    const currentParcelId = selectedAdjacentParcel?.id || applicationLands[selectedLandIndex]?.id;
-                    const hasCurrentUsage = currentParcelId && adminCurrentUsagePerLand[currentParcelId] && adminCurrentUsagePerLand[currentParcelId].trim() !== "";
-                    const isDisabled = isAIAnalyzing || !hasCurrentUsage;
-                    
-                    return (
-                      <div className="space-y-1.5">
-                        <Button
-                          onClick={() => {
-                            if (currentParcelId) {
-                              setAdminCheckedLandIds([currentParcelId]);
-                              handleRunAIAnalysis();
-                            }
-                          }}
-                          disabled={isDisabled}
-                          className="h-12 w-full gap-2 text-base bg-blue-600 hover:bg-blue-700"
-                        >
-                          {isAIAnalyzing ? (
-                            <>
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                              AI 분석 중...
-                            </>
-                          ) : (
-                            <>
-                              <AIIcon className="h-4 w-4" />
-                              이 필지 AI 분석 실행
-                            </>
-                          )}
-                        </Button>
-                        {!hasCurrentUsage && (
-                          <p className="text-xs text-center text-red-600">
-                            현재 활용 지목을 선택해 주세요
-                          </p>
-                        )}
-                      </div>
-                    );
-                  })()}
-                </div>
                 
-                {/* 우측: 분석결과 확인 */}
-                <div className="w-[60%] space-y-3">
+                    {/* 우측: 분석결과 확인 */}
+                    <div className="w-1/2 space-y-3">
                   <div className="flex items-center justify-between">
                     <h4 className="text-lg font-semibold">분석결과 확인</h4>
                     {Object.keys(adminLandAIResults).length > 0 && (
@@ -1828,7 +1826,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
                                           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                                             {landResult?.judgmentRationale?.legalBasis || 
-                                              "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조"}
+                                              "「공익사업을 위한 토지 등의 취득 및 보상에 관한 ���률」 제74조 및 동법 시행규칙 제34조"}
                                           </p>
                                         </div>
                                       </div>
