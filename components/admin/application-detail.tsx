@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ����������������������������������지별 분�������
+        // 개별 �����������������������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1021,9 +1021,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </tr>
                   </tbody>
                 </table>
-              </div>
-            )}
-          </div>
+                            </div>
 
           {/* 2-2. AI 분석 */}
           <div className="space-y-4">
