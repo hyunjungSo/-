@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ���������������������������지별 분�������
+        // 개별 ����������������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1363,7 +1363,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           onMouseLeave={() => setHoveredLandId(null)}
                         >
                           <span className="flex shrink-0 items-center justify-center rounded bg-[#2563eb] px-1.5 py-0.5 text-[10px] font-bold text-white">
-                            필지{selectedLandIndex + 1}
+                            필지1
                           </span>
                           <div className="min-w-0 flex-1">
                             <p className="text-sm font-medium text-blue-700 truncate">
@@ -1382,7 +1382,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         { id: "adjacent-002", address: "경기도 용인시 처인구 포곡읍 마성리 102", landType: "답", landCategory: "농지", area: 980 },
                       ].map((adjacent, index) => {
                         const isSelected = selectedAdjacentParcel?.id === adjacent.id;
-                        const adjacentNumber = applicationLands.length + index + 1;
+                        const adjacentNumber = index + 2; // 신청 필지가 1번이므로 인접 필지는 2번부터
                         return (
                           <div 
                             key={adjacent.id}
@@ -1495,7 +1495,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                     <div className="flex items-center gap-1.5">
                       <div className="h-2.5 w-2.5 rounded-sm border border-dashed border-[#d97706] bg-[#fef3c7]" />
-                      <span className="text-muted-foreground">인접필지</span>
+                      <span className="text-muted-foreground">���접필지</span>
                     </div>
                   </div>
                 </div>
@@ -2544,7 +2544,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <Info className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
                     <p className="text-xs text-amber-700">
                       AI 판독 분석 이���지는 참고용이며, 실제 ��량 결과와 다를 수 있습니다.
-                      최종 판정은 ��당자의 현장 확인 및 검토에 따라 결정됩니다.
+                      최종 판정은 ��당��의 현장 확인 및 검토에 따라 결정됩니다.
                     </p>
                   </div>
                 </div>
