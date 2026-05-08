@@ -977,7 +977,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             <span className="text-xs text-muted-foreground">아래 정보는 선택한 필지에 대한 내용입니다</span>
           </div>
         </CardHeader>
-        <CardContent className="space-y-12 border-l-4 border-blue-200 ml-4 pl-4">
+        <CardContent className="space-y-12">
           {/* 2-1. 토지정보 */}
           <div className="space-y-4">
             <h3 className="text-base font-semibold flex items-center gap-2">
@@ -1057,7 +1057,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           {/* 2-2. AI 분석 */}
           <div className="space-y-4">
             <h3 className="text-base font-semibold">AI 분석</h3>
-            <p className="text-sm text-muted-foreground">민원인 신청 결과와 담당자 분석 결과를 확인합니다.</p>
+            <p className="text-sm text-muted-foreground">민원인 신청 결과와 ���당자 분석 결과를 확인합니다.</p>
             <Tabs defaultValue="citizen" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="citizen">
@@ -2108,7 +2108,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* 필지별 검토 ���황 요약 */}
+          {/* 필지별 검토 ����� 요약 */}
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-muted-foreground shrink-0">필지별 검토 현황</span>
             <div className="flex flex-wrap gap-2">
