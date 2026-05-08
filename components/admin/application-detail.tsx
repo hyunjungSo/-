@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ����������������������지별 분�������
+        // 개별 �����������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1045,10 +1045,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 좌측: 지적도 - 선택된 필지만 표시 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-semibold flex items-center gap-2">
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">1</span>
-                      지적도
-                    </h4>
+                    <h4 className="text-sm font-semibold">지적도</h4>
                   </div>
                   
                   {/* 지적도 - 선택된 필지만 표시 */}
@@ -1117,10 +1114,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 우측: 분석결과 - 선택된 필지만 표시 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-semibold flex items-center gap-2">
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">2</span>
-                      분석결과
-                    </h4>
+                    <h4 className="text-sm font-semibold">분석결과</h4>
                     {(() => {
                       const land = applicationLands[selectedLandIndex];
                       if (!land) return null;
@@ -1346,10 +1340,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 섹션 1: 지적도 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-semibold flex items-center gap-2">
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">1</span>
-                      지적도
-                    </h4>
+                    <h4 className="text-sm font-semibold">지적도</h4>
                     <Badge variant="outline" className="font-normal text-xs">
                       {applicationLands.length + 2}개 필지
                     </Badge>
@@ -1359,7 +1350,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div className="flex gap-3">
                     {/* 필지 선택 목록 */}
                     <div className="w-[35%] shrink-0 rounded-lg border bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
-                      {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지�� ���시 */}
+                      {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지�� ����시 */}
                       {applicationLands[selectedLandIndex] && (
                         <div 
                           className={`flex items-center gap-2 p-2 rounded-md border-2 cursor-pointer transition-colors ${
@@ -1524,10 +1515,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 섹션 2: 분석 설정 및 결과 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-semibold flex items-center gap-2">
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">2</span>
-                      분석 설정 및 결과
-                    </h4>
+                    <h4 className="text-sm font-semibold">분석 설정 및 결과</h4>
                   </div>
                   
                   {/* 선택된 필지 옵션 설정 */}
