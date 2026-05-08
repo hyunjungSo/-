@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ���������������������������������지별 분�������
+        // 개별 ����������������������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1577,21 +1577,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 </SelectContent>
                               </Select>
                             </div>
-                              
-                              {/* 지목 참고 정보 - 인접 필지 선택 시 민원인 선택 제외 */}
-                              {(() => {
-                                const landData = application.landDataList?.[selectedLandIndex];
-                                const citizenUsage = landData?.currentUsage || landData?.actualUsage || currentParcelLandType;
-                                const aiUsage = landData?.actualUsage || currentParcelLandType;
-                                const isAdjacentParcel = !!selectedAdjacentParcel;
-                                
-                                return (
-                                  <div className={`grid gap-2 ${isAdjacentParcel ? "grid-cols-2" : "grid-cols-3"}`}>
-                                    {!isAdjacentParcel && (
-                                      <div className="text-center p-2 rounded-md bg-blue-50 border border-blue-100">
-                                        <p className="text-[10px] text-muted-foreground mb-0.5">민원인 선택</p>
-                                        <p className="text-sm font-semibold text-blue-700">{citizenUsage || "-"}</p>
-                                      </div>
                                     )}
                                     <div className="text-center p-2 rounded-md bg-purple-50 border border-purple-100">
                                       <p className="text-[10px] text-muted-foreground mb-0.5">AI 판단</p>
@@ -2035,7 +2020,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}㎡</span>
                                     </div>
                                     <div>
-                                      <span className="text-muted-foreground">편입 면적:</span>
+                                      <span className="text-muted-foreground">편�� 면적:</span>
                                       <span className="ml-1 font-medium">{(land.includedArea ?? ((land.originalArea ?? 0) - (land.remainingArea ?? 0))).toLocaleString()}m²</span>
                                     </div>
                                     <div>
