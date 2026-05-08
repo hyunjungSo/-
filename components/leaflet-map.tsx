@@ -754,7 +754,7 @@ export function LeafletMap({
                 <div className="absolute bottom-1 right-0.5 h-2 w-2 rounded-sm bg-[#c8e6c9]" />
               </div>
             </div>
-            <span className={`text-[9px] font-medium ${baseMap === "normal" ? "text-primary" : "text-muted-foreground"}`}>
+            <span className={`text-[11px] font-medium ${baseMap === "normal" ? "text-primary" : "text-muted-foreground"}`}>
               일반
             </span>
           </button>
@@ -772,7 +772,7 @@ export function LeafletMap({
                 <div className="absolute right-1 top-0.5 h-1.5 w-2 rounded-sm bg-[#5a6a5a]" />
               </div>
             </div>
-            <span className={`text-[9px] font-medium ${baseMap === "satellite" ? "text-primary" : "text-muted-foreground"}`}>
+            <span className={`text-[11px] font-medium ${baseMap === "satellite" ? "text-primary" : "text-muted-foreground"}`}>
               위성
             </span>
           </button>

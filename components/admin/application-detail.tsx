@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지��� 분석
+        // 개별 필지����� 분석
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1362,7 +1362,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           onMouseEnter={() => setHoveredLandId(applicationLands[selectedLandIndex].id)}
                           onMouseLeave={() => setHoveredLandId(null)}
                         >
-                          <span className="flex shrink-0 items-center justify-center rounded bg-[#2563eb] px-1.5 py-0.5 text-[10px] font-bold text-white">
+                          <span className="flex shrink-0 items-center justify-center rounded bg-[#2563eb] px-1.5 py-0.5 text-xs font-bold text-white">
                             필지1
                           </span>
                           <div className="min-w-0 flex-1">
@@ -1405,7 +1405,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             onMouseEnter={() => setHoveredLandId(adjacent.id)}
                             onMouseLeave={() => setHoveredLandId(null)}
                           >
-                            <span className="flex shrink-0 items-center justify-center rounded bg-[#d97706] px-1.5 py-0.5 text-[10px] font-bold text-white">
+                            <span className="flex shrink-0 items-center justify-center rounded bg-[#d97706] px-1.5 py-0.5 text-xs font-bold text-white">
                               필지{adjacentNumber}
                             </span>
                             <div className="min-w-0 flex-1">
@@ -1565,16 +1565,16 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <div className={`grid gap-2 ${isAdjacentParcel ? "grid-cols-2" : "grid-cols-3"}`}>
                                   {!isAdjacentParcel && (
                                     <div className="text-center p-2 rounded-md bg-blue-50 border border-blue-100">
-                                      <p className="text-[10px] text-muted-foreground mb-0.5">민원인 선택</p>
+                                      <p className="text-xs text-muted-foreground mb-0.5">민원인 선택</p>
                                       <p className="text-sm font-semibold text-blue-700">{citizenUsage || "-"}</p>
                                     </div>
                                   )}
                                   <div className="text-center p-2 rounded-md bg-purple-50 border border-purple-100">
-                                    <p className="text-[10px] text-muted-foreground mb-0.5">AI 판단</p>
+                                    <p className="text-xs text-muted-foreground mb-0.5">AI 판단</p>
                                     <p className="text-sm font-semibold text-purple-700">{aiUsage || "-"}</p>
                                   </div>
                                   <div className="text-center p-2 rounded-md bg-slate-50 border border-slate-200">
-                                    <p className="text-[10px] text-muted-foreground mb-0.5">공부상 지목</p>
+                                    <p className="text-xs text-muted-foreground mb-0.5">공부상 지목</p>
                                     <p className="text-sm font-semibold text-slate-700">{currentParcelLandType || "-"}</p>
                                   </div>
                                 </div>
@@ -1850,7 +1850,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         </div>
                                       </div>
 
-                                      {/* 수동 확인 항목 */}
+                                      {/* 수�� 확인 항목 */}
                                       {aiResult?.judgmentRationale?.manualCheckItems && aiResult.judgmentRationale.manualCheckItems.length > 0 && (
                                         <div className="flex items-start gap-2">
                                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
