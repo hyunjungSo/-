@@ -277,7 +277,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
 
   
-  // 민원인이 신청한 필지 ID 목록 (application에서 가져옴, 읽기 전용)
+  // 민원인�� 신청한 필지 ID 목록 (application에서 가져옴, 읽기 전용)
   const citizenSelectedLandIds = allLands.map(l => l.id);
   
   // 담당자가 선택한 필지 ID 목록 (수정 가능, 초기값: 민원인 신청 필지와 동일)
@@ -903,30 +903,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* Section 02. 신청인 정보 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">신청인 정보</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-6">
-            <div>
-              <span className="text-sm text-muted-foreground">접수번호</span>
-              <p className="font-medium">{application.id}</p>
-            </div>
-            <div>
-              <span className="text-sm text-muted-foreground">신청인</span>
-              <p className="font-medium">{application.applicantName}</p>
-            </div>
-            <div>
-              <span className="text-sm text-muted-foreground">신청일</span>
-              <p className="font-medium">{application.createdAt}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Section 03. 필지 정보 */}
+      {/* Section 02. 필지 정보 */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">필지 정보</CardTitle>
