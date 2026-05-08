@@ -1353,10 +1353,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 표시 */}
                       {applicationLands[selectedLandIndex] && (
                         <div 
-                          className={`flex items-center gap-2 p-2 rounded-md border-2 cursor-pointer transition-colors ${
+                          className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${
                             !selectedAdjacentParcel 
-                              ? "border-[#2563eb] bg-[#dbeafe]/50 ring-2 ring-[#2563eb] ring-offset-1" 
-                              : "border-[#2563eb] bg-[#dbeafe]/20 hover:bg-[#dbeafe]/40"
+                              ? "border-2 border-[#2563eb] bg-[#2563eb]/15" 
+                              : "border border-[#2563eb]"
                           }`}
                           onClick={() => setSelectedAdjacentParcel(null)}
                           onMouseEnter={() => setHoveredLandId(applicationLands[selectedLandIndex].id)}
@@ -1386,10 +1386,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         return (
                           <div 
                             key={adjacent.id}
-                            className={`flex items-center gap-2 p-2 rounded-md border cursor-pointer transition-colors ${
+                            className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${
                               isSelected 
-                                ? "border-2 border-[#d97706] bg-[#fef3c7]/50 ring-2 ring-[#d97706] ring-offset-1" 
-                                : "border-dashed border-[#d97706] bg-[#fef3c7]/20 hover:bg-[#fef3c7]/40"
+                                ? "border-2 border-[#d97706] bg-[#d97706]/15" 
+                                : "border border-[#d97706]"
                             }`}
                             onClick={() => {
                               setSelectedAdjacentParcel({
@@ -2022,7 +2022,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 <div className="space-y-3">
                   <Label className="text-sm font-medium">검토 의견</Label>
                   <Textarea
-                    placeholder="해당 필지에 대한 검토 의견을 입력하세요"
+                    placeholder="해당 필지에 대한 검토 의견을 입력하세요..."
                     value={landReview.landComment}
                     onChange={(e) => updateLandReviewData(selectedLandIndex, 'landComment', e.target.value)}
                     className="min-h-[100px] resize-none"
