@@ -904,7 +904,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       </Card>
 
       {/* Section 02. 필지선택 */}
-      <Card className="border" style={{ borderColor: 'lab(91.6229 -0.159115 -2.26791)' }}>
+      <Card className="border-none">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">대상 필지 분석 및 검토</CardTitle>
@@ -1313,7 +1313,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                               <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                                 {aiResult?.judgmentRationale?.detailedExplanation || 
-                                  `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 ��과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`}
+                                  `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 ��과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔���비율 ${land.remainingRatio}%`}
                               </pre>
                             </div>
                           </div>
