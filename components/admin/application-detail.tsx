@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 �����������지별 분�������
+        // 개별 ������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1042,37 +1042,42 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             {/* 민원인 결과 탭 */}
             <TabsContent value="citizen">
               <div className="grid gap-6 lg:grid-cols-2">
-                {/* 좌측: 지적도 */}
-                <div className="space-y-4">
+                {/* 좌측: 지적도 - 선택된 필지만 표시 */}
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium">지적도</h4>
-                    <Badge variant="outline" className="font-normal">
-                      {allLands.length}필지
+                    <h4 className="text-sm font-semibold flex items-center gap-2">
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">1</span>
+                      지적도
+                    </h4>
+                    <Badge variant="outline" className="font-normal text-xs">
+                      {applicationLands[selectedLandIndex]?.address.split(" ").slice(-2).join(" ")}
                     </Badge>
                   </div>
                   
-                  {/* 지적도 */}
+                  {/* 지적도 - 선택된 필지만 표시 */}
                   <div className="h-[400px] rounded-lg overflow-hidden border">
                     <LeafletMap
                       parcels={(() => {
-                        const applicationParcels = allLands.map((land, idx) => {
-                          const baseLat = 37.2180 + (idx * 0.0008);
-                          const baseLng = 127.2950 + (idx * 0.0005);
-                          const offset = 0.0003;
-                          
-                          return {
-                            id: land.id,
-                            address: land.address,
-                            isIncluded: true,
-                            isOwned: true,
-                            coordinates: [
-                              { lat: baseLat, lng: baseLng },
-                              { lat: baseLat, lng: baseLng + offset * 1.2 },
-                              { lat: baseLat + offset, lng: baseLng + offset * 1.2 },
-                              { lat: baseLat + offset, lng: baseLng },
-                            ],
-                          };
-                        });
+                        // 선택된 필지만 표시
+                        const selectedLand = applicationLands[selectedLandIndex];
+                        if (!selectedLand) return [];
+                        
+                        const baseLat = 37.2180 + (selectedLandIndex * 0.0008);
+                        const baseLng = 127.2950 + (selectedLandIndex * 0.0005);
+                        const offset = 0.0003;
+                        
+                        const selectedParcel = {
+                          id: selectedLand.id,
+                          address: selectedLand.address,
+                          isIncluded: true,
+                          isOwned: true,
+                          coordinates: [
+                            { lat: baseLat, lng: baseLng },
+                            { lat: baseLat, lng: baseLng + offset * 1.2 },
+                            { lat: baseLat + offset, lng: baseLng + offset * 1.2 },
+                            { lat: baseLat + offset, lng: baseLng },
+                          ],
+                        };
                         
                         const adjacentParcels = [
                           {
@@ -1081,17 +1086,17 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             isIncluded: false,
                             isOwned: false,
                             coordinates: [
-                              { lat: 37.2183, lng: 127.2953 },
-                              { lat: 37.2183, lng: 127.2957 },
-                              { lat: 37.2186, lng: 127.2957 },
-                              { lat: 37.2186, lng: 127.2953 },
+                              { lat: baseLat + 0.0003, lng: baseLng + 0.0003 },
+                              { lat: baseLat + 0.0003, lng: baseLng + 0.0007 },
+                              { lat: baseLat + 0.0006, lng: baseLng + 0.0007 },
+                              { lat: baseLat + 0.0006, lng: baseLng + 0.0003 },
                             ],
                           },
                         ];
                         
-                        return [...applicationParcels, ...adjacentParcels];
+                        return [selectedParcel, ...adjacentParcels];
                       })()}
-                      selectedParcelIds={new Set(allLands.map(l => l.id))}
+                      selectedParcelIds={new Set([applicationLands[selectedLandIndex]?.id].filter(Boolean))}
                       onParcelClick={() => {}}
                       hoveredParcelId={hoveredLandId}
                       onParcelHover={(parcelId) => setHoveredLandId(parcelId)}
@@ -1100,17 +1105,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                   
                   {/* 지도 범례 */}
-                  <div className="rounded-lg border bg-white/80 p-2">
-                    <p className="text-xs font-medium text-muted-foreground mb-2">범례</p>
-                    <div className="flex flex-wrap gap-3 text-xs">
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
-                        <span className="text-blue-600 font-medium">신청필지</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
-                        <span>인접필지</span>
-                      </div>
+                  <div className="flex flex-wrap gap-4 text-xs px-1">
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-2.5 w-2.5 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
+                      <span className="text-muted-foreground">신청필지</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-2.5 w-2.5 rounded-sm border border-dashed border-[#d97706] bg-[#fef3c7]" />
+                      <span className="text-muted-foreground">인접필지</span>
                     </div>
                   </div>
                 </div>
@@ -1749,7 +1751,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m²</span>
                                         </div>
                                         <div>
-                                          <span className="text-muted-foreground">잔여 비율:</span>
+                                          <span className="text-muted-foreground">잔��� 비율:</span>
                                           <span className="ml-1 font-medium">{land.remainingRatio}%</span>
                                         </div>
                                         <div>
