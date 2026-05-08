@@ -365,8 +365,8 @@ export function LandMap({
 
   return (
     <div className="relative w-full overflow-hidden rounded-lg border border-border bg-muted">
-      {/* 지도 컨트롤 */}
-      <div className="absolute left-3 top-3 z-10 flex gap-2">
+      {/* 지도 컨트롤 - 우측 정렬 */}
+      <div className="absolute right-0 top-3 z-[1000] flex flex-col gap-1.5 pr-2">
         {/* 배경지도 타입 선택 */}
         <div className="flex gap-1">
           <button
@@ -406,14 +406,10 @@ export function LandMap({
           </button>
         </div>
 
-
-      
-      {/* 지도 컨트롤 - 거리, 레이어 */}
-      <div className="absolute right-0 top-3 z-[1000] flex flex-col gap-1.5 pr-2">
         {/* 거리 측정 */}
         <button
           onClick={toggleMeasureMode}
-          className={`flex flex-col items-center justify-center w-[38px] h-10 rounded-md shadow transition-colors ${
+          className={`flex flex-col items-center justify-center w-[38px] h-10 rounded-md shadow transition-colors self-end ${
             measureMode ? "bg-pink-500" : "bg-white hover:bg-gray-100"
           }`}
         >
@@ -424,7 +420,7 @@ export function LandMap({
         {/* 레이어 선택 */}
         <Popover>
           <PopoverTrigger asChild>
-            <button className="flex flex-col items-center justify-center w-[38px] h-10 bg-white rounded-md shadow hover:bg-gray-100 transition-colors">
+            <button className="flex flex-col items-center justify-center w-[38px] h-10 bg-white rounded-md shadow hover:bg-gray-100 transition-colors self-end">
               <Layers className="h-4 w-4 text-gray-700 mb-0.5" strokeWidth={1.5} />
               <span className="text-[10px] text-gray-700 font-medium">레이어</span>
             </button>

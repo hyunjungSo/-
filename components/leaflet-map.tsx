@@ -795,7 +795,7 @@ export function LeafletMap({
         {/* 거리 측정 */}
         <button
           onClick={toggleMeasureMode}
-          className={`flex flex-col items-center justify-center w-[38px] h-10 rounded-md shadow transition-colors ${
+          className={`flex flex-col items-center justify-center w-[38px] h-10 rounded-md shadow transition-colors self-end ${
             measureMode ? "bg-blue-500" : "bg-white hover:bg-gray-100"
           }`}
         >
@@ -806,7 +806,7 @@ export function LeafletMap({
         {/* 레이어 선택 */}
         <Popover>
           <PopoverTrigger asChild>
-            <button className="flex flex-col items-center justify-center w-[38px] h-10 bg-white rounded-md shadow hover:bg-gray-100 transition-colors">
+            <button className="flex flex-col items-center justify-center w-[38px] h-10 bg-white rounded-md shadow hover:bg-gray-100 transition-colors self-end">
               <Layers className="h-4 w-4 text-gray-700 mb-0.5" strokeWidth={1.5} />
               <span className="text-[10px] text-gray-700 font-medium">레이어</span>
             </button>
