@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ������������������지별 분�������
+        // 개별 �������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1342,8 +1342,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             {/* 담당자 결과 탭 */}
             <TabsContent value="admin">
-              <div className="grid gap-6 lg:grid-cols-2">
-                {/* 좌측: 필지 선택 + 지적도 (한 행 배치) */}
+              <div className="space-y-6">
+                {/* 섹션 1: 지적도 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h4 className="text-sm font-semibold flex items-center gap-2">
@@ -1359,7 +1359,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div className="flex gap-3">
                     {/* 필지 선택 목록 */}
                     <div className="w-[200px] shrink-0 rounded-lg border bg-white p-2.5 space-y-1.5 max-h-[300px] overflow-y-auto">
-                      {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 ���시 */}
+                      {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지�� ���시 */}
                       {applicationLands[selectedLandIndex] && (
                         <div 
                           className={`flex items-center gap-2 p-2 rounded-md border-2 cursor-pointer transition-colors ${
@@ -1521,7 +1521,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                 </div>
                 
-                {/* 우측: AI 분석 설정 + 분석결과 */}
+                {/* 섹션 2: 분석 설정 및 결과 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h4 className="text-sm font-semibold flex items-center gap-2">
@@ -1693,7 +1693,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           {isAIAnalyzing ? (
                             <>
                               <Loader2 className="h-4 w-4 animate-spin" />
-                              AI 분석 중...
+                              AI ��석 중...
                             </>
                           ) : (
                             <>
