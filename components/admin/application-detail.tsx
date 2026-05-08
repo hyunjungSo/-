@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 �������������지별 분�������
+        // 개별 ��������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1629,7 +1629,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     onCheckedChange={(checked) => updateLandOption(selectedLand.id, 'accessRoadLost', checked === true)}
                                     className="h-5 w-5"
                                   />
-                                  <span className="text-sm">접면도로 상실</span>
+                                  <span className="text-sm">접면���로 상실</span>
                                 </label>
                                 <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-muted/50">
                                   <Checkbox 
@@ -2199,11 +2199,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           key={judgment}
                           type="button"
                           variant="outline"
-                          size="sm"
                           onClick={() => updateLandReviewData(selectedLandIndex, 'landJudgment', judgment)}
-                          className={`cursor-pointer border-2 ${isSelected ? `${config.borderColor} ${config.textColor}` : "border-gray-200"}`}
+                          className={`cursor-pointer border-2 ${isSelected ? `${config.borderColor} ${config.textColor}` : "border-[#E1E4E7] text-foreground"}`}
                         >
-                          <Icon className="mr-1.5 h-3.5 w-3.5" />
+                          <Icon className="mr-2 h-4 w-4" />
                           {config.label}
                         </Button>
                       );
