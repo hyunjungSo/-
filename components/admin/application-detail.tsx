@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 �����������������������������지별 분�������
+        // 개별 ������������������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1448,7 +1448,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         const adjacentParcels = [
                           {
                             id: "adjacent-001",
-                            address: "경기도 용인시 처인구 포곡읍 마성리 101",
+                            address: "경기도 용���시 처인구 포곡읍 마성리 101",
                             isIncluded: false,
                             isOwned: false,
                             isAdjacent: true,
@@ -1509,21 +1509,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   {/* 선택된 필지 옵션 설정 */}
                   <div className="rounded-lg border bg-white">
                     {/* 헤더 - 필지 선택과 연동 */}
-                    <div className="flex items-center justify-between border-b bg-muted/30 px-3 py-2.5">
-                      <span className="text-sm font-medium flex items-center gap-2">
-                        <Badge 
-                          className={`text-xs ${selectedAdjacentParcel ? "bg-[#d97706] text-white" : "bg-[#2563eb] text-white"}`}
-                        >
-                          필지{selectedAdjacentParcel ? (selectedAdjacentParcel.parcelNumber || (applicationLands.length + 1)) : 1}
-                        </Badge>
-                        검토 옵션
-                      </span>
+                    <div className="flex items-center gap-2 border-b bg-muted/30 px-3 py-2.5">
                       <Badge 
-                        variant="outline"
-                        className={`text-xs ${selectedAdjacentParcel ? "border-amber-600 text-amber-700" : "border-blue-600 text-blue-700"}`}
+                        className={`text-xs ${selectedAdjacentParcel ? "bg-[#d97706] text-white" : "bg-[#2563eb] text-white"}`}
                       >
-                        {selectedAdjacentParcel ? "인접 필지" : "신청 필지"}
+                        필지{selectedAdjacentParcel ? (selectedAdjacentParcel.parcelNumber || (applicationLands.length + 1)) : 1}
                       </Badge>
+                      <span className="text-sm font-medium">검토 옵션</span>
                     </div>
                     
                     {/* 선택된 필지 옵션 설정 */}
@@ -1817,7 +1809,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
                                           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                                             {landResult?.judgmentRationale?.legalBasis || 
-                                              "「공익사업을 위한 토지 등의 취��� 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조"}
+                                              "「공익사업을 위한 토지 등의 취��� �� 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조"}
                                           </p>
                                         </div>
                                       </div>
@@ -2130,7 +2122,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     }
                                   })()}
 
-                                  {/* 안내 문구 */}
+                                  {/* 안�� 문구 */}
                                   <div className="flex items-start gap-2 pt-2 border-t">
                                     <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                     <p className="text-xs text-muted-foreground">
