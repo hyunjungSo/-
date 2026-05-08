@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지������������������� 분석
+        // 개별 필지��������������������� 분석
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1352,7 +1352,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         <div className="flex items-start gap-2 pt-2 border-t">
                           <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                           <p className="text-xs text-muted-foreground">
-                            AI 판������� 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                            AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                           </p>
                         </div>
                       </div>
@@ -1980,7 +1980,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <div className="flex items-start gap-2 pt-2 border-t">
                                 <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                 <p className="text-xs text-muted-foreground">
-                                  AI 판독 결과는 참고용이며, ���종 판정은 담당자 검토에 따라 결정됩니다.
+                                  AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                                 </p>
                               </div>
                             </div>
@@ -2108,7 +2108,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* 필지별 검토 현황 요약 */}
+          {/* 필지별 검토 ���황 요약 */}
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-muted-foreground shrink-0">필지별 검토 현황</span>
             <div className="flex flex-wrap gap-2">
