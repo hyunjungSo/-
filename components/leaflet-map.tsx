@@ -351,52 +351,68 @@ export function LeafletMap({
       const isSelected = parcel.id === selectedParcelId || selectedParcelIds.has(parcel.id);
       const isOwned = parcel.isOwned ?? selectedParcelIds.has(parcel.id);
       const isHovered = parcel.id === hoveredParcelId;
-      const isAdjacentParcel = !parcel.isIncluded; // 인접 필지 여부
+      const isAdjacentParcel = !parcel.isIncluded; // 인접 필지 여부 (미신청 인접지)
       const latlngs = validCoords.map(coord => [coord.lat, coord.lng] as [number, number]);
 
-      // 폴리곤 스타일 - 신청필지(녹색/회색), 인접필지(점선/주황), 선택시 각각 다른 스타일
-      let polygonColor = "#6b7280"; // 기본: 미선택 신청필지 (진한 회색)
+      // 4가지 필지 상태별 스타일링
+      // 1. 민원인 신청 필지 선택 시 - 파란색 실선
+      // 2. 민원인 신청 필지 미선택 시 - 회색 실선
+      // 3. (미신청 인접지) 선택 시 - 주황색 실선
+      // 4. (미신청 인접지) 미선택 시 - 주황색 점선
+      let polygonColor = "#6b7280"; // 기본: 미선택 신청필지 (회색)
       let fillColor = "#f3f4f6";
       let weight = 3;
       let fillOpacity = 0.3;
       let dashArray: string | undefined = undefined;
       
       if (isAdjacentParcel) {
+        // 미신청 인접지
         if (isSelected || isOwned) {
-          // 선택된 인접 필지: 진한 파란색 실선
-          polygonColor = "#2563eb"; // 진한 파란색
-          fillColor = "#dbeafe"; // 연한 파란색 배경
+          // 3. (미신청 인접지) 선택 시: 주황색 실선
+          polygonColor = "#d97706"; // 주황색
+          fillColor = "#ffedd5"; // 연한 주황색 배경
           weight = 4;
           fillOpacity = 0.45;
-          dashArray = undefined; // 선택 시 실선
+          dashArray = undefined; // 실선
         } else {
-          // 미선택 인접 필지: 점선 테두리
-          polygonColor = "#d97706"; // 진한 주황/갈색
+          // 4. (미신청 인접지) 미선택 시: 주황색 점선
+          polygonColor = "#d97706"; // 주황색
           fillColor = "#fef3c7"; // 연한 노란색 배경
           weight = 2;
           fillOpacity = 0.15;
           dashArray = "6, 4"; // 점선 스타일
         }
-      } else if (isSelected || isOwned) {
-        // 선택된 신청 필지: 진한 파란색 실선
-        polygonColor = "#2563eb"; // 진한 파란색
-        fillColor = "#dbeafe"; // 연한 파란색 배경
-        weight = 4;
-        fillOpacity = 0.45;
+      } else {
+        // 민원인 신청 필지
+        if (isSelected || isOwned) {
+          // 1. 민원인 신청 필지 선택 시: 파란색 실선
+          polygonColor = "#2563eb"; // 파란색
+          fillColor = "#dbeafe"; // 연한 파란색 배경
+          weight = 4;
+          fillOpacity = 0.45;
+          dashArray = undefined; // 실선
+        } else {
+          // 2. 민원인 신청 필지 미선택 시: 회색 실선
+          polygonColor = "#6b7280"; // 회색
+          fillColor = "#f3f4f6"; // 연한 회색 배경
+          weight = 3;
+          fillOpacity = 0.3;
+          dashArray = undefined; // 실선
+        }
       }
       
       // 호버 시 스타일 오버라이드
       if (isHovered) {
         if (isAdjacentParcel) {
-          // 인접 필지 호버
+          // 인접 필지 호버: 진한 주황색
           polygonColor = "#c2410c";
           fillColor = "#ffedd5";
           weight = 4;
           fillOpacity = 0.4;
           dashArray = undefined;
         } else {
-          // 신청 필지 호버
-          polygonColor = "#2563eb"; // 파란색
+          // 신청 필지 호버: 진한 파란색
+          polygonColor = "#1d4ed8";
           fillColor = "#dbeafe";
           weight = 4;
           fillOpacity = 0.5;
