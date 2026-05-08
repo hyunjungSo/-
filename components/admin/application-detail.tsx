@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 �����지별 분�������
+        // 개별 ������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1540,28 +1540,33 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   
                   {/* 선택된 필지 옵션 설정 */}
                   <div className="rounded-lg border bg-white">
-                    {/* 헤더 */}
+                    {/* 헤더 - 필지 선택과 연동 */}
                     <div className="flex items-center justify-between border-b bg-muted/30 px-3 py-2.5">
                       <span className="text-sm font-medium flex items-center gap-2">
                         <span 
                           className="flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white"
-                          style={{ backgroundColor: selectedLandIndex < applicationLands.length ? "#2563eb" : "#d97706" }}
+                          style={{ backgroundColor: selectedAdjacentParcel ? "#d97706" : "#2563eb" }}
                         >
-                          {String.fromCharCode(65 + selectedLandIndex)}
+                          {selectedAdjacentParcel ? "B" : "A"}
                         </span>
                         필지 검토 옵션
                       </span>
-                      <Badge variant={selectedLandIndex < applicationLands.length ? "default" : "outline"} className="text-xs">
-                        {selectedLandIndex < applicationLands.length ? "신청 필지" : "인접 필지"}
+                      <Badge 
+                        variant={selectedAdjacentParcel ? "outline" : "default"} 
+                        className={`text-xs ${selectedAdjacentParcel ? "border-amber-600 text-amber-700" : ""}`}
+                      >
+                        {selectedAdjacentParcel ? "인접 필지" : "신청 필지"}
                       </Badge>
                     </div>
                     
                     {/* 선택된 필지 옵션 설정 */}
                     <div className="p-4 space-y-4">
                       {(() => {
-                        const selectedLand = allLands[selectedLandIndex];
-                        if (!selectedLand) return null;
-                        const landOptions = adminAIOptionsPerLand[selectedLand.id] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
+                        // 선택된 필지에 따라 데이터 결정
+                        const currentParcelId = selectedAdjacentParcel?.id || applicationLands[selectedLandIndex]?.id;
+                        const currentParcelLandType = selectedAdjacentParcel?.landType || applicationLands[selectedLandIndex]?.landType;
+                        if (!currentParcelId) return null;
+                        const landOptions = adminAIOptionsPerLand[currentParcelId] || { accessRoadLost: false, waterChannelLost: false, farmMachineDifficulty: false };
                         
                         return (
                           <>
@@ -1572,12 +1577,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   현재 활용 지목 <span className="text-destructive">*</span>
                                 </label>
                                 <span className="text-sm text-muted-foreground">
-                                  공부상 지목: <span className="font-medium text-foreground">{selectedLand.landType}</span>
+                                  공부상 지목: <span className="font-medium text-foreground">{currentParcelLandType}</span>
                                 </span>
                               </div>
                               <Select 
-                                value={adminCurrentUsagePerLand[selectedLand.id] || ""} 
-                                onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [selectedLand.id]: value }))}
+                                value={adminCurrentUsagePerLand[currentParcelId] || ""} 
+                                onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
                               >
                                 <SelectTrigger className="h-10 bg-background">
                                   <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
@@ -1593,14 +1598,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             </div>
                             
                             {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
-                            {adminCurrentUsagePerLand[selectedLand.id] === "대" && (
+                            {adminCurrentUsagePerLand[currentParcelId] === "대" && (
                               <div className="space-y-2 p-3 rounded-lg bg-muted/30">
                                 <label className="text-sm font-medium text-foreground">
                                   건축물 용도 선택 <span className="text-destructive">*</span>
                                 </label>
                                 <Select 
-                                  value={adminLandSubTypePerLand[selectedLand.id] || ""} 
-                                  onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [selectedLand.id]: value }))}
+                                  value={adminLandSubTypePerLand[currentParcelId] || ""} 
+                                  onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
                                 >
                                   <SelectTrigger className="h-10 bg-background">
                                     <SelectValue placeholder="건축물 용도를 선택해 주세요" />
