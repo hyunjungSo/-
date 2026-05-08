@@ -1323,7 +1323,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         <div className="flex items-start gap-2 pt-2 border-t">
                           <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                           <p className="text-xs text-muted-foreground">
-                            AI 판��� 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                            AI 판����� 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                           </p>
                         </div>
                       </div>
@@ -1682,10 +1682,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 우측: Step 4. 분석결과 확인 */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium flex items-center gap-2">
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">4</span>
-                      분석결과 확인
-                    </h4>
+                    <h4 className="text-lg font-semibold">분석결과 확인</h4>
                     {Object.keys(adminLandAIResults).length > 0 && (
                       <Button
                         variant="ghost"
