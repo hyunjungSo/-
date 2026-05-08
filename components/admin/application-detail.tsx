@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ����������������지별 분�������
+        // 개별 �����������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1343,7 +1343,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             {/* 담당자 결과 탭 */}
             <TabsContent value="admin">
               <div className="grid gap-6 lg:grid-cols-2">
-                {/* 좌측: 지적도 + 필지 선택 */}
+                {/* 좌측: 필지 선택 + 지적도 (한 행 배치) */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h4 className="text-sm font-semibold flex items-center gap-2">
@@ -1354,9 +1354,11 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       {applicationLands.length + 2}개 필지
                     </Badge>
                   </div>
-                    
-                  {/* 필지 선택 목록 */}
-                  <div className="rounded-lg border bg-white p-2.5 space-y-1.5 max-h-[140px] overflow-y-auto">
+                  
+                  {/* 필지 선택 + 지적도 한 행 배치 */}
+                  <div className="flex gap-3">
+                    {/* 필지 선택 목록 */}
+                    <div className="w-[200px] shrink-0 rounded-lg border bg-white p-2.5 space-y-1.5 max-h-[300px] overflow-y-auto">
                       {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 표시 */}
                       {applicationLands[selectedLandIndex] && (
                         <div 
@@ -1438,7 +1440,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                     
                     {/* 지적도 맵 */}
-                    <div className="relative h-[260px] rounded-lg overflow-hidden border">
+                    <div className="flex-1 relative h-[300px] rounded-lg overflow-hidden border">
                     <div className="absolute inset-0">
                     <LeafletMap
                       parcels={(() => {
@@ -1502,6 +1504,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       focusedParcelId={focusedLandId}
                       zoom={18}
                     />
+                    </div>
                     </div>
                   </div>
                   
@@ -1852,7 +1855,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
                                           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                                             {landResult?.judgmentRationale?.legalBasis || 
-                                              "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조"}
+                                              "「공익사업을 위한 토지 등의 취��� 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조"}
                                           </p>
                                         </div>
                                       </div>
