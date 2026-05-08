@@ -856,7 +856,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </div>
       </div>
 
-      {/* Section 02. 신청인 정보 */}
+      {/* Section 01. 신청인 정보 */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">신청인 정보</CardTitle>
@@ -889,7 +889,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* Section 03. 토지 정보 */}
+      {/* Section 02. 필지선택 */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">토지 정보</CardTitle>
@@ -939,10 +939,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </div>
           </div>
 
-          {/* 선택된 필지 상세 정보 */}
-          {applicationLands[selectedLandIndex] && (
-            <div className="pt-4 border-t">
-              {/* 기본 정보 테이블 */}
+        </CardHeader>
+        <CardContent className="space-y-8">
+          {/* 2-1. 토지정보 */}
+          <div className="space-y-3">
+            <h3 className="text-base font-semibold border-l-4 border-primary pl-3">토지정보</h3>
+            {applicationLands[selectedLandIndex] && (
               <div className="rounded-lg border overflow-hidden">
                 <table className="w-full text-sm">
                   <tbody className="divide-y">
@@ -992,23 +994,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </tbody>
                 </table>
               </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            )}
+          </div>
 
-      {/* Section 04. AI 분석 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            AI 분석
-          </CardTitle>
-          <CardDescription>
-            민원인 신청 결과와 담당자 분석 결과를 확인합니다.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="citizen" className="w-full">
+          {/* 2-2. AI 분석 */}
+          <div className="space-y-3">
+            <h3 className="text-base font-semibold border-l-4 border-primary pl-3">AI 분석</h3>
+            <p className="text-sm text-muted-foreground">민원인 신청 결과와 담당자 분석 결과를 확인합니다.</p>
+            <Tabs defaultValue="citizen" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="citizen">
                 민원인 결과
@@ -2136,24 +2129,13 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </div>
               </div>
             </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-
-      {/* Section 04. 담당자 검토 */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-lg">담당자 검토</CardTitle>
-              <CardDescription>선택된 필지의 판정과 검토 의견을 입력하세요</CardDescription>
-            </div>
-            <Badge variant="outline">
-              {landReviewDataList.filter(d => d.landJudgment !== null).length}/{applicationLands.length} 검토완료
-            </Badge>
+            </Tabs>
           </div>
-        </CardHeader>
-        <CardContent>
+
+          {/* 2-3. 담당자 검토 */}
+          <div className="space-y-3">
+            <h3 className="text-base font-semibold border-l-4 border-primary pl-3">담당자 검토</h3>
+            <p className="text-sm text-muted-foreground">선택된 필지의 판정과 검토 의견을 입력하세요</p>
           {(() => {
             const landReview = landReviewDataList[selectedLandIndex];
             const land = applicationLands[selectedLandIndex];
@@ -2226,58 +2208,72 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </div>
             );
           })()}
-        </CardContent>
-      </Card>
+          </div>
 
-      {/* 진행상황 선택 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">진행상황 선택</CardTitle>
-          <CardDescription>민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
-              const config = adminStatusConfig[status];
-              const Icon = config.icon;
-              const isSelected = reviewData.adminStatus === status;
-              return (
-                <Button
-                  key={status}
-                  type="button"
-                  variant="outline"
-                  onClick={() =>
-                    setReviewData((prev) => ({ ...prev, adminStatus: status }))
-                  }
-                  className={`cursor-pointer border-2 ${isSelected ? "border-primary text-primary" : "border-[#E1E4E7] text-foreground"}`}
-                >
-                  <Icon className={`mr-2 h-4 w-4 ${status === "진행중" && isSelected ? "animate-spin" : ""}`} />
-                  {config.label}
-                </Button>
-              );
-            })}
+          {/* 2-4. 진행상황 선택 */}
+          <div className="space-y-3">
+            <h3 className="text-base font-semibold border-l-4 border-primary pl-3">진행상황 선택</h3>
+            <p className="text-sm text-muted-foreground">민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다</p>
+            <div className="flex flex-wrap gap-2">
+              {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
+                const config = adminStatusConfig[status];
+                const Icon = config.icon;
+                const isSelected = reviewData.adminStatus === status;
+                return (
+                  <Button
+                    key={status}
+                    type="button"
+                    variant="outline"
+                    onClick={() =>
+                      setReviewData((prev) => ({ ...prev, adminStatus: status }))
+                    }
+                    className={`cursor-pointer border-2 ${isSelected ? "border-primary text-primary" : "border-[#E1E4E7] text-foreground"}`}
+                  >
+                    <Icon className={`mr-2 h-4 w-4 ${status === "진행중" && isSelected ? "animate-spin" : ""}`} />
+                    {config.label}
+                  </Button>
+                );
+              })}
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* 최종 검토 */}
-      <Card>
+      {/* Section 03. 최종 검토 의견 */}
+      <Card className="border-2 border-primary/20 bg-primary/5">
         <CardHeader>
           <CardTitle className="text-lg">최종 검토 의견</CardTitle>
-          <CardDescription>전체 민원에 대한 최종 검토 의견을 작성해주세요</CardDescription>
+          <CardDescription>
+            모든 필지에 대한 종합적인 검토 의견을 작성해주세요. 이 내용은 심의서에 자동 입력됩니다.
+          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Textarea
-              placeholder="이 내용은 ��의서에 자동 입력됩니다."
-              rows={4}
-              value={reviewData.reviewerComment || ""}
-              onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}
-              className="resize-none"
-            />
+        <CardContent>
+          {/* 필지별 검토 현황 요약 */}
+          <div className="mb-4 p-3 bg-background rounded-lg border">
+            <p className="text-sm font-medium mb-2">필지별 검토 현황</p>
+            <div className="flex flex-wrap gap-2">
+              {applicationLands.map((land, idx) => {
+                const review = landReviewDataList[idx];
+                const isReviewed = review?.landJudgment !== null;
+                return (
+                  <Badge 
+                    key={land.id}
+                    variant={isReviewed ? "default" : "outline"}
+                    className={isReviewed ? "bg-green-600" : "border-dashed"}
+                  >
+                    {String.fromCharCode(65 + idx)} {isReviewed ? review.landJudgment : "미검토"}
+                  </Badge>
+                );
+              })}
+            </div>
           </div>
-
-
+          <Textarea
+            placeholder="전체 필지에 대한 종합 검토 의견을 입력하세요..."
+            rows={4}
+            value={reviewData.reviewerComment || ""}
+            onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}
+            className="resize-none bg-background"
+          />
         </CardContent>
       </Card>
 
