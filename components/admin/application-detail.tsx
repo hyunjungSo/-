@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ��������������지별 분�������
+        // 개별 ���������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1437,7 +1437,37 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       })}
                     </div>
                     
-                    {/* 범례 */}
+                    {/* 지목 참고 정보 */}
+                    {(() => {
+                      const currentLand = selectedAdjacentParcel 
+                        ? { landType: selectedAdjacentParcel.landType, landCategory: selectedAdjacentParcel.landCategory }
+                        : applicationLands[selectedLandIndex];
+                      const landData = application.landDataList?.[selectedLandIndex];
+                      const citizenUsage = landData?.currentUsage || landData?.actualUsage || currentLand?.landType;
+                      const aiUsage = landData?.actualUsage || currentLand?.landType;
+                      const officialUsage = currentLand?.landType;
+                      
+                      return (
+                        <div className="rounded-lg border bg-white p-3 space-y-2">
+                          <p className="text-xs font-medium text-muted-foreground">지목 참고 정보</p>
+                          <div className="grid grid-cols-3 gap-2">
+                            <div className="text-center p-2 rounded-md bg-blue-50 border border-blue-100">
+                              <p className="text-[10px] text-muted-foreground mb-0.5">민원인 선택</p>
+                              <p className="text-sm font-semibold text-blue-700">{citizenUsage || "-"}</p>
+                            </div>
+                            <div className="text-center p-2 rounded-md bg-purple-50 border border-purple-100">
+                              <p className="text-[10px] text-muted-foreground mb-0.5">AI 판단</p>
+                              <p className="text-sm font-semibold text-purple-700">{aiUsage || "-"}</p>
+                            </div>
+                            <div className="text-center p-2 rounded-md bg-slate-50 border border-slate-200">
+                              <p className="text-[10px] text-muted-foreground mb-0.5">공부상 지목</p>
+                              <p className="text-sm font-semibold text-slate-700">{officialUsage || "-"}</p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                    
                     {/* 지적도 맵 */}
                     <div className="relative h-[260px] rounded-lg overflow-hidden border">
                     <div className="absolute inset-0">
