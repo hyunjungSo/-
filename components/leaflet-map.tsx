@@ -736,7 +736,7 @@ export function LeafletMap({
       )}
 
       {/* 지도 컨트롤 - 배경지도/거리측정/레이어 */}
-      <div className="absolute right-3 top-3 z-[1000] flex flex-col gap-1.5">
+      <div className="absolute right-0 top-3 z-[1000] flex flex-col gap-1.5 pr-3">
         {/* 배경지도 타입 선택 - 컴팩트 썸네일 UI */}
         <div className="flex gap-1 rounded-md bg-white p-1 shadow-md">
           <button
