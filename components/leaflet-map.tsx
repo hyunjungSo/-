@@ -778,33 +778,33 @@ export function LeafletMap({
           </button>
         </div>
         
-        {/* 측정 도구 - 세로 카드 형태 (참고 이미지 스타일) */}
-        <div className="flex flex-col bg-white rounded shadow-sm">
-          <button className="flex flex-col items-center justify-center w-10 py-2 hover:bg-gray-50 transition-colors border-b border-gray-100">
-            <Circle className="h-4 w-4 text-gray-500 mb-0.5" strokeWidth={1.5} />
-            <span className="text-[10px] text-gray-600">반경</span>
+        {/* 측정 도구 - 네이버지도 스타일 */}
+        <div className="flex flex-col bg-white rounded-md shadow">
+          <button className="flex flex-col items-center justify-center w-12 py-2.5 hover:bg-gray-100 transition-colors border-b border-gray-200">
+            <Circle className="h-[18px] w-[18px] text-gray-700 mb-1" strokeWidth={1.5} />
+            <span className="text-[11px] text-gray-700 font-medium">반경</span>
           </button>
-          <button className="flex flex-col items-center justify-center w-10 py-2 hover:bg-gray-50 transition-colors border-b border-gray-100">
-            <Square className="h-4 w-4 text-gray-500 mb-0.5" strokeWidth={1.5} />
-            <span className="text-[10px] text-gray-600">면적</span>
+          <button className="flex flex-col items-center justify-center w-12 py-2.5 hover:bg-gray-100 transition-colors border-b border-gray-200">
+            <Square className="h-[18px] w-[18px] text-gray-700 mb-1" strokeWidth={1.5} />
+            <span className="text-[11px] text-gray-700 font-medium">면적</span>
           </button>
           <button
             onClick={toggleMeasureMode}
-            className={`flex flex-col items-center justify-center w-10 py-2 transition-colors ${
-              measureMode ? "bg-pink-500" : "hover:bg-gray-50"
+            className={`flex flex-col items-center justify-center w-12 py-2.5 transition-colors ${
+              measureMode ? "bg-blue-500" : "hover:bg-gray-100"
             }`}
           >
-            <Ruler className={`h-4 w-4 mb-0.5 ${measureMode ? "text-white" : "text-gray-500"}`} strokeWidth={1.5} />
-            <span className={`text-[10px] ${measureMode ? "text-white" : "text-gray-600"}`}>거리</span>
+            <Ruler className={`h-[18px] w-[18px] mb-1 ${measureMode ? "text-white" : "text-gray-700"}`} strokeWidth={1.5} />
+            <span className={`text-[11px] font-medium ${measureMode ? "text-white" : "text-gray-700"}`}>거리</span>
           </button>
         </div>
 
         {/* 레이어 선택 */}
         <Popover>
           <PopoverTrigger asChild>
-            <button className="flex flex-col items-center justify-center w-10 py-2 bg-white rounded shadow-sm hover:bg-gray-50 transition-colors">
-              <Layers className="h-4 w-4 text-gray-500 mb-0.5" strokeWidth={1.5} />
-              <span className="text-[10px] text-gray-600">레이어</span>
+            <button className="flex flex-col items-center justify-center w-12 py-2.5 bg-white rounded-md shadow hover:bg-gray-100 transition-colors">
+              <Layers className="h-[18px] w-[18px] text-gray-700 mb-1" strokeWidth={1.5} />
+              <span className="text-[11px] text-gray-700 font-medium">레이어</span>
             </button>
           </PopoverTrigger>
           <PopoverContent className="z-[1001] w-52 p-3" align="end" sideOffset={5}>
