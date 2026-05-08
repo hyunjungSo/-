@@ -969,7 +969,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {applicationLands[selectedLandIndex]?.address.split(" ").slice(-2).join(" ")}
               </span>
             </div>
-            <span className="text-xs text-muted-foreground">아래정보는 선택한필지 ({applicationLands[selectedLandIndex]?.address}) 에 대한 내용입니다.</span>
+            <span className="text-xs text-muted-foreground">아래정보는 선택한 필지에 대한 내용입니다.</span>
           </div>
         </CardHeader>
         <CardContent className="space-y-12">
@@ -1054,7 +1054,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 민원인 결과
               </TabsTrigger>
               <TabsTrigger value="admin">
-                담당자 결과
+                ���당자 결과
               </TabsTrigger>
             </TabsList>
             
