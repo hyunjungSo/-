@@ -5,7 +5,6 @@ import { Layers, Plus, Minus, Info, Locate, Ruler, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import {
   Popover,
   PopoverContent,
@@ -436,7 +435,7 @@ export function LeafletMap({
 
       polygon.addTo(polygonLayer);
 
-      // 필지 중앙에 지번 라벨 추가
+      // 필지 중앙에 ���번 라벨 추가
       const bounds = polygon.getBounds();
       const center = bounds.getCenter();
       
@@ -722,19 +721,47 @@ export function LeafletMap({
 
       {/* 지도 컨트롤 - 배경지도/거리측정/레이어 */}
       <div className="absolute right-14 top-3 z-[1000] flex flex-col gap-2">
-        {/* 배경지도 토글 스위치 */}
-        <div className="flex items-center gap-2 rounded-md bg-white px-3 py-1.5 shadow-md">
-          <span className={`text-sm font-medium ${baseMap === "normal" ? "text-foreground" : "text-muted-foreground"}`}>
-            일반
-          </span>
-          <Switch
-            checked={baseMap === "satellite"}
-            onCheckedChange={(checked) => setBaseMap(checked ? "satellite" : "normal")}
-            className="data-[state=checked]:bg-primary"
-          />
-          <span className={`text-sm font-medium ${baseMap === "satellite" ? "text-foreground" : "text-muted-foreground"}`}>
-            위성
-          </span>
+        {/* 배경지도 타입 선택 - 네이버/구글 스타일 썸네일 UI */}
+        <div className="flex gap-1.5 rounded-lg bg-white p-1.5 shadow-lg">
+          <button
+            onClick={() => setBaseMap("normal")}
+            className={`relative flex flex-col items-center gap-1 rounded-md p-1 transition-all ${
+              baseMap === "normal" 
+                ? "ring-2 ring-primary ring-offset-1" 
+                : "hover:bg-gray-100"
+            }`}
+          >
+            <div className="relative h-10 w-14 overflow-hidden rounded-sm border border-gray-200">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#f5f5f5] via-[#e8e8e8] to-[#f0f0f0]">
+                <div className="absolute left-1 top-2 h-0.5 w-6 bg-[#ffd54f]" />
+                <div className="absolute left-2 top-4 h-0.5 w-8 bg-white" />
+                <div className="absolute bottom-2 right-1 h-3 w-3 rounded-sm bg-[#c8e6c9]" />
+                <div className="absolute bottom-1 left-1 h-2 w-4 rounded-sm bg-[#bbdefb]" />
+              </div>
+            </div>
+            <span className={`text-[10px] font-medium ${baseMap === "normal" ? "text-primary" : "text-muted-foreground"}`}>
+              일반
+            </span>
+          </button>
+          <button
+            onClick={() => setBaseMap("satellite")}
+            className={`relative flex flex-col items-center gap-1 rounded-md p-1 transition-all ${
+              baseMap === "satellite" 
+                ? "ring-2 ring-primary ring-offset-1" 
+                : "hover:bg-gray-100"
+            }`}
+          >
+            <div className="relative h-10 w-14 overflow-hidden rounded-sm border border-gray-200">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#2d4a2d] via-[#3d5a3d] to-[#1a3a1a]">
+                <div className="absolute left-0 top-3 h-1 w-full bg-[#4a4a4a]/60" />
+                <div className="absolute right-2 top-1 h-2 w-3 rounded-sm bg-[#5a6a5a]" />
+                <div className="absolute bottom-1 left-1 h-3 w-4 rounded-sm bg-[#3a4a3a]" />
+              </div>
+            </div>
+            <span className={`text-[10px] font-medium ${baseMap === "satellite" ? "text-primary" : "text-muted-foreground"}`}>
+              위성
+            </span>
+          </button>
         </div>
         
         {/* 거리 측정 */}
@@ -874,7 +901,7 @@ export function LeafletMap({
               </div>
             </div>
           )}
-          {/* 닫기 버튼 */}
+          {/* 닫기 ���튼 */}
           <Button
             variant="ghost"
             size="sm"
