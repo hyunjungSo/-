@@ -375,7 +375,7 @@ export function LandMap({
           }`}
         >
           <Ruler className={`h-4 w-4 mb-0.5 ${measureMode ? "text-white" : "text-gray-700"}`} strokeWidth={1.5} />
-          <span className={`text-[10px] font-medium ${measureMode ? "text-white" : "text-gray-700"}`}>거리</span>
+          <span className={`text-[11px] font-medium ${measureMode ? "text-white" : "text-gray-700"}`}>거리</span>
         </button>
 
         {/* 레이어 선택 */}
@@ -383,7 +383,7 @@ export function LandMap({
           <PopoverTrigger asChild>
             <button className="flex flex-col items-center justify-center w-[38px] h-10 bg-white rounded-md shadow hover:bg-gray-100 transition-colors self-end">
               <Layers className="h-4 w-4 text-gray-700 mb-0.5" strokeWidth={1.5} />
-              <span className="text-[10px] text-gray-700 font-medium">레이어</span>
+              <span className="text-[11px] text-gray-700 font-medium">레이어</span>
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-52 p-3" align="end" sideOffset={5}>
@@ -427,8 +427,8 @@ export function LandMap({
       </div>
 
       {/* 줌 컨트롤 */}
-      <div className="absolute right-0 top-3 z-10 flex flex-col gap-1 pr-3">
-        <div className="flex flex-col overflow-hidden rounded-md bg-white/90 shadow-sm">
+      <div className="absolute left-3 top-3 z-10 flex flex-col gap-1">
+        <div className="flex flex-col overflow-hidden rounded-md bg-white shadow">
           <Button 
             variant="ghost" 
             size="sm" 
@@ -438,7 +438,7 @@ export function LandMap({
           >
             <Plus className="h-4 w-4" />
           </Button>
-          <div className="border-t border-gray-200 px-1 py-1 text-center text-base font-medium text-[#1a1a1a]">
+          <div className="border-t border-gray-200 px-2 py-1.5 text-center text-base font-medium text-[#1a1a1a]">
             {zoomLevel}
           </div>
           <Button 
@@ -451,6 +451,21 @@ export function LandMap({
             <Minus className="h-4 w-4" />
           </Button>
         </div>
+        {/* 현재 위치 버튼 */}
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="h-8 w-8 rounded-md bg-white shadow p-0 text-[#1a1a1a] hover:bg-gray-100 [&_svg]:text-[#1a1a1a]"
+          onClick={() => {
+            // 현재 위치로 이동 (기본 위치로 리셋)
+            setZoomLevel(14);
+          }}
+        >
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+          </svg>
+        </Button>
       </div>
 
       <canvas
