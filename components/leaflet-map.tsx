@@ -720,45 +720,43 @@ export function LeafletMap({
       )}
 
       {/* 지도 컨트롤 - 배경지도/거리측정/레이어 */}
-      <div className="absolute right-14 top-3 z-[1000] flex flex-col gap-2">
-        {/* 배경지도 타입 선택 - 네이버/구글 스타일 썸네일 UI */}
-        <div className="flex gap-1.5 rounded-lg bg-white p-1.5 shadow-lg">
+      <div className="absolute right-3 top-3 z-[1000] flex flex-col gap-1.5">
+        {/* 배경지도 타입 선택 - 컴팩트 썸네일 UI */}
+        <div className="flex gap-1 rounded-md bg-white p-1 shadow-md">
           <button
             onClick={() => setBaseMap("normal")}
-            className={`relative flex flex-col items-center gap-1 rounded-md p-1 transition-all ${
+            className={`relative flex flex-col items-center gap-0.5 rounded p-0.5 transition-all ${
               baseMap === "normal" 
-                ? "ring-2 ring-primary ring-offset-1" 
+                ? "ring-1.5 ring-primary ring-offset-1" 
                 : "hover:bg-gray-100"
             }`}
           >
-            <div className="relative h-10 w-14 overflow-hidden rounded-sm border border-gray-200">
+            <div className="relative h-7 w-10 overflow-hidden rounded-sm border border-gray-200">
               <div className="absolute inset-0 bg-gradient-to-br from-[#f5f5f5] via-[#e8e8e8] to-[#f0f0f0]">
-                <div className="absolute left-1 top-2 h-0.5 w-6 bg-[#ffd54f]" />
-                <div className="absolute left-2 top-4 h-0.5 w-8 bg-white" />
-                <div className="absolute bottom-2 right-1 h-3 w-3 rounded-sm bg-[#c8e6c9]" />
-                <div className="absolute bottom-1 left-1 h-2 w-4 rounded-sm bg-[#bbdefb]" />
+                <div className="absolute left-0.5 top-1.5 h-px w-4 bg-[#ffd54f]" />
+                <div className="absolute left-1 top-3 h-px w-5 bg-white" />
+                <div className="absolute bottom-1 right-0.5 h-2 w-2 rounded-sm bg-[#c8e6c9]" />
               </div>
             </div>
-            <span className={`text-[10px] font-medium ${baseMap === "normal" ? "text-primary" : "text-muted-foreground"}`}>
+            <span className={`text-[9px] font-medium ${baseMap === "normal" ? "text-primary" : "text-muted-foreground"}`}>
               일반
             </span>
           </button>
           <button
             onClick={() => setBaseMap("satellite")}
-            className={`relative flex flex-col items-center gap-1 rounded-md p-1 transition-all ${
+            className={`relative flex flex-col items-center gap-0.5 rounded p-0.5 transition-all ${
               baseMap === "satellite" 
-                ? "ring-2 ring-primary ring-offset-1" 
+                ? "ring-1.5 ring-primary ring-offset-1" 
                 : "hover:bg-gray-100"
             }`}
           >
-            <div className="relative h-10 w-14 overflow-hidden rounded-sm border border-gray-200">
+            <div className="relative h-7 w-10 overflow-hidden rounded-sm border border-gray-200">
               <div className="absolute inset-0 bg-gradient-to-br from-[#2d4a2d] via-[#3d5a3d] to-[#1a3a1a]">
-                <div className="absolute left-0 top-3 h-1 w-full bg-[#4a4a4a]/60" />
-                <div className="absolute right-2 top-1 h-2 w-3 rounded-sm bg-[#5a6a5a]" />
-                <div className="absolute bottom-1 left-1 h-3 w-4 rounded-sm bg-[#3a4a3a]" />
+                <div className="absolute left-0 top-2 h-0.5 w-full bg-[#4a4a4a]/60" />
+                <div className="absolute right-1 top-0.5 h-1.5 w-2 rounded-sm bg-[#5a6a5a]" />
               </div>
             </div>
-            <span className={`text-[10px] font-medium ${baseMap === "satellite" ? "text-primary" : "text-muted-foreground"}`}>
+            <span className={`text-[9px] font-medium ${baseMap === "satellite" ? "text-primary" : "text-muted-foreground"}`}>
               위성
             </span>
           </button>
@@ -768,7 +766,7 @@ export function LeafletMap({
         <Button 
           variant="secondary" 
           size="sm" 
-          className={`h-8 gap-1.5 shadow-md ${
+          className={`h-7 gap-1 px-2 shadow-md text-xs ${
             measureMode 
               ? "text-white hover:opacity-90" 
               : "bg-white text-[#292929] hover:bg-gray-100 [&_svg]:text-[#292929]"
@@ -776,16 +774,16 @@ export function LeafletMap({
           style={measureMode ? { backgroundColor: '#ff3478' } : undefined}
           onClick={toggleMeasureMode}
         >
-          <Ruler className="h-4 w-4" />
-          <span className="text-sm">거리 측정</span>
+          <Ruler className="h-3.5 w-3.5" />
+          <span>거리</span>
         </Button>
 
         {/* 레이어 선택 */}
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="secondary" size="sm" className="h-8 gap-1.5 bg-white text-[#292929] shadow-md hover:bg-gray-100 active:bg-[#292929] active:text-white [&_svg]:text-[#292929] active:[&_svg]:text-white">
-              <Layers className="h-4 w-4" />
-              <span className="text-sm">레이어</span>
+            <Button variant="secondary" size="sm" className="h-7 gap-1 px-2 bg-white text-[#292929] shadow-md hover:bg-gray-100 text-xs [&_svg]:text-[#292929]">
+              <Layers className="h-3.5 w-3.5" />
+              <span>레이어</span>
             </Button>
           </PopoverTrigger>
           <PopoverContent className="z-[1001] w-52 p-3" align="start" sideOffset={5}>
@@ -868,7 +866,7 @@ export function LeafletMap({
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000] rounded-lg bg-white shadow-lg border border-gray-200 overflow-hidden">
           {measurePoints.length === 0 ? (
             <div className="px-4 py-3 text-sm text-gray-600">
-              지도를 클릭하여 거리 측정을 시작하세요
+              지도를 클릭하여 거리 측정을 시���하세요
             </div>
           ) : (
             <div className="min-w-[200px]">
