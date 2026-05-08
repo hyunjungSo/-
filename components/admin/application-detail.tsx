@@ -1476,8 +1476,27 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         
                         return [selectedParcel, ...adjacentParcels];
                       })()}
-                      selectedParcelIds={new Set([applicationLands[selectedLandIndex]?.id].filter(Boolean))}
-                      onParcelClick={() => {}}
+                      selectedParcelIds={new Set([selectedAdjacentParcel?.id || applicationLands[selectedLandIndex]?.id].filter(Boolean))}
+                      onParcelClick={(parcelId) => {
+                        // 신청 필지인지 확인
+                        if (parcelId === applicationLands[selectedLandIndex]?.id) {
+                          setSelectedAdjacentParcel(null);
+                          return;
+                        }
+                        // 인접 필지인지 확인
+                        const adjacentParcels = [
+                          { id: "adjacent-1", address: "경기도 용인시 처인구 포곡읍 마성리 101", landType: "전", area: 320 },
+                          { id: "adjacent-2", address: "경기도 용인시 처인구 포곡읍 마성리 102", landType: "답", area: 280 },
+                        ];
+                        const clickedAdjacent = adjacentParcels.find(p => p.id === parcelId);
+                        if (clickedAdjacent) {
+                          const adjacentIndex = adjacentParcels.indexOf(clickedAdjacent);
+                          setSelectedAdjacentParcel({
+                            ...clickedAdjacent,
+                            parcelNumber: adjacentIndex + 2
+                          });
+                        }
+                      }}
                       hoveredParcelId={hoveredLandId}
                       onParcelHover={(parcelId) => setHoveredLandId(parcelId)}
                       focusedParcelId={focusedLandId}
