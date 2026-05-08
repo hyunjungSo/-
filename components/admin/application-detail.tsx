@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ��������������������������������������지별 분�������
+        // 개별 필지별 분석
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -527,7 +527,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
         judgment = "기각";
-        reasons.push("���� 기준 미충족");
+        reasons.push("면적 기준 미충족");
       }
       
     } else if (effectiveLandType === "농지") {
@@ -540,7 +540,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         met: waterLost || roadLost,
         description: waterLost 
           ? "관개수로 상실로 농지 사용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
-          : (roadLost ? "접면도로 상실" + (adminOptions?.accessRoadLost ? " (����리�� 확인)" : "") : "도로/���� 유지")
+          : (roadLost ? "접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "도로/수로 유지")
       });
       
       // 3. 농기계 회전 곤란, 형상 부정형 변경
@@ -582,14 +582,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || roadLost) {
         judgment = "매수";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (roadLost) reasons.push("���면도로 상실" + (adminOptions?.accessRoadLost ? " (���리자 확인)" : ""));
+        if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
       } else {
         judgment = "기각";
-        reasons.push("모든 기준 미충��");
+        reasons.push("모든 기준 미충족");
       }
       
     } else {
-      // 그 밖�� 토지 + 관��자 ���션 반영
+      // 그 밖의 토지 + 관리자 옵션 반영
       // 종래 목적 사용 곤란 여부 (위치, 형상, 접근 상태 고려)
       const usageDifficulty = adminOptions?.accessRoadLost || adminOptions?.farmMachineDifficulty || land.remainingRatio < 40 || shapeCriteria.met;
       criteriaChecks.push({
@@ -722,7 +722,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               shapeIndexChange: (land.remainingRatio < 50) ? 1.5 + Math.random() * 1.5 : 0.5 + Math.random() * 0.5,
             };
           } catch (landError) {
-            // ���지 분석 오류 처리
+            // 필지 분석 오류 처리
           }
         });
         
@@ -1262,7 +1262,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             <div className="flex items-start gap-2">
                               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                               <div>
-                                <h4 className="text-sm font-semibold text-foreground">���동 확인 항목</h4>
+                                <h4 className="text-sm font-semibold text-foreground">자동 확인 항목</h4>
                                 <ul className="mt-1 space-y-1">
                                   {landResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
                                     <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -1311,7 +1311,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       variant={check.isMet ? "default" : "destructive"} 
                                       className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}
                                     >
-                                      {check.isMet ? "충족" : "미충��"}
+                                      {check.isMet ? "충족" : "미충족"}
                                     </Badge>
                                   </div>
                                 ))}
@@ -1350,7 +1350,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div className="flex gap-3">
                     {/* 필지 선택 목록 */}
                     <div className="w-[35%] shrink-0 rounded-lg border bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
-                      {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지�� ����시 */}
+                      {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 표시 */}
                       {applicationLands[selectedLandIndex] && (
                         <div 
                           className={`flex items-center gap-2 p-2 rounded-md border-2 cursor-pointer transition-colors ${
@@ -1448,7 +1448,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         const adjacentParcels = [
                           {
                             id: "adjacent-001",
-                            address: "경기도 용���시 처인구 포곡읍 마성리 101",
+                            address: "경기도 용인시 처인구 포곡읍 마성리 101",
                             isIncluded: false,
                             isOwned: false,
                             isAdjacent: true,
@@ -1495,7 +1495,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                     <div className="flex items-center gap-1.5">
                       <div className="h-2.5 w-2.5 rounded-sm border border-dashed border-[#d97706] bg-[#fef3c7]" />
-                      <span className="text-muted-foreground">���접필지</span>
+                      <span className="text-muted-foreground">인접필지</span>
                     </div>
                   </div>
                 </div>
@@ -1592,9 +1592,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     <SelectValue placeholder="건축물 용도를 선택해 주세요" />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value="residential-detached">주거용 - ��독주택 (기준: 90㎡)</SelectItem>
+                                    <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
                                     <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
-                                    <SelectItem value="residential-apartment">주거용 - 아파트 (��준: 60㎡)</SelectItem>
+                                    <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
                                     <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
                                     <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
                                   </SelectContent>
@@ -1660,7 +1660,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           {isAIAnalyzing ? (
                             <>
                               <Loader2 className="h-4 w-4 animate-spin" />
-                              AI ��석 중...
+                              AI 분석 중...
                             </>
                           ) : (
                             <>
@@ -1671,7 +1671,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         </Button>
                         {!hasCurrentUsage && (
                           <p className="text-xs text-center text-red-600">
-                            현재 활�� 지목을 선택해 주세요
+                            현재 활용 지목을 선택해 주세요
                           </p>
                         )}
                       </div>
@@ -1727,7 +1727,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           }`}>
                             {/* 편입 정보 */}
                             <div className="rounded-lg bg-white/60 p-3 border mb-4">
-                                      <p className="text-xs font-medium text-muted-foreground mb-2">��입 정보</p>
+                                      <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
                                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
                                         <div>
                                           <span className="text-muted-foreground">편입 전 면적:</span>
@@ -1742,7 +1742,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <span className="ml-1 font-medium">{land.remainingArea.toLocaleString()}m²</span>
                                         </div>
                                         <div>
-                                          <span className="text-muted-foreground">잔��� 비율:</span>
+                                          <span className="text-muted-foreground">잔여지 비율:</span>
                                           <span className="ml-1 font-medium">{land.remainingRatio}%</span>
                                         </div>
                                         <div>
@@ -1806,7 +1806,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
                                           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                                             {landResult?.judgmentRationale?.legalBasis || 
-                                              "「공익사업을 위한 토지 등의 취��� �� 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조"}
+                                              "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조"}
                                           </p>
                                         </div>
                                       </div>
@@ -1946,7 +1946,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <div className="flex items-start gap-2 pt-2 border-t">
                                 <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                 <p className="text-xs text-muted-foreground">
-                                  AI 판독 결과����� 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                  AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                                 </p>
                               </div>
                             </div>
@@ -1962,7 +1962,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         if (!land) return null;
                         
                         const result = adminLandAIResults[land.id];
-                        // ���분석 결과가 없으면 민원인 결과 사용
+                        // 재분석 결과가 없으면 민원인 결과 사용
                         const landResult = result || landAIResults[land.id];
                         const judgment = result?.provisionalJudgment || landResult?.provisionalJudgment || application.aiResult?.provisionalJudgment;
                         
@@ -1991,7 +1991,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                       <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}㎡</span>
                                     </div>
                                     <div>
-                                      <span className="text-muted-foreground">편�� 면적:</span>
+                                      <span className="text-muted-foreground">편입 면적:</span>
                                       <span className="ml-1 font-medium">{(land.includedArea ?? ((land.originalArea ?? 0) - (land.remainingArea ?? 0))).toLocaleString()}m²</span>
                                     </div>
                                     <div>
@@ -2111,7 +2111,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <p className="text-xs font-medium text-blue-700 mb-2">적용된 현장 상황</p>
                                           <div className="flex flex-wrap gap-2">
                                             {landOptions.accessRoadLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">접면도로 상실</Badge>}
-                                            {landOptions.waterChannelLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">관개수�� 상실</Badge>}
+                                            {landOptions.waterChannelLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">관개수로 상실</Badge>}
                                             {landOptions.farmMachineDifficulty && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">농기계 회전 곤란</Badge>}
                                           </div>
                                         </div>
@@ -2119,7 +2119,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     }
                                   })()}
 
-                                  {/* 안�� 문구 */}
+                                  {/* 안내 문구 */}
                                   <div className="flex items-start gap-2 pt-2 border-t">
                                     <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                     <p className="text-xs text-muted-foreground">
@@ -2127,7 +2127,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </p>
                                   </div>
                                   
-                              {/* 분석 프로���스 상세 보기 ��튼 */}
+                              {/* 분석 프로세스 상세 보기 버튼 */}
                               <Button
                                 variant="outline"
                                 className="h-12 w-full gap-2 mt-3 text-base bg-black text-white hover:bg-gray-800 hover:text-white border-black"
@@ -2172,7 +2172,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <Badge variant="outline" className={`text-sm ${
                       adminResult ? "border-blue-500 text-blue-700" : "border-gray-400 text-gray-600"
                     }`}>
-                      {adminResult ? "담당자 AI 판���" : "민원��� AI 판정"}: {aiResult.provisionalJudgment}
+                      {adminResult ? "담당자 AI 판정" : "민원인 AI 판정"}: {aiResult.provisionalJudgment}
                     </Badge>
                   </div>
                 )}
@@ -2268,7 +2268,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardHeader>
           <CardTitle className="text-lg">최종 검토 의견</CardTitle>
           <CardDescription>
-            모든 필지에 대한 종합적인 검토 의견을 작성해��세요. 이 내용은 심의서에 자동 입력됩니다.
+            모든 필지에 대한 종합적인 검토 의견을 작성해주세요. 이 내용은 심의서에 자동 입력됩니다.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -2285,7 +2285,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     variant={isReviewed ? "default" : "outline"}
                     className={isReviewed ? "bg-green-600" : "border-dashed"}
                   >
-                    {String.fromCharCode(65 + idx)} {isReviewed ? review.landJudgment : "���검토"}
+                    {String.fromCharCode(65 + idx)} {isReviewed ? review.landJudgment : "미검토"}
                   </Badge>
                 );
               })}
@@ -2301,12 +2301,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardContent>
       </Card>
 
-      {/* AI 분석 프로세스 다이얼���그 - 관리자 재판독 결과 우선 표시 */}
+      {/* AI 분석 프로세스 다이얼로그 - 관리자 재판독 결과 우선 표시 */}
       <AIAnalysisFlowDialog
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
         aiResult={(() => {
-          // 선����된 ���지의 관리��� 재판독 결과가 ��으면 우선 사용
+          // 선택된 필지의 관리자 재판독 결과가 있으면 우선 사용
           const selectedLandId = allLands[selectedLandIndex]?.id;
           if (selectedLandId && adminLandAIResults[selectedLandId]) {
             return adminLandAIResults[selectedLandId];
@@ -2332,7 +2332,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           
           {/* 확장 패널 */}
           <div className="relative flex w-full max-w-6xl bg-background shadow-2xl animate-in slide-in-from-left duration-300">
-            {/* ��기 버튼 */}
+            {/* 닫기 버튼 */}
             <Button
               variant="ghost"
               size="icon"
@@ -2344,7 +2344,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             {/* 패널 내용 - 2단 레이아웃 */}
             <div className="flex flex-1 overflow-hidden">
-              {/* 왼쪽: ���스트 정보 (판단 요약, 법적 근거) */}
+              {/* 왼쪽: 텍스트 정보 (판단 요약, 법적 근거) */}
               <div className="w-3/4 border-r overflow-y-auto p-6">
                 <div className="space-y-6">
                   {/* 헤더 */}
@@ -2375,14 +2375,14 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div className="rounded-lg border bg-muted/30 p-4">
                     <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                       <FileText className="h-4 w-4" />
-                      ���적 근거
+                      법적 근거
                     </h3>
                     <p className="text-[15px] text-muted-foreground leading-relaxed">
                       {(() => {
                         const land = allLands[expandedLandIndex];
                         const result = citizenLandAIResults[land?.id];
                         return result?.judgmentRationale?.legalBasis || 
-                          "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법��」 제74조 및 동법 시행규칙 제34조";
+                          "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조";
                       })()}
                     </p>
                   </div>
@@ -2399,8 +2399,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         const result = citizenLandAIResults[land?.id];
                         const criteria = result?.judgmentRationale?.appliedCriteria || [
                           "잔여지 면적 기준 미달 여부",
-                          "잔여��� 형상 변화 (정형 → 부정형)",
-                          "접면도로 상태 ��경 여부"
+                          "잔여지 형상 변화 (정형 → 부정형)",
+                          "접면도로 상태 변경 여부"
                         ];
                         return criteria.map((c: string, i: number) => (
                           <li key={i} className="flex items-start gap-2 text-[15px] text-muted-foreground">
@@ -2440,7 +2440,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
                   {/* 상세 설명 */}
                   <div className="rounded-lg border bg-muted/30 p-4">
-                    <h3 className="text-sm font-semibold text-foreground mb-3">상세 ����� ��용</h3>
+                    <h3 className="text-sm font-semibold text-foreground mb-3">상세 분석 내용</h3>
                     <pre className="whitespace-pre-wrap text-sm text-muted-foreground leading-relaxed">
                       {(() => {
                         const land = allLands[expandedLandIndex];
@@ -2453,7 +2453,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </div>
               </div>
 
-              {/* 오른쪽: AI 판��� 분석 이미지 */}
+              {/* 오른쪽: AI 판독 분석 이미지 */}
               <div className="w-1/4 bg-muted/20 p-6 overflow-y-auto">
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
@@ -2496,7 +2496,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   {/* 분석 시각화 */}
                   <div className="grid grid-cols-2 gap-4">
                     <div className="rounded-lg border bg-background p-4">
-                      <p className="text-xs text-muted-foreground mb-2">잔여 ���적</p>
+                      <p className="text-xs text-muted-foreground mb-2">잔여 면적</p>
                       <p className="text-2xl font-bold text-foreground">
                         {allLands[expandedLandIndex]?.remainingArea?.toLocaleString()}
                         <span className="text-sm font-normal text-muted-foreground ml-1">㎡</span>
@@ -2531,8 +2531,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 border border-amber-200">
                     <Info className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
                     <p className="text-xs text-amber-700">
-                      AI 판독 분석 이���지는 참고용이며, 실제 ��량 결과와 다를 수 있습니다.
-                      최종 판정은 ��당��의 현장 확인 및 검토에 따라 결정됩니다.
+                      AI 판독 분석 이미지는 참고용이며, 실제 측량 결과와 다를 수 있습니다.
+                      최종 판정은 담당자의 현장 확인 및 검토에 따라 결정됩니다.
                     </p>
                   </div>
                 </div>
