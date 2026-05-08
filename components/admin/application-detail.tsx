@@ -1950,7 +1950,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <div className="flex items-start gap-2 pt-2 border-t">
                                 <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                 <p className="text-xs text-muted-foreground">
-                                  AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                  AI 판독 결과는 참고용이며, ���종 판정은 담당자 검토에 따라 결정됩니다.
                                 </p>
                               </div>
                             </div>
@@ -2351,10 +2351,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       {/* 하단 저장 버튼 */}
       <div className="fixed bottom-0 left-0 right-0 w-screen bg-background border-t py-4 px-6 mt-6 z-[9999]">
         <div className="flex justify-end gap-3">
-          <Button variant="outline" className="text-foreground border-foreground hover:bg-foreground/5" onClick={onBack}>
+          <Button variant="outline" className="w-[80px] text-foreground border-foreground hover:bg-foreground/5" onClick={onBack}>
             취소
           </Button>
-          <Button onClick={handleSave}>
+          <Button className="w-[80px]" onClick={handleSave}>
             저장
           </Button>
         </div>
