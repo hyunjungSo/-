@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -764,6 +765,18 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지 포함/제외 상태 (민원인 소유 확인용)
   const [excludedLands, setExcludedLands] = useState<Set<string>>(new Set());
   
+  // PDF 미리보기 상태
+  const [selectedAttachment, setSelectedAttachment] = useState<{ name: string; url: string } | null>(null);
+  const [showPdfPreview, setShowPdfPreview] = useState(false);
+  
+  // 첨부파일 클릭 핸들러
+  const handleAttachmentClick = (fileName: string) => {
+    // 실제 환경에서는 서버에서 파일 URL을 받아옴
+    const fileUrl = `/attachments/${fileName}`;
+    setSelectedAttachment({ name: fileName, url: fileUrl });
+    setShowPdfPreview(true);
+  };
+  
   // 필지 포함/제외 토글
   const toggleLandInclusion = (landId: string) => {
     setExcludedLands(prev => {
@@ -984,9 +997,24 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground align-top">첨부서류</td>
                       <td className="px-4 py-3" colSpan={3}>
                         <div className="flex flex-wrap gap-2">
-                          <Badge variant="outline" className="font-normal">토지대장_용인시_포곡읍_200-1.pdf</Badge>
-                          <Badge variant="outline" className="font-normal">지적도_용인시_포곡읍_200-1.pdf</Badge>
-                          <Badge variant="outline" className="font-normal">현장사진_20260501.jpg</Badge>
+                          <button
+                            onClick={() => handleAttachmentClick("토지대장_용인시_포곡읍_200-1.pdf")}
+                            className="cursor-pointer hover:opacity-80 transition-opacity"
+                          >
+                            <Badge variant="outline" className="font-normal cursor-pointer">토지대장_용인시_포곡읍_200-1.pdf</Badge>
+                          </button>
+                          <button
+                            onClick={() => handleAttachmentClick("지적도_용인시_포곡읍_200-1.pdf")}
+                            className="cursor-pointer hover:opacity-80 transition-opacity"
+                          >
+                            <Badge variant="outline" className="font-normal cursor-pointer">지적도_용인시_포곡읍_200-1.pdf</Badge>
+                          </button>
+                          <button
+                            onClick={() => handleAttachmentClick("현장사진_20260501.jpg")}
+                            className="cursor-pointer hover:opacity-80 transition-opacity"
+                          >
+                            <Badge variant="outline" className="font-normal cursor-pointer">현장사진_20260501.jpg</Badge>
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -2045,7 +2073,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <p className="text-xs font-medium text-blue-700 mb-2">적용된 현장 상황</p>
                                           <div className="flex flex-wrap gap-2">
                                             {landOptions.accessRoadLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">접면도로 상실</Badge>}
-                                            {landOptions.waterChannelLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">관개수로 상실</Badge>}
+                                            {landOptions.waterChannelLost && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">관개수�� 상실</Badge>}
                                             {landOptions.farmMachineDifficulty && <Badge variant="outline" className="border-blue-400 text-blue-700 text-xs">농기계 회전 곤란</Badge>}
                                           </div>
                                         </div>
@@ -2481,6 +2509,63 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </Button>
         </div>
       </div>
+
+      {/* PDF 미리보기 Dialog */}
+      <Dialog open={showPdfPreview} onOpenChange={setShowPdfPreview}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{selectedAttachment?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4 flex flex-col gap-4">
+            {selectedAttachment && (
+              <>
+                {selectedAttachment.name.toLowerCase().endsWith('.pdf') ? (
+                  <div className="w-full bg-gray-100 rounded-lg border p-4 min-h-[500px]">
+                    <div className="flex flex-col items-center justify-center h-full gap-4">
+                      <FileText className="h-16 w-16 text-muted-foreground" />
+                      <div className="text-center">
+                        <p className="font-semibold text-foreground">{selectedAttachment.name}</p>
+                        <p className="text-sm text-muted-foreground mt-2">
+                          PDF 미리보기 (실제 환경에서는 PDF Viewer 라이브러리 사용)
+                        </p>
+                        <Button 
+                          className="mt-4"
+                          onClick={() => {
+                            // 실제 환경에서는 파일 다운로드 또는 새 창에서 열기
+                            window.open(selectedAttachment.url, '_blank');
+                          }}
+                        >
+                          파일 열기
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-full bg-gray-100 rounded-lg border p-4">
+                    <div className="flex flex-col items-center justify-center gap-4 py-8">
+                      <ImageIcon className="h-16 w-16 text-muted-foreground" />
+                      <div className="text-center">
+                        <p className="font-semibold text-foreground">{selectedAttachment.name}</p>
+                        <p className="text-sm text-muted-foreground mt-2">
+                          이미지 미리보기
+                        </p>
+                        <Button 
+                          className="mt-4"
+                          onClick={() => {
+                            window.open(selectedAttachment.url, '_blank');
+                          }}
+                        >
+                          이미지 열기
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
