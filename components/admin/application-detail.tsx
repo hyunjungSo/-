@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 �����������������������지별 분�������
+        // 개별 ������������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1028,7 +1028,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           {/* 2-2. AI 분석 */}
           <div className="space-y-4">
             <h3 className="text-base font-semibold ">AI 분석</h3>
-            <p className="text-sm text-muted-foreground">민원인 신청 결과와 담당자 분석 결과를 확인합니다.</p>
+            <p className="text-sm text-muted-foreground">민원인 신청 결과와 담당자 분석 결과를 확인��니다.</p>
             <Tabs defaultValue="citizen" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="citizen">
@@ -1045,7 +1045,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 좌측: 지적도 - 선택된 필지만 표시 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-semibold">지적도</h4>
+                    <h4 className="text-lg font-semibold">지적도</h4>
                   </div>
                   
                   {/* 지적도 - 선택된 필지만 표시 */}
@@ -1114,7 +1114,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 우측: 분석결과 - 선택된 필지만 표시 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-semibold">분석결과</h4>
+                    <h4 className="text-lg font-semibold">분석결과</h4>
                     {(() => {
                       const land = applicationLands[selectedLandIndex];
                       if (!land) return null;
@@ -1340,7 +1340,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 섹션 1: 지적도 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-semibold">지적도</h4>
+                    <h4 className="text-lg font-semibold">지적도</h4>
                     <Badge variant="outline" className="font-normal text-xs">
                       {applicationLands.length + 2}개 필지
                     </Badge>
@@ -1515,7 +1515,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 {/* 섹션 2: 분석 설정 및 결과 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-semibold">분석 설정 및 결과</h4>
+                    <h4 className="text-lg font-semibold">분석 설정 및 결과</h4>
                   </div>
                   
                   {/* 선택된 필지 옵션 설정 */}
