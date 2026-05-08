@@ -384,7 +384,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지별 분�����
+        // 개별 필지별 분������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1636,7 +1636,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           }`}>
                             {/* 편입 정보 */}
                             <div className="rounded-lg bg-white/60 p-3 border mb-4">
-                                      <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
+                                      <p className="text-xs font-medium text-muted-foreground mb-2">��입 정보</p>
                                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
                                         <div>
                                           <span className="text-muted-foreground">편입 전 면적:</span>
@@ -2036,7 +2036,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </p>
                                   </div>
                                   
-                              {/* 분석 프로세스 상세 보기 버튼 */}
+                              {/* 분석 프로세스 상세 보기 ��튼 */}
                               <Button
                                 variant="outline"
                                 className="h-12 w-full gap-2 mt-3 text-base bg-black text-white hover:bg-gray-800 hover:text-white border-black"
@@ -2137,36 +2137,43 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           })()}
           </div>
 
-          {/* 2-4. 진행상황 선택 */}
-          <div className="space-y-4">
-            <h3 className="text-base font-semibold ">진행상황 선택</h3>
-            <p className="text-sm text-muted-foreground">민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다</p>
-            <div className="flex flex-wrap gap-2">
-              {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
-                const config = adminStatusConfig[status];
-                const Icon = config.icon;
-                const isSelected = reviewData.adminStatus === status;
-                return (
-                  <Button
-                    key={status}
-                    type="button"
-                    variant="outline"
-                    onClick={() =>
-                      setReviewData((prev) => ({ ...prev, adminStatus: status }))
-                    }
-                    className={`cursor-pointer border-2 ${isSelected ? "border-primary text-primary" : "border-[#E1E4E7] text-foreground"}`}
-                  >
-                    <Icon className={`mr-2 h-4 w-4 ${status === "진행중" && isSelected ? "animate-spin" : ""}`} />
-                    {config.label}
-                  </Button>
-                );
-              })}
-            </div>
+        </CardContent>
+      </Card>
+
+      {/* Section 03. 진행상황 선택 - 복수필지 전체에 대한 한 건 처리 */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">진행상황 선택</CardTitle>
+          <CardDescription>
+            민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
+              const config = adminStatusConfig[status];
+              const Icon = config.icon;
+              const isSelected = reviewData.adminStatus === status;
+              return (
+                <Button
+                  key={status}
+                  type="button"
+                  variant="outline"
+                  onClick={() =>
+                    setReviewData((prev) => ({ ...prev, adminStatus: status }))
+                  }
+                  className={`cursor-pointer border-2 ${isSelected ? "border-primary text-primary" : "border-[#E1E4E7] text-foreground"}`}
+                >
+                  <Icon className={`mr-2 h-4 w-4 ${status === "진행중" && isSelected ? "animate-spin" : ""}`} />
+                  {config.label}
+                </Button>
+              );
+            })}
           </div>
         </CardContent>
       </Card>
 
-      {/* Section 03. 최종 검토 의견 */}
+      {/* Section 04. 최종 검토 의견 */}
       <Card className="border-2 border-primary/20 bg-primary/5">
         <CardHeader>
           <CardTitle className="text-lg">최종 검토 의견</CardTitle>
