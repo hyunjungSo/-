@@ -827,7 +827,7 @@ export function LeafletMap({
       </div>
 
       {/* 줌 컨트롤 */}
-      <div className="absolute right-3 top-3 z-[1000] flex flex-col gap-1">
+      <div className="absolute left-3 top-3 z-[1000] flex flex-col gap-1">
         <div className="flex flex-col overflow-hidden rounded-md bg-white shadow-md">
           <Button
             variant="ghost"
