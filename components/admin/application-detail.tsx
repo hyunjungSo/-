@@ -613,7 +613,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "소규모 토지",
         met: true,
-        description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규모 해당)`
+        description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규모 ���당)`
       });
       if (judgment === "기각") {
         judgment = "심의위원회 이관";
@@ -1323,7 +1323,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         <div className="flex items-start gap-2 pt-2 border-t">
                           <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                           <p className="text-xs text-muted-foreground">
-                            AI 판����� 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                            AI 판������� 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                           </p>
                         </div>
                       </div>
@@ -1500,14 +1500,15 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                 </div>
                 
-                {/* 섹션 2: 분석 설정 및 결과 */}
+                {/* 섹션 2: 분석 설정 및 결과 - 좌우 레이아웃 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h4 className="text-lg font-semibold">분석 설정 및 결과</h4>
                   </div>
                   
-                  {/* 선택된 필지 옵션 설정 */}
-                  <div className="rounded-lg border bg-white">
+                  <div className="flex gap-4">
+                  {/* 좌측: 검토 옵션 */}
+                  <div className="w-[40%] rounded-lg border bg-white">
                     {/* 헤더 - 필지 선택과 연동 */}
                     <div className="flex items-center gap-2 border-b bg-muted/30 px-3 py-2.5">
                       <Badge 
@@ -1679,8 +1680,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   })()}
                 </div>
                 
-                {/* 우측: Step 4. 분석결과 확인 */}
-                <div className="space-y-4">
+                {/* 우측: 분석결과 확인 */}
+                <div className="w-[60%] space-y-3">
                   <div className="flex items-center justify-between">
                     <h4 className="text-lg font-semibold">분석결과 확인</h4>
                     {Object.keys(adminLandAIResults).length > 0 && (
@@ -2142,6 +2143,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </>
                   )}
                 </div>
+                </div>
               </div>
             </TabsContent>
             </Tabs>
@@ -2339,7 +2341,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <X className="h-5 w-5" />
             </Button>
             
-            {/* 패널 내용 - 2단 레이아웃 */}
+            {/* 패��� 내용 - 2단 레이아웃 */}
             <div className="flex flex-1 overflow-hidden">
               {/* 왼쪽: 텍스트 정보 (판단 요약, 법적 근거) */}
               <div className="w-3/4 border-r overflow-y-auto p-6">
