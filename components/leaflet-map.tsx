@@ -446,7 +446,7 @@ export function LeafletMap({
 
       polygon.addTo(polygonLayer);
 
-      // 필지 중앙에 ���번 라벨 추가
+      // 필지 중앙에 지번 라벨 추가
       const bounds = polygon.getBounds();
       const center = bounds.getCenter();
       
@@ -837,7 +837,7 @@ export function LeafletMap({
               <div className="flex items-start gap-1.5 rounded bg-amber-50 p-2">
                 <Info className="mt-0.5 h-3 w-3 shrink-0 text-amber-500" />
                 <p className="text-base leading-relaxed text-amber-500">
-                  국토수급, 도로구역 레���어는 {LAYER_MIN_ZOOM}Level 부터 가시화됩니다.
+                  국토수급, 도로구역 레이어는 {LAYER_MIN_ZOOM}Level 부터 가시화됩니다.
                   현재 Zoom Level은 <strong>{currentZoom}Level</strong> 입니다.
                 </p>
               </div>
@@ -886,7 +886,7 @@ export function LeafletMap({
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000] rounded-lg bg-white shadow-lg border border-gray-200 overflow-hidden">
           {measurePoints.length === 0 ? (
             <div className="px-4 py-3 text-sm text-gray-600">
-              지도를 클릭하여 거리 측정을 시���하세요
+              지도를 클릭하여 거리 측정을 시작하세요
             </div>
           ) : (
             <div className="min-w-[200px]">
@@ -919,7 +919,7 @@ export function LeafletMap({
               </div>
             </div>
           )}
-          {/* 닫기 ���튼 */}
+          {/* 닫기 버튼 */}
           <Button
             variant="ghost"
             size="sm"

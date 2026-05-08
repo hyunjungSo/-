@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지������������������������������������� 분석
+        // 개별 필지 분석
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -613,7 +613,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "소규모 토지",
         met: true,
-        description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규모 ���당)`
+        description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규모 해당)`
       });
       if (judgment === "기각") {
         judgment = "심의위원회 이관";
@@ -697,7 +697,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 `${check.name}: ${check.description} ${check.met ? "✓" : "✗"}`
               ),
               detailedExplanation: `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n${analysis.reasons.map(r => `• ${r}`).join("\n")}`,
-              manualCheckItems: analysis.criteriaChecks.filter(c => !c.met).map(c => `${c.name} 재확인 필���`),
+              manualCheckItems: analysis.criteriaChecks.filter(c => !c.met).map(c => `${c.name} 재확인 필요`),
             };
             
             const criteriaChecks = analysis.criteriaChecks.map(check => ({
@@ -1010,7 +1010,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <tr>
                       <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground align-top">신청 사유</td>
                       <td className="px-4 py-3" colSpan={3}>
-                        <p className="text-sm leading-relaxed">도로 개설로 인��� 토지가 분할되어 잔여지의 형상이 불규칙하고, 농기계 진입이 어려워 농업 활용이 곤란합니다. 또한 기존 접면도로가 상실되어 토지 이용에 심각한 제한이 발생하였습니다.</p>
+                        <p className="text-sm leading-relaxed">도로 개설로 인해 토지가 분할되어 잔여지의 형상이 불규칙하고, 농기계 진입이 어려워 농업 활용이 곤란합니다. 또한 기존 접면도로가 상실되어 토지 이용에 심각한 제한이 발생하였습니다.</p>
                       </td>
                     </tr>
                     <tr>
@@ -1313,7 +1313,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                               <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                                 {aiResult?.judgmentRationale?.detailedExplanation || 
-                                  `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`}
+                                  `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 ��과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`}
                               </pre>
                             </div>
                           </div>
@@ -1342,7 +1342,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         <div className="flex items-start gap-2 pt-2 border-t">
                           <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                           <p className="text-xs text-muted-foreground">
-                            AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩���다.
+                            AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                           </p>
                         </div>
                       </div>
@@ -1836,7 +1836,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                           <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
                                           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                                             {aiResult?.judgmentRationale?.legalBasis || 
-                                              "「공익사업을 위한 토지 등의 취득 및 보상에 관한 ���률」 제74조 및 동법 시행규칙 제34조"}
+                                              "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조"}
                                           </p>
                                         </div>
                                       </div>
@@ -2098,7 +2098,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* 필지별 검토 ����� 요약 */}
+          {/* 필지별 검토 현황 요약 */}
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-muted-foreground shrink-0">필지별 검토 현황</span>
             <div className="flex flex-wrap gap-2">
@@ -2168,7 +2168,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               <X className="h-5 w-5" />
             </Button>
             
-            {/* 패��� 내용 - 2단 레이아웃 */}
+            {/* 패널 내용 - 2단 레이아웃 */}
             <div className="flex flex-1 overflow-hidden">
               {/* 왼쪽: 텍스트 정보 (판단 요약, 법적 근거) */}
               <div className="w-3/4 border-r overflow-y-auto p-6">
@@ -2238,7 +2238,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </ul>
                   </div>
 
-                  {/* 판정 결���� */}
+                  {/* 판정 결과 */}
                   <div className="rounded-lg border p-4">
                     <h3 className="text-sm font-semibold text-foreground mb-3">AI 판정 결과</h3>
                     <div className="flex items-center gap-3">
@@ -2334,7 +2334,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         />
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">
-                        ���래 면적의 {allLands[expandedLandIndex]?.remainingRatio}%
+                        원래 면적의 {allLands[expandedLandIndex]?.remainingRatio}%
                       </p>
                     </div>
                     

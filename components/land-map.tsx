@@ -502,7 +502,7 @@ export function LandMap({
               </div>
             </div>
           )}
-          {/* 닫기 버��� */}
+          {/* 닫기 버튼 */}
           <Button
             variant="ghost"
             size="sm"

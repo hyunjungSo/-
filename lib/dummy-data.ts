@@ -1386,7 +1386,7 @@ function generateRationale(
     const areaThreshold = land.landType === "택지" ? 90 : 330;
     const rejectionReason = `잔여면적 ${land.remainingArea}㎡(기준 ${areaThreshold}㎡ 초과), 잔여비율 ${land.remainingRatio}%(기준 초과), 물리조건 미해당`;
     summary = `${land.landType} 수용 조건 미충족으로 「기각」 판정`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조��� 전체 미해당`;
+    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조건 전체 미해당`;
   }
 
   return {
@@ -2104,13 +2104,13 @@ export const dummyApplications: Application[] = [
       farmMachineDifficulty: false,
       judgmentRationale: {
         summary: "2필지 대지 - 맹지 판정으로 「매수」 인정",
-        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 ���률」 제74조 및 동법 시행규칙 제34조",
+        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
           "토지유형: 대지 (주거용)",
           "잔여면적: 140㎡ (건축 곤란)",
           "맹지 판정: 양 필지 모두 접면도로 상실로 건축허가 불가",
         ],
-        detailedExplanation: "2필지 대지\n\n[필지 1] 123-1: 180㎡ → 80㎡ (삼각형)\n[필지 2] 123-2: 150㎡ → 60㎡ (자루형)\n\n고속도로 ���입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 인정됩니다.",
+        detailedExplanation: "2필지 대지\n\n[필지 1] 123-1: 180㎡ → 80㎡ (삼각형)\n[필지 2] 123-2: 150㎡ → 60㎡ (자루형)\n\n고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 인정됩니다.",
         manualCheckItems: [],
       },
     },
@@ -2186,7 +2186,7 @@ export const dummyApplications: Application[] = [
         waterChannelLost: false,
       },
     ],
-    attachments: ["토지대장_산101.pdf", "토지대장_산102.pdf", "토지대장_산103.pdf", "토지대장_산104.pdf", "토지대장_산105.pdf", "등���부등본.pdf", "산림경영계획서.pdf", "조림현황사진.jpg"],
+    attachments: ["토지대장_산101.pdf", "토지대장_산102.pdf", "토지대장_산103.pdf", "토지대장_산104.pdf", "토지대장_산105.pdf", "등기부등본.pdf", "산림경영계획서.pdf", "조림현황사진.jpg"],
     status: "검토중",
     adminStatus: "진행중",
     appliedAt: "2026-04-28",
@@ -2503,7 +2503,7 @@ export const landCategories = [
   { value: "제", label: "제방" },
   { value: "주유소", label: "주유소용지" },
   { value: "창", label: "창고용지" },
-  { value: "천", label: "하���" },
+  { value: "천", label: "하천" },
 ] as const;
 
 // 토지 형상 목록

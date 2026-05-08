@@ -208,7 +208,7 @@ export function ApplicationFormSection({
     allLands.map(createInitialLandData)
   );
 
-  // 토지별 데이터 업데이트 함���
+  // 토지별 데이터 업데이트 함수
   const updateLandData = (index: number, field: keyof LandSpecificData, value: LandSpecificData[keyof LandSpecificData]) => {
     setLandDataList(prev => {
       const newList = [...prev];
