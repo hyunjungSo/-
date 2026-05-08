@@ -384,7 +384,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지별 분석
+        // 개별 필지별 분��
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -906,7 +906,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">필지 선택</CardTitle>
+            <CardTitle className="text-lg">대상 필지 분석 및 검토</CardTitle>
             {/* 필지 선택 */}
             <div className="flex items-center gap-4">
               <Select
@@ -2396,7 +2396,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
                   {/* 상세 설명 */}
                   <div className="rounded-lg border bg-muted/30 p-4">
-                    <h3 className="text-sm font-semibold text-foreground mb-3">상세 분석 ��용</h3>
+                    <h3 className="text-sm font-semibold text-foreground mb-3">상세 분�� ��용</h3>
                     <pre className="whitespace-pre-wrap text-sm text-muted-foreground leading-relaxed">
                       {(() => {
                         const land = allLands[expandedLandIndex];
