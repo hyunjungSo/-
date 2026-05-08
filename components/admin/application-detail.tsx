@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 �������������������������지별 분�������
+        // 개별 ��������������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1362,8 +1362,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                           onMouseEnter={() => setHoveredLandId(applicationLands[selectedLandIndex].id)}
                           onMouseLeave={() => setHoveredLandId(null)}
                         >
-                          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#2563eb] text-[10px] font-bold text-white">
-                            {selectedLandIndex + 1}
+                          <span className="flex shrink-0 items-center justify-center rounded bg-[#2563eb] px-1.5 py-0.5 text-[10px] font-bold text-white">
+                            필지{selectedLandIndex + 1}
                           </span>
                           <div className="min-w-0 flex-1">
                             <p className="text-sm font-medium text-blue-700 truncate">
@@ -1373,12 +1373,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               {applicationLands[selectedLandIndex].landType} | {applicationLands[selectedLandIndex].originalArea.toLocaleString()}㎡
                             </p>
                           </div>
-                          <div className="flex shrink-0 items-center gap-1.5">
-                            {!selectedAdjacentParcel && (
-                              <span className="text-[10px] text-blue-600 font-medium whitespace-nowrap">선택됨</span>
-                            )}
-                            <Badge className="bg-blue-600 text-white text-xs whitespace-nowrap">필지{selectedLandIndex + 1}</Badge>
-                          </div>
+                          {!selectedAdjacentParcel && (
+                            <span className="text-[10px] text-blue-600 font-medium whitespace-nowrap shrink-0">선택됨</span>
+                          )}
                         </div>
                       )}
                       
@@ -1408,8 +1405,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             onMouseEnter={() => setHoveredLandId(adjacent.id)}
                             onMouseLeave={() => setHoveredLandId(null)}
                           >
-                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#d97706] text-[10px] font-bold text-white">
-                              {adjacentNumber}
+                            <span className="flex shrink-0 items-center justify-center rounded bg-[#d97706] px-1.5 py-0.5 text-[10px] font-bold text-white">
+                              필지{adjacentNumber}
                             </span>
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-medium text-amber-700 truncate">
@@ -1419,12 +1416,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 {adjacent.landType} | {adjacent.area.toLocaleString()}㎡
                               </p>
                             </div>
-                            <div className="flex shrink-0 items-center gap-1.5">
-                              {isSelected && (
-                                <span className="text-[10px] text-amber-600 font-medium whitespace-nowrap">선택됨</span>
-                              )}
-                              <Badge variant="outline" className="border-amber-600 text-amber-700 text-xs whitespace-nowrap">필지{adjacentNumber}</Badge>
-                            </div>
+                            {isSelected && (
+                              <span className="text-[10px] text-amber-600 font-medium whitespace-nowrap shrink-0">선택됨</span>
+                            )}
                           </div>
                         );
                       })}
@@ -2309,7 +2303,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     variant={isReviewed ? "default" : "outline"}
                     className={isReviewed ? "bg-green-600" : "border-dashed"}
                   >
-                    {String.fromCharCode(65 + idx)} {isReviewed ? review.landJudgment : "미검토"}
+                    {String.fromCharCode(65 + idx)} {isReviewed ? review.landJudgment : "���검토"}
                   </Badge>
                 );
               })}
