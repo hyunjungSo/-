@@ -1057,7 +1057,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               </TabsTrigger>
             </TabsList>
             
-            {/* 민��인 결과 탭 */}
+            {/* 민���� 결과 탭 */}
             <TabsContent value="citizen">
               <div className="grid gap-6 lg:grid-cols-2">
                 {/* 좌측: 지적도 - 선택된 필지만 표시 */}
@@ -1988,7 +1988,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
           {/* 2-3. 담당자 검토 */}
           <div className="space-y-4">
-            <h3 className="text-base font-semibold">담당자 검토</h3>
+            <h3 className="text-base font-semibold" style={{ fontSize: '18px' }}>담당자 검토</h3>
             <p className="text-sm text-muted-foreground">선택된 필지의 판정과 검토 의견을 입력하세요</p>
           {(() => {
             const landReview = landReviewDataList[selectedLandIndex];
@@ -2065,7 +2065,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
+            {(["���수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
               const config = adminStatusConfig[status];
               const Icon = config.icon;
               const isSelected = reviewData.adminStatus === status;
@@ -2271,7 +2271,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         const land = allLands[expandedLandIndex];
                         const result = citizenLandAIResults[land?.id];
                         return result?.judgmentRationale?.detailedExplanation || 
-                          `[필지 정보]\n주소: ${land?.address}\n지목: ${land?.landType} (${land?.landCategory})\n편입 전 면적: ${land?.originalArea?.toLocaleString()}㎡\n잔여 면적: ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)`;
+                          `[필지 정보]\n주소: ${land?.address}\n��목: ${land?.landType} (${land?.landCategory})\n편입 전 면적: ${land?.originalArea?.toLocaleString()}㎡\n잔여 면적: ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)`;
                       })()}
                     </pre>
                   </div>
