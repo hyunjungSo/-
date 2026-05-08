@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지����������������������������� 분석
+        // 개별 필지������������������������������� 분석
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -904,12 +904,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       </Card>
 
       {/* Section 02. 필지선택 */}
-      <Card className="border-none">
+      <Card>
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">대상 필지 분석 및 검토</CardTitle>
+            <CardTitle className="text-xl">대상 필지 분석 및 검토</CardTitle>
             {/* 필지 선택 - 강조된 UI */}
-            <div className="flex items-center gap-3 bg-blue-50 border border-gray-200 rounded-lg px-3 py-2">
+            <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
               <div className="flex items-center gap-2">
                 <div className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white font-bold text-sm">
                   {String.fromCharCode(65 + selectedLandIndex)}
@@ -1052,7 +1052,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           {/* 2-2. AI 분석 */}
           <div className="space-y-4">
             <h3 className="text-base font-semibold">AI 분석</h3>
-            <p className="text-sm text-muted-foreground">민원��� 신청 결과와 ���당자 분석 결과를 확인합니다.</p>
+            <p className="text-sm text-muted-foreground">민원��� 신청 결���와 ���당자 분석 결과를 확인합니다.</p>
             <Tabs defaultValue="citizen" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="citizen">
@@ -1741,7 +1741,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                   ) : (
                     <>
-                      {/* 선택된 필지의 분석 결과 표�� */}
+                      {/* 선택된 필지의 분석 결과 표시 */}
                       {(() => {
                         const currentParcelId = selectedAdjacentParcel?.id || applicationLands[selectedLandIndex]?.id;
                         const land = selectedAdjacentParcel || applicationLands[selectedLandIndex];
@@ -1951,7 +1951,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                         </div>
                                       </div>
                                       
-                                      {/* 판정 기준 충족 여부 */}
+                                      {/* 판정 기��� 충족 여부 */}
                                       {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
                                         <div className="rounded-lg bg-white/60 p-3 border">
                                           <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
