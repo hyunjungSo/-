@@ -909,7 +909,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">대상 필지 분석 및 검토</CardTitle>
             {/* 필지 선택 - 강조된 UI */}
-            <div className="flex items-center gap-3 bg-blue-50 border border-gray-200 rounded-lg px-3 py-2">
+            <div className="flex items-center gap-3 bg-blue-50 rounded-lg px-3 py-2">
               <div className="flex items-center gap-2">
                 <div className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white font-bold text-sm">
                   {String.fromCharCode(65 + selectedLandIndex)}
@@ -959,7 +959,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             </div>
           </div>
           {/* 선택된 필지 연결 표시 */}
-          <div className="flex items-center gap-2 mt-3 pt-3 border-t border-blue-100">
+          <div className="flex items-center gap-2 mt-3 pt-3 border-t" style={{ borderColor: 'lab(91.6229 -0.159115 -2.26791)' }}>
             <div className="flex items-center gap-2 bg-blue-100 rounded-full px-3 py-1">
               <span className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-xs">
                 {String.fromCharCode(65 + selectedLandIndex)}
@@ -1312,7 +1312,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               </div>
                               <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                                 {aiResult?.judgmentRationale?.detailedExplanation || 
-                                  `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 ���적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 ��과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔���비율 ${land.remainingRatio}%`}
+                                  `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n���입 전 ���적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 ��과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔���비율 ${land.remainingRatio}%`}
                               </pre>
                             </div>
                           </div>
