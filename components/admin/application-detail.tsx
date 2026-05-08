@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ��������������������������������지별 분�������
+        // 개별 ���������������������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1529,13 +1529,54 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         
                         return (
                           <>
+                            {/* 지목 참고 정보 - 인접 필지 선택 시 민원인 선택 제외 */}
+                            {(() => {
+                              const landData = application.landDataList?.[selectedLandIndex];
+                              const citizenUsage = landData?.currentUsage || landData?.actualUsage || currentParcelLandType;
+                              const aiUsage = landData?.actualUsage || currentParcelLandType;
+                              const isAdjacentParcel = !!selectedAdjacentParcel;
+                              
+                              return (
+                                <div className={`grid gap-2 ${isAdjacentParcel ? "grid-cols-2" : "grid-cols-3"}`}>
+                                  {!isAdjacentParcel && (
+                                    <div className="text-center p-2 rounded-md bg-blue-50 border border-blue-100">
+                                      <p className="text-[10px] text-muted-foreground mb-0.5">민원인 선택</p>
+                                      <p className="text-sm font-semibold text-blue-700">{citizenUsage || "-"}</p>
+                                    </div>
+                                  )}
+                                  <div className="text-center p-2 rounded-md bg-purple-50 border border-purple-100">
+                                    <p className="text-[10px] text-muted-foreground mb-0.5">AI 판단</p>
+                                    <p className="text-sm font-semibold text-purple-700">{aiUsage || "-"}</p>
+                                  </div>
+                                  <div className="text-center p-2 rounded-md bg-slate-50 border border-slate-200">
+                                    <p className="text-[10px] text-muted-foreground mb-0.5">공부상 지목</p>
+                                    <p className="text-sm font-semibold text-slate-700">{currentParcelLandType || "-"}</p>
+                                  </div>
+                                </div>
+                              );
+                            })()}
+                            
                             {/* 현재 활용 지목 */}
-                            <div className="space-y-3">
-                              <div className="flex items-center justify-between">
-                                <label className="text-sm font-medium text-foreground">
-                                  현재 활용 지목 <span className="text-destructive">*</span>
-                                </label>
-                              </div>
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium text-foreground">
+                                현재 활용 지목 <span className="text-destructive">*</span>
+                              </label>
+                              <Select 
+                                value={adminCurrentUsagePerLand[currentParcelId] || ""} 
+                                onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
+                              >
+                                <SelectTrigger className="h-10 bg-background">
+                                  <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="대">대 (택지)</SelectItem>
+                                  <SelectItem value="전">전 (밭)</SelectItem>
+                                  <SelectItem value="답">답 (논)</SelectItem>
+                                  <SelectItem value="임">임 (임야)</SelectItem>
+                                  <SelectItem value="잡">잡 (잡종지)</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
                               
                               {/* 지목 참고 정보 - 인접 필지 선택 시 민원인 선택 제외 */}
                               {(() => {
@@ -1949,7 +1990,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <div className="flex items-start gap-2 pt-2 border-t">
                                 <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                 <p className="text-xs text-muted-foreground">
-                                  AI 판독 결과��� 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                  AI 판독 결과����� 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                                 </p>
                               </div>
                             </div>
@@ -2402,7 +2443,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         const result = citizenLandAIResults[land?.id];
                         const criteria = result?.judgmentRationale?.appliedCriteria || [
                           "잔여지 면적 기준 미달 여부",
-                          "잔여지 형상 변화 (정형 → 부정형)",
+                          "잔여��� 형상 변화 (정형 → 부정형)",
                           "접면도로 상태 ��경 여부"
                         ];
                         return criteria.map((c: string, i: number) => (
