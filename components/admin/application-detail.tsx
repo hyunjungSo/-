@@ -159,7 +159,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 선택된 필지 인덱스 (복수 필지용)
   const [selectedLandIndex, setSelectedLandIndex] = useState(0);
   
-  // 호버된 필지 ID (지도-리스트 연동)
+  // 호버된 필지 ID (지도-��스트 연동)
   const [hoveredLandId, setHoveredLandId] = useState<string | null>(null);
   
   // 포커스된 필지 ID (지도 중심 이동용) - 초기값은 첫 번째 신청 필지
@@ -2077,10 +2077,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             모든 필지에 대한 종합적인 검토 의견을 작성해주세요. 이 내용은 심의서에 자동 입력됩니다.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           {/* 필지별 검토 현황 요약 */}
-          <div className="mb-4 p-3 bg-background rounded-lg border">
-            <p className="text-sm font-medium mb-2">필지별 검토 현황</p>
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium text-muted-foreground shrink-0">필지별 검토 현황</span>
             <div className="flex flex-wrap gap-2">
               {applicationLands.map((land, idx) => {
                 const review = landReviewDataList[idx];
@@ -2089,7 +2089,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   <Badge 
                     key={land.id}
                     variant={isReviewed ? "default" : "outline"}
-                    className={isReviewed ? "bg-green-600" : "border-dashed"}
+                    className={isReviewed ? "bg-green-600" : "border-dashed text-muted-foreground"}
                   >
                     {String.fromCharCode(65 + idx)} {isReviewed ? review.landJudgment : "미검토"}
                   </Badge>
