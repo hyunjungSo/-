@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ������������������������������지별 분�������
+        // 개별 �������������������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1612,7 +1612,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-muted/50">
                                   <Checkbox 
                                     checked={landOptions.farmMachineDifficulty}
-                                    onCheckedChange={(checked) => updateLandOption(selectedLand.id, 'farmMachineDifficulty', checked === true)}
+                                    onCheckedChange={(checked) => updateLandOption(currentParcelId, 'farmMachineDifficulty', checked === true)}
                                     className="h-5 w-5"
                                   />
                                   <span className="text-sm">농기계 회전 곤란</span>
@@ -1620,20 +1620,21 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                 <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-muted/50">
                                   <Checkbox 
                                     checked={landOptions.accessRoadLost}
-                                    onCheckedChange={(checked) => updateLandOption(selectedLand.id, 'accessRoadLost', checked === true)}
+                                    onCheckedChange={(checked) => updateLandOption(currentParcelId, 'accessRoadLost', checked === true)}
                                     className="h-5 w-5"
                                   />
-                                  <span className="text-sm">접면���로 상실</span>
+                                  <span className="text-sm">접면도로 상실</span>
                                 </label>
                                 <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-muted/50">
                                   <Checkbox 
                                     checked={landOptions.waterChannelLost}
-                                    onCheckedChange={(checked) => updateLandOption(selectedLand.id, 'waterChannelLost', checked === true)}
+                                    onCheckedChange={(checked) => updateLandOption(currentParcelId, 'waterChannelLost', checked === true)}
                                     className="h-5 w-5"
                                   />
                                   <span className="text-sm">관개수로 상실</span>
                                 </label>
                               </div>
+                            </div>
                             </div>
                           </>
                         );
@@ -1949,7 +1950,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               <div className="flex items-start gap-2 pt-2 border-t">
                                 <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                 <p className="text-xs text-muted-foreground">
-                                  AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                  AI 판독 결과��� 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                                 </p>
                               </div>
                             </div>
