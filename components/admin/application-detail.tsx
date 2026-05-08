@@ -162,8 +162,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 호버된 필지 ID (지도-리스트 연동)
   const [hoveredLandId, setHoveredLandId] = useState<string | null>(null);
   
-  // 포커스된 필지 ID (지도 중심 이동용)
-  const [focusedLandId, setFocusedLandId] = useState<string | null>(null);
+  // 포커스된 필지 ID (지도 중심 이동용) - 초기값은 첫 번째 신청 필지
+  const [focusedLandId, setFocusedLandId] = useState<string | null>(applicationLands[0]?.id || null);
   
   // 선택된 인접 필지 정보 표시용
   const [selectedAdjacentParcel, setSelectedAdjacentParcel] = useState<{
