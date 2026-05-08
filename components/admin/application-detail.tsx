@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지별 분�������
+        // 개별 ��지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1424,16 +1424,66 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <div className="flex flex-wrap gap-3 text-xs">
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
-                        <span className="text-blue-600 font-medium">선택 필지</span>
+                        <span className="text-blue-600 font-medium">신청 필지</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
-                        <span>인접지 (미선택)</span>
+                        <span>인접 필지 (미신청)</span>
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
-                        <span className="text-blue-600 font-medium">선택된 필지</span>
-                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* 필지 목록 */}
+                  <div className="rounded-lg border bg-white p-3">
+                    <p className="text-sm font-medium mb-3">필지 목록</p>
+                    <div className="space-y-2">
+                      {/* 신청 필지 (선택된 필지) */}
+                      {applicationLands[selectedLandIndex] && (
+                        <div 
+                          className="flex items-center justify-between p-2 rounded-md border-2 border-[#2563eb] bg-[#dbeafe]/30 cursor-pointer hover:bg-[#dbeafe]/50 transition-colors"
+                          onMouseEnter={() => setHoveredLandId(applicationLands[selectedLandIndex].id)}
+                          onMouseLeave={() => setHoveredLandId(null)}
+                        >
+                          <div className="flex items-center gap-2">
+                            <div className="h-3 w-3 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
+                            <div>
+                              <p className="text-sm font-medium text-blue-700">
+                                {applicationLands[selectedLandIndex].address.split(" ").slice(-2).join(" ")}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {applicationLands[selectedLandIndex].landType} | {applicationLands[selectedLandIndex].originalArea.toLocaleString()}㎡
+                              </p>
+                            </div>
+                          </div>
+                          <Badge className="bg-blue-600 text-white text-xs">신청</Badge>
+                        </div>
+                      )}
+                      
+                      {/* 인접 필지 (미신청) */}
+                      {[
+                        { id: "adjacent-001", address: "경기도 용인시 처인구 포곡읍 마성리 101", landType: "전", area: 1250 },
+                        { id: "adjacent-002", address: "경기도 용인시 처인구 포곡읍 마성리 102", landType: "답", area: 980 },
+                      ].map((adjacent) => (
+                        <div 
+                          key={adjacent.id}
+                          className="flex items-center justify-between p-2 rounded-md border border-dashed border-[#d97706] bg-[#fef3c7]/20 cursor-pointer hover:bg-[#fef3c7]/40 transition-colors"
+                          onMouseEnter={() => setHoveredLandId(adjacent.id)}
+                          onMouseLeave={() => setHoveredLandId(null)}
+                        >
+                          <div className="flex items-center gap-2">
+                            <div className="h-3 w-3 rounded-sm border-2 border-dashed border-[#d97706] bg-[#fef3c7]" />
+                            <div>
+                              <p className="text-sm font-medium text-amber-700">
+                                {adjacent.address.split(" ").slice(-2).join(" ")}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {adjacent.landType} | {adjacent.area.toLocaleString()}㎡
+                              </p>
+                            </div>
+                          </div>
+                          <Badge variant="outline" className="border-amber-600 text-amber-700 text-xs">인접</Badge>
+                        </div>
+                      ))}
                     </div>
                   </div>
                   
@@ -2037,7 +2087,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                     </p>
                                   </div>
                                   
-                              {/* 분석 프로세스 상세 보기 ��튼 */}
+                              {/* 분석 프로���스 상세 보기 ��튼 */}
                               <Button
                                 variant="outline"
                                 className="h-12 w-full gap-2 mt-3 text-base bg-black text-white hover:bg-gray-800 hover:text-white border-black"
@@ -2082,7 +2132,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     <Badge variant="outline" className={`text-sm ${
                       adminResult ? "border-blue-500 text-blue-700" : "border-gray-400 text-gray-600"
                     }`}>
-                      {adminResult ? "담당자 AI 판정" : "민원��� AI 판정"}: {aiResult.provisionalJudgment}
+                      {adminResult ? "담당자 AI 판���" : "민원��� AI 판정"}: {aiResult.provisionalJudgment}
                     </Badge>
                   </div>
                 )}
@@ -2364,7 +2414,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </div>
               </div>
 
-              {/* 오른쪽: AI 판독 분석 이미지 */}
+              {/* 오른쪽: AI 판��� 분석 이미지 */}
               <div className="w-1/4 bg-muted/20 p-6 overflow-y-auto">
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
@@ -2407,7 +2457,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   {/* 분석 시각화 */}
                   <div className="grid grid-cols-2 gap-4">
                     <div className="rounded-lg border bg-background p-4">
-                      <p className="text-xs text-muted-foreground mb-2">잔여 면적</p>
+                      <p className="text-xs text-muted-foreground mb-2">잔여 ���적</p>
                       <p className="text-2xl font-bold text-foreground">
                         {allLands[expandedLandIndex]?.remainingArea?.toLocaleString()}
                         <span className="text-sm font-normal text-muted-foreground ml-1">㎡</span>
