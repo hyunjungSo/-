@@ -1704,19 +1704,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 
                     {/* 우측: 분석결과 확인 */}
                     <div className="w-1/2 space-y-3">
-                  {Object.keys(adminLandAIResults).length > 0 && (
-                    <div className="flex justify-end">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={handleResetAdminAIResults}
-                        className="h-6 w-6"
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  )}
-                  
                   {Object.keys(adminLandAIResults).length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center rounded-lg border bg-muted/20">
                       <div className="rounded-full bg-muted/50 p-4 mb-4">
