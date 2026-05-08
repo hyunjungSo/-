@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지별 분석
+        // 개별 필지��� 분석
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1687,7 +1687,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                               ) : (
                                 <>
                                   <AIIcon className="h-4 w-4" />
-                                  이 필지 AI 분석 실행
+                                  AI 분석 실행
                                 </>
                               )}
                             </Button>
