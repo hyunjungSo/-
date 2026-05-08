@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 필지����� 분석
+        // 개별 필지������� 분석
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -2022,7 +2022,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 <div className="space-y-3">
                   <Label className="text-sm font-medium">검토 의견</Label>
                   <Textarea
-                    placeholder="해당 필지에 대한 검토 의견을 입력하세요..."
+                    placeholder="해당 필지에 대한 검토 의견을 입력하세요"
                     value={landReview.landComment}
                     onChange={(e) => updateLandReviewData(selectedLandIndex, 'landComment', e.target.value)}
                     className="min-h-[100px] resize-none"
