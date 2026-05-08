@@ -160,7 +160,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 호버된 필지 ID (지도-리스트 연동)
   const [hoveredLandId, setHoveredLandId] = useState<string | null>(null);
   
-  // ����커스된 필지 ID (지도 중심 이동용)
+  // �����커스된 필지 ID (지도 중심 이동용)
   const [focusedLandId, setFocusedLandId] = useState<string | null>(null);
   
   // 선택된 인접 필지 정보 표시용
@@ -855,53 +855,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           </Button>
         </div>
       </div>
-
-      {/* Section 01. 신청인 정보 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">
-            신청인 정보
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            <div>
-              <p className="text-xs text-muted-foreground">접수번호</p>
-              <p className="font-medium">{application.applicationNumber}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">신청인</p>
-              <p className="font-medium">{application.applicantName}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">신청일</p>
-              <p className="font-medium">{application.appliedAt}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">대상 지번</p>
-              <p className="font-medium truncate">{application.landInfo.address}</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 mt-4">
-            <div>
-              <p className="text-xs text-muted-foreground">토지 유형</p>
-              <p className="font-medium">{application.landInfo.landType}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">필지 수</p>
-              <p className="font-medium">{allLands.length}필지</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">면적</p>
-              <p className="font-medium">{application.landInfo.remainingArea.toLocaleString()}m²</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">담당자</p>
-              <p className="font-medium">{application.assignedTo || "-"}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Section 02. 신청인 정보 */}
       <Card>
