@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ���������지별 분�������
+        // 개별 ����������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1052,7 +1052,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </div>
                   
                   {/* 지적도 */}
-                  <div className="h-[450px] rounded-lg overflow-hidden border">
+                  <div className="h-[400px] rounded-lg overflow-hidden border">
                     <LeafletMap
                       parcels={(() => {
                         const applicationParcels = allLands.map((land, idx) => {
@@ -1145,7 +1145,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     const judgment = landResult?.provisionalJudgment || aiResult?.provisionalJudgment;
                     
                     return (
-                      <div className={`rounded-lg border p-4 ${
+                      <div className={`rounded-lg border p-4 max-h-[480px] overflow-y-auto ${
                         judgment === "매수"
                           ? "border-green-600/20 bg-green-600/5"
                           : judgment === "기각"
@@ -1340,22 +1340,21 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             {/* 담당자 결과 탭 */}
             <TabsContent value="admin">
-              <div className="space-y-6">
-                {/* 상단: 필지 목록(좌측) | 지적도(우측) */}
-                <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
-                  {/* 좌측: 필지 목록 */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">1</span>
-                        필지 선택
-                      </h4>
-                      <Badge variant="outline" className="font-normal text-xs">
-                        {applicationLands.length + 2}개 필지
-                      </Badge>
-                    </div>
+              <div className="grid gap-6 lg:grid-cols-2">
+                {/* 좌측: 지적도 + 필지 선택 */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm font-semibold flex items-center gap-2">
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">1</span>
+                      지적도
+                    </h4>
+                    <Badge variant="outline" className="font-normal text-xs">
+                      {applicationLands.length + 2}개 필지
+                    </Badge>
+                  </div>
                     
-                    <div className="rounded-lg border bg-white p-3 space-y-2 max-h-[400px] overflow-y-auto">
+                  {/* 필지 선택 목록 */}
+                  <div className="rounded-lg border bg-white p-2.5 space-y-1.5 max-h-[140px] overflow-y-auto">
                       {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 표시 */}
                       {applicationLands[selectedLandIndex] && (
                         <div 
@@ -1437,32 +1436,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </div>
                     
                     {/* 범례 */}
-                    <div className="flex flex-wrap gap-3 text-xs px-1">
-                      <div className="flex items-center gap-1">
-                        <div className="h-2.5 w-2.5 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
-                        <span className="text-blue-600">신청</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <div className="h-2.5 w-2.5 rounded-sm border border-dashed border-[#d97706] bg-[#fef3c7]" />
-                        <span className="text-amber-600">인접</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* 우측: 지적도 */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">2</span>
-                        지적도 확인
-                      </h4>
-                      <Badge variant="outline" className="font-normal text-xs">
-                        {applicationLands[selectedLandIndex]?.address.split(" ").slice(-2).join(" ")}
-                      </Badge>
-                    </div>
-                    
                     {/* 지적도 맵 */}
-                    <div className="relative h-[400px] rounded-lg overflow-hidden border">
+                    <div className="relative h-[260px] rounded-lg overflow-hidden border">
                     <div className="absolute inset-0">
                     <LeafletMap
                       parcels={(() => {
@@ -1528,16 +1503,27 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     />
                     </div>
                   </div>
+                  
+                  {/* 지도 범례 */}
+                  <div className="flex flex-wrap gap-4 text-xs px-1">
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-2.5 w-2.5 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
+                      <span className="text-muted-foreground">신청필지</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-2.5 w-2.5 rounded-sm border border-dashed border-[#d97706] bg-[#fef3c7]" />
+                      <span className="text-muted-foreground">인접필지</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
                 
-              {/* 하단: AI 분석 설정(좌측) | 분석결과(우측) */}
-              <div className="grid gap-4 lg:grid-cols-2">
-                {/* 좌측: AI 분석 설정 */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">3</span>
-                    <h4 className="font-medium">AI 분석 설정</h4>
+                {/* 우측: AI 분석 설정 + 분석결과 */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm font-semibold flex items-center gap-2">
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">2</span>
+                      분석 설정 및 결과
+                    </h4>
                   </div>
                   
                   {/* 선택된 필지 옵션 설정 */}
@@ -1615,7 +1601,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                                   <SelectContent>
                                     <SelectItem value="residential-detached">주거용 - ��독주택 (기준: 90㎡)</SelectItem>
                                     <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
-                                    <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
+                                    <SelectItem value="residential-apartment">주거용 - 아파트 (��준: 60㎡)</SelectItem>
                                     <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
                                     <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
                                   </SelectContent>
@@ -2329,7 +2315,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
         aiResult={(() => {
-          // 선����된 ���지의 관리��� 재판독 결과가 있으면 우선 사용
+          // 선����된 ���지의 관리��� 재판독 결과가 ��으면 우선 사용
           const selectedLandId = allLands[selectedLandIndex]?.id;
           if (selectedLandId && adminLandAIResults[selectedLandId]) {
             return adminLandAIResults[selectedLandId];
