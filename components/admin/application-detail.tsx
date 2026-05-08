@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ���������������������지별 분�������
+        // 개별 ����������������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1049,9 +1049,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">1</span>
                       지적도
                     </h4>
-                    <Badge variant="outline" className="font-normal text-xs">
-                      {applicationLands[selectedLandIndex]?.address.split(" ").slice(-2).join(" ")}
-                    </Badge>
                   </div>
                   
                   {/* 지적도 - 선택된 필지만 표시 */}
@@ -1118,9 +1115,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                 </div>
                 
                 {/* 우측: 분석결과 - 선택된 필지만 표시 */}
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium">분석결과</h4>
+                    <h4 className="text-sm font-semibold flex items-center gap-2">
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">2</span>
+                      분석결과
+                    </h4>
                     {(() => {
                       const land = applicationLands[selectedLandIndex];
                       if (!land) return null;
