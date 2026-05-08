@@ -385,7 +385,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           }
         });
       } else {
-        // 개별 ���������������지별 분�������
+        // 개별 ����������������지별 분�������
         allLands.forEach(land => {
           initial[land.id] = {
             provisionalJudgment: application.aiResult!.provisionalJudgment,
@@ -1268,7 +1268,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             <div className="flex items-start gap-2">
                               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                               <div>
-                                <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
+                                <h4 className="text-sm font-semibold text-foreground">���동 확인 항목</h4>
                                 <ul className="mt-1 space-y-1">
                                   {landResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
                                     <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -1437,37 +1437,6 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                       })}
                     </div>
                     
-                    {/* 지목 참고 정보 */}
-                    {(() => {
-                      const currentLand = selectedAdjacentParcel 
-                        ? { landType: selectedAdjacentParcel.landType, landCategory: selectedAdjacentParcel.landCategory }
-                        : applicationLands[selectedLandIndex];
-                      const landData = application.landDataList?.[selectedLandIndex];
-                      const citizenUsage = landData?.currentUsage || landData?.actualUsage || currentLand?.landType;
-                      const aiUsage = landData?.actualUsage || currentLand?.landType;
-                      const officialUsage = currentLand?.landType;
-                      
-                      return (
-                        <div className="rounded-lg border bg-white p-3 space-y-2">
-                          <p className="text-xs font-medium text-muted-foreground">지목 참고 정보</p>
-                          <div className="grid grid-cols-3 gap-2">
-                            <div className="text-center p-2 rounded-md bg-blue-50 border border-blue-100">
-                              <p className="text-[10px] text-muted-foreground mb-0.5">민원인 선택</p>
-                              <p className="text-sm font-semibold text-blue-700">{citizenUsage || "-"}</p>
-                            </div>
-                            <div className="text-center p-2 rounded-md bg-purple-50 border border-purple-100">
-                              <p className="text-[10px] text-muted-foreground mb-0.5">AI 판단</p>
-                              <p className="text-sm font-semibold text-purple-700">{aiUsage || "-"}</p>
-                            </div>
-                            <div className="text-center p-2 rounded-md bg-slate-50 border border-slate-200">
-                              <p className="text-[10px] text-muted-foreground mb-0.5">공부상 지목</p>
-                              <p className="text-sm font-semibold text-slate-700">{officialUsage || "-"}</p>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })()}
-                    
                     {/* 지적도 맵 */}
                     <div className="relative h-[260px] rounded-lg overflow-hidden border">
                     <div className="absolute inset-0">
@@ -1591,15 +1560,53 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         return (
                           <>
                             {/* 현재 활용 지목 */}
-                            <div className="space-y-2">
+                            <div className="space-y-3">
                               <div className="flex items-center justify-between">
                                 <label className="text-sm font-medium text-foreground">
                                   현재 활용 지목 <span className="text-destructive">*</span>
                                 </label>
-                                <span className="text-sm text-muted-foreground">
-                                  공부상 지목: <span className="font-medium text-foreground">{currentParcelLandType}</span>
-                                </span>
                               </div>
+                              
+                              {/* 지목 참고 정보 */}
+                              {(() => {
+                                const landData = application.landDataList?.[selectedLandIndex];
+                                const citizenUsage = landData?.currentUsage || landData?.actualUsage || currentParcelLandType;
+                                const aiUsage = landData?.actualUsage || currentParcelLandType;
+                                
+                                return (
+                                  <div className="grid grid-cols-3 gap-2">
+                                    <div className="text-center p-2 rounded-md bg-blue-50 border border-blue-100">
+                                      <p className="text-[10px] text-muted-foreground mb-0.5">민원인 선택</p>
+                                      <p className="text-sm font-semibold text-blue-700">{citizenUsage || "-"}</p>
+                                    </div>
+                                    <div className="text-center p-2 rounded-md bg-purple-50 border border-purple-100">
+                                      <p className="text-[10px] text-muted-foreground mb-0.5">AI 판단</p>
+                                      <p className="text-sm font-semibold text-purple-700">{aiUsage || "-"}</p>
+                                    </div>
+                                    <div className="text-center p-2 rounded-md bg-slate-50 border border-slate-200">
+                                      <p className="text-[10px] text-muted-foreground mb-0.5">공부상 지목</p>
+                                      <p className="text-sm font-semibold text-slate-700">{currentParcelLandType || "-"}</p>
+                                    </div>
+                                  </div>
+                                );
+                              })()}
+                              
+                              <Select 
+                                value={adminCurrentUsagePerLand[currentParcelId] || ""} 
+                                onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
+                              >
+                                <SelectTrigger className="h-10 bg-background">
+                                  <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="대">대 (택지)</SelectItem>
+                                  <SelectItem value="전">전 (밭)</SelectItem>
+                                  <SelectItem value="답">답 (논)</SelectItem>
+                                  <SelectItem value="임">임 (임야)</SelectItem>
+                                  <SelectItem value="잡">잡 (잡종지)</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
                               <Select 
                                 value={adminCurrentUsagePerLand[currentParcelId] || ""} 
                                 onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
@@ -2307,7 +2314,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardHeader>
           <CardTitle className="text-lg">최종 검토 의견</CardTitle>
           <CardDescription>
-            모든 필지에 대한 종합적인 검토 의견을 작성해주세요. 이 내용은 심의서에 자동 입력됩니다.
+            모든 필지에 대한 종합적인 검토 의견을 작성해��세요. 이 내용은 심의서에 자동 입력됩니다.
           </CardDescription>
         </CardHeader>
         <CardContent>
