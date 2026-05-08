@@ -956,7 +956,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         <CardContent className="space-y-12">
           {/* 2-1. 토지정보 */}
           <div className="space-y-4">
-            <h3 className="text-base font-semibold ">토지정보</h3>
+            <h3 className="text-base font-semibold">토지정보</h3>
             {applicationLands[selectedLandIndex] && (
               <div className="rounded-lg border overflow-hidden">
                 <table className="w-full text-sm">
@@ -1022,12 +1022,12 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                   </tbody>
                 </table>
               </div>
-            </div>
+            )}
           </div>
 
           {/* 2-2. AI 분석 */}
           <div className="space-y-4">
-            <h3 className="text-base font-semibold ">AI 분석</h3>
+            <h3 className="text-base font-semibold">AI 분석</h3>
             <p className="text-sm text-muted-foreground">민원인 신청 결과와 담당자 분석 결과를 확인합니다.</p>
             <Tabs defaultValue="citizen" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
@@ -2152,7 +2152,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
 
           {/* 2-3. 담당자 검토 */}
           <div className="space-y-4">
-            <h3 className="text-base font-semibold ">담당자 검토</h3>
+            <h3 className="text-base font-semibold">담당자 검토</h3>
             <p className="text-sm text-muted-foreground">선택된 필지의 판정과 검토 의견을 입력하세요</p>
           {(() => {
             const landReview = landReviewDataList[selectedLandIndex];
@@ -2412,7 +2412,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                     </ul>
                   </div>
 
-                  {/* 판정 결과 */}
+                  {/* 판정 결��� */}
                   <div className="rounded-lg border p-4">
                     <h3 className="text-sm font-semibold text-foreground mb-3">AI 판정 결과</h3>
                     <div className="flex items-center gap-3">
