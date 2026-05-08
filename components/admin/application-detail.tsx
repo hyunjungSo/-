@@ -1484,6 +1484,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                         // 신청 필지인지 확인
                         if (parcelId === applicationLands[selectedLandIndex]?.id) {
                           setSelectedAdjacentParcel(null);
+                          setFocusedLandId(parcelId);
                           return;
                         }
                         // 인접 필지인지 확인
@@ -1498,6 +1499,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
                             ...clickedAdjacent,
                             parcelNumber: adjacentIndex + 2
                           });
+                          setFocusedLandId(parcelId);
                         }
                       }}
                       hoveredParcelId={hoveredLandId}
