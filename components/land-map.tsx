@@ -429,20 +429,20 @@ export function LandMap({
         {/* 거리 측정 */}
         <button
           onClick={toggleMeasureMode}
-          className={`flex flex-col items-center justify-center w-[42px] h-11 rounded-md shadow transition-colors ${
+          className={`flex flex-col items-center justify-center w-[38px] h-10 rounded-md shadow transition-colors ${
             measureMode ? "bg-pink-500" : "bg-white hover:bg-gray-100"
           }`}
         >
-          <Ruler className={`h-[18px] w-[18px] mb-1 ${measureMode ? "text-white" : "text-gray-700"}`} strokeWidth={1.5} />
-          <span className={`text-[11px] font-medium ${measureMode ? "text-white" : "text-gray-700"}`}>거리</span>
+          <Ruler className={`h-4 w-4 mb-0.5 ${measureMode ? "text-white" : "text-gray-700"}`} strokeWidth={1.5} />
+          <span className={`text-[10px] font-medium ${measureMode ? "text-white" : "text-gray-700"}`}>거리</span>
         </button>
 
         {/* 레이어 선택 */}
         <Popover>
           <PopoverTrigger asChild>
-            <button className="flex flex-col items-center justify-center w-[42px] h-11 bg-white rounded-md shadow hover:bg-gray-100 transition-colors">
-              <Layers className="h-[18px] w-[18px] text-gray-700 mb-1" strokeWidth={1.5} />
-              <span className="text-[11px] text-gray-700 font-medium">레이어</span>
+            <button className="flex flex-col items-center justify-center w-[38px] h-10 bg-white rounded-md shadow hover:bg-gray-100 transition-colors">
+              <Layers className="h-4 w-4 text-gray-700 mb-0.5" strokeWidth={1.5} />
+              <span className="text-[10px] text-gray-700 font-medium">레이어</span>
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-52 p-3" align="end" sideOffset={5}>
