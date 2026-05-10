@@ -2160,11 +2160,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             {/* 닫기 버튼 */}
             <Button
               variant="ghost"
-              size="icon"
-              className="absolute right-4 top-4 z-10"
+              className="absolute right-4 top-4 z-10 h-[34px] w-[34px] p-0"
               onClick={() => setIsDetailPanelExpanded(false)}
             >
-              <X className="h-5 w-5" />
+              <X className="h-6 w-6" />
             </Button>
             
             {/* 패널 내용 - 2단 레이아웃 */}
