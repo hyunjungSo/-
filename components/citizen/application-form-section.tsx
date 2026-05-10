@@ -228,6 +228,22 @@ export function ApplicationFormSection({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
+  // 필수 입력값 검증 함수
+  const isFormValid = () => {
+    // 기본 필수 필드 검증
+    const hasApplicantName = formData.applicantName.trim() !== "";
+    const hasApplicantContact = formData.applicantContact.trim() !== "";
+    const hasPostalCode = formData.postalCode.trim() !== "";
+    const hasBaseAddress = formData.baseAddress.trim() !== "";
+    const hasReason = formData.reason.trim() !== "";
+
+    // 대리인인 경우 대리인 정보도 필수
+    const isAgentValid = formData.applicantRelation === "owner" || 
+      (formData.agentName.trim() !== "" && formData.agentContact.trim() !== "");
+
+    return hasApplicantName && hasApplicantContact && hasPostalCode && hasBaseAddress && hasReason && isAgentValid;
+  };
+
   const handleSubmitClick = (e: React.FormEvent) => {
     e.preventDefault();
     setShowConfirmDialog(true);
@@ -950,7 +966,7 @@ export function ApplicationFormSection({
                 type="submit"
                 size="lg"
                 className="mx-auto flex h-12 w-full max-w-[600px] items-center justify-center gap-2 text-base"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !isFormValid()}
               >
                 {isSubmitting ? (
                   "신청서 제출 중..."
