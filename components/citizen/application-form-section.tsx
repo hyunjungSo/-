@@ -99,6 +99,7 @@ function AddressSearchModal({
               autoFocus
             />
             <Button 
+              type="button"
               onClick={handleSearch}
               className="h-10 shrink-0 bg-[#222222] hover:bg-[#333333] py-3"
             >
