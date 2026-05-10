@@ -95,7 +95,13 @@ function AddressSearchModal({
               placeholder="도로명, 건물명 또는 지번 입력"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleSearch();
+                }
+              }}
               autoFocus
             />
             <Button 
