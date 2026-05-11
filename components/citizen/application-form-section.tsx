@@ -145,7 +145,7 @@ function AddressSearchModal({
         </div>
         
         <div className="border-t bg-muted/30 p-3">
-          <p className="text-base text-muted-foreground">
+          <p className="text-muted-foreground" style={{ fontSize: '14px' }}>
             * 정확한 주소를 찾을 수 없는 경우, 가까운 건물명이나 도로명으로 검색해 보세요.
           </p>
         </div>
