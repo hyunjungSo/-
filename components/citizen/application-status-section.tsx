@@ -618,6 +618,24 @@ function ApplicationDetailPanel({
     attachments: [] as FileItem[],
   });
 
+  // application이 변경되면 editData와 landEditDataList를 다시 초기화
+  useEffect(() => {
+    setEditData({
+      applicantRelation: "owner",
+      applicantName: application.applicantName,
+      applicantContact: application.applicantContact,
+      agentName: "",
+      agentContact: "",
+      postalCode: "",
+      baseAddress: application.applicantAddress,
+      detailAddress: "",
+      reason: application.reason || "잔여지 매수 신청",
+      attachments: [],
+    });
+    setLandEditDataList(initLandEditDataList());
+    setSelectedLandIndex(0);
+  }, [application.id]);
+
   const canEdit = application.adminStatus === "접수완료";
   const MAX_FILES = 10;
 
