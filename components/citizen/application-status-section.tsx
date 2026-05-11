@@ -160,7 +160,7 @@ function LandInfoSection({
   onEditDataChange,
   onFileChange,
   onRemoveFile,
-  MAX_FILES = 5
+  MAX_FILES = 10
 }: { 
   application: Application;
   isEditMode?: boolean;
@@ -383,7 +383,7 @@ function LandInfoSection({
                 <SelectValue placeholder="선택하세요" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="residential-detached">주거용 (기준 90㎡ 이하)</SelectItem>
+                <SelectItem value="residential-detached">주거용 (기준 90㎡ 이���)</SelectItem>
                 <SelectItem value="commercial">상업용 (기준 150㎡ 이하)</SelectItem>
                 <SelectItem value="industrial">공업용 (기준 330㎡ 이하)</SelectItem>
               </SelectContent>
@@ -586,7 +586,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
   });
 
   const canEdit = application.adminStatus === "접수완료";
-  const MAX_FILES = 5;
+  const MAX_FILES = 10;
 
   const handleAddressSelect = (address: { postalCode: string; address: string }) => {
     setEditData(prev => ({
