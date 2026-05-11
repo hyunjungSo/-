@@ -55,11 +55,6 @@ export function JudgmentStatus({
           badge: "bg-red-500 text-white hover:bg-red-500",
           text: "text-red-500"
         };
-      case "조건부매수":
-        return {
-          badge: "bg-amber-500 text-white hover:bg-amber-500",
-          text: "text-amber-500"
-        };
       default:
         return {
           badge: "bg-gray-400 text-white hover:bg-gray-400",
