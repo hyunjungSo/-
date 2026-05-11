@@ -282,11 +282,21 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [editData, setEditData] = useState({
+    // 신청인 정보
+    applicantRelation: "owner" as "owner" | "agent",
     applicantName: application.applicantName,
     applicantContact: application.applicantContact,
+    agentName: "",
+    agentContact: "",
     postalCode: "",
     baseAddress: application.applicantAddress,
     detailAddress: "",
+    // 토지 정보
+    landUseCategory: "대 (택지)",
+    landShape: "역삼각형",
+    siteType: "",
+    roadFrontageLoss: false,
+    // 신청 사유 및 첨부
     reason: application.reason,
     attachments: [] as FileItem[],
   });
@@ -334,11 +344,18 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
   const handleCancel = () => {
     // 원래 데이터로 복원
     setEditData({
+      applicantRelation: "owner",
       applicantName: application.applicantName,
       applicantContact: application.applicantContact,
+      agentName: "",
+      agentContact: "",
       postalCode: "",
       baseAddress: application.applicantAddress,
       detailAddress: "",
+      landUseCategory: "대 (택지)",
+      landShape: "역삼각형",
+      siteType: "",
+      roadFrontageLoss: false,
       reason: application.reason,
       attachments: [],
     });
@@ -409,10 +426,82 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           </div>
         </div>
 
-        {/* 신청인명 행 */}
+{/* 신청 구분 행 */}
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
-            <span className="text-sm font-medium">신청인명</span>
+            <span className="text-sm font-medium">신청 구분</span>
+          </div>
+          <div className="flex flex-1 items-center px-4 py-3">
+            {isEditMode ? (
+              <div className="flex gap-6">
+                <label className="flex cursor-pointer items-center gap-2">
+                  <input
+                    type="radio"
+                    name="applicantRelation"
+                    checked={editData.applicantRelation === "owner"}
+                    onChange={() => setEditData({ ...editData, applicantRelation: "owner" })}
+                    className="h-4 w-4 accent-primary"
+                  />
+                  <span className="text-sm">본인 신청</span>
+                </label>
+                <label className="flex cursor-pointer items-center gap-2">
+                  <input
+                    type="radio"
+                    name="applicantRelation"
+                    checked={editData.applicantRelation === "agent"}
+                    onChange={() => setEditData({ ...editData, applicantRelation: "agent" })}
+                    className="h-4 w-4 accent-primary"
+                  />
+                  <span className="text-sm">대리인 신청</span>
+                </label>
+              </div>
+            ) : (
+              <span className="text-sm">본인 신청</span>
+            )}
+          </div>
+        </div>
+
+        {/* 대리인 정보 (대리인 신청 시만 표시) */}
+        {isEditMode && editData.applicantRelation === "agent" && (
+          <>
+            <div className="flex border-b border-border">
+              <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+                <span className="text-sm font-medium">대리인 성명</span>
+              </div>
+              <div className="flex flex-1 items-center px-4 py-3">
+                <Input
+                  value={editData.agentName}
+                  onChange={(e) => setEditData({ ...editData, agentName: e.target.value })}
+                  placeholder="대리인 성명을 입력해주세요"
+                  className="h-10 text-sm"
+                />
+              </div>
+            </div>
+            <div className="flex border-b border-border">
+              <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+                <span className="text-sm font-medium">대리인 연락처</span>
+              </div>
+              <div className="flex flex-1 items-center px-4 py-3">
+                <Input
+                  value={editData.agentContact}
+                  onChange={(e) => setEditData({ ...editData, agentContact: e.target.value })}
+                  placeholder="대리인 연락처를 입력해주세요"
+                  className="h-10 text-sm"
+                />
+              </div>
+            </div>
+            <div className="border-b border-border bg-amber-50 px-4 py-2">
+              <p className="text-xs text-amber-700">
+                대리인 신청 시 위임장 및 대리인 신분증 사본을 첨부 서류에 추가해 주세요.
+              </p>
+            </div>
+          </>
+        )}
+
+        {/* 소유자 성명 행 */}
+        <div className="flex border-b border-border">
+          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">소유자 성명</span>
           </div>
           <div className="flex flex-1 items-center px-4 py-3">
             {isEditMode ? (
@@ -427,10 +516,10 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           </div>
         </div>
 
-        {/* 연락처 행 */}
+        {/* 소유자 연락처 행 */}
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
-            <span className="text-sm font-medium">연락처</span>
+            <span className="text-sm font-medium">소유자 연락처</span>
           </div>
           <div className="flex flex-1 items-center px-4 py-3">
             {isEditMode ? (
@@ -441,6 +530,18 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               />
             ) : (
               <span className="text-sm">{application.applicantContact}</span>
+            )}
+          </div>
+        </div>
+          <div className="flex flex-1 items-center px-4 py-3">
+            {isEditMode ? (
+              <Input
+                value={editData.applicantName}
+                onChange={(e) => setEditData({ ...editData, applicantName: e.target.value })}
+                className="h-10 text-sm"
+              />
+            ) : (
+              <span className="text-sm">{application.applicantName}</span>
             )}
           </div>
         </div>
@@ -487,6 +588,141 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               <span className="text-sm">{application.applicantAddress}</span>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* 토지 정보 테이블 */}
+      <div className="overflow-hidden rounded-lg border border-border">
+        <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
+          <h4 className="font-semibold text-foreground">토지 정보</h4>
+        </div>
+        
+        {isEditMode && (
+          <div className="border-b border-border bg-blue-50 px-4 py-2">
+            <p className="text-xs text-blue-700">
+              AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지의 실제 활용 상황을 입력해 주세요.
+            </p>
+          </div>
+        )}
+
+        {/* 활용 지목 / 공부상 지목 / 토지 모양 행 */}
+        <div className="flex border-b border-border">
+          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">활용 지목</span>
+          </div>
+          <div className="flex flex-1 items-center px-4 py-3">
+            {isEditMode ? (
+              <Select
+                value={editData.landUseCategory}
+                onValueChange={(value) => setEditData({ ...editData, landUseCategory: value })}
+              >
+                <SelectTrigger className="h-10 w-40">
+                  <SelectValue placeholder="선택하세요" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="대 (택지)">대 (택지)</SelectItem>
+                  <SelectItem value="전">전</SelectItem>
+                  <SelectItem value="답">답</SelectItem>
+                  <SelectItem value="임야">임야</SelectItem>
+                  <SelectItem value="잡종지">잡종지</SelectItem>
+                </SelectContent>
+              </Select>
+            ) : (
+              <span className="text-sm">대 (택지)</span>
+            )}
+          </div>
+          <div className="flex w-28 shrink-0 items-center border-l border-border bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">공부상 지목</span>
+          </div>
+          <div className="flex flex-1 items-center px-4 py-3">
+            <span className="text-sm text-muted-foreground">대 (택지)</span>
+          </div>
+          <div className="flex w-28 shrink-0 items-center border-l border-border bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">토지 모양</span>
+          </div>
+          <div className="flex flex-1 items-center px-4 py-3">
+            {isEditMode ? (
+              <Select
+                value={editData.landShape}
+                onValueChange={(value) => setEditData({ ...editData, landShape: value })}
+              >
+                <SelectTrigger className="h-10 w-32">
+                  <SelectValue placeholder="선택하세요" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="정방형">정방형</SelectItem>
+                  <SelectItem value="장방형">장방형</SelectItem>
+                  <SelectItem value="사다리꼴">사다리꼴</SelectItem>
+                  <SelectItem value="삼각형">삼각형</SelectItem>
+                  <SelectItem value="역삼각형">역삼각형</SelectItem>
+                  <SelectItem value="부정형">부정형</SelectItem>
+                </SelectContent>
+              </Select>
+            ) : (
+              <span className="text-sm">역삼각형</span>
+            )}
+          </div>
+        </div>
+
+        {/* 택지 유형 행 */}
+        <div className="flex border-b border-border">
+          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">택지 유형</span>
+          </div>
+          <div className="flex flex-1 items-center px-4 py-3">
+            {isEditMode ? (
+              <Select
+                value={editData.siteType}
+                onValueChange={(value) => setEditData({ ...editData, siteType: value })}
+              >
+                <SelectTrigger className="h-10 w-40">
+                  <SelectValue placeholder="선택하세요" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="일반택지">일반택지</SelectItem>
+                  <SelectItem value="주거택지">주거택지</SelectItem>
+                  <SelectItem value="상업택지">상업택지</SelectItem>
+                  <SelectItem value="공업택지">공업택지</SelectItem>
+                </SelectContent>
+              </Select>
+            ) : (
+              <span className="text-sm text-muted-foreground">-</span>
+            )}
+          </div>
+        </div>
+
+        {/* 확인 항목 행 */}
+        <div className="flex border-b border-border">
+          <div className="flex w-28 shrink-0 items-start bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">확인 항목</span>
+          </div>
+          <div className="flex flex-1 flex-col px-4 py-3">
+            {isEditMode ? (
+              <>
+                <p className="mb-2 text-xs text-muted-foreground">
+                  AI가 자동 판독할 수 없는 사항입니다. 해당되는 경우 체크해 주세요.
+                </p>
+                <label className="flex cursor-pointer items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={editData.roadFrontageLoss}
+                    onChange={(e) => setEditData({ ...editData, roadFrontageLoss: e.target.checked })}
+                    className="h-4 w-4 rounded border-gray-300"
+                  />
+                  <span className="text-sm">접면도로 상실</span>
+                </label>
+              </>
+            ) : (
+              <span className="text-sm text-muted-foreground">해당 없음</span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* 신청 사유 및 첨부 서류 테이블 */}
+      <div className="overflow-hidden rounded-lg border border-border">
+        <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
+          <h4 className="font-semibold text-foreground">신청 사유 및 첨부 서류</h4>
         </div>
 
         {/* 신청사유 행 */}
