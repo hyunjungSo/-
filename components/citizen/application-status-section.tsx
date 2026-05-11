@@ -144,6 +144,22 @@ function AddressSearchModal({
   );
 }
 
+// 현재 활용 지목 옵션
+const LAND_USAGE_OPTIONS = [
+  { value: "대", label: "대(택지)" },
+  { value: "전", label: "전(밭)" },
+  { value: "답", label: "답(논)" },
+  { value: "임", label: "임(임야)" },
+  { value: "잡", label: "그밖의 토지" },
+] as const;
+
+// 값으로 라벨 가져오기 유틸 함수
+function getLandUsageLabel(value: string | undefined): string {
+  if (!value) return "-";
+  const option = LAND_USAGE_OPTIONS.find((opt) => opt.value === value);
+  return option?.label || value;
+}
+
 // 토지 정보 섹션 컴포넌트 (고용24 스타일 테이블 형태)
 interface LandEditData {
   landUseCategory: string;
