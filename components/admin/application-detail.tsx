@@ -250,6 +250,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지별 건축물 용도 상태
   const [adminLandSubTypePerLand, setAdminLandSubTypePerLand] = useState<Record<string, string>>({});
   
+  // 필지별 토지 모양 상태
+  const [adminLandShapePerLand, setAdminLandShapePerLand] = useState<Record<string, string>>({});
+  
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
   const [aiResultViewMode, setAiResultViewMode] = useState<"citizen" | "admin">("citizen");
   
@@ -543,7 +546,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         name: "도로/수로 상실",
         met: waterLost || roadLost,
         description: waterLost 
-          ? "관개수로 상실로 농지 사용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
+          ? "관개수로 상실로 농지 ��용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
           : (roadLost ? "접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "도로/수로 �����")
       });
       
@@ -1044,7 +1047,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             <Badge variant="outline" className="font-normal cursor-pointer">지적도_용인시_포곡읍_200-1.pdf</Badge>
                           </button>
                           <button
-                            onClick={() => handleAttachmentClick("현장사진_20260501.jpg")}
+                            onClick={() => handleAttachmentClick("���장사진_20260501.jpg")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
                             <Badge variant="outline" className="font-normal cursor-pointer">현장사진_20260501.jpg</Badge>
@@ -1645,6 +1648,43 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                               )}
                             </div>
                             
+                            {/* 토지 모양 */}
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium text-foreground">
+                                토지 모양 <span className="text-destructive">*</span>
+                              </label>
+                              {isViewOnly ? (
+                                <div className="h-10 px-3 py-2 border rounded-md bg-muted/30 flex items-center text-sm">
+                                  {adminLandShapePerLand[currentParcelId] ? (
+                                    <>
+                                      {landShapes.regular.concat(landShapes.irregular).find(s => s.value === adminLandShapePerLand[currentParcelId])?.label}
+                                    </>
+                                  ) : (
+                                    <span className="text-muted-foreground">선택되지 않음</span>
+                                  )}
+                                </div>
+                              ) : (
+                                <Select 
+                                  value={adminLandShapePerLand[currentParcelId] || ""} 
+                                  onValueChange={(value) => setAdminLandShapePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
+                                >
+                                  <SelectTrigger className="h-10 bg-background">
+                                    <SelectValue placeholder="토지 모양을 선택해 주세요" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">정형</div>
+                                    {landShapes.regular.map((shape) => (
+                                      <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
+                                    ))}
+                                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">비정형</div>
+                                    {landShapes.irregular.map((shape) => (
+                                      <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              )}
+                            </div>
+
                             {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
                             {adminCurrentUsagePerLand[currentParcelId] === "대" && (
                               <div className="space-y-2 p-3 rounded-lg bg-muted/30">
@@ -2343,7 +2383,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
                     <ImageIcon className="h-5 w-5" />
-                    AI 판독 분석 이미지
+                    AI 판독 ��석 이미지
                   </h3>
                   
                   {/* ���적도 이미지 */}
@@ -2416,7 +2456,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 border border-amber-200">
                     <Info className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
                     <p className="text-xs text-amber-700">
-                      AI 판독 분석 이미지는 참고용이며, 실제 측량 결과와 다를 수 있습니다.
+                      AI 판독 분석 이미지는 참고��이며, 실제 측량 결과와 다를 수 있습니다.
                       최종 판정은 담당자의 현장 확인 및 검토에 따라 결정됩니다.
                     </p>
                   </div>
