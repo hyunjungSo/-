@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { dummyApplications, landCategories, landShapes } from "@/lib/dummy-data";
 import type { Application, AdminStatus } from "@/lib/types";
 import { 
@@ -412,29 +413,26 @@ function LandInfoSection({
               </p>
               <div className="flex flex-wrap gap-x-6 gap-y-2">
                 <label className="flex cursor-pointer items-center gap-2">
-                  <input
-                    type="checkbox"
+                  <Checkbox
+                    id="roadFrontageLoss"
                     checked={editData.roadFrontageLoss}
-                    onChange={(e) => onEditDataChange({ roadFrontageLoss: e.target.checked })}
-                    className="h-4 w-4 rounded border-gray-300"
+                    onCheckedChange={(checked) => onEditDataChange({ roadFrontageLoss: checked === true })}
                   />
                   <span className="text-sm">접면도로 상실</span>
                 </label>
                 <label className="flex cursor-pointer items-center gap-2">
-                  <input
-                    type="checkbox"
+                  <Checkbox
+                    id="irrigationCanalLoss"
                     checked={editData.irrigationCanalLoss}
-                    onChange={(e) => onEditDataChange({ irrigationCanalLoss: e.target.checked })}
-                    className="h-4 w-4 rounded border-gray-300"
+                    onCheckedChange={(checked) => onEditDataChange({ irrigationCanalLoss: checked === true })}
                   />
                   <span className="text-sm">관개수로 상실</span>
                 </label>
                 <label className="flex cursor-pointer items-center gap-2">
-                  <input
-                    type="checkbox"
+                  <Checkbox
+                    id="farmEquipmentTurnImpossible"
                     checked={editData.farmEquipmentTurnImpossible}
-                    onChange={(e) => onEditDataChange({ farmEquipmentTurnImpossible: e.target.checked })}
-                    className="h-4 w-4 rounded border-gray-300"
+                    onCheckedChange={(checked) => onEditDataChange({ farmEquipmentTurnImpossible: checked === true })}
                   />
                   <span className="text-sm">농기계 회전 불가</span>
                 </label>
