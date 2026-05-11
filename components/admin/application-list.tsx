@@ -60,8 +60,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     
     // AI 판정 통계
     const aiAnalyzed = applications.filter((a) => a.aiResult).length;
-    const aiPurchase = applications.filter((a) => a.aiResult?.provisionalJudgment === "수용가능").length;
-    const aiReject = applications.filter((a) => a.aiResult?.provisionalJudgment === "수용불가").length;
+    const aiPurchase = applications.filter((a) => a.aiResult?.provisionalJudgment === "매수").length;
+    const aiReject = applications.filter((a) => a.aiResult?.provisionalJudgment === "기각").length;
     
     // 처리 완료율
     const completionRate = total > 0 ? Math.round((심사완료 / total) * 100) : 0;
@@ -162,7 +162,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               <div className="flex items-center justify-between rounded-md bg-red-50 px-3 py-2">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-red-500" />
-                  <span className="text-sm">기��� 판정</span>
+                  <span className="text-sm">기각 판정</span>
                 </div>
                 <span className="font-semibold text-red-500">{stats.aiReject}건</span>
               </div>

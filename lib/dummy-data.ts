@@ -1358,10 +1358,10 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   const physicalConditionMet = criteriaChecks.some(c => !c.autoDetected && c.isMet);
   
   // PRD 판정 원칙:
-  // - AI 판정은 "수용가능", "수용불가" 두 가지
-  // - 물리 조건 중 하나라도 해당 시 '수용가능'
-  // - 전체 조건 미해당시 '수용불가'
-  let provisionalJudgment: "수용가능" | "수용불가";
+  // - AI 판정은 "매수", "기각", "심의위원회 이관" 세 가지
+  // - 물리 조건 중 하나라도 해당 시 '수용 조건 충족'(=매수)
+  // - 전체 조건 미해당시 '수용 조건 미충족'(=기각)
+  let provisionalJudgment: "매수" | "기각" | "심의위원회 이관";
   
   // 면적 기준 충족 여부
   const coreCriteriaMet = areaMet;
@@ -1370,23 +1370,23 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   if (landInfo.landType === "임야") {
     // 산지: 면적 기준 + 접면 도로 상실만 (형상 조건 없음!)
     if (coreCriteriaMet) {
-      provisionalJudgment = "수용가능";
+      provisionalJudgment = "매수";
     } else {
-      provisionalJudgment = "수용불가";
+      provisionalJudgment = "기각";
     }
   } else if (landInfo.landType === "택지" || landInfo.landType === "농지") {
     // 택지/농지: 면적 기준 + 형상 조건 적용
     if (coreCriteriaMet || isIrregularShape || shapeIndexMet) {
-      provisionalJudgment = "수용가능";
+      provisionalJudgment = "매수";
     } else {
-      provisionalJudgment = "수용불가";
+      provisionalJudgment = "기각";
     }
   } else {
     // 그 밖의 토지: 면적 기준 + 잔여비율 50% 이하 + 형상 변경
     if (coreCriteriaMet || isBlindLand || isIrregularShape || shapeIndexMet) {
-      provisionalJudgment = "수용가능";
+      provisionalJudgment = "매수";
     } else {
-      provisionalJudgment = "수용불가";
+      provisionalJudgment = "기각";
     }
   }
   
@@ -1413,7 +1413,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
 // 판단 근거 생성 헬퍼 함수 (PRD v2.0 기준 - 중앙토지수용위원회 참고문서)
 function generateRationale(
   land: LandInfo,
-  judgment: "수용가능" | "수용불가",
+  judgment: "매수" | "기각" | "심의위원회 이관",
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],
@@ -1432,7 +1432,7 @@ function generateRationale(
     landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)";
     physicalConditions = "물리조건: ①접면도로 상실로 건축허가 불가 ②형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "임야") {
-    landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이하 시 495㎡��지 완화)";
+    landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
     physicalConditions = "물리조건: ①공익사업으로 접한 도로가 없어진 경우";
   } else {
     landTypeCriteria = "그 밖의 토지 기준: 면적 330㎡ 이하 또는 잔여비율 50% 이하";
@@ -1448,15 +1448,15 @@ function generateRationale(
   let summary: string;
   let detailedExplanation: string;
 
-  if (judgment === "수용가능") {
-    summary = `${land.landType} 수용 조건 충족으로 「수용가능」 판정 - 사용이 현저히 곤란한 경우로 예상`;
+  if (judgment === "매수" || judgment === "심의위원회 이관") {
+    summary = `${land.landType} 수용 조건 충족으로 「${judgment}」 판정 - 사용이 현저히 곤란한 경우로 예상`;
     detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n충족기준: ${metCriteriaNames.join(", ")}\n\n※ 물리 조건 중 하나 이상 해당으로 수용 조건 충족`;
   } else {
-    // 수용불가
+    // 기각
     const areaThreshold = land.landType === "택지" ? 90 : 330;
     const rejectionReason = `잔여면적 ${land.remainingArea}㎡(기준 ${areaThreshold}㎡ 초과), 잔여비율 ${land.remainingRatio}%(기준 초과), 물리조건 미해당`;
-    summary = `${land.landType} 수용 조건 미충족으로 「수용불가」 판정`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n수용불가사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조건 전체 미해당`;
+    summary = `${land.landType} 수용 조건 미충족으로 「기각」 판정`;
+    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조건 전체 미해당`;
   }
 
   return {
@@ -1540,31 +1540,15 @@ export const dummyApplications: Application[] = [
     reportedShape: "역삼각형",
     farmMachineDifficulty: false,
     reason: "토지가 양분되어 잔여지 발생. 절토 및 옹벽 설치로 진입이 곤란합니다.",
-    attachments: ["토지대장.pdf", "등기부등본.pdf", "지적도.pdf"],
+    attachments: ["토지대장.pdf"],
     status: "처리완료",
     adminStatus: "심사완료",
     appliedAt: "2026-04-04",
     aiResult: generateAIResult(dummyLandInfoList[3]),
-    finalJudgment: "수용가능",
-    reviewerComment: "본 필지는 도로 편입으로 인해 잔여지가 역삼각형 형태로 변형되었으며, 잔여면적 280㎡로 기준 330㎡ 이하를 충족합니다. 또한 절토 및 옹벽 설치로 인해 기존 진입로가 상실되어 토지 이용이 현저히 곤란한 상태입니다. 형상지수 변화가 1.2로 기준 1.0 이상을 충족하여 수용가능으로 판정합니다.",
+    finalJudgment: "매수",
+    reviewerComment: "잔여지 형상 및 면적 기준 충족으로 매수 판정",
     adminName: "홍길동",
     statusUpdatedAt: "2026-04-15",
-    // 담당자 AI 분석 입력값 (완전히 채워진 케이스)
-    adminCurrentUsage: "잡",
-    adminLandSubType: "other",
-    adminLandOptions: {
-      farmMachineDifficulty: false,
-      accessRoadLost: true,
-      waterChannelLost: false,
-    },
-    // 필지별 담당자 판정
-    landJudgments: [
-      {
-        landId: dummyLandInfoList[3].id,
-        judgment: "수용가능" as const,
-        comment: "잔여면적 280㎡, 형상지수 변화 +1.2, 접면도로 상실로 수용 조건 충족",
-      }
-    ],
   },
   // 동일 소유자 복수 필지 신청 케이스
   {
@@ -1722,7 +1706,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "심사완료",
     appliedAt: "2026-04-07",
     aiResult: generateAIResult(dummyLandInfoList[9]),
-    finalJudgment: "수용불가",
+    finalJudgment: "기각",
     reviewerComment: "잔여비율 90%로 매수 기준(30% 이하)을 크게 초과하며, 형상지수 변화도 0.1로 미미하여 종래 용도 사용에 지장이 없음. 매수 기준 미충족으로 기각 처리.",
     adminName: "박담당",
     statusUpdatedAt: "2026-04-18",
@@ -1781,7 +1765,7 @@ export const dummyApplications: Application[] = [
         currentUsage: "대" as const,
         landSubType: "residential-detached" as const,
         actualUsage: "대" as const,
-        reportedShape: "삼���형" as const,
+        reportedShape: "삼각형" as const,
         farmMachineDifficulty: false,
         accessRoadLost: true,
         waterChannelLost: false,
@@ -1899,7 +1883,7 @@ export const dummyApplications: Application[] = [
     reportedShape: "부정형",
     farmMachineDifficulty: true,
     reason: "농기계 회전이 불가하여 농업 활동이 불가능합니다.",
-    attachments: ["토지대장.pdf", "농지원��.pdf"],
+    attachments: ["토지대장.pdf", "농지원부.pdf"],
     status: "AI분석완료",
     adminStatus: "접수완료",
     appliedAt: "2026-04-10",
@@ -1941,7 +1925,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "심사완료",
     appliedAt: "2026-04-12",
     aiResult: generateAIResult(dummyLandInfoList[3]),
-    finalJudgment: "수용가능",
+    finalJudgment: "매수",
     reviewerComment: "매수 기준 충족",
     adminName: "최영호",
     statusUpdatedAt: "2026-04-20",
@@ -2008,7 +1992,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "도로/수로 상실", criteriaDescription: "관개수로 상실로 농지 사용 불가", isMet: true, autoDetected: false },
         { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란으로 경작 불가", isMet: true, autoDetected: false },
       ],
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수",
       originalShapeIndex: 4.2,
       remainingShapeIndex: 5.9,
       shapeIndexChange: 1.7,
@@ -2029,7 +2013,7 @@ export const dummyApplications: Application[] = [
         manualCheckItems: [],
       },
     },
-    finalJudgment: "수용가능",
+    finalJudgment: "매수",
     reviewerComment: "3필지 농지로 확인됨. 관개수로 단절 및 형상 변경으로 농업 활동 불가. 매수 기준 충족으로 매수 결정.",
     finalReviewOpinion: "안성-천안 국도확장사업으로 편입된 3필지 농지입니다. 현장 확인 결과, 도로 편입 후 관개수로가 단절되고, 각 필지가 삼각형, 역삼각형, 부정형으로 변경되어 농기계 회전 및 회전이 불가능한 상태입니다. 매수 기준 충족하여 매수가 적정합니다.",
     adminName: "홍길동",
@@ -2104,7 +2088,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 불가", isMet: true, autoDetected: false },
       ],
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수",
       originalShapeIndex: 4.2,
       remainingShapeIndex: 5.8,
       shapeIndexChange: 1.6,
@@ -2180,7 +2164,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "맹지 판정", criteriaDescription: "접면도로 상실로 양 필지 모두 맹지화", isMet: true, autoDetected: true },
       ],
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수",
       originalShapeIndex: 4.1,
       remainingShapeIndex: 5.95,
       shapeIndexChange: 1.85,
@@ -2200,7 +2184,7 @@ export const dummyApplications: Application[] = [
         manualCheckItems: [],
       },
     },
-    finalJudgment: "수용가능",
+    finalJudgment: "매수",
     reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 양 필지 모두 접면도로 상실 확인.",
     finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2필지 대지입니다. 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
     adminName: "김철수",
@@ -2283,7 +2267,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },
       ],
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수",
       originalShapeIndex: 5.1,
       remainingShapeIndex: 6.48,
       shapeIndexChange: 1.38,
@@ -2381,7 +2365,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "면적 기준 (55-2)", criteriaDescription: "잔여 550㎡ > 330㎡ (농지 기준 미충족)", isMet: false, autoDetected: true },
         { criteriaName: "형상지수 (55-2)", criteriaDescription: "형상지수 1.3 < 2.0 (양호)", isMet: false, autoDetected: true },
       ],
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수",
       originalShapeIndex: 4.1,
       remainingShapeIndex: 5.0,
       shapeIndexChange: 0.9,
@@ -2416,8 +2400,8 @@ export const dummyApplications: Application[] = [
       },
       // 필지별 판정 결과 (개별 분��)
       landJudgments: [
-        { landId: "land-mixed-001", judgment: "수용가능", unifiedGroupId: null, reason: "내기리 200-1: 잔여 150㎡ ≤ 330㎡, 형상지수 5.0(불량), 농기계 회전곤란" },
-        { landId: "land-mixed-002", judgment: "수용가능", unifiedGroupId: null, reason: "내기리 200-2: 잔여 180㎡ ≤ 330㎡, 형상지수 4.8(불량), 관개수로 상실" },
+        { landId: "land-mixed-001", judgment: "매수", unifiedGroupId: null, reason: "내기리 200-1: 잔여 150㎡ ≤ 330㎡, 형상지수 5.0(불량), 농기계 회전곤란" },
+        { landId: "land-mixed-002", judgment: "매수", unifiedGroupId: null, reason: "내기리 200-2: 잔여 180㎡ ≤ 330㎡, 형상지수 4.8(불량), 관개수로 상실" },
         { landId: "land-mixed-003", judgment: "미해당", unifiedGroupId: null, reason: "면적 기준 미충족(600㎡>330㎡), 형상지수 1.2(양호), 종래 사용 가능" },
         { landId: "land-mixed-004", judgment: "미해당", unifiedGroupId: null, reason: "면적 기준 미충족(550㎡>330㎡), 형상지수 1.3(양호), 종래 사용 가능" },
       ],
@@ -2432,7 +2416,7 @@ export const dummyApplications: Application[] = [
     applicationType: "multiple", // 복수필지 신청
     applicantName: "정민재",
     applicantContact: "010-5555-1234",
-    applicantAddress: "경기도 ���인시 처인구 포곡읍 둔전리 200",
+    applicantAddress: "경기도 용인시 처인구 포곡읍 둔전리 200",
     landInfo: {
       id: "land-unified-001",
       pnu: "4146325027100200001",
@@ -2507,7 +2491,7 @@ export const dummyApplications: Application[] = [
     appliedAt: "2026-05-01",
     // 민원인 AI 분석 결과 - 농지 2필지 개별 분석
     aiResult: {
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수",
       confidence: 85,
       originalArea: 3950,
       remainingArea: 2480,
@@ -2532,13 +2516,13 @@ export const dummyApplications: Application[] = [
         manualCheckItems: ["현장 형상 확인", "농기계 진입로 확인", "관개수로 현황 확인"],
       },
       landJudgments: [
-        { landId: "land-unified-001", judgment: "수용가능", reason: "전: 세장형(형상지수 4.8), 농기계 회전 곤란으로 효율적 영농 불가" },
-        { landId: "land-unified-002", judgment: "수용가능", reason: "답: 관개수로 상실(형상지수 5.2), 부정형으로 논농사 불가" },
+        { landId: "land-unified-001", judgment: "매수", reason: "전: 세장형(형상지수 4.8), 농기계 회전 곤란으로 효율적 영농 불가" },
+        { landId: "land-unified-002", judgment: "매수", reason: "답: 관개수로 상실(형상지수 5.2), 부정형으로 논농사 불가" },
       ],
     },
     // 담당자 AI 재분석 결과 - 농지 2필지 분석
     adminAiResult: {
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수",
       confidence: 82,
       originalArea: 3950,
       remainingArea: 2480,
@@ -2563,8 +2547,8 @@ export const dummyApplications: Application[] = [
         manualCheckItems: ["최종 형상 확인 완료", "농업인 영농 현황 확인"],
       },
       landJudgments: [
-        { landId: "land-unified-001", judgment: "수용가능", reason: "전: 세장형(형상지수 4.8), 농기계 회전 곤란 현장 확인" },
-        { landId: "land-unified-002", judgment: "수용가능", reason: "답: 관개수로 상실(형상지수 5.2), 논농사 불가 현장 확인" },
+        { landId: "land-unified-001", judgment: "매수", reason: "전: 세장형(형상지수 4.8), 농기계 회전 곤란 현장 확인" },
+        { landId: "land-unified-002", judgment: "매수", reason: "답: 관개수로 상실(형상지수 5.2), 논농사 불가 현장 확인" },
       ],
     },
     adminName: "김철수",
@@ -2618,7 +2602,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "접수완료",
     appliedAt: "2026-05-10",
     aiResult: {
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수",
       confidence: 78,
       originalArea: 1350,
       remainingArea: 800,
@@ -2643,14 +2627,14 @@ export const dummyApplications: Application[] = [
         manualCheckItems: ["현장 형상 확인", "접도 조건 확인", "건축 가능 여부 확인"],
       },
       landJudgments: [
-        { landId: "land-3parcel-001", judgment: "수용불가", reason: "택지: 잔여면적 270㎡, 형상 양호하나 면적 기준 초과로 재분할 필요" },
-        { landId: "land-3parcel-002", judgment: "수용불가", reason: "택지: 잔여면적 230㎡, 장방형으로 건축 효율 저하로 부적절" },
-        { landId: "land-3parcel-003", judgment: "수용가능", reason: "택지: 잔여면적 300㎡이나 사다리꼴 형상으로 건축 효율 저하" },
+        { landId: "land-3parcel-001", judgment: "매수 불가", reason: "택지: 잔여면적 270㎡, 형상 양호하나 면적 기준 초과로 재분할 필요" },
+        { landId: "land-3parcel-002", judgment: "매수 불가", reason: "택지: 잔여면적 230㎡, 장방형으로 건축 효율 저하로 부적절" },
+        { landId: "land-3parcel-003", judgment: "매수", reason: "택지: 잔여면적 300㎡이나 사다리꼴 형상으로 건축 효율 저하" },
       ],
     },
     landAIResults: {
       "land-3parcel-001": {
-        provisionalJudgment: "수용불가",
+        provisionalJudgment: "매수 불가",
         confidence: 75,
         originalArea: 450,
         remainingArea: 270,
@@ -2664,7 +2648,7 @@ export const dummyApplications: Application[] = [
         },
       },
       "land-3parcel-002": {
-        provisionalJudgment: "수용불가",
+        provisionalJudgment: "매수 불가",
         confidence: 72,
         originalArea: 380,
         remainingArea: 230,
@@ -2678,7 +2662,7 @@ export const dummyApplications: Application[] = [
         },
       },
       "land-3parcel-003": {
-        provisionalJudgment: "수용가능",
+        provisionalJudgment: "매수",
         confidence: 80,
         originalArea: 520,
         remainingArea: 300,
