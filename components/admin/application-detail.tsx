@@ -17,7 +17,7 @@ import { AIAnalysisFlowDialog } from "@/components/admin/ai-analysis-flow-dialog
 import { AIIcon } from "@/components/ui/ai-icon";
 import { JudgmentStatus } from "@/components/ui/judgment-status";
 import { landShapes, landCategories } from "@/lib/dummy-data";
-import type { Application, JudgmentResult, LandShape, LandCategory, AdminStatus } from "@/lib/types";
+import type { Application, JudgmentResult, FinalJudgmentResult, LandShape, LandCategory, AdminStatus } from "@/lib/types";
 import {
   ArrowLeft,
   User,
@@ -58,9 +58,17 @@ interface ApplicationDetailProps {
   onSave: (application: Application) => void;
 }
 
-const judgmentConfig = {
+// AI 판정 결과 (수용가능/수용불가)
+const aiJudgmentConfig = {
   수용가능: { label: "수용가능", icon: CheckCircle2, borderColor: "border-green-600", textColor: "text-green-600", color: "text-green-600" },
-  "수용불가": { label: "수용불가", icon: XCircle, borderColor: "border-red-500", textColor: "text-red-500", color: "text-red-500" },
+  수용불가: { label: "수용불가", icon: XCircle, borderColor: "border-red-500", textColor: "text-red-500", color: "text-red-500" },
+};
+
+// 담당자 판정 (매수/기각/심의위원회 이관)
+const judgmentConfig = {
+  매수: { label: "매수", icon: CheckCircle2, borderColor: "border-green-600", textColor: "text-green-600", color: "text-green-600" },
+  기각: { label: "기각", icon: XCircle, borderColor: "border-red-500", textColor: "text-red-500", color: "text-red-500" },
+  "심의위원회 이관": { label: "심의위원회 이관", icon: AlertTriangle, borderColor: "border-amber-500", textColor: "text-amber-500", color: "text-amber-500" },
 };
 
 const adminStatusConfig: Record<AdminStatus, { 
@@ -492,7 +500,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     const shapeCriteria = checkShapeCriteria(land);
     
     const criteriaChecks: Array<{ name: string; met: boolean; description: string }> = [];
-    let judgment: "수용가능" | "수용불가" = "수용불가";
+    let judgment: "수용가능" | "수용 불가능" = "수용 불가능";
     let reasons: string[] = [];
     
     // 1. 면적 기준 미달 여부
@@ -528,7 +536,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
-        judgment = "수용불가";
+        judgment = "수용 불가능";
         reasons.push("면적 기준 미충족");
       }
       
@@ -567,7 +575,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (farmDifficulty) reasons.push("농기계 회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
-        judgment = "수용불가";
+        judgment = "수용 불가능";
         reasons.push("모든 기준 미충족");
       }
       
@@ -584,9 +592,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || roadLost) {
         judgment = "수용가능";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 ��������)" : ""));
+        if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확�����)" : ""));
       } else {
-        judgment = "수용불가";
+        judgment = "수용 불가능";
         reasons.push("모든 기준 미충족");
       }
       
@@ -605,7 +613,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (areaCheckMet) reasons.push("면적 기준 충족");
         if (usageDifficulty) reasons.push("종래 사용 곤란");
       } else {
-        judgment = "수용불가";
+        judgment = "수용 불가능";
         reasons.push("모든 기준 미충족");
       }
     }
@@ -617,8 +625,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         met: true,
         description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규모 해당)`
       });
-      if (judgment === "수용불가") {
-        judgment = "수용불가";
+      if (judgment === "수용 불가능") {
+        judgment = "수용 불가능";
         reasons.push("소규모 토지로 심의위원회 검토 필요");
       }
     }
@@ -822,7 +830,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         remainingRatio: land.remainingRatio,
         judgment: result?.provisionalJudgment || "분석중",
 purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const :
-              result?.provisionalJudgment === "수용불가" ? "X" as const :
+              result?.provisionalJudgment === "수용 불가능" ? "X" as const :
                           "-" as const,
       };
     });
@@ -1803,7 +1811,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                           <div className={`rounded-lg border p-4 ${
                             judgment === "수용가능"
                               ? "border-green-600/20 bg-green-600/5"
-                              : judgment === "수용불가"
+                              : judgment === "수용 불가능"
                                 ? "border-red-200 bg-red-50/50"
                                 : "border-slate-200 bg-slate-50/50"
                           }`}>
@@ -2055,11 +2063,11 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             
             return (
               <div className="space-y-6">
-                {/* 매수 판정 */}
+                {/* 담당자 판정 (매수/기각/심의위원회 이관) */}
                 <div className="space-y-3">
-                  <Label className="text-sm font-medium">매수 판정</Label>
+                  <Label className="text-sm font-medium">담당자 판정</Label>
                   <div className="flex flex-wrap gap-2">
-                    {(["수용가능", "수용불가"] as JudgmentResult[]).map((judgment) => {
+                    {(["매수", "기각", "심의위원회 이관"] as FinalJudgmentResult[]).map((judgment) => {
                       const config = judgmentConfig[judgment];
                       const Icon = config.icon;
                       const isSelected = landReview.landJudgment === judgment;
@@ -2080,13 +2088,15 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   </div>
                 </div>
                 
-                {/* AI 판정과 다른 경우 경고 */}
-                {landReview.landJudgment && aiResult?.provisionalJudgment && 
-                  landReview.landJudgment !== aiResult.provisionalJudgment && (
-                  <div className="flex items-start gap-2 p-3 bg-red-50 rounded-lg border border-red-200">
-                    <AlertTriangle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
-                    <p className="text-sm text-red-600">
-                      AI 제안({aiResult.provisionalJudgment})과 다른 판정입니다. 검토 의견에 사유를 ��성해주세요.
+                {/* AI 판정(수용가능/수용불가)과 담당자 판정(매수/기각/심의위원회 이관) 불일치 안내 */}
+                {landReview.landJudgment && aiResult?.provisionalJudgment && (
+                  (aiResult.provisionalJudgment === "수용가능" && landReview.landJudgment !== "매수") ||
+                  (aiResult.provisionalJudgment === "수용불가" && landReview.landJudgment === "매수")
+                ) && (
+                  <div className="flex items-start gap-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                    <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
+                    <p className="text-sm text-amber-700">
+                      AI 판정({aiResult.provisionalJudgment})과 다른 결정입니다. 검토 의견에 사유를 작성해주세요.
                     </p>
                   </div>
                 )}
