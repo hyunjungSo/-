@@ -772,7 +772,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
         </div>
       </div>
 
-{/* 주소 검색 모달 */}
+      {/* 주소 검색 모달 */}
       {showAddressModal && (
         <AddressSearchModal
           onSelect={handleAddressSelect}
