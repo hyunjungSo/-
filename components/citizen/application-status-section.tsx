@@ -426,7 +426,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           </div>
         </div>
 
-{/* 신청 구분 행 */}
+        {/* 신청 구분 행 */}
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
             <span className="text-sm font-medium">신청 구분</span>
@@ -589,10 +589,9 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
             )}
           </div>
         </div>
-      </div>
 
-      {/* 토지 정보 테이블 */}
-      <div className="overflow-hidden rounded-lg border border-border">
+        {/* 토지 정보 섹션 */}
+        <div className="overflow-hidden rounded-lg border border-border">
         <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
           <h4 className="font-semibold text-foreground">토지 정보</h4>
         </div>
@@ -790,15 +789,15 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                           <span className="truncate text-xs text-foreground">
                             {file.name} <span className="text-muted-foreground">[{file.size}]</span>
                           </span>
-<Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => handleRemoveFile(index)}
-                                            className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
-                                          >
-                                            <Trash2 className="size-[18px]" />
-                                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRemoveFile(index)}
+                            className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                          >
+                            <Trash2 className="size-[18px]" />
+                          </Button>
                         </li>
                       ))}
                     </ul>
