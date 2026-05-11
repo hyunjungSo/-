@@ -310,7 +310,7 @@ function LandInfoSection({
       {isEditMode && (
         <div className="border-b border-border bg-blue-50 px-4 py-2">
           <p className="text-xs text-blue-700">
-            AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지�� 실제 활용 상황을 입력해 주세요. (필지 주소는 수정 불가)
+            AI 판단과 실제 현황이 다를 수 있습니다. ��재 토지�� 실제 활용 상황을 입력해 주세요. (필지 주소는 수정 불가)
           </p>
         </div>
       )}
@@ -1057,9 +1057,8 @@ function ApplicationDetailPanel({
               <span className="text-sm font-medium">최종 판정</span>
             </div>
             <div className="flex flex-1 items-center gap-3 px-4 py-4">
-              {application.finalJudgment === "매수" && <CheckCircle2 className="h-5 w-5 text-green-600" />}
-              {application.finalJudgment === "기각" && <AlertTriangle className="h-5 w-5 text-red-500" />}
-              {application.finalJudgment === "심의위원회 이관" && <Info className="h-5 w-5 text-amber-500" />}
+              {application.finalJudgment === "수용가능" && <CheckCircle2 className="h-5 w-5 text-green-600" />}
+              {application.finalJudgment === "수용불가" && <AlertTriangle className="h-5 w-5 text-red-500" />}
               <JudgmentStatus 
                 judgment={application.finalJudgment} 
                 variant="text" 
@@ -1211,11 +1210,9 @@ export function ApplicationStatusSection() {
                         <span className="text-xs text-muted-foreground">{app.appliedAt}</span>
                         {app.adminStatus === "심사완료" && app.finalJudgment && (
                           <span className={`text-xs font-medium ${
-                            app.finalJudgment === "매수" 
+                            app.finalJudgment === "수용가능" 
                               ? "text-green-600" 
-                              : app.finalJudgment === "기각"
-                                ? "text-red-500"
-                                : "text-amber-500"
+                              : "text-red-500"
                           }`}>
                             {app.finalJudgment}
                           </span>

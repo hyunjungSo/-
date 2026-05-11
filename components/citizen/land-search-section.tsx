@@ -98,7 +98,7 @@ const regionData = {
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
-    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
+    "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "���곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
     "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "내덕동", "율량동"],
@@ -235,7 +235,7 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["기곡리", "효자리", "금수리", "금산리"],
+    "도고면": ["기곡리", "효자���", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
@@ -400,13 +400,13 @@ function simulateAIAnalysis(
   const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
-  // AI 1차 판독: 매수/기각/심의위원회 이관 판정
-  let provisionalJudgment: "매수" | "기각" | "심의위원회 이관";
+  // AI 1차 판독: 수용가능/수용불가 판정
+  let provisionalJudgment: "수용가능" | "수용불가";
   
   if (metAutoCriteria >= 1) {
-    provisionalJudgment = "매수";
+    provisionalJudgment = "수용가능";
   } else {
-    provisionalJudgment = "기각";
+    provisionalJudgment = "수용불가";
   }
 
   const judgmentRationale: JudgmentRationale = generateJudgmentRationale(
@@ -438,7 +438,7 @@ function simulateAIAnalysis(
 // 중앙토지수용위원회 기준 기반 판단 근거 설명 생성 함수
 function generateJudgmentRationale(
   land: LandInfo,
-  judgment: "매수" | "기각",
+  judgment: "수용가능" | "수용불가",
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],
@@ -472,7 +472,7 @@ function generateJudgmentRationale(
   const shapeDescription = getShapeDescription(land.remainingShape, land.remainingArea);
   const usageDescription = getUsageDifficultyDescription(land.landType, land.remainingArea, land.remainingShape);
 
-  if (judgment === "매수") {
+  if (judgment === "수용가능") {
     summary = `${shapeDescription} ${usageDescription} 수용할 수 있는 것으로 판단됩니다.`;
     detailedExplanation = `[중앙토지수용위원회 참고기준에 따른 분석]
 
@@ -793,7 +793,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return;
       }
       
-      // 지번 검색: 선택된 지역에 해당하는 토지 필터링
+      // 지번 ��색: 선택된 지역에 해당하는 토지 필터링
       results = dummyLandInfoList.filter(land => {
         // 시군구 포함 여부
         if (!land.address.includes(selectedSigungu)) return false;
@@ -1125,7 +1125,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               <div className="flex flex-1 items-center bg-background px-4 py-2">
                 <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <Info className="h-3.5 w-3.5 shrink-0" />
-                  법인 신청 시, 사업자등록증 및 법인인감증명서가 필요합니다.
+                  법인 신청 시, 사업자등록�� 및 법인인감증명서가 필요합니다.
                 </p>
               </div>
             </div>
@@ -1383,9 +1383,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                   {hasAiResult && (
                                     <Badge 
                                       className={`text-xs px-1.5 py-0 ${
-                                        landAiResult?.provisionalJudgment === "매수" 
+                                        landAiResult?.provisionalJudgment === "수용가능" 
                                           ? "bg-green-600 text-white" 
-                                          : landAiResult?.provisionalJudgment === "기각"
+                                          : landAiResult?.provisionalJudgment === "수용불가"
                                             ? "bg-red-500 text-white"
                                             : "bg-amber-500 text-white"
                                       }`}
@@ -1562,9 +1562,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     {/* 선택된 필지 상세 결과 */}
                     {aiResult && selectedLand && (
                       <div className={`rounded-lg border-2 p-4 ${
-                        aiResult.provisionalJudgment === "매수" 
+                        aiResult.provisionalJudgment === "수용가능" 
                           ? "border-success bg-success/5" 
-                          : aiResult.provisionalJudgment === "심의위원회 이관"
+                          : false
                             ? "border-warning bg-warning/5"
                             : "border-destructive bg-destructive/5"
                       }`}>
@@ -1576,9 +1576,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           </div>
                           <Badge 
                             className={`px-3 py-1 text-sm font-bold ${
-                              aiResult.provisionalJudgment === "매수" 
+                              aiResult.provisionalJudgment === "수용가능" 
                                 ? "bg-green-600 text-white" 
-                                : aiResult.provisionalJudgment === "심의위원회 이관"
+                                : false
                                   ? "bg-amber-500 text-white"
                                   : "bg-red-500 text-white"
                             }`}
@@ -1729,7 +1729,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     );
                   }
                   
-                  if (aiResult.provisionalJudgment !== "기각") {
+                  if (aiResult.provisionalJudgment !== "수용불가") {
                     const isAlreadyInCart = cartItems.some(c => c.landInfo.id === selectedLand.id);
                     
                     return (
@@ -1945,9 +1945,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                       <span>|</span>
                                       <span>{item.landInfo.landType}</span>
                                       <Badge 
-                                        className={`text-xs ${item.aiResult.provisionalJudgment === "매수" ? "bg-green-600 text-white" : "bg-red-500 text-white"}`}
+                                        className={`text-xs ${item.aiResult.provisionalJudgment === "수용가능" ? "bg-green-600 text-white" : "bg-red-500 text-white"}`}
                                       >
-                                        {item.aiResult.provisionalJudgment === "매수" ? "매수" : "기준 미충족"}
+                                        {item.aiResult.provisionalJudgment === "수용가능" ? "수용가능" : "수용불가"}
                                       </Badge>
                                     </div>
                                   </div>

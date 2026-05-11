@@ -3,8 +3,8 @@
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-// AI 판정 결과: 수용가능, 수용 불가능
-export type JudgmentType = "수용가능" | "수용 불가능" | "분석중";
+// AI 판정 결과: 수용가능, 수용불가
+export type JudgmentType = "수용가능" | "수용불가" | "분석중";
 
 interface JudgmentStatusProps {
   judgment: JudgmentType | string;
@@ -34,7 +34,7 @@ export function JudgmentStatus({
           badge: "bg-green-600 text-white hover:bg-green-600",
           text: "text-green-600"
         };
-      case "수용 불가능":
+      case "수용불가":
         return {
           badge: "bg-red-500 text-white hover:bg-red-500",
           text: "text-red-500"

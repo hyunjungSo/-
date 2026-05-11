@@ -60,7 +60,7 @@ interface ApplicationDetailProps {
 
 const judgmentConfig = {
   수용가능: { label: "수용가능", icon: CheckCircle2, borderColor: "border-green-600", textColor: "text-green-600", color: "text-green-600" },
-  "수용 불가능": { label: "수용 불가능", icon: XCircle, borderColor: "border-red-500", textColor: "text-red-500", color: "text-red-500" },
+  수용불가: { label: "수용불가", icon: XCircle, borderColor: "border-red-500", textColor: "text-red-500", color: "text-red-500" },
 };
 
 const adminStatusConfig: Record<AdminStatus, { 
@@ -492,7 +492,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     const shapeCriteria = checkShapeCriteria(land);
     
     const criteriaChecks: Array<{ name: string; met: boolean; description: string }> = [];
-    let judgment: "수용가능" | "수용 불가능" = "수용 불가능";
+    let judgment: "수용가능" | "수용불가" = "수용불가";
     let reasons: string[] = [];
     
     // 1. 면적 기준 미달 여부
@@ -528,7 +528,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
-        judgment = "수용 불가능";
+        judgment = "수용불가";
         reasons.push("면적 기준 미충족");
       }
       
@@ -567,7 +567,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (farmDifficulty) reasons.push("농기계 회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
-        judgment = "수용 불가능";
+        judgment = "수용불가";
         reasons.push("모든 기준 미충족");
       }
       
@@ -586,7 +586,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (areaCheckMet) reasons.push("면적 기준 충족");
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확���)" : ""));
       } else {
-        judgment = "수용 불가능";
+        judgment = "수용불가";
         reasons.push("모든 기준 미충족");
       }
       
@@ -605,7 +605,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (areaCheckMet) reasons.push("면적 기준 충족");
         if (usageDifficulty) reasons.push("종래 사용 곤란");
       } else {
-        judgment = "수용 불가능";
+        judgment = "수용불가";
         reasons.push("모든 기준 미충족");
       }
     }
@@ -617,8 +617,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         met: true,
         description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규모 해당)`
       });
-      if (judgment === "수용 불가능") {
-        judgment = "수용 불가능";
+      if (judgment === "수용불가") {
+        judgment = "수용불가";
         reasons.push("소규모 토지로 심의위원회 검토 필요");
       }
     }
@@ -822,7 +822,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         remainingRatio: land.remainingRatio,
         judgment: result?.provisionalJudgment || "분석중",
 purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const :
-              result?.provisionalJudgment === "수용 불가능" ? "X" as const :
+              result?.provisionalJudgment === "수용불가" ? "X" as const :
                           "-" as const,
       };
     });
@@ -1615,32 +1615,22 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                               <label className="text-sm font-medium text-foreground">
                                 현재 활용 지목 <span className="text-destructive">*</span>
                               </label>
-                              {isViewOnly ? (
-                                <div className="h-10 px-3 py-2 border rounded-md bg-muted/30 flex items-center text-sm">
-                                  {adminCurrentUsagePerLand[currentParcelId] === "대" && "대 (택지)"}
-                                  {adminCurrentUsagePerLand[currentParcelId] === "전" && "전 (밭)"}
-                                  {adminCurrentUsagePerLand[currentParcelId] === "답" && "답 (논)"}
-                                  {adminCurrentUsagePerLand[currentParcelId] === "임" && "임 (임야)"}
-                                  {adminCurrentUsagePerLand[currentParcelId] === "잡" && "잡 (잡종지)"}
-                                  {!adminCurrentUsagePerLand[currentParcelId] && <span className="text-muted-foreground">선택되지 않음</span>}
-                                </div>
-                              ) : (
-                                <Select 
-                                  value={adminCurrentUsagePerLand[currentParcelId] || ""} 
-                                  onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
-                                >
-                                  <SelectTrigger className="h-10 bg-background">
-                                    <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="대">대 (택지)</SelectItem>
-                                    <SelectItem value="전">전 (밭)</SelectItem>
-                                    <SelectItem value="답">답 (논)</SelectItem>
-                                    <SelectItem value="임">임 (임야)</SelectItem>
-                                    <SelectItem value="잡">잡 (잡종지)</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              )}
+                              <Select 
+                                value={adminCurrentUsagePerLand[currentParcelId] || ""} 
+                                onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
+                                disabled={isViewOnly}
+                              >
+                                <SelectTrigger className={`h-10 bg-background ${isViewOnly ? "opacity-60" : ""}`}>
+                                  <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="대">대 (택지)</SelectItem>
+                                  <SelectItem value="전">전 (밭)</SelectItem>
+                                  <SelectItem value="답">답 (논)</SelectItem>
+                                  <SelectItem value="임">임 (임야)</SelectItem>
+                                  <SelectItem value="잡">잡 (잡종지)</SelectItem>
+                                </SelectContent>
+                              </Select>
                             </div>
                             
                             {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
@@ -1649,91 +1639,64 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                 <label className="text-sm font-medium text-foreground">
                                   건축물 용도 선택 <span className="text-destructive">*</span>
                                 </label>
-                                {isViewOnly ? (
-                                  <div className="h-10 px-3 py-2 border rounded-md bg-muted/30 flex items-center text-sm">
-                                    {adminLandSubTypePerLand[currentParcelId] === "residential-detached" && "주거용 - 단독주택 (기준: 90㎡)"}
-                                    {adminLandSubTypePerLand[currentParcelId] === "residential-multi" && "주거용 - 연립/다세대 (기준: 165㎡)"}
-                                    {adminLandSubTypePerLand[currentParcelId] === "residential-apartment" && "주거용 - 아파트 (기준: 60㎡)"}
-                                    {adminLandSubTypePerLand[currentParcelId] === "commercial" && "상업용 (기준: 150㎡)"}
-                                    {adminLandSubTypePerLand[currentParcelId] === "industrial" && "공업용 (기준: 330㎡)"}
-                                    {!adminLandSubTypePerLand[currentParcelId] && <span className="text-muted-foreground">선택되지 않음</span>}
-                                  </div>
-                                ) : (
-                                  <Select 
-                                    value={adminLandSubTypePerLand[currentParcelId] || ""} 
-                                    onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
-                                  >
-                                    <SelectTrigger className="h-10 bg-background">
-                                      <SelectValue placeholder="건축물 용도를 선택해 주세요" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
-                                      <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
-                                      <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
-                                      <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
-                                      <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                )}
+                                <Select 
+                                  value={adminLandSubTypePerLand[currentParcelId] || ""} 
+                                  onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
+                                  disabled={isViewOnly}
+                                >
+                                  <SelectTrigger className={`h-10 bg-background ${isViewOnly ? "opacity-60" : ""}`}>
+                                    <SelectValue placeholder="건축물 용도를 선택해 주세요" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
+                                    <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
+                                    <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
+                                    <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
+                                    <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
+                                  </SelectContent>
+                                </Select>
                               </div>
                             )}
                             
                             {/* 현장확인 옵션 */}
                             <div className="space-y-3 pt-2 border-t">
                               <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
-                              {isViewOnly ? (
-                                <div className="space-y-2 text-sm">
-                                  <div className="flex items-center gap-3 p-2">
-                                    <span className={landOptions.farmMachineDifficulty ? "text-primary font-medium" : "text-muted-foreground"}>
-                                      {landOptions.farmMachineDifficulty ? "✓" : "−"} 농기계 회전 곤란
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center gap-3 p-2">
-                                    <span className={landOptions.accessRoadLost ? "text-primary font-medium" : "text-muted-foreground"}>
-                                      {landOptions.accessRoadLost ? "✓" : "−"} 접면도로 상실
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center gap-3 p-2">
-                                    <span className={landOptions.waterChannelLost ? "text-primary font-medium" : "text-muted-foreground"}>
-                                      {landOptions.waterChannelLost ? "✓" : "−"} 관개수로 상실
-                                    </span>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="space-y-2">
-                                  <label className="flex items-center gap-3 p-2 rounded cursor-pointer hover:bg-muted/50">
-                                    <Checkbox 
-                                      checked={landOptions.farmMachineDifficulty}
-                                      onCheckedChange={(checked) => updateLandOption(currentParcelId, 'farmMachineDifficulty', checked === true)}
-                                      className="h-5 w-5"
-                                    />
-                                    <span className="text-sm">농기계 회전 곤란</span>
-                                  </label>
-                                  <label className="flex items-center gap-3 p-2 rounded cursor-pointer hover:bg-muted/50">
-                                    <Checkbox 
-                                      checked={landOptions.accessRoadLost}
-                                      onCheckedChange={(checked) => updateLandOption(currentParcelId, 'accessRoadLost', checked === true)}
-                                      className="h-5 w-5"
-                                    />
-                                    <span className="text-sm">접면도로 상실</span>
-                                  </label>
-                                  <label className="flex items-center gap-3 p-2 rounded cursor-pointer hover:bg-muted/50">
-                                    <Checkbox 
-                                      checked={landOptions.waterChannelLost}
-                                      onCheckedChange={(checked) => updateLandOption(currentParcelId, 'waterChannelLost', checked === true)}
-                                      className="h-5 w-5"
-                                    />
-                                    <span className="text-sm">관개수로 상실</span>
-                                  </label>
-                                </div>
-                              )}
+                              <div className="space-y-2">
+                                <label className={`flex items-center gap-3 p-2 rounded ${isViewOnly ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:bg-muted/50"}`}>
+                                  <Checkbox 
+                                    checked={landOptions.farmMachineDifficulty}
+                                    onCheckedChange={(checked) => updateLandOption(currentParcelId, 'farmMachineDifficulty', checked === true)}
+                                    className="h-5 w-5"
+                                    disabled={isViewOnly}
+                                  />
+                                  <span className="text-sm">농기계 회전 곤란</span>
+                                </label>
+                                <label className={`flex items-center gap-3 p-2 rounded ${isViewOnly ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:bg-muted/50"}`}>
+                                  <Checkbox 
+                                    checked={landOptions.accessRoadLost}
+                                    onCheckedChange={(checked) => updateLandOption(currentParcelId, 'accessRoadLost', checked === true)}
+                                    className="h-5 w-5"
+                                    disabled={isViewOnly}
+                                  />
+                                  <span className="text-sm">접면도로 상실</span>
+                                </label>
+                                <label className={`flex items-center gap-3 p-2 rounded ${isViewOnly ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:bg-muted/50"}`}>
+                                  <Checkbox 
+                                    checked={landOptions.waterChannelLost}
+                                    onCheckedChange={(checked) => updateLandOption(currentParcelId, 'waterChannelLost', checked === true)}
+                                    className="h-5 w-5"
+                                    disabled={isViewOnly}
+                                  />
+                                  <span className="text-sm">관개수로 상실</span>
+                                </label>
+                              </div>
                             </div>
                           </>
                         );
                       })()}
                       
-                      {/* AI 분석 버튼 - 검토 옵션 하단 (심사완료 시 숨김) */}
-                      {!isViewOnly && (() => {
+                      {/* AI 분석 버튼 - 검토 옵션 하단 */}
+                      {(() => {
                         const currentParcelId = selectedAdjacentParcel?.id || applicationLands[selectedLandIndex]?.id;
                         const hasCurrentUsage = currentParcelId && adminCurrentUsagePerLand[currentParcelId] && adminCurrentUsagePerLand[currentParcelId].trim() !== "";
                         const isDisabled = isAIAnalyzing || !hasCurrentUsage;
@@ -1747,7 +1710,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                   handleRunAIAnalysis();
                                 }
                               }}
-                              disabled={isDisabled}
+                              disabled={isDisabled || isViewOnly}
                               variant="default"
                               className="h-12 w-full gap-2 text-base"
                             >
@@ -1803,7 +1766,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                           <div className={`rounded-lg border p-4 ${
                             judgment === "수용가능"
                               ? "border-green-600/20 bg-green-600/5"
-                              : judgment === "수용 불가능"
+                              : judgment === "수용불가"
                                 ? "border-red-200 bg-red-50/50"
                                 : "border-slate-200 bg-slate-50/50"
                           }`}>
@@ -2059,7 +2022,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 <div className="space-y-3">
                   <Label className="text-sm font-medium">매수 판정</Label>
                   <div className="flex flex-wrap gap-2">
-                    {(["수용가능", "수용 불가능"] as JudgmentResult[]).map((judgment) => {
+                    {(["수용가능", "수용불가"] as JudgmentResult[]).map((judgment) => {
                       const config = judgmentConfig[judgment];
                       const Icon = config.icon;
                       const isSelected = landReview.landJudgment === judgment;
