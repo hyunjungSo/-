@@ -400,7 +400,7 @@ function LandInfoSection({
       </div>
       
       {/* 확인 항목 행 */}
-      <div className="flex">
+      <div className="flex border-b border-border">
         <div className="flex w-28 shrink-0 items-start bg-muted/30 px-4 py-3">
           <span className="text-sm font-medium">확인 항목</span>
         </div>
@@ -761,7 +761,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                 <Input
                   value={editData.agentName}
                   onChange={(e) => setEditData({ ...editData, agentName: e.target.value })}
-                  placeholder="대리인 성명을 입력해주세요"
+                  placeholder="��리인 성명을 입력해주세요"
                   className="h-10 text-sm"
                 />
               </div>
