@@ -254,7 +254,7 @@ function LandInfoSection({
         if (!landAIResult?.provisionalJudgment) return null;
         
         return (
-          <Collapsible defaultOpen={false}>
+          <Collapsible defaultOpen={false} className="border-b border-border">
             <CollapsibleTrigger asChild>
               <div className="flex cursor-pointer hover:bg-muted/50 transition-colors">
                 <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
