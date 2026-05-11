@@ -13,7 +13,8 @@ import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult, JudgmentRationale, ApplicationCartItem } from "@/lib/types";
 import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ClipboardList, Plus, Trash2, X, User, Layers, PlayCircle } from "lucide-react";
 import { AIIcon } from "@/components/ui/ai-icon";
-
+import { LandUsageSelect, getLandUsageLabel } from "@/components/common/land-usage-select";
+import { BuildingTypeSelect } from "@/components/common/building-type-select";
 
 interface LandSearchSectionProps {
   onLandSelect: (land: LandInfo, aiResult: AIAnalysisResult) => void;
@@ -240,7 +241,7 @@ const regionData = {
     // 세종특별자치시
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
-    "부강면": ["금산리", "노호리", "등곡리", "문곡리", "청수리"],
+    "부강면": ["금산리", "노호리", "등곡리", "문곡리", "청��리"],
     "소정면": ["송등리", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
@@ -409,7 +410,7 @@ function simulateAIAnalysis(
   } else if (metAutoCriteria >= 1) {
     provisionalJudgment = "수용가능";
   } else {
-    provisionalJudgment = "수용����";
+    provisionalJudgment = "수용������";
   }
 
   const judgmentRationale: JudgmentRationale = generateJudgmentRationale(
