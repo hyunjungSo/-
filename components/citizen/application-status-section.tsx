@@ -419,7 +419,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               <Input
                 value={editData.applicantName}
                 onChange={(e) => setEditData({ ...editData, applicantName: e.target.value })}
-                className="h-8 text-sm"
+                className="h-10 text-sm"
               />
             ) : (
               <span className="text-sm">{application.applicantName}</span>
@@ -437,7 +437,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               <Input
                 value={editData.applicantContact}
                 onChange={(e) => setEditData({ ...editData, applicantContact: e.target.value })}
-                className="h-8 text-sm"
+                className="h-10 text-sm"
               />
             ) : (
               <span className="text-sm">{application.applicantContact}</span>
@@ -458,14 +458,14 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                     value={editData.postalCode}
                     placeholder="우편번호"
                     readOnly
-                    className="h-9 w-24 bg-muted text-sm"
+                    className="h-10 w-24 bg-muted text-sm"
                   />
                   <Button
                     type="button"
                     variant="secondary"
                     size="sm"
                     onClick={() => setShowAddressModal(true)}
-                    className="h-9 shrink-0"
+                    className="h-10 shrink-0"
                   >
                     주소 검색
                   </Button>
@@ -474,13 +474,13 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                   value={editData.baseAddress}
                   placeholder="기본주소"
                   readOnly
-                  className="h-9 bg-muted text-sm"
+                  className="h-10 bg-muted text-sm"
                 />
                 <Input
                   value={editData.detailAddress}
                   onChange={(e) => setEditData({ ...editData, detailAddress: e.target.value })}
                   placeholder="상세주소를 입력해주세요"
-                  className="h-9 text-sm"
+                  className="h-10 text-sm"
                 />
               </div>
             ) : (
