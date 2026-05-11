@@ -211,6 +211,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [isSaving, setIsSaving] = useState(false);
   const [showAnalysisFlow, setShowAnalysisFlow] = useState(false);
   const { toast } = useToast();
+  
+  // 심사완료 상태인 경우 뷰어 모드 (편집 불가)
+  const isViewOnly = application.adminStatus === "심사완료";
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
   
   // 필지별 분석 진행 상태: 'pending' | 'analyzing' | 'done'
@@ -901,6 +904,17 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
           </div>
         </CardContent>
       </Card>
+
+      {/* 심사완료 뷰어모드 안내 배너 */}
+      {isViewOnly && (
+        <div className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+          <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0" />
+          <div>
+            <p className="font-medium text-amber-800">심사완료 건입니다</p>
+            <p className="text-sm text-amber-700">심사가 완료되어 편집이 불가능합니다. 조회만 가능합니다.</p>
+          </div>
+        </div>
+      )}
 
       {/* Section 02. 필지선택 */}
       <Card className="border border-gray-200">
@@ -1604,8 +1618,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                               <Select 
                                 value={adminCurrentUsagePerLand[currentParcelId] || ""} 
                                 onValueChange={(value) => setAdminCurrentUsagePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
+                                disabled={isViewOnly}
                               >
-                                <SelectTrigger className="h-10 bg-background">
+                                <SelectTrigger className={`h-10 bg-background ${isViewOnly ? "opacity-60" : ""}`}>
                                   <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -1627,8 +1642,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                 <Select 
                                   value={adminLandSubTypePerLand[currentParcelId] || ""} 
                                   onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
+                                  disabled={isViewOnly}
                                 >
-                                  <SelectTrigger className="h-10 bg-background">
+                                  <SelectTrigger className={`h-10 bg-background ${isViewOnly ? "opacity-60" : ""}`}>
                                     <SelectValue placeholder="건축물 용도를 선택해 주세요" />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -1646,27 +1662,30 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             <div className="space-y-3 pt-2 border-t">
                               <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
                               <div className="space-y-2">
-                                <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-muted/50">
+                                <label className={`flex items-center gap-3 p-2 rounded ${isViewOnly ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:bg-muted/50"}`}>
                                   <Checkbox 
                                     checked={landOptions.farmMachineDifficulty}
                                     onCheckedChange={(checked) => updateLandOption(currentParcelId, 'farmMachineDifficulty', checked === true)}
                                     className="h-5 w-5"
+                                    disabled={isViewOnly}
                                   />
                                   <span className="text-sm">농기계 회전 곤란</span>
                                 </label>
-                                <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-muted/50">
+                                <label className={`flex items-center gap-3 p-2 rounded ${isViewOnly ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:bg-muted/50"}`}>
                                   <Checkbox 
                                     checked={landOptions.accessRoadLost}
                                     onCheckedChange={(checked) => updateLandOption(currentParcelId, 'accessRoadLost', checked === true)}
                                     className="h-5 w-5"
+                                    disabled={isViewOnly}
                                   />
                                   <span className="text-sm">접면도로 상실</span>
                                 </label>
-                                <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-muted/50">
+                                <label className={`flex items-center gap-3 p-2 rounded ${isViewOnly ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:bg-muted/50"}`}>
                                   <Checkbox 
                                     checked={landOptions.waterChannelLost}
                                     onCheckedChange={(checked) => updateLandOption(currentParcelId, 'waterChannelLost', checked === true)}
                                     className="h-5 w-5"
+                                    disabled={isViewOnly}
                                   />
                                   <span className="text-sm">관개수로 상실</span>
                                 </label>
@@ -1691,7 +1710,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                   handleRunAIAnalysis();
                                 }
                               }}
-                              disabled={isDisabled}
+                              disabled={isDisabled || isViewOnly}
                               variant="default"
                               className="h-12 w-full gap-2 text-base"
                             >
@@ -2012,8 +2031,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                           key={judgment}
                           type="button"
                           variant="outline"
+                          disabled={isViewOnly}
                           onClick={() => updateLandReviewData(selectedLandIndex, 'landJudgment', judgment)}
-                          className={`cursor-pointer border-2 ${isSelected ? `${config.borderColor} ${config.textColor}` : "border-[#E1E4E7] text-foreground"}`}
+                          className={`cursor-pointer border-2 ${isSelected ? `${config.borderColor} ${config.textColor}` : "border-[#E1E4E7] text-foreground"} ${isViewOnly ? "opacity-60 cursor-not-allowed" : ""}`}
                         >
                           <Icon className="mr-2 h-4 w-4" />
                           {config.label}
@@ -2042,6 +2062,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     value={landReview.landComment}
                     onChange={(e) => updateLandReviewData(selectedLandIndex, 'landComment', e.target.value)}
                     className="min-h-[100px] resize-none"
+                    disabled={isViewOnly}
                   />
                 </div>
               </div>
@@ -2071,10 +2092,11 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   key={status}
                   type="button"
                   variant="outline"
+                  disabled={isViewOnly}
                   onClick={() =>
                     setReviewData((prev) => ({ ...prev, adminStatus: status }))
                   }
-                  className={`cursor-pointer border-2 ${isSelected ? "border-primary text-primary" : "border-[#E1E4E7] text-foreground"}`}
+                  className={`cursor-pointer border-2 ${isSelected ? "border-primary text-primary" : "border-[#E1E4E7] text-foreground"} ${isViewOnly ? "opacity-60 cursor-not-allowed" : ""}`}
                 >
                   <Icon className={`mr-2 h-4 w-4 ${status === "진행중" && isSelected ? "animate-spin" : ""}`} />
                   {config.label}
@@ -2119,6 +2141,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             value={reviewData.reviewerComment || ""}
             onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}
             className="resize-none bg-background"
+            disabled={isViewOnly}
           />
         </CardContent>
       </Card>
@@ -2367,11 +2390,13 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       <div className="fixed bottom-0 left-0 right-0 w-screen bg-background border-t py-4 px-6 mt-6 z-[9999]">
         <div className="flex justify-end gap-3">
           <Button variant="outline" className="w-[80px] text-foreground border-foreground hover:bg-foreground/5" onClick={onBack}>
-            취소
+            {isViewOnly ? "닫기" : "취소"}
           </Button>
-          <Button className="w-[80px]" onClick={handleSave}>
-            저장
-          </Button>
+          {!isViewOnly && (
+            <Button className="w-[80px]" onClick={handleSave}>
+              저장
+            </Button>
+          )}
         </div>
       </div>
 
