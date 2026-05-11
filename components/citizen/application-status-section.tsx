@@ -296,6 +296,8 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
     landShape: "역삼각형",
     siteType: "",
     roadFrontageLoss: false,
+    irrigationCanalLoss: false,
+    farmEquipmentTurnImpossible: false,
     // 신청 사유 및 첨부
     reason: application.reason,
     attachments: [] as FileItem[],
@@ -356,6 +358,8 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
       landShape: "역삼각형",
       siteType: "",
       roadFrontageLoss: false,
+      irrigationCanalLoss: false,
+      farmEquipmentTurnImpossible: false,
       reason: application.reason,
       attachments: [],
     });
@@ -580,7 +584,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
       </div>
 
       {/* 토지 정보 섹션 */}
-      <div className="overflow-hidden rounded-lg border border-border">
+      <div className={`overflow-hidden rounded-lg border transition-colors duration-300 ${isEditMode ? "border-primary/50 bg-primary/5" : "border-border"}`}>
         <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
           <h4 className="font-semibold text-foreground">토지 정보</h4>
         </div>
@@ -592,6 +596,19 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
             </p>
           </div>
         )}
+
+        {/* 필지 주소(소재지) - 읽기 전용 */}
+        <div className="flex border-b border-border">
+          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">필지 주소</span>
+          </div>
+          <div className="flex flex-1 items-center px-4 py-3">
+            <span className="text-sm">{application.lands?.[0]?.address || "충청남도 천안시 동남구 신부동 810"}</span>
+            {isEditMode && (
+              <span className="ml-2 text-xs text-muted-foreground">(수정 불가)</span>
+            )}
+          </div>
+        </div>
 
         {/* 활용 지목 / 공부상 지목 / 토지 모양 행 */}
         <div className="flex border-b border-border">
@@ -687,18 +704,38 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           <div className="flex flex-1 flex-col px-4 py-3">
             {isEditMode ? (
               <>
-                <p className="mb-2 text-xs text-muted-foreground">
+                <p className="mb-3 text-xs text-muted-foreground">
                   AI가 자동 판독할 수 없는 사항입니다. 해당되는 경우 체크해 주세요.
                 </p>
-                <label className="flex cursor-pointer items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={editData.roadFrontageLoss}
-                    onChange={(e) => setEditData({ ...editData, roadFrontageLoss: e.target.checked })}
-                    className="h-4 w-4 rounded border-gray-300"
-                  />
-                  <span className="text-sm">접면도로 상실</span>
-                </label>
+                <div className="flex flex-wrap gap-x-6 gap-y-2">
+                  <label className="flex cursor-pointer items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={editData.roadFrontageLoss}
+                      onChange={(e) => setEditData({ ...editData, roadFrontageLoss: e.target.checked })}
+                      className="h-4 w-4 rounded border-gray-300"
+                    />
+                    <span className="text-sm">접면도로 상실</span>
+                  </label>
+                  <label className="flex cursor-pointer items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={editData.irrigationCanalLoss}
+                      onChange={(e) => setEditData({ ...editData, irrigationCanalLoss: e.target.checked })}
+                      className="h-4 w-4 rounded border-gray-300"
+                    />
+                    <span className="text-sm">관개수로 상실</span>
+                  </label>
+                  <label className="flex cursor-pointer items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={editData.farmEquipmentTurnImpossible}
+                      onChange={(e) => setEditData({ ...editData, farmEquipmentTurnImpossible: e.target.checked })}
+                      className="h-4 w-4 rounded border-gray-300"
+                    />
+                    <span className="text-sm">농기계 회전 불가</span>
+                  </label>
+                </div>
               </>
             ) : (
               <span className="text-sm text-muted-foreground">해당 없음</span>
@@ -708,7 +745,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
       </div>
 
       {/* 신청 사유 및 첨부 서류 테이블 */}
-      <div className="overflow-hidden rounded-lg border border-border">
+      <div className={`overflow-hidden rounded-lg border transition-colors duration-300 ${isEditMode ? "border-primary/50 bg-primary/5" : "border-border"}`}>
         <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
           <h4 className="font-semibold text-foreground">신청 사유 및 첨부 서류</h4>
         </div>
