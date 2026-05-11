@@ -887,7 +887,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
         </div>
       )}
 
-      {/* 토지 정보 요약 - 셀렉트박스로 필지 선택 */}
+      {/* 토지 정보 (활용 지목, 토지 모양, 택지 유형, 확인 항목, 신청 사유, 첨부 서류) */}
       <LandInfoSection 
         application={application}
         isEditMode={isEditMode}
@@ -898,8 +898,13 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           roadFrontageLoss: editData.roadFrontageLoss,
           irrigationCanalLoss: editData.irrigationCanalLoss,
           farmEquipmentTurnImpossible: editData.farmEquipmentTurnImpossible,
+          reason: editData.reason,
+          attachments: editData.attachments,
         }}
         onEditDataChange={(data) => setEditData({ ...editData, ...data })}
+        onFileChange={handleFileChange}
+        onRemoveFile={handleRemoveFile}
+        MAX_FILES={MAX_FILES}
       />
 
       {/* 처리 완료 시 결과 표시 */}
