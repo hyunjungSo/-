@@ -99,16 +99,14 @@ export function AIAnalysisFlowDialog({
   const shapeChanged = shapeIndexChange >= 1.0 || isIrregularShape;
 
   // 최종 판정
-  const finalJudgment = aiResult?.provisionalJudgment || "심의위원회 이관";
+  const finalJudgment = aiResult?.provisionalJudgment || "수용 불가능";
   const anyConditionMet = areaMet || accessRoadLost || shapeChanged;
 
   // 조건 상태 결정 (AI 판정 결과 우선 적용)
   const getConditionStatus = () => {
-    // AI 판정이 심의위원회 이관인 경우 심의위원회 이관 반환
-    if (finalJudgment === "심의위원회 이관") return "심의위원회 이관";
-    // AI 판정이 매수인 경우 충족 반환
-    if (finalJudgment === "매수") return "충족";
-    // AI 판정이 기각인 경우 미충족 반환
+    // AI 판정이 수용가능인 경우 충족 반환
+    if (finalJudgment === "수용가능") return "충족";
+    // AI 판정이 수용 불가능인 경우 미충족 반환
     return "미충족";
   };
   const conditionStatus = getConditionStatus();
@@ -350,21 +348,15 @@ export function AIAnalysisFlowDialog({
               <div className="grid grid-cols-3 gap-3">
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
-                  finalJudgment === "매수" ? "border-success bg-success/5" : "border-gray-200 bg-gray-50"
+                  finalJudgment === "수용가능" ? "border-success bg-success/5" : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className={cn("text-sm font-medium", finalJudgment === "매수" ? "text-success" : "text-gray-500")}>매수 판단</p>
+                  <p className={cn("text-sm font-medium", finalJudgment === "수용가능" ? "text-success" : "text-gray-500")}>수용가능 판단</p>
                 </div>
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
-                  finalJudgment === "기각" ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50"
+                  finalJudgment === "수용 불가능" ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className={cn("text-sm font-medium", finalJudgment === "기각" ? "text-red-500" : "text-gray-500")}>기각 판단</p>
-                </div>
-                <div className={cn(
-                  "border rounded p-3 text-center transition-all",
-                  finalJudgment === "심의위원회 이관" ? "border-amber-500 bg-amber-50" : "border-gray-200 bg-gray-50"
-                )}>
-                  <p className={cn("text-sm font-medium", finalJudgment === "심의위원회 이관" ? "text-amber-500" : "text-gray-500")}>토지보상심의위원회 이관 판단</p>
+                  <p className={cn("text-sm font-medium", finalJudgment === "수용 불가능" ? "text-red-500" : "text-gray-500")}>수용 불가능 판단</p>
                 </div>
               </div>
             </div>
@@ -380,39 +372,28 @@ export function AIAnalysisFlowDialog({
               <div className="mb-3">
                 <h4 className="text-sm font-bold text-gray-700">최종 결정</h4>
               </div>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <motion.div 
-                  animate={{ scale: finalJudgment === "매수" && animationStep >= 7 ? 1.02 : 1 }}
+                  animate={{ scale: finalJudgment === "수용가능" && animationStep >= 7 ? 1.02 : 1 }}
                   className={cn(
                     "rounded p-3 text-center text-sm font-semibold border transition-all",
-                    finalJudgment === "매수" 
+                    finalJudgment === "수용가능" 
                       ? "border-success bg-success text-white" 
                       : "border-gray-200 bg-gray-50 text-gray-400"
                   )}
                 >
-                  매수
+                  수용가능
                 </motion.div>
                 <motion.div 
-                  animate={{ scale: finalJudgment === "기각" && animationStep >= 7 ? 1.02 : 1 }}
+                  animate={{ scale: finalJudgment === "수용 불가능" && animationStep >= 7 ? 1.02 : 1 }}
                   className={cn(
                     "rounded p-3 text-center text-sm font-semibold border transition-all",
-                    finalJudgment === "기각"
+                    finalJudgment === "수용 불가능"
                       ? "border-red-500 bg-red-500 text-white" 
                       : "border-gray-200 bg-gray-50 text-gray-400"
                   )}
                 >
-                  기각
-                </motion.div>
-                <motion.div 
-                  animate={{ scale: finalJudgment === "심의위원회 이관" && animationStep >= 7 ? 1.02 : 1 }}
-                  className={cn(
-                    "rounded p-3 text-center text-sm font-semibold border transition-all",
-                    finalJudgment === "심의위원회 이관"
-                      ? "border-amber-500 bg-amber-500 text-white" 
-                      : "border-gray-200 bg-gray-50 text-gray-400"
-                  )}
-                >
-                  토지보상심의위원회 이관
+                  수용 불가능
                 </motion.div>
               </div>
             </div>
@@ -441,9 +422,7 @@ export function AIAnalysisFlowDialog({
               <span className="text-base text-gray-500">AI 잠정 판정:</span>
               <span className={cn(
                 "text-base font-bold px-4 py-1.5 rounded",
-                finalJudgment === "매수" ? "bg-green-600 text-white" :
-                finalJudgment === "기각" ? "bg-red-500 text-white" :
-                "bg-amber-500 text-white"
+                finalJudgment === "수용가능" ? "bg-green-600 text-white" : "bg-red-500 text-white"
               )}>
                 {finalJudgment}
               </span>
@@ -677,7 +656,7 @@ function PathColumn({
             전체 미해당 시 조건 <span className="text-red-500">미충족</span> → 수용
           </p>
           <p className={cn(
-            conditionStatus === "심의위원회 이관" ? "text-amber-500 font-medium" : "text-gray-400"
+            conditionStatus === "미충족" ? "text-amber-500 font-medium" : "text-gray-400"
           )}>
             실측 및 추가 검토 필요시 → <span className="text-amber-500">검토필요</span>
           </p>

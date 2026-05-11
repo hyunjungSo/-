@@ -3,8 +3,8 @@
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-// AI 판정 및 최종 결정: 매수, 기각, 심의위원회 이관
-export type JudgmentType = "매수" | "기각" | "심의위원회 이관" | "분석중";
+// AI 판정 결과: 수용가능, 수용 불가능
+export type JudgmentType = "수용가능" | "수용 불가능" | "분석중";
 
 interface JudgmentStatusProps {
   judgment: JudgmentType | string;
@@ -14,7 +14,7 @@ interface JudgmentStatusProps {
 }
 
 /**
- * 매수 상태 표시 컴포넌트
+ * AI 판정 상태 표시 컴포넌트
  * 
  * 사용 가이드:
  * 1. Badge 형식 (variant="badge"): 카드 헤더, 목록 아이템, 강조 필요 시
@@ -28,24 +28,13 @@ export function JudgmentStatus({
 }: JudgmentStatusProps) {
   const getColors = () => {
     switch (judgment) {
-      // 최종 결정
-      case "매수":
+      // AI 판정 결과
+      case "수용가능":
         return {
           badge: "bg-green-600 text-white hover:bg-green-600",
           text: "text-green-600"
         };
-      case "기각":
-        return {
-          badge: "bg-red-500 text-white hover:bg-red-500",
-          text: "text-red-500"
-        };
-      case "심의위원회 이관":
-        return {
-          badge: "bg-amber-500 text-white hover:bg-amber-500",
-          text: "text-amber-500"
-        };
-      // AI 판정 결과 (매수, 매수 불가)
-      case "매수 불가":
+      case "수용 불가능":
         return {
           badge: "bg-red-500 text-white hover:bg-red-500",
           text: "text-red-500"
@@ -97,7 +86,7 @@ export function JudgmentStatus({
 }
 
 /**
- * 매수여부 O/X 표시 (심의서용)
+ * 수용여부 O/X 표시 (심의서용)
  */
 export function JudgmentOX({ 
   judgment,
@@ -106,15 +95,15 @@ export function JudgmentOX({
   judgment: JudgmentType | string;
   className?: string;
 }) {
-  const isApproved = judgment === "매수";
+  const isAccepted = judgment === "수용가능";
   
   return (
     <span className={cn(
       "font-bold",
-      isApproved ? "text-green-600" : "text-red-500",
+      isAccepted ? "text-green-600" : "text-red-500",
       className
     )}>
-      {isApproved ? "O" : "X"}
+      {isAccepted ? "O" : "X"}
     </span>
   );
 }
