@@ -599,7 +599,7 @@ export function ApplicationFormSection({
                     <label className="text-sm font-medium">소유자 연락처 <span className="text-destructive">*</span></label>
                     <Input
                       id="applicantContact"
-                      placeholder="01000000000"
+                      placeholder="'-' 없이 숫자만 입력"
                       value={formData.applicantContact}
                       onChange={(e) =>
                         setFormData((prev) => ({ ...prev, applicantContact: e.target.value }))
@@ -627,7 +627,7 @@ export function ApplicationFormSection({
                       <label className="text-sm font-medium">대리인 연락처 <span className="text-destructive">*</span></label>
                       <Input
                         id="agentContact"
-                        placeholder="01000000000"
+                        placeholder="'-' 없이 숫자만 입력"
                         value={formData.agentContact}
                         onChange={(e) =>
                           setFormData((prev) => ({ ...prev, agentContact: e.target.value }))
