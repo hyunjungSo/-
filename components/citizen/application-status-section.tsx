@@ -360,7 +360,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                 onClick={handleCancel}
                 className="h-8 gap-1.5 text-xs"
               >
-                <X className="h-[18px] w-[18px]" />
+                <X className="h-[14px] w-[14px]" />
                 취소
               </Button>
               <Button
@@ -368,7 +368,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                 onClick={handleSave}
                 className="h-8 gap-1.5 text-xs"
               >
-                <Save className="h-[18px] w-[18px]" />
+                <Save className="h-[14px] w-[14px]" />
                 저장
               </Button>
             </div>
@@ -380,7 +380,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               onClick={() => setIsEditMode(true)}
               className="h-8 gap-1.5 text-xs"
             >
-              <Pencil className="h-[18px] w-[18px]" />
+              <Pencil className="h-[14px] w-[14px]" />
               수정
             </Button>
           )}
