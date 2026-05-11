@@ -310,7 +310,7 @@ function LandInfoSection({
       {isEditMode && (
         <div className="border-b border-border bg-blue-50 px-4 py-2">
           <p className="text-xs text-blue-700">
-            AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지�� 실제 활용 상황을 입력해 주세요. (필지 주소는 수정 불가)
+            AI 판단과 실제 현황이 다를 수 있습니다. ��재 토지�� 실제 활용 상황을 입력해 주세요. (필지 주소는 수정 불가)
           </p>
         </div>
       )}
@@ -810,7 +810,7 @@ function ApplicationDetailPanel({
         <div className="flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2">
           <Info className="h-4 w-4 shrink-0 text-blue-600" />
           <p className="text-xs text-blue-700">
-            필지 선택은 접수 후 단계와 상관없이 수정이 불가능합니다. 그 외 정보는 자유롭게 수정하실 수 있습니다.
+            필지 선택은 접수 후 단계와 상관없이 수정이 불가능합니다.
           </p>
         </div>
       )}

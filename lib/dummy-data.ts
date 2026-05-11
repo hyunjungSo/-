@@ -1428,7 +1428,7 @@ function generateRationale(
   if (land.landType === "농지") {
     landTypeCriteria = "농지 기준: 면적 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
     physicalConditions = "물리조건: ①도로/수로 상실로 농지 사용 불가 ②농기계 회전 곤란 ③형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
-  } else if (land.landType === "��지") {
+  } else if (land.landType === "택지") {
     landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)";
     physicalConditions = "물리조건: ①접면도로 상실로 건축허가 불가 ②형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "임야") {
@@ -1540,32 +1540,15 @@ export const dummyApplications: Application[] = [
     reportedShape: "역삼각형",
     farmMachineDifficulty: false,
     reason: "토지가 양분되어 잔여지 발생. 절토 및 옹벽 설치로 진입이 곤란합니다.",
-    attachments: ["토지대장.pdf", "등기부등본.pdf", "지적도.pdf"],
+    attachments: ["토지대장.pdf"],
     status: "처리완료",
     adminStatus: "심사완료",
     appliedAt: "2026-04-04",
     aiResult: generateAIResult(dummyLandInfoList[3]),
     finalJudgment: "매수",
-    reviewerComment: "본 필지는 도로 편입으로 인해 잔여지가 역삼각형 형태로 변형되었으며, 잔여면적 300㎡로 기준 330㎡ 이하를 충족합니다. 또한 절토 및 옹벽 설치로 인해 기존 진입로가 상실되어 토지 이용이 현저히 곤란한 상태입니다. 형상지수 변화가 1.2로 기준 1.0 이상을 충족하여 매수 판정합니다.",
+    reviewerComment: "잔여지 형상 및 면적 기준 충족으로 매수 판정",
     adminName: "홍길동",
     statusUpdatedAt: "2026-04-15",
-    // 담당자 AI 분석 입력값 (완전히 채워진 케이스)
-    adminCurrentUsage: "잡",
-    adminLandSubType: "other",
-    adminLandOptions: {
-      farmMachineDifficulty: false,
-      accessRoadLost: true,
-      waterChannelLost: false,
-    },
-    // 필지별 담당자 판정
-    landJudgments: [
-      {
-        landId: dummyLandInfoList[3].id,
-        judgment: "매수" as const,
-        unifiedGroupId: null,
-        reason: "잔여면적 300㎡ ≤ 330㎡, 형상지수 +1.2, 접면도로 상실로 수용 조건 충족",
-      }
-    ],
   },
   // 동일 소유자 복수 필지 신청 케이스
   {
@@ -1782,7 +1765,7 @@ export const dummyApplications: Application[] = [
         currentUsage: "대" as const,
         landSubType: "residential-detached" as const,
         actualUsage: "대" as const,
-        reportedShape: "삼���형" as const,
+        reportedShape: "삼각형" as const,
         farmMachineDifficulty: false,
         accessRoadLost: true,
         waterChannelLost: false,
