@@ -599,7 +599,7 @@ export function ApplicationFormSection({
                     <label className="text-sm font-medium">소유자 연락처 <span className="text-destructive">*</span></label>
                     <Input
                       id="applicantContact"
-                      placeholder="'-' 없이 숫자만 입력"
+                      placeholder="01000000000"
                       value={formData.applicantContact}
                       onChange={(e) =>
                         setFormData((prev) => ({ ...prev, applicantContact: e.target.value }))
@@ -627,7 +627,7 @@ export function ApplicationFormSection({
                       <label className="text-sm font-medium">대리인 연락처 <span className="text-destructive">*</span></label>
                       <Input
                         id="agentContact"
-                        placeholder="'-' 없이 숫자만 입력"
+                        placeholder="01000000000"
                         value={formData.agentContact}
                         onChange={(e) =>
                           setFormData((prev) => ({ ...prev, agentContact: e.target.value }))
@@ -722,13 +722,13 @@ export function ApplicationFormSection({
                       {/* 활용 지목 / 공부상 지목 / 토지 모양 - 한 열 정렬 */}
                       <div className="grid gap-4 sm:grid-cols-3">
                         <div className="space-y-1.5">
-                          <label className="text-sm font-medium">���용 지목 <span className="text-destructive">*</span></label>
+                          <label className="text-sm font-medium">���용 지��� <span className="text-destructive">*</span></label>
                           <Select
                             value={landData.currentUsage}
                             onValueChange={(value) => updateLandData(index, "currentUsage", value as LandCategory)}
                           >
                             <SelectTrigger>
-                              <SelectValue placeholder="선택하세요" />
+                              <SelectValue placeholder="선택하���요" />
                             </SelectTrigger>
                             <SelectContent>
                               {landCategories.map((cat) => (
@@ -739,13 +739,13 @@ export function ApplicationFormSection({
                             </SelectContent>
                           </Select>
                           <p className="text-xs text-muted-foreground">
-                            AI 판단: {land.landCategory} ({landCategories.find(c => c.value === land.landCategory)?.label || ""})
+                            AI 판단: {landCategories.find(c => c.value === land.landCategory)?.label || land.landCategory}
                           </p>
                         </div>
                         <div className="space-y-1.5">
                           <label className="text-sm font-medium text-muted-foreground">공부상 지목</label>
                           <div className="flex w-fit items-center whitespace-nowrap rounded-md border border-input bg-muted px-3 py-2 h-10 text-sm text-muted-foreground cursor-not-allowed opacity-70">
-                            {land.landCategory} ({landCategories.find(c => c.value === land.landCategory)?.label || ""})
+                            {landCategories.find(c => c.value === land.landCategory)?.label || land.landCategory}
                           </div>
                         </div>
                       </div>
