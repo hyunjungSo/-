@@ -287,7 +287,7 @@ export function ApplicationFormSection({
       landDataList: isMultipleLands ? landDataList : undefined,
     };
 
-    // 시뮬레이션을 위한 딜레이
+    // 시뮬��이션을 위한 딜레이
     setTimeout(() => {
       setIsSubmitting(false);
       onSubmit(application);
@@ -980,18 +980,21 @@ export function ApplicationFormSection({
           <AlertDialogHeader>
             <AlertDialogTitle>잔여지 매수 신청서를 제출하시겠습니까?</AlertDialogTitle>
             <AlertDialogDescription asChild>
-              <div className="space-y-3 text-muted-foreground" style={{ fontSize: '16px' }}>
-                <p>
-                  제출 후에는 <span className="font-medium text-foreground">&apos;진행 중&apos; 단계로 넘어가기 전(담당자 확인 전)</span>까지 신청 내용을 보완하실 수 있습니다.
+              <div className="space-y-4 text-muted-foreground">
+                <p className="flex items-center gap-2 text-sm">
+                  <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 font-medium">진행 중</Badge>
+                  <span>단계 전까지 신청 내용 수정이 가능합니다.</span>
                 </p>
-                <ul className="space-y-1" style={{ fontSize: '14px' }}>
-                  <li>
-                    <span className="font-medium text-foreground">수정 가능 항목:</span> 신청인 정보, 토지 정보, 신청 사유, 첨부 서류
-                  </li>
-                  <li>
-                    <span className="font-medium text-foreground">수정 불가 항목:</span> 대상 필지 선택 (AI 분석에 영향을 미치는 정보는 접수 후 수정이 불가능합니다)
-                  </li>
-                </ul>
+                <div className="rounded-md border bg-muted/30 p-3 space-y-2 text-sm">
+                  <p className="flex gap-2">
+                    <span className="text-green-600 font-medium shrink-0">수정 가능:</span>
+                    <span>신청인 정보, 토지 정보, 신청 사유, 첨부 서류</span>
+                  </p>
+                  <p className="flex gap-2">
+                    <span className="text-red-500 font-medium shrink-0">수정 불가:</span>
+                    <span>대상 필지 선택</span>
+                  </p>
+                </div>
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
