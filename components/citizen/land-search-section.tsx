@@ -235,7 +235,7 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["기곡리", "효자리", "금수리", "금산리"],
+    "도고면": ["기곡리", "효���리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
@@ -603,7 +603,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const [isResultsCollapsed, setIsResultsCollapsed] = useState(false);
   const [isBasicInfoCollapsed, setIsBasicInfoCollapsed] = useState(false);
   
-  // 본인 소유 필지 선택 상태 (인접지 중 ��인 소유 확인용)
+  // 본인 소유 필지 선택 상태 (인접지 중 ���인 소유 확인용)
   const [ownedParcels, setOwnedParcels] = useState<Set<string>>(new Set());
   
   // 지도-목록 호버 연동 상태
@@ -793,7 +793,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return;
       }
       
-      // 지번 검색: 선택된 지역에 해당하는 토지 필터링
+      // 지번 검색: 선���된 지역에 해당하는 토지 필터링
       results = dummyLandInfoList.filter(land => {
         // 시군구 포함 여부
         if (!land.address.includes(selectedSigungu)) return false;
@@ -1316,7 +1316,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             </div>
             
             {/* 검색 결과 목록 */}
-            <div className="max-h-[calc(100%-52px)] overflow-y-auto pb-4">
+            <div className="max-h-[calc(100%-110px)] overflow-y-auto pb-2">
               {searchResults.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center px-4 py-12 text-center">
                   <MapPin className="h-8 w-8 text-muted-foreground" />
