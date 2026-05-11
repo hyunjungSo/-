@@ -561,7 +561,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                                             onClick={() => handleRemoveFile(index)}
                                             className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
                                           >
-                                            <Trash2 className="size-3.5" />
+                                            <Trash2 className="size-[18px]" />
                                           </Button>
                         </li>
                       ))}
