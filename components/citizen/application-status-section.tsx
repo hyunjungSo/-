@@ -591,7 +591,6 @@ function ApplicationDetailPanel({
   });
 
   const canEdit = application.adminStatus === "접수완료";
-  const [showEditDisabledAlert, setShowEditDisabledAlert] = useState(false);
   const MAX_FILES = 10;
 
   const handleAddressSelect = (address: { postalCode: string; address: string }) => {
@@ -692,23 +691,35 @@ function ApplicationDetailPanel({
             </Button>
           </div>
         ) : (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              if (canEdit) {
-                onEditModeChange(true);
-              } else {
-                setShowEditDisabledAlert(true);
-              }
-            }}
-            className="h-8 gap-1.5 text-xs"
-          >
-            <Pencil className="size-[18px]" />
-            수정
-          </Button>
+          <div className="flex items-center gap-2">
+            {!canEdit && (
+              <span className="text-xs text-muted-foreground">
+                이미 검토가 시작되어 정보 수정이 제한됩니다
+              </span>
+            )}
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={!canEdit}
+              onClick={() => onEditModeChange(true)}
+              className={`h-8 gap-1.5 text-xs ${!canEdit ? "opacity-50 cursor-not-allowed" : ""}`}
+            >
+              <Pencil className="size-[18px]" />
+              수정
+            </Button>
+          </div>
         )}
       </div>
+
+      {/* 수정 모드 안내 */}
+      {isEditMode && (
+        <div className="flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2">
+          <Info className="h-4 w-4 shrink-0 text-blue-600" />
+          <p className="text-xs text-blue-700">
+            필지 선택은 접수 후 단계와 상관없이 수정이 불가능합니다. 그 외 정보는 자유롭게 수정하실 수 있습니다.
+          </p>
+        </div>
+      )}
 
       {/* 신청인 정보 테이블 */}
       <div className={`overflow-hidden rounded-lg border transition-colors duration-300 ${isEditMode ? "border-primary/50 bg-primary/5" : "border-border"}`}>
@@ -964,22 +975,7 @@ function ApplicationDetailPanel({
         </div>
       )}
 
-      {/* 수정 불가 안내 모달 */}
-      {showEditDisabledAlert && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="mx-4 w-full max-w-md rounded-lg bg-background p-6 shadow-xl">
-            <h3 className="mb-2 text-lg font-semibold">수정이 불가합니다</h3>
-            <p className="mb-6 text-sm text-muted-foreground">
-              현재 담당자가 신청 내용을 검토 중입니다. 검토가 진행 중인 신청 건은 수정할 수 없습니다. 수정이 필요하신 경우 담당자에게 문의해 주세요.
-            </p>
-            <div className="flex justify-end">
-              <Button onClick={() => setShowEditDisabledAlert(false)}>
-                확인
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      
     </div>
   );
 }
