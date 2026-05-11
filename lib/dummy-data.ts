@@ -999,7 +999,7 @@ export const dummyLandInfoList: LandInfo[] = [
     ],
   },
   // ===== 혼합 케이스 (일부 매수 + 일부 미해당) =====
-  // 4���지 중 2필지 매수, 나머지 2필지 미해당
+  // 4필지 중 2필지 매수, 나머지 2필지 미해당
   {
     id: "land-mixed-001",
     address: "경기도 평택시 포승읍 내기리 200-1",
@@ -1408,17 +1408,17 @@ function generateRationale(
   let physicalConditions: string;
   
   if (land.landType === "농지") {
-    landTypeCriteria = "농지 기준: 면�� 330��� 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
+    landTypeCriteria = "농지 기준: 면적 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
     physicalConditions = "물리조건: ①도로/수로 상실로 농지 사용 불가 ②농기계 회전 곤란 ③형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "택지") {
-    landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (���여��율 25% 이하 시 1.5배 완화)";
+    landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)";
     physicalConditions = "물리조건: ①접면도로 상실로 건축허가 불가 ②형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "임야") {
-    landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이��� 시 495㎡������ 완화)";
+    landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
     physicalConditions = "물리조건: ①공익사업으로 접한 도로가 없어진 경우";
   } else {
     landTypeCriteria = "그 밖의 토지 기준: 면적 330㎡ 이하 또는 잔여비율 50% 이하";
-    physicalConditions = "물리조건: ①절토/성토/옹벽으로 진입 곤란 ②토지 양분 ③형상 변경(정형: 폭 기준 미달/비정형: 형상지수 1.0이��� 상승)";
+    physicalConditions = "물리조건: ①절토/성토/옹벽으로 진입 곤란 ②토지 양분 ③형상 변경(정형: 폭 기준 미달/비정형: 형상지수 1.0이상 상승)";
   }
   
   const appliedCriteria = [
@@ -1491,7 +1491,7 @@ export const dummyApplications: Application[] = [
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
     reason: "고속도로 편입으로 인해 잔여지가 삼각형 형태로 남아 건축물 건축이 불가능합니다. 잔여 면적도 협소하여 종래 목적대로 사용할 수 없습니다.",
-    attachments: ["토지대장.pdf", "등����등본.pdf"],
+    attachments: ["토지대장.pdf", "등기부등본.pdf"],
     status: "AI분석완료",
     adminStatus: "접수완료",
     appliedAt: "2026-04-01",
@@ -1580,7 +1580,7 @@ export const dummyApplications: Application[] = [
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
     reason: "도로 편입으로 인접한 2개 필지가 모두 불규칙한 형태로 남아 건축이 불가능합니다. 각 필지별로 매수 검토를 요청드립니다.",
-    // 토지��� 민원인 입력 ���이터
+    // 토지는 민원인 입력 데이터
     landDataList: [
       {
         currentUsage: "대" as const,
@@ -1663,7 +1663,7 @@ export const dummyApplications: Application[] = [
     reportedShape: "자루형",
     farmMachineDifficulty: false,
     reason: "도로 편입으로 토지가 자루형으로 변형되었습니다. 면적 기준은 애매하여 실측이 필요합니다.",
-    attachments: ["토지대장.pdf", "지적��.pdf", "현황사진.jpg"],
+    attachments: ["토지대장.pdf", "지적도.pdf", "현황사진.jpg"],
     status: "검토중",
     adminStatus: "진행중",
     appliedAt: "2026-04-21",
@@ -1691,7 +1691,7 @@ export const dummyApplications: Application[] = [
           "물리조건: 형상 부정형(자루형) 확인됨",
           "면적 기준 경계선상으로 실측 필요",
         ],
-        detailedExplanation: "소재지: 경기도 용인시 처인구 양지면 마성리 137\n토지유형: 대지, 지목: 대\n편입현황: 500㎡ → 잔여 120㎡ (잔여비율 24.0%)\n형상변화: 정방형 → 자루형 (형상지수 +1.2)\n\n※ 면적이 완화기준(135㎡) 근처로 실측 ���인 필요",
+        detailedExplanation: "소재지: 경기도 용인시 처인구 양지면 마성리 137\n토지유형: 대지, 지목: 대\n편입현황: 500㎡ → 잔여 120㎡ (잔여비율 24.0%)\n형상변화: 정방형 → 자루형 (형상지수 +1.2)\n\n※ 면적이 완화기준(135㎡) 근처로 실측 확인 필요",
         manualCheckItems: ["접면도로 상실 여부 현장 확인"],
       },
     },
@@ -1717,7 +1717,7 @@ export const dummyApplications: Application[] = [
     appliedAt: "2026-04-07",
     aiResult: generateAIResult(dummyLandInfoList[9]),
     finalJudgment: "기각",
-    reviewerComment: "잔여비�� 90%로 매수 기준(30% 이하)을 크게 초과하며, 형상지수 변화도 0.1로 미미하여 종래 용도 사용에 지장이 없음. 매수 기준 미충족으로 기각 처리.",
+    reviewerComment: "잔여비율 90%로 매수 기준(30% 이하)을 크게 초과하며, 형상지수 변화도 0.1로 미미하여 종래 용도 사용에 지장이 없음. 매수 기준 미충족으로 기각 처리.",
     adminName: "박담당",
     statusUpdatedAt: "2026-04-18",
   },
@@ -1766,16 +1766,16 @@ export const dummyApplications: Application[] = [
       sameUsage: false,
       isUnifiedParcel: true,
     },
-    actualUsage: "���",
+    actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "동탄2 도시개발사업으로 인해 소유한 8개 필지가 모두 도로에 편입되어 잔여지가 불규칙한 형태로 남았습니다. 각 필지별로 건축 및 농업 활동이 불가능하여 일괄 매수�� 신청합니다.",
+    reason: "동탄2 도시개발사업으로 인해 소유한 8개 필지가 모두 도로에 편입되어 잔여지가 불규칙한 형태로 남았습니다. 각 필지별로 건축 및 농업 활동이 불가능하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "대" as const,
         landSubType: "residential-detached" as const,
         actualUsage: "대" as const,
-        reportedShape: "삼���형" as const,
+        reportedShape: "삼각형" as const,
         farmMachineDifficulty: false,
         accessRoadLost: true,
         waterChannelLost: false,
@@ -1869,7 +1869,7 @@ export const dummyApplications: Application[] = [
     applicationNumber: "2026-0409-001",
     applicantName: "한지민",
     applicantContact: "010-4444-5555",
-    applicantAddress: "��기도 파주시 탄현면 금산리 200",
+    applicantAddress: "경기도 파주시 탄현면 금산리 200",
     landInfo: dummyLandInfoList[0],
     actualUsage: "대",
     reportedShape: "삼각형",
@@ -1941,7 +1941,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 ��해 소유한 3�� 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합��다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -2029,7 +2029,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "천안 도시개발사업으로 ��해 소유한 4개 ���지(대지 1, 농지 2, 잡종지 1)가 모두 도로에 편입되었습니다. 대지에는 주택이 있었으나 철거되었고, 인접한 농지와 잡종지는 주택 부속 텃밭과 창고용지로 사용해 왔습니다. 편입 후 각 필지가 불규칙한 형태로 남아 건축 및 농업이 불가능합니다. 4필지 모두 매수를 신청합니다.",
+    reason: "천안 도시개발사업으로 인해 소유한 4개 필지(대지 1, 농지 2, 잡종지 1)가 모두 도로에 편입되었습니다. 대지에는 주택이 있었으나 철거되었고, 인접한 농지와 잡종지는 주택 부속 텃밭과 창고용지로 사용해 왔습니다. 편입 후 각 필지가 불규칙한 형태로 남아 건축 및 농업이 불가능합니다. 4필지 모두 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "대" as const,
@@ -2098,7 +2098,7 @@ export const dummyApplications: Application[] = [
           "농지 물리조건: 농기계 회전 곤란, 관개수로 상실",
           "형상 변화: 4필지 모두 비정형으로 변경",
         ],
-        detailedExplanation: "4필지 혼합 토지\n\n[필지 1] 777-1 (대지): 300㎡ → 90㎡ (삼각형)\n[필지 2] 777-2 (전): 450㎡ → 130㎡ (자루형)\n[필지 3] 777-3 (답): 600㎡ → 170㎡ (역삼각형)\n[필지 4] 777-4 (잡): 200㎡ → 60㎡ (삼각형)\n\n도로 편입 후 각 필지가 비정형으로 변경되어 종래 용도로 사용이 불가������ 상태입니다.",
+        detailedExplanation: "4필지 혼합 토지\n\n[필지 1] 777-1 (대지): 300㎡ → 90㎡ (삼각형)\n[필지 2] 777-2 (전): 450㎡ → 130㎡ (자루형)\n[필지 3] 777-3 (답): 600㎡ → 170㎡ (역삼각형)\n[필지 4] 777-4 (잡): 200㎡ → 60㎡ (삼각형)\n\n도로 편입 후 각 필지가 비정형으로 변경되어 종래 용도로 사용이 불가능한 상태입니다.",
         manualCheckItems: ["사용 여부 현장 확인"],
       },
     },
@@ -2106,7 +2106,7 @@ export const dummyApplications: Application[] = [
     statusUpdatedAt: "2026-04-27",
   },
   // ===== 소규모 복수필지 케이스 =====
-  // 소규모 복수필지 케이스 1: 김인정 - 2필지 대지 (개별 필지별 맹지 발생으로 매수 ���정)
+  // 소규모 복수필지 케이스 1: 김인정 - 2필지 대지 (개별 필지별 맹지 발생으로 매수 인정)
   {
     id: "app-recognized-001",
     applicationNumber: "2026-0427-001",
@@ -2130,7 +2130,7 @@ export const dummyApplications: Application[] = [
         currentUsage: "대" as const,
         landSubType: "residential-detached" as const,
         actualUsage: "대" as const,
-        reportedShape: "삼각���" as const,
+        reportedShape: "삼각형" as const,
         farmMachineDifficulty: false,
         accessRoadLost: true,
         waterChannelLost: false,
@@ -2177,7 +2177,7 @@ export const dummyApplications: Application[] = [
       },
     },
     finalJudgment: "매수",
-    reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 �� 필지 모두 접���도로 상실 ���인.",
+    reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 두 필지 모두 접면도로 상실 확인.",
     finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2필지 대지입니다. 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
     adminName: "김철수",
     statusUpdatedAt: "2026-04-29",
@@ -2255,7 +2255,7 @@ export const dummyApplications: Application[] = [
     aiResult: {
       landTypePath: "산지",
       criteriaChecks: [
-        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100㎡로 조��지 분단", isMet: true, autoDetected: true },
+        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100㎡로 조림지 분단", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },
       ],
@@ -2276,7 +2276,7 @@ export const dummyApplications: Application[] = [
           "토지 양분: 고속도로 관통으로 산림경영 불가",
         ],
         detailedExplanation: "5필지 산지 (조림지)\n\n[필지 1] 산101: 3,000㎡ → 1,500㎡ (삼각형)\n[필지 2] 산102: 2,500㎡ → 700㎡ (역삼각형)\n[필지 3] 산103: 2,800㎡ → 800㎡ (부정형)\n[필지 4] 산104: 2,200㎡ → 600㎡ (삼각형)\n[필지 5] 산105: 1,800㎡ → 500㎡ (자루형)\n\n고속도로가 중앙을 관통하여 조림지가 양분되어 산림경영이 불가능합니다.",
-        manualCheckItems: ["산림경영계획서 확인", "조림 현황 현장 ���인"],
+        manualCheckItems: ["산림경영계획서 확인", "조림 현황 현장 확인"],
       },
     },
     adminName: "박영희",
@@ -2326,7 +2326,7 @@ export const dummyApplications: Application[] = [
       {
         currentUsage: "전" as const,
         landSubType: "" as const,
-        actualUsage: "��" as const,
+        actualUsage: "전" as const,
         reportedShape: "정방형" as const,
         farmMachineDifficulty: false,
         accessRoadLost: false,
@@ -2351,7 +2351,7 @@ export const dummyApplications: Application[] = [
       criteriaChecks: [
         { criteriaName: "면적 기준 (200-1)", criteriaDescription: "잔여 150㎡ ≤ 330㎡ (농지 기준 충족)", isMet: true, autoDetected: true },
         { criteriaName: "면적 기준 (200-2)", criteriaDescription: "잔여 180㎡ ≤ 330㎡ (농지 기준 충족)", isMet: true, autoDetected: true },
-        { criteriaName: "형상지��� (200-1)", criteriaDescription: "형상지수 5.0 ≥ 2.0 (불량)", isMet: true, autoDetected: true },
+        { criteriaName: "형상지수 (200-1)", criteriaDescription: "형상지수 5.0 ≥ 2.0 (불량)", isMet: true, autoDetected: true },
         { criteriaName: "면적 기준 (55-1)", criteriaDescription: "잔여 600㎡ > 330㎡ (농지 기준 미충족)", isMet: false, autoDetected: true },
         { criteriaName: "형상지수 (55-1)", criteriaDescription: "형상지수 1.2 < 2.0 (양호)", isMet: false, autoDetected: true },
         { criteriaName: "면적 기준 (55-2)", criteriaDescription: "잔여 550㎡ > 330㎡ (농지 기준 미충족)", isMet: false, autoDetected: true },
@@ -2384,13 +2384,13 @@ export const dummyApplications: Application[] = [
         adjacentParcels: 2, // 내기리 200-1, 200-2만 연접
         conditions: {
           sameOwner: true,
-          continuous: false, // 전체는 ��접 아님
-          sameUsage: false, // 전체는 용도 불���치 (답/전)
+          continuous: false, // 전체는 인접 아님
+          sameUsage: false, // 전체는 용도 불일치 (답/전)
         },
         combinedArea: 1480,
         explanation: "4필지 개별 분석 결과: 내기리 200-1, 200-2는 면적 기준 충족 및 형상 불량으로 매수 판정. 만호리 55-1, 55-2는 면적 기준 미충족, 형상 양호로 미해당 판정.",
       },
-      // 필지별 판정 결과 (개별 분��)
+      // 필지별 판정 결과 (개별 분석)
       landJudgments: [
         { landId: "land-mixed-001", judgment: "매수", unifiedGroupId: null, reason: "내기리 200-1: 잔여 150㎡ ≤ 330㎡, 형상지수 5.0(불량), 농기계 회전곤란" },
         { landId: "land-mixed-002", judgment: "매수", unifiedGroupId: null, reason: "내기리 200-2: 잔여 180㎡ ≤ 330㎡, 형상지수 4.8(불량), 관개수로 상실" },
@@ -2405,7 +2405,7 @@ export const dummyApplications: Application[] = [
   {
     id: "app-unified-to-multiple",
     applicationNumber: "2026-0501-001",
-    applicationType: "multiple", // 복수��지 신청
+    applicationType: "multiple", // 복수필지 신청
     applicantName: "정민재",
     applicantContact: "010-5555-1234",
     applicantAddress: "경기도 용인시 처인구 포곡읍 둔전리 200",
@@ -2496,8 +2496,8 @@ export const dummyApplications: Application[] = [
       waterChannelLost: true,
       farmMachineDifficulty: true,
       judgmentRationale: {
-        summary: "농지 2필지 ���별 분석 - 200-1(전): 세장형 변형으로 농기계 진입 곤란, 200-2(답): 관개수로 상실로 영농 불가",
-        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행��칙 제34조",
+        summary: "농지 2필지 개별 분석 - 200-1(전): 세장형 변형으로 농기계 진입 곤란, 200-2(답): 관개수로 상실로 영농 불가",
+        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
           "200-1(전): 형상지수 4.8 (불량) - 농기계 회전 곤란 ✓",
           "200-1(전): 세장형으로 변형되어 효율적 영농 곤란 ✓",
@@ -2649,7 +2649,7 @@ export const dummyApplications: Application[] = [
           summary: "매탄동 101번지: 잔여면적 230㎡로 장방형 형상으로 부적절",
           legalBasis: "「공익사업법」 제74조",
           appliedCriteria: ["잔여면적 230㎡ > 기준 90㎡", "장방형 형상"],
-          detailedExplanation: "장방형 형상으로 건축 효���이 저하되어 매수 불가로 판정합니다.",
+          detailedExplanation: "장방형 형상으로 건축 효율이 저하되어 매수 불가로 판정합니다.",
           manualCheckItems: ["건축 배치 가능 여부 확인"],
         },
       },
@@ -2663,7 +2663,7 @@ export const dummyApplications: Application[] = [
           summary: "매탄동 102번지: 사다리꼴 형상으로 건축 효율 저하, 매수 대상",
           legalBasis: "「공익사업법」 제74조",
           appliedCriteria: ["사다리꼴 형상으로 건축 효율 저하", "형상지수 불량"],
-          detailedExplanation: "사��리꼴 형상으로 인해 효율적인 건축물 배치가 어려워 매수 가능으로 판정합니다.",
+          detailedExplanation: "사다리꼴 형상으로 인해 효율적인 건축물 배치가 어려워 매수 가능으로 판정합니다.",
           manualCheckItems: ["최종 형상 확인"],
         },
       },
@@ -2689,7 +2689,7 @@ export const landShapes = {
     { value: "세로장방형", label: "세로장방형" },
   ],
   irregular: [
-    { value: "변형사다리형", label: "변��사다리형" },
+    { value: "변형사다리형", label: "변형사다리형" },
     { value: "역사다리형", label: "역사다리형" },
     { value: "사다리형", label: "사다리형" },
     { value: "삼각형", label: "삼각형" },
