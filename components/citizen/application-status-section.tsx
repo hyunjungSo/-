@@ -206,7 +206,7 @@ function LandInfoSection({
         )}
       </div>
       
-      {/* 복수 필지일 경우 셀렉트박����� 표시 */}
+      {/* 복수 필지일 경우 셀렉트박������� 표시 */}
       {isMultipleLands && (
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
@@ -788,9 +788,7 @@ function ApplicationDetailPanel({
           <div className="flex items-center gap-2">
             {!canEdit && (
               <span className="text-xs text-muted-foreground">
-                {application.adminStatus === "심사완료" 
-                  ? "이미 심사가 완료된건으로 정보 수정이 제한됩니다."
-                  : "이미 심사가 진행중인건으로 정보 수정이 제한됩니다."}
+                이미 심사가 완료되어 정보 수정이 제한됩니다
               </span>
             )}
             <Button
@@ -806,16 +804,6 @@ function ApplicationDetailPanel({
           </div>
         )}
       </div>
-
-      {/* 수정 모드 안내 */}
-      {isEditMode && (
-        <div className="flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2">
-          <Info className="h-4 w-4 shrink-0 text-blue-600" />
-          <p className="text-xs text-blue-700">
-            필지 선택은 접수 후 단계와 상관없이 수정이 불가능합니다.
-          </p>
-        </div>
-      )}
 
       {/* 신청인 정보 테이블 */}
       <div className={`overflow-hidden rounded-lg border transition-colors duration-300 ${isEditMode ? "border-primary/50 bg-primary/5" : "border-border"}`}>
