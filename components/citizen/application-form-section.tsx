@@ -287,7 +287,7 @@ export function ApplicationFormSection({
       landDataList: isMultipleLands ? landDataList : undefined,
     };
 
-    // 시뮬��이션을 위한 딜레이
+    // 시뮬레이션을 위한 딜레이
     setTimeout(() => {
       setIsSubmitting(false);
       onSubmit(application);
@@ -739,7 +739,7 @@ export function ApplicationFormSection({
                             onValueChange={(value) => updateLandData(index, "currentUsage", value as LandCategory)}
                           />
                           <p className="text-xs text-muted-foreground">
-                            AI ��단: {getLandUsageLabel(land.landCategory)}
+                            AI 판단: {getLandUsageLabel(land.landCategory)}
                           </p>
                         </div>
                         <div className="space-y-1.5">

@@ -217,7 +217,7 @@ export const dummyLandInfoList: LandInfo[] = [
     remainingRatio: 30.0,
     landType: "택지",
     landCategory: "대",
-    originalShape: "가로장������형",
+    originalShape: "가로장방형",
     remainingShape: "삼각형",
     originalShapeIndex: 4.2,
     remainingShapeIndex: 5.9,
@@ -812,7 +812,7 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerContact: "010-7700-2002",
     hasIncludedLand: true,
     businessUnit: "천안안성",
-    projectName: "천안 도시개���사업",
+    projectName: "천안 도시개발사업",
     coordinates: [
       { lat: 36.8165, lng: 127.1580 },
       { lat: 36.8170, lng: 127.1590 },
@@ -1414,11 +1414,11 @@ function generateRationale(
     landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (���여��율 25% 이하 시 1.5배 완화)";
     physicalConditions = "물리조건: ①접면도로 상실로 건축허가 불가 ②형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "임야") {
-    landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이��� 시 495㎡���지 완화)";
+    landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이��� 시 495㎡������ 완화)";
     physicalConditions = "물리조건: ①공익사업으로 접한 도로가 없어진 경우";
   } else {
     landTypeCriteria = "그 밖의 토지 기준: 면적 330㎡ 이하 또는 잔여비율 50% 이하";
-    physicalConditions = "물리조건: ①절토/성토/옹벽으로 진입 곤란 ②토지 양분 ③형상 변경(정형: 폭 기준 미달/비정형: 형상지수 1.0이�� 상승)";
+    physicalConditions = "물리조건: ①절토/성토/옹벽으로 진입 곤란 ②토지 양분 ③형상 변경(정형: 폭 기준 미달/비정형: 형상지수 1.0이��� 상승)";
   }
   
   const appliedCriteria = [
@@ -2130,7 +2130,7 @@ export const dummyApplications: Application[] = [
         currentUsage: "대" as const,
         landSubType: "residential-detached" as const,
         actualUsage: "대" as const,
-        reportedShape: "삼각형" as const,
+        reportedShape: "삼각���" as const,
         farmMachineDifficulty: false,
         accessRoadLost: true,
         waterChannelLost: false,

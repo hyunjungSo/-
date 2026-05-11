@@ -79,7 +79,7 @@ const regionData = {
     "중구": ["광희동", "남대문로", "남산동", "남창동", "남학동", "다동", "만리동", "명동", "무교동", "무학동", "묵정동", "방산동", "봉래동", "북창동", "산림동", "삼각동", "서소문동", "소공동", "수표동", "수하동", "순화동", "신당동", "쌍림동", "예관동", "예장동", "오장동", "을지로", "인현동", "입정동", "장교동", "장충동", "저동", "정동", "주교동", "주자동", "중림동", "초동", "충무로", "충정로", "태평로", "필동", "황학동", "회현동", "흥인동"],
     "중랑구": ["망우동", "면목동", "묵동", "상봉동", "신내동", "중화동"],
     // 부산광역시
-    "해운대구": ["반송동", "반여동", "석대동", "송정동", "우동", "좌동", "재송동", "중동"],
+    "해운대구": ["��송동", "반여동", "석대동", "송정동", "우동", "좌동", "재송동", "중동"],
     "기장군": ["기장읍", "장안읍", "정관읍", "일광면", "철마면"],
     "금정구": ["구서동", "금��동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
     // 경기도
@@ -234,13 +234,13 @@ const regionData = {
     "송악면": ["강장리", "궁평리", "마곡리", "수곡리", "역촌리", "유곡리", "평촌리"],
     "신창면": ["가덕리", "궁화리", "남성리", "읍내리", "학정리", "황산리"],
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
-    "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
+    "영인면": ["고룡리", "상성리", "신봉리", "신현리", "���산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
     "도고면": ["기곡���", "효���리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
-    "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
+    "금남면": ["��성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "청��리"],
     "소정면": ["송등리", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
@@ -410,7 +410,7 @@ function simulateAIAnalysis(
   } else if (metAutoCriteria >= 1) {
     provisionalJudgment = "수용가능";
   } else {
-    provisionalJudgment = "수용������";
+    provisionalJudgment = "수용불가";
   }
 
   const judgmentRationale: JudgmentRationale = generateJudgmentRationale(
@@ -1171,7 +1171,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 disabled={!selectedSido}
               >
                 <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="시군구 선택" />
+                  <SelectValue placeholder="시군구 ���택" />
                 </SelectTrigger>
                 <SelectContent>
                   {sigunguOptions.map((sigungu) => (
@@ -1539,7 +1539,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
                         <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
                         <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
-                        <SelectItem value="commercial">���업용 (기준: 150㎡)</SelectItem>
+                        <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
                         <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
                       </SelectContent>
                     </Select>
@@ -1598,7 +1598,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         <div className="flex items-start gap-2">
                           <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                           <div>
-                            <h4 className="text-base font-semibold text-foreground">법��� 근거</h4>
+                            <h4 className="text-base font-semibold text-foreground">법적 근거</h4>
                             <p className="mt-1 text-base leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
                           </div>
                         </div>
