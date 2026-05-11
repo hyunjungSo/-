@@ -1721,7 +1721,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             )}
                             
                             {/* 현장확인 옵션 */}
-                            <div className="space-y-3 pt-2 border-t">
+                            <div className="space-y-3 pt-2">
                               <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
                               {isViewOnly ? (
                                 <div className="space-y-2 text-sm">
