@@ -588,13 +588,13 @@ function LandInfoSection({
       {/* 파일 뷰어 다이얼로그 - 풀페이지 */}
       <Dialog open={fileViewerOpen} onOpenChange={setFileViewerOpen}>
         <DialogContent className="fixed inset-0 w-[100vw] h-[100vh] max-w-[100vw] max-h-[100vh] rounded-none border-none overflow-hidden flex flex-col p-0 translate-x-0 translate-y-0 top-0 left-0">
-          <DialogHeader className="shrink-0 px-6 py-4 border-b bg-background">
+          <DialogHeader className="shrink-0 px-6 py-4 border-b bg-background pr-16">
             <div className="flex items-center justify-between">
               <DialogTitle className="flex items-center gap-2 text-base">
                 <FileImage className="size-5" />
                 첨부파일 미리보기
               </DialogTitle>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <span className="text-sm text-muted-foreground">{selectedFile}</span>
                 <Button
                   variant="outline"
