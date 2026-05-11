@@ -206,7 +206,7 @@ function LandInfoSection({
         )}
       </div>
       
-      {/* 복수 필지일 경우 셀렉트박��� 표시 */}
+      {/* 복수 필지일 경우 셀렉트박����� 표시 */}
       {isMultipleLands && (
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
@@ -788,7 +788,7 @@ function ApplicationDetailPanel({
           <div className="flex items-center gap-2">
             {!canEdit && (
               <span className="text-xs text-muted-foreground">
-                이미 검토가 시작되어 정보 수정이 제한됩니다
+                이미 심사가 완료되어 정보 수정이 제한됩니다
               </span>
             )}
             <Button
