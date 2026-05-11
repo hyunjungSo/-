@@ -788,7 +788,9 @@ function ApplicationDetailPanel({
           <div className="flex items-center gap-2">
             {!canEdit && (
               <span className="text-xs text-muted-foreground">
-                이미 심사가 완료되어 정보 수정이 제한됩니다
+                {application.adminStatus === "심사완료" 
+                  ? "이미 심사가 완료된건으로 정보 수정이 제한됩니다."
+                  : "이미 심사가 진행중인건으로 정보 수정이 제한됩니다."}
               </span>
             )}
             <Button
