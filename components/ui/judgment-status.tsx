@@ -6,15 +6,21 @@ import { cn } from "@/lib/utils";
 // AI 판정 결과: 수용가능, 수용불가
 export type JudgmentType = "수용가능" | "수용불가" | "분석중";
 
+// 담당자/최종 판정 결과: 매수, 기각, 심의위원회 이관
+export type FinalJudgmentType = "매수" | "기각" | "심의위원회 이관";
+
 interface JudgmentStatusProps {
-  judgment: JudgmentType | string;
+  judgment: JudgmentType | FinalJudgmentType | string;
   variant?: "badge" | "text";
   size?: "sm" | "md" | "lg";
   className?: string;
 }
 
 /**
- * AI 판정 상태 표시 컴포넌트
+ * 판정 상태 표시 컴포넌트
+ * 
+ * AI 판정: 수용가능 / 수용불가
+ * 담당자/최종 판정: 매수 / 기각 / 심의위원회 이관
  * 
  * 사용 가이드:
  * 1. Badge 형식 (variant="badge"): 카드 헤더, 목록 아이템, 강조 필요 시
@@ -28,7 +34,7 @@ export function JudgmentStatus({
 }: JudgmentStatusProps) {
   const getColors = () => {
     switch (judgment) {
-      // AI 판정 결과
+      // AI 판정 결과 (수용가능/수용불가)
       case "수용가능":
         return {
           badge: "bg-green-600 text-white hover:bg-green-600",
@@ -38,6 +44,22 @@ export function JudgmentStatus({
         return {
           badge: "bg-red-500 text-white hover:bg-red-500",
           text: "text-red-500"
+        };
+      // 담당자/최종 판정 결과 (매수/기각/심의위원회 이관)
+      case "매수":
+        return {
+          badge: "bg-green-600 text-white hover:bg-green-600",
+          text: "text-green-600"
+        };
+      case "기각":
+        return {
+          badge: "bg-red-500 text-white hover:bg-red-500",
+          text: "text-red-500"
+        };
+      case "심의위원회 이관":
+        return {
+          badge: "bg-amber-500 text-white hover:bg-amber-500",
+          text: "text-amber-500"
         };
       default:
         return {
@@ -92,9 +114,10 @@ export function JudgmentOX({
   judgment,
   className 
 }: { 
-  judgment: JudgmentType | string;
+  judgment: JudgmentType | FinalJudgmentType | string;
   className?: string;
 }) {
+  // AI 판정 "수용가능" 또는 담당자 판정 "매수"인 경우 O
   const isAccepted = judgment === "수용가능" || judgment === "매수";
   
   return (
