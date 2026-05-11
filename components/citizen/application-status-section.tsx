@@ -554,15 +554,15 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                           <span className="truncate text-xs text-foreground">
                             {file.name} <span className="text-muted-foreground">[{file.size}]</span>
                           </span>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleRemoveFile(index)}
-                            className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
+<Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => handleRemoveFile(index)}
+                                            className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                                          >
+                                            <Trash2 className="size-3.5" />
+                                          </Button>
                         </li>
                       ))}
                     </ul>
