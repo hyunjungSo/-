@@ -373,14 +373,18 @@ function LandInfoSection({
                 <SelectValue placeholder="선택하세요" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="일반택지">일반택지</SelectItem>
-                <SelectItem value="주거택지">주거택지</SelectItem>
-                <SelectItem value="상업택지">상업택지</SelectItem>
-                <SelectItem value="공업택지">공업택지</SelectItem>
+                <SelectItem value="residential-detached">주거용 (기준 90㎡ 이하)</SelectItem>
+                <SelectItem value="commercial">상업용 (기준 150㎡ 이하)</SelectItem>
+                <SelectItem value="industrial">공업용 (기준 330㎡ 이하)</SelectItem>
               </SelectContent>
             </Select>
           ) : (
-            <span className="text-sm">{selectedLand.landSubType || "-"}</span>
+            <span className="text-sm">
+              {selectedLand.landSubType === "residential-detached" ? "주거용 (기준 90㎡ 이하)" :
+               selectedLand.landSubType === "commercial" ? "상업용 (기준 150㎡ 이하)" :
+               selectedLand.landSubType === "industrial" ? "공업용 (기준 330㎡ 이하)" :
+               selectedLand.landSubType || "-"}
+            </span>
           )}
         </div>
       </div>
@@ -767,7 +771,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
       {/* 신청 사유 및 첨부 서류 테이블 */}
       <div className={`overflow-hidden rounded-lg border transition-colors duration-300 ${isEditMode ? "border-primary/50 bg-primary/5" : "border-border"}`}>
         <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
-          <h4 className="font-semibold text-foreground">신청 사유 및 첨부 서류</h4>
+          <h4 className="font-semibold text-foreground">신청 ���유 및 첨부 서류</h4>
         </div>
 
         {/* 신청사유 행 */}
