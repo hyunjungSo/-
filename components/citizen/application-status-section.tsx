@@ -573,15 +573,15 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
     postalCode: "",
     baseAddress: application.applicantAddress,
     detailAddress: "",
-    // 토지 정보 - 민원인이 신청 시 입력한 값으로 초기화
-    landUseCategory: application.landInfo?.currentUsage || "대 (택지)",
+    // 토지 정보 - 민원인이 신청 시 입력한 값으로 초기화 (필수값은 디폴트 설정)
+    landUseCategory: application.landInfo?.currentUsage || "대",
     landShape: application.landInfo?.reportedShape || "정방형",
     siteType: application.landInfo?.landSubType || "",
     roadFrontageLoss: application.landInfo?.accessRoadLost || false,
     irrigationCanalLoss: application.landInfo?.waterChannelLost || false,
     farmEquipmentTurnImpossible: application.landInfo?.farmMachineDifficulty || false,
-    // 신청 사유 및 첨부
-    reason: application.reason,
+    // 신청 사유 및 첨부 (필수값)
+    reason: application.reason || "잔여지 매수 신청",
     attachments: [] as FileItem[],
   });
 
@@ -642,13 +642,13 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
       postalCode: "",
       baseAddress: application.applicantAddress,
       detailAddress: "",
-      landUseCategory: application.landInfo?.currentUsage || "대 (택지)",
+      landUseCategory: application.landInfo?.currentUsage || "대",
       landShape: application.landInfo?.reportedShape || "정방형",
       siteType: application.landInfo?.landSubType || "",
       roadFrontageLoss: application.landInfo?.accessRoadLost || false,
       irrigationCanalLoss: application.landInfo?.waterChannelLost || false,
       farmEquipmentTurnImpossible: application.landInfo?.farmMachineDifficulty || false,
-      reason: application.reason,
+      reason: application.reason || "잔여지 매수 신청",
       attachments: [],
     });
     setIsEditMode(false);
