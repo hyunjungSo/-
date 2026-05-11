@@ -310,7 +310,7 @@ function LandInfoSection({
       {isEditMode && (
         <div className="border-b border-border bg-blue-50 px-4 py-2">
           <p className="text-xs text-blue-700">
-            AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지의 실제 활용 상황을 입력해 주세요. (필지 주소는 수정 불가)
+            AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지�� 실제 활용 상황을 입력해 주세요. (필지 주소는 수정 불가)
           </p>
         </div>
       )}
@@ -605,11 +605,11 @@ function ApplicationDetailPanel({
   
   const [editData, setEditData] = useState({
     // 신청인 정보
-    applicantRelation: "owner" as "owner" | "agent",
+    applicantRelation: (application.applicantRelation || "owner") as "owner" | "agent",
     applicantName: application.applicantName,
     applicantContact: application.applicantContact,
-    agentName: "",
-    agentContact: "",
+    agentName: application.agentName || "",
+    agentContact: application.agentContact || "",
     postalCode: "",
     baseAddress: application.applicantAddress,
     detailAddress: "",
@@ -617,6 +617,24 @@ function ApplicationDetailPanel({
     reason: application.reason || "잔여지 매수 신청",
     attachments: [] as FileItem[],
   });
+
+  // application이 변경되면 editData와 landEditDataList를 다시 초기화
+  useEffect(() => {
+    setEditData({
+      applicantRelation: (application.applicantRelation || "owner") as "owner" | "agent",
+      applicantName: application.applicantName,
+      applicantContact: application.applicantContact,
+      agentName: application.agentName || "",
+      agentContact: application.agentContact || "",
+      postalCode: "",
+      baseAddress: application.applicantAddress,
+      detailAddress: "",
+      reason: application.reason || "잔여지 매수 신청",
+      attachments: [],
+    });
+    setLandEditDataList(initLandEditDataList());
+    setSelectedLandIndex(0);
+  }, [application.id]);
 
   const canEdit = application.adminStatus === "접수완료";
   const MAX_FILES = 10;
@@ -662,9 +680,12 @@ function ApplicationDetailPanel({
     // 수정된 신청 데이터 생성
     const updatedApplication: Application = {
       ...application,
+      applicantRelation: editData.applicantRelation,
       applicantName: editData.applicantName,
       applicantContact: editData.applicantContact,
       applicantAddress: editData.baseAddress + (editData.detailAddress ? ` ${editData.detailAddress}` : ""),
+      agentName: editData.applicantRelation === "agent" ? editData.agentName : undefined,
+      agentContact: editData.applicantRelation === "agent" ? editData.agentContact : undefined,
       reason: editData.reason,
       // 토지 정보 업데이트 (첫 번째 필지)
       landInfo: application.landInfo ? {
