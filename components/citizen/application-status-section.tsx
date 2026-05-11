@@ -469,13 +469,13 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
     postalCode: "",
     baseAddress: application.applicantAddress,
     detailAddress: "",
-    // 토지 정보
-    landUseCategory: "대 (택지)",
-    landShape: "역삼각형",
-    siteType: "",
-    roadFrontageLoss: false,
-    irrigationCanalLoss: false,
-    farmEquipmentTurnImpossible: false,
+    // 토지 정보 - 민원인이 신청 시 입력한 값으로 초기화
+    landUseCategory: application.landInfo?.currentUsage || "대 (택지)",
+    landShape: application.landInfo?.reportedShape || "정방형",
+    siteType: application.landInfo?.landSubType || "",
+    roadFrontageLoss: application.landInfo?.accessRoadLost || false,
+    irrigationCanalLoss: application.landInfo?.waterChannelLost || false,
+    farmEquipmentTurnImpossible: application.landInfo?.farmMachineDifficulty || false,
     // 신청 사유 및 첨부
     reason: application.reason,
     attachments: [] as FileItem[],
@@ -528,7 +528,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
   };
 
   const handleCancel = () => {
-    // 원래 데이터로 복원
+    // 원래 데이터로 복원 (민원인이 신청 시 입력한 값)
     setEditData({
       applicantRelation: "owner",
       applicantName: application.applicantName,
@@ -538,12 +538,12 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
       postalCode: "",
       baseAddress: application.applicantAddress,
       detailAddress: "",
-      landUseCategory: "대 (택지)",
-      landShape: "역삼각형",
-      siteType: "",
-      roadFrontageLoss: false,
-      irrigationCanalLoss: false,
-      farmEquipmentTurnImpossible: false,
+      landUseCategory: application.landInfo?.currentUsage || "대 (택지)",
+      landShape: application.landInfo?.reportedShape || "정방형",
+      siteType: application.landInfo?.landSubType || "",
+      roadFrontageLoss: application.landInfo?.accessRoadLost || false,
+      irrigationCanalLoss: application.landInfo?.waterChannelLost || false,
+      farmEquipmentTurnImpossible: application.landInfo?.farmMachineDifficulty || false,
       reason: application.reason,
       attachments: [],
     });
@@ -942,7 +942,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           <div className="mx-4 w-full max-w-md rounded-lg bg-background p-6 shadow-xl">
             <h3 className="mb-2 text-lg font-semibold">수정 내용 저장</h3>
             <p className="mb-6 text-sm text-muted-foreground">
-              필지 선택을 제외한 정보가 수정됩니다. 저장하시겠습니까?
+              필지 선택을 제외한 정보가 수정됩니다. 저장하시���습니까?
             </p>
             <div className="flex justify-end gap-2">
               <Button
