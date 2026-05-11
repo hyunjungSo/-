@@ -160,6 +160,74 @@ function getLandUsageLabel(value: string | undefined): string {
   return option?.label || value;
 }
 
+// 토지 활용 지목 선택 컴포넌트
+function LandUsageSelect({ 
+  value, 
+  onValueChange, 
+  triggerClassName 
+}: { 
+  value: string; 
+  onValueChange: (value: string) => void; 
+  triggerClassName?: string;
+}) {
+  return (
+    <Select value={value} onValueChange={onValueChange}>
+      <SelectTrigger className={triggerClassName || "h-10 w-full bg-background"}>
+        <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+      </SelectTrigger>
+      <SelectContent>
+        {LAND_USAGE_OPTIONS.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
+// 현재 활용 지목 옵션
+const LAND_USAGE_OPTIONS = [
+  { value: "대", label: "대(택지)" },
+  { value: "전", label: "전(밭)" },
+  { value: "답", label: "답(논)" },
+  { value: "임", label: "임(임야)" },
+  { value: "잡", label: "그밖의 토지" },
+] as const;
+
+// 값으로 라벨 가져오기 유틸 함수
+function getLandUsageLabel(value: string | undefined): string {
+  if (!value) return "-";
+  const option = LAND_USAGE_OPTIONS.find((opt) => opt.value === value);
+  return option?.label || value;
+}
+
+// 토지 활용 지목 선택 컴포넌트
+function LandUsageSelect({ 
+  value, 
+  onValueChange, 
+  triggerClassName 
+}: { 
+  value: string; 
+  onValueChange: (value: string) => void; 
+  triggerClassName?: string;
+}) {
+  return (
+    <Select value={value} onValueChange={onValueChange}>
+      <SelectTrigger className={triggerClassName || "h-10 w-full bg-background"}>
+        <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+      </SelectTrigger>
+      <SelectContent>
+        {LAND_USAGE_OPTIONS.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
 // 토지 정보 섹션 컴포넌트 (고용24 스타일 테이블 형태)
 interface LandEditData {
   landUseCategory: string;
@@ -222,7 +290,7 @@ function LandInfoSection({
         )}
       </div>
       
-      {/* 복수 필지일 경우 셀렉트박스로 표시 */}
+      {/* 복수 필지일 경우 셀렉트박������������������� 표시 */}
       {isMultipleLands && (
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
@@ -326,7 +394,7 @@ function LandInfoSection({
       {isEditMode && (
         <div className="border-b border-border bg-blue-50 px-4 py-2">
           <p className="text-xs text-blue-700">
-            AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지의 실제 활용 상황을 입력해 주세요. (필지 주소는 수정 불가)
+            AI 판단과 실제 현황이 다를 수 있습니다. ��재 토지�� 실제 ������ 상황을 입력해 주세요. (필지 주소는 수정 불가)
           </p>
         </div>
       )}
@@ -368,7 +436,7 @@ function LandInfoSection({
           {isEditMode && editData && onEditDataChange ? (
             <>
               <p className="mb-3 text-xs text-muted-foreground">
-                AI가 자동 판독할 수 없는 사항입니다. 해당되는 경우 체크해 주세요.
+                AI가 자동 판독할 수 없는 사항입니다. 해당되는 경우 체���해 주세요.
               </p>
               <div className="flex flex-wrap gap-x-6 gap-y-2">
                 <label className="flex cursor-pointer items-center gap-2">
@@ -401,7 +469,7 @@ function LandInfoSection({
             (() => {
               const checks = [];
               if (selectedLand.accessRoadLost) checks.push("접면도로 상실");
-              if (selectedLand.waterChannelLost) checks.push("관개수로 상실");
+              if (selectedLand.waterChannelLost) checks.push("관개수로 ���실");
               if (selectedLand.farmMachineDifficulty) checks.push("농기계 회전 곤란");
               return checks.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
@@ -554,7 +622,7 @@ function ApplicationDetailPanel({
   const [landEditDataList, setLandEditDataList] = useState(initLandEditDataList);
   
   const [editData, setEditData] = useState({
-    // 신청인 정보
+    // 신��인 정보
     applicantRelation: (application.applicantRelation || "owner") as "owner" | "agent",
     applicantName: application.applicantName,
     applicantContact: application.applicantContact,
@@ -705,7 +773,7 @@ function ApplicationDetailPanel({
 
   return (
     <div className="space-y-4 overflow-visible">
-      {/* 상세 화면 타이틀 헤더 */}
+      {/* 상세 화면 ��이틀 헤더 */}
       <div className="flex items-center justify-between px-0 py-3">
         <div className="flex items-center gap-3">
           <Badge variant={adminStatusConfig[application.adminStatus].variant}>
@@ -774,7 +842,7 @@ function ApplicationDetailPanel({
         {/* 신청 구분 행 */}
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
-            <span className="text-sm font-medium">신청 구분</span>
+            <span className="text-sm font-medium">신청 ���분</span>
           </div>
           <div className="flex flex-1 items-center px-4 py-3">
             {isEditMode ? (
@@ -880,7 +948,7 @@ function ApplicationDetailPanel({
           </div>
         </div>
 
-        {/* 소유자 연락처 행 */}
+        {/* 소유자 ���락처 행 */}
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
             <span className="text-sm font-medium">소유자 연락처</span>
@@ -959,7 +1027,7 @@ function ApplicationDetailPanel({
         />
       )}
 
-      {/* 토지 정보 (활용 지목, 토지 모양, 택지 유형, 확인 항목, 신청 사유, 첨부 서류) */}
+      {/* 토지 정보 (활용 지목, 토지 모양, 택지 ���형, 확인 항목, 신청 사유, 첨부 서류) */}
       <LandInfoSection 
         application={application}
         isEditMode={isEditMode}
@@ -1156,7 +1224,7 @@ export function ApplicationStatusSection() {
                         )}
                       </p>
 
-                      {/* 하단: 날짜 + 결과 */}
+                      {/* 하단: 날짜 + ���과 */}
                       <div className="mt-2 flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">{app.appliedAt}</span>
                         {app.adminStatus === "심사완료" && app.finalJudgment && (
