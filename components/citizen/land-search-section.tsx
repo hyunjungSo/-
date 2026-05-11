@@ -603,7 +603,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const [isResultsCollapsed, setIsResultsCollapsed] = useState(false);
   const [isBasicInfoCollapsed, setIsBasicInfoCollapsed] = useState(false);
   
-  // 본인 소유 필지 선택 상태 (인접지 중 본인 소유 확인용)
+  // 본인 소유 필지 선택 상태 (인접지 중 ��인 소유 확인용)
   const [ownedParcels, setOwnedParcels] = useState<Set<string>>(new Set());
   
   // 지도-목록 호버 연동 상태
@@ -793,7 +793,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return;
       }
       
-      // 지번 검색: 선택된 지역에 해당하는 토지 필터링
+      // 지번 검색: 선택��� 지역에 해당하는 토지 필터링
       results = dummyLandInfoList.filter(land => {
         // 시군구 포함 여부
         if (!land.address.includes(selectedSigungu)) return false;
@@ -1125,7 +1125,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               <div className="flex flex-1 items-center bg-background px-4 py-2">
                 <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <Info className="h-3.5 w-3.5 shrink-0" />
-                  법인 신청 시, 사업자등록�� 및 법인인감증명서가 필요합니다.
+                  법인 신청 시, 사업자등록�� 및 ��인인감증명서가 필요합니다.
                 </p>
               </div>
             </div>
@@ -1731,6 +1731,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   
                   if (aiResult.provisionalJudgment !== "수용불가") {
                     const isAlreadyInCart = cartItems.some(c => c.landInfo.id === selectedLand.id);
+                    const isRemainingAreaZero = selectedLand.remainingArea === 0;
                     
                     return (
                       <div className="space-y-2">
@@ -1738,12 +1739,17 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           onClick={() => onAddToCart(selectedLand, aiResult!)}
                           className="h-12 w-full cursor-pointer text-base"
                           variant="default"
-                          disabled={isAlreadyInCart}
+                          disabled={isAlreadyInCart || isRemainingAreaZero}
                         >
                           <Plus className="mr-2 h-4 w-4" />
                           신청 목록에 추가
                         </Button>
-                        {isAlreadyInCart && (
+                        {isRemainingAreaZero && (
+                          <p className="text-center text-xs text-muted-foreground">
+                            잔여지가 0이라 신청 불가합니다
+                          </p>
+                        )}
+                        {isAlreadyInCart && !isRemainingAreaZero && (
                           <p className="text-center text-xs text-muted-foreground">
                             이미 신청 목록에 추가된 필지입니다
                           </p>
