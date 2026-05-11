@@ -18,8 +18,6 @@ import {
 
 import { landCategories } from "@/lib/dummy-data";
 import type { LandInfo, Application, LandCategory, LandShape, AIAnalysisResult } from "@/lib/types";
-import { LandUsageSelect, getLandUsageLabel } from "@/components/common/land-usage-select";
-import { BuildingTypeSelect } from "@/components/common/building-type-select";
 import { ArrowLeft, Upload, Send, Bot, CheckCircle2, XCircle, X, Loader2, ChevronDown, AlertTriangle } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { JudgmentStatus } from "@/components/ui/judgment-status";
@@ -87,7 +85,6 @@ function AddressSearchModal({
         <div className="flex items-center justify-between py-2 px-4">
           <h3 className="text-lg font-semibold">주소 검색</h3>
           <Button variant="ghost" className="h-10 w-10 p-0" onClick={onClose}>
-            <X className="!size-4" />
           </Button>
         </div>
         
@@ -730,13 +727,19 @@ export function ApplicationFormSection({
                             onValueChange={(value) => updateLandData(index, "currentUsage", value as LandCategory)}
                           />
                           <p className="text-xs text-muted-foreground">
-                            AI 판단: {getLandUsageLabel(land.landCategory)}
+                            AI ��단: {getLandUsageLabel(land.landCategory)}
                           </p>
                         </div>
                         <div className="space-y-1.5">
                           <label className="text-sm font-medium text-muted-foreground">공부상 지목</label>
                           <div className="flex w-fit items-center whitespace-nowrap rounded-md border border-input bg-muted px-3 py-2 h-10 text-sm text-muted-foreground cursor-not-allowed opacity-70">
                             {getLandUsageLabel(land.landCategory)}
+                          </div>
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="text-sm font-medium text-muted-foreground">공부상 지목</label>
+                          <div className="flex w-fit items-center whitespace-nowrap rounded-md border border-input bg-muted px-3 py-2 h-10 text-sm text-muted-foreground cursor-not-allowed opacity-70">
+                            {landCategories.find(c => c.value === land.landCategory)?.label || land.landCategory}
                           </div>
                         </div>
                       </div>
