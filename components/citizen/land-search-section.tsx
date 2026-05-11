@@ -403,10 +403,7 @@ function simulateAIAnalysis(
   // AI 1차 판독: 수용가능/수용불가 판정
   let provisionalJudgment: "수용가능" | "수용불가";
   
-  // 잔여 면적이 0인 경우: 잔여지가 없으므로 수용 불가
-  if (land.remainingArea === 0) {
-    provisionalJudgment = "수용불가";
-  } else if (metAutoCriteria >= 1) {
+  if (metAutoCriteria >= 1) {
     provisionalJudgment = "수용가능";
   } else {
     provisionalJudgment = "수용불가";
@@ -796,7 +793,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return;
       }
       
-      // 지번 검색: 선택��� 지역에 해당하는 토지 필터링
+      // 지번 검색: 선택된 지역에 해당하는 토지 필터링
       results = dummyLandInfoList.filter(land => {
         // 시군구 포함 여부
         if (!land.address.includes(selectedSigungu)) return false;
@@ -1319,7 +1316,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             </div>
             
             {/* 검색 결과 목록 */}
-            <div className="max-h-[calc(100%-100px)] overflow-y-auto">
+            <div className="max-h-[calc(100%-52px)] overflow-y-auto pb-4">
               {searchResults.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center px-4 py-12 text-center">
                   <MapPin className="h-8 w-8 text-muted-foreground" />
@@ -1549,7 +1546,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
                         <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
                         <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
-                        <SelectItem value="commercial">상업용 (기준: 150㎡)</SelectItem>
+                        <SelectItem value="commercial">���업용 (기준: 150㎡)</SelectItem>
                         <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
                       </SelectContent>
                     </Select>
