@@ -162,7 +162,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               <div className="flex items-center justify-between rounded-md bg-red-50 px-3 py-2">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-red-500" />
-                  <span className="text-sm">기각 판정</span>
+                  <span className="text-sm">기��� 판정</span>
                 </div>
                 <span className="font-semibold text-red-500">{stats.aiReject}건</span>
               </div>

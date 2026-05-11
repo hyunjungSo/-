@@ -1432,7 +1432,7 @@ function generateRationale(
     landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)";
     physicalConditions = "물리조건: ①접면도로 상실로 건축허가 불가 ②형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "임야") {
-    landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
+    landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이하 시 495㎡��지 완화)";
     physicalConditions = "물리조건: ①공익사업으로 접한 도로가 없어진 경우";
   } else {
     landTypeCriteria = "그 밖의 토지 기준: 면적 330㎡ 이하 또는 잔여비율 50% 이하";
@@ -1448,35 +1448,42 @@ function generateRationale(
   let summary: string;
   let detailedExplanation: string;
 
+  // Build strings in parts to avoid Turbopack unicode boundary issues
+  const landTypeStr = land.landType;
+  const addressStr = land.address;
+  const landCategoryStr = land.landCategory;
+  const originalAreaStr = String(land.originalArea);
+  const remainingAreaStr = String(land.remainingArea);
+  const remainingRatioStr = String(land.remainingRatio);
+  const originalShapeStr = land.originalShape;
+  const remainingShapeStr = land.remainingShape;
+  const shapeIndexStr = shapeIndexChange.toFixed(1);
+  const criteriaStr = metCriteriaNames.join(", ");
+
   if (judgment === "수용가능") {
-    summary = `${land.landType} 수용 조건 충족으로 「수용가능」 판정 - 사용이 현저히 곤란한 경우로 예상`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n충족기준: ${metCriteriaNames.join(", ")}\n\n※ 물리 조건 중 하나 이상 해당으로 수용 조건 충족`;
+    summary = landTypeStr + " 수용 조건 충족으로 수용가능 판정";
+    detailedExplanation = [
+      "소재지: " + addressStr,
+      "토지유형: " + landTypeStr + ", 지목: " + landCategoryStr,
+      "편입현황: " + originalAreaStr + "m2 -> 잔여 " + remainingAreaStr + "m2 (잔여비율 " + remainingRatioStr + "%)",
+      "형상변화: " + originalShapeStr + " -> " + remainingShapeStr + " (형상지수 +" + shapeIndexStr + ")",
+      "충족기준: " + criteriaStr,
+      "",
+      "* 물리 조건 중 하나 이상 해당으로 수용 조건 충족"
+    ].join("\n");
   } else {
-    // 수용불가
     const areaThreshold = land.landType === "택지" ? 90 : 330;
-    const rejectionReason = `잔여면적 ${land.remainingArea}㎡(기준 ${areaThreshold}㎡ 초과), 잔여비율 ${land.remainingRatio}%(기준 초과), 물리조건 미해당`;
-    summary = `${land.landType} 수용 조건 미충족으로 「수용불가」 판정`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n수용불가사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조건 전체 미해당`;
-  }
-  
-  const appliedCriteria = [
-    landTypeCriteria,
-    physicalConditions,
-    `형상지수 변화 기준: 1.0 이상 상승 시 수용 조건 충족`,
-  ];
-
-  let summary: string;
-  let detailedExplanation: string;
-
-  if (judgment === "매수" || judgment === "심의위원회 이관") {
-    summary = `${land.landType} 수용 조건 충족으로 「${judgment}」 판정 - 사용이 현저히 곤란한 경우로 예상`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n충족기준: ${metCriteriaNames.join(", ")}\n\n※ 물리 조건 중 하나 이상 해당으로 수용 조건 충족`;
-  } else {
-    // 기각
-    const areaThreshold = land.landType === "택지" ? 90 : 330;
-    const rejectionReason = `잔여면적 ${land.remainingArea}㎡(기준 ${areaThreshold}㎡ 초과), 잔여비율 ${land.remainingRatio}%(기준 초과), 물리조건 미해당`;
-    summary = `${land.landType} 수용 조건 미충족으로 「기각」 판정`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조건 전체 미해당`;
+    const rejectionReason = "잔여면적 " + remainingAreaStr + "m2(기준 " + areaThreshold + "m2 초과), 잔여비율 " + remainingRatioStr + "%(기준 초과), 물리조건 미해당";
+    summary = landTypeStr + " 수용 조건 미충족으로 수용불가 판정";
+    detailedExplanation = [
+      "소재지: " + addressStr,
+      "토지유형: " + landTypeStr + ", 지목: " + landCategoryStr,
+      "편입현황: " + originalAreaStr + "m2 -> 잔여 " + remainingAreaStr + "m2 (잔여비율 " + remainingRatioStr + "%)",
+      "형상변화: " + originalShapeStr + " -> " + remainingShapeStr + " (형상지수 +" + shapeIndexStr + ")",
+      "수용불가사유: " + rejectionReason,
+      "",
+      "* 면적/비율 기준 및 물리조건 전체 미해당"
+    ].join("\n");
   }
 
   return {
@@ -1685,7 +1692,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 불가", isMet: false, autoDetected: false },
       ],
-      provisionalJudgment: "심의위원회 이관",
+      provisionalJudgment: "수용가능",
       originalShapeIndex: 4.0,
       remainingShapeIndex: 5.2,
       shapeIndexChange: 1.2,
@@ -1727,7 +1734,7 @@ export const dummyApplications: Application[] = [
     appliedAt: "2026-04-07",
     aiResult: generateAIResult(dummyLandInfoList[9]),
     finalJudgment: "기각",
-    reviewerComment: "잔여비율 90%로 매수 기준(30% 이하)을 크게 초과하며, 형상지수 변화도 0.1로 미미하여 종래 용도 사용에 지장이 없음. 매수 기준 미충족으로 기각 처리.",
+    reviewerComment: "잔여비�� 90%로 매수 기준(30% 이하)을 크게 초과하며, 형상지수 변화도 0.1로 미미하여 종래 용도 사용에 지장이 없음. 매수 기준 미충족으로 기각 처리.",
     adminName: "박담당",
     statusUpdatedAt: "2026-04-18",
   },
@@ -1785,7 +1792,7 @@ export const dummyApplications: Application[] = [
         currentUsage: "대" as const,
         landSubType: "residential-detached" as const,
         actualUsage: "대" as const,
-        reportedShape: "삼각형" as const,
+        reportedShape: "삼���형" as const,
         farmMachineDifficulty: false,
         accessRoadLost: true,
         waterChannelLost: false,
@@ -2304,7 +2311,7 @@ export const dummyApplications: Application[] = [
           "토지 양분: 고속도로 관통으로 산림경영 불가",
         ],
         detailedExplanation: "5필지 산지 (조림지)\n\n[필지 1] 산101: 3,000㎡ → 1,500㎡ (삼각형)\n[필지 2] 산102: 2,500㎡ → 700㎡ (역삼각형)\n[필지 3] 산103: 2,800㎡ → 800㎡ (부정형)\n[필지 4] 산104: 2,200㎡ → 600㎡ (삼각형)\n[필지 5] 산105: 1,800㎡ → 500㎡ (자루형)\n\n고속도로가 중앙을 관통하여 조림지가 양분되어 산림경영이 불가능합니다.",
-        manualCheckItems: ["산림경영계획서 확인", "조림 현황 현장 확인"],
+        manualCheckItems: ["산림경영계획서 확인", "조림 현황 현장 ���인"],
       },
     },
     adminName: "박영희",
@@ -2691,7 +2698,7 @@ export const dummyApplications: Application[] = [
           summary: "매탄동 102번지: 사다리꼴 형상으로 건축 효율 저하, 매수 대상",
           legalBasis: "「공익사업법」 제74조",
           appliedCriteria: ["사다리꼴 형상으로 건축 효율 저하", "형상지수 불량"],
-          detailedExplanation: "사다리꼴 형상으로 인해 효율적인 건축물 배치가 어려워 매수 가능으로 판정합니다.",
+          detailedExplanation: "사��리꼴 형상으로 인해 효율적인 건축물 배치가 어려워 매수 가능으로 판정합니다.",
           manualCheckItems: ["최종 형상 확인"],
         },
       },

@@ -58,12 +58,6 @@ interface ApplicationDetailProps {
   onSave: (application: Application) => void;
 }
 
-// AI 판정 결과 (수용가능/수용불가)
-const aiJudgmentConfig = {
-  수용가능: { label: "수용가능", icon: CheckCircle2, borderColor: "border-green-600", textColor: "text-green-600", color: "text-green-600" },
-  수용불가: { label: "수용불가", icon: XCircle, borderColor: "border-red-500", textColor: "text-red-500", color: "text-red-500" },
-};
-
 // 담당자 판정 (매수/기각/심의위원회 이관)
 const judgmentConfig = {
   매수: { label: "매수", icon: CheckCircle2, borderColor: "border-green-600", textColor: "text-green-600", color: "text-green-600" },
@@ -592,7 +586,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || roadLost) {
         judgment = "수용가능";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확�����)" : ""));
+        if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 ��������)" : ""));
       } else {
         judgment = "수용불가";
         reasons.push("모든 기준 미충족");
@@ -1360,7 +1354,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         <div className="flex items-start gap-2 pt-2 border-t">
                           <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                           <p className="text-xs text-muted-foreground">
-                            AI 판독 결과는 참고��이��, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                            AI 판독 결과는 참고��이��, 최종 판정��� 담당자 검토에 따라 결정됩니다.
                           </p>
                         </div>
                       </div>
