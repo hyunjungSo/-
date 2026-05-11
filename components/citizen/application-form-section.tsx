@@ -993,11 +993,21 @@ export function ApplicationFormSection({
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>매수 신청서를 제출하시겠습니까?</AlertDialogTitle>
-            <AlertDialogDescription>
-              입력하신 내용으로 매수 신청서가 제출됩니다.
-              <br />
-              <span className="font-medium text-foreground">제출 후에도 내용 수정이 가능합니다.</span>
+            <AlertDialogTitle>잔여지 매수 신청서를 제출하시겠습니까?</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <p>
+                  제출 후에는 <span className="font-medium text-foreground">&apos;진행 중&apos; 단계로 넘어가기 전(담당자 확인 전)</span>까지 신청 내용을 보완하실 수 있습니다.
+                </p>
+                <ul className="space-y-1 text-xs">
+                  <li>
+                    <span className="font-medium text-foreground">수정 가능 항목:</span> 신청인 정보, 토지 정보, 신청 사유, 첨부 서류
+                  </li>
+                  <li>
+                    <span className="font-medium text-foreground">수정 불가 항목:</span> 대상 필지 선택 (신청이 접수된 후에는 필지 추가 및 삭제가 불가능합니다)
+                  </li>
+                </ul>
+              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
