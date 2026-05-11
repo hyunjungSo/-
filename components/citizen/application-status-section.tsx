@@ -28,6 +28,7 @@ import {
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { AdminStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { JudgmentStatus } from "@/components/ui/judgment-status";
+import { LandUsageSelect, getLandUsageLabel } from "@/components/common/land-usage-select";
 
 // 샘플 주소 데이터 (실제로는 API에서 가져옴)
 const sampleAddresses = [
@@ -206,7 +207,7 @@ function LandInfoSection({
         )}
       </div>
       
-      {/* 복수 필지일 경우 셀렉트박������������� 표시 */}
+      {/* 복수 필지일 경우 셀렉트박����������� 표시 */}
       {isMultipleLands && (
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
@@ -310,7 +311,7 @@ function LandInfoSection({
       {isEditMode && (
         <div className="border-b border-border bg-blue-50 px-4 py-2">
           <p className="text-xs text-blue-700">
-            AI 판단과 실제 현황이 다를 수 있습니다. ��재 토지�� 실제 ������ 상황을 입력해 주세요. (필지 주소는 수정 불가)
+            AI 판단과 실제 현황이 다를 수 있습니다. ��재 토지�� 실제 �������� 상황을 입력해 주세요. (필지 주소는 수정 불���)
           </p>
         </div>
       )}
@@ -329,7 +330,7 @@ function LandInfoSection({
             />
           ) : (
             <span className="text-sm">
-              {getLandUsageLabel(selectedLand.currentUsage || selectedLand.landCategory)}
+              {getLandUsageLabel(selectedLand.currentUsage)}
             </span>
           )}
         </div>
@@ -384,8 +385,8 @@ function LandInfoSection({
           ) : (
             (() => {
               const checks = [];
-              if (selectedLand.accessRoadLost) checks.push("접면도로 상실");
-              if (selectedLand.waterChannelLost) checks.push("관개수로 ���실");
+              if (selectedLand.accessRoadLost) checks.push("���면���로 상실");
+              if (selectedLand.waterChannelLost) checks.push("관개수로 상실");
               if (selectedLand.farmMachineDifficulty) checks.push("농기계 회전 곤란");
               return checks.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
@@ -824,11 +825,9 @@ function ApplicationDetailPanel({
                     value={editData.agentContact}
                     onChange={(e) => {
                       const value = e.target.value.replace(/[^0-9]/g, "");
-                      const formatted = value.length <= 3 ? value : value.length <= 7 ? `${value.slice(0, 3)}-${value.slice(3)}` : `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`;
-                      setEditData({ ...editData, agentContact: formatted });
+                      setEditData({ ...editData, agentContact: value });
                     }}
-                    placeholder="'-' 없이 숫자만 입력"
-                    maxLength={13}
+                    placeholder="대리인 연락처를 입력해주세요"
                     className="h-10 text-sm"
                   />
                 ) : (
@@ -872,16 +871,8 @@ function ApplicationDetailPanel({
           <div className="flex flex-1 items-center px-4 py-3">
             {isEditMode ? (
               <Input
-                type="tel"
-                inputMode="numeric"
                 value={editData.applicantContact}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/[^0-9]/g, "");
-                  const formatted = value.length <= 3 ? value : value.length <= 7 ? `${value.slice(0, 3)}-${value.slice(3)}` : `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`;
-                  setEditData({ ...editData, applicantContact: formatted });
-                }}
-                placeholder="'-' 없이 숫자만 입력"
-                maxLength={13}
+                onChange={(e) => setEditData({ ...editData, applicantContact: e.target.value })}
                 className="h-10 text-sm"
               />
             ) : (
@@ -943,7 +934,7 @@ function ApplicationDetailPanel({
         />
       )}
 
-      {/* 토지 정보 (활용 지목, 토지 모양, 택지 ���형, 확인 항목, 신청 사유, 첨부 서류) */}
+      {/* 토지 정보 (활용 지목, 토지 모양, 택지 유형, 확인 항목, 신청 사유, 첨부 서류) */}
       <LandInfoSection 
         application={application}
         isEditMode={isEditMode}
@@ -1136,7 +1127,7 @@ export function ApplicationStatusSection() {
                       <p className="mt-1.5 truncate text-xs text-muted-foreground">
                         {app.landInfo.address}
                         {isMultipleLands && (
-                          <span className="ml-1 font-medium text-black">외 {app.additionalLands.length}필지</span>
+                          <span className="ml-1 font-medium text-black">외 {app.additionalLands.length}필���</span>
                         )}
                       </p>
 
