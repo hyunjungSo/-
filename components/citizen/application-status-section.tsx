@@ -552,56 +552,53 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
 
   return (
     <div className="space-y-4 overflow-visible">
-      {/* 신청 정보 테이블 */}
-      <div className={`overflow-hidden rounded-lg border transition-colors duration-300 ${isEditMode ? "border-primary/50 bg-primary/5" : "border-border"}`}>
-        <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
-          <h4 className="font-semibold text-foreground">신청 정보</h4>
-          {/* 수정/저장/취소 버튼 - 접수완료 상태에서만 활성화 */}
-          {isEditMode ? (
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleCancel}
-                className="h-8 gap-1.5 text-xs"
-              >
-                <X className="size-[18px]" />
-                취소
-              </Button>
-              <Button
-                size="sm"
-                onClick={handleSaveClick}
-                className="h-8 gap-1.5 text-xs"
-              >
-                <Save className="size-[18px]" />
-                저장
-              </Button>
-            </div>
-          ) : (
+      {/* 상세 화면 타이틀 헤더 */}
+      <div className="flex items-center justify-between rounded-lg bg-muted/30 px-4 py-3">
+        <div className="flex items-center gap-3">
+          <Badge variant={adminStatusConfig[application.adminStatus].variant}>
+            {adminStatusConfig[application.adminStatus].label}
+          </Badge>
+          <span className="text-lg font-semibold text-foreground">{application.applicationNumber}</span>
+        </div>
+        {/* 수정/저장/취소 버튼 - 접수완료 상태에서만 활성화 */}
+        {isEditMode ? (
+          <div className="flex gap-2">
             <Button
               variant="outline"
               size="sm"
-              disabled={!canEdit}
-              onClick={() => setIsEditMode(true)}
+              onClick={handleCancel}
               className="h-8 gap-1.5 text-xs"
             >
-              <Pencil className="size-[18px]" />
-              수정
+              <X className="size-[18px]" />
+              취소
             </Button>
-          )}
-        </div>
-        
-        {/* 접수번호 행 */}
-        <div className="flex border-b border-border">
-          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
-            <span className="text-sm font-medium">접수번호</span>
+            <Button
+              size="sm"
+              onClick={handleSaveClick}
+              className="h-8 gap-1.5 text-xs"
+            >
+              <Save className="size-[18px]" />
+              저장
+            </Button>
           </div>
-          <div className="flex flex-1 items-center gap-2 px-4 py-3">
-            <Badge variant={adminStatusConfig[application.adminStatus].variant}>
-              {adminStatusConfig[application.adminStatus].label}
-            </Badge>
-            <span className="font-semibold text-foreground">{application.applicationNumber}</span>
-          </div>
+        ) : (
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={!canEdit}
+            onClick={() => setIsEditMode(true)}
+            className="h-8 gap-1.5 text-xs"
+          >
+            <Pencil className="size-[18px]" />
+            수정
+          </Button>
+        )}
+      </div>
+
+      {/* 신청인 정보 테이블 */}
+      <div className={`overflow-hidden rounded-lg border transition-colors duration-300 ${isEditMode ? "border-primary/50 bg-primary/5" : "border-border"}`}>
+        <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
+          <h4 className="font-semibold text-foreground">신청인 정보</h4>
         </div>
         
         {/* 신청일 행 */}
