@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { dummyApplications } from "@/lib/dummy-data";
+import { dummyApplications, landCategories, landShapes } from "@/lib/dummy-data";
 import type { Application, AdminStatus } from "@/lib/types";
 import { 
   FileText, 
@@ -310,19 +310,21 @@ function LandInfoSection({
               value={editData.landUseCategory}
               onValueChange={(value) => onEditDataChange({ landUseCategory: value })}
             >
-              <SelectTrigger className="h-10 w-40">
+              <SelectTrigger className="h-10 w-48">
                 <SelectValue placeholder="선택하세요" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="대 (택지)">대 (택지)</SelectItem>
-                <SelectItem value="전">전</SelectItem>
-                <SelectItem value="답">답</SelectItem>
-                <SelectItem value="임야">임야</SelectItem>
-                <SelectItem value="잡종지">잡종지</SelectItem>
+                {landCategories.map((cat) => (
+                  <SelectItem key={cat.value} value={cat.value}>
+                    {cat.value} ({cat.label})
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           ) : (
-            <span className="text-sm">{selectedLand.currentUsage || "대 (택지)"}</span>
+            <span className="text-sm">
+              {selectedLand.currentUsage} ({landCategories.find(c => c.value === selectedLand.currentUsage)?.label || ""})
+            </span>
           )}
         </div>
         <div className="flex w-28 shrink-0 items-center border-l border-border bg-muted/30 px-4 py-3">
@@ -344,20 +346,22 @@ function LandInfoSection({
               value={editData.landShape}
               onValueChange={(value) => onEditDataChange({ landShape: value })}
             >
-              <SelectTrigger className="h-10 w-32">
-                <SelectValue placeholder="선택하세요" />
+              <SelectTrigger className="h-10 w-36">
+                <SelectValue placeholder="선택" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="정방형">정방형</SelectItem>
-                <SelectItem value="장방형">장방형</SelectItem>
-                <SelectItem value="사다리꼴">사다리꼴</SelectItem>
-                <SelectItem value="삼각형">삼각형</SelectItem>
-                <SelectItem value="역삼각형">역삼각형</SelectItem>
-                <SelectItem value="부정형">부정형</SelectItem>
+                <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">정형</div>
+                {landShapes.regular.map((shape) => (
+                  <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
+                ))}
+                <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">비정형</div>
+                {landShapes.irregular.map((shape) => (
+                  <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           ) : (
-            <span className="text-sm">{selectedLand.reportedShape || "정방형"}</span>
+            <span className="text-sm">{selectedLand.reportedShape}</span>
           )}
         </div>
         <div className="flex w-28 shrink-0 items-center border-l border-border bg-muted/30 px-4 py-3">
