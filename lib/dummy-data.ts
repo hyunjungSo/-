@@ -501,7 +501,7 @@ export const dummyLandInfoList: LandInfo[] = [
     includedArea: 250,
     remainingArea: 130,
     remainingRatio: 34.2,
-    landType: "택지",
+    landType: "���지",
     landCategory: "대",
     originalShape: "정방형",
     remainingShape: "자루형",
@@ -1491,7 +1491,7 @@ export const dummyApplications: Application[] = [
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
     reason: "고속도로 편입으로 인해 잔여지가 삼각형 형태로 남아 건축물 건축이 불가능합니다. 잔여 면적도 협소하여 종래 목적대로 사용할 수 없습니다.",
-    attachments: ["토지대장.pdf", "등기부등본.pdf"],
+    attachments: ["토지대장.jpg", "현황사진.jpg", "지적도.jpg"],
     status: "AI분석완료",
     adminStatus: "접수완료",
     appliedAt: "2026-04-01",
@@ -2044,7 +2044,7 @@ export const dummyApplications: Application[] = [
         currentUsage: "전" as const,
         landSubType: "" as const,
         actualUsage: "전" as const,
-        reportedShape: "자루형" as const,
+        reportedShape: "���루형" as const,
         farmMachineDifficulty: true,
         accessRoadLost: true,
         waterChannelLost: false,
@@ -2512,7 +2512,7 @@ export const dummyApplications: Application[] = [
         { landId: "land-unified-002", judgment: "매수", reason: "답: 관개수로 상실(형상지수 5.2), 부정형으로 논농사 불가" },
       ],
     },
-    // 담당자 AI 재분석 결과 - 농지 2필지 분석
+    // 담당자 AI 재분석 결과 - 농지 2��지 분석
     adminAiResult: {
       provisionalJudgment: "수용가능",
       confidence: 82,
