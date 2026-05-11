@@ -136,7 +136,7 @@ const regionData = {
     "양산시": ["동면", "물금읍", "상북면", "웅상읍", "원동면", "하북면"],
     // 제주특별자치도
     "제주시": ["구좌읍", "애월읍", "우도면", "조천읍", "추자면", "한경면", "한림읍", "아라동", "건입동", "노형동", "봉개동", "삼도동", "연동", "오라동", "외도동", "용담동", "이도동", "이호동", "일도동", "화북동"],
-    "서귀포시": ["남원읍", "대정읍", "성산읍", "안덕면", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "월평동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
+    "서귀포시": ["남원읍", "대정읍", "성산읍", "안덕면", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "���평동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
   },
   리: {
     // 경기도 - 용인시 처인구
@@ -403,7 +403,10 @@ function simulateAIAnalysis(
   // AI 1차 판독: 수용가능/수용불가 판정
   let provisionalJudgment: "수용가능" | "수용불가";
   
-  if (metAutoCriteria >= 1) {
+  // 잔여 면적이 0인 경우: 잔여지가 없으므로 수용 불가
+  if (land.remainingArea === 0) {
+    provisionalJudgment = "수용불가";
+  } else if (metAutoCriteria >= 1) {
     provisionalJudgment = "수용가능";
   } else {
     provisionalJudgment = "수용불가";
@@ -1316,7 +1319,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             </div>
             
             {/* 검색 결과 목록 */}
-            <div className="max-h-[calc(100%-110px)] overflow-y-auto pb-2">
+            <div className="max-h-[calc(100%-52px)] overflow-y-auto pb-4">
               {searchResults.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center px-4 py-12 text-center">
                   <MapPin className="h-8 w-8 text-muted-foreground" />
@@ -1605,7 +1608,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         <div className="flex items-start gap-2">
                           <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                           <div>
-                            <h4 className="text-base font-semibold text-foreground">법적 근거</h4>
+                            <h4 className="text-base font-semibold text-foreground">법��� 근거</h4>
                             <p className="mt-1 text-base leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
                           </div>
                         </div>
