@@ -28,6 +28,7 @@ export function JudgmentStatus({
 }: JudgmentStatusProps) {
   const getColors = () => {
     switch (judgment) {
+      // 최종 결정
       case "매수":
         return {
           badge: "bg-green-600 text-white hover:bg-green-600",
@@ -39,6 +40,22 @@ export function JudgmentStatus({
           text: "text-red-500"
         };
       case "심의위원회 이관":
+        return {
+          badge: "bg-amber-500 text-white hover:bg-amber-500",
+          text: "text-amber-500"
+        };
+      // AI 판정 결과
+      case "매수가능":
+        return {
+          badge: "bg-green-600 text-white hover:bg-green-600",
+          text: "text-green-600"
+        };
+      case "매수불가":
+        return {
+          badge: "bg-red-500 text-white hover:bg-red-500",
+          text: "text-red-500"
+        };
+      case "조건부매수":
         return {
           badge: "bg-amber-500 text-white hover:bg-amber-500",
           text: "text-amber-500"
