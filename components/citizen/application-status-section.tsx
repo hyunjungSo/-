@@ -14,7 +14,8 @@ import {
   CheckCircle2,
   AlertTriangle,
   Info,
-  ChevronDown
+  ChevronDown,
+  Pencil
 } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { AdminStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
@@ -160,8 +161,18 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
     <div className="space-y-4 overflow-visible">
       {/* 신청 정보 테이블 */}
       <div className="overflow-hidden rounded-lg border border-border">
-        <div className="border-b border-border bg-muted/50 px-4 py-2.5">
+        <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
           <h4 className="font-semibold text-foreground">신청 정보</h4>
+          {/* 수정 버튼 - 접수완료 상태에서만 활성화 */}
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={application.adminStatus !== "접수완료"}
+            className="h-7 gap-1.5 text-xs"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+            수정
+          </Button>
         </div>
         
         {/* 접수번호 행 */}
@@ -188,6 +199,16 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
         </div>
         
       </div>
+
+      {/* 수정 가능 여부 안내 */}
+      {application.adminStatus !== "접수완료" && (
+        <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2">
+          <Info className="h-4 w-4 shrink-0 text-amber-600" />
+          <p className="text-xs text-amber-700">
+            담당자가 검토를 시작하여 신청 내용 수정이 불가합니다. 수정이 필요한 경우 담당자에게 문의해 주세요.
+          </p>
+        </div>
+      )}
 
       {/* 토지 정보 요약 - 셀렉트박스로 필지 선택 */}
       <LandInfoSection application={application} />
