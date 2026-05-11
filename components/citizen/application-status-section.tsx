@@ -614,7 +614,7 @@ function LandInfoSection({
                   <img 
                     src={`/uploads/${selectedFile}`} 
                     alt={selectedFile}
-                    className="max-w-full max-h-[calc(100vh-120px)] object-contain shadow-lg rounded-lg"
+                    className="w-full h-full object-contain"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none';
                       (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
