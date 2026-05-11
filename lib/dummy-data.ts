@@ -27,7 +27,31 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.2173, lng: 127.2955 },
     ],
   },
-
+  {
+    id: "land-002",
+    address: "경기도 용인시 처인구 양지면 마성리 125-1 (잔여지 없음)",
+    originalArea: 2500,
+    includedArea: 2500,
+    remainingArea: 0,
+    remainingRatio: 0,
+    landType: "농지",
+    landCategory: "답",
+    originalShape: "세로장방형",
+    remainingShape: "전체편입",
+    originalShapeIndex: 4.5,
+    remainingShapeIndex: 0,
+    ownerName: "박영희",
+    ownerContact: "010-9876-5432",
+    hasIncludedLand: true,
+    businessUnit: "수도권",
+    projectName: "용인-양지 도로확장사업",
+    coordinates: [
+      { lat: 37.2185, lng: 127.2960 },
+      { lat: 37.2192, lng: 127.2972 },
+      { lat: 37.2188, lng: 127.2980 },
+      { lat: 37.2178, lng: 127.2965 },
+    ],
+  },
   {
     id: "land-003",
     address: "경기도 용인시 처인구 양지면 마성리 127",
@@ -217,7 +241,7 @@ export const dummyLandInfoList: LandInfo[] = [
     remainingRatio: 30.0,
     landType: "택지",
     landCategory: "대",
-    originalShape: "가로장������형",
+    originalShape: "가로장방형",
     remainingShape: "삼각형",
     originalShapeIndex: 4.2,
     remainingShapeIndex: 5.9,
@@ -812,7 +836,7 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerContact: "010-7700-2002",
     hasIncludedLand: true,
     businessUnit: "천안안성",
-    projectName: "천안 도시개���사업",
+    projectName: "천안 도시개발사업",
     coordinates: [
       { lat: 36.8165, lng: 127.1580 },
       { lat: 36.8170, lng: 127.1590 },
@@ -1418,7 +1442,7 @@ function generateRationale(
     physicalConditions = "물리조건: ①공익사업으로 접한 도로가 없어진 경우";
   } else {
     landTypeCriteria = "그 밖의 토지 기준: 면적 330㎡ 이하 또는 잔여비율 50% 이하";
-    physicalConditions = "물리조건: ①절토/성토/옹벽으로 진입 곤란 ②토지 양분 ③형상 변경(정형: 폭 기준 미달/비정형: 형상지수 1.0이�� 상승)";
+    physicalConditions = "물리조건: ①절토/성토/옹벽으로 진입 곤란 ②토지 양분 ③형상 변경(정형: 폭 기준 미달/비정형: 형상지수 1.0이상 상승)";
   }
   
   const appliedCriteria = [
@@ -1766,7 +1790,7 @@ export const dummyApplications: Application[] = [
       sameUsage: false,
       isUnifiedParcel: true,
     },
-    actualUsage: "���",
+    actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
     reason: "동탄2 도시개발사업으로 인해 소유한 8개 필지가 모두 도로에 편입되어 잔여지가 불규칙한 형태로 남았습니다. 각 필지별로 건축 및 농업 활동이 불가능하여 일괄 매수�� 신청합니다.",
@@ -1775,7 +1799,7 @@ export const dummyApplications: Application[] = [
         currentUsage: "대" as const,
         landSubType: "residential-detached" as const,
         actualUsage: "대" as const,
-        reportedShape: "삼���형" as const,
+        reportedShape: "삼각형" as const,
         farmMachineDifficulty: false,
         accessRoadLost: true,
         waterChannelLost: false,
@@ -1869,7 +1893,7 @@ export const dummyApplications: Application[] = [
     applicationNumber: "2026-0409-001",
     applicantName: "한지민",
     applicantContact: "010-4444-5555",
-    applicantAddress: "��기도 파주시 탄현면 금산리 200",
+    applicantAddress: "경기도 파주시 탄현면 금산리 200",
     landInfo: dummyLandInfoList[0],
     actualUsage: "대",
     reportedShape: "삼각형",
@@ -1881,6 +1905,24 @@ export const dummyApplications: Application[] = [
     appliedAt: "2026-04-09",
     aiResult: generateAIResult(dummyLandInfoList[0]),
     adminName: "이정은",
+  },
+  {
+    id: "app-010",
+    applicationNumber: "2026-0410-001",
+    applicantName: "정우성",
+    applicantContact: "010-5555-6666",
+    applicantAddress: "경기도 고양시 일산동구 마두동 100",
+    landInfo: dummyLandInfoList[1],
+    actualUsage: "답",
+    reportedShape: "부정형",
+    farmMachineDifficulty: true,
+    reason: "농기계 회전이 불가하여 농업 활동이 불가능합니다.",
+    attachments: ["토지대장.pdf", "농지원부.pdf"],
+    status: "AI분석완료",
+    adminStatus: "접수완료",
+    appliedAt: "2026-04-10",
+    aiResult: generateAIResult(dummyLandInfoList[1]),
+    adminName: "박민수",
   },
   {
     id: "app-011",
@@ -1941,7 +1983,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 ��해 소유한 3�� 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합��다.",
+    reason: "안성-천안 국도확장사업으로 ��해 소유한 3�� 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -2326,7 +2368,7 @@ export const dummyApplications: Application[] = [
       {
         currentUsage: "전" as const,
         landSubType: "" as const,
-        actualUsage: "��" as const,
+        actualUsage: "전" as const,
         reportedShape: "정방형" as const,
         farmMachineDifficulty: false,
         accessRoadLost: false,
@@ -2634,7 +2676,7 @@ export const dummyApplications: Application[] = [
         judgmentRationale: {
           summary: "매탄동 100번지: 잔여면적 270㎡로 기준 초과, 재분할 필요",
           legalBasis: "「공익사업법」 제74조",
-          appliedCriteria: ["잔여면적 270㎡ > 기준 90㎡"],
+          appliedCriteria: ["잔여면적 270㎡ > ��준 90㎡"],
           detailedExplanation: "잔여 면적이 주거용 택지 기준을 초과하여 별도 재분할이 필요합니다.",
           manualCheckItems: ["건축 가능 여부 현장 확인"],
         },
