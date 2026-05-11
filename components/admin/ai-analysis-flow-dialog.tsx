@@ -99,14 +99,14 @@ export function AIAnalysisFlowDialog({
   const shapeChanged = shapeIndexChange >= 1.0 || isIrregularShape;
 
   // 최종 판정
-  const finalJudgment = aiResult?.provisionalJudgment || "수용 불가능";
+  const finalJudgment = aiResult?.provisionalJudgment || "수용불가";
   const anyConditionMet = areaMet || accessRoadLost || shapeChanged;
 
   // 조건 상태 결정 (AI 판정 결과 우선 적용)
   const getConditionStatus = () => {
     // AI 판정이 수용가능인 경우 충족 반환
     if (finalJudgment === "수용가능") return "충족";
-    // AI 판정이 수용 불가능인 경우 미충족 반환
+    // AI 판정이 수용불가인 경우 미충족 반환
     return "미충족";
   };
   const conditionStatus = getConditionStatus();
@@ -354,9 +354,9 @@ export function AIAnalysisFlowDialog({
                 </div>
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
-                  finalJudgment === "수용 불가능" ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50"
+                  finalJudgment === "수용불가" ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className={cn("text-sm font-medium", finalJudgment === "수용 불가능" ? "text-red-500" : "text-gray-500")}>수용 불가능 판단</p>
+                  <p className={cn("text-sm font-medium", finalJudgment === "수용불가" ? "text-red-500" : "text-gray-500")}>수용불가 판단</p>
                 </div>
               </div>
             </div>
@@ -385,15 +385,15 @@ export function AIAnalysisFlowDialog({
                   수용가능
                 </motion.div>
                 <motion.div 
-                  animate={{ scale: finalJudgment === "수용 불가능" && animationStep >= 7 ? 1.02 : 1 }}
+                  animate={{ scale: finalJudgment === "수용불가" && animationStep >= 7 ? 1.02 : 1 }}
                   className={cn(
                     "rounded p-3 text-center text-sm font-semibold border transition-all",
-                    finalJudgment === "수용 불가능"
+                    finalJudgment === "수용불가"
                       ? "border-red-500 bg-red-500 text-white" 
                       : "border-gray-200 bg-gray-50 text-gray-400"
                   )}
                 >
-                  수용 불가능
+                  수용불가
                 </motion.div>
               </div>
             </div>

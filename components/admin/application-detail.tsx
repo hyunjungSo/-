@@ -60,7 +60,7 @@ interface ApplicationDetailProps {
 
 const judgmentConfig = {
   수용가능: { label: "수용가능", icon: CheckCircle2, borderColor: "border-green-600", textColor: "text-green-600", color: "text-green-600" },
-  "수용 불가능": { label: "수용 불가능", icon: XCircle, borderColor: "border-red-500", textColor: "text-red-500", color: "text-red-500" },
+  "수용불가": { label: "수용불가", icon: XCircle, borderColor: "border-red-500", textColor: "text-red-500", color: "text-red-500" },
 };
 
 const adminStatusConfig: Record<AdminStatus, { 
@@ -492,7 +492,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     const shapeCriteria = checkShapeCriteria(land);
     
     const criteriaChecks: Array<{ name: string; met: boolean; description: string }> = [];
-    let judgment: "수용가능" | "수용 불가능" = "수용 불가능";
+    let judgment: "수용가능" | "수용불가" = "수용불가";
     let reasons: string[] = [];
     
     // 1. 면적 기준 미달 여부
@@ -528,7 +528,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
-        judgment = "수용 불가능";
+        judgment = "수용불가";
         reasons.push("면적 기준 미충족");
       }
       
@@ -567,7 +567,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (farmDifficulty) reasons.push("농기계 회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
       } else {
-        judgment = "수용 불가능";
+        judgment = "수용불가";
         reasons.push("모든 기준 미충족");
       }
       
@@ -584,9 +584,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || roadLost) {
         judgment = "수용가능";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확�����)" : ""));
+        if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 ��������)" : ""));
       } else {
-        judgment = "수용 불가능";
+        judgment = "수용불가";
         reasons.push("모든 기준 미충족");
       }
       
@@ -605,7 +605,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         if (areaCheckMet) reasons.push("면적 기준 충족");
         if (usageDifficulty) reasons.push("종래 사용 곤란");
       } else {
-        judgment = "수용 불가능";
+        judgment = "수용불가";
         reasons.push("모든 기준 미충족");
       }
     }
@@ -617,8 +617,8 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         met: true,
         description: `편입전 ${land.originalArea}㎡ 또는 잔여비율 ${land.remainingRatio}% (소규모 해당)`
       });
-      if (judgment === "수용 불가능") {
-        judgment = "수용 불가능";
+      if (judgment === "수용불가") {
+        judgment = "수용불가";
         reasons.push("소규모 토지로 심의위원회 검토 필요");
       }
     }
@@ -822,7 +822,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         remainingRatio: land.remainingRatio,
         judgment: result?.provisionalJudgment || "분석중",
 purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const :
-              result?.provisionalJudgment === "수용 불가능" ? "X" as const :
+              result?.provisionalJudgment === "수용불가" ? "X" as const :
                           "-" as const,
       };
     });
@@ -1803,7 +1803,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                           <div className={`rounded-lg border p-4 ${
                             judgment === "수용가능"
                               ? "border-green-600/20 bg-green-600/5"
-                              : judgment === "수용 불가능"
+                              : judgment === "수용불가"
                                 ? "border-red-200 bg-red-50/50"
                                 : "border-slate-200 bg-slate-50/50"
                           }`}>
@@ -2059,7 +2059,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 <div className="space-y-3">
                   <Label className="text-sm font-medium">매수 판정</Label>
                   <div className="flex flex-wrap gap-2">
-                    {(["수용가능", "수용 불가능"] as JudgmentResult[]).map((judgment) => {
+                    {(["수용가능", "수용불가"] as JudgmentResult[]).map((judgment) => {
                       const config = judgmentConfig[judgment];
                       const Icon = config.icon;
                       const isSelected = landReview.landJudgment === judgment;
