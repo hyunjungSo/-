@@ -1755,6 +1755,23 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     );
                   }
                   
+                  // 잔여 면적이 0인 경우: 잔여지가 없으므로 신청 자체가 불가
+                  if (selectedLand.remainingArea === 0) {
+                    return (
+                      <div className="space-y-2">
+                        <div className="rounded-lg bg-red-50 border border-red-200 p-4 text-center">
+                          <p className="text-sm font-medium text-red-700">
+                            잔여지가 없어 매수 신청이 불가합니다
+                          </p>
+                          <p className="mt-1.5 text-xs text-red-600">
+                            본 토지는 전체가 공익사업에 편입되어 잔여지가 존재하지 않습니다.
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  }
+                  
+                  // 그 외 수용불가 케이스: 기준 미충족이지만 신청은 가능
                   return (
                     <div className="space-y-2">
                       <div className="rounded bg-muted/50 p-2 text-center">
