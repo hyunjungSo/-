@@ -29,17 +29,17 @@ export const dummyLandInfoList: LandInfo[] = [
   },
   {
     id: "land-002",
-    address: "경기도 용인시 처인구 양지면 마성리 125-1",
+    address: "경기도 용인시 처인구 양지면 마성리 125-1 (잔여지 없음)",
     originalArea: 2500,
-    includedArea: 1800,
-    remainingArea: 700,
-    remainingRatio: 28.0,
+    includedArea: 2500,
+    remainingArea: 0,
+    remainingRatio: 0,
     landType: "농지",
     landCategory: "답",
     originalShape: "세로장방형",
-    remainingShape: "부정형",
+    remainingShape: "전체편입",
     originalShapeIndex: 4.5,
-    remainingShapeIndex: 6.2,
+    remainingShapeIndex: 0,
     ownerName: "박영희",
     ownerContact: "010-9876-5432",
     hasIncludedLand: true,
@@ -1432,7 +1432,7 @@ function generateRationale(
     landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)";
     physicalConditions = "물리조건: ①접면도로 상실로 건축허가 불가 ②형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "임야") {
-    landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이하 시 495㎡��지 완화)";
+    landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이하 시 495㎡���지 완화)";
     physicalConditions = "물리조건: ①공익사업으로 접한 도로가 없어진 경우";
   } else {
     landTypeCriteria = "그 밖의 토지 기준: 면적 330㎡ 이하 또는 잔여비율 50% 이하";
@@ -1894,7 +1894,7 @@ export const dummyApplications: Application[] = [
     reason: "도로 편입으로 인한 잔여지 매수 신청",
     attachments: ["토지대장.pdf"],
     status: "접수완료",
-    adminStatus: "접수완료",
+    adminStatus: "접수���료",
     appliedAt: "2026-04-09",
     aiResult: generateAIResult(dummyLandInfoList[0]),
     adminName: "이정은",
@@ -2064,7 +2064,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "천안 도시개발사업으로 인해 소유한 4개 필지(대지 1, 농지 2, 잡종지 1)가 모두 도로에 편입되었습니다. 대지에는 주택이 있었으나 철거되었고, 인접한 농지와 잡종지는 주택 부속 텃밭과 창고용지로 사용해 왔습니다. 편입 후 각 필지가 불규칙한 형태로 남아 건축 및 농업이 불가능합니다. 4필지 모두 매수를 신청합니다.",
+    reason: "천안 도시개발사업으로 인해 소유한 4개 ���지(대지 1, 농지 2, 잡종지 1)가 모두 도로에 편입되었습니다. 대지에는 주택이 있었으나 철거되었고, 인접한 농지와 잡종지는 주택 부속 텃밭과 창고용지로 사용해 왔습니다. 편입 후 각 필지가 불규칙한 형태로 남아 건축 및 농업이 불가능합니다. 4필지 모두 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "대" as const,
@@ -2386,7 +2386,7 @@ export const dummyApplications: Application[] = [
       criteriaChecks: [
         { criteriaName: "면적 기준 (200-1)", criteriaDescription: "잔여 150㎡ ≤ 330㎡ (농지 기준 충족)", isMet: true, autoDetected: true },
         { criteriaName: "면적 기준 (200-2)", criteriaDescription: "잔여 180㎡ ≤ 330㎡ (농지 기준 충족)", isMet: true, autoDetected: true },
-        { criteriaName: "형상지수 (200-1)", criteriaDescription: "형상지수 5.0 ≥ 2.0 (불량)", isMet: true, autoDetected: true },
+        { criteriaName: "형상지��� (200-1)", criteriaDescription: "형상지수 5.0 ≥ 2.0 (불량)", isMet: true, autoDetected: true },
         { criteriaName: "면적 기준 (55-1)", criteriaDescription: "잔여 600㎡ > 330㎡ (농지 기준 미충족)", isMet: false, autoDetected: true },
         { criteriaName: "형상지수 (55-1)", criteriaDescription: "형상지수 1.2 < 2.0 (양호)", isMet: false, autoDetected: true },
         { criteriaName: "면적 기준 (55-2)", criteriaDescription: "잔여 550㎡ > 330㎡ (농지 기준 미충족)", isMet: false, autoDetected: true },
