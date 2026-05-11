@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { dummyApplications, landCategories } from "@/lib/dummy-data";
 import type { Application, AdminStatus } from "@/lib/types";
 import { 
@@ -24,7 +25,9 @@ import {
   Upload,
   Trash2,
   Search,
-  Download
+  Download,
+  Eye,
+  FileImage
 } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { AdminStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
@@ -223,6 +226,24 @@ function LandInfoSection({
     ? [application.landInfo, ...application.additionalLands] 
     : [application.landInfo];
   
+  // 파일 뷰어 상태
+  const [fileViewerOpen, setFileViewerOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<string | null>(null);
+
+  // 파일 확장자로 파일 타입 확인
+  const getFileType = (fileName: string) => {
+    const ext = fileName.split('.').pop()?.toLowerCase();
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'].includes(ext || '')) return 'image';
+    if (ext === 'pdf') return 'pdf';
+    return 'other';
+  };
+
+  // 파일 뷰어 열기
+  const openFileViewer = (fileName: string) => {
+    setSelectedFile(fileName);
+    setFileViewerOpen(true);
+  };
+
   // 인덱스 범위 안전 처리
   const safeIndex = Math.min(selectedLandIndex, allLands.length - 1);
   const selectedLand = allLands[safeIndex];
@@ -547,9 +568,10 @@ function LandInfoSection({
                           variant="ghost"
                           size="sm"
                           className="h-7 w-7 p-0 text-muted-foreground hover:text-primary"
-                          title="파일 다운로드"
+                          title="파일 보기"
+                          onClick={() => openFileViewer(fileName)}
                         >
-                          <Download className="size-[14px]" />
+                          <Eye className="size-[14px]" />
                         </Button>
                       </li>
                     ))}
@@ -562,6 +584,53 @@ function LandInfoSection({
           )}
         </div>
       </div>
+
+      {/* 파일 뷰어 다이얼로그 */}
+      <Dialog open={fileViewerOpen} onOpenChange={setFileViewerOpen}>
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base">
+              <FileImage className="size-5" />
+              첨부파일 미리보기
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-auto">
+            {selectedFile && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between rounded-lg bg-muted/50 px-4 py-3">
+                  <span className="text-sm font-medium">{selectedFile}</span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5"
+                  >
+                    <Download className="size-4" />
+                    다운로드
+                  </Button>
+                </div>
+                <div className="flex items-center justify-center rounded-lg border bg-white p-6 min-h-[400px]">
+                  {getFileType(selectedFile) === 'image' ? (
+                    <img 
+                      src={`/uploads/${selectedFile}`} 
+                      alt={selectedFile}
+                      className="max-w-full max-h-[500px] object-contain"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                        (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                      }}
+                    />
+                  ) : null}
+                  <div className={`flex flex-col items-center gap-3 text-muted-foreground ${getFileType(selectedFile) === 'image' ? 'hidden' : ''}`}>
+                    <FileText className="size-16 text-muted-foreground/50" />
+                    <p className="text-sm">미리보기를 지원하지 않는 파일 형식입니다.</p>
+                    <p className="text-xs">파일을 다운로드하여 확인해 주세요.</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -1163,7 +1232,7 @@ export function ApplicationStatusSection() {
     <div>
       {/* 2-column 레이아웃: 왼쪽 리스트 / 오른쪽 상세 */}
       <div className="grid grid-cols-[320px_1fr] gap-4">
-        {/* 왼쪽: 신청 목록 - 고용24 스타일 */}
+        {/* 왼쪽: 신청 목록 - 고��24 스타일 */}
         <div className="flex h-full max-h-[calc(100vh-200px)] flex-col overflow-hidden rounded-lg border border-border">
           <div className="flex shrink-0 items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
             <h3 className="font-semibold text-foreground">신청 목록</h3>
