@@ -144,7 +144,26 @@ function AddressSearchModal({
 }
 
 // 토지 정보 섹션 컴포넌트 (고용24 스타일 테이블 형태)
-function LandInfoSection({ application }: { application: Application }) {
+interface LandEditData {
+  landUseCategory: string;
+  landShape: string;
+  siteType: string;
+  roadFrontageLoss: boolean;
+  irrigationCanalLoss: boolean;
+  farmEquipmentTurnImpossible: boolean;
+}
+
+function LandInfoSection({ 
+  application, 
+  isEditMode = false,
+  editData,
+  onEditDataChange
+}: { 
+  application: Application;
+  isEditMode?: boolean;
+  editData?: LandEditData;
+  onEditDataChange?: (data: Partial<LandEditData>) => void;
+}) {
   const isMultipleLands = application.additionalLands && application.additionalLands.length > 0;
   const allLands = isMultipleLands 
     ? [application.landInfo, ...application.additionalLands] 
@@ -160,7 +179,7 @@ function LandInfoSection({ application }: { application: Application }) {
   if (!selectedLand) return null;
 
   return (
-    <div className="overflow-hidden rounded-lg border border-border">
+    <div className={`overflow-hidden rounded-lg border transition-colors duration-300 ${isEditMode ? "border-primary/50 bg-primary/5" : "border-border"}`}>
       <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
         <h4 className="font-semibold text-foreground">토지 정보</h4>
         {isMultipleLands && (
@@ -271,13 +290,40 @@ function LandInfoSection({ application }: { application: Application }) {
         );
       })()}
       
+      {/* 수정 모드 안내 */}
+      {isEditMode && (
+        <div className="border-b border-border bg-blue-50 px-4 py-2">
+          <p className="text-xs text-blue-700">
+            AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지의 실제 활용 상황을 입력해 주세요. (필지 주소는 수정 불가)
+          </p>
+        </div>
+      )}
+
       {/* 활용 지목 / 공부상 지목 행 */}
       <div className="flex border-b border-border">
         <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
           <span className="text-sm font-medium">활용 지목</span>
         </div>
         <div className="flex flex-1 items-center px-4 py-3">
-          <span className="text-sm">{selectedLand.currentUsage || "대 (택지)"}</span>
+          {isEditMode && editData && onEditDataChange ? (
+            <Select
+              value={editData.landUseCategory}
+              onValueChange={(value) => onEditDataChange({ landUseCategory: value })}
+            >
+              <SelectTrigger className="h-10 w-40">
+                <SelectValue placeholder="선택하세요" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="대 (택지)">대 (택지)</SelectItem>
+                <SelectItem value="전">전</SelectItem>
+                <SelectItem value="답">답</SelectItem>
+                <SelectItem value="임야">임야</SelectItem>
+                <SelectItem value="잡종지">잡종지</SelectItem>
+              </SelectContent>
+            </Select>
+          ) : (
+            <span className="text-sm">{selectedLand.currentUsage || "대 (택지)"}</span>
+          )}
         </div>
         <div className="flex w-28 shrink-0 items-center border-l border-border bg-muted/30 px-4 py-3">
           <span className="text-sm font-medium">공부상 지목</span>
@@ -293,13 +339,49 @@ function LandInfoSection({ application }: { application: Application }) {
           <span className="text-sm font-medium">토지 모양</span>
         </div>
         <div className="flex flex-1 items-center px-4 py-3">
-          <span className="text-sm">{selectedLand.reportedShape || "정방형"}</span>
+          {isEditMode && editData && onEditDataChange ? (
+            <Select
+              value={editData.landShape}
+              onValueChange={(value) => onEditDataChange({ landShape: value })}
+            >
+              <SelectTrigger className="h-10 w-32">
+                <SelectValue placeholder="선택하세요" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="정방형">정방형</SelectItem>
+                <SelectItem value="장방형">장방형</SelectItem>
+                <SelectItem value="사다리꼴">사다리꼴</SelectItem>
+                <SelectItem value="삼각형">삼각형</SelectItem>
+                <SelectItem value="역삼각형">역삼각형</SelectItem>
+                <SelectItem value="부정형">부정형</SelectItem>
+              </SelectContent>
+            </Select>
+          ) : (
+            <span className="text-sm">{selectedLand.reportedShape || "정방형"}</span>
+          )}
         </div>
         <div className="flex w-28 shrink-0 items-center border-l border-border bg-muted/30 px-4 py-3">
           <span className="text-sm font-medium">택지 유형</span>
         </div>
         <div className="flex flex-1 items-center px-4 py-3">
-          <span className="text-sm">{selectedLand.landSubType || "-"}</span>
+          {isEditMode && editData && onEditDataChange ? (
+            <Select
+              value={editData.siteType}
+              onValueChange={(value) => onEditDataChange({ siteType: value })}
+            >
+              <SelectTrigger className="h-10 w-40">
+                <SelectValue placeholder="선택하세요" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="일반택지">일반택지</SelectItem>
+                <SelectItem value="주거택지">주거택지</SelectItem>
+                <SelectItem value="상업택지">상업택지</SelectItem>
+                <SelectItem value="공업택지">공업택지</SelectItem>
+              </SelectContent>
+            </Select>
+          ) : (
+            <span className="text-sm">{selectedLand.landSubType || "-"}</span>
+          )}
         </div>
       </div>
       
@@ -308,24 +390,61 @@ function LandInfoSection({ application }: { application: Application }) {
         <div className="flex w-28 shrink-0 items-start bg-muted/30 px-4 py-3">
           <span className="text-sm font-medium">확인 항목</span>
         </div>
-        <div className="flex flex-1 items-center gap-4 px-4 py-3">
-          {(() => {
-            const checks = [];
-            if (selectedLand.accessRoadLost) checks.push("접면도로 상실");
-            if (selectedLand.waterChannelLost) checks.push("관개수로 상실");
-            if (selectedLand.farmMachineDifficulty) checks.push("농기계 회전 곤란");
-            return checks.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {checks.map((check, i) => (
-                  <span key={i} className="rounded bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
-                    {check}
-                  </span>
-                ))}
+        <div className="flex flex-1 flex-col px-4 py-3">
+          {isEditMode && editData && onEditDataChange ? (
+            <>
+              <p className="mb-3 text-xs text-muted-foreground">
+                AI가 자동 판독할 수 없는 사항입니다. 해당되는 경우 체크해 주세요.
+              </p>
+              <div className="flex flex-wrap gap-x-6 gap-y-2">
+                <label className="flex cursor-pointer items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={editData.roadFrontageLoss}
+                    onChange={(e) => onEditDataChange({ roadFrontageLoss: e.target.checked })}
+                    className="h-4 w-4 rounded border-gray-300"
+                  />
+                  <span className="text-sm">접면도로 상실</span>
+                </label>
+                <label className="flex cursor-pointer items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={editData.irrigationCanalLoss}
+                    onChange={(e) => onEditDataChange({ irrigationCanalLoss: e.target.checked })}
+                    className="h-4 w-4 rounded border-gray-300"
+                  />
+                  <span className="text-sm">관개수로 상실</span>
+                </label>
+                <label className="flex cursor-pointer items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={editData.farmEquipmentTurnImpossible}
+                    onChange={(e) => onEditDataChange({ farmEquipmentTurnImpossible: e.target.checked })}
+                    className="h-4 w-4 rounded border-gray-300"
+                  />
+                  <span className="text-sm">농기계 회전 불가</span>
+                </label>
               </div>
-            ) : (
-              <span className="text-sm text-muted-foreground">해당 없음</span>
-            );
-          })()}
+            </>
+          ) : (
+            (() => {
+              const checks = [];
+              if (selectedLand.accessRoadLost) checks.push("접면도로 상실");
+              if (selectedLand.waterChannelLost) checks.push("관개수로 상실");
+              if (selectedLand.farmMachineDifficulty) checks.push("농기계 회전 곤란");
+              return checks.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {checks.map((check, i) => (
+                    <span key={i} className="rounded bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                      {check}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <span className="text-sm text-muted-foreground">해당 없음</span>
+              );
+            })()
+          )}
         </div>
       </div>
     </div>
@@ -444,7 +563,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               </Button>
               <Button
                 size="sm"
-                onClick={handleSave}
+                onClick={handleSaveClick}
                 className="h-8 gap-1.5 text-xs"
               >
                 <Save className="size-[18px]" />
@@ -762,7 +881,19 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
       )}
 
       {/* 토지 정보 요약 - 셀렉트박스로 필지 선택 */}
-      <LandInfoSection application={application} />
+      <LandInfoSection 
+        application={application}
+        isEditMode={isEditMode}
+        editData={{
+          landUseCategory: editData.landUseCategory,
+          landShape: editData.landShape,
+          siteType: editData.siteType,
+          roadFrontageLoss: editData.roadFrontageLoss,
+          irrigationCanalLoss: editData.irrigationCanalLoss,
+          farmEquipmentTurnImpossible: editData.farmEquipmentTurnImpossible,
+        }}
+        onEditDataChange={(data) => setEditData({ ...editData, ...data })}
+      />
 
       {/* 처리 완료 시 결과 표시 */}
       {application.adminStatus === "심사완료" && application.finalJudgment && (
