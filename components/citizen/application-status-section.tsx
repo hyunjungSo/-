@@ -310,7 +310,7 @@ function LandInfoSection({
       {isEditMode && (
         <div className="border-b border-border bg-blue-50 px-4 py-2">
           <p className="text-xs text-blue-700">
-            AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지의 실제 활용 상황을 입력해 주세요. (필지 주소는 수정 불가)
+            AI 판단과 실제 현황이 다를 수 있습니다. 현재 토지�� 실제 활용 상황을 입력해 주세요. (필지 주소는 수정 불가)
           </p>
         </div>
       )}
@@ -604,12 +604,12 @@ function ApplicationDetailPanel({
   const [landEditDataList, setLandEditDataList] = useState(initLandEditDataList);
   
   const [editData, setEditData] = useState({
-    // 신청인 정보
-    applicantRelation: "owner" as "owner" | "agent",
+    // 신��인 정보
+    applicantRelation: (application.applicantRelation || "owner") as "owner" | "agent",
     applicantName: application.applicantName,
     applicantContact: application.applicantContact,
-    agentName: "",
-    agentContact: "",
+    agentName: application.agentName || "",
+    agentContact: application.agentContact || "",
     postalCode: "",
     baseAddress: application.applicantAddress,
     detailAddress: "",
@@ -617,6 +617,24 @@ function ApplicationDetailPanel({
     reason: application.reason || "잔여지 매수 신청",
     attachments: [] as FileItem[],
   });
+
+  // application이 변경되면 editData와 landEditDataList를 다시 초기화
+  useEffect(() => {
+    setEditData({
+      applicantRelation: (application.applicantRelation || "owner") as "owner" | "agent",
+      applicantName: application.applicantName,
+      applicantContact: application.applicantContact,
+      agentName: application.agentName || "",
+      agentContact: application.agentContact || "",
+      postalCode: "",
+      baseAddress: application.applicantAddress,
+      detailAddress: "",
+      reason: application.reason || "잔여지 매수 신청",
+      attachments: [],
+    });
+    setLandEditDataList(initLandEditDataList());
+    setSelectedLandIndex(0);
+  }, [application.id]);
 
   const canEdit = application.adminStatus === "접수완료";
   const MAX_FILES = 10;
@@ -662,9 +680,12 @@ function ApplicationDetailPanel({
     // 수정된 신청 데이터 생성
     const updatedApplication: Application = {
       ...application,
+      applicantRelation: editData.applicantRelation,
       applicantName: editData.applicantName,
       applicantContact: editData.applicantContact,
       applicantAddress: editData.baseAddress + (editData.detailAddress ? ` ${editData.detailAddress}` : ""),
+      agentName: editData.applicantRelation === "agent" ? editData.agentName : undefined,
+      agentContact: editData.applicantRelation === "agent" ? editData.agentContact : undefined,
       reason: editData.reason,
       // 토지 정보 업데이트 (첫 번째 필지)
       landInfo: application.landInfo ? {
@@ -840,25 +861,31 @@ function ApplicationDetailPanel({
                 </label>
               </div>
             ) : (
-              <span className="text-sm">본인 신청</span>
+              <span className="text-sm">
+                {application.applicantRelation === "agent" ? "대리인 신청" : "본인 신청"}
+              </span>
             )}
           </div>
         </div>
 
         {/* 대리인 정보 (대리인 신청 시만 표시) */}
-        {isEditMode && editData.applicantRelation === "agent" && (
+        {((isEditMode && editData.applicantRelation === "agent") || (!isEditMode && application.applicantRelation === "agent")) && (
           <>
             <div className="flex border-b border-border">
               <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
                 <span className="text-sm font-medium">대리인 성명</span>
               </div>
               <div className="flex flex-1 items-center px-4 py-3">
-                <Input
-                  value={editData.agentName}
-                  onChange={(e) => setEditData({ ...editData, agentName: e.target.value })}
-                  placeholder="대리인 성명을 입력해주세요"
-                  className="h-10 text-sm"
-                />
+                {isEditMode ? (
+                  <Input
+                    value={editData.agentName}
+                    onChange={(e) => setEditData({ ...editData, agentName: e.target.value })}
+                    placeholder="대리인 성명을 입력해주세요"
+                    className="h-10 text-sm"
+                  />
+                ) : (
+                  <span className="text-sm">{application.agentName || "-"}</span>
+                )}
               </div>
             </div>
             <div className="flex border-b border-border">
@@ -866,24 +893,30 @@ function ApplicationDetailPanel({
                 <span className="text-sm font-medium">대리인 연락처</span>
               </div>
               <div className="flex flex-1 items-center px-4 py-3">
-                <Input
-                  type="tel"
-                  inputMode="numeric"
-                  value={editData.agentContact}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/[^0-9]/g, "");
-                    setEditData({ ...editData, agentContact: value });
-                  }}
-                  placeholder="대리인 연락처를 입력해주세요"
-                  className="h-10 text-sm"
-                />
+                {isEditMode ? (
+                  <Input
+                    type="tel"
+                    inputMode="numeric"
+                    value={editData.agentContact}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/[^0-9]/g, "");
+                      setEditData({ ...editData, agentContact: value });
+                    }}
+                    placeholder="대리인 연락처를 입력해주세요"
+                    className="h-10 text-sm"
+                  />
+                ) : (
+                  <span className="text-sm">{application.agentContact || "-"}</span>
+                )}
               </div>
             </div>
-            <div className="border-b border-border bg-amber-50 px-4 py-2">
-              <p className="text-xs text-amber-700">
-                대리인 신청 시 위임장 및 대리인 신분증 사본을 첨부 서류에 추가해 주세요.
-              </p>
-            </div>
+            {isEditMode && (
+              <div className="border-b border-border bg-amber-50 px-4 py-2">
+                <p className="text-xs text-amber-700">
+                  대리인 신청 시 위임장 및 대리인 신분증 사본을 첨부 서류에 추가해 주세요.
+                </p>
+              </div>
+            )}
           </>
         )}
 
@@ -913,13 +946,8 @@ function ApplicationDetailPanel({
           <div className="flex flex-1 items-center px-4 py-3">
             {isEditMode ? (
               <Input
-                type="tel"
-                inputMode="numeric"
                 value={editData.applicantContact}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/[^0-9]/g, "");
-                  setEditData({ ...editData, applicantContact: value });
-                }}
+                onChange={(e) => setEditData({ ...editData, applicantContact: e.target.value })}
                 className="h-10 text-sm"
               />
             ) : (
