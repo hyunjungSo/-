@@ -395,7 +395,7 @@ export function ApplicationFormSection({
                       <div 
                         key={land.id} 
                         className={`rounded-lg border p-3 ${
-                          result?.provisionalJudgment === "매수" 
+                          result?.provisionalJudgment === "수용가능" 
                             ? "border-primary/30 bg-primary/5" 
                             : "border-red-300 bg-red-50"
                         }`}
@@ -435,9 +435,9 @@ export function ApplicationFormSection({
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">매수 가능 필지</span>
+                    <span className="text-muted-foreground">수용가능 필지</span>
                     <span className="font-medium text-primary">
-                      {allAiResults.filter(r => r?.provisionalJudgment === "매수").length}건
+                      {allAiResults.filter(r => r?.provisionalJudgment === "수용가능").length}건
                     </span>
                   </div>
                 </div>
@@ -445,9 +445,9 @@ export function ApplicationFormSection({
                 {/* AI 판독 결과 요약 (복수 필지) */}
                 {allLands.length > 0 && (
                   <div className={`mt-4 rounded-lg border-2 p-4 ${
-                    allAiResults.every(r => r?.provisionalJudgment === "매수")
+                    allAiResults.every(r => r?.provisionalJudgment === "수용가능")
                       ? "border-primary bg-primary/5" 
-                      : allAiResults.some(r => r?.provisionalJudgment === "매수")
+                      : allAiResults.some(r => r?.provisionalJudgment === "수용가능")
                         ? "border-amber-500 bg-amber-50"
                         : "border-red-500 bg-red-50"
                   }`}>
@@ -455,25 +455,25 @@ export function ApplicationFormSection({
                       <span className="text-base font-semibold text-foreground">AI 판독 결과</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      {allAiResults.every(r => r?.provisionalJudgment === "매수") ? (
+                      {allAiResults.every(r => r?.provisionalJudgment === "수용가능") ? (
                         <>
                           <CheckCircle2 className="h-5 w-5 text-primary" />
-                          <span className="text-base font-bold text-primary">전체 매수 가능</span>
+                          <span className="text-base font-bold text-primary">전체 수용가능</span>
                         </>
-                      ) : allAiResults.some(r => r?.provisionalJudgment === "매수") ? (
+                      ) : allAiResults.some(r => r?.provisionalJudgment === "수용가능") ? (
                         <>
                           <AlertTriangle className="h-5 w-5 text-amber-500" />
-                          <span className="text-base font-bold text-amber-500">일부 매수 가능</span>
+                          <span className="text-base font-bold text-amber-500">일부 수용가능</span>
                         </>
                       ) : (
                         <>
                           <XCircle className="h-5 w-5 text-red-500" />
-                          <span className="text-base font-bold text-red-500">전체 기준 미충족</span>
+                          <span className="text-base font-bold text-red-500">전체 수용불가</span>
                         </>
                       )}
                     </div>
                     <p className="mt-2 text-sm text-muted-foreground">
-                      총 {allLands.length}필지 중 {allAiResults.filter(r => r?.provisionalJudgment === "매수").length}필지 매수 가능
+                      총 {allLands.length}필지 중 {allAiResults.filter(r => r?.provisionalJudgment === "수용가능").length}필지 수용가능
                     </p>
                   </div>
                 )}
@@ -484,7 +484,7 @@ export function ApplicationFormSection({
                 <div className="max-h-[300px] space-y-2 overflow-y-auto">
                   <div 
                     className={`rounded-lg border p-3 ${
-                      aiResult?.provisionalJudgment === "매수" 
+                      aiResult?.provisionalJudgment === "수용가능" 
                         ? "border-primary/30 bg-primary/5" 
                         : "border-red-300 bg-red-50"
                     }`}
@@ -522,9 +522,9 @@ export function ApplicationFormSection({
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">매수 가능 필지</span>
+                    <span className="text-muted-foreground">수용가능 필지</span>
                     <span className="font-medium text-primary">
-                      {aiResult?.provisionalJudgment === "매수" ? "1건" : "0건"}
+                      {aiResult?.provisionalJudgment === "수용가능" ? "1건" : "0건"}
                     </span>
                   </div>
                 </div>

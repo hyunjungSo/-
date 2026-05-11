@@ -1358,10 +1358,10 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   const physicalConditionMet = criteriaChecks.some(c => !c.autoDetected && c.isMet);
   
   // PRD 판정 원칙:
-  // - AI 판정은 "매수", "기각", "심의위원회 이관" 세 가지
-  // - 물리 조건 중 하나라도 해당 시 '수용 조건 충족'(=매수)
-  // - 전체 조건 미해당시 '수용 조건 미충족'(=기각)
-  let provisionalJudgment: "매수" | "기각" | "심의위원회 이관";
+  // - AI 판정은 "수용가능", "수용불가" 두 가지
+  // - 물리 조건 중 하나라도 해당 시 '수용가능'
+  // - 전체 조건 미해당시 '수용불가'
+  let provisionalJudgment: "수용가능" | "수용불가";
   
   // 면적 기준 충족 여부
   const coreCriteriaMet = areaMet;
@@ -1370,23 +1370,23 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   if (landInfo.landType === "임야") {
     // 산지: 면적 기준 + 접면 도로 상실만 (형상 조건 없음!)
     if (coreCriteriaMet) {
-      provisionalJudgment = "매수";
+      provisionalJudgment = "수용가능";
     } else {
-      provisionalJudgment = "기각";
+      provisionalJudgment = "수용불가";
     }
   } else if (landInfo.landType === "택지" || landInfo.landType === "농지") {
     // 택지/농지: 면적 기준 + 형상 조건 적용
     if (coreCriteriaMet || isIrregularShape || shapeIndexMet) {
-      provisionalJudgment = "매수";
+      provisionalJudgment = "수용가능";
     } else {
-      provisionalJudgment = "기각";
+      provisionalJudgment = "수용불가";
     }
   } else {
     // 그 밖의 토지: 면적 기준 + 잔여비율 50% 이하 + 형상 변경
     if (coreCriteriaMet || isBlindLand || isIrregularShape || shapeIndexMet) {
-      provisionalJudgment = "매수";
+      provisionalJudgment = "수용가능";
     } else {
-      provisionalJudgment = "기각";
+      provisionalJudgment = "수용불가";
     }
   }
   
@@ -1413,7 +1413,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
 // 판단 근거 생성 헬퍼 함수 (PRD v2.0 기준 - 중앙토지수용위원회 참고문서)
 function generateRationale(
   land: LandInfo,
-  judgment: "매수" | "기각" | "심의위원회 이관",
+  judgment: "수용가능" | "수용불가",
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],
@@ -1448,15 +1448,15 @@ function generateRationale(
   let summary: string;
   let detailedExplanation: string;
 
-  if (judgment === "매수" || judgment === "심의위원회 이관") {
-    summary = `${land.landType} 수용 조건 충족으로 「${judgment}」 판정 - 사용이 현저히 곤란한 경우로 예상`;
+  if (judgment === "수용가능") {
+    summary = `${land.landType} 수용 조건 충족으로 「수용가능」 판정 - 사용이 현저히 곤란한 경우로 예상`;
     detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n충족기준: ${metCriteriaNames.join(", ")}\n\n※ 물리 조건 중 하나 이상 해당으로 수용 조건 충족`;
   } else {
-    // 기각
+    // 수용불가
     const areaThreshold = land.landType === "택지" ? 90 : 330;
     const rejectionReason = `잔여면적 ${land.remainingArea}㎡(기준 ${areaThreshold}㎡ 초과), 잔여비율 ${land.remainingRatio}%(기준 초과), 물리조건 미해당`;
-    summary = `${land.landType} 수용 조건 미충족으로 「기각」 판정`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조건 전체 미해당`;
+    summary = `${land.landType} 수용 조건 미충족으로 「수용불가」 판정`;
+    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n수용불가사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조건 전체 미해당`;
   }
 
   return {
@@ -1665,7 +1665,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 불가", isMet: false, autoDetected: false },
       ],
-      provisionalJudgment: "심의위원회 이관",
+      provisionalJudgment: "수용가능",
       originalShapeIndex: 4.0,
       remainingShapeIndex: 5.2,
       shapeIndexChange: 1.2,
@@ -1765,7 +1765,7 @@ export const dummyApplications: Application[] = [
         currentUsage: "대" as const,
         landSubType: "residential-detached" as const,
         actualUsage: "대" as const,
-        reportedShape: "삼각형" as const,
+        reportedShape: "삼���형" as const,
         farmMachineDifficulty: false,
         accessRoadLost: true,
         waterChannelLost: false,
@@ -1992,7 +1992,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "도로/수로 상실", criteriaDescription: "관개수로 상실로 농지 사용 불가", isMet: true, autoDetected: false },
         { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란으로 경작 불가", isMet: true, autoDetected: false },
       ],
-      provisionalJudgment: "매수",
+      provisionalJudgment: "수용가능",
       originalShapeIndex: 4.2,
       remainingShapeIndex: 5.9,
       shapeIndexChange: 1.7,
@@ -2088,7 +2088,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 불가", isMet: true, autoDetected: false },
       ],
-      provisionalJudgment: "매수",
+      provisionalJudgment: "수용가능",
       originalShapeIndex: 4.2,
       remainingShapeIndex: 5.8,
       shapeIndexChange: 1.6,
@@ -2164,7 +2164,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "맹지 판정", criteriaDescription: "접면도로 상실로 양 필지 모두 맹지화", isMet: true, autoDetected: true },
       ],
-      provisionalJudgment: "매수",
+      provisionalJudgment: "수용가능",
       originalShapeIndex: 4.1,
       remainingShapeIndex: 5.95,
       shapeIndexChange: 1.85,
@@ -2267,7 +2267,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },
       ],
-      provisionalJudgment: "매수",
+      provisionalJudgment: "수용가능",
       originalShapeIndex: 5.1,
       remainingShapeIndex: 6.48,
       shapeIndexChange: 1.38,
@@ -2284,7 +2284,7 @@ export const dummyApplications: Application[] = [
           "토지 양분: 고속도로 관통으로 산림경영 불가",
         ],
         detailedExplanation: "5필지 산지 (조림지)\n\n[필지 1] 산101: 3,000㎡ → 1,500㎡ (삼각형)\n[필지 2] 산102: 2,500㎡ → 700㎡ (역삼각형)\n[필지 3] 산103: 2,800㎡ → 800㎡ (부정형)\n[필지 4] 산104: 2,200㎡ → 600㎡ (삼각형)\n[필지 5] 산105: 1,800㎡ → 500㎡ (자루형)\n\n고속도로가 중앙을 관통하여 조림지가 양분되어 산림경영이 불가능합니다.",
-        manualCheckItems: ["산림경영계획서 확인", "조림 현황 현장 확인"],
+        manualCheckItems: ["산림경영계획서 확인", "조림 현황 현장 ���인"],
       },
     },
     adminName: "박영희",
@@ -2365,7 +2365,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "면적 기준 (55-2)", criteriaDescription: "잔여 550㎡ > 330㎡ (농지 기준 미충족)", isMet: false, autoDetected: true },
         { criteriaName: "형상지수 (55-2)", criteriaDescription: "형상지수 1.3 < 2.0 (양호)", isMet: false, autoDetected: true },
       ],
-      provisionalJudgment: "매수",
+      provisionalJudgment: "수용가능",
       originalShapeIndex: 4.1,
       remainingShapeIndex: 5.0,
       shapeIndexChange: 0.9,
@@ -2491,7 +2491,7 @@ export const dummyApplications: Application[] = [
     appliedAt: "2026-05-01",
     // 민원인 AI 분석 결과 - 농지 2필지 개별 분석
     aiResult: {
-      provisionalJudgment: "매수",
+      provisionalJudgment: "수용가능",
       confidence: 85,
       originalArea: 3950,
       remainingArea: 2480,
@@ -2522,7 +2522,7 @@ export const dummyApplications: Application[] = [
     },
     // 담당자 AI 재분석 결과 - 농지 2필지 분석
     adminAiResult: {
-      provisionalJudgment: "매수",
+      provisionalJudgment: "수용가능",
       confidence: 82,
       originalArea: 3950,
       remainingArea: 2480,
@@ -2602,7 +2602,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "접수완료",
     appliedAt: "2026-05-10",
     aiResult: {
-      provisionalJudgment: "매수",
+      provisionalJudgment: "수용가능",
       confidence: 78,
       originalArea: 1350,
       remainingArea: 800,
@@ -2634,7 +2634,7 @@ export const dummyApplications: Application[] = [
     },
     landAIResults: {
       "land-3parcel-001": {
-        provisionalJudgment: "매수 불가",
+        provisionalJudgment: "수용불가",
         confidence: 75,
         originalArea: 450,
         remainingArea: 270,
@@ -2648,7 +2648,7 @@ export const dummyApplications: Application[] = [
         },
       },
       "land-3parcel-002": {
-        provisionalJudgment: "매수 불가",
+        provisionalJudgment: "수용불가",
         confidence: 72,
         originalArea: 380,
         remainingArea: 230,
@@ -2662,7 +2662,7 @@ export const dummyApplications: Application[] = [
         },
       },
       "land-3parcel-003": {
-        provisionalJudgment: "매수",
+        provisionalJudgment: "수용가능",
         confidence: 80,
         originalArea: 520,
         remainingArea: 300,

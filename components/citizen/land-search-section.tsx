@@ -80,7 +80,7 @@ const regionData = {
     // 부산광역시
     "해운대구": ["반송동", "반여동", "석대동", "송정동", "우동", "좌동", "재송동", "중동"],
     "기장군": ["기장읍", "장안읍", "정관읍", "일광면", "철마면"],
-    "금정구": ["구서동", "금사동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
+    "금정구": ["구서동", "금��동", "금성동", "남산동", "노포동", "두구동", "부곡동", "서동", "선두구동", "오륜동", "장전동", "청룡동", "회동동"],
     // 경기도
     "용인시 처인구": ["양지면", "백암면", "원삼면", "이동읍", "남사읍", "포곡읍", "모현읍"],
     "용인시 기흥구": ["구갈동", "마북동", "보라동", "상갈동", "상하동", "서농동", "신갈동", "언남동", "영덕동", "중동", "지곡동", "청덕동", "하갈동"],
@@ -400,13 +400,13 @@ function simulateAIAnalysis(
   const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
-  // AI 1차 판독: 매수/기각/심의위원회 이관 판정
-  let provisionalJudgment: "매수" | "기각" | "심의위원회 이관";
+  // AI 1차 판독: 수용가능/수용불가 판정
+  let provisionalJudgment: "수용가능" | "수용불가";
   
   if (metAutoCriteria >= 1) {
-    provisionalJudgment = "매수";
+    provisionalJudgment = "수용가능";
   } else {
-    provisionalJudgment = "기각";
+    provisionalJudgment = "수용불가";
   }
 
   const judgmentRationale: JudgmentRationale = generateJudgmentRationale(
@@ -1125,7 +1125,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               <div className="flex flex-1 items-center bg-background px-4 py-2">
                 <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <Info className="h-3.5 w-3.5 shrink-0" />
-                  법인 신청 시, 사업자등록증 및 법인인감증명서가 필요합니다.
+                  법인 신청 시, 사업자등록�� 및 법인인감증명서가 필요합니다.
                 </p>
               </div>
             </div>
@@ -1383,9 +1383,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                   {hasAiResult && (
                                     <Badge 
                                       className={`text-xs px-1.5 py-0 ${
-                                        landAiResult?.provisionalJudgment === "매수" 
+                                        landAiResult?.provisionalJudgment === "수용가능" 
                                           ? "bg-green-600 text-white" 
-                                          : landAiResult?.provisionalJudgment === "기각"
+                                          : landAiResult?.provisionalJudgment === "수용불가"
                                             ? "bg-red-500 text-white"
                                             : "bg-amber-500 text-white"
                                       }`}
@@ -1562,7 +1562,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     {/* 선택된 필지 상세 결과 */}
                     {aiResult && selectedLand && (
                       <div className={`rounded-lg border-2 p-4 ${
-                        aiResult.provisionalJudgment === "매수" 
+                        aiResult.provisionalJudgment === "수용가능" 
                           ? "border-success bg-success/5" 
                           : aiResult.provisionalJudgment === "심의위원회 이관"
                             ? "border-warning bg-warning/5"
@@ -1576,7 +1576,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           </div>
                           <Badge 
                             className={`px-3 py-1 text-sm font-bold ${
-                              aiResult.provisionalJudgment === "매수" 
+                              aiResult.provisionalJudgment === "수용가능" 
                                 ? "bg-green-600 text-white" 
                                 : aiResult.provisionalJudgment === "심의위원회 이관"
                                   ? "bg-amber-500 text-white"
@@ -1729,7 +1729,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     );
                   }
                   
-                  if (aiResult.provisionalJudgment !== "기각") {
+                  if (aiResult.provisionalJudgment !== "수용불가") {
                     const isAlreadyInCart = cartItems.some(c => c.landInfo.id === selectedLand.id);
                     
                     return (
@@ -1945,9 +1945,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                       <span>|</span>
                                       <span>{item.landInfo.landType}</span>
                                       <Badge 
-                                        className={`text-xs ${item.aiResult.provisionalJudgment === "매수" ? "bg-green-600 text-white" : "bg-red-500 text-white"}`}
+                                        className={`text-xs ${item.aiResult.provisionalJudgment === "수용가능" ? "bg-green-600 text-white" : "bg-red-500 text-white"}`}
                                       >
-                                        {item.aiResult.provisionalJudgment === "매수" ? "매수" : "기준 미충족"}
+                                        {item.aiResult.provisionalJudgment}
                                       </Badge>
                                     </div>
                                   </div>
