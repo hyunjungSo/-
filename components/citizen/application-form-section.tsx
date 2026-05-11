@@ -982,8 +982,8 @@ export function ApplicationFormSection({
             <AlertDialogDescription asChild>
               <div className="space-y-4 text-muted-foreground">
                 <p className="flex items-center gap-2 text-sm">
-                  <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 font-medium">진행 중</Badge>
-                  <span>단계 전까지 신청 내용 수정이 가능합니다.</span>
+                  <Badge className="bg-teal-100 text-teal-700 hover:bg-teal-100 font-medium">접수완료</Badge>
+                  <span>단계에서 신청 내용 수정이 가능합니다.</span>
                 </p>
                 <div className="rounded-md border bg-muted/30 p-3 space-y-2 text-sm">
                   <p className="flex gap-2">
