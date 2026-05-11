@@ -74,7 +74,7 @@ function AddressSearchModal({
         <div className="flex items-center justify-between py-2 px-4">
           <h3 className="text-lg font-semibold">주소 검색</h3>
           <Button variant="ghost" className="h-10 w-10 p-0" onClick={onClose}>
-            <X className="h-8 w-8" />
+            <X className="size-6" />
           </Button>
         </div>
         
@@ -250,7 +250,7 @@ function LandInfoSection({ application }: { application: Application }) {
                     />
                   </div>
                   {landAIResult.judgmentRationale && (
-                    <ChevronDown className="h-6 w-6 text-muted-foreground transition-transform duration-200 [[data-state=open]_&]:rotate-180" />
+                    <ChevronDown className="size-5 text-muted-foreground transition-transform duration-200 [[data-state=open]_&]:rotate-180" />
                   )}
                 </div>
               </div>
@@ -747,7 +747,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                   <div className="flex items-center justify-center">
                     <label className="cursor-pointer">
                       <span className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-foreground shadow-sm transition-colors hover:bg-gray-50">
-                        <Upload className="h-3.5 w-3.5" />
+                        <Upload className="size-[14px]" />
                         파일선택
                       </span>
                       <input
