@@ -561,7 +561,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
   return (
     <div className="space-y-4 overflow-visible">
       {/* 상세 화면 타이틀 헤더 */}
-      <div className="flex items-center justify-between rounded-lg bg-muted/30 px-4 py-3">
+      <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
           <Badge variant={adminStatusConfig[application.adminStatus].variant}>
             {adminStatusConfig[application.adminStatus].label}
