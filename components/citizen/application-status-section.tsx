@@ -1002,12 +1002,12 @@ export function ApplicationStatusSection() {
     }
   };
 
-  // 경고 확인 - 저장하지 않고 이동
+  // 경고 확인 - 저장하지 않고 이동 (새 신청건은 기본 상태로 표시)
   const handleConfirmLeave = () => {
     if (pendingApplication) {
       setSelectedApplication(pendingApplication);
       setPendingApplication(null);
-      onEditModeChange(false);
+      setIsEditMode(false);
     }
     setShowLeaveWarning(false);
   };
