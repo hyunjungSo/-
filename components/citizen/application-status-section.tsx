@@ -201,17 +201,17 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                 variant="outline"
                 size="sm"
                 onClick={handleCancel}
-                className="h-7 gap-1.5 text-xs"
+                className="h-8 gap-1.5 text-xs"
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="h-4 w-4" />
                 취소
               </Button>
               <Button
                 size="sm"
                 onClick={handleSave}
-                className="h-7 gap-1.5 text-xs"
+                className="h-8 gap-1.5 text-xs"
               >
-                <Save className="h-3.5 w-3.5" />
+                <Save className="h-4 w-4" />
                 저장
               </Button>
             </div>
@@ -221,9 +221,9 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               size="sm"
               disabled={!canEdit}
               onClick={() => setIsEditMode(true)}
-              className="h-7 gap-1.5 text-xs"
+              className="h-8 gap-1.5 text-xs"
             >
-              <Pencil className="h-3.5 w-3.5" />
+              <Pencil className="h-4 w-4" />
               수정
             </Button>
           )}
