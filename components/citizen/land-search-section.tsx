@@ -1496,7 +1496,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             현재 활용 지목 <span className="text-destructive">*</span>
                           </Label>
                           <span className="text-xs text-muted-foreground">
-                            공부상 지목: <span className="font-medium text-foreground">{landCategories.find(c => c.value === selectedLand.landCategory)?.label || selectedLand.landCategory}</span>
+                            공부상 지목: <span className="font-medium text-foreground">{selectedLand.landCategory}</span>
                           </span>
                         </div>
                         <Select 
