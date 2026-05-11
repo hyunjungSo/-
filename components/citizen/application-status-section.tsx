@@ -517,7 +517,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               <div className="w-full space-y-3">
                 {/* 파일 업로드 영역 */}
                 <div className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-3">
-                  <p className="mb-2 text-center text-xs text-muted-foreground">
+                  <p className="mb-2 text-center text-muted-foreground" style={{ fontSize: '14px' }}>
                     첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 클릭하세요.
                   </p>
                   <div className="flex items-center justify-center">
