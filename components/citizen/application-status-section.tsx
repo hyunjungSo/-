@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -617,24 +617,6 @@ function ApplicationDetailPanel({
     reason: application.reason || "잔여지 매수 신청",
     attachments: [] as FileItem[],
   });
-
-  // application이 변경되면 editData와 landEditDataList를 다시 초기화
-  useEffect(() => {
-    setEditData({
-      applicantRelation: "owner",
-      applicantName: application.applicantName,
-      applicantContact: application.applicantContact,
-      agentName: "",
-      agentContact: "",
-      postalCode: "",
-      baseAddress: application.applicantAddress,
-      detailAddress: "",
-      reason: application.reason || "잔여지 매수 신청",
-      attachments: [],
-    });
-    setLandEditDataList(initLandEditDataList());
-    setSelectedLandIndex(0);
-  }, [application.id]);
 
   const canEdit = application.adminStatus === "접수완료";
   const MAX_FILES = 10;
