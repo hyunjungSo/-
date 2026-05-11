@@ -310,7 +310,7 @@ function LandInfoSection({
       {isEditMode && (
         <div className="border-b border-border bg-blue-50 px-4 py-2">
           <p className="text-xs text-blue-700">
-            AI 판단과 실제 현황이 다를 수 있습니다. ��재 토지�� 실제 ���용 상황을 입력해 주세요. (필지 주소는 수정 불가)
+            AI 판단과 실제 현황이 다를 수 있습니다. ��재 토지�� 실제 ������ 상황을 입력해 주세요. (필지 주소는 수정 불가)
           </p>
         </div>
       )}
@@ -341,15 +341,7 @@ function LandInfoSection({
         </div>
       </div>
       
-      {/* 택지 유형 행 */}
-      <div className="flex border-b border-border">
-        <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
-          <span className="text-sm font-medium">택지 유형</span>
-        </div>
-        <div className="flex flex-1 items-center px-4 py-3">
-          <span className="text-sm">{getBuildingTypeLabel(selectedLand.landSubType)}</span>
-        </div>
-      </div>
+
       
       {/* 확인 항목 행 */}
       <div className="flex border-b border-border">
