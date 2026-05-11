@@ -748,27 +748,6 @@ export function ApplicationFormSection({
                             {land.landCategory} ({landCategories.find(c => c.value === land.landCategory)?.label || ""})
                           </div>
                         </div>
-                        <div className="space-y-1.5">
-                          <label className="text-sm font-medium">토지 모양 <span className="text-destructive">*</span></label>
-                          <Select
-                            value={landData.reportedShape}
-                            onValueChange={(value) => updateLandData(index, "reportedShape", value as LandShape)}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="선택" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">정형</div>
-                              {landShapes.regular.map((shape) => (
-                                <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
-                              ))}
-                              <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">비정형</div>
-                              {landShapes.irregular.map((shape) => (
-                                <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
                       </div>
 
                       {/* 택지 선택 시 세부 유형 */}
