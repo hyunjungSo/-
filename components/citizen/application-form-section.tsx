@@ -600,16 +600,11 @@ export function ApplicationFormSection({
                     <label className="text-sm font-medium">소유자 연락처 <span className="text-destructive">*</span></label>
                     <Input
                       id="applicantContact"
-                      type="tel"
-                      inputMode="numeric"
-                      placeholder="'-' 없이 숫자만 입력"
+                      placeholder="01000000000"
                       value={formData.applicantContact}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/[^0-9]/g, "");
-                        const formatted = value.length <= 3 ? value : value.length <= 7 ? `${value.slice(0, 3)}-${value.slice(3)}` : `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`;
-                        setFormData((prev) => ({ ...prev, applicantContact: formatted }));
-                      }}
-                      maxLength={13}
+                      onChange={(e) =>
+                        setFormData((prev) => ({ ...prev, applicantContact: e.target.value }))
+                      }
                       required
                     />
                   </div>
@@ -633,16 +628,11 @@ export function ApplicationFormSection({
                       <label className="text-sm font-medium">대리인 연락처 <span className="text-destructive">*</span></label>
                       <Input
                         id="agentContact"
-                        type="tel"
-                        inputMode="numeric"
-                        placeholder="'-' 없이 숫자만 입력"
+                        placeholder="01000000000"
                         value={formData.agentContact}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/[^0-9]/g, "");
-                          const formatted = value.length <= 3 ? value : value.length <= 7 ? `${value.slice(0, 3)}-${value.slice(3)}` : `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`;
-                          setFormData((prev) => ({ ...prev, agentContact: formatted }));
-                        }}
-                        maxLength={13}
+                        onChange={(e) =>
+                          setFormData((prev) => ({ ...prev, agentContact: e.target.value }))
+                        }
                         required={formData.applicantRelation === "agent"}
                       />
                     </div>
@@ -739,7 +729,7 @@ export function ApplicationFormSection({
                             onValueChange={(value) => updateLandData(index, "currentUsage", value as LandCategory)}
                           />
                           <p className="text-xs text-muted-foreground">
-                            AI ��단: {getLandUsageLabel(land.landCategory)}
+                            AI 판단: {getLandUsageLabel(land.landCategory)}
                           </p>
                         </div>
                         <div className="space-y-1.5">
