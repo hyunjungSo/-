@@ -1458,26 +1458,6 @@ function generateRationale(
     summary = `${land.landType} 수용 조건 미충족으로 「수용불가」 판정`;
     detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n수용불가사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조건 전체 미해당`;
   }
-  
-  const appliedCriteria = [
-    landTypeCriteria,
-    physicalConditions,
-    `형상지수 변화 기준: 1.0 이상 상승 시 수용 조건 충족`,
-  ];
-
-  let summary: string;
-  let detailedExplanation: string;
-
-  if (judgment === "매수" || judgment === "심의위원회 이관") {
-    summary = `${land.landType} 수용 조건 충족으로 「${judgment}」 판정 - 사용이 현저히 곤란한 경우로 예상`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n충족기준: ${metCriteriaNames.join(", ")}\n\n※ 물리 조건 중 하나 이상 해당으로 수용 조건 충족`;
-  } else {
-    // 기각
-    const areaThreshold = land.landType === "택지" ? 90 : 330;
-    const rejectionReason = `잔여면적 ${land.remainingArea}㎡(기준 ${areaThreshold}㎡ 초과), 잔여비율 ${land.remainingRatio}%(기준 초과), 물리조건 미해당`;
-    summary = `${land.landType} 수용 조건 미충족으로 「기각」 판정`;
-    detailedExplanation = `소재지: ${land.address}\n토지유형: ${land.landType}, 지목: ${land.landCategory}\n편입현황: ${land.originalArea}㎡ → 잔여 ${land.remainingArea}㎡ (잔여비율 ${land.remainingRatio}%)\n형상변화: ${land.originalShape} → ${land.remainingShape} (형상지수 +${shapeIndexChange.toFixed(1)})\n기각사유: ${rejectionReason}\n\n※ 면적/비율 기준 및 물리조건 전체 미해당`;
-  }
 
   return {
     summary,
@@ -1685,7 +1665,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 불가", isMet: false, autoDetected: false },
       ],
-      provisionalJudgment: "심의위원회 이관",
+      provisionalJudgment: "수용가능",
       originalShapeIndex: 4.0,
       remainingShapeIndex: 5.2,
       shapeIndexChange: 1.2,
@@ -1785,7 +1765,7 @@ export const dummyApplications: Application[] = [
         currentUsage: "대" as const,
         landSubType: "residential-detached" as const,
         actualUsage: "대" as const,
-        reportedShape: "삼각형" as const,
+        reportedShape: "삼���형" as const,
         farmMachineDifficulty: false,
         accessRoadLost: true,
         waterChannelLost: false,
@@ -2304,7 +2284,7 @@ export const dummyApplications: Application[] = [
           "토지 양분: 고속도로 관통으로 산림경영 불가",
         ],
         detailedExplanation: "5필지 산지 (조림지)\n\n[필지 1] 산101: 3,000㎡ → 1,500㎡ (삼각형)\n[필지 2] 산102: 2,500㎡ → 700㎡ (역삼각형)\n[필지 3] 산103: 2,800㎡ → 800㎡ (부정형)\n[필지 4] 산104: 2,200㎡ → 600㎡ (삼각형)\n[필지 5] 산105: 1,800㎡ → 500㎡ (자루형)\n\n고속도로가 중앙을 관통하여 조림지가 양분되어 산림경영이 불가능합니다.",
-        manualCheckItems: ["산림경영계획서 확인", "조림 현황 현장 확인"],
+        manualCheckItems: ["산림경영계획서 확인", "조림 현황 현장 ���인"],
       },
     },
     adminName: "박영희",
