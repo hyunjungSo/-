@@ -55,7 +55,7 @@ export default function HomePage() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg" className="h-[55px] px-8 text-lg font-semibold">
                 <Link href="/citizen">
-                  잔여지 매수 조회
+                  잔여지 매수 신청
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="h-[55px] border-1 border-gray-400 bg-white px-8 text-lg font-semibold text-gray-800 hover:bg-gray-50 hover:text-gray-800">
