@@ -452,36 +452,35 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           </div>
           <div className="flex flex-1 px-4 py-3">
             {isEditMode ? (
-              <div className="w-full space-y-2">
+              <div className="w-full space-y-1.5">
                 <div className="flex gap-2">
                   <Input
                     value={editData.postalCode}
                     placeholder="우편번호"
                     readOnly
-                    className="h-8 w-24 text-sm bg-muted/30"
+                    className="h-9 w-24 bg-muted text-sm"
                   />
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={() => setShowAddressModal(true)}
-                    className="h-8 gap-1.5 text-xs"
+                    className="h-9 shrink-0"
                   >
-                    <Search className="h-3.5 w-3.5" />
                     주소 검색
                   </Button>
                 </div>
                 <Input
                   value={editData.baseAddress}
-                  placeholder="기본 주소"
+                  placeholder="기본주소"
                   readOnly
-                  className="h-8 text-sm bg-muted/30"
+                  className="bg-muted text-sm"
                 />
                 <Input
                   value={editData.detailAddress}
                   onChange={(e) => setEditData({ ...editData, detailAddress: e.target.value })}
-                  placeholder="상세 주소 입력"
-                  className="h-8 text-sm"
+                  placeholder="상세주소를 입력해주세요"
+                  className="text-sm"
                 />
               </div>
             ) : (
