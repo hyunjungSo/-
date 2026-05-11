@@ -1001,10 +1001,10 @@ export function ApplicationFormSection({
                 </p>
                 <ul className="space-y-1" style={{ fontSize: '14px' }}>
                   <li>
-                    <span className="font-medium text-foreground">수정 가능 항목:</span> 신청인 정보, 토지 정보, 신청 사유, 첨부 서류
+                    <span className="font-medium text-foreground">수정 가능 항목:</span> 신청인 정보, 신청 사유, 첨부 서류
                   </li>
                   <li>
-                    <span className="font-medium text-foreground">수정 불가 항목:</span> 대상 필지 선택 (신청이 접수된 후에는 필지 추가 및 삭제가 불가능합니다)
+                    <span className="font-medium text-foreground">수정 불가 항목:</span> 대상 필지 선택, 토지 정보 (AI 분석에 영향을 미치는 정보는 접수 후 수정이 불가능합니다)
                   </li>
                 </ul>
               </div>
