@@ -23,7 +23,8 @@ import {
   X,
   Upload,
   Trash2,
-  Search
+  Search,
+  Download
 } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { AdminStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
@@ -526,11 +527,38 @@ function LandInfoSection({
               </p>
             </div>
           ) : (
-            <span className="text-sm text-muted-foreground">
-              {application.attachments && application.attachments.length > 0
-                ? `${application.attachments.length}개 파일 첨부됨`
-                : "첨부된 파일 없음"}
-            </span>
+            <div className="space-y-1.5">
+              {application.attachments && application.attachments.length > 0 ? (
+                <>
+                  <span className="text-xs text-muted-foreground">
+                    {application.attachments.length}개 파일 첨부됨
+                  </span>
+                  <ul className="space-y-1">
+                    {application.attachments.map((fileName, index) => (
+                      <li
+                        key={index}
+                        className="flex items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2"
+                      >
+                        <span className="truncate text-xs text-foreground">
+                          {fileName}
+                        </span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 w-7 p-0 text-muted-foreground hover:text-primary"
+                          title="파일 다운로드"
+                        >
+                          <Download className="size-[14px]" />
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <span className="text-sm text-muted-foreground">첨부된 파일 없음</span>
+              )}
+            </div>
           )}
         </div>
       </div>
