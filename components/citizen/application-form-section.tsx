@@ -995,11 +995,11 @@ export function ApplicationFormSection({
           <AlertDialogHeader>
             <AlertDialogTitle>잔여지 매수 신청서를 제출하시겠습니까?</AlertDialogTitle>
             <AlertDialogDescription asChild>
-              <div className="space-y-3 text-sm text-muted-foreground">
+              <div className="space-y-3 text-muted-foreground" style={{ fontSize: '16px' }}>
                 <p>
-                  제출 후에는 <span className="font-medium text-foreground">&apos;진행 중&apos; 단계로 넘어가기 전(담당자 확인 전)</span>까지 신청 내용을 보완하�� 수 있습니다.
+                  제출 후에는 <span className="font-medium text-foreground">&apos;진행 중&apos; 단계로 넘어가기 전(담당자 확인 전)</span>까지 신청 내용을 보완하실 수 있습니다.
                 </p>
-                <ul className="space-y-1 text-xs">
+                <ul className="space-y-1" style={{ fontSize: '14px' }}>
                   <li>
                     <span className="font-medium text-foreground">수정 가능 항목:</span> 신청인 정보, 토지 정보, 신청 사유, 첨부 서류
                   </li>
