@@ -587,8 +587,8 @@ function LandInfoSection({
 
       {/* 파일 뷰어 다이얼로그 - 풀페이지 */}
       <Dialog open={fileViewerOpen} onOpenChange={setFileViewerOpen}>
-        <DialogContent className="w-screen max-w-none h-screen max-h-none rounded-none border-none overflow-hidden flex flex-col p-0">
-          <DialogHeader className="px-6 py-4 border-b bg-background">
+        <DialogContent className="fixed inset-0 w-[100vw] h-[100vh] max-w-[100vw] max-h-[100vh] rounded-none border-none overflow-hidden flex flex-col p-0 translate-x-0 translate-y-0 top-0 left-0">
+          <DialogHeader className="shrink-0 px-6 py-4 border-b bg-background">
             <div className="flex items-center justify-between">
               <DialogTitle className="flex items-center gap-2 text-base">
                 <FileImage className="size-5" />
@@ -607,9 +607,9 @@ function LandInfoSection({
               </div>
             </div>
           </DialogHeader>
-          <div className="flex-1 overflow-auto bg-muted/30">
+          <div className="flex-1 overflow-auto bg-muted/30 w-full">
             {selectedFile && (
-              <div className="flex items-center justify-center w-full h-full p-8">
+              <div className="w-full h-full">
                 {getFileType(selectedFile) === 'image' ? (
                   <img 
                     src={`/uploads/${selectedFile}`} 
@@ -621,7 +621,7 @@ function LandInfoSection({
                     }}
                   />
                 ) : null}
-                <div className={`flex flex-col items-center gap-4 text-muted-foreground ${getFileType(selectedFile) === 'image' ? 'hidden' : ''}`}>
+                <div className={`flex flex-col items-center justify-center gap-4 text-muted-foreground w-full h-full ${getFileType(selectedFile) === 'image' ? 'hidden' : ''}`}>
                   <FileText className="size-24 text-muted-foreground/50" />
                   <p className="text-base">미리보기를 지원하지 않는 파일 형식입니다.</p>
                   <p className="text-sm">파일을 다운로드하여 확인해 주세요.</p>
