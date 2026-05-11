@@ -84,7 +84,7 @@ function AddressSearchModal({
       <div className="mx-4 w-full max-w-lg rounded-lg bg-background shadow-xl">
         <div className="flex items-center justify-between py-2 px-4">
           <h3 className="text-lg font-semibold">주소 검색</h3>
-          <Button variant="ghost" className="h-[34px] w-[34px] p-0" onClick={onClose}>
+          <Button variant="ghost" className="h-10 w-10 p-0" onClick={onClose}>
             <X className="h-6 w-6" />
           </Button>
         </div>
@@ -997,7 +997,7 @@ export function ApplicationFormSection({
             <AlertDialogDescription asChild>
               <div className="space-y-3 text-sm text-muted-foreground">
                 <p>
-                  제출 후에는 <span className="font-medium text-foreground">&apos;진행 중&apos; 단계로 넘어가기 전(담당자 확인 전)</span>까지 신청 내용을 보완하실 수 있습니다.
+                  제출 후에는 <span className="font-medium text-foreground">&apos;진행 중&apos; 단계로 넘어가기 전(담당자 확인 전)</span>까지 신청 내용을 보완하�� 수 있습니다.
                 </p>
                 <ul className="space-y-1 text-xs">
                   <li>

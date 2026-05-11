@@ -241,7 +241,7 @@ const regionData = {
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "산수리"],
-    "��의면": ["송등리", "대곡리", "소정리", "운담리"],
+    "���의면": ["송등리", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
     "연동면": ["내판리", "노송리", "명학리", "송용리", "예양리"],
     "연서면": ["기룡리", "부동리", "신대리", "쌍류리", "월하리", "청라리"],
@@ -1835,7 +1835,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               </div>
               <button
                 onClick={() => setIsCartOpen(false)}
-                className="flex h-[34px] w-[34px] items-center justify-center rounded-lg hover:bg-muted"
+                className="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-muted"
               >
                 <X className="h-6 w-6" />
               </button>

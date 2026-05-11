@@ -846,7 +846,7 @@ export function LeafletMap({
         </Popover>
       </div>
 
-      {/* 줌 컨��롤 */}
+      {/* 줌 컨���롤 */}
       <div className="absolute left-3 top-3 z-[1000] flex flex-col gap-1">
         <div className="flex flex-col overflow-hidden rounded-md bg-white shadow-md">
           <Button
@@ -922,7 +922,7 @@ export function LeafletMap({
           {/* 닫기 버튼 */}
           <Button
             variant="ghost"
-            className="absolute top-1 right-1 h-[34px] w-[34px] p-0 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+            className="absolute top-1 right-1 h-10 w-10 p-0 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
             onClick={toggleMeasureMode}
           >
             <X className="h-6 w-6" />
