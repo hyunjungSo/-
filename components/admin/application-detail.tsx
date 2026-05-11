@@ -543,7 +543,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       const waterLost = adminOptions?.waterChannelLost || landData?.waterChannelLost || false;
       const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || false;
       criteriaChecks.push({
-        name: "�����로/수로 상실",
+        name: "�������로/수로 상실",
         met: waterLost || roadLost,
         description: waterLost 
           ? "관개수로 상실로 농지 ��용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
@@ -583,7 +583,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "접면도로 상실",
         met: roadLost,
-        description: roadLost ? "도로 접하지 않아 접근 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유지"
+        description: roadLost ? "도로 접하지 않아 접근 불��" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유지"
       });
       
       if (areaCheckMet || roadLost) {
@@ -1050,7 +1050,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onClick={() => handleAttachmentClick("���장사진_20260501.jpg")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">현장���진_20260501.jpg</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">��장���진_20260501.jpg</Badge>
                           </button>
                         </div>
                       </td>
@@ -1622,11 +1622,11 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                               </label>
                               {isViewOnly ? (
                                 <div className="h-10 px-3 py-2 border rounded-md bg-muted/30 flex items-center text-sm">
-                                  {adminCurrentUsagePerLand[currentParcelId] === "대" && "택지"}
-                                  {adminCurrentUsagePerLand[currentParcelId] === "전" && "밭"}
-                                  {adminCurrentUsagePerLand[currentParcelId] === "답" && "논"}
-                                  {adminCurrentUsagePerLand[currentParcelId] === "임" && "임야"}
-                                  {adminCurrentUsagePerLand[currentParcelId] === "잡" && "그 밖의 토지"}
+                                  {adminCurrentUsagePerLand[currentParcelId] === "대" && "대(택지)"}
+                                  {adminCurrentUsagePerLand[currentParcelId] === "전" && "전(밭)"}
+                                  {adminCurrentUsagePerLand[currentParcelId] === "답" && "답(논)"}
+                                  {adminCurrentUsagePerLand[currentParcelId] === "임" && "임(임야)"}
+                                  {adminCurrentUsagePerLand[currentParcelId] === "잡" && "그밖의 토지"}
                                   {!adminCurrentUsagePerLand[currentParcelId] && <span className="text-muted-foreground">선택되지 않음</span>}
                                 </div>
                               ) : (
@@ -1638,11 +1638,11 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                     <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value="대">택지</SelectItem>
-                                    <SelectItem value="전">밭</SelectItem>
-                                    <SelectItem value="답">논</SelectItem>
-                                    <SelectItem value="임">임야</SelectItem>
-                                    <SelectItem value="잡">그 밖의 토지</SelectItem>
+                                    <SelectItem value="대">대(택지)</SelectItem>
+                                    <SelectItem value="전">전(밭)</SelectItem>
+                                    <SelectItem value="답">답(논)</SelectItem>
+                                    <SelectItem value="임">임(임야)</SelectItem>
+                                    <SelectItem value="잡">그밖의 토지</SelectItem>
                                   </SelectContent>
                                 </Select>
                               )}
@@ -1722,7 +1722,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             
                             {/* 현장확인 옵션 */}
                             <div className="space-y-3 pt-2 border-t">
-                              <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
+                              <label className="text-sm font-medium text-foreground">현장 확인 항���</label>
                               {isViewOnly ? (
                                 <div className="space-y-2 text-sm">
                                   <div className="flex items-center gap-3 p-2">

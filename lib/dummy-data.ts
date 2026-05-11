@@ -1435,7 +1435,7 @@ function generateRationale(
     landTypeCriteria = "농지 기준: 면적 330��� 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
     physicalConditions = "물리조건: ①도로/수로 상실로 농지 사용 불가 ②농기계 회전 곤란 ③형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "택지") {
-    landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)";
+    landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (잔여��율 25% 이하 시 1.5배 완화)";
     physicalConditions = "물리조건: ①접면도로 상실로 건축허가 불가 ②형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "임야") {
     landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이��� 시 495㎡���지 완화)";
@@ -2147,7 +2147,7 @@ export const dummyApplications: Application[] = [
     statusUpdatedAt: "2026-04-27",
   },
   // ===== 소규모 복수필지 케이스 =====
-  // 소규모 복수필지 케이스 1: 김인정 - 2필지 대지 (개별 필지별 맹지 발생으로 매수 인정)
+  // 소규모 복수필지 케이스 1: 김인정 - 2필지 대지 (개별 필지별 맹지 발생으로 매수 ���정)
   {
     id: "app-recognized-001",
     applicationNumber: "2026-0427-001",
@@ -2426,7 +2426,7 @@ export const dummyApplications: Application[] = [
         conditions: {
           sameOwner: true,
           continuous: false, // 전체는 ��접 아님
-          sameUsage: false, // 전체는 용도 불���치 (답/전)
+          sameUsage: false, // 전체는 용도 불������ (답/전)
         },
         combinedArea: 1480,
         explanation: "4필지 개별 분석 결과: 내기리 200-1, 200-2는 면적 기준 충족 및 형상 불량으로 매수 판정. 만호리 55-1, 55-2는 면적 기준 미충족, 형상 양호로 미해당 판정.",
@@ -2715,11 +2715,11 @@ export const dummyApplications: Application[] = [
 
 // 현재 활용 지목 목록
 export const landCategories = [
-  { value: "대", label: "택지" },
-  { value: "전", label: "밭" },
-  { value: "답", label: "논" },
-  { value: "임", label: "임야" },
-  { value: "잡", label: "그 밖의 토지" },
+  { value: "대", label: "대(택지)" },
+  { value: "전", label: "전(밭)" },
+  { value: "답", label: "답(논)" },
+  { value: "임", label: "임(임야)" },
+  { value: "잡", label: "그밖의 토지" },
 ] as const;
 
 // 토지 형상 목록
