@@ -1514,7 +1514,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             <SelectItem value="전">전 (밭)</SelectItem>
                             <SelectItem value="답">답 (논)</SelectItem>
                             <SelectItem value="임">임 (임야)</SelectItem>
-                            <SelectItem value="잡">그 밖의 토지</SelectItem>
+                            <SelectItem value="잡">잡 (잡종지)</SelectItem>
                           </SelectContent>
                         </Select>
                         <p className="mt-1.5 text-xs text-muted-foreground">
