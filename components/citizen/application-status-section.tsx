@@ -323,7 +323,7 @@ function LandInfoSection({
             </Select>
           ) : (
             <span className="text-sm">
-              {selectedLand.currentUsage} ({landCategories.find(c => c.value === selectedLand.currentUsage)?.label || ""})
+              {selectedLand.currentUsage || "-"} {selectedLand.currentUsage && `(${landCategories.find(c => c.value === selectedLand.currentUsage)?.label || ""})`}
             </span>
           )}
         </div>
@@ -361,7 +361,7 @@ function LandInfoSection({
               </SelectContent>
             </Select>
           ) : (
-            <span className="text-sm">{selectedLand.reportedShape}</span>
+            <span className="text-sm">{selectedLand.reportedShape || "-"}</span>
           )}
         </div>
         <div className="flex w-28 shrink-0 items-center border-l border-border bg-muted/30 px-4 py-3">
