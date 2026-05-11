@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { landCategories, landShapes } from "@/lib/dummy-data";
+import { landCategories } from "@/lib/dummy-data";
 import type { LandInfo, Application, LandCategory, LandShape, AIAnalysisResult } from "@/lib/types";
 import { ArrowLeft, Upload, Send, Bot, CheckCircle2, XCircle, X, Loader2, ChevronDown, AlertTriangle } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -722,7 +722,7 @@ export function ApplicationFormSection({
                       {/* 활용 지목 / 공부상 지목 / 토지 모양 - 한 열 정렬 */}
                       <div className="grid gap-4 sm:grid-cols-3">
                         <div className="space-y-1.5">
-                          <label className="text-sm font-medium">활용 지목 <span className="text-destructive">*</span></label>
+                          <label className="text-sm font-medium">���용 지목 <span className="text-destructive">*</span></label>
                           <Select
                             value={landData.currentUsage}
                             onValueChange={(value) => updateLandData(index, "currentUsage", value as LandCategory)}
