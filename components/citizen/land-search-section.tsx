@@ -403,7 +403,10 @@ function simulateAIAnalysis(
   // AI 1차 판독: 수용가능/수용불가 판정
   let provisionalJudgment: "수용가능" | "수용불가";
   
-  if (metAutoCriteria >= 1) {
+  // 잔여 면적이 0인 경우: 잔여지가 없으므로 수용 불가
+  if (land.remainingArea === 0) {
+    provisionalJudgment = "수용불가";
+  } else if (metAutoCriteria >= 1) {
     provisionalJudgment = "수용가능";
   } else {
     provisionalJudgment = "수용불가";
@@ -603,7 +606,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const [isResultsCollapsed, setIsResultsCollapsed] = useState(false);
   const [isBasicInfoCollapsed, setIsBasicInfoCollapsed] = useState(false);
   
-  // 본인 소유 필지 선택 상태 (인접지 중 본인 소유 확인용)
+  // 본인 소유 필지 선택 상태 (인접지 중 ��인 소유 확인용)
   const [ownedParcels, setOwnedParcels] = useState<Set<string>>(new Set());
   
   // 지도-목록 호버 연동 상태
@@ -793,7 +796,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         return;
       }
       
-      // 지번 검색: 선택된 지역에 해당하는 토지 필터링
+      // 지번 검색: 선택��� 지역에 해당하는 토지 필터링
       results = dummyLandInfoList.filter(land => {
         // 시군구 포함 여부
         if (!land.address.includes(selectedSigungu)) return false;
@@ -1125,7 +1128,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
               <div className="flex flex-1 items-center bg-background px-4 py-2">
                 <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <Info className="h-3.5 w-3.5 shrink-0" />
-                  법인 신청 시, 사업자등록�� 및 법인인감증명서가 필요합니다.
+                  법인 신청 시, 사업자등록�� 및 ��인인감증명서가 필요합니다.
                 </p>
               </div>
             </div>

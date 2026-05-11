@@ -836,7 +836,7 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerContact: "010-7700-2002",
     hasIncludedLand: true,
     businessUnit: "천안안성",
-    projectName: "천안 도시개발사업",
+    projectName: "천안 도시개발사���",
     coordinates: [
       { lat: 36.8165, lng: 127.1580 },
       { lat: 36.8170, lng: 127.1590 },
@@ -1023,7 +1023,7 @@ export const dummyLandInfoList: LandInfo[] = [
     ],
   },
   // ===== 혼합 케이스 (일부 매수 + 일부 미해당) =====
-  // 4필지 중 2필지 매수, 나머지 2필지 미해당
+  // 4필��� 중 2필지 매수, 나머지 2필지 미해당
   {
     id: "land-mixed-001",
     address: "경기도 평택시 포승읍 내기리 200-1",
@@ -1361,18 +1361,13 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   // - AI 판정은 "수용가능", "수용불가" 두 가지
   // - 물리 조건 중 하나라도 해당 시 '수용가능'
   // - 전체 조건 미해당시 '수용불가'
-  // - 잔여 면적이 0인 경우 잔여지가 없으므로 '수용불가'
   let provisionalJudgment: "수용가능" | "수용불가";
   
-  // 잔여 면적이 0인 경우: 잔여지 자체가 없으므로 신청 불가
-  if (landInfo.remainingArea === 0) {
-    provisionalJudgment = "수용불가";
-  } else {
-    // 면적 기준 충족 여부
-    const coreCriteriaMet = areaMet;
-    
-    // 토지 유형별 판정 로직 (PDF 기준)
-    if (landInfo.landType === "임야") {
+  // 면적 기준 충족 여부
+  const coreCriteriaMet = areaMet;
+  
+  // 토지 유형별 판정 로직 (PDF 기준)
+  if (landInfo.landType === "임야") {
     // 산지: 면적 기준 + 접면 도로 상실만 (형상 조건 없음!)
     if (coreCriteriaMet) {
       provisionalJudgment = "수용가능";
@@ -1394,7 +1389,6 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
       provisionalJudgment = "수용불가";
     }
   }
-  } // end of remainingArea > 0 check
   
   const metAutoCriteria = criteriaChecks.filter(c => c.autoDetected && c.isMet).length;
 
@@ -2690,7 +2684,7 @@ export const dummyApplications: Application[] = [
           summary: "매탄동 101번지: 잔여면적 230㎡로 장방형 형상으로 부적절",
           legalBasis: "「공익사업법」 제74조",
           appliedCriteria: ["잔여면적 230㎡ > 기준 90㎡", "장방형 형상"],
-          detailedExplanation: "장방형 형상으로 건축 효���이 저하되어 매수 불가로 판정합니다.",
+          detailedExplanation: "장방형 형상으로 건축 효율이 저하되어 매수 불가로 판정합니다.",
           manualCheckItems: ["건축 배치 가능 여부 확인"],
         },
       },
@@ -2724,7 +2718,7 @@ export const landCategories = [
   { value: "묘", label: "묘지" },
   { value: "양", label: "양어장" },
   { value: "임", label: "임야" },
-  { value: "잡", label: "잡종지" },
+  { value: "잡", label: "그 밖의 토지" },
   { value: "장", label: "공장용지" },
   { value: "전", label: "전" },
   { value: "제", label: "제방" },
