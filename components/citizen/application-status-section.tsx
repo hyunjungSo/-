@@ -455,6 +455,96 @@ function LandInfoSection({
           )}
         </div>
       </div>
+
+      {/* 신청사유 행 */}
+      <div className="flex border-b border-border">
+        <div className="flex w-28 shrink-0 items-start bg-muted/30 px-4 py-3">
+          <span className="text-sm font-medium">신청사유</span>
+        </div>
+        <div className="flex flex-1 items-center px-4 py-3">
+          {isEditMode && editData && onEditDataChange ? (
+            <Textarea
+              value={editData.reason}
+              onChange={(e) => onEditDataChange({ reason: e.target.value })}
+              className="min-h-[80px] text-sm"
+            />
+          ) : (
+            <span className="text-sm">{application.reason}</span>
+          )}
+        </div>
+      </div>
+
+      {/* 첨부 서류 행 */}
+      <div className="flex">
+        <div className="flex w-28 shrink-0 items-start bg-muted/30 px-4 py-3">
+          <span className="text-sm font-medium">첨부 서류</span>
+        </div>
+        <div className="flex flex-1 px-4 py-3">
+          {isEditMode && editData && onFileChange && onRemoveFile ? (
+            <div className="w-full space-y-3">
+              <div className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-3">
+                <p className="mb-2 text-center text-sm text-muted-foreground">
+                  첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 클릭하세요.
+                </p>
+                <div className="flex items-center justify-center">
+                  <label className="cursor-pointer">
+                    <span className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-foreground shadow-sm transition-colors hover:bg-gray-50">
+                      <Upload className="size-[14px]" />
+                      파일선택
+                    </span>
+                    <input
+                      type="file"
+                      multiple
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      onChange={onFileChange}
+                      className="sr-only"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              {editData.attachments.length > 0 && (
+                <div className="space-y-1.5">
+                  <span className="text-xs text-muted-foreground">
+                    {editData.attachments.length}개 / {MAX_FILES}개
+                  </span>
+                  <ul className="space-y-1">
+                    {editData.attachments.map((file, index) => (
+                      <li
+                        key={index}
+                        className="flex items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2"
+                      >
+                        <span className="truncate text-xs text-foreground">
+                          {file.name} <span className="text-muted-foreground">[{file.size}]</span>
+                        </span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onRemoveFile(index)}
+                          className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                        >
+                          <Trash2 className="size-[14px]" />
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <p className="text-xs text-muted-foreground">
+                PDF, JPG, PNG 파일 (최대 {MAX_FILES}개, 파일당 20MB 이하)
+              </p>
+            </div>
+          ) : (
+            <span className="text-sm text-muted-foreground">
+              {application.attachments && application.attachments.length > 0
+                ? `${application.attachments.length}개 파일 첨부됨`
+                : "첨부된 파일 없음"}
+            </span>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
