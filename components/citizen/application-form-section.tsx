@@ -85,7 +85,7 @@ function AddressSearchModal({
         <div className="flex items-center justify-between py-2 px-4">
           <h3 className="text-lg font-semibold">주소 검색</h3>
           <Button variant="ghost" className="h-10 w-10 p-0" onClick={onClose}>
-            <X className="h-8 w-8" />
+            <X className="!size-4" />
           </Button>
         </div>
         
