@@ -13,8 +13,7 @@ import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult, JudgmentRationale, ApplicationCartItem } from "@/lib/types";
 import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ClipboardList, Plus, Trash2, X, User, Layers, PlayCircle } from "lucide-react";
 import { AIIcon } from "@/components/ui/ai-icon";
-import { LandUsageSelect, getLandUsageLabel } from "@/components/common/land-usage-select";
-import { BuildingTypeSelect } from "@/components/common/building-type-select";
+
 
 interface LandSearchSectionProps {
   onLandSelect: (land: LandInfo, aiResult: AIAnalysisResult) => void;
@@ -59,7 +58,7 @@ const regionData = {
     "강서구": ["가양동", "개화동", "공항동", "과해동", "내발산동", "등촌동", "마곡동", "방화동", "염창동", "오곡동", "오쇠동", "외발산동", "화곡동"],
     "관악구": ["봉천동", "신림동"],
     "광진구": ["광장동", "구의동", "군자동", "능동", "자양동", "중곡동", "화양동"],
-    "구로구": ["가리봉동", "개봉��", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
+    "구로구": ["가리봉동", "개봉동", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
     "금천구": ["가산동", "독산동", "시흥동"],
     "노원구": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
     "도봉구": ["도봉동", "방학동", "쌍문동", "창동"],
@@ -137,7 +136,7 @@ const regionData = {
     "양산시": ["동면", "물금읍", "상북면", "웅상읍", "원동면", "하북면"],
     // 제주특별자치도
     "제주시": ["구좌읍", "애월읍", "우도면", "조천읍", "추자면", "한경면", "한림읍", "아라동", "건입동", "노형동", "봉개동", "삼도동", "연동", "오라동", "외도동", "용담동", "이도동", "이호동", "일도동", "화북동"],
-    "서귀포시": ["남원읍", "대정읍", "성산읍", "안덕면", "표선면", "���홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "���평동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
+    "서귀포시": ["남원읍", "대정읍", "성산읍", "안덕면", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "���평동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
   },
   리: {
     // 경기도 - 용인시 처인구
@@ -179,7 +178,7 @@ const regionData = {
     "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "음양리"],
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
     "향남읍": ["구문천리", "도이리", "발안리", "상신리", "제암리", "평리", "행정리"],
-    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "천����"],
+    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "천���"],
     "비봉면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
     "마도면": ["백곡리", "송정리", "쌍송리", "청원리", "해문리"],
     "남양읍": ["남양리", "문호리", "북양리", "송림리", "신남리"],
@@ -236,11 +235,11 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["기곡���", "효���리", "금수리", "금산리"],
+    "도고면": ["기곡리", "효���리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
-    "금남면": ["��성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
+    "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "청수리"],
     "소정면": ["송등리", "대곡리", "소정리", "운담리"],
     "연기면": ["눌왕리", "봉기리", "산울리", "세종리", "수산리", "응암리"],
@@ -410,7 +409,7 @@ function simulateAIAnalysis(
   } else if (metAutoCriteria >= 1) {
     provisionalJudgment = "수용가능";
   } else {
-    provisionalJudgment = "수용����";
+    provisionalJudgment = "수용불��";
   }
 
   const judgmentRationale: JudgmentRationale = generateJudgmentRationale(
@@ -785,7 +784,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           },
         ];
         
-        // 여러 필지를 소유한 경우 (4개 관할기관: 양평이천 2건, ��산울산 2건, 강진광주 1건, 춘천원주 1건)
+        // 여러 필지를 소유한 경우 (4개 관할기관: 양평이천 2건, 부산울산 2건, 강진광주 1건, 춘천원주 1건)
         results = ownerLandData.map((landData) => ({
           ...dummyLandInfoList[0],
           ...landData,
@@ -1497,16 +1496,27 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             현재 활용 지목 <span className="text-destructive">*</span>
                           </Label>
                           <span className="text-xs text-muted-foreground">
-                            공부상 지목: <span className="font-medium text-foreground">{getLandUsageLabel(selectedLand.landCategory)}</span>
+                            공부상 지목: <span className="font-medium text-foreground">{landCategories.find(c => c.value === selectedLand.landCategory)?.label || selectedLand.landCategory}</span>
                           </span>
                         </div>
-                        <LandUsageSelect
-                          value={currentUsage}
+                        <Select 
+                          value={currentUsage} 
                           onValueChange={(value) => {
                             setCurrentUsage(value);
                             if (value !== "대") setLandSubType("");
                           }}
-                        />
+                        >
+                          <SelectTrigger id="currentUsage" className="h-10 w-full bg-background">
+                            <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="대">대(택지)</SelectItem>
+                            <SelectItem value="전">전(밭)</SelectItem>
+                            <SelectItem value="답">답(논)</SelectItem>
+                            <SelectItem value="임">임(임야)</SelectItem>
+                            <SelectItem value="잡">그밖의 토지</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <p className="mt-1.5 text-xs text-muted-foreground">
                           실제 토지 활용 상황에 따라 선택해 주세요.
                         </p>
@@ -1531,10 +1541,18 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     <Label htmlFor="landSubType" className="mb-2 block text-sm font-medium">
                       건축물 용도 선택 <span className="text-destructive">*</span>
                     </Label>
-                    <BuildingTypeSelect
-                      value={landSubType}
-                      onValueChange={(value) => setLandSubType(value as typeof landSubType)}
-                    />
+                    <Select value={landSubType} onValueChange={(value) => setLandSubType(value as typeof landSubType)}>
+                      <SelectTrigger id="landSubType" className="h-10 w-full bg-background">
+                        <SelectValue placeholder="건축물 용도를 선택해 주세요" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
+                        <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
+                        <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
+                        <SelectItem value="commercial">���업용 (기준: 150㎡)</SelectItem>
+                        <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <p className="mt-1.5 text-xs text-muted-foreground">
                       택지 유형에 따라 매수 기준 면적이 달라집니다.
                     </p>

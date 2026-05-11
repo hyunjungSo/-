@@ -241,7 +241,7 @@ export const dummyLandInfoList: LandInfo[] = [
     remainingRatio: 30.0,
     landType: "택지",
     landCategory: "대",
-    originalShape: "가로장����형",
+    originalShape: "가로장�����형",
     remainingShape: "삼각형",
     originalShapeIndex: 4.2,
     remainingShapeIndex: 5.9,
@@ -1435,7 +1435,7 @@ function generateRationale(
     landTypeCriteria = "농지 기준: 면�� 330��� 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
     physicalConditions = "물리조건: ①도로/수로 상실로 농지 사용 불가 ②농기계 회전 곤란 ③형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "택지") {
-    landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (��여��율 25% 이하 시 1.5배 완화)";
+    landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (���여��율 25% 이하 시 1.5배 완화)";
     physicalConditions = "물리조건: ①접면도로 상실로 건축허가 불가 ②형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "임야") {
     landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이��� 시 495㎡���지 완화)";
@@ -1515,7 +1515,7 @@ export const dummyApplications: Application[] = [
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
     reason: "고속도로 편입으로 인해 잔여지가 삼각형 형태로 남아 건축물 건축이 불가능합니다. 잔여 면적도 협소하여 종래 목적대로 사용할 수 없습니다.",
-    attachments: ["토지대장.pdf", "등기��등본.pdf"],
+    attachments: ["토지대장.pdf", "등����등본.pdf"],
     status: "AI분석완료",
     adminStatus: "접수완료",
     appliedAt: "2026-04-01",
@@ -1901,7 +1901,7 @@ export const dummyApplications: Application[] = [
     reason: "도로 편입으로 인한 잔여지 매수 신청",
     attachments: ["토지대장.pdf"],
     status: "접수완료",
-    adminStatus: "접수���료",
+    adminStatus: "접수완료",
     appliedAt: "2026-04-09",
     aiResult: generateAIResult(dummyLandInfoList[0]),
     adminName: "이정은",
@@ -2140,7 +2140,7 @@ export const dummyApplications: Application[] = [
           "농지 물리조건: 농기계 회전 곤란, 관개수로 상실",
           "형상 변화: 4필지 모두 비정형으로 변경",
         ],
-        detailedExplanation: "4필지 혼합 토지\n\n[필지 1] 777-1 (대지): 300㎡ → 90㎡ (삼각형)\n[필지 2] 777-2 (전): 450㎡ → 130㎡ (자루형)\n[필지 3] 777-3 (답): 600㎡ → 170㎡ (역삼각형)\n[필지 4] 777-4 (잡): 200㎡ → 60㎡ (삼각형)\n\n도로 편입 후 각 필지가 비정형으로 변경되어 종래 용도로 사용이 불가능한 상태입니다.",
+        detailedExplanation: "4필지 혼합 토지\n\n[필지 1] 777-1 (대지): 300㎡ → 90㎡ (삼각형)\n[필지 2] 777-2 (전): 450㎡ → 130㎡ (자루형)\n[필지 3] 777-3 (답): 600㎡ → 170㎡ (역삼각형)\n[필지 4] 777-4 (잡): 200㎡ → 60㎡ (삼각형)\n\n도로 편입 후 각 필지가 비정형으로 변경되어 종래 용도로 사용이 불가능��� 상태입니다.",
         manualCheckItems: ["사용 여부 현장 확인"],
       },
     },

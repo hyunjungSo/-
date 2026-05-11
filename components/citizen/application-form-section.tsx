@@ -18,9 +18,6 @@ import {
 
 import { landCategories } from "@/lib/dummy-data";
 import type { LandInfo, Application, LandCategory, LandShape, AIAnalysisResult } from "@/lib/types";
-import { LandUsageSelect, getLandUsageLabel } from "@/components/common/land-usage-select";
-import { BuildingTypeSelect, getBuildingTypeLabel } from "@/components/common/building-type-select";
-import { SiteInspectionCheckboxGroup, type SiteInspectionKey } from "@/components/common/site-inspection-checkbox";
 import { ArrowLeft, Upload, Send, Bot, CheckCircle2, XCircle, X, Loader2, ChevronDown, AlertTriangle } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { JudgmentStatus } from "@/components/ui/judgment-status";
@@ -725,25 +722,20 @@ export function ApplicationFormSection({
                       {/* 활용 지목 / 공부상 지목 / 토지 모양 - 한 열 정렬 */}
                       <div className="grid gap-4 sm:grid-cols-3">
                         <div className="space-y-1.5">
-                          <label className="text-sm font-medium">���용 지��� <span className="text-destructive">*</span></label>
-                          <Select
+                          <label className="text-sm font-medium">활용 지목 <span className="text-destructive">*</span></label>
+                          <LandUsageSelect
                             value={landData.currentUsage}
                             onValueChange={(value) => updateLandData(index, "currentUsage", value as LandCategory)}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="현��� 활용 지목을 선택해 주세요" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="대">대(택지)</SelectItem>
-                              <SelectItem value="전">전(밭)</SelectItem>
-                              <SelectItem value="답">답(논)</SelectItem>
-                              <SelectItem value="임">임(임야)</SelectItem>
-                              <SelectItem value="잡">그밖의 토지</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          />
                           <p className="text-xs text-muted-foreground">
-                            AI 판단: {landCategories.find(c => c.value === land.landCategory)?.label || land.landCategory}
+                            AI 판단: {getLandUsageLabel(land.landCategory)}
                           </p>
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="text-sm font-medium text-muted-foreground">공부상 지목</label>
+                          <div className="flex w-fit items-center whitespace-nowrap rounded-md border border-input bg-muted px-3 py-2 h-10 text-sm text-muted-foreground cursor-not-allowed opacity-70">
+                            {getLandUsageLabel(land.landCategory)}
+                          </div>
                         </div>
                         <div className="space-y-1.5">
                           <label className="text-sm font-medium text-muted-foreground">공부상 지목</label>
@@ -758,10 +750,19 @@ export function ApplicationFormSection({
                         <div className="grid gap-4 sm:grid-cols-3">
                           <div className="space-y-1.5">
                             <label className="text-sm font-medium">택지 유형</label>
-                            <BuildingTypeSelect
+                            <Select
                               value={landData.landSubType}
                               onValueChange={(value) => updateLandData(index, "landSubType", value as typeof landData.landSubType)}
-                            />
+                            >
+<SelectTrigger>
+                              <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+                            </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="residential-detached">주거용 (기준 90㎡ 이하)</SelectItem>
+                                <SelectItem value="commercial">상업용 (기준 150㎡ 이하)</SelectItem>
+                                <SelectItem value="industrial">공업용 (기준 330㎡ 이하)</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </div>
                         </div>
                       )}

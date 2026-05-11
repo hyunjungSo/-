@@ -8,11 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { dummyApplications, landCategories, landShapes } from "@/lib/dummy-data";
+import { dummyApplications, landCategories } from "@/lib/dummy-data";
 import type { Application, AdminStatus } from "@/lib/types";
-import { LandUsageSelect, getLandUsageLabel } from "@/components/common/land-usage-select";
-import { LandShapeSelect, getLandShapeLabel } from "@/components/common/land-shape-select";
-import { getBuildingTypeLabel } from "@/components/common/building-type-select";
 import { 
   FileText, 
   MapPin,
@@ -209,7 +206,7 @@ function LandInfoSection({
         )}
       </div>
       
-      {/* 복수 필지일 경우 셀렉트박������� 표시 */}
+      {/* 복수 필지일 경우 셀렉트박����������� 표시 */}
       {isMultipleLands && (
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
@@ -325,24 +322,14 @@ function LandInfoSection({
         </div>
         <div className="flex flex-1 items-center px-4 py-3">
           {isEditMode && editData && onEditDataChange ? (
-            <Select
-              value={editData.landUseCategory || "대"}
+            <LandUsageSelect
+              value={editData.landUseCategory || selectedLand.currentUsage || "대"}
               onValueChange={(value) => onEditDataChange({ landUseCategory: value })}
-            >
-              <SelectTrigger className="h-10 w-full max-w-[200px]">
-                <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="대">대(택지)</SelectItem>
-                <SelectItem value="전">전(밭)</SelectItem>
-                <SelectItem value="답">답(논)</SelectItem>
-                <SelectItem value="임">임(임야)</SelectItem>
-                <SelectItem value="잡">그밖의 토지</SelectItem>
-              </SelectContent>
-            </Select>
+              triggerClassName="h-10 w-full max-w-[200px] bg-background"
+            />
           ) : (
             <span className="text-sm">
-              {selectedLand.currentUsage ? landCategories.find(c => c.value === selectedLand.currentUsage)?.label || "-" : "-"}
+              {getLandUsageLabel(selectedLand.currentUsage)}
             </span>
           )}
         </div>
@@ -354,23 +341,9 @@ function LandInfoSection({
         </div>
       </div>
       
-      {/* 토지 모양 / 택지 유형 행 */}
+      {/* 택지 유형 행 */}
       <div className="flex border-b border-border">
         <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
-          <span className="text-sm font-medium">토지 모양</span>
-        </div>
-        <div className="flex flex-1 items-center px-4 py-3">
-          {isEditMode && editData && onEditDataChange ? (
-            <LandShapeSelect
-              value={editData.landShape || "정방형"}
-              onValueChange={(value) => onEditDataChange({ landShape: value })}
-              triggerClassName="h-10 w-full max-w-[160px] bg-background"
-            />
-          ) : (
-            <span className="text-sm">{getLandShapeLabel(selectedLand.reportedShape)}</span>
-          )}
-        </div>
-        <div className="flex w-28 shrink-0 items-center border-l border-border bg-muted/30 px-4 py-3">
           <span className="text-sm font-medium">택지 유형</span>
         </div>
         <div className="flex flex-1 items-center px-4 py-3">
@@ -724,7 +697,7 @@ function ApplicationDetailPanel({
 
   return (
     <div className="space-y-4 overflow-visible">
-      {/* 상세 화면 타이틀 헤더 */}
+      {/* 상세 화면 ��이틀 헤더 */}
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
           <Badge variant={adminStatusConfig[application.adminStatus].variant}>
