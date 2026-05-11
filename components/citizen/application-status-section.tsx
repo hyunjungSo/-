@@ -19,11 +19,129 @@ import {
   ChevronDown,
   Pencil,
   Save,
-  X
+  X,
+  Upload,
+  Trash2,
+  Search
 } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { AdminStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { JudgmentStatus } from "@/components/ui/judgment-status";
+
+// 샘플 주소 데이터 (실제로는 API에서 가져옴)
+const sampleAddresses = [
+  { postalCode: "31110", address: "충청남도 천안시 동남구 신부동 810" },
+  { postalCode: "31120", address: "충청남도 천안시 동남구 신방동 123-45" },
+  { postalCode: "31130", address: "충청남도 천안시 서북구 불당동 1234" },
+  { postalCode: "31140", address: "충청남도 천안시 서북구 쌍용동 567-8" },
+  { postalCode: "31200", address: "충청남도 아산시 배방읍 세출리 100" },
+  { postalCode: "31300", address: "충청남도 논산시 내동 150" },
+];
+
+// 파일 타입 정의
+interface FileItem {
+  name: string;
+  size: string;
+  status: "uploading" | "complete" | "error";
+}
+
+// 주소 검색 모달 컴포넌트
+function AddressSearchModal({
+  onSelect,
+  onClose,
+}: {
+  onSelect: (address: { postalCode: string; address: string }) => void;
+  onClose: () => void;
+}) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<typeof sampleAddresses>([]);
+  const [hasSearched, setHasSearched] = useState(false);
+
+  const handleSearch = () => {
+    if (!searchQuery.trim()) return;
+    
+    const results = sampleAddresses.filter(
+      (addr) =>
+        addr.address.includes(searchQuery) || addr.postalCode.includes(searchQuery)
+    );
+    setSearchResults(results);
+    setHasSearched(true);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="mx-4 w-full max-w-lg rounded-lg bg-background shadow-xl">
+        <div className="flex items-center justify-between py-2 px-4">
+          <h3 className="text-lg font-semibold">주소 검색</h3>
+          <Button variant="ghost" className="h-10 w-10 p-0" onClick={onClose}>
+            <X className="h-8 w-8" />
+          </Button>
+        </div>
+        
+        <div className="p-4">
+          <div className="flex gap-2">
+            <Input
+              placeholder="도로명, 건물명 또는 지번 입력"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleSearch();
+                }
+              }}
+              autoFocus
+            />
+            <Button 
+              type="button"
+              onClick={handleSearch}
+              className="h-10 shrink-0 bg-[#222222] hover:bg-[#333333] py-3"
+            >
+              검색
+            </Button>
+          </div>
+          
+          <div className="mt-4 max-h-64 overflow-y-auto">
+            {hasSearched && searchResults.length === 0 ? (
+              <p className="py-8 text-center text-base text-muted-foreground">
+                검색 결과가 없습니다.
+              </p>
+            ) : searchResults.length > 0 ? (
+              <ul className="space-y-1">
+                {searchResults.map((addr, idx) => (
+                  <li key={idx}>
+                    <button
+                      type="button"
+                      className="w-full rounded-md px-3 py-2 text-left text-base transition-colors hover:bg-muted"
+                      onClick={() => onSelect(addr)}
+                    >
+                      <span className="mr-2 text-base text-muted-foreground">
+                        [{addr.postalCode}]
+                      </span>
+                      <span>{addr.address}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="space-y-2 py-4 text-center text-base text-muted-foreground">
+                <p>도로명, 건물명 또는 지번을 입력하세요.</p>
+                <p className="text-base">예: 천안시 동남구, 신부동 100</p>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        <div className="border-t bg-muted/30 p-3">
+          <p className="text-muted-foreground" style={{ fontSize: '14px' }}>
+            * 정확한 주소를 찾을 수 없는 경우, 가까운 건물명이나 도로명으로 검색해 보세요.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // 토지 정보 섹션 컴포넌트 (고용24 스타일 테이블 형태)
 function LandInfoSection({ application }: { application: Application }) {
@@ -162,18 +280,54 @@ import { RationaleCard } from "@/components/ui/rationale-card";
 // 상세 정보 패널 컴포넌트 (고용24 스타일)
 function ApplicationDetailPanel({ application }: { application: Application }) {
   const [isEditMode, setIsEditMode] = useState(false);
+  const [showAddressModal, setShowAddressModal] = useState(false);
   const [editData, setEditData] = useState({
     applicantName: application.applicantName,
     applicantContact: application.applicantContact,
-    applicantAddress: application.applicantAddress,
+    postalCode: "",
+    baseAddress: application.applicantAddress,
+    detailAddress: "",
     reason: application.reason,
+    attachments: [] as FileItem[],
   });
 
   const canEdit = application.adminStatus === "접수완료";
+  const MAX_FILES = 5;
+
+  const handleAddressSelect = (address: { postalCode: string; address: string }) => {
+    setEditData(prev => ({
+      ...prev,
+      postalCode: address.postalCode,
+      baseAddress: address.address,
+    }));
+    setShowAddressModal(false);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const newFiles: FileItem[] = Array.from(files).map((file) => ({
+      name: file.name,
+      size: `${(file.size / 1024).toFixed(1)}KB`,
+      status: "complete" as const,
+    }));
+
+    setEditData(prev => ({
+      ...prev,
+      attachments: [...prev.attachments, ...newFiles].slice(0, MAX_FILES),
+    }));
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setEditData(prev => ({
+      ...prev,
+      attachments: prev.attachments.filter((_, i) => i !== index),
+    }));
+  };
 
   const handleSave = () => {
     // TODO: API 호출하여 수정 내용 저장
-    console.log("[v0] Saving edited data:", editData);
     setIsEditMode(false);
   };
 
@@ -182,8 +336,11 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
     setEditData({
       applicantName: application.applicantName,
       applicantContact: application.applicantContact,
-      applicantAddress: application.applicantAddress,
+      postalCode: "",
+      baseAddress: application.applicantAddress,
+      detailAddress: "",
       reason: application.reason,
+      attachments: [],
     });
     setIsEditMode(false);
   };
@@ -290,16 +447,43 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
 
         {/* 주소 행 */}
         <div className="flex border-b border-border">
-          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+          <div className="flex w-28 shrink-0 items-start bg-muted/30 px-4 py-3">
             <span className="text-sm font-medium">주소</span>
           </div>
-          <div className="flex flex-1 items-center px-4 py-3">
+          <div className="flex flex-1 px-4 py-3">
             {isEditMode ? (
-              <Input
-                value={editData.applicantAddress}
-                onChange={(e) => setEditData({ ...editData, applicantAddress: e.target.value })}
-                className="h-8 text-sm"
-              />
+              <div className="w-full space-y-2">
+                <div className="flex gap-2">
+                  <Input
+                    value={editData.postalCode}
+                    placeholder="우편번호"
+                    readOnly
+                    className="h-8 w-24 text-sm bg-muted/30"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowAddressModal(true)}
+                    className="h-8 gap-1.5 text-xs"
+                  >
+                    <Search className="h-3.5 w-3.5" />
+                    주소 검색
+                  </Button>
+                </div>
+                <Input
+                  value={editData.baseAddress}
+                  placeholder="기본 주소"
+                  readOnly
+                  className="h-8 text-sm bg-muted/30"
+                />
+                <Input
+                  value={editData.detailAddress}
+                  onChange={(e) => setEditData({ ...editData, detailAddress: e.target.value })}
+                  placeholder="상세 주소 입력"
+                  className="h-8 text-sm"
+                />
+              </div>
             ) : (
               <span className="text-sm">{application.applicantAddress}</span>
             )}
@@ -307,7 +491,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
         </div>
 
         {/* 신청사유 행 */}
-        <div className="flex">
+        <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-start bg-muted/30 px-4 py-3">
             <span className="text-sm font-medium">신청사유</span>
           </div>
@@ -323,8 +507,92 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
             )}
           </div>
         </div>
+
+        {/* 첨부 서류 행 */}
+        <div className="flex">
+          <div className="flex w-28 shrink-0 items-start bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">첨부 서류</span>
+          </div>
+          <div className="flex flex-1 px-4 py-3">
+            {isEditMode ? (
+              <div className="w-full space-y-3">
+                {/* 파일 업로드 영역 */}
+                <div className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-3">
+                  <p className="mb-2 text-center text-xs text-muted-foreground">
+                    첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 클릭하세요.
+                  </p>
+                  <div className="flex items-center justify-center">
+                    <label className="cursor-pointer">
+                      <span className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-foreground shadow-sm transition-colors hover:bg-gray-50">
+                        <Upload className="h-3.5 w-3.5" />
+                        파일선택
+                      </span>
+                      <input
+                        type="file"
+                        multiple
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        onChange={handleFileChange}
+                        className="sr-only"
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                {/* 파일 리스트 */}
+                {editData.attachments.length > 0 && (
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">
+                        {editData.attachments.length}개 / {MAX_FILES}개
+                      </span>
+                    </div>
+                    <ul className="space-y-1">
+                      {editData.attachments.map((file, index) => (
+                        <li
+                          key={index}
+                          className="flex items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2"
+                        >
+                          <span className="truncate text-xs text-foreground">
+                            {file.name} <span className="text-muted-foreground">[{file.size}]</span>
+                          </span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRemoveFile(index)}
+                            className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <p className="text-xs text-muted-foreground">
+                  PDF, JPG, PNG 파일 (최대 {MAX_FILES}개, 파일당 20MB 이하)
+                </p>
+              </div>
+            ) : (
+              <span className="text-sm text-muted-foreground">
+                {application.attachments && application.attachments.length > 0
+                  ? `${application.attachments.length}개 파일 첨부됨`
+                  : "첨부된 파일 없음"}
+              </span>
+            )}
+          </div>
+        </div>
         
       </div>
+
+      {/* 주소 검색 모달 */}
+      {showAddressModal && (
+        <AddressSearchModal
+          onSelect={handleAddressSelect}
+          onClose={() => setShowAddressModal(false)}
+        />
+      )}
 
       {/* 수정 가능 여부 안내 */}
       {application.adminStatus !== "접수완료" && (
