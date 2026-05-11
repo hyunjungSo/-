@@ -836,7 +836,7 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerContact: "010-7700-2002",
     hasIncludedLand: true,
     businessUnit: "천안안성",
-    projectName: "천안 도시개발사업",
+    projectName: "천안 도시개���사업",
     coordinates: [
       { lat: 36.8165, lng: 127.1580 },
       { lat: 36.8170, lng: 127.1590 },
@@ -1432,7 +1432,7 @@ function generateRationale(
   let physicalConditions: string;
   
   if (land.landType === "농지") {
-    landTypeCriteria = "농지 기준: 면적 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
+    landTypeCriteria = "농지 기준: 면적 330��� 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
     physicalConditions = "물리조건: ①도로/수로 상실로 농지 사용 불가 ②농기계 회전 곤란 ③형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "택지") {
     landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)";
@@ -1603,7 +1603,7 @@ export const dummyApplications: Application[] = [
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
     reason: "도로 편입으로 인접한 2개 필지가 모두 불규칙한 형태로 남아 건축이 불가능합니다. 각 필지별로 매수 검토를 요청드립니다.",
-    // 토지별 민원인 입력 데이터
+    // 토지별 민원인 입력 ���이터
     landDataList: [
       {
         currentUsage: "대" as const,
@@ -2218,7 +2218,7 @@ export const dummyApplications: Application[] = [
       },
     },
     finalJudgment: "매수",
-    reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 양 필지 모두 접면도로 상실 ���인.",
+    reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 양 필지 모두 접���도로 상실 ���인.",
     finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2필지 대지입니다. 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
     adminName: "김철수",
     statusUpdatedAt: "2026-04-29",
@@ -2446,7 +2446,7 @@ export const dummyApplications: Application[] = [
   {
     id: "app-unified-to-multiple",
     applicationNumber: "2026-0501-001",
-    applicationType: "multiple", // 복수필지 신청
+    applicationType: "multiple", // 복수��지 신청
     applicantName: "정민재",
     applicantContact: "010-5555-1234",
     applicantAddress: "경기도 용인시 처인구 포곡읍 둔전리 200",
@@ -2715,10 +2715,10 @@ export const dummyApplications: Application[] = [
 
 // 현재 활용 지목 목록
 export const landCategories = [
-  { value: "대", label: "대(택지)" },
-  { value: "전", label: "전(밭)" },
-  { value: "답", label: "답(논)" },
-  { value: "임", label: "임(임야)" },
+  { value: "대", label: "택지" },
+  { value: "전", label: "밭" },
+  { value: "답", label: "논" },
+  { value: "임", label: "임야" },
   { value: "잡", label: "그 밖의 토지" },
 ] as const;
 

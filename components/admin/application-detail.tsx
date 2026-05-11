@@ -543,7 +543,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       const waterLost = adminOptions?.waterChannelLost || landData?.waterChannelLost || false;
       const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || false;
       criteriaChecks.push({
-        name: "���로/수로 상실",
+        name: "�����로/수로 상실",
         met: waterLost || roadLost,
         description: waterLost 
           ? "관개수로 상실로 농지 ��용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
@@ -1050,7 +1050,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onClick={() => handleAttachmentClick("���장사진_20260501.jpg")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">현장��진_20260501.jpg</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">현장���진_20260501.jpg</Badge>
                           </button>
                         </div>
                       </td>
@@ -1622,10 +1622,10 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                               </label>
                               {isViewOnly ? (
                                 <div className="h-10 px-3 py-2 border rounded-md bg-muted/30 flex items-center text-sm">
-                                  {adminCurrentUsagePerLand[currentParcelId] === "대" && "대(택지)"}
-                                  {adminCurrentUsagePerLand[currentParcelId] === "전" && "전(밭)"}
-                                  {adminCurrentUsagePerLand[currentParcelId] === "답" && "답(논)"}
-                                  {adminCurrentUsagePerLand[currentParcelId] === "임" && "임(임야)"}
+                                  {adminCurrentUsagePerLand[currentParcelId] === "대" && "택지"}
+                                  {adminCurrentUsagePerLand[currentParcelId] === "전" && "밭"}
+                                  {adminCurrentUsagePerLand[currentParcelId] === "답" && "논"}
+                                  {adminCurrentUsagePerLand[currentParcelId] === "임" && "임야"}
                                   {adminCurrentUsagePerLand[currentParcelId] === "잡" && "그 밖의 토지"}
                                   {!adminCurrentUsagePerLand[currentParcelId] && <span className="text-muted-foreground">선택되지 않음</span>}
                                 </div>
@@ -1638,48 +1638,11 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                     <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value="대">대(택지)</SelectItem>
-                                    <SelectItem value="전">전(밭)</SelectItem>
-                                    <SelectItem value="답">답(논)</SelectItem>
-                                    <SelectItem value="임">임(임야)</SelectItem>
+                                    <SelectItem value="대">택지</SelectItem>
+                                    <SelectItem value="전">밭</SelectItem>
+                                    <SelectItem value="답">논</SelectItem>
+                                    <SelectItem value="임">임야</SelectItem>
                                     <SelectItem value="잡">그 밖의 토지</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              )}
-                            </div>
-                            
-                            {/* 토지 모양 */}
-                            <div className="space-y-2">
-                              <label className="text-sm font-medium text-foreground">
-                                토지 모양 <span className="text-destructive">*</span>
-                              </label>
-                              {isViewOnly ? (
-                                <div className="h-10 px-3 py-2 border rounded-md bg-muted/30 flex items-center text-sm">
-                                  {adminLandShapePerLand[currentParcelId] ? (
-                                    <>
-                                      {landShapes.regular.concat(landShapes.irregular).find(s => s.value === adminLandShapePerLand[currentParcelId])?.label}
-                                    </>
-                                  ) : (
-                                    <span className="text-muted-foreground">선택되지 않음</span>
-                                  )}
-                                </div>
-                              ) : (
-                                <Select 
-                                  value={adminLandShapePerLand[currentParcelId] || ""} 
-                                  onValueChange={(value) => setAdminLandShapePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
-                                >
-                                  <SelectTrigger className="h-10 bg-background">
-                                    <SelectValue placeholder="토지 모양을 선택해 주세요" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">정형</div>
-                                    {landShapes.regular.map((shape) => (
-                                      <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
-                                    ))}
-                                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">비정형</div>
-                                    {landShapes.irregular.map((shape) => (
-                                      <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
-                                    ))}
                                   </SelectContent>
                                 </Select>
                               )}
@@ -1720,8 +1683,45 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                               </div>
                             )}
                             
+                            {/* 토지 모양 */}
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium text-foreground">
+                                토지 모양 <span className="text-destructive">*</span>
+                              </label>
+                              {isViewOnly ? (
+                                <div className="h-10 px-3 py-2 border rounded-md bg-muted/30 flex items-center text-sm">
+                                  {adminLandShapePerLand[currentParcelId] ? (
+                                    <>
+                                      {landShapes.regular.concat(landShapes.irregular).find(s => s.value === adminLandShapePerLand[currentParcelId])?.label}
+                                    </>
+                                  ) : (
+                                    <span className="text-muted-foreground">선택되지 않음</span>
+                                  )}
+                                </div>
+                              ) : (
+                                <Select 
+                                  value={adminLandShapePerLand[currentParcelId] || ""} 
+                                  onValueChange={(value) => setAdminLandShapePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
+                                >
+                                  <SelectTrigger className="h-10 bg-background">
+                                    <SelectValue placeholder="토지 모양을 선택해 주세요" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">정형</div>
+                                    {landShapes.regular.map((shape) => (
+                                      <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
+                                    ))}
+                                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">비정형</div>
+                                    {landShapes.irregular.map((shape) => (
+                                      <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              )}
+                            </div>
+                            
                             {/* 현장확인 옵션 */}
-                            <div className="space-y-3 pt-2">
+                            <div className="space-y-3 pt-2 border-t">
                               <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
                               {isViewOnly ? (
                                 <div className="space-y-2 text-sm">
@@ -1807,7 +1807,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             </Button>
                             {!hasCurrentUsage && (
                               <p className="text-xs text-center text-red-600">
-필수값을 선택해 주세요
+                                현재 활용 지목을 선택해 주세요
                               </p>
                             )}
                           </div>
@@ -1816,7 +1816,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     </div>
                   </div>
                 
-                    {/* 우측: 분석결과 확인 */}
+                    {/* 우측: ���석결�� 확인 */}
                     <div className="w-1/2 space-y-3">
                   {Object.keys(adminLandAIResults).length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center rounded-lg border bg-muted/20">
@@ -2026,7 +2026,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                                   const currentParcelLines = lines.slice(startIdx, endIdx);
                                                   
                                                   // Find the summary/general part (above first [필지])
-                                                  const summaryEndIdx = lines.findIndex(l => l.includes("[���지"));
+                                                  const summaryEndIdx = lines.findIndex(l => l.includes("[필지"));
                                                   const summaryLines = summaryEndIdx > 0 ? lines.slice(0, summaryEndIdx).filter(l => l.trim()) : [];
                                                   
                                                   const filtered = [...summaryLines, ...currentParcelLines].join("\n").trim();
@@ -2137,7 +2137,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 
                 {/* 검토 의견 */}
                 <div className="space-y-3">
-                  <Label className="text-sm font-medium">검토 ��견</Label>
+                  <Label className="text-sm font-medium">검토 의견</Label>
                   <Textarea
                     placeholder="해당 필지에 대한 검토 의견을 입력하세요..."
                     value={landReview.landComment}
@@ -2217,7 +2217,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             </div>
           </div>
           <Textarea
-            placeholder="전체 필지에 대한 종합 검토 의��을 입력하세요..."
+            placeholder="전체 필지에 ��한 종합 검토 의견을 입력하세요..."
             rows={4}
             value={reviewData.reviewerComment || ""}
             onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}
