@@ -1435,7 +1435,7 @@ function generateRationale(
     landTypeCriteria = "농지 기준: 면�� 330��� 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
     physicalConditions = "물리조건: ①도로/수로 상실로 농지 사용 불가 ②농기계 회전 곤란 ③형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "택지") {
-    landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (잔여��율 25% 이하 시 1.5배 완화)";
+    landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (��여��율 25% 이하 시 1.5배 완화)";
     physicalConditions = "물리조건: ①접면도로 상실로 건축허가 불가 ②형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "임야") {
     landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이��� 시 495㎡���지 완화)";
@@ -1515,7 +1515,7 @@ export const dummyApplications: Application[] = [
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
     reason: "고속도로 편입으로 인해 잔여지가 삼각형 형태로 남아 건축물 건축이 불가능합니다. 잔여 면적도 협소하여 종래 목적대로 사용할 수 없습니다.",
-    attachments: ["토지대장.pdf", "등기부등본.pdf"],
+    attachments: ["토지대장.pdf", "등기��등본.pdf"],
     status: "AI분석완료",
     adminStatus: "접수완료",
     appliedAt: "2026-04-01",
@@ -1580,6 +1580,7 @@ export const dummyApplications: Application[] = [
     aiResult: generateAIResult(dummyLandInfoList[3]),
     finalJudgment: "매수",
     reviewerComment: "잔여지 형상 및 면적 기준 충족으로 매수 판정",
+    finalReviewOpinion: "본 토지는 도로사업 편입으로 인해 잔여지가 발생하였으며, 잔여지 면적이 기준 미달이고 형상지수 악화로 정상적인 이용이 곤란한 것으로 판단됩니다. 따라서 잔여지 매수 기준에 부합하여 매수 결정이 적정합니다.",
     adminName: "홍길동",
     statusUpdatedAt: "2026-04-15",
   },
@@ -1603,7 +1604,7 @@ export const dummyApplications: Application[] = [
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
     reason: "도로 편입으로 인접한 2개 필지가 모두 불규칙한 형태로 남아 건축이 불가능합니다. 각 필지별로 매수 검토를 요청드립니다.",
-    // 토지별 민원인 입력 ���이터
+    // 토지��� 민원인 입력 ���이터
     landDataList: [
       {
         currentUsage: "대" as const,
