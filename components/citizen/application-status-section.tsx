@@ -887,16 +887,6 @@ function ApplicationDetailPanel({
         />
       )}
 
-      {/* 수정 가능 여부 안내 */}
-      {application.adminStatus !== "접수완료" && (
-        <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2">
-          <Info className="h-4 w-4 shrink-0 text-amber-600" />
-          <p className="text-xs text-amber-700">
-            담당자가 검토를 시작하여 신청 내용 수정이 불가합니다. 수정이 필요한 경우 담당자에게 문의해 주세요.
-          </p>
-        </div>
-      )}
-
       {/* 토지 정보 (활용 지목, 토지 모양, 택지 유형, 확인 항목, 신청 사유, 첨부 서류) */}
       <LandInfoSection 
         application={application}
