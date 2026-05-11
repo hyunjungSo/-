@@ -339,7 +339,7 @@ function LandInfoSection({
             </Select>
           ) : (
             <span className="text-sm">
-              {selectedLand.currentUsage ? landCategories.find(c => c.value === selectedLand.currentUsage)?.label || "-" : "-"}
+              {selectedLand.currentUsage || "-"} {selectedLand.currentUsage && `(${landCategories.find(c => c.value === selectedLand.currentUsage)?.label || ""})`}
             </span>
           )}
         </div>
@@ -928,7 +928,7 @@ function ApplicationDetailPanel({
           </div>
         </div>
 
-        {/* 소유자 ���락처 행 */}
+        {/* 소유자 연락처 행 */}
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
             <span className="text-sm font-medium">소유자 연락처</span>
