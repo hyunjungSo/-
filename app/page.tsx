@@ -60,7 +60,7 @@ export default function HomePage() {
               </Button>
               <Button asChild variant="outline" size="lg" className="h-[55px] border-1 border-gray-400 bg-white px-8 text-lg font-semibold text-gray-800 hover:bg-gray-50 hover:text-gray-800">
                 <Link href="/citizen?tab=status">
-                  신청현황 확인
+                  신청현황 조회
                 </Link>
               </Button>
             </div>
