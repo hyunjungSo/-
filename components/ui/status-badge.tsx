@@ -70,16 +70,6 @@ interface ProcessStatusBadgeProps {
 // 담당자 진행상황 Badge
 export function AdminStatusBadge({ status, showIcon = false, size = "default" }: AdminStatusBadgeProps) {
   const config = adminStatusConfig[status];
-  
-  // 안전한 처리: config가 없으면 기본값 사용
-  if (!config) {
-    return (
-      <Badge variant="secondary" className={size === "sm" ? "text-xs" : ""}>
-        {status || "알 수 없음"}
-      </Badge>
-    );
-  }
-  
   const Icon = config.icon;
 
   return (
@@ -96,16 +86,6 @@ export function AdminStatusBadge({ status, showIcon = false, size = "default" }:
 // 처리 상태 Badge
 export function ProcessStatusBadge({ status, showIcon = false, size = "default" }: ProcessStatusBadgeProps) {
   const config = processStatusConfig[status];
-  
-  // 안전한 처리: config가 없으면 기본값 사용
-  if (!config) {
-    return (
-      <Badge variant="secondary" className={size === "sm" ? "text-xs" : ""}>
-        {status || "알 수 없음"}
-      </Badge>
-    );
-  }
-  
   const Icon = config.icon;
 
   return (
