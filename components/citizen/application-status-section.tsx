@@ -569,11 +569,13 @@ import { RationaleCard } from "@/components/ui/rationale-card";
 function ApplicationDetailPanel({ 
   application,
   isEditMode,
-  onEditModeChange
+  onEditModeChange,
+  onSave
 }: { 
   application: Application;
   isEditMode: boolean;
   onEditModeChange: (value: boolean) => void;
+  onSave: (updatedApp: Application) => void;
 }) {
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -657,7 +659,46 @@ function ApplicationDetailPanel({
   };
 
   const handleConfirmSave = () => {
-    // TODO: API 호출하여 수정 내용 저장
+    // 수정된 신청 데이터 생성
+    const updatedApplication: Application = {
+      ...application,
+      applicantName: editData.applicantName,
+      applicantContact: editData.applicantContact,
+      applicantAddress: editData.baseAddress + (editData.detailAddress ? ` ${editData.detailAddress}` : ""),
+      reason: editData.reason,
+      // 토지 정보 업데이트 (첫 번째 필지)
+      landInfo: application.landInfo ? {
+        ...application.landInfo,
+        currentUsage: landEditDataList[0]?.landUseCategory,
+        reportedShape: landEditDataList[0]?.landShape,
+        landSubType: landEditDataList[0]?.siteType,
+        accessRoadLost: landEditDataList[0]?.roadFrontageLoss,
+        waterChannelLost: landEditDataList[0]?.irrigationCanalLoss,
+        farmMachineDifficulty: landEditDataList[0]?.farmEquipmentTurnImpossible,
+      } : application.landInfo,
+      // 추가 필지 정보 업데이트
+      additionalLands: application.additionalLands?.map((land, index) => ({
+        ...land,
+        currentUsage: landEditDataList[index + 1]?.landUseCategory || land.currentUsage,
+        reportedShape: landEditDataList[index + 1]?.landShape || land.reportedShape,
+        landSubType: landEditDataList[index + 1]?.siteType || land.landSubType,
+        accessRoadLost: landEditDataList[index + 1]?.roadFrontageLoss || land.accessRoadLost,
+        waterChannelLost: landEditDataList[index + 1]?.irrigationCanalLoss || land.waterChannelLost,
+        farmMachineDifficulty: landEditDataList[index + 1]?.farmEquipmentTurnImpossible || land.farmMachineDifficulty,
+      })),
+      // landDataList도 업데이트
+      landDataList: landEditDataList.map(data => ({
+        currentUsage: data.landUseCategory as "대" | "전" | "답" | "과" | "목" | "임" | "광" | "염" | "잡" | "공",
+        landSubType: data.siteType as "residential-detached" | "commercial" | "industrial",
+        actualUsage: data.landUseCategory as "대" | "전" | "답" | "과" | "목" | "임" | "광" | "염" | "잡" | "공",
+        reportedShape: data.landShape as "정방형" | "장방형" | "세장형" | "사다리꼴" | "삼각형" | "역삼각형" | "부정형",
+        farmMachineDifficulty: data.farmEquipmentTurnImpossible,
+        accessRoadLost: data.roadFrontageLoss,
+        waterChannelLost: data.irrigationCanalLoss,
+      })),
+    };
+    
+    onSave(updatedApplication);
     setShowConfirmModal(false);
     onEditModeChange(false);
   };
@@ -1030,16 +1071,25 @@ function ApplicationDetailPanel({
 }
 
 export function ApplicationStatusSection() {
+  const [applications, setApplications] = useState<Application[]>(dummyApplications);
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [showLeaveWarning, setShowLeaveWarning] = useState(false);
   const [pendingApplication, setPendingApplication] = useState<Application | null>(null);
 
-  // 현재 로그인한 사용자의 신청 목록 (실제로는 사용자 ID로 필터링)
-  const myApplications = dummyApplications;
+  // 현재 로그인한 사용자의 신청 목록
+  const myApplications = applications;
 
   // 첫 번째 신청이 있으면 기본 선택
   const displayedApplication = selectedApplication || (myApplications.length > 0 ? myApplications[0] : null);
+
+  // 신청 데이터 업데이트 핸들러
+  const handleApplicationUpdate = (updatedApp: Application) => {
+    setApplications(prev => prev.map(app => 
+      app.id === updatedApp.id ? updatedApp : app
+    ));
+    setSelectedApplication(updatedApp);
+  };
 
   // 목록 클릭 핸들러 - 수정 중이면 경고 표시
   const handleSelectApplication = (app: Application) => {
@@ -1147,6 +1197,7 @@ export function ApplicationStatusSection() {
             application={displayedApplication} 
             isEditMode={isEditMode}
             onEditModeChange={setIsEditMode}
+            onSave={handleApplicationUpdate}
           />
         ) : (
           <div className="overflow-hidden rounded-lg border border-border">
