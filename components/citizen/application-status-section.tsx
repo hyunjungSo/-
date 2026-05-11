@@ -157,6 +157,8 @@ interface LandEditData {
 function LandInfoSection({ 
   application, 
   isEditMode = false,
+  selectedLandIndex = 0,
+  onSelectedLandIndexChange,
   editData,
   onEditDataChange,
   onFileChange,
@@ -165,6 +167,8 @@ function LandInfoSection({
 }: { 
   application: Application;
   isEditMode?: boolean;
+  selectedLandIndex?: number;
+  onSelectedLandIndexChange?: (index: number) => void;
   editData?: LandEditData;
   onEditDataChange?: (data: Partial<LandEditData>) => void;
   onFileChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -176,11 +180,16 @@ function LandInfoSection({
     ? [application.landInfo, ...application.additionalLands] 
     : [application.landInfo];
   
-  const [selectedLandIndex, setSelectedLandIndex] = useState(0);
-  
   // 인덱스 범위 안전 처리
   const safeIndex = Math.min(selectedLandIndex, allLands.length - 1);
   const selectedLand = allLands[safeIndex];
+  
+  // 필지 선택 핸들러
+  const handleLandIndexChange = (index: number) => {
+    if (onSelectedLandIndexChange) {
+      onSelectedLandIndexChange(index);
+    }
+  };
   
   // selectedLand가 없으면 렌더링 안함
   if (!selectedLand) return null;
@@ -206,7 +215,7 @@ function LandInfoSection({
           <div className="flex flex-1 items-center px-4 py-3">
             <Select
               value={selectedLandIndex.toString()}
-              onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
+              onValueChange={(value) => handleLandIndexChange(parseInt(value))}
             >
               <SelectTrigger className="w-full max-w-md">
                 <SelectValue />
@@ -314,7 +323,7 @@ function LandInfoSection({
         <div className="flex flex-1 items-center px-4 py-3">
           {isEditMode && editData && onEditDataChange ? (
             <Select
-              value={editData.landUseCategory}
+              value={editData.landUseCategory || "대"}
               onValueChange={(value) => onEditDataChange({ landUseCategory: value })}
             >
               <SelectTrigger className="h-10 w-full max-w-[200px]">
@@ -350,7 +359,7 @@ function LandInfoSection({
         <div className="flex flex-1 items-center px-4 py-3">
           {isEditMode && editData && onEditDataChange ? (
             <Select
-              value={editData.landShape}
+              value={editData.landShape || "정방형"}
               onValueChange={(value) => onEditDataChange({ landShape: value })}
             >
               <SelectTrigger className="h-10 w-full max-w-[160px]">
@@ -377,14 +386,14 @@ function LandInfoSection({
         <div className="flex flex-1 items-center px-4 py-3">
           {isEditMode && editData && onEditDataChange ? (
             <Select
-              value={editData.siteType}
+              value={editData.siteType || "residential-detached"}
               onValueChange={(value) => onEditDataChange({ siteType: value })}
             >
               <SelectTrigger className="h-10 w-full max-w-[200px]">
                 <SelectValue placeholder="선택하세요" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="residential-detached">주거용 (기준 90㎡ 이���)</SelectItem>
+                <SelectItem value="residential-detached">주거용 (기준 90㎡ 이하)</SelectItem>
                 <SelectItem value="commercial">상업용 (기준 150㎡ 이하)</SelectItem>
                 <SelectItem value="industrial">공업용 (기준 330㎡ 이하)</SelectItem>
               </SelectContent>
@@ -415,7 +424,7 @@ function LandInfoSection({
                 <label className="flex cursor-pointer items-center gap-2">
                   <Checkbox
                     id="roadFrontageLoss"
-                    checked={editData.roadFrontageLoss}
+                    checked={editData.roadFrontageLoss ?? false}
                     onCheckedChange={(checked) => onEditDataChange({ roadFrontageLoss: checked === true })}
                   />
                   <span className="text-sm">접면도로 상실</span>
@@ -423,7 +432,7 @@ function LandInfoSection({
                 <label className="flex cursor-pointer items-center gap-2">
                   <Checkbox
                     id="irrigationCanalLoss"
-                    checked={editData.irrigationCanalLoss}
+                    checked={editData.irrigationCanalLoss ?? false}
                     onCheckedChange={(checked) => onEditDataChange({ irrigationCanalLoss: checked === true })}
                   />
                   <span className="text-sm">관개수로 상실</span>
@@ -431,7 +440,7 @@ function LandInfoSection({
                 <label className="flex cursor-pointer items-center gap-2">
                   <Checkbox
                     id="farmEquipmentTurnImpossible"
-                    checked={editData.farmEquipmentTurnImpossible}
+                    checked={editData.farmEquipmentTurnImpossible ?? false}
                     onCheckedChange={(checked) => onEditDataChange({ farmEquipmentTurnImpossible: checked === true })}
                   />
                   <span className="text-sm">농기계 회전 불가</span>
@@ -568,6 +577,30 @@ function ApplicationDetailPanel({
 }) {
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedLandIndex, setSelectedLandIndex] = useState(0);
+  
+  // 모든 필지 목록
+  const allLands = application.additionalLands 
+    ? [application.landInfo, ...application.additionalLands] 
+    : [application.landInfo];
+  
+  // 필지별 토지 편집 데이터 초기화
+  const initLandEditDataList = () => {
+    return allLands.map((land, index) => {
+      const landData = application.landDataList?.[index];
+      return {
+        landUseCategory: landData?.currentUsage || land?.currentUsage || "대",
+        landShape: landData?.reportedShape || land?.reportedShape || "정방형",
+        siteType: landData?.landSubType || land?.landSubType || "",
+        roadFrontageLoss: landData?.accessRoadLost || land?.accessRoadLost || false,
+        irrigationCanalLoss: landData?.waterChannelLost || land?.waterChannelLost || false,
+        farmEquipmentTurnImpossible: landData?.farmMachineDifficulty || land?.farmMachineDifficulty || false,
+      };
+    });
+  };
+  
+  const [landEditDataList, setLandEditDataList] = useState(initLandEditDataList);
+  
   const [editData, setEditData] = useState({
     // 신청인 정보
     applicantRelation: "owner" as "owner" | "agent",
@@ -578,14 +611,7 @@ function ApplicationDetailPanel({
     postalCode: "",
     baseAddress: application.applicantAddress,
     detailAddress: "",
-    // 토지 정보 - 민원인이 신청 시 입력한 값으로 초기화 (필수값은 디폴트 설정)
-    landUseCategory: application.landInfo?.currentUsage || "대",
-    landShape: application.landInfo?.reportedShape || "정방형",
-    siteType: application.landInfo?.landSubType || "",
-    roadFrontageLoss: application.landInfo?.accessRoadLost || false,
-    irrigationCanalLoss: application.landInfo?.waterChannelLost || false,
-    farmEquipmentTurnImpossible: application.landInfo?.farmMachineDifficulty || false,
-    // 신청 사유 및 첨부 (필수값)
+    // 신청 사유 및 첨부 (필수값) - 공통 항목
     reason: application.reason || "잔여지 매수 신청",
     attachments: [] as FileItem[],
   });
@@ -647,16 +673,22 @@ function ApplicationDetailPanel({
       postalCode: "",
       baseAddress: application.applicantAddress,
       detailAddress: "",
-      landUseCategory: application.landInfo?.currentUsage || "대",
-      landShape: application.landInfo?.reportedShape || "정방형",
-      siteType: application.landInfo?.landSubType || "",
-      roadFrontageLoss: application.landInfo?.accessRoadLost || false,
-      irrigationCanalLoss: application.landInfo?.waterChannelLost || false,
-      farmEquipmentTurnImpossible: application.landInfo?.farmMachineDifficulty || false,
       reason: application.reason || "잔여지 매수 신청",
       attachments: [],
     });
+    // 필지별 토지 데이터도 복원
+    setLandEditDataList(initLandEditDataList());
+    setSelectedLandIndex(0);
     onEditModeChange(false);
+  };
+  
+  // 현재 선택된 필지의 토지 편집 데이터 업데이트
+  const handleLandEditDataChange = (data: Partial<typeof landEditDataList[0]>) => {
+    setLandEditDataList(prev => {
+      const newList = [...prev];
+      newList[selectedLandIndex] = { ...newList[selectedLandIndex], ...data };
+      return newList;
+    });
   };
 
   return (
@@ -902,17 +934,34 @@ function ApplicationDetailPanel({
       <LandInfoSection 
         application={application}
         isEditMode={isEditMode}
+        selectedLandIndex={selectedLandIndex}
+        onSelectedLandIndexChange={setSelectedLandIndex}
         editData={{
-          landUseCategory: editData.landUseCategory,
-          landShape: editData.landShape,
-          siteType: editData.siteType,
-          roadFrontageLoss: editData.roadFrontageLoss,
-          irrigationCanalLoss: editData.irrigationCanalLoss,
-          farmEquipmentTurnImpossible: editData.farmEquipmentTurnImpossible,
+          ...landEditDataList[selectedLandIndex],
           reason: editData.reason,
           attachments: editData.attachments,
         }}
-        onEditDataChange={(data) => setEditData({ ...editData, ...data })}
+        onEditDataChange={(data) => {
+          // 토지 관련 필드는 필지별로 저장, 공통 필드는 editData에 저장
+          const landFields = ['landUseCategory', 'landShape', 'siteType', 'roadFrontageLoss', 'irrigationCanalLoss', 'farmEquipmentTurnImpossible'];
+          const landData: Record<string, unknown> = {};
+          const commonData: Record<string, unknown> = {};
+          
+          Object.entries(data).forEach(([key, value]) => {
+            if (landFields.includes(key)) {
+              landData[key] = value;
+            } else {
+              commonData[key] = value;
+            }
+          });
+          
+          if (Object.keys(landData).length > 0) {
+            handleLandEditDataChange(landData);
+          }
+          if (Object.keys(commonData).length > 0) {
+            setEditData(prev => ({ ...prev, ...commonData }));
+          }
+        }}
         onFileChange={handleFileChange}
         onRemoveFile={handleRemoveFile}
         MAX_FILES={MAX_FILES}
