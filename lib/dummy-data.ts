@@ -241,7 +241,7 @@ export const dummyLandInfoList: LandInfo[] = [
     remainingRatio: 30.0,
     landType: "택지",
     landCategory: "대",
-    originalShape: "가로장방형",
+    originalShape: "가로장��형",
     remainingShape: "삼각형",
     originalShapeIndex: 4.2,
     remainingShapeIndex: 5.9,
@@ -836,7 +836,7 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerContact: "010-7700-2002",
     hasIncludedLand: true,
     businessUnit: "천안안성",
-    projectName: "천안 도시개발사업",
+    projectName: "천안 도시개발사���",
     coordinates: [
       { lat: 36.8165, lng: 127.1580 },
       { lat: 36.8170, lng: 127.1590 },
@@ -1023,7 +1023,7 @@ export const dummyLandInfoList: LandInfo[] = [
     ],
   },
   // ===== 혼합 케이스 (일부 매수 + 일부 미해당) =====
-  // 4필지 중 2필지 매수, 나머지 2필지 미해당
+  // 4필��� 중 2필지 매수, 나머지 2필지 미해당
   {
     id: "land-mixed-001",
     address: "경기도 평택시 포승읍 내기리 200-1",
@@ -1432,7 +1432,7 @@ function generateRationale(
     landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)";
     physicalConditions = "물리조건: ①접면도로 상실로 건축허가 불가 ②형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "임야") {
-    landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이하 시 495㎡���지 완화)";
+    landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이��� 시 495㎡���지 완화)";
     physicalConditions = "물리조건: ①공익사업으로 접한 도로가 없어진 경우";
   } else {
     landTypeCriteria = "그 밖의 토지 기준: 면적 330㎡ 이하 또는 잔여비율 50% 이하";
@@ -1786,7 +1786,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "동탄2 도시개발사업으로 인해 소유한 8개 필지가 모두 도로에 편입되어 잔여지가 불규칙한 형태로 남았습니다. 각 필지별로 건축 및 농업 활동이 불가능하여 일괄 매수를 신청합니다.",
+    reason: "동탄2 도시개발사업으로 인해 소유한 8개 필지가 모두 도로에 편입되어 잔여지가 불규칙한 형태로 남았습니다. 각 필지별로 건축 및 농업 활동이 불가능하여 일괄 매수�� 신청합니다.",
     landDataList: [
       {
         currentUsage: "대" as const,
@@ -2064,7 +2064,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "천안 도시개발사업으로 인해 소유한 4개 ���지(대지 1, 농지 2, 잡종지 1)가 모두 도로에 편입되었습니다. 대지에는 주택이 있었으나 철거되었고, 인접한 농지와 잡종지는 주택 부속 텃밭과 창고용지로 사용해 왔습니다. 편입 후 각 필지가 불규칙한 형태로 남아 건축 및 농업이 불가능합니다. 4필지 모두 매수를 신청합니다.",
+    reason: "천안 도시개발사업으로 ��해 소유한 4개 ���지(대지 1, 농지 2, 잡종지 1)가 모두 도로에 편입되었습니다. 대지에는 주택이 있었으나 철거되었고, 인접한 농지와 잡종지는 주택 부속 텃밭과 창고용지로 사용해 왔습니다. 편입 후 각 필지가 불규칙한 형태로 남아 건축 및 농업이 불가능합니다. 4필지 모두 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "대" as const,
@@ -2718,7 +2718,7 @@ export const landCategories = [
   { value: "묘", label: "묘지" },
   { value: "양", label: "양어장" },
   { value: "임", label: "임야" },
-  { value: "잡", label: "잡종지" },
+  { value: "잡", label: "그 밖의 토지" },
   { value: "장", label: "공장용지" },
   { value: "전", label: "전" },
   { value: "제", label: "제방" },
