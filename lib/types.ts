@@ -139,12 +139,9 @@ export interface Application {
   id: string;
   applicationNumber: string; // 접수번호
   applicationType: ApplicationType; // 신청 유형 (단일/복수개별/일단지)
-  applicantRelation?: "owner" | "agent"; // 신청인 구분 (본인/대리인)
   applicantName: string; // 신청인명
   applicantContact: string; // 연락처
   applicantAddress: string; // 주소
-  agentName?: string; // 대리인 성명
-  agentContact?: string; // 대리인 연락처
   landInfo: LandInfo;
   additionalLands?: LandInfo[]; // 동일 소유자 복수 필지
   unifiedParcelCondition?: UnifiedParcelCondition; // 일단지 판정 조건
