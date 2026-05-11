@@ -544,7 +544,7 @@ function getShapeDescription(shape: string, area: number): string {
   switch (shape) {
     case "삼각형":
     case "역삼각형":
-      return `잔여지의 형상이 ${shape}으로서 정상적인 이용이 곤란한 부정형으로 보이며,`;
+      return `잔여지의 형상이 ${shape}으로��� 정상적인 이용이 곤란한 부정형으로 보이며,`;
     case "자루형":
       return `잔여지의 형상이 자루형(세장형)으로서 폭이 좁아 정상적인 이용이 곤란하며,`;
     case "부정형":
@@ -603,22 +603,21 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const [isResultsCollapsed, setIsResultsCollapsed] = useState(false);
   const [isBasicInfoCollapsed, setIsBasicInfoCollapsed] = useState(false);
   
-  // 본인 소유 필지 선택 상태 (인접지 중 본인 소유 확인용)
+  // 본인 ��유 필지 선택 상태 (인접지 중 본인 소유 확인용)
   const [ownedParcels, setOwnedParcels] = useState<Set<string>>(new Set());
   
   // 지도-목록 호버 연동 상태
   const [hoveredParcelId, setHoveredParcelId] = useState<string | null>(null);
   
-  // 본인 소유 필지 토글
+  // 본인 소유 필지 선택 (단일 선택만 가능)
   const toggleOwnedParcel = (landId: string) => {
     setOwnedParcels(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(landId)) {
-        newSet.delete(landId);
-      } else {
-        newSet.add(landId);
+      // 이미 선택된 필지를 다시 클릭하면 선택 해제
+      if (prev.has(landId)) {
+        return new Set();
       }
-      return newSet;
+      // 새로운 필지 선택 시 기존 선택 해제하고 새 필지만 선택
+      return new Set([landId]);
     });
   };
   
@@ -1366,7 +1365,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                     : "hover:bg-muted/50"
                             }`}
                           >
-                            {/* 필지 정보 버튼 */}
+                            {/* 필지 정��� 버튼 */}
                             <button
                               onClick={() => handleLandSelect(land)}
                               className="flex flex-1 cursor-pointer items-center justify-between text-left"
