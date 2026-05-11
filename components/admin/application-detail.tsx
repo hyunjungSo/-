@@ -543,7 +543,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       const waterLost = adminOptions?.waterChannelLost || landData?.waterChannelLost || false;
       const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || false;
       criteriaChecks.push({
-        name: "�������로/수로 상실",
+        name: "�����로/수로 상실",
         met: waterLost || roadLost,
         description: waterLost 
           ? "관개수로 상실로 농지 ��용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
@@ -583,7 +583,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "접면도로 상실",
         met: roadLost,
-        description: roadLost ? "도로 접하지 않아 접근 불��" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유지"
+        description: roadLost ? "도로 접하지 않아 접근 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유지"
       });
       
       if (areaCheckMet || roadLost) {
@@ -1722,7 +1722,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             
                             {/* 현장확인 옵션 */}
                             <div className="space-y-3 pt-2 border-t">
-                              <label className="text-sm font-medium text-foreground">현장 확인 항���</label>
+                              <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
                               {isViewOnly ? (
                                 <div className="space-y-2 text-sm">
                                   <div className="flex items-center gap-3 p-2">
