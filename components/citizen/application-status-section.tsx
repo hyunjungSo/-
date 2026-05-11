@@ -134,7 +134,7 @@ function AddressSearchModal({
         </div>
         
         <div className="border-t bg-muted/30 p-3">
-          <p className="text-muted-foreground" style={{ fontSize: '14px' }}>
+          <p className="text-sm text-muted-foreground">
             * 정확한 주소를 찾을 수 없는 경우, 가까운 건물명이나 도로명으로 검색해 보세요.
           </p>
         </div>
@@ -794,7 +794,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               <div className="w-full space-y-3">
                 {/* 파일 업로드 영역 */}
                 <div className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-3">
-                  <p className="mb-2 text-center text-muted-foreground" style={{ fontSize: '14px' }}>
+                  <p className="mb-2 text-center text-sm text-muted-foreground">
                     첨부할 파일을 여기에 끌어다 놓거나, 파일 선택 버튼을 클릭하세요.
                   </p>
                   <div className="flex items-center justify-center">
