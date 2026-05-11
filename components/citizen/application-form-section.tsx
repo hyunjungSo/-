@@ -577,7 +577,7 @@ export function ApplicationFormSection({
                   {formData.applicantRelation === "agent" && (
                     <p className="flex items-center gap-1.5 rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-500">
                       <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-                      대리인 신청 시 위임장 �� 대리인 신분증 사본을 첨부 서류에 추가해 주세요.
+                      대리인 신청 시 위임장 및 대리인 신분증 사본을 첨부 서류에 추가해 주세요.
                     </p>
                   )}
                 </div>

@@ -316,7 +316,7 @@ function LandInfoSection({
               value={editData.landUseCategory}
               onValueChange={(value) => onEditDataChange({ landUseCategory: value })}
             >
-              <SelectTrigger className="h-10 w-48">
+              <SelectTrigger className="h-10 w-full max-w-[200px]">
                 <SelectValue placeholder="선택하세요" />
               </SelectTrigger>
               <SelectContent>
@@ -352,7 +352,7 @@ function LandInfoSection({
               value={editData.landShape}
               onValueChange={(value) => onEditDataChange({ landShape: value })}
             >
-              <SelectTrigger className="h-10 w-36">
+              <SelectTrigger className="h-10 w-full max-w-[160px]">
                 <SelectValue placeholder="선택" />
               </SelectTrigger>
               <SelectContent>
@@ -379,7 +379,7 @@ function LandInfoSection({
               value={editData.siteType}
               onValueChange={(value) => onEditDataChange({ siteType: value })}
             >
-              <SelectTrigger className="h-10 w-40">
+              <SelectTrigger className="h-10 w-full max-w-[200px]">
                 <SelectValue placeholder="선택하세요" />
               </SelectTrigger>
               <SelectContent>
@@ -761,7 +761,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                 <Input
                   value={editData.agentName}
                   onChange={(e) => setEditData({ ...editData, agentName: e.target.value })}
-                  placeholder="��리인 성명을 입력해주세요"
+                  placeholder="대리인 성명을 입력해주세요"
                   className="h-10 text-sm"
                 />
               </div>
@@ -946,7 +946,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           <div className="mx-4 w-full max-w-md rounded-lg bg-background p-6 shadow-xl">
             <h3 className="mb-2 text-lg font-semibold">수정 내용 저장</h3>
             <p className="mb-6 text-sm text-muted-foreground">
-              필지 선택을 제외한 정보가 수정됩니다. 저장하시���습니까?
+              필지 선택을 제외한 정보가 수정됩니다. 저장하시겠습니까?
             </p>
             <div className="flex justify-end gap-2">
               <Button
@@ -1060,7 +1060,7 @@ export function ApplicationStatusSection() {
             <div className="flex h-48 items-center justify-center">
               <div className="text-center">
                 <FileText className="mx-auto h-8 w-8 text-muted-foreground" />
-                <p className="mt-2 text-sm text-muted-foreground">신청 내역을 선택해주���요</p>
+                <p className="mt-2 text-sm text-muted-foreground">신청 내역을 선택해주세요</p>
               </div>
             </div>
           </div>
