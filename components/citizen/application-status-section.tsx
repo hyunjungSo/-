@@ -206,7 +206,7 @@ function LandInfoSection({
         )}
       </div>
       
-      {/* 복수 필지일 경우 셀렉트박����������� 표시 */}
+      {/* 복수 필지일 경우 셀렉트박������������� 표시 */}
       {isMultipleLands && (
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
@@ -824,9 +824,11 @@ function ApplicationDetailPanel({
                     value={editData.agentContact}
                     onChange={(e) => {
                       const value = e.target.value.replace(/[^0-9]/g, "");
-                      setEditData({ ...editData, agentContact: value });
+                      const formatted = value.length <= 3 ? value : value.length <= 7 ? `${value.slice(0, 3)}-${value.slice(3)}` : `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`;
+                      setEditData({ ...editData, agentContact: formatted });
                     }}
-                    placeholder="대리인 연락처를 입력해주세요"
+                    placeholder="'-' 없이 숫자만 입력"
+                    maxLength={13}
                     className="h-10 text-sm"
                   />
                 ) : (
@@ -870,8 +872,16 @@ function ApplicationDetailPanel({
           <div className="flex flex-1 items-center px-4 py-3">
             {isEditMode ? (
               <Input
+                type="tel"
+                inputMode="numeric"
                 value={editData.applicantContact}
-                onChange={(e) => setEditData({ ...editData, applicantContact: e.target.value })}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^0-9]/g, "");
+                  const formatted = value.length <= 3 ? value : value.length <= 7 ? `${value.slice(0, 3)}-${value.slice(3)}` : `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`;
+                  setEditData({ ...editData, applicantContact: formatted });
+                }}
+                placeholder="'-' 없이 숫자만 입력"
+                maxLength={13}
                 className="h-10 text-sm"
               />
             ) : (
@@ -1130,7 +1140,7 @@ export function ApplicationStatusSection() {
                         )}
                       </p>
 
-                      {/* 하단: 날짜 + 결과 */}
+                      {/* 하단: 날짜 + ���과 */}
                       <div className="mt-2 flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">{app.appliedAt}</span>
                         {app.adminStatus === "심사완료" && app.finalJudgment && (
