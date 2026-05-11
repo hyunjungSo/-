@@ -458,6 +458,7 @@ import { RationaleCard } from "@/components/ui/rationale-card";
 function ApplicationDetailPanel({ application }: { application: Application }) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [showAddressModal, setShowAddressModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [editData, setEditData] = useState({
     // 신청인 정보
     applicantRelation: "owner" as "owner" | "agent",
@@ -515,8 +516,14 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
     }));
   };
 
-  const handleSave = () => {
+  const handleSaveClick = () => {
+    // 컨펌 모달 표시
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmSave = () => {
     // TODO: API 호출하여 수정 내용 저장
+    setShowConfirmModal(false);
     setIsEditMode(false);
   };
 
@@ -926,6 +933,29 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* 컨펌 모달 */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="mx-4 w-full max-w-md rounded-lg bg-background p-6 shadow-xl">
+            <h3 className="mb-2 text-lg font-semibold">수정 내용 저장</h3>
+            <p className="mb-6 text-sm text-muted-foreground">
+              필지 선택을 제외한 정보가 수정됩니다. 저장하시겠습니까?
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowConfirmModal(false)}
+              >
+                취소
+              </Button>
+              <Button onClick={handleConfirmSave}>
+                저장
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>
