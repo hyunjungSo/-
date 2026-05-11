@@ -157,12 +157,18 @@ function LandInfoSection({
   application, 
   isEditMode = false,
   editData,
-  onEditDataChange
+  onEditDataChange,
+  onFileChange,
+  onRemoveFile,
+  MAX_FILES = 5
 }: { 
   application: Application;
   isEditMode?: boolean;
   editData?: LandEditData;
   onEditDataChange?: (data: Partial<LandEditData>) => void;
+  onFileChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onRemoveFile?: (index: number) => void;
+  MAX_FILES?: number;
 }) {
   const isMultipleLands = application.additionalLands && application.additionalLands.length > 0;
   const allLands = isMultipleLands 
