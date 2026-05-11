@@ -85,7 +85,6 @@ function AddressSearchModal({
         <div className="flex items-center justify-between py-2 px-4">
           <h3 className="text-lg font-semibold">주소 검색</h3>
           <Button variant="ghost" className="h-10 w-10 p-0" onClick={onClose}>
-            <X className="!size-4" />
           </Button>
         </div>
         
@@ -728,7 +727,7 @@ export function ApplicationFormSection({
                             onValueChange={(value) => updateLandData(index, "currentUsage", value as LandCategory)}
                           />
                           <p className="text-xs text-muted-foreground">
-                            AI 판단: {getLandUsageLabel(land.landCategory)}
+                            AI ��단: {getLandUsageLabel(land.landCategory)}
                           </p>
                         </div>
                         <div className="space-y-1.5">
