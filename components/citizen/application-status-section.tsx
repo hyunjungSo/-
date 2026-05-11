@@ -160,6 +160,32 @@ function getLandUsageLabel(value: string | undefined): string {
   return option?.label || value;
 }
 
+// 토지 활용 지목 선택 컴포넌트
+function LandUsageSelect({ 
+  value, 
+  onValueChange, 
+  triggerClassName 
+}: { 
+  value: string; 
+  onValueChange: (value: string) => void; 
+  triggerClassName?: string;
+}) {
+  return (
+    <Select value={value} onValueChange={onValueChange}>
+      <SelectTrigger className={triggerClassName || "h-10 w-full bg-background"}>
+        <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
+      </SelectTrigger>
+      <SelectContent>
+        {LAND_USAGE_OPTIONS.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
 // 토지 정보 섹션 컴포넌트 (고용24 스타일 테이블 형태)
 interface LandEditData {
   landUseCategory: string;
@@ -222,7 +248,7 @@ function LandInfoSection({
         )}
       </div>
       
-      {/* 복수 필지일 경우 셀렉트박����������������� 표시 */}
+      {/* 복수 필지일 경우 셀렉트박������������������� 표시 */}
       {isMultipleLands && (
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
@@ -774,7 +800,7 @@ function ApplicationDetailPanel({
         {/* 신청 구분 행 */}
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
-            <span className="text-sm font-medium">신청 구분</span>
+            <span className="text-sm font-medium">신청 ���분</span>
           </div>
           <div className="flex flex-1 items-center px-4 py-3">
             {isEditMode ? (
