@@ -2662,13 +2662,13 @@ export const dummyApplications: Application[] = [
         },
       },
       "land-3parcel-003": {
-        provisionalJudgment: "매수가능",
+        provisionalJudgment: "매수",
         confidence: 80,
         originalArea: 520,
         remainingArea: 300,
         remainingRatio: 57.7,
         judgmentRationale: {
-          summary: "매탄동 102번지: 사다리꼴 형상으로 건축 효율 저하, 매수 가능",
+          summary: "매탄동 102번지: 사다리꼴 형상으로 건축 효율 저하, 매수 대상",
           legalBasis: "「공익사업법」 제74조",
           appliedCriteria: ["사다리꼴 형상으로 건축 효율 저하", "형상지수 불량"],
           detailedExplanation: "사다리꼴 형상으로 인해 효율적인 건축물 배치가 어려워 매수 가능으로 판정합니다.",

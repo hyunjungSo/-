@@ -44,13 +44,8 @@ export function JudgmentStatus({
           badge: "bg-amber-500 text-white hover:bg-amber-500",
           text: "text-amber-500"
         };
-      // AI 판정 결과
-      case "매수가능":
-        return {
-          badge: "bg-green-600 text-white hover:bg-green-600",
-          text: "text-green-600"
-        };
-      case "매수불가":
+      // AI 판정 결과 (매수, 매수 불가)
+      case "매수 불가":
         return {
           badge: "bg-red-500 text-white hover:bg-red-500",
           text: "text-red-500"
