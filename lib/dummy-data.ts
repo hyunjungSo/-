@@ -241,7 +241,7 @@ export const dummyLandInfoList: LandInfo[] = [
     remainingRatio: 30.0,
     landType: "택지",
     landCategory: "대",
-    originalShape: "가로장����형",
+    originalShape: "가로장���형",
     remainingShape: "삼각형",
     originalShapeIndex: 4.2,
     remainingShapeIndex: 5.9,
@@ -1432,7 +1432,7 @@ function generateRationale(
   let physicalConditions: string;
   
   if (land.landType === "농지") {
-    landTypeCriteria = "농지 기준: 면�� 330��� 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
+    landTypeCriteria = "농지 기준: 면적 330��� 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
     physicalConditions = "물리조건: ①도로/수로 상실로 농지 사용 불가 ②농기계 회전 곤란 ③형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "택지") {
     landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (잔여��율 25% 이하 시 1.5배 완화)";
@@ -1714,7 +1714,7 @@ export const dummyApplications: Application[] = [
           "물리조건: 형상 부정형(자루형) 확인됨",
           "면적 기준 경계선상으로 실측 필요",
         ],
-        detailedExplanation: "소재지: 경기도 용인시 처인구 양지면 마성리 137\n토지유형: 대지, 지목: 대\n편입현황: 500㎡ → 잔여 120㎡ (잔여비율 24.0%)\n형상변화: 정방형 → 자루형 (형상지수 +1.2)\n\n※ 면적이 완화기준(135㎡) 근처로 실측 ���인 필요",
+        detailedExplanation: "소재지: 경기도 용인시 처인구 양지면 마성리 137\n토지유형: 대지, 지목: 대\n편입현황: 500㎡ → 잔여 120㎡ (잔여비율 24.0%)\n형상변화: 정방형 → 자루형 (형상지수 +1.2)\n\n※ 면적이 완화기준(135㎡) 근처로 실측 확인 필요",
         manualCheckItems: ["접면도로 상실 여부 현장 확인"],
       },
     },
@@ -2218,7 +2218,7 @@ export const dummyApplications: Application[] = [
       },
     },
     finalJudgment: "매수",
-    reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 �� 필지 모두 접���도로 상실 ���인.",
+    reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 양 필지 모두 접���도로 상실 ���인.",
     finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2필지 대지입니다. 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
     adminName: "김철수",
     statusUpdatedAt: "2026-04-29",
@@ -2426,7 +2426,7 @@ export const dummyApplications: Application[] = [
         conditions: {
           sameOwner: true,
           continuous: false, // 전체는 ��접 아님
-          sameUsage: false, // 전체는 용도 불���치 (답/전)
+          sameUsage: false, // 전체는 용도 불������ (답/전)
         },
         combinedArea: 1480,
         explanation: "4필지 개별 분석 결과: 내기리 200-1, 200-2는 면적 기준 충족 및 형상 불량으로 매수 판정. 만호리 55-1, 55-2는 면적 기준 미충족, 형상 양호로 미해당 판정.",
@@ -2538,7 +2538,7 @@ export const dummyApplications: Application[] = [
       farmMachineDifficulty: true,
       judgmentRationale: {
         summary: "농지 2필지 ���별 분석 - 200-1(전): 세장형 변형으로 농기계 진입 곤란, 200-2(답): 관개수로 상실로 영농 불가",
-        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행��칙 제34조",
+        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
           "200-1(전): 형상지수 4.8 (불량) - 농기계 회전 곤란 ✓",
           "200-1(전): 세장형으로 변형되어 효율적 영농 곤란 ✓",
