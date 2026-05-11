@@ -1650,7 +1650,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
 
                             {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
                             {adminCurrentUsagePerLand[currentParcelId] === "대" && (
-                              <div className="space-y-2 p-3 rounded-lg bg-muted/30">
+                              <div className="space-y-2">
                                 <label className="text-sm font-medium text-foreground">
                                   건축물 용도 선택 <span className="text-destructive">*</span>
                                 </label>
