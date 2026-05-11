@@ -310,7 +310,7 @@ function LandInfoSection({
       {isEditMode && (
         <div className="border-b border-border bg-blue-50 px-4 py-2">
           <p className="text-xs text-blue-700">
-            AI 판단과 실제 현황이 다를 수 있습니다. ��재 토지�� 실제 활용 상황을 입력해 주세요. (필지 주소는 수정 불가)
+            AI 판단과 실제 현황이 다를 수 있습니다. ��재 토지�� 실제 ���용 상황을 입력해 주세요. (필지 주소는 수정 불가)
           </p>
         </div>
       )}
@@ -327,19 +327,19 @@ function LandInfoSection({
               onValueChange={(value) => onEditDataChange({ landUseCategory: value })}
             >
               <SelectTrigger className="h-10 w-full max-w-[200px]">
-                <SelectValue placeholder="선택하세요" />
+                <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
               </SelectTrigger>
               <SelectContent>
-                {landCategories.map((cat) => (
-                  <SelectItem key={cat.value} value={cat.value}>
-                    {cat.label}
-                  </SelectItem>
-                ))}
+                <SelectItem value="대">대(택지)</SelectItem>
+                <SelectItem value="전">전(밭)</SelectItem>
+                <SelectItem value="답">답(논)</SelectItem>
+                <SelectItem value="임">임(임야)</SelectItem>
+                <SelectItem value="잡">그밖의 토지</SelectItem>
               </SelectContent>
             </Select>
           ) : (
             <span className="text-sm">
-              {selectedLand.currentUsage || "-"} {selectedLand.currentUsage && `(${landCategories.find(c => c.value === selectedLand.currentUsage)?.label || ""})`}
+              {selectedLand.currentUsage ? landCategories.find(c => c.value === selectedLand.currentUsage)?.label || "-" : "-"}
             </span>
           )}
         </div>
@@ -928,7 +928,7 @@ function ApplicationDetailPanel({
           </div>
         </div>
 
-        {/* 소유자 연락처 행 */}
+        {/* 소유자 ���락처 행 */}
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
             <span className="text-sm font-medium">소유자 연락처</span>

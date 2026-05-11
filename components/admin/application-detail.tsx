@@ -583,7 +583,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "접면도로 상실",
         met: roadLost,
-        description: roadLost ? "도로 접하지 않아 접근 불��" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유지"
+        description: roadLost ? "도로 접하지 않아 접근 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유지"
       });
       
       if (areaCheckMet || roadLost) {
@@ -1013,7 +1013,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">활용지목</td>
                       <td className="px-4 py-3">전</td>
                       <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">공부상 지목</td>
-                      <td className="px-4 py-3">{applicationLands[selectedLandIndex].landCategory}</td>
+                      <td className="px-4 py-3">{landCategories.find(c => c.value === applicationLands[selectedLandIndex].landCategory)?.label || applicationLands[selectedLandIndex].landCategory}</td>
                     </tr>
                     <tr>
                       <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground align-top">확인항목</td>
@@ -1044,13 +1044,13 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onClick={() => handleAttachmentClick("지적도_용인시_포곡읍_200-1.pdf")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">지적도_용인시_포��읍_200-1.pdf</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">지적도_용인시_포곡읍_200-1.pdf</Badge>
                           </button>
                           <button
                             onClick={() => handleAttachmentClick("���장사진_20260501.jpg")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">��장���진_20260501.jpg</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">���장���진_20260501.jpg</Badge>
                           </button>
                         </div>
                       </td>
@@ -1588,7 +1588,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         
                         return (
                           <>
-                            {/* 지목 참고 정보 - 인접 필지 선택 시 민원인 선택 제외 */}
+                            {/* 지목 참고 정보 - 인접 필지 ��택 시 민원인 선택 제외 */}
                             {(() => {
                               const landData = application.landDataList?.[selectedLandIndex];
                               const citizenUsage = landData?.currentUsage || landData?.actualUsage || currentParcelLandType;
@@ -1609,7 +1609,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                   </div>
                                   <div className="text-center p-2 rounded-md bg-slate-50 border border-slate-200">
                                     <p className="text-xs text-muted-foreground mb-0.5">공부상 지목</p>
-                                    <p className="text-sm font-semibold text-slate-700">{currentParcelLandType || "-"}</p>
+                                    <p className="text-sm font-semibold text-slate-700">{currentParcelLandType ? (landCategories.find(c => c.value === currentParcelLandType)?.label || currentParcelLandType) : "-"}</p>
                                   </div>
                                 </div>
                               );
@@ -1721,8 +1721,8 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             </div>
                             
                             {/* 현장확인 옵션 */}
-                            <div className="space-y-3 pt-2">
-                              <label className="text-sm font-medium text-foreground">현장 확인 항���</label>
+                            <div className="space-y-3 pt-2 border-t">
+                              <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
                               {isViewOnly ? (
                                 <div className="space-y-2 text-sm">
                                   <div className="flex items-center gap-3 p-2">
@@ -1807,7 +1807,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             </Button>
                             {!hasCurrentUsage && (
                               <p className="text-xs text-center text-red-600">
-                                현재 활용 지목을 선택해 주세요
+                                필수값을 선택해 주세요
                               </p>
                             )}
                           </div>
@@ -1816,7 +1816,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     </div>
                   </div>
                 
-                    {/* 우측: ���석결�� 확인 */}
+                    {/* 우���: ���석결�� 확인 */}
                     <div className="w-1/2 space-y-3">
                   {Object.keys(adminLandAIResults).length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center rounded-lg border bg-muted/20">
