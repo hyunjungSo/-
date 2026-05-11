@@ -1496,27 +1496,16 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             현재 활용 지목 <span className="text-destructive">*</span>
                           </Label>
                           <span className="text-xs text-muted-foreground">
-                            공부상 지목: <span className="font-medium text-foreground">{landCategories.find(c => c.value === selectedLand.landCategory)?.label || selectedLand.landCategory}</span>
+                            공부상 지목: <span className="font-medium text-foreground">{getLandUsageLabel(selectedLand.landCategory)}</span>
                           </span>
                         </div>
-                        <Select 
-                          value={currentUsage} 
+                        <LandUsageSelect
+                          value={currentUsage}
                           onValueChange={(value) => {
                             setCurrentUsage(value);
                             if (value !== "대") setLandSubType("");
                           }}
-                        >
-                          <SelectTrigger id="currentUsage" className="h-10 w-full bg-background">
-                            <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="대">대(택지)</SelectItem>
-                            <SelectItem value="전">전(밭)</SelectItem>
-                            <SelectItem value="답">답(논)</SelectItem>
-                            <SelectItem value="임">임(임야)</SelectItem>
-                            <SelectItem value="잡">그밖의 토지</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        />
                         <p className="mt-1.5 text-xs text-muted-foreground">
                           실제 토지 활용 상황에 따라 선택해 주세요.
                         </p>
