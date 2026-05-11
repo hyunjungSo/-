@@ -543,7 +543,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       const waterLost = adminOptions?.waterChannelLost || landData?.waterChannelLost || false;
       const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || false;
       criteriaChecks.push({
-        name: "도로/수로 상실",
+        name: "���로/수로 상실",
         met: waterLost || roadLost,
         description: waterLost 
           ? "관개수로 상실로 농지 ��용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
@@ -1626,7 +1626,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                   {adminCurrentUsagePerLand[currentParcelId] === "전" && "전 (밭)"}
                                   {adminCurrentUsagePerLand[currentParcelId] === "답" && "답 (논)"}
                                   {adminCurrentUsagePerLand[currentParcelId] === "임" && "임 (임야)"}
-                                  {adminCurrentUsagePerLand[currentParcelId] === "잡" && "잡 (잡종지)"}
+                                  {adminCurrentUsagePerLand[currentParcelId] === "잡" && "그 밖의 토지"}
                                   {!adminCurrentUsagePerLand[currentParcelId] && <span className="text-muted-foreground">선택되지 않음</span>}
                                 </div>
                               ) : (
@@ -1642,7 +1642,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                     <SelectItem value="전">전 (밭)</SelectItem>
                                     <SelectItem value="답">답 (논)</SelectItem>
                                     <SelectItem value="임">임 (임야)</SelectItem>
-                                    <SelectItem value="잡">잡 (잡종지)</SelectItem>
+                                    <SelectItem value="잡">그 밖의 토지</SelectItem>
                                   </SelectContent>
                                 </Select>
                               )}
@@ -1721,7 +1721,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             )}
                             
                             {/* 현장확인 옵션 */}
-                            <div className="space-y-3 pt-2">
+                            <div className="space-y-3 pt-2 border-t">
                               <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
                               {isViewOnly ? (
                                 <div className="space-y-2 text-sm">
@@ -1816,7 +1816,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     </div>
                   </div>
                 
-                    {/* 우측: 분석결과 확인 */}
+                    {/* 우측: 분석결�� 확인 */}
                     <div className="w-1/2 space-y-3">
                   {Object.keys(adminLandAIResults).length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center rounded-lg border bg-muted/20">
