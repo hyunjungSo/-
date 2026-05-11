@@ -474,13 +474,13 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
                   value={editData.baseAddress}
                   placeholder="기본주소"
                   readOnly
-                  className="bg-muted text-sm"
+                  className="h-9 bg-muted text-sm"
                 />
                 <Input
                   value={editData.detailAddress}
                   onChange={(e) => setEditData({ ...editData, detailAddress: e.target.value })}
                   placeholder="상세주소를 입력해주세요"
-                  className="text-sm"
+                  className="h-9 text-sm"
                 />
               </div>
             ) : (
