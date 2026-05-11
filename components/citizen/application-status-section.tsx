@@ -585,46 +585,46 @@ function LandInfoSection({
         </div>
       </div>
 
-      {/* 파일 뷰어 다이얼로그 - 전체화면 */}
+      {/* 파일 뷰어 다이얼로그 - 풀페이지 */}
       <Dialog open={fileViewerOpen} onOpenChange={setFileViewerOpen}>
-        <DialogContent className="w-[95vw] max-w-[95vw] h-[95vh] max-h-[95vh] overflow-hidden flex flex-col">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-base">
-              <FileImage className="size-5" />
-              첨부파일 미리보기
-            </DialogTitle>
+        <DialogContent className="w-screen max-w-none h-screen max-h-none rounded-none border-none overflow-hidden flex flex-col p-0">
+          <DialogHeader className="px-6 py-4 border-b bg-background">
+            <div className="flex items-center justify-between">
+              <DialogTitle className="flex items-center gap-2 text-base">
+                <FileImage className="size-5" />
+                첨부파일 미리보기
+              </DialogTitle>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">{selectedFile}</span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5"
+                >
+                  <Download className="size-4" />
+                  다운로드
+                </Button>
+              </div>
+            </div>
           </DialogHeader>
-          <div className="flex-1 overflow-auto">
+          <div className="flex-1 overflow-auto bg-muted/30">
             {selectedFile && (
-              <div className="flex flex-col h-full gap-4">
-                <div className="flex items-center justify-between rounded-lg bg-muted/50 px-4 py-3">
-                  <span className="text-sm font-medium">{selectedFile}</span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-1.5"
-                  >
-                    <Download className="size-4" />
-                    다운로드
-                  </Button>
-                </div>
-                <div className="flex-1 flex items-center justify-center rounded-lg border bg-white p-6">
-                  {getFileType(selectedFile) === 'image' ? (
-                    <img 
-                      src={`/uploads/${selectedFile}`} 
-                      alt={selectedFile}
-                      className="max-w-full max-h-[calc(95vh-180px)] object-contain"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                        (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                      }}
-                    />
-                  ) : null}
-                  <div className={`flex flex-col items-center gap-3 text-muted-foreground ${getFileType(selectedFile) === 'image' ? 'hidden' : ''}`}>
-                    <FileText className="size-16 text-muted-foreground/50" />
-                    <p className="text-sm">미리보기를 지원하지 않는 파일 형식입니다.</p>
-                    <p className="text-xs">파일을 다운로드하여 확인해 주세요.</p>
-                  </div>
+              <div className="flex items-center justify-center w-full h-full p-8">
+                {getFileType(selectedFile) === 'image' ? (
+                  <img 
+                    src={`/uploads/${selectedFile}`} 
+                    alt={selectedFile}
+                    className="max-w-full max-h-[calc(100vh-120px)] object-contain shadow-lg rounded-lg"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                      (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                    }}
+                  />
+                ) : null}
+                <div className={`flex flex-col items-center gap-4 text-muted-foreground ${getFileType(selectedFile) === 'image' ? 'hidden' : ''}`}>
+                  <FileText className="size-24 text-muted-foreground/50" />
+                  <p className="text-base">미리보기를 지원하지 않는 파일 형식입니다.</p>
+                  <p className="text-sm">파일을 다운로드하여 확인해 주세요.</p>
                 </div>
               </div>
             )}
@@ -1244,7 +1244,7 @@ export function ApplicationStatusSection() {
               <FileText className="h-10 w-10 text-muted-foreground" />
               <p className="mt-4 text-sm font-medium text-foreground">신청 내역이 없습니다</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                신규 신청 탭에서 잔여지 매수를 신청해 주세요.
+                신규 신청 탭에서 잔여지 매���를 신청해 주세요.
               </p>
             </div>
           ) : (
