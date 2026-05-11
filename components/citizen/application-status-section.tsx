@@ -559,8 +559,15 @@ function LandInfoSection({
 import { RationaleCard } from "@/components/ui/rationale-card";
 
 // 상세 정보 패널 컴포넌트 (고용24 스타일)
-function ApplicationDetailPanel({ application }: { application: Application }) {
-  const [isEditMode, setIsEditMode] = useState(false);
+function ApplicationDetailPanel({ 
+  application,
+  isEditMode,
+  onEditModeChange
+}: { 
+  application: Application;
+  isEditMode: boolean;
+  onEditModeChange: (value: boolean) => void;
+}) {
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [editData, setEditData] = useState({
@@ -628,7 +635,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
   const handleConfirmSave = () => {
     // TODO: API 호출하여 수정 내용 저장
     setShowConfirmModal(false);
-    setIsEditMode(false);
+    onEditModeChange(false);
   };
 
   const handleCancel = () => {
@@ -651,7 +658,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
       reason: application.reason || "잔여지 매수 신청",
       attachments: [],
     });
-    setIsEditMode(false);
+    onEditModeChange(false);
   };
 
   return (
@@ -690,7 +697,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
             variant="outline"
             size="sm"
             disabled={!canEdit}
-            onClick={() => setIsEditMode(true)}
+            onClick={() => onEditModeChange(true)}
             className="h-8 gap-1.5 text-xs"
           >
             <Pencil className="size-[18px]" />
@@ -968,12 +975,41 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
 
 export function ApplicationStatusSection() {
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [showLeaveWarning, setShowLeaveWarning] = useState(false);
+  const [pendingApplication, setPendingApplication] = useState<Application | null>(null);
 
   // 현재 로그인한 사용자의 신청 목록 (실제로는 사용자 ID로 필터링)
   const myApplications = dummyApplications;
 
   // 첫 번째 신청이 있으면 기본 선택
   const displayedApplication = selectedApplication || (myApplications.length > 0 ? myApplications[0] : null);
+
+  // 목록 클릭 핸들러 - 수정 중이면 경고 표시
+  const handleSelectApplication = (app: Application) => {
+    if (isEditMode && displayedApplication?.id !== app.id) {
+      setPendingApplication(app);
+      setShowLeaveWarning(true);
+    } else {
+      setSelectedApplication(app);
+    }
+  };
+
+  // 경고 확인 - 저장하지 않고 이동
+  const handleConfirmLeave = () => {
+    if (pendingApplication) {
+      setSelectedApplication(pendingApplication);
+      setPendingApplication(null);
+      onEditModeChange(false);
+    }
+    setShowLeaveWarning(false);
+  };
+
+  // 경고 취소 - 현재 수정 계속
+  const handleCancelLeave = () => {
+    setPendingApplication(null);
+    setShowLeaveWarning(false);
+  };
 
   return (
     <div>
@@ -1003,7 +1039,7 @@ export function ApplicationStatusSection() {
                 return (
                   <li key={app.id}>
                     <button
-                      onClick={() => setSelectedApplication(app)}
+                      onClick={() => handleSelectApplication(app)}
                       className={`group w-full px-4 py-3 text-left transition-all ${
                         isSelected 
                           ? "border-l-2 border-l-primary bg-primary/5" 
@@ -1051,7 +1087,11 @@ export function ApplicationStatusSection() {
 
         {/* 오른쪽: 신청 상세 정보 */}
         {displayedApplication ? (
-          <ApplicationDetailPanel application={displayedApplication} />
+          <ApplicationDetailPanel 
+            application={displayedApplication} 
+            isEditMode={isEditMode}
+            onEditModeChange={setIsEditMode}
+          />
         ) : (
           <div className="overflow-hidden rounded-lg border border-border">
             <div className="border-b border-border bg-muted/50 px-4 py-2.5">
@@ -1066,6 +1106,26 @@ export function ApplicationStatusSection() {
           </div>
         )}
       </div>
+
+      {/* 수정 중 이동 경고 모달 */}
+      {showLeaveWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="mx-4 w-full max-w-md rounded-lg bg-background p-6 shadow-xl">
+            <h3 className="mb-2 text-lg font-semibold">수정 내용이 저장되지 않습니다</h3>
+            <p className="mb-6 text-sm text-muted-foreground">
+              현재 수정 중인 내용이 있습니다. 저장하지 않고 다른 신청으로 이동하시겠습니까?
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={handleCancelLeave}>
+                계속 수정하기
+              </Button>
+              <Button variant="destructive" onClick={handleConfirmLeave}>
+                저장하지 않고 이동
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
