@@ -180,7 +180,7 @@ function LandInfoSection({
 
   return (
     <div className={`overflow-hidden rounded-lg border transition-colors duration-300 ${isEditMode ? "border-primary/50 bg-primary/5" : "border-border"}`}>
-      <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
+      <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
         <h4 className="font-semibold text-foreground">토지 정보</h4>
         {isMultipleLands && (
           <span className="flex items-center gap-1 rounded bg-violet-100 px-2 py-0.5 text-xs font-medium text-violet-700">
@@ -546,7 +546,7 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
   return (
     <div className="space-y-4 overflow-visible">
       {/* 신청 정보 테이블 */}
-      <div className="overflow-hidden rounded-lg border border-border">
+      <div className={`overflow-hidden rounded-lg border transition-colors duration-300 ${isEditMode ? "border-primary/50 bg-primary/5" : "border-border"}`}>
         <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
           <h4 className="font-semibold text-foreground">신청 정보</h4>
           {/* 수정/저장/취소 버튼 - 접수완료 상태에서만 활성화 */}
