@@ -206,7 +206,7 @@ function LandInfoSection({
         )}
       </div>
       
-      {/* 복수 필지일 경우 셀렉트박������� 표시 */}
+      {/* 복수 필지일 경우 셀렉트박��������� 표시 */}
       {isMultipleLands && (
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
@@ -322,24 +322,14 @@ function LandInfoSection({
         </div>
         <div className="flex flex-1 items-center px-4 py-3">
           {isEditMode && editData && onEditDataChange ? (
-            <Select
+            <LandUsageSelect
               value={editData.landUseCategory || "대"}
               onValueChange={(value) => onEditDataChange({ landUseCategory: value })}
-            >
-              <SelectTrigger className="h-10 w-full max-w-[200px]">
-                <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="대">대(택지)</SelectItem>
-                <SelectItem value="전">전(밭)</SelectItem>
-                <SelectItem value="답">답(논)</SelectItem>
-                <SelectItem value="임">임(임야)</SelectItem>
-                <SelectItem value="잡">그밖의 토지</SelectItem>
-              </SelectContent>
-            </Select>
+              triggerClassName="h-10 w-full max-w-[200px] bg-background"
+            />
           ) : (
             <span className="text-sm">
-              {selectedLand.currentUsage ? landCategories.find(c => c.value === selectedLand.currentUsage)?.label || "-" : "-"}
+              {getLandUsageLabel(selectedLand.currentUsage)}
             </span>
           )}
         </div>

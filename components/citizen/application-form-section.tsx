@@ -722,25 +722,20 @@ export function ApplicationFormSection({
                       {/* 활용 지목 / 공부상 지목 / 토지 모양 - 한 열 정렬 */}
                       <div className="grid gap-4 sm:grid-cols-3">
                         <div className="space-y-1.5">
-                          <label className="text-sm font-medium">���용 지��� <span className="text-destructive">*</span></label>
-                          <Select
+                          <label className="text-sm font-medium">활용 지목 <span className="text-destructive">*</span></label>
+                          <LandUsageSelect
                             value={landData.currentUsage}
                             onValueChange={(value) => updateLandData(index, "currentUsage", value as LandCategory)}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="현재 활용 지목을 선택해 주세요" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="대">대(택지)</SelectItem>
-                              <SelectItem value="전">전(밭)</SelectItem>
-                              <SelectItem value="답">답(논)</SelectItem>
-                              <SelectItem value="임">임(임야)</SelectItem>
-                              <SelectItem value="잡">그밖의 토지</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          />
                           <p className="text-xs text-muted-foreground">
-                            AI 판단: {landCategories.find(c => c.value === land.landCategory)?.label || land.landCategory}
+                            AI 판단: {getLandUsageLabel(land.landCategory)}
                           </p>
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="text-sm font-medium text-muted-foreground">공부상 지목</label>
+                          <div className="flex w-fit items-center whitespace-nowrap rounded-md border border-input bg-muted px-3 py-2 h-10 text-sm text-muted-foreground cursor-not-allowed opacity-70">
+                            {getLandUsageLabel(land.landCategory)}
+                          </div>
                         </div>
                         <div className="space-y-1.5">
                           <label className="text-sm font-medium text-muted-foreground">공부상 지목</label>
