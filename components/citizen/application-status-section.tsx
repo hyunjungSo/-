@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { dummyApplications } from "@/lib/dummy-data";
 import type { Application, AdminStatus } from "@/lib/types";
@@ -15,7 +17,9 @@ import {
   AlertTriangle,
   Info,
   ChevronDown,
-  Pencil
+  Pencil,
+  Save,
+  X
 } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { AdminStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
@@ -157,22 +161,72 @@ import { RationaleCard } from "@/components/ui/rationale-card";
 
 // 상세 정보 패널 컴포넌트 (고용24 스타일)
 function ApplicationDetailPanel({ application }: { application: Application }) {
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editData, setEditData] = useState({
+    applicantName: application.applicantName,
+    applicantContact: application.applicantContact,
+    applicantAddress: application.applicantAddress,
+    reason: application.reason,
+  });
+
+  const canEdit = application.adminStatus === "접수완료";
+
+  const handleSave = () => {
+    // TODO: API 호출하여 수정 내용 저장
+    console.log("[v0] Saving edited data:", editData);
+    setIsEditMode(false);
+  };
+
+  const handleCancel = () => {
+    // 원래 데이터로 복원
+    setEditData({
+      applicantName: application.applicantName,
+      applicantContact: application.applicantContact,
+      applicantAddress: application.applicantAddress,
+      reason: application.reason,
+    });
+    setIsEditMode(false);
+  };
+
   return (
     <div className="space-y-4 overflow-visible">
       {/* 신청 정보 테이블 */}
       <div className="overflow-hidden rounded-lg border border-border">
         <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
           <h4 className="font-semibold text-foreground">신청 정보</h4>
-          {/* 수정 버튼 - 접수완료 상태에서만 활성화 */}
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={application.adminStatus !== "접수완료"}
-            className="h-7 gap-1.5 text-xs"
-          >
-            <Pencil className="h-3.5 w-3.5" />
-            수정
-          </Button>
+          {/* 수정/저장/취소 버튼 - 접수완료 상태에서만 활성화 */}
+          {isEditMode ? (
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCancel}
+                className="h-7 gap-1.5 text-xs"
+              >
+                <X className="h-3.5 w-3.5" />
+                취소
+              </Button>
+              <Button
+                size="sm"
+                onClick={handleSave}
+                className="h-7 gap-1.5 text-xs"
+              >
+                <Save className="h-3.5 w-3.5" />
+                저장
+              </Button>
+            </div>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={!canEdit}
+              onClick={() => setIsEditMode(true)}
+              className="h-7 gap-1.5 text-xs"
+            >
+              <Pencil className="h-3.5 w-3.5" />
+              수정
+            </Button>
+          )}
         </div>
         
         {/* 접수번호 행 */}
@@ -195,6 +249,78 @@ function ApplicationDetailPanel({ application }: { application: Application }) {
           </div>
           <div className="flex flex-1 items-center px-4 py-3">
             <span className="text-sm">{application.appliedAt}</span>
+          </div>
+        </div>
+
+        {/* 신청인명 행 */}
+        <div className="flex border-b border-border">
+          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">신청인명</span>
+          </div>
+          <div className="flex flex-1 items-center px-4 py-3">
+            {isEditMode ? (
+              <Input
+                value={editData.applicantName}
+                onChange={(e) => setEditData({ ...editData, applicantName: e.target.value })}
+                className="h-8 text-sm"
+              />
+            ) : (
+              <span className="text-sm">{application.applicantName}</span>
+            )}
+          </div>
+        </div>
+
+        {/* 연락처 행 */}
+        <div className="flex border-b border-border">
+          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">연락처</span>
+          </div>
+          <div className="flex flex-1 items-center px-4 py-3">
+            {isEditMode ? (
+              <Input
+                value={editData.applicantContact}
+                onChange={(e) => setEditData({ ...editData, applicantContact: e.target.value })}
+                className="h-8 text-sm"
+              />
+            ) : (
+              <span className="text-sm">{application.applicantContact}</span>
+            )}
+          </div>
+        </div>
+
+        {/* 주소 행 */}
+        <div className="flex border-b border-border">
+          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">주소</span>
+          </div>
+          <div className="flex flex-1 items-center px-4 py-3">
+            {isEditMode ? (
+              <Input
+                value={editData.applicantAddress}
+                onChange={(e) => setEditData({ ...editData, applicantAddress: e.target.value })}
+                className="h-8 text-sm"
+              />
+            ) : (
+              <span className="text-sm">{application.applicantAddress}</span>
+            )}
+          </div>
+        </div>
+
+        {/* 신청사유 행 */}
+        <div className="flex">
+          <div className="flex w-28 shrink-0 items-start bg-muted/30 px-4 py-3">
+            <span className="text-sm font-medium">신청사유</span>
+          </div>
+          <div className="flex flex-1 items-center px-4 py-3">
+            {isEditMode ? (
+              <Textarea
+                value={editData.reason}
+                onChange={(e) => setEditData({ ...editData, reason: e.target.value })}
+                className="min-h-[80px] text-sm"
+              />
+            ) : (
+              <span className="text-sm">{application.reason}</span>
+            )}
           </div>
         </div>
         
@@ -344,7 +470,7 @@ export function ApplicationStatusSection() {
             <div className="flex h-48 items-center justify-center">
               <div className="text-center">
                 <FileText className="mx-auto h-8 w-8 text-muted-foreground" />
-                <p className="mt-2 text-sm text-muted-foreground">신청 내역을 선택해주세요</p>
+                <p className="mt-2 text-sm text-muted-foreground">신청 내역을 선택해주���요</p>
               </div>
             </div>
           </div>
