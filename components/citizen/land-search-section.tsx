@@ -13,8 +13,7 @@ import { dummyLandInfoList } from "@/lib/dummy-data";
 import type { LandInfo, AIAnalysisResult, JudgmentRationale, ApplicationCartItem } from "@/lib/types";
 import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ClipboardList, Plus, Trash2, X, User, Layers, PlayCircle } from "lucide-react";
 import { AIIcon } from "@/components/ui/ai-icon";
-import { LandUsageSelect, getLandUsageLabel } from "@/components/common/land-usage-select";
-import { BuildingTypeSelect } from "@/components/common/building-type-select";
+
 
 interface LandSearchSectionProps {
   onLandSelect: (land: LandInfo, aiResult: AIAnalysisResult) => void;
@@ -179,7 +178,7 @@ const regionData = {
     "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "음양리"],
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
     "향남읍": ["구문천리", "도이리", "발안리", "상신리", "제암리", "평리", "행정리"],
-    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "천����"],
+    "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "천���"],
     "비봉면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
     "마도면": ["백곡리", "송정리", "쌍송리", "청원리", "해문리"],
     "남양읍": ["남양리", "문호리", "북양리", "송림리", "신남리"],
@@ -236,7 +235,7 @@ const regionData = {
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
     "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["기곡���", "효���리", "금수리", "금산리"],
+    "도고면": ["기곡리", "효���리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // 세종특별자치시
     "조치원읍": [],
@@ -410,7 +409,7 @@ function simulateAIAnalysis(
   } else if (metAutoCriteria >= 1) {
     provisionalJudgment = "수용가능";
   } else {
-    provisionalJudgment = "수용����";
+    provisionalJudgment = "수용불��";
   }
 
   const judgmentRationale: JudgmentRationale = generateJudgmentRationale(
@@ -1542,10 +1541,18 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     <Label htmlFor="landSubType" className="mb-2 block text-sm font-medium">
                       건축물 용도 선택 <span className="text-destructive">*</span>
                     </Label>
-                    <BuildingTypeSelect
-                      value={landSubType}
-                      onValueChange={(value) => setLandSubType(value as typeof landSubType)}
-                    />
+                    <Select value={landSubType} onValueChange={(value) => setLandSubType(value as typeof landSubType)}>
+                      <SelectTrigger id="landSubType" className="h-10 w-full bg-background">
+                        <SelectValue placeholder="건축물 용도를 선택해 주세요" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
+                        <SelectItem value="residential-multi">주거용 - 연립/다세대 (기준: 165㎡)</SelectItem>
+                        <SelectItem value="residential-apartment">주거용 - 아파트 (기준: 60㎡)</SelectItem>
+                        <SelectItem value="commercial">���업용 (기준: 150㎡)</SelectItem>
+                        <SelectItem value="industrial">공업용 (기준: 330㎡)</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <p className="mt-1.5 text-xs text-muted-foreground">
                       택지 유형에 따라 매수 기준 면적이 달라집니다.
                     </p>
