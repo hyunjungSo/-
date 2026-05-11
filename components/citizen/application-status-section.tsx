@@ -558,21 +558,14 @@ function LandInfoSection({
                     {application.attachments.map((fileName, index) => (
                       <li
                         key={index}
-                        className="flex items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2"
+                        className="flex items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2 cursor-pointer hover:bg-gray-50 transition-colors"
+                        onClick={() => openFileViewer(fileName)}
+                        title="파일 보기"
                       >
                         <span className="truncate text-xs text-foreground">
                           {fileName}
                         </span>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="h-7 w-7 p-0 text-muted-foreground hover:text-primary"
-                          title="파일 보기"
-                          onClick={() => openFileViewer(fileName)}
-                        >
-                          <Eye className="size-[14px]" />
-                        </Button>
+                        <Eye className="size-[14px] text-muted-foreground" />
                       </li>
                     ))}
                   </ul>
