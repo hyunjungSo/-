@@ -75,7 +75,7 @@ export default function ReviewDocumentPage({
 
   // 소유자 의견
   const [ownerOpinion, setOwnerOpinion] = useState(
-    "토지 활용도가 현저히 저하되어, 경제적 가치가 현저히 하락하게 되었으니 수용 요청"
+    "토지 활용도가 현저히 저하되어, 경제적 가치가 현저히 하락하게 되었으니 매수 요청"
   );
 
   // 심의위원회 결정
@@ -235,7 +235,7 @@ export default function ReviewDocumentPage({
     setIsEditing(true);
   };
 
-  // 필지별 수용여부 변경 핸들러
+  // 필지별 매수여부 변경 핸들러
   const handlePurchaseDecisionChange = (index: number, decision: "O" | "X" | "-" | "선택") => {
     setLandParcels((prev) => {
       const updated = prev.map((parcel, i) =>
@@ -308,7 +308,7 @@ export default function ReviewDocumentPage({
                 {/* 제목 */}
                 <div className="mb-6 text-center">
                   <h2 className="text-xl font-bold text-foreground sm:text-2xl">
-                    잔여지 수용여부 심의서({documentMeta.sectionNumber})[{documentMeta.reviewNumber}]
+                    잔여지 매수여부 심의서({documentMeta.sectionNumber})[{documentMeta.reviewNumber}]
                   </h2>
                 </div>
 
@@ -422,7 +422,7 @@ export default function ReviewDocumentPage({
                           잔여비율
                         </td>
                         <td className="border border-foreground bg-primary/10 px-2 py-1 text-center text-base font-semibold text-primary">
-                          수용여부
+                          매수여부
                         </td>
                       </tr>
                       {landParcels.map((parcel, index) => (
@@ -477,10 +477,10 @@ export default function ReviewDocumentPage({
                                         선택
                                       </SelectItem>
                                       <SelectItem value="O" className="font-bold text-primary">
-                                        O (수용가능)
+                                        O (매수)
                                       </SelectItem>
                                       <SelectItem value="X" className="font-bold text-destructive">
-                                        X (수용불가)
+                                        X (기각)
                                       </SelectItem>
                                       <SelectItem value="-" className="text-muted-foreground">
                                         - (미정)
@@ -531,7 +531,7 @@ export default function ReviewDocumentPage({
                           className="border border-foreground bg-muted px-2 py-1 text-center text-base font-medium text-foreground"
                         >
                           심의위원회결정{" "}
-                          <span className="text-muted-foreground">(수용가능시 O, 수용불가시 X표시)</span>
+                          <span className="text-muted-foreground">(매수시 O, 기각시 X표시)</span>
                         </td>
                       </tr>
                       <tr>
