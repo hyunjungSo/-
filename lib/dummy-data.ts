@@ -1023,7 +1023,7 @@ export const dummyLandInfoList: LandInfo[] = [
     ],
   },
   // ===== 혼합 케이스 (일부 매수 + 일부 미해당) =====
-  // 4필지 �� 2필지 매수, 나머지 2필지 미해당
+  // 4���지 중 2필지 매수, 나머지 2필지 미해당
   {
     id: "land-mixed-001",
     address: "경기도 평택시 포승읍 내기리 200-1",
@@ -2218,7 +2218,7 @@ export const dummyApplications: Application[] = [
       },
     },
     finalJudgment: "매수",
-    reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 양 필지 모두 접면도로 상실 확인.",
+    reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 양 필지 모두 접면도로 상실 ���인.",
     finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2필지 대지입니다. 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
     adminName: "김철수",
     statusUpdatedAt: "2026-04-29",
@@ -2574,7 +2574,7 @@ export const dummyApplications: Application[] = [
           "토지유형: 농지 (전, 답)",
           "200-1(전): 형상지수 4.8(불량), 농기계 회전 곤란 현장 확인 ✓",
           "200-2(답): 형상지수 5.2(불량), 관개수로 상실 현장 확인 ✓",
-          "두 필지 ���두 효율적 영농 곤란으로 매수 기준 충족",
+          "두 필지 모두 효율적 영농 곤란으로 매수 기준 충족",
         ],
         detailedExplanation: "둔전리 200-1(전, 1,850㎡→1,230㎡): 현장 확인 결과 세장형 형태로 농기계 진입 및 회전이 곤란하여 효율적인 밭농사가 어려움.\n둔전리 200-2(답, 2,100㎡→1,250㎡): 현장 확인 결과 도로 편입으로 관개수로가 절단되어 논농사 불가.",
         manualCheckItems: ["최종 형상 확인 완료", "농업인 영농 현황 확인"],
@@ -2713,24 +2713,13 @@ export const dummyApplications: Application[] = [
   },
 ];
 
-// 법정 지목 목록
+// 현재 활용 지목 목록
 export const landCategories = [
-  { value: "과", label: "과수원" },
-  { value: "구", label: "구거" },
-  { value: "답", label: "답" },
-  { value: "대", label: "택지" },
-  { value: "도", label: "도로" },
-  { value: "목", label: "목장용지" },
-  { value: "묘", label: "묘지" },
-  { value: "양", label: "양어장" },
-  { value: "임", label: "임야" },
+  { value: "대", label: "대(택지)" },
+  { value: "전", label: "전(밭)" },
+  { value: "답", label: "답(논)" },
+  { value: "임", label: "임(임야)" },
   { value: "잡", label: "그 밖의 토지" },
-  { value: "장", label: "공장용지" },
-  { value: "전", label: "전" },
-  { value: "제", label: "제방" },
-  { value: "주유소", label: "주유소용지" },
-  { value: "창", label: "창고용지" },
-  { value: "천", label: "하천" },
 ] as const;
 
 // 토지 형상 목록
@@ -2738,7 +2727,7 @@ export const landShapes = {
   regular: [
     { value: "정방형", label: "정방형" },
     { value: "가로장방형", label: "가로장방형" },
-    { value: "세로장방��", label: "세로장방형" },
+    { value: "세로장방형", label: "세로장방형" },
   ],
   irregular: [
     { value: "변형사다리형", label: "변��사다리형" },

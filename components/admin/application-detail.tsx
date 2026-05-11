@@ -250,6 +250,9 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 필지별 건축물 용도 상태
   const [adminLandSubTypePerLand, setAdminLandSubTypePerLand] = useState<Record<string, string>>({});
   
+  // 필지별 토지 모양 상태
+  const [adminLandShapePerLand, setAdminLandShapePerLand] = useState<Record<string, string>>({});
+  
   // AI 결과 뷰 모드: "citizen" (민원인 신청 결과) | "admin" (관리자 재판독 결과)
   const [aiResultViewMode, setAiResultViewMode] = useState<"citizen" | "admin">("citizen");
   
@@ -543,7 +546,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         name: "도로/수로 상실",
         met: waterLost || roadLost,
         description: waterLost 
-          ? "관개수로 상실로 ���지 사용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
+          ? "관개수로 상실로 농지 ��용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
           : (roadLost ? "접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "도로/수로 �����")
       });
       
@@ -1645,6 +1648,43 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                               )}
                             </div>
                             
+                            {/* 토지 모양 */}
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium text-foreground">
+                                토지 모양 <span className="text-destructive">*</span>
+                              </label>
+                              {isViewOnly ? (
+                                <div className="h-10 px-3 py-2 border rounded-md bg-muted/30 flex items-center text-sm">
+                                  {adminLandShapePerLand[currentParcelId] ? (
+                                    <>
+                                      {landShapes.regular.concat(landShapes.irregular).find(s => s.value === adminLandShapePerLand[currentParcelId])?.label}
+                                    </>
+                                  ) : (
+                                    <span className="text-muted-foreground">선택되지 않음</span>
+                                  )}
+                                </div>
+                              ) : (
+                                <Select 
+                                  value={adminLandShapePerLand[currentParcelId] || ""} 
+                                  onValueChange={(value) => setAdminLandShapePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
+                                >
+                                  <SelectTrigger className="h-10 bg-background">
+                                    <SelectValue placeholder="토지 모양을 선택해 주세요" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">정형</div>
+                                    {landShapes.regular.map((shape) => (
+                                      <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
+                                    ))}
+                                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">비정형</div>
+                                    {landShapes.irregular.map((shape) => (
+                                      <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              )}
+                            </div>
+
                             {/* 건축물 용도 선택 - 현재 활용 지목이 "대"인 경우만 표시 */}
                             {adminCurrentUsagePerLand[currentParcelId] === "대" && (
                               <div className="space-y-2 p-3 rounded-lg bg-muted/30">
@@ -1681,7 +1721,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             )}
                             
                             {/* 현장확인 옵션 */}
-                            <div className="space-y-3 pt-2">
+                            <div className="space-y-3 pt-2 border-t">
                               <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
                               {isViewOnly ? (
                                 <div className="space-y-2 text-sm">
