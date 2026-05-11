@@ -540,7 +540,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         met: waterLost || roadLost,
         description: waterLost 
           ? "관개수로 상실로 농지 사용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
-          : (roadLost ? "접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "도로/수로 유��")
+          : (roadLost ? "접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "도로/수로 유���")
       });
       
       // 3. 농기계 회전 곤��, 형상 부정형 변경
@@ -2163,7 +2163,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               className="absolute right-4 top-4 z-10 h-10 w-10 p-0"
               onClick={() => setIsDetailPanelExpanded(false)}
             >
-              <X className="h-6 w-6" />
+              <X className="h-8 w-8" />
             </Button>
             
             {/* 패널 내용 - 2단 레이아웃 */}

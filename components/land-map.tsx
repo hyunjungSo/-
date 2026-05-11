@@ -508,7 +508,7 @@ export function LandMap({
             className="absolute top-1 right-1 h-10 w-10 p-0 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
             onClick={toggleMeasureMode}
           >
-            <X className="h-6 w-6" />
+            <X className="h-8 w-8" />
           </Button>
         </div>
       )}
