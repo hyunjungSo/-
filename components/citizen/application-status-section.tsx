@@ -585,9 +585,9 @@ function LandInfoSection({
         </div>
       </div>
 
-      {/* 파일 뷰어 다이얼로그 */}
+      {/* 파일 뷰어 다이얼로그 - 전체화면 */}
       <Dialog open={fileViewerOpen} onOpenChange={setFileViewerOpen}>
-        <DialogContent className="max-w-3xl max-h-[85vh] overflow-hidden flex flex-col">
+        <DialogContent className="w-[95vw] max-w-[95vw] h-[95vh] max-h-[95vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-base">
               <FileImage className="size-5" />
@@ -596,7 +596,7 @@ function LandInfoSection({
           </DialogHeader>
           <div className="flex-1 overflow-auto">
             {selectedFile && (
-              <div className="space-y-4">
+              <div className="flex flex-col h-full gap-4">
                 <div className="flex items-center justify-between rounded-lg bg-muted/50 px-4 py-3">
                   <span className="text-sm font-medium">{selectedFile}</span>
                   <Button
@@ -608,12 +608,12 @@ function LandInfoSection({
                     다운로드
                   </Button>
                 </div>
-                <div className="flex items-center justify-center rounded-lg border bg-white p-6 min-h-[400px]">
+                <div className="flex-1 flex items-center justify-center rounded-lg border bg-white p-6">
                   {getFileType(selectedFile) === 'image' ? (
                     <img 
                       src={`/uploads/${selectedFile}`} 
                       alt={selectedFile}
-                      className="max-w-full max-h-[500px] object-contain"
+                      className="max-w-full max-h-[calc(95vh-180px)] object-contain"
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = 'none';
                         (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
@@ -1143,7 +1143,7 @@ function ApplicationDetailPanel({
           {application.reviewerComment && (
             <div className="flex border-t border-border">
               <div className="flex w-28 shrink-0 bg-muted/30 px-4 py-3">
-                <span className="text-sm font-medium">심사 의견</span>
+                <span className="text-sm font-medium">��사 의견</span>
               </div>
               <div className="flex flex-1 px-4 py-3">
                 <p className="text-sm text-muted-foreground">{application.reviewerComment}</p>
