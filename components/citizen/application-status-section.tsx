@@ -591,6 +591,7 @@ function ApplicationDetailPanel({
   });
 
   const canEdit = application.adminStatus === "접수완료";
+  const [showEditDisabledAlert, setShowEditDisabledAlert] = useState(false);
   const MAX_FILES = 10;
 
   const handleAddressSelect = (address: { postalCode: string; address: string }) => {
@@ -694,8 +695,13 @@ function ApplicationDetailPanel({
           <Button
             variant="outline"
             size="sm"
-            disabled={!canEdit}
-            onClick={() => onEditModeChange(true)}
+            onClick={() => {
+              if (canEdit) {
+                onEditModeChange(true);
+              } else {
+                setShowEditDisabledAlert(true);
+              }
+            }}
             className="h-8 gap-1.5 text-xs"
           >
             <Pencil className="size-[18px]" />
@@ -962,6 +968,23 @@ function ApplicationDetailPanel({
               </Button>
               <Button onClick={handleConfirmSave}>
                 저장
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 수정 불가 안내 모달 */}
+      {showEditDisabledAlert && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="mx-4 w-full max-w-md rounded-lg bg-background p-6 shadow-xl">
+            <h3 className="mb-2 text-lg font-semibold">수정이 불가합니다</h3>
+            <p className="mb-6 text-sm text-muted-foreground">
+              현재 담당자가 신청 내용을 검토 중입니다. 검토가 진행 중인 신청 건은 수정할 수 없습니다. 수정이 필요하신 경우 담당자에게 문의해 주세요.
+            </p>
+            <div className="flex justify-end">
+              <Button onClick={() => setShowEditDisabledAlert(false)}>
+                확인
               </Button>
             </div>
           </div>
