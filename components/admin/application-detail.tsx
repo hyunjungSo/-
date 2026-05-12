@@ -208,7 +208,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // AI 결과와 다른 최종 판정 시 사유 필수
   const [adminOverrideReason, setAdminOverrideReason] = useState("");
   
-  // 필지별 검토 �������이터 업데이트 함수
+  // 필지별 검토 ���������이터 업데이트 함수
   const updateLandReviewData = (index: number, field: keyof LandReviewData, value: LandReviewData[keyof LandReviewData]) => {
     setLandReviewDataList(prev => {
       const newList = [...prev];
@@ -1415,8 +1415,8 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   
                   {/* 필지 선택 + 지적도 한 행 배치 */}
                   <div className="relative flex gap-3">
-                    {/* 필지 선택 목록 */}
-                    <div className="w-[40%] shrink-0 rounded-lg bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
+                    {/* 필지 선택 목록 (30%) */}
+                    <div className="w-[30%] shrink-0 rounded-lg bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
                       {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 표시 */}
                       {applicationLands[selectedLandIndex] && (
                         <div 
