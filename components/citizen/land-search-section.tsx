@@ -597,7 +597,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const [selectedRi, setSelectedRi] = useState<string>("");
   const [jibun, setJibun] = useState<string>("");
   
-  // 검색 결과 ��태
+  // 검색 결과 ���태
   const [searchResults, setSearchResults] = useState<LandInfo[]>([]);
   const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -1750,7 +1750,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     return (
                       <div className="space-y-2">
                         <div className="rounded-lg bg-red-50 border border-red-200 p-4 text-center">
-                          <p className="text-sm font-medium text-red-700">
+                          <p className="text-sm font-medium text-red-600">
                             잔여지가 없어 매수 신청이 불가합니다
                           </p>
                           <p className="mt-1.5 text-xs text-red-600">
