@@ -543,7 +543,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       const waterLost = adminOptions?.waterChannelLost || landData?.waterChannelLost || false;
       const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || false;
       criteriaChecks.push({
-        name: "�������로/수로 상실",
+        name: "���������로/수로 상실",
         met: waterLost || roadLost,
         description: waterLost 
           ? "관개수로 상실로 농지 ��용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
@@ -1047,7 +1047,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             <Badge variant="outline" className="font-normal cursor-pointer">지적도_용인시_포곡읍_200-1.pdf</Badge>
                           </button>
                           <button
-                            onClick={() => handleAttachmentClick("���장사진_20260501.jpg")}
+                            onClick={() => handleAttachmentClick("���장사��_20260501.jpg")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
                             <Badge variant="outline" className="font-normal cursor-pointer">���장���진_20260501.jpg</Badge>
@@ -1319,8 +1319,21 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                           >
                             <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                             <div className="flex-1">
-                              <div className="flex items-center justify-between">
-                                <h4 className="text-sm font-semibold text-foreground">상세 판독 결과</h4>
+                              <div className="flex items-center justify-between gap-2">
+                                <div className="flex items-center gap-2">
+                                  <h4 className="text-sm font-semibold text-foreground">상세 판독 결과</h4>
+                                  {(() => {
+                                    const landResult = landAIResults[land.id];
+                                    const judgment = landResult?.provisionalJudgment || aiResult?.provisionalJudgment;
+                                    return (
+                                      <JudgmentStatus 
+                                        judgment={judgment || "분석중"} 
+                                        variant="badge" 
+                                        size="sm"
+                                      />
+                                    );
+                                  })()}
+                                </div>
                                 <Button variant="ghost" size="sm" className="h-6 px-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity">
                                   <Maximize2 className="h-3 w-3 mr-1" />
                                   확대 보기
