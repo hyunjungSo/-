@@ -260,7 +260,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     </TableCell>
                     <TableCell>{app.applicantName}</TableCell>
                     <TableCell>{app.appliedAt}</TableCell>
-                    <TableCell>
+                    <TableCell style={{ width: "220px" }}>
                       <div className="flex items-center gap-2">
                         <span>{app.landInfo.address}</span>
                         {(app.additionalLands?.length || 0) >= 1 && (
