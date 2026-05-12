@@ -1544,7 +1544,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       </SelectContent>
                     </Select>
                     <p className="mt-1.5 text-xs text-muted-foreground">
-                      택지 유형에 따라 매수 기준 면적이 달라집니다.
+                      택지 ��형에 따라 매수 기준 면적이 달라집니다.
                     </p>
                   </div>
                 )}
@@ -1568,7 +1568,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             <p className="text-xs text-muted-foreground mt-0.5">{selectedLand.address}</p>
                           </div>
                           <Badge 
-                            className={`px-3 py-1 text-sm font-bold ${
+                            className={`px-3 py-1 text-sm font-semibold ${
                               aiResult.provisionalJudgment === "수용가능" 
                                 ? "bg-green-600 text-white" 
                                 : aiResult.provisionalJudgment === "심의위원회 이관"
