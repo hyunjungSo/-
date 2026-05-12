@@ -189,7 +189,7 @@ export function JudgmentSummaryBadge({
       <HoverCardTrigger asChild>
         {badges}
       </HoverCardTrigger>
-      <HoverCardContent className="w-64" align="start">
+      <HoverCardContent className="w-auto min-w-[160px]" align="start">
         <div className="space-y-2">
           <p className="text-sm font-semibold">심사 결과 상세</p>
           <div className="space-y-1.5 max-h-48 overflow-y-auto">
