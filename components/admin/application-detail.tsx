@@ -208,7 +208,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // AI 결과와 다른 최종 판정 시 사유 필수
   const [adminOverrideReason, setAdminOverrideReason] = useState("");
   
-  // 필지별 검토 ���������이터 업데이트 함수
+  // 필지별 검토 �����������이터 업데이트 함수
   const updateLandReviewData = (index: number, field: keyof LandReviewData, value: LandReviewData[keyof LandReviewData]) => {
     setLandReviewDataList(prev => {
       const newList = [...prev];
@@ -1058,7 +1058,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onClick={() => handleAttachmentClick("토지대장_용인시_포곡읍_200-1.pdf")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">토���대장_���인시_포곡읍_200-1.pdf</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">������대장_���인시_포곡읍_200-1.pdf</Badge>
                           </button>
                           <button
                             onClick={() => handleAttachmentClick("지적도_용인시_포곡읍_200-1.pdf")}
@@ -1105,7 +1105,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   </div>
                   
                   {/* 지적도 - 선택된 필지만 표시 */}
-                  <div className="h-[400px] rounded-lg overflow-hidden border">
+                  <div className="h-[520px] rounded-lg overflow-hidden border">
                     <LeafletMap
                       parcels={(() => {
                         // 선택된 필지만 표시
@@ -1329,7 +1329,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             </div>
                           )}
 
-                          {/* 상세 분석 */}
+                          {/* 상세 분�� */}
                           <div 
                             className="flex items-start gap-2 p-3 -mx-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors group"
                             onClick={() => {
