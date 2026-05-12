@@ -161,7 +161,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 선택된 필지 인덱스 (복수 필지용)
   const [selectedLandIndex, setSelectedLandIndex] = useState(0);
   
-  // 호버된 필지 ID (지도-��스트 연동)
+  // 호���된 필지 ID (지도-��스트 연동)
   const [hoveredLandId, setHoveredLandId] = useState<string | null>(null);
   
   // 포커스된 필지 ID (지도 중심 이동용) - 초기값은 첫 번째 신청 필지
@@ -2133,7 +2133,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                           type="button"
                           variant="outline"
                           disabled={isViewOnly}
-                          onClick={() => updateLandReviewData(selectedLandIndex, 'landJudgment', judgment)}
+                          onClick={() => updateLandReviewData(selectedLandIndex, 'landJudgment', landReview.landJudgment === judgment ? undefined : judgment)}
                           className={`cursor-pointer border-2 ${isSelected ? `${config.borderColor} ${config.textColor}` : "border-[#E1E4E7] text-foreground"} ${isViewOnly ? "opacity-60 cursor-not-allowed" : ""}`}
                         >
                           <Icon className="mr-2 h-4 w-4" />
