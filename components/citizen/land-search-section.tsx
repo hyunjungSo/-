@@ -138,7 +138,7 @@ const regionData = {
     "양산시": ["동면", "물금읍", "상북면", "웅상읍", "원동면", "하북면"],
     // 제주특별자치도
     "제주시": ["구좌읍", "애월읍", "우도면", "조천읍", "추자면", "한경면", "한림읍", "아라동", "건입동", "노형동", "봉개동", "삼도동", "연동", "오라동", "외도동", "용담동", "이도동", "이호동", "일도동", "화북동"],
-    "서귀포시": ["남원읍", "대정읍", "안덕면", "성산읍", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "법환동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
+    "서귀포시": ["남원���", "대정읍", "안덕면", "성산읍", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "법환동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
   },
   리: {
     // 경기도 - 용인시 처인구
@@ -157,7 +157,7 @@ const regionData = {
     "설성면": ["대죽리", "사곡리", "상봉리", "송계리", "신필리", "신작리", "행죽리"],
     "신둔면": ["고척리", "남정리", "도봉리", "수광리", "수남리", "용면리", "지석리"],
     "장호원읍": ["나래리", "노탑리", "선읍리", "송산리", "와현리", "장왕리", "진암리", "풍계리"],
-    "율면": ["본당리", "���농리", "산성리", "월포리", "이황리"],
+    "율면": ["본당리", "반농리", "산성리", "월포리", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
     // 경기도 - 광주시
@@ -235,11 +235,11 @@ const regionData = {
     "송악면": ["강장리", "궁평리", "마곡리", "수곡리", "역촌리", "유곡리", "평촌리"],
     "신창면": ["가덕리", "궁화리", "남성리", "읍내리", "학정리", "황산리"],
     "염치읍": ["곡교리", "산동리", "백암리", "송곡리", "동정리", "석정리"],
-    "영인면": ["고룡���", "상성리", "신봉리", "삼현리", "아산리", "월선리"],
+    "영인면": ["고룡리", "상성리", "신봉리", "삼현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대율리", "문방리", "신두리", "용두리"],
     "도고면": ["신곡리", "효자리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
-    // 세종특별자치시
+    // 세종특별자치��
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "청용리"],
@@ -402,10 +402,10 @@ function simulateAIAnalysis(
   const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
-  // AI 1��� ���독: 수용가능/수용불가 판정
-  let provisionalJudgment: "수���가능" | "수용불가";
+    // AI 1차 판독: 수용가능/수용불가 판정
+    let provisionalJudgment: "수용가능" | "수용불가";
   
-  // 잔여 면적이 0��� ���우: 잔���지가 없으������ 수용 불가
+  // 잔여 면적이 0인 경우: 잔여지가 없으므로 수용 불가
   if (land.remainingArea === 0) {
     provisionalJudgment = "수용불가";
   } else if (metAutoCriteria >= 1) {
@@ -490,7 +490,7 @@ function generateJudgmentRationale(
 2. 편입 현황
 - 편입 전 면적: ${land.originalArea.toLocaleString()}㎡
 - 편입 면적: ${land.includedArea.toLocaleString()}㎡
-- ��여 면적: ${land.remainingArea.toLocaleString()}㎡
+- 잔여 면적: ${land.remainingArea.toLocaleString()}m²
 - 잔여 비율: ${land.remainingRatio}%
 
 3. 형상 분석
@@ -591,14 +591,14 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const [corpName, setCorpName] = useState<string>("");
   const [businessNumber, setBusinessNumber] = useState<string>("");
   
-  // 행정구역 선택 ���태
+  // 행정구역 선택 상태
   const [selectedSido, setSelectedSido] = useState<string>("");
   const [selectedSigungu, setSelectedSigungu] = useState<string>("");
   const [selectedEupmyeondong, setSelectedEupmyeondong] = useState<string>("");
   const [selectedRi, setSelectedRi] = useState<string>("");
   const [jibun, setJibun] = useState<string>("");
   
-  // 검색 결과 ����태
+  // 검색 결과 상태
   const [searchResults, setSearchResults] = useState<LandInfo[]>([]);
   const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -786,7 +786,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           },
         ];
         
-        // 여러 ��지를 소����한 경우 (4개 관할기관: 양평이천 2건, 부산울산 2건, 강������주 1건, 춘천원주 1건)
+        // 여러 필지를 소유한 경우 (4개 관할기관: 양평이천 2건, 부산울산 2건, 강원원주 1건, 충천원주 1건)
         results = ownerLandData.map((landData) => ({
           ...dummyLandInfoList[0],
           ...landData,
@@ -940,7 +940,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setHasSearched(false);
   };
   
-  // 검색 방식 변경 시 필지 목록 및 기본 정보 초기��
+  // 검색 방식 변경 시 필지 목록 및 기본 정보 초기화
   const handleSearchModeChange = (mode: "address" | "individual" | "corporation") => {
     setSearchMode(mode);
     setOwnerName("");
@@ -1001,12 +1001,12 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         </ol>
       </nav>
 
-      {/* 검색 필터 영역 - �����24 스타일 테���블 형태 */}
+      {/* 검색 필터 영역 - 정부24 스타일 테이블 형태 */}
       <div className="mb-4 overflow-hidden rounded-lg border border-border">
-        {/* ���색 방식 �� */}
+        {/* 검색 방식 행 */}
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/50 px-4 py-3">
-            <span className="text-sm font-medium text-foreground">검��방식</span>
+            <span className="text-sm font-medium text-foreground">검색방식</span>
           </div>
           <div className="flex flex-1 items-center gap-4 bg-background px-4 py-3">
             <label className="flex cursor-pointer items-center gap-2">
@@ -1125,7 +1125,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             </div>
             <div className="flex border-b border-border">
               <div className="flex w-28 shrink-0 items-center bg-muted/50 px-4 py-2">
-                <span className="text-sm font-medium text-foreground">���내</span>
+                <span className="text-sm font-medium text-foreground">안내</span>
               </div>
               <div className="flex flex-1 items-center bg-background px-4 py-2">
                 <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -1550,7 +1550,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       </SelectContent>
                     </Select>
                     <p className="mt-1.5 text-xs text-muted-foreground">
-                      택지 ��형에 따라 매수 기준 면적이 달라집니다.
+                      택지 유형에 따라 매수 기준 면적이 달라집니다.
                     </p>
                   </div>
                 )}
@@ -1604,7 +1604,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <Scale className="h-4 w-4 shrink-0 text-amber-500" />
-                            <h4 className="text-base font-semibold text-foreground">법적 ���거</h4>
+                            <h4 className="text-base font-semibold text-foreground">법적 근거</h4>
                           </div>
                           <p className="text-base leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
                         </div>
@@ -1760,14 +1760,14 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             잔여지가 없어 매수 신청이 불가합니다
                           </p>
                           <p className="mt-1.5 text-xs text-red-600">
-                            본 토지는 전체가 공익사업��� 편입되어 잔여지가 존재하지 않습니다.
+                            본 토지는 전체가 공익사업에 편입되어 잔여지가 존재하지 않습니다.
                           </p>
                         </div>
                       </div>
                     );
                   }
                   
-                  // 그 �� 수용불��� 케이스: 기준 미충족이지만 신청은 가능
+                  // 그 외 수용불가 케이스: 기준 미충족이지만 신청은 가능
                   return (
                     <div className="space-y-2">
                       <div className="rounded bg-muted/50 p-2 text-center">
@@ -1800,7 +1800,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
       </div>
 
-      {/* 장바구니 플로팅 버��� */}
+      {/* 장바구니 플로팅 버튼 */}
       {cartItems.length > 0 && !isCartOpen && (
         <button
           onClick={() => setIsCartOpen(true)}
@@ -1906,7 +1906,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                 className="h-5 w-5"
                               />
                               <div className="flex items-center gap-2">
-                                <span className="font-medium">{businessUnit} 관할기���</span>
+                                <span className="font-medium">{businessUnit} 관할기관</span>
                                 <Badge variant="outline" className="text-xs">{items.length}필지</Badge>
                               </div>
                             </div>

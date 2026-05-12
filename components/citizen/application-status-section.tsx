@@ -766,7 +766,7 @@ function ApplicationDetailPanel({
       agentName: editData.applicantRelation === "agent" ? editData.agentName : undefined,
       agentContact: editData.applicantRelation === "agent" ? editData.agentContact : undefined,
       reason: editData.reason,
-      // 토지 정보 업데이트 (첫 번�� 필��)
+      // 토지 정보 업데이트 (첫 번째 필지)
       landInfo: application.landInfo ? {
         ...application.landInfo,
         currentUsage: landEditDataList[0]?.landUseCategory,
@@ -1129,7 +1129,7 @@ function ApplicationDetailPanel({
       {application.adminStatus === "심사완료" && application.finalJudgment && (
         <div className="overflow-hidden rounded-lg border border-border">
           <div className="border-b border-border bg-muted/50 px-4 py-2.5">
-            <h4 className="font-semibold text-foreground">��사 결과</h4>
+            <h4 className="font-semibold text-foreground">심사 결과</h4>
           </div>
           <div className="flex">
             <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-4">
@@ -1149,7 +1149,7 @@ function ApplicationDetailPanel({
           {application.reviewerComment && (
             <div className="flex border-t border-border">
               <div className="flex w-28 shrink-0 bg-muted/30 px-4 py-3">
-                <span className="text-sm font-medium">��사 의견</span>
+                <span className="text-sm font-medium">심사 의견</span>
               </div>
               <div className="flex flex-1 px-4 py-3">
                 <p className="text-sm text-muted-foreground">{application.reviewerComment}</p>
@@ -1238,7 +1238,7 @@ export function ApplicationStatusSection() {
     <div>
       {/* 2-column 레이아웃: 왼쪽 리스트 / 오른쪽 상세 */}
       <div className="grid grid-cols-[320px_1fr] gap-4">
-        {/* 왼쪽: 신청 목록 - 고��24 스타일 */}
+        {/* 왼쪽: 신청 목록 - 정부24 스타일 */}
         <div className="flex h-full max-h-[calc(100vh-200px)] flex-col overflow-hidden rounded-lg border border-border">
           <div className="flex shrink-0 items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
             <h3 className="font-semibold text-foreground">신청 목록</h3>
@@ -1250,7 +1250,7 @@ export function ApplicationStatusSection() {
               <FileText className="h-10 w-10 text-muted-foreground" />
               <p className="mt-4 text-sm font-medium text-foreground">신청 내역이 없습니다</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                신규 신청 탭에서 잔여지 매���를 신청해 주세요.
+                신규 신청 탭에서 잔여지 매수를 신청해 주세요.
               </p>
             </div>
           ) : (

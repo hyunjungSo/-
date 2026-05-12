@@ -180,7 +180,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 선택된 필지 인덱스 (복수 필지용)
   const [selectedLandIndex, setSelectedLandIndex] = useState(0);
   
-  // 호���된 필지 ID (지도-��스트 연동)
+  // \uD638\uBC84\uB41C \uD544\uC9C0 ID (\uC9C0\uB3C4-\uB9AC\uC2A4\uD2B8 \uC5F0\uB3D9)
   const [hoveredLandId, setHoveredLandId] = useState<string | null>(null);
   
   // 포커스된 필지 ID (지도 중심 이동용) - 초기값은 첫 번째 신청 필지
@@ -208,7 +208,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // AI 결과와 다른 최종 판정 시 사유 필수
   const [adminOverrideReason, setAdminOverrideReason] = useState("");
   
-  // 필지별 검토 �����������������이터 업데이트 함수
+  // \uD544\uC9C0\uBCC4 \uAC80\uD1A0 \uB370\uC774\uD130 \uC5C5\uB370\uC774\uD2B8 \uD568\uC218
   const updateLandReviewData = (index: number, field: keyof LandReviewData, value: LandReviewData[keyof LandReviewData]) => {
     setLandReviewDataList(prev => {
       const newList = [...prev];
@@ -546,31 +546,31 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         description: shapeCriteria.description
       });
       
-      // 하나���도 해당 시 → 충족(매수), 전체 미해당 시 → 미충족(기각)
+      // \uD558\uB098\uB77C\uB3C4 \uD574\uB2F9 \uC2DC \u2192 \uCDA9\uC871(\uB9E4\uC218), \uC804\uCCB4 \uBBF8\uD574\uB2F9 \uC2DC \u2192 \uBBF8\uCDA9\uC871(\uAE30\uAC01)
       if (areaCheckMet || roadLost || shapeCriteria.met) {
-        judgment = "수용가능";
-        if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
-        if (shapeCriteria.met) reasons.push("형상 부정형 변경");
+        judgment = "\uC218\uC6A9\uAC00\uB2A5";
+        if (areaCheckMet) reasons.push("\uBA74\uC801 \uAE30\uC900 \uCDA9\uC871");
+        if (roadLost) reasons.push("\uC811\uBA74\uB3C4\uB85C \uC0C1\uC2E4" + (adminOptions?.accessRoadLost ? " (\uAD00\uB9AC\uC790 \uD655\uC778)" : ""));
+        if (shapeCriteria.met) reasons.push("\uD615\uC0C1 \uBD80\uC815\uD615 \uBCC0\uACBD");
       } else {
-        judgment = "수용불가";
-        reasons.push("면적 기준 미충족");
+        judgment = "\uC218\uC6A9\uBD88\uAC00";
+        reasons.push("\uBA74\uC801 \uAE30\uC900 \uBBF8\uCDA9\uC871");
       }
       
-    } else if (effectiveLandType === "농지") {
-      // 농�� 경로 + 관리자 옵션 반영
-      // 2. 접면 도로/수로 상실 여부
+    } else if (effectiveLandType === "\uB18D\uC9C0") {
+      // \uB18D\uC9C0 \uACBD\uB85C + \uAD00\uB9AC\uC790 \uC635\uC158 \uBC18\uC601
+      // 2. \uC811\uBA74 \uB3C4\uB85C/\uC218\uB85C \uC0C1\uC2E4 \uC5EC\uBD80
       const waterLost = adminOptions?.waterChannelLost || landData?.waterChannelLost || false;
       const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || false;
       criteriaChecks.push({
-        name: "���������로/수로 상실",
+        name: "\uB3C4\uB85C/\uC218\uB85C \uC0C1\uC2E4",
         met: waterLost || roadLost,
         description: waterLost 
-          ? "관개수로 상실로 농지 ��용 불가" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : "")
-          : (roadLost ? "접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "도로/수로 �����")
+          ? "\uAD00\uAC1C\uC218\uB85C \uC0C1\uC2E4\uB85C \uB18D\uC9C0 \uD65C\uC6A9 \uBD88\uAC00" + (adminOptions?.waterChannelLost ? " (\uAD00\uB9AC\uC790 \uD655\uC778)" : "")
+          : (roadLost ? "\uC811\uBA74\uB3C4\uB85C \uC0C1\uC2E4" + (adminOptions?.accessRoadLost ? " (\uAD00\uB9AC\uC790 \uD655\uC778)" : "") : "\uB3C4\uB85C/\uC218\uB85C \uC720\uC9C0")
       });
       
-      // 3. 농기계 회전 곤��, 형상 부정형 변경
+      // 3. \uB18D\uAE30\uACC4 \uD68C\uC804 \uACE4\uB780, \uD615\uC0C1 \uBD80\uC815\uD615 \uBCC0\uACBD
       const farmDifficulty = adminOptions?.farmMachineDifficulty || landData?.farmMachineDifficulty || land.remainingArea < 200;
       criteriaChecks.push({
         name: "농기계 회전",
@@ -596,23 +596,23 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         reasons.push("모든 기준 미충족");
       }
       
-    } else if (land.landType === "산지") {
-      // ��지 경로 + 관리자 옵션 반영
-      // 2. 접면 도로 상실 여부
+    } else if (land.landType === "\uC0B0\uC9C0") {
+      // \uC0B0\uC9C0 \uACBD\uB85C + \uAD00\uB9AC\uC790 \uC635\uC158 \uBC18\uC601
+      // 2. \uC811\uBA74 \uB3C4\uB85C \uC0C1\uC2E4 \uC5EC\uBD80
       const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || land.remainingRatio < 25;
       criteriaChecks.push({
-        name: "접면도로 상실",
+        name: "\uC811\uBA74\uB3C4\uB85C \uC0C1\uC2E4",
         met: roadLost,
-        description: roadLost ? "도로 접하지 �����아 접근 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유지"
+        description: roadLost ? "\uB3C4\uB85C \uC811\uD558\uC9C0 \uC54A\uC544 \uC811\uADFC \uBD88\uAC00" + (adminOptions?.accessRoadLost ? " (\uAD00\uB9AC\uC790 \uD655\uC778)" : "") : "\uC811\uBA74\uB3C4\uB85C \uC720\uC9C0"
       });
       
       if (areaCheckMet || roadLost) {
-        judgment = "수용가능";
-        if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 ��������)" : ""));
+        judgment = "\uC218\uC6A9\uAC00\uB2A5";
+        if (areaCheckMet) reasons.push("\uBA74\uC801 \uAE30\uC900 \uCDA9\uC871");
+        if (roadLost) reasons.push("\uC811\uBA74\uB3C4\uB85C \uC0C1\uC2E4" + (adminOptions?.accessRoadLost ? " (\uAD00\uB9AC\uC790 \uD655\uC778)" : ""));
       } else {
-        judgment = "수용불가";
-        reasons.push("모든 기준 미충족");
+        judgment = "\uC218\uC6A9\uBD88\uAC00";
+        reasons.push("\uBAA8\uB4E0 \uAE30\uC900 \uBBF8\uCDA9\uC871");
       }
       
     } else {
@@ -723,7 +723,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               appliedCriteria: analysis.criteriaChecks.map(check => 
                 `${check.name}: ${check.description} ${check.met ? "✓" : "✗"}`
               ),
-              detailedExplanation: `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 ����적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n${analysis.reasons.map(r => `• ${r}`).join("\n")}`,
+              detailedExplanation: `[\uD544\uC9C0 \uC815\uBCF4]\n\uC8FC\uC18C: ${land.address}\n\uC9C0\uBAA9: ${land.landType} (${land.landCategory})\n\uD3B8\uC785 \uC804 \uBA74\uC801: ${land.originalArea.toLocaleString()}\u33A1\n\uC794\uC5EC \uBA74\uC801: ${land.remainingArea.toLocaleString()}\u33A1 (${land.remainingRatio}%)\n\n[\uBD84\uC11D \uACB0\uACFC]\n${analysis.reasons.map(r => `\u2022 ${r}`).join("\n")}`,
               manualCheckItems: analysis.criteriaChecks.filter(c => !c.met).map(c => `${c.name} 재확인 필요`),
             };
             
@@ -1058,19 +1058,19 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onClick={() => handleAttachmentClick("토지대장_용인시_포곡읍_200-1.pdf")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">������대장_���인시_포곡읍_200-1.pdf</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">\uD1A0\uC9C0\uB300\uC7A5_\uC6A9\uC778\uC2DC_\uD3EC\uACE1\uC74D_200-1.pdf</Badge>
                           </button>
                           <button
-                            onClick={() => handleAttachmentClick("지적도_용인시_포곡읍_200-1.pdf")}
+                            onClick={() => handleAttachmentClick("\uC9C0\uC801\uB3C4_\uC6A9\uC778\uC2DC_\uD3EC\uACE1\uC74D_200-1.pdf")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">���적도_용인시_포곡읍_200-1.pdf</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">\uC9C0\uC801\uB3C4_\uC6A9\uC778\uC2DC_\uD3EC\uACE1\uC74D_200-1.pdf</Badge>
                           </button>
                           <button
-                            onClick={() => handleAttachmentClick("���장사��_20260501.jpg")}
+                            onClick={() => handleAttachmentClick("\uD604\uC7A5\uC0AC\uC9C4_20260501.jpg")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">���장���진_20260501.jpg</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">\uD604\uC7A5\uC0AC\uC9C4_20260501.jpg</Badge>
                           </button>
                         </div>
                       </td>
@@ -1531,7 +1531,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                           },
                           {
                             id: "adjacent-002",
-                            address: "경기도 용인시 처인구 포곡읍 ��성리 102",
+                            address: "\uACBD\uAE30\uB3C4 \uC6A9\uC778\uC2DC \uCC98\uC778\uAD6C \uD3EC\uACE1\uC74D \uB9C8\uC131\uB9AC 102",
                             isIncluded: false,
                             isOwned: false,
                             isAdjacent: true,
