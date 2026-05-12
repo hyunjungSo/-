@@ -798,44 +798,44 @@ export function LeafletMap({
         </div>
         
         {/* 지도 도구 버튼들 - 세로 스택 */}
-        <div className="flex flex-col gap-1 bg-white rounded-lg shadow overflow-hidden">
+        <div className="flex flex-col gap-1">
           {/* 국토수급 */}
           <button
             onClick={() => setLayers((prev) => ({ ...prev, landSupplyDemand: !prev.landSupplyDemand }))}
-            className={`flex items-center gap-2 px-3 py-2.5 transition-colors border-b border-gray-100 ${
+            className={`flex flex-col items-center justify-center w-[52px] h-12 rounded-md shadow transition-colors ${
               layers.landSupplyDemand 
-                ? "bg-primary/10 border-2 border-primary" 
-                : "hover:bg-gray-50"
+                ? "bg-white ring-2 ring-primary" 
+                : "bg-white hover:bg-gray-100"
             }`}
           >
-            <Layers className={`h-4 w-4 ${layers.landSupplyDemand ? "text-primary" : "text-gray-600"}`} strokeWidth={1.5} />
-            <span className={`text-sm font-medium ${layers.landSupplyDemand ? "text-primary" : "text-gray-700"}`}>국토수급</span>
+            <Layers className={`h-4 w-4 mb-0.5 ${layers.landSupplyDemand ? "text-primary" : "text-gray-700"}`} strokeWidth={1.5} />
+            <span className={`text-[10px] font-medium ${layers.landSupplyDemand ? "text-primary" : "text-gray-700"}`}>국토수급</span>
           </button>
           
           {/* 도로구역 */}
           <button
             onClick={() => setLayers((prev) => ({ ...prev, roadArea: !prev.roadArea }))}
-            className={`flex items-center gap-2 px-3 py-2.5 transition-colors border-b border-gray-100 ${
+            className={`flex flex-col items-center justify-center w-[52px] h-12 rounded-md shadow transition-colors ${
               layers.roadArea 
-                ? "bg-primary/10 border-2 border-primary" 
-                : "hover:bg-gray-50"
+                ? "bg-white ring-2 ring-primary" 
+                : "bg-white hover:bg-gray-100"
             }`}
           >
-            <Route className={`h-4 w-4 ${layers.roadArea ? "text-primary" : "text-gray-600"}`} strokeWidth={1.5} />
-            <span className={`text-sm font-medium ${layers.roadArea ? "text-primary" : "text-gray-700"}`}>도로구역</span>
+            <Route className={`h-4 w-4 mb-0.5 ${layers.roadArea ? "text-primary" : "text-gray-700"}`} strokeWidth={1.5} />
+            <span className={`text-[10px] font-medium ${layers.roadArea ? "text-primary" : "text-gray-700"}`}>도로구역</span>
           </button>
           
           {/* 거리측정 */}
           <button
             onClick={toggleMeasureMode}
-            className={`flex items-center gap-2 px-3 py-2.5 transition-colors border-b border-gray-100 ${
+            className={`flex flex-col items-center justify-center w-[52px] h-12 rounded-md shadow transition-colors ${
               measureMode 
-                ? "bg-primary/10 border-2 border-primary" 
-                : "hover:bg-gray-50"
+                ? "bg-white ring-2 ring-primary" 
+                : "bg-white hover:bg-gray-100"
             }`}
           >
-            <Ruler className={`h-4 w-4 ${measureMode ? "text-primary" : "text-gray-600"}`} strokeWidth={1.5} />
-            <span className={`text-sm font-medium ${measureMode ? "text-primary" : "text-gray-700"}`}>거리측정</span>
+            <Ruler className={`h-4 w-4 mb-0.5 ${measureMode ? "text-primary" : "text-gray-700"}`} strokeWidth={1.5} />
+            <span className={`text-[10px] font-medium ${measureMode ? "text-primary" : "text-gray-700"}`}>거리측정</span>
           </button>
           
           {/* 각도측정 */}
@@ -851,23 +851,23 @@ export function LeafletMap({
               setAnglePoints([]);
               setMeasuredAngle(null);
             }}
-            className={`flex items-center gap-2 px-3 py-2.5 transition-colors ${
+            className={`flex flex-col items-center justify-center w-[52px] h-12 rounded-md shadow transition-colors ${
               angleMeasureMode 
-                ? "bg-primary/10 border-2 border-primary" 
-                : "hover:bg-gray-50"
+                ? "bg-white ring-2 ring-primary" 
+                : "bg-white hover:bg-gray-100"
             }`}
           >
-            <Triangle className={`h-4 w-4 ${angleMeasureMode ? "text-primary" : "text-gray-600"}`} strokeWidth={1.5} />
-            <span className={`text-sm font-medium ${angleMeasureMode ? "text-primary" : "text-gray-700"}`}>각도측정</span>
+            <Triangle className={`h-4 w-4 mb-0.5 ${angleMeasureMode ? "text-primary" : "text-gray-700"}`} strokeWidth={1.5} />
+            <span className={`text-[10px] font-medium ${angleMeasureMode ? "text-primary" : "text-gray-700"}`}>각도측정</span>
           </button>
         </div>
         
         {/* 레이어 가시화 안내 */}
         {(layers.landSupplyDemand || layers.roadArea) && !isLayerVisible && (
-          <div className="flex items-start gap-1.5 rounded-lg bg-amber-50 p-2 mt-1 max-w-[140px] shadow">
+          <div className="flex items-start gap-1.5 rounded-lg bg-amber-50 p-2 mt-1 max-w-[52px] shadow">
             <Info className="mt-0.5 h-3 w-3 shrink-0 text-amber-500" />
-            <p className="text-xs leading-relaxed text-amber-600">
-              {LAYER_MIN_ZOOM}Level 이상에서 표시
+            <p className="text-[9px] leading-tight text-amber-600">
+              {LAYER_MIN_ZOOM}+
             </p>
           </div>
         )}
