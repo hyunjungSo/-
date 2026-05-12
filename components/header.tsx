@@ -55,7 +55,7 @@ export function Header() {
     <header className="z-50 w-full bg-white">
       {/* 1. 최상단 유틸리티 바 (KRDS Header 배경) */}
       <div style={{ backgroundColor: '#23b59d' }}>
-        <div className="mx-auto flex h-9 max-w-7xl items-center justify-between gap-1 px-4 text-sm text-white sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-9 max-w-[1550px] items-center justify-between gap-1 px-4 text-sm text-white sm:px-6 lg:px-8">
           {/* 좌측: 화면 전환 토글 */}
           <div className="flex items-center gap-1 rounded-full bg-white/20 p-0.5">
             <button
@@ -116,7 +116,7 @@ export function Header() {
 
       {/* 2. 로고 및 유틸리티 링크 영역 (흰색 배경) */}
       <div className="border-b border-gray-200">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-16 max-w-[1550px] items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* 로고 */}
           <Link href="/" className="flex cursor-pointer items-center py-2">
             <Image
@@ -194,7 +194,7 @@ export function Header() {
 
       {/* 3. 메인 네비게이션 (KRDS Secondary 배경) */}
       <div className="hidden border-b border-border bg-secondary md:block">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1550px] px-4 sm:px-6 lg:px-8">
           <nav className="flex items-center gap-0" role="navigation" aria-label="메인 메뉴">
             {mainNavigation.map((item) => (
               <Link

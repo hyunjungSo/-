@@ -11,7 +11,7 @@ export function Footer() {
     <footer className="mt-auto border-t border-gray-200 bg-white">
       {/* 링크 영역 */}
       <div className="border-b border-gray-100 bg-gray-50">
-        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1550px] px-4 py-3 sm:px-6 lg:px-8">
           <nav className="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm" aria-label="푸터 링크">
             <Link
               href="/privacy"
@@ -42,7 +42,7 @@ export function Footer() {
       </div>
       
       {/* 기관 정보 */}
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[1550px] px-4 py-6 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             <Image
