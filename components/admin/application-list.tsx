@@ -23,7 +23,7 @@ import type { Application, AdminStatus } from "@/lib/types";
 import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers } from "lucide-react";
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { Progress } from "@/components/ui/progress";
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
+import { JudgmentSummaryBadge } from "@/components/ui/judgment-badge";
 
 interface ApplicationListProps {
   applications: Application[];
@@ -279,65 +279,9 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       <AdminStatusBadge status={app.adminStatus} />
                     </TableCell>
                     <TableCell>
-                      {(() => {
-                        const allLands = [app.landInfo, ...(app.additionalLands || [])];
-                        
-                        // 판정 결과별 개수 세기 (매수/기각/심사위원회 이관)
-                        const judgments = allLands.map(land => 
-                          land.remainingRatio <= 30 ? "매수" : 
-                          land.remainingRatio <= 50 ? "이관" : "기각"
-                        );
-                        
-                        const judgmentCounts = {
-                          매수: judgments.filter(j => j === "매수").length,
-                          기각: judgments.filter(j => j === "기각").length,
-                          이관: judgments.filter(j => j === "이관").length,
-                        };
-                        
-                        return (
-                          <HoverCard openDelay={100} closeDelay={100}>
-                            <HoverCardTrigger asChild>
-                              <div className="flex items-center gap-2 cursor-pointer">
-                                {judgmentCounts.매수 > 0 && (
-                                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-emerald-500 text-white">
-                                    매수 {judgmentCounts.매수}
-                                  </span>
-                                )}
-                                {judgmentCounts.기각 > 0 && (
-                                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-rose-500 text-white">
-                                    기각 {judgmentCounts.기각}
-                                  </span>
-                                )}
-                                {judgmentCounts.이관 > 0 && (
-                                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-amber-500 text-white">
-                                    이관 {judgmentCounts.이관}
-                                  </span>
-                                )}
-                              </div>
-                            </HoverCardTrigger>
-                            <HoverCardContent className="w-64" align="start">
-                              <div className="space-y-2">
-                                <p className="text-sm font-semibold">심사 결과 상세</p>
-                                <div className="space-y-1.5 max-h-48 overflow-y-auto">
-                                  {allLands.map((land, idx) => {
-                                    const judgment = land.remainingRatio <= 30 ? "매수" : 
-                                                    land.remainingRatio <= 50 ? "이관" : "기각";
-                                    const judgmentColor = judgment === "매수" ? "text-emerald-600" :
-                                                         judgment === "기각" ? "text-rose-600" : "text-amber-600";
-                                    return (
-                                      <div key={idx} className="text-xs">
-                                        <span className="font-medium">{idx + 1}:</span>{" "}
-                                        <span className="text-muted-foreground">{land.address.split(" ").slice(-2).join(" ")}</span>{" "}
-                                        <span className={`font-medium ${judgmentColor}`}>({judgment})</span>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              </div>
-                            </HoverCardContent>
-                          </HoverCard>
-                        );
-                      })()}
+                      <JudgmentSummaryBadge 
+                        lands={[app.landInfo, ...(app.additionalLands || [])]} 
+                      />
                     </TableCell>
                     <TableCell>
                       <ChevronRight className="h-4 w-4 text-muted-foreground" />
