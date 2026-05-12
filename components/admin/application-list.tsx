@@ -280,14 +280,14 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       {(() => {
                         const allLands = [app.landInfo, ...(app.additionalLands || [])];
                         
-                        // 판정 결과별 개수 세기
+                        // 판정 결과별 개수 세기 (매수/기각/심사위원회 이관)
                         const judgments = allLands.map(land => 
-                          land.remainingRatio <= 30 ? "매수대상" : 
-                          land.remainingRatio <= 50 ? "검토필요" : "대상외"
+                          land.remainingRatio <= 30 ? "매수" : 
+                          land.remainingRatio <= 50 ? "이관" : "기각"
                         );
                         
                         const judgmentCounts = {
-                          매수대상: judgments.filter(j => j === "매수대상").length,
+                          매수: judgments.filter(j => j === "매수").length,
                           기각: judgments.filter(j => j === "기각").length,
                           이관: judgments.filter(j => j === "이관").length,
                         };
@@ -297,12 +297,12 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                             <HoverCardTrigger asChild>
                               <div className="flex items-center gap-2 cursor-pointer">
                                 <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-700">
-                                  매수 {judgmentCounts.매수대상}
+                                  매수 {judgmentCounts.매수}
                                 </span>
                                 <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-700">
                                   기각 {judgmentCounts.기각}
                                 </span>
-                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-amber-100 text-amber-700">
                                   이관 {judgmentCounts.이관}
                                 </span>
                               </div>
@@ -312,10 +312,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                                 <p className="text-sm font-semibold">심사 결과 상세</p>
                                 <div className="space-y-1.5 max-h-48 overflow-y-auto">
                                   {allLands.map((land, idx) => {
-                                    const judgment = land.remainingRatio <= 30 ? "매수대상" : 
-                                                    land.remainingRatio <= 50 ? "검토필요" : "대상외";
-                                    const judgmentColor = judgment === "매수대상" ? "text-blue-600" :
-                                                         judgment === "검토필요" ? "text-yellow-600" : "text-gray-600";
+                                    const judgment = land.remainingRatio <= 30 ? "매수" : 
+                                                    land.remainingRatio <= 50 ? "이관" : "기각";
+                                    const judgmentColor = judgment === "매수" ? "text-blue-600" :
+                                                         judgment === "기각" ? "text-red-600" : "text-amber-600";
                                     return (
                                       <div key={idx} className="text-xs">
                                         <span className="font-medium">{idx + 1}:</span>{" "}
