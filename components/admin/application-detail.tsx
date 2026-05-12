@@ -583,7 +583,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "접면도로 상실",
         met: roadLost,
-        description: roadLost ? "도로 접하지 않아 접근 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유지"
+        description: roadLost ? "도로 접하지 ���아 접근 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유지"
       });
       
       if (areaCheckMet || roadLost) {
@@ -1394,7 +1394,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   </div>
                   
                   {/* 필지 선택 + 지적도 한 행 배치 */}
-                  <div className="flex gap-3">
+                  <div className="relative flex gap-3">
                     {/* 필지 선택 목록 */}
                     <div className="w-[45%] shrink-0 rounded-lg bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
                       {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 표시 */}
@@ -1556,6 +1556,14 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     />
                     </div>
                     </div>
+                    
+                    {/* 기본정보 패널 collapse 버튼 */}
+                    <button 
+                      className="absolute top-1/2 -translate-y-1/2 right-0 z-20 flex h-12 w-6 cursor-pointer items-center justify-center rounded-l-md bg-background shadow-md hover:bg-muted transition-colors"
+                      title="패널 접기/펼치기"
+                    >
+                      <ChevronLeft className="h-4 w-4 text-muted-foreground" />
+                    </button>
                   </div>
                   
                   {/* 지도 범례 */}
@@ -2135,7 +2143,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   </div>
                 </div>
                 
-                {/* AI 판정(수용가능/수용불가)과 담당자 판정(매수/기각/��의위원회 이관) 불일치 안내 */}
+                {/* AI 판정(수용가능/수용불가)과 담당자 판정(매수/기��/��의위원회 이관) 불일치 안내 */}
                 {landReview.landJudgment && aiResult?.provisionalJudgment && (
                   (aiResult.provisionalJudgment === "수용가능" && landReview.landJudgment !== "매수") ||
                   (aiResult.provisionalJudgment === "수용불가" && landReview.landJudgment === "매수")
@@ -2329,7 +2337,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   <div className="rounded-lg border bg-muted/30 p-4">
                     <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                       <AlertTriangle className="h-4 w-4" />
-                      적용 기준
+                      적용 기��
                     </h3>
                     <ul className="space-y-2">
                       {(() => {
