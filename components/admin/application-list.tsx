@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Application, AdminStatus } from "@/lib/types";
-import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, Brain, FileCheck, Layers } from "lucide-react";
+import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers } from "lucide-react";
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { Progress } from "@/components/ui/progress";
 
@@ -141,8 +141,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         {/* AI 분석 현황 카드 */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-base font-medium">
-              <Brain className="h-4 w-4 text-primary" />
+            <CardTitle className="text-base font-medium">
               AI 분석 현황
             </CardTitle>
           </CardHeader>
