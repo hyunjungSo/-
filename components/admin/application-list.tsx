@@ -32,6 +32,7 @@ interface ApplicationListProps {
 export function ApplicationList({ applications, onSelect }: ApplicationListProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<AdminStatus | "all">("all");
+  const [projectUnitFilter, setProjectUnitFilter] = useState<"all" | "gangjin-gwangju">("all");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const filteredApplications = useMemo(() => {
@@ -41,15 +42,16 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           app.applicationNumber.includes(searchQuery) ||
           app.applicantName.includes(searchQuery) ||
           app.landInfo.address.includes(searchQuery);
-        const matchesStatus = statusFilter === "all" || app.adminStatus === statusFilter;
-        return matchesSearch && matchesStatus;
+      const matchesStatus = statusFilter === "all" || app.adminStatus === statusFilter;
+      const matchesProjectUnit = projectUnitFilter === "all" || app.businessUnit === "강진광주";
+      return matchesSearch && matchesStatus && matchesProjectUnit;
       })
       .sort((a, b) => {
         const dateA = new Date(a.appliedAt).getTime();
         const dateB = new Date(b.appliedAt).getTime();
         return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
       });
-  }, [applications, searchQuery, statusFilter, sortOrder]);
+    }, [applications, searchQuery, statusFilter, projectUnitFilter, sortOrder]);
 
   // 상태별 통계
   const stats = useMemo(() => {
@@ -194,6 +196,17 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               />
               <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             </div>
+            
+            {/* 사업단 필터 */}
+            <Select value={projectUnitFilter} onValueChange={(value) => setProjectUnitFilter(value as "all" | "gangjin-gwangju")}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="사업단 선택" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">전체 사업단</SelectItem>
+                <SelectItem value="gangjin-gwangju">강진광주건설 사업단</SelectItem>
+              </SelectContent>
+            </Select>
             
             {/* 처리상태 필터 */}
             <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as AdminStatus | "all")}>
