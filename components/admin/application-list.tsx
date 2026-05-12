@@ -298,15 +298,21 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                           <HoverCard openDelay={100} closeDelay={100}>
                             <HoverCardTrigger asChild>
                               <div className="flex items-center gap-2 cursor-pointer">
-                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-700">
-                                  매수 {judgmentCounts.매수}
-                                </span>
-                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-700">
-                                  기각 {judgmentCounts.기각}
-                                </span>
-                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-amber-100 text-amber-700">
-                                  이관 {judgmentCounts.이관}
-                                </span>
+                                {judgmentCounts.매수 > 0 && (
+                                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-700">
+                                    매수 {judgmentCounts.매수}
+                                  </span>
+                                )}
+                                {judgmentCounts.기각 > 0 && (
+                                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-700">
+                                    기각 {judgmentCounts.기각}
+                                  </span>
+                                )}
+                                {judgmentCounts.이관 > 0 && (
+                                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-amber-100 text-amber-700">
+                                    이관 {judgmentCounts.이관}
+                                  </span>
+                                )}
                               </div>
                             </HoverCardTrigger>
                             <HoverCardContent className="w-64" align="start">
