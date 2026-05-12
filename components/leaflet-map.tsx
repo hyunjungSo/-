@@ -798,7 +798,7 @@ export function LeafletMap({
         </div>
         
         {/* 지도 도구 버튼들 - 세로 스택 */}
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 items-end">
           {/* 국토수급 */}
           <button
             onClick={() => setLayers((prev) => ({ ...prev, landSupplyDemand: !prev.landSupplyDemand }))}
