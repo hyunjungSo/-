@@ -59,7 +59,7 @@ const regionData = {
     "강서구": ["가양동", "개화동", "공항동", "과해동", "내발산동", "등촌동", "마곡동", "방화동", "염창동", "오곡동", "오쇠동", "외발산동", "화곡동"],
     "관악구": ["봉천동", "신림동"],
     "광진구": ["광장동", "구의동", "군자동", "능동", "자양동", "중곡동", "화양동"],
-    "구로구": ["가리봉동", "개봉��������������", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
+    "구로구": ["가리봉동", "개봉���������������", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
     "금천구": ["가산동", "독산동", "시흥동"],
     "노원구": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
     "도봉구": ["도봉동", "방학동", "쌍문동", "창동"],
@@ -137,7 +137,7 @@ const regionData = {
     "양산시": ["동면", "물금읍", "상북면", "웅상읍", "원동면", "하북면"],
     // 제주특별자치도
     "제주시": ["구좌읍", "애월읍", "우도면", "조천읍", "추자면", "한경면", "한림읍", "아라동", "건입동", "노형동", "봉개동", "삼도동", "연동", "오라동", "외도동", "용담동", "이도동", "이호동", "일도동", "화북동"],
-    "서귀포시": ["남원읍", "대��읍", "���산읍", "��덕면", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "법환동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
+    "서귀포시": ["남원���", "대��읍", "���산읍", "��덕면", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "법환동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
   },
   리: {
     // 경기도 - 용인시 처인구
@@ -1467,7 +1467,14 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
           {/* 기본정보 패널 (선택된 토지 정보) - 슬라이드 */}
           {selectedLand && (
-          <div className={`flex h-full flex-col border-l bg-background transition-all duration-300 overflow-hidden ${isBasicInfoCollapsed ? "w-0 border-l-0" : "w-[440px]"}`}>
+          <div className={`relative flex h-full flex-col border-l bg-background transition-all duration-300 overflow-hidden ${isBasicInfoCollapsed ? "w-0 border-l-0" : "w-[440px]"}`}>
+            {/* 토글 버튼 - 패널 왼쪽 모서리에 배치 */}
+            <button 
+              onClick={() => setIsBasicInfoCollapsed(!isBasicInfoCollapsed)}
+              className="absolute top-1/2 -left-6 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-l-md bg-background shadow-md transition-all duration-300"
+            >
+              <ChevronLeft className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${isBasicInfoCollapsed ? "rotate-180" : ""}`} />
+            </button>
             {/* 헤더 */}
             <div className="flex shrink-0 items-center justify-between border-b bg-muted px-4 py-3">
               <span className="text-base font-medium text-foreground">기본정보</span>
@@ -1794,20 +1801,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           <ChevronLeft className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${isResultsCollapsed ? "rotate-180" : ""}`} />
         </button>
 
-        {/* 사이드바 토글 버튼 - 기본정보 패널용 (선택된 토지가 있을 때만) */}
-        {selectedLand && (
-          <button 
-            onClick={() => setIsBasicInfoCollapsed(!isBasicInfoCollapsed)}
-            className={`absolute top-1/2 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-l-md bg-background shadow-md transition-all duration-300`}
-            style={{ 
-              right: isBasicInfoCollapsed 
-                ? "0px" 
-                : "440px" 
-            }}
-          >
-            <ChevronLeft className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${isBasicInfoCollapsed ? "rotate-180" : ""}`} />
-          </button>
-        )}
+
       </div>
 
       {/* 장바구니 플로팅 버튼 */}
