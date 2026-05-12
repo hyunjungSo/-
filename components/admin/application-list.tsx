@@ -23,7 +23,7 @@ import type { Application, AdminStatus } from "@/lib/types";
 import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers } from "lucide-react";
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { Progress } from "@/components/ui/progress";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 
 interface ApplicationListProps {
   applications: Application[];
@@ -293,9 +293,9 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                         };
                         
                         return (
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <button className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                          <HoverCard openDelay={100} closeDelay={100}>
+                            <HoverCardTrigger asChild>
+                              <div className="flex items-center gap-2 cursor-pointer">
                                 <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-700">
                                   매수 {judgmentCounts.매수대상}
                                 </span>
@@ -305,25 +305,29 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                                 <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
                                   이관 {judgmentCounts.이관}
                                 </span>
-                              </button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-48" align="start">
+                              </div>
+                            </HoverCardTrigger>
+                            <HoverCardContent className="w-64" align="start">
                               <div className="space-y-2">
-                                <p className="text-sm font-medium">심사 결과 상세</p>
-                                <div className="space-y-1 max-h-40 overflow-y-auto">
+                                <p className="text-sm font-semibold">심사 결과 상세</p>
+                                <div className="space-y-1.5 max-h-48 overflow-y-auto">
                                   {allLands.map((land, idx) => {
                                     const judgment = land.remainingRatio <= 30 ? "매수대상" : 
                                                     land.remainingRatio <= 50 ? "검토필요" : "대상외";
+                                    const judgmentColor = judgment === "매수대상" ? "text-blue-600" :
+                                                         judgment === "검토필요" ? "text-yellow-600" : "text-gray-600";
                                     return (
-                                      <div key={idx} className="text-xs text-muted-foreground">
-                                        <span className="font-medium text-foreground">{idx + 1}:</span> {land.address} <span className="font-medium text-foreground">({judgment})</span>
+                                      <div key={idx} className="text-xs">
+                                        <span className="font-medium">{idx + 1}:</span>{" "}
+                                        <span className="text-muted-foreground">{land.address.split(" ").slice(-2).join(" ")}</span>{" "}
+                                        <span className={`font-medium ${judgmentColor}`}>({judgment})</span>
                                       </div>
                                     );
                                   })}
                                 </div>
                               </div>
-                            </PopoverContent>
-                          </Popover>
+                            </HoverCardContent>
+                          </HoverCard>
                         );
                       })()}
                     </TableCell>
