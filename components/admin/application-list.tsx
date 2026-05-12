@@ -228,9 +228,9 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <TableHead>신청인</TableHead>
                   <TableHead>신청일</TableHead>
                   <TableHead>대상 지번</TableHead>
-                  <TableHead>심사결과</TableHead>
                   <TableHead>담당자</TableHead>
                   <TableHead>진행상황</TableHead>
+                  <TableHead>심사결과</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -254,6 +254,14 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                           <span className="text-sm font-medium">{(app.additionalLands?.length || 0) + 1}</span>
                         </span>
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className={app.adminName ? "text-foreground" : "text-muted-foreground"}>
+                        {app.adminName || "미정"}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <AdminStatusBadge status={app.adminStatus} />
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
@@ -286,14 +294,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                           return results;
                         })()}
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <span className={app.adminName ? "text-foreground" : "text-muted-foreground"}>
-                        {app.adminName || "미정"}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <AdminStatusBadge status={app.adminStatus} />
                     </TableCell>
                     <TableCell>
                       <ChevronRight className="h-4 w-4 text-muted-foreground" />
