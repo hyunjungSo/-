@@ -288,7 +288,7 @@ export function ApplicationFormSection({
       landDataList: isMultipleLands ? landDataList : undefined,
     };
 
-    // 시뮬레이션을 위한 딜레이
+    // 시뮬��이션을 위한 딜레이
     setTimeout(() => {
       setIsSubmitting(false);
       onSubmit(application);
@@ -398,8 +398,8 @@ export function ApplicationFormSection({
                         key={land.id} 
                         className={`rounded-lg border p-3 ${
                           result?.provisionalJudgment === "수용가능" 
-                            ? "border-primary/30 bg-primary/5" 
-                            : "border-red-300 bg-red-50"
+                            ? "border-success/30 bg-success/5" 
+                            : "border-destructive/30 bg-destructive/5"
                         }`}
                       >
                         <div className="flex items-start justify-between">
@@ -451,7 +451,7 @@ export function ApplicationFormSection({
                       ? "border-primary bg-primary/5" 
                       : allAiResults.some(r => r?.provisionalJudgment === "수용가능")
                         ? "border-amber-500 bg-amber-50"
-                        : "border-red-500 bg-red-50"
+                        : "border-destructive bg-destructive/5"
                   }`}>
                     <div className="mb-2">
                       <span className="text-base font-semibold text-foreground">AI 판독 결과</span>
@@ -469,8 +469,8 @@ export function ApplicationFormSection({
                         </>
                       ) : (
                         <>
-                          <XCircle className="h-5 w-5 text-red-500" />
-                          <span className="text-base font-bold text-red-500">전체 수용불가</span>
+<XCircle className="h-5 w-5 text-destructive" />
+                <span className="text-base font-bold text-destructive">전체 수용불가</span>
                         </>
                       )}
                     </div>
@@ -487,8 +487,8 @@ export function ApplicationFormSection({
                   <div 
                     className={`rounded-lg border p-3 ${
                       aiResult?.provisionalJudgment === "수용가능" 
-                        ? "border-primary/30 bg-primary/5" 
-                        : "border-red-300 bg-red-50"
+                        ? "border-success/30 bg-success/5" 
+                        : "border-destructive/30 bg-destructive/5"
                     }`}
                   >
                     <div className="flex items-start justify-between">
@@ -988,11 +988,11 @@ export function ApplicationFormSection({
                 </p>
                 <div className="rounded-md border bg-muted/30 p-3 space-y-2 text-sm">
                   <p className="flex gap-2">
-                    <span className="text-green-600 font-medium shrink-0">수정 가능:</span>
+                    <span className="text-success font-medium shrink-0">수정 가능:</span>
                     <span>신청인 정보, 토지 정보, 신청 사유, 첨부 서류</span>
                   </p>
                   <p className="flex gap-2">
-                    <span className="text-red-500 font-medium shrink-0">수정 불가:</span>
+                    <span className="text-destructive font-medium shrink-0">수정 불가:</span>
                     <span>대상 필지 선택</span>
                   </p>
                 </div>

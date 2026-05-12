@@ -125,11 +125,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <span className="mt-2 text-xl font-bold text-sky-700">{stats.진행중}</span>
                 <span className="text-xs text-muted-foreground">진행중</span>
               </div>
-              <div className="flex flex-col items-center rounded-lg bg-emerald-50 p-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100">
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
+              <div className="flex flex-col items-center rounded-lg bg-success/10 p-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-success/20">
+                  <CheckCircle2 className="h-4 w-4 text-success" />
                 </div>
-                <span className="mt-2 text-xl font-bold text-green-600">{stats.심사완료}</span>
+                <span className="mt-2 text-xl font-bold text-success">{stats.심사완료}</span>
                 <span className="text-xs text-muted-foreground">심사완료</span>
               </div>
             </div>
@@ -152,19 +152,19 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             
             {/* AI 판정 결과 분포 */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between rounded-md bg-emerald-50 px-3 py-2">
+              <div className="flex items-center justify-between rounded-md bg-success/10 px-3 py-2">
                 <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-emerald-500" />
+                  <div className="h-2 w-2 rounded-full bg-success" />
                   <span className="text-sm">매수 판정</span>
                 </div>
-                <span className="font-semibold text-green-600">{stats.aiPurchase}건</span>
+                <span className="font-semibold text-success">{stats.aiPurchase}건</span>
               </div>
-              <div className="flex items-center justify-between rounded-md bg-red-50 px-3 py-2">
+              <div className="flex items-center justify-between rounded-md bg-destructive/10 px-3 py-2">
                 <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-red-500" />
+                  <div className="h-2 w-2 rounded-full bg-destructive" />
                   <span className="text-sm">기각 판정</span>
                 </div>
-                <span className="font-semibold text-red-500">{stats.aiReject}건</span>
+                <span className="font-semibold text-destructive">{stats.aiReject}건</span>
               </div>
             </div>
 

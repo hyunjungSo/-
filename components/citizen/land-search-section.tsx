@@ -59,7 +59,7 @@ const regionData = {
     "강서구": ["가양동", "개화동", "공항동", "과해동", "내발산동", "등촌동", "마곡동", "방화동", "염창동", "오곡동", "오쇠동", "외발산동", "화곡동"],
     "관악구": ["봉천동", "신림동"],
     "광진구": ["광장동", "구의동", "군자동", "능동", "자양동", "중곡동", "화양동"],
-    "구로구": ["가리봉동", "개봉������������", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
+    "구로구": ["가리봉동", "개봉�������������", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
     "금천구": ["가산동", "독산동", "시흥동"],
     "노원구": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
     "도봉구": ["도봉동", "방학동", "쌍문동", "창동"],
@@ -156,7 +156,7 @@ const regionData = {
     "설성면": ["대죽리", "사곡리", "상봉리", "송계리", "신필리", "신작리", "행죽리"],
     "신둔면": ["고척리", "남정리", "도봉리", "수광리", "수남리", "용면리", "지석리"],
     "장호원읍": ["나래리", "노탑리", "선읍리", "송산리", "와현리", "장왕리", "진암리", "풍계리"],
-    "율면": ["고당리", "반���리", "����������리", "월포���", "이황리"],
+    "율면": ["���당리", "반���리", "����������리", "월포���", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
     // 경기도 - 광주시
@@ -402,7 +402,7 @@ function simulateAIAnalysis(
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
   // AI 1차 판독: 수용가능/수용불가 판정
-  let provisionalJudgment: "수용가능" | "수용불가";
+  let provisionalJudgment: "수���가능" | "수용불가";
   
   // 잔여 면적이 0��� ���우: 잔여지가 없으������ 수용 불가
   if (land.remainingArea === 0) {
@@ -1388,10 +1388,10 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                     <Badge 
                                       className={`text-xs px-1.5 py-0 ${
                                         landAiResult?.provisionalJudgment === "수용가능" 
-                                          ? "bg-green-600 text-white" 
+                                          ? "bg-success text-white" 
                                           : landAiResult?.provisionalJudgment === "수용불가"
-                                            ? "bg-red-500 text-white"
-                                            : "bg-amber-500 text-white"
+                                            ? "bg-destructive text-white"
+                                            : "bg-warning text-white"
                                       }`}
                                     >
                                       {landAiResult?.provisionalJudgment}
@@ -1569,11 +1569,11 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           </div>
                           <Badge 
                             className={`px-2 py-1 text-sm font-semibold ${
-                              aiResult.provisionalJudgment === "���용가능" 
-                                ? "bg-green-600 text-white" 
+                              aiResult.provisionalJudgment === "수용가능" 
+                                ? "bg-success text-white" 
                                 : aiResult.provisionalJudgment === "심의위원회 이관"
-                                  ? "bg-amber-500 text-white"
-                                  : "bg-red-500 text-white"
+                                  ? "bg-warning text-white"
+                                  : "bg-destructive text-white"
                             }`}
                           >
                             {aiResult.provisionalJudgment}
@@ -1954,7 +1954,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                       <span>|</span>
                                       <span>{item.landInfo.landType}</span>
                                       <Badge 
-                                        className={`text-xs ${item.aiResult.provisionalJudgment === "수용가��" ? "bg-green-600 text-white" : "bg-red-500 text-white"}`}
+                                        className={`text-xs ${item.aiResult.provisionalJudgment === "수용가능" ? "bg-success text-white" : "bg-destructive text-white"}`}
                                       >
                                         {item.aiResult.provisionalJudgment}
                                       </Badge>

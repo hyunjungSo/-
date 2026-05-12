@@ -60,9 +60,9 @@ interface ApplicationDetailProps {
 
 // 담당자 판정 (매수/기각/심의위원회 이관)
 const judgmentConfig = {
-  매수: { label: "매수", icon: CheckCircle2, borderColor: "border-green-600", textColor: "text-green-600", color: "text-green-600" },
-  기각: { label: "기각", icon: XCircle, borderColor: "border-red-500", textColor: "text-red-500", color: "text-red-500" },
-  "심의위원회 이관": { label: "심의위원회 이관", icon: AlertTriangle, borderColor: "border-amber-500", textColor: "text-amber-500", color: "text-amber-500" },
+  매수: { label: "매수", icon: CheckCircle2, borderColor: "border-success", textColor: "text-success", color: "text-success" },
+  기각: { label: "기각", icon: XCircle, borderColor: "border-destructive", textColor: "text-destructive", color: "text-destructive" },
+  "심의위원회 이관": { label: "심의위원회 이관", icon: AlertTriangle, borderColor: "border-warning", textColor: "text-warning", color: "text-warning" },
 };
 
 const adminStatusConfig: Record<AdminStatus, { 
@@ -583,7 +583,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       criteriaChecks.push({
         name: "접면도로 상실",
         met: roadLost,
-        description: roadLost ? "도로 접하지 ���아 접근 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유지"
+        description: roadLost ? "도로 접하지 �����아 접근 불가" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : "") : "접면도로 유지"
       });
       
       if (areaCheckMet || roadLost) {
@@ -1176,11 +1176,11 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     const aiResult = application.aiResult;
                     const judgment = landResult?.provisionalJudgment || aiResult?.provisionalJudgment;
                     
-                    return (
+                        return (
                       <div className={`rounded-lg border p-4 ${
                         judgment === "수용가능"
-                          ? "border-green-600/20 bg-green-600/5"
-                          : "border-red-200 bg-red-50/50"
+                          ? "border-success/20 bg-success/5"
+                          : "border-destructive/20 bg-destructive/5"
                       }`}>
                         {/* 편입 정보 */}
                         <div className="rounded-lg bg-white/60 p-3 border mb-4">
@@ -1356,7 +1356,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                     <span className="text-muted-foreground">{check.criteriaName}</span>
                                     <Badge 
                                       variant={check.isMet ? "default" : "destructive"} 
-                                      className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}
+                                      className={`text-xs ${check.isMet ? "bg-success" : ""}`}
                                     >
                                       {check.isMet ? "충족" : "미충족"}
                                     </Badge>
@@ -1865,9 +1865,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         return (
                           <div className={`rounded-lg border p-4 ${
                             judgment === "수용가능"
-                              ? "border-green-600/20 bg-green-600/5"
+                              ? "border-success/20 bg-success/5"
                               : judgment === "수용불가"
-                                ? "border-red-200 bg-red-50/50"
+                                ? "border-destructive/20 bg-destructive/5"
                                 : "border-slate-200 bg-slate-50/50"
                           }`}>
                             {/* 편입 정보 */}
@@ -2071,7 +2071,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                                 <span className="text-muted-foreground">{check.criteriaName}</span>
                                                 <Badge 
                                                   variant={check.isMet ? "default" : "destructive"} 
-                                                  className={`text-xs ${check.isMet ? "bg-green-600" : ""}`}
+                                                  className={`text-xs ${check.isMet ? "bg-success" : ""}`}
                                                 >
                                                   {check.isMet ? "충족" : "미충족"}
                                                 </Badge>
@@ -2229,7 +2229,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   <Badge 
                     key={land.id}
                     variant={isReviewed ? "default" : "outline"}
-                    className={isReviewed ? "bg-green-600" : "border-dashed text-muted-foreground"}
+                    className={isReviewed ? "bg-success" : "border-dashed text-muted-foreground"}
                   >
                     {String.fromCharCode(65 + idx)} {isReviewed ? review.landJudgment : "미검토"}
                   </Badge>

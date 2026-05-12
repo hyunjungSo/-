@@ -28,16 +28,16 @@ export function JudgmentStatus({
 }: JudgmentStatusProps) {
   const getColors = () => {
     switch (judgment) {
-      // AI 판정 결과
+      // AI 판정 결과 - KRDS 색상 사용
       case "수용가능":
         return {
-          badge: "bg-green-600 text-white hover:bg-green-600",
-          text: "text-green-600"
+          badge: "bg-success text-white hover:bg-success",
+          text: "text-success"
         };
       case "수용불가":
         return {
-          badge: "bg-red-500 text-white hover:bg-red-500",
-          text: "text-red-500"
+          badge: "bg-destructive text-white hover:bg-destructive",
+          text: "text-destructive"
         };
       default:
         return {
@@ -100,7 +100,7 @@ export function JudgmentOX({
   return (
     <span className={cn(
       "font-bold",
-      isAccepted ? "text-green-600" : "text-red-500",
+      isAccepted ? "text-success" : "text-destructive",
       className
     )}>
       {isAccepted ? "O" : "X"}

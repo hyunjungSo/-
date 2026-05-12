@@ -354,9 +354,9 @@ export function AIAnalysisFlowDialog({
                 </div>
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
-                  finalJudgment === "수용불가" ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50"
+                  finalJudgment === "수용불가" ? "border-destructive bg-destructive/5" : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className={cn("text-sm font-medium", finalJudgment === "수용불가" ? "text-red-500" : "text-gray-500")}>수용불가 판단</p>
+                  <p className={cn("text-sm font-medium", finalJudgment === "수용불가" ? "text-destructive" : "text-gray-500")}>수용불가 판단</p>
                 </div>
               </div>
             </div>
@@ -389,7 +389,7 @@ export function AIAnalysisFlowDialog({
                   className={cn(
                     "rounded p-3 text-center text-sm font-semibold border transition-all",
                     finalJudgment === "수용불가"
-                      ? "border-red-500 bg-red-500 text-white" 
+                      ? "border-destructive bg-destructive text-white" 
                       : "border-gray-200 bg-gray-50 text-gray-400"
                   )}
                 >
@@ -422,7 +422,7 @@ export function AIAnalysisFlowDialog({
               <span className="text-base text-gray-500">AI 잠정 판정:</span>
               <span className={cn(
                 "text-base font-bold px-4 py-1.5 rounded",
-                finalJudgment === "수용가능" ? "bg-green-600 text-white" : "bg-red-500 text-white"
+                finalJudgment === "수용가능" ? "bg-success text-white" : "bg-destructive text-white"
               )}>
                 {finalJudgment}
               </span>
@@ -477,21 +477,21 @@ function PathColumn({
   const isMet = conditionStatus === "충족";
   const isUnmet = conditionStatus === "미충족";
   
-  // 색상 클래스 결정
+  // 색상 클래스 결정 - KRDS 색상 사용
   const borderColor = showHighlight 
-    ? (isMet ? "border-green-500" : isUnmet ? "border-red-500" : "border-amber-500")
+    ? (isMet ? "border-success" : isUnmet ? "border-destructive" : "border-warning")
     : "border-gray-200";
   const bgColor = showHighlight 
-    ? (isMet ? "bg-green-50/30" : isUnmet ? "bg-red-50/30" : "bg-amber-50/30")
+    ? (isMet ? "bg-success/10" : isUnmet ? "bg-destructive/10" : "bg-warning/10")
     : "bg-white";
   const headerBorderColor = showHighlight 
-    ? (isMet ? "border-green-200" : isUnmet ? "border-red-200" : "border-amber-200")
+    ? (isMet ? "border-success/30" : isUnmet ? "border-destructive/30" : "border-warning/30")
     : "border-gray-100";
   const iconColor = showHighlight 
-    ? (isMet ? "text-green-600" : isUnmet ? "text-red-500" : "text-amber-500")
+    ? (isMet ? "text-success" : isUnmet ? "text-destructive" : "text-warning")
     : "text-gray-400";
   const titleColor = showHighlight 
-    ? (isMet ? "text-green-600" : isUnmet ? "text-red-500" : "text-amber-500")
+    ? (isMet ? "text-success" : isUnmet ? "text-destructive" : "text-warning")
     : "text-gray-500";
 
   return (
@@ -526,7 +526,7 @@ function PathColumn({
             <div className={cn(
               "border border-dashed rounded p-2",
               showHighlight 
-                ? (isMet ? "border-green-300 bg-green-50/30" : isUnmet ? "border-red-300 bg-red-50/30" : "border-amber-300 bg-amber-50/30")
+                ? (isMet ? "border-success/50 bg-success/10" : isUnmet ? "border-destructive/50 bg-destructive/10" : "border-warning/50 bg-warning/10")
                 : "border-gray-200 bg-gray-50"
             )}>
               <p className="text-sm text-gray-400 italic text-center">해당 없음</p>
@@ -543,9 +543,9 @@ function PathColumn({
                   <div className={cn(
                     "flex-shrink-0 w-4 h-4 rounded-sm flex items-center justify-center border",
                     isActive && c.items.some(item => item.isMet) 
-                      ? "bg-green-600 border-green-600" 
+                      ? "bg-success border-success" 
                       : isActive && !c.items.some(item => item.isMet)
-                        ? "bg-red-500 border-red-500"
+                        ? "bg-destructive border-destructive"
                         : "border-gray-300 bg-white"
                   )}>
                     {isActive && c.items.some(item => item.isMet) && (
@@ -580,7 +580,7 @@ function PathColumn({
                     {isActive && item.isSelected && (
                       <div className={cn(
                         "flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center mt-0.5",
-                        item.isMet ? "bg-green-600" : "bg-red-500"
+                        item.isMet ? "bg-success" : "bg-destructive"
                       )}>
                         {item.isMet ? (
                           <Check className="h-2.5 w-2.5 text-white" />
@@ -593,7 +593,7 @@ function PathColumn({
                       <div className="flex items-center gap-1 flex-wrap">
                         <span className={cn(
                           isActive && item.isSelected 
-                            ? (item.isMet ? "text-green-700 font-medium" : "text-red-600 font-medium")
+                            ? (item.isMet ? "text-success font-medium" : "text-destructive font-medium")
                             : "text-gray-500"
                         )}>
                           {item.label}
@@ -602,7 +602,7 @@ function PathColumn({
                           <span className={cn(
                             "text-sm",
                             isActive && item.isSelected 
-                              ? (item.isMet ? "text-green-600" : "text-red-500")
+                              ? (item.isMet ? "text-success" : "text-destructive")
                               : "text-gray-400"
                           )}>
                             {item.value}
@@ -615,12 +615,12 @@ function PathColumn({
                       )}
                       {/* 충족/미충족 상세 설명 */}
                       {isActive && item.isSelected && item.isMet && item.explanationMet && (
-                        <p className="text-sm text-green-600 mt-1 font-medium">
+                        <p className="text-sm text-success mt-1 font-medium">
                           → {item.explanationMet}
                         </p>
                       )}
                       {isActive && item.isSelected && !item.isMet && item.explanationUnmet && (
-                        <p className="text-sm text-red-500 mt-1 font-medium">
+                        <p className="text-sm text-destructive mt-1 font-medium">
                           → {item.explanationUnmet}
                         </p>
                       )}
@@ -646,19 +646,19 @@ function PathColumn({
           className="text-sm space-y-0.5 mb-3 py-2 border-t border-gray-100"
         >
           <p className={cn(
-            conditionStatus === "충족" ? "text-green-600 font-medium" : "text-gray-400"
+            conditionStatus === "충족" ? "text-success font-medium" : "text-gray-400"
           )}>
-            어느 하나라도 해당 시 조건 <span className="text-green-600">충족</span> → 수용
+            어느 하나라도 해당 시 조건 <span className="text-success">충족</span> → 수용
           </p>
           <p className={cn(
-            conditionStatus === "미충족" ? "text-red-500 font-medium" : "text-gray-400"
+            conditionStatus === "미충족" ? "text-destructive font-medium" : "text-gray-400"
           )}>
-            전체 미해당 시 조건 <span className="text-red-500">미충족</span> → 수용
+            전체 미해당 시 조건 <span className="text-destructive">미충족</span> → 수용
           </p>
           <p className={cn(
-            conditionStatus === "미충족" ? "text-amber-500 font-medium" : "text-gray-400"
+            conditionStatus === "미충족" ? "text-warning font-medium" : "text-gray-400"
           )}>
-            실측 및 추가 검토 필요시 → <span className="text-amber-500">검토필요</span>
+            실측 및 추가 검토 필요시 → <span className="text-warning">검토필요</span>
           </p>
         </motion.div>
       )}
@@ -672,9 +672,9 @@ function PathColumn({
         >
           <span className={cn(
             "px-4 py-1.5 rounded-full text-sm font-bold",
-            conditionStatus === "충족" ? "bg-green-600 text-white" :
-            conditionStatus === "미충족" ? "bg-red-500 text-white" :
-            "bg-amber-500 text-white"
+            conditionStatus === "충족" ? "bg-success text-white" :
+            conditionStatus === "미충족" ? "bg-destructive text-white" :
+            "bg-warning text-white"
           )}>
             {conditionStatus}
           </span>
