@@ -59,7 +59,7 @@ const regionData = {
     "강서구": ["가양동", "개화동", "공항동", "과해동", "내발산동", "등촌동", "마곡동", "방화동", "염창동", "오곡동", "오쇠동", "외발산동", "화곡동"],
     "관악구": ["봉천동", "신림동"],
     "광진구": ["광장동", "구의동", "군자동", "능동", "자양동", "중곡동", "화양동"],
-    "구로구": ["가리봉동", "개봉���������", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
+    "구로구": ["가리봉동", "개봉����������", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
     "금천구": ["가산동", "독산동", "시흥동"],
     "노원구": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
     "도봉구": ["도봉동", "방학동", "쌍문동", "창동"],
@@ -98,7 +98,7 @@ const regionData = {
     "안성시": ["가현동", "고삼면", "공도읍", "금광면", "대덕면", "미양면", "보개면", "삼죽면", "서운면", "양성면", "원곡면", "일죽면", "죽산면"],
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
-    "음성군": ["삼성면", "대소면", "금왕읍", "���������", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
+    "음성군": ["삼성면", "대소면", "금왕���", "���������", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 ��원��": ["���이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
@@ -1298,7 +1298,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           {/* 필지 목록 패널 */}
           <div className={`bg-background transition-all duration-300 overflow-hidden ${isResultsCollapsed ? "w-0" : "w-[320px]"}`}>
             {/* 필지 목록 헤더 */}
-            <div className="flex items-center justify-between border-b bg-muted px-4 py-3">
+            <div className="flex items-center justify-between border-b bg-muted pl-4 pr-1 py-3">
               <span className="text-base font-medium text-foreground">필지 목록</span>
               {searchResults.length > 0 && parcelAiResults.size > 0 && (
                 <Button
@@ -1569,7 +1569,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           </div>
                           <Badge 
                             className={`px-2 py-1 text-sm font-semibold ${
-                              aiResult.provisionalJudgment === "수용가능" 
+                              aiResult.provisionalJudgment === "���용가능" 
                                 ? "bg-green-600 text-white" 
                                 : aiResult.provisionalJudgment === "심의위원회 이관"
                                   ? "bg-amber-500 text-white"
