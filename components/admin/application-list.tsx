@@ -262,7 +262,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     <TableCell>{app.appliedAt}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <span className="truncate max-w-[180px]">{app.landInfo.address}</span>
+                        <span>{app.landInfo.address}</span>
                         {(app.additionalLands?.length || 0) >= 1 && (
                           <span className={`inline-flex items-center gap-1 whitespace-nowrap ${PARCEL_COUNT_COLORS.text}`}>
                             <Layers className="h-4 w-4" />
