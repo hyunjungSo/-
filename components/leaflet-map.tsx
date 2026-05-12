@@ -77,6 +77,7 @@ interface LeafletMapProps {
   selectedParcelIds?: Set<string>; // 복수 선택 지원
   hoveredParcelId?: string | null; // 호버된 필지 ID
   focusedParcelId?: string | null; // 포커스할 필지 ID (지도 중심 이동)
+  zoomControlsPosition?: "left" | "sidebar-right"; // 줌 컨트롤 위치
 }
 
 type BaseMapType = "normal" | "satellite";
@@ -92,6 +93,7 @@ export function LeafletMap({
   selectedParcelId,
   hoveredParcelId,
   focusedParcelId,
+  zoomControlsPosition = "left",
 }: LeafletMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -864,7 +866,7 @@ export function LeafletMap({
       </div>
 
       {/* 줌 컨트롤 */}
-      <div className="absolute left-3 top-3 z-[1000] flex flex-col gap-1">
+      <div className={`absolute top-3 z-[1000] flex flex-col gap-1 ${zoomControlsPosition === "sidebar-right" ? "left-[336px]" : "left-3"}`}>
         <div className="flex flex-col overflow-hidden rounded-md bg-white shadow-md">
           <Button
             variant="ghost"

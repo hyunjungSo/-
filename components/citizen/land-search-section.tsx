@@ -157,7 +157,7 @@ const regionData = {
     "설성면": ["대죽리", "사곡리", "상봉리", "송계리", "신필리", "신작리", "행죽리"],
     "신둔면": ["고척리", "남정리", "도봉리", "수광리", "수남리", "용면리", "지석리"],
     "장호원읍": ["나래리", "노탑리", "선읍리", "송산리", "와현리", "장왕리", "진암리", "풍계리"],
-    "율면": ["본당리", "반농리", "산성리", "월포리", "이황리"],
+    "율면": ["본당리", "���농리", "산성리", "월포리", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
     // 경기도 - 광주시
@@ -235,7 +235,7 @@ const regionData = {
     "송악면": ["강장리", "궁평리", "마곡리", "수곡리", "역촌리", "유곡리", "평촌리"],
     "신창면": ["가덕리", "궁화리", "남성리", "읍내리", "학정리", "황산리"],
     "염치읍": ["곡교리", "산동리", "백암리", "송곡리", "동정리", "석정리"],
-    "영인면": ["고룡리", "상성리", "신봉리", "삼현리", "아산리", "월선리"],
+    "영인면": ["고룡���", "상성리", "신봉리", "삼현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대율리", "문방리", "신두리", "용두리"],
     "도고면": ["신곡리", "효자리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
@@ -405,7 +405,7 @@ function simulateAIAnalysis(
   // AI 1��� ���독: 수용가능/수용불가 판정
   let provisionalJudgment: "수���가능" | "수용불가";
   
-  // 잔여 면적이 0��� ���우: 잔여지가 없으������ 수용 불가
+  // 잔여 면적이 0��� ���우: 잔���지가 없으������ 수용 불가
   if (land.remainingArea === 0) {
     provisionalJudgment = "수용불가";
   } else if (metAutoCriteria >= 1) {
@@ -1001,7 +1001,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         </ol>
       </nav>
 
-      {/* 검색 필터 영역 - 고��24 스타일 테���블 형태 */}
+      {/* 검색 필터 영역 - �����24 스타일 테���블 형태 */}
       <div className="mb-4 overflow-hidden rounded-lg border border-border">
         {/* ���색 방식 �� */}
         <div className="flex border-b border-border">
@@ -1266,8 +1266,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
       {/* 전체 화면 지도 컨테이너 */}
       <div className="relative h-[calc(100vh-260px)] min-h-[500px] w-full">
         {/* 지도 (전체 화면) */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-[5]">
           <LeafletMap 
+            zoomControlsPosition="sidebar-right"
             selectedRegion={selectedRi || selectedEupmyeondong || selectedSigungu || selectedSido}
             onParcelClick={(id) => {
               const land = searchResults.find(l => l.id === id);
@@ -1799,7 +1800,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
       </div>
 
-      {/* 장바구니 플로팅 버튼 */}
+      {/* 장바구니 플로팅 버��� */}
       {cartItems.length > 0 && !isCartOpen && (
         <button
           onClick={() => setIsCartOpen(true)}
