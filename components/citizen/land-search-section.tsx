@@ -59,7 +59,7 @@ const regionData = {
     "강서구": ["가양동", "개화동", "공항동", "과해동", "내발산동", "등촌동", "마곡동", "방화동", "염창동", "오곡동", "오쇠동", "외발산동", "화곡동"],
     "관악구": ["봉천동", "신림동"],
     "광진구": ["광장동", "구의동", "군자동", "능동", "자양동", "중곡동", "화양동"],
-    "구로구": ["가리봉동", "개봉��", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
+    "구로구": ["가리봉동", "개봉���", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
     "금천구": ["가산동", "독산동", "시흥동"],
     "노원구": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
     "도봉구": ["도봉동", "방학동", "쌍문동", "창동"],
@@ -785,7 +785,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           },
         ];
         
-        // 여러 필지를 소유한 경우 (4개 관할기관: 양평이천 2건, 부산울산 2건, 강진광주 1건, 춘천원주 1건)
+        // 여러 필지를 소유한 경우 (4개 관할기관: 양평이천 2건, 부산울산 2건, 강진���주 1건, 춘천원주 1건)
         results = ownerLandData.map((landData) => ({
           ...dummyLandInfoList[0],
           ...landData,
@@ -1002,7 +1002,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
       {/* 검색 필터 영역 - 고용24 스타일 테이블 형태 */}
       <div className="mb-4 overflow-hidden rounded-lg border border-border">
-        {/* 검색 방식 �� */}
+        {/* ���색 방식 �� */}
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/50 px-4 py-3">
             <span className="text-sm font-medium text-foreground">검색방식</span>
@@ -1798,11 +1798,11 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         {selectedLand && (
           <button 
             onClick={() => setIsBasicInfoCollapsed(!isBasicInfoCollapsed)}
-            className={`absolute top-1/2 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-r-md bg-background shadow-md transition-all duration-300`}
+            className={`absolute top-1/2 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-l-md bg-background shadow-md transition-all duration-300`}
             style={{ 
-              left: isBasicInfoCollapsed 
-                ? (isResultsCollapsed ? "0px" : "280px") 
-                : (isResultsCollapsed ? "320px" : "600px") 
+              right: isBasicInfoCollapsed 
+                ? "0px" 
+                : "0px" 
             }}
           >
             <ChevronLeft className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${isBasicInfoCollapsed ? "rotate-180" : ""}`} />
