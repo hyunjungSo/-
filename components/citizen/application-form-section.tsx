@@ -288,7 +288,7 @@ export function ApplicationFormSection({
       landDataList: isMultipleLands ? landDataList : undefined,
     };
 
-    // 시뮬��이션을 위한 딜레이
+    // 시뮬레이션을 위한 딜레이
     setTimeout(() => {
       setIsSubmitting(false);
       onSubmit(application);

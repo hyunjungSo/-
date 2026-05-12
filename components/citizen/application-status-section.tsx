@@ -762,7 +762,7 @@ function ApplicationDetailPanel({
         waterChannelLost: landEditDataList[0]?.irrigationCanalLoss,
         farmMachineDifficulty: landEditDataList[0]?.farmEquipmentTurnImpossible,
       } : application.landInfo,
-      // 추가 필지 정보 업���이트
+      // 추가 필지 정보 업데이트
       additionalLands: application.additionalLands?.map((land, index) => ({
         ...land,
         currentUsage: landEditDataList[index + 1]?.landUseCategory || land.currentUsage,
@@ -772,7 +772,7 @@ function ApplicationDetailPanel({
         waterChannelLost: landEditDataList[index + 1]?.irrigationCanalLoss || land.waterChannelLost,
         farmMachineDifficulty: landEditDataList[index + 1]?.farmEquipmentTurnImpossible || land.farmMachineDifficulty,
       })),
-      // landDataList도 업데��트
+      // landDataList도 업데이트
       landDataList: landEditDataList.map(data => ({
         currentUsage: data.landUseCategory as "대" | "전" | "답" | "과" | "목" | "임" | "광" | "염" | "잡" | "공",
         landSubType: data.siteType as "residential-detached" | "commercial" | "industrial",

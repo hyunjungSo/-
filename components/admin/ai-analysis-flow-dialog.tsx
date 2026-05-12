@@ -613,7 +613,7 @@ function PathColumn({
                       {item.subLabel && (
                         <p className="text-sm text-gray-400 mt-0.5">{item.subLabel}</p>
                       )}
-                      {/* 충��/미충족 상세 설명 */}
+                      {/* 충족/미충족 상세 설명 */}
                       {isActive && item.isSelected && item.isMet && item.explanationMet && (
                         <p className="text-sm text-green-600 mt-1 font-medium">
                           → {item.explanationMet}
