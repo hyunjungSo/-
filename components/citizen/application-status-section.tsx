@@ -601,23 +601,34 @@ function LandInfoSection({
           </DialogHeader>
           <div className="flex-1 overflow-auto bg-muted/30 w-full">
             {selectedFile && (
-              <div className="w-full h-full">
+              <div className="w-full h-full flex items-center justify-center">
                 {getFileType(selectedFile) === 'image' ? (
-                  <img 
-                    src={`/uploads/${selectedFile}`} 
-                    alt={selectedFile}
-                    className="w-full h-full object-contain"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none';
-                      (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                    }}
-                  />
-                ) : null}
-                <div className={`flex flex-col items-center justify-center gap-4 text-muted-foreground w-full h-full ${getFileType(selectedFile) === 'image' ? 'hidden' : ''}`}>
-                  <FileText className="size-24 text-muted-foreground/50" />
-                  <p className="text-base">미리보기를 지원하지 않는 파일 형식입니다.</p>
-                  <p className="text-sm">파일을 다운로드하여 확인해 주세요.</p>
-                </div>
+                  <div className="relative w-full h-full flex items-center justify-center p-8">
+                    <img 
+                      src={`https://picsum.photos/seed/${encodeURIComponent(selectedFile)}/800/600`}
+                      alt={selectedFile}
+                      className="max-w-full max-h-full object-contain rounded-lg shadow-lg"
+                    />
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full">
+                      데모용 샘플 이미지입니다
+                    </div>
+                  </div>
+                ) : getFileType(selectedFile) === 'pdf' ? (
+                  <div className="flex flex-col items-center justify-center gap-4 text-muted-foreground w-full h-full">
+                    <div className="relative">
+                      <FileText className="size-24 text-red-500/70" />
+                      <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-xs font-bold text-red-500 bg-white px-1">PDF</span>
+                    </div>
+                    <p className="text-base font-medium">{selectedFile}</p>
+                    <p className="text-sm text-muted-foreground">PDF 파일입니다. 다운로드하여 확인해 주세요.</p>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center gap-4 text-muted-foreground w-full h-full">
+                    <FileText className="size-24 text-muted-foreground/50" />
+                    <p className="text-base">미리보기를 지원하지 않는 파일 형식입니다.</p>
+                    <p className="text-sm">파일을 다운로드하여 확인해 주세요.</p>
+                  </div>
+                )}
               </div>
             )}
           </div>
