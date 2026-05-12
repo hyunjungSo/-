@@ -607,7 +607,7 @@ function LandInfoSection({
                     <img 
                       src={`https://picsum.photos/seed/${encodeURIComponent(selectedFile)}/800/600`}
                       alt={selectedFile}
-                      className="max-w-full max-h-full object-contain rounded-lg shadow-lg"
+                      className="max-w-full max-h-full object-contain rounded-lg"
                     />
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full">
                       데모용 샘플 이미지입니다
@@ -765,7 +765,7 @@ function ApplicationDetailPanel({
       agentName: editData.applicantRelation === "agent" ? editData.agentName : undefined,
       agentContact: editData.applicantRelation === "agent" ? editData.agentContact : undefined,
       reason: editData.reason,
-      // 토지 정보 업데이트 (첫 번째 필지)
+      // 토지 정보 업데이트 (첫 번�� 필지)
       landInfo: application.landInfo ? {
         ...application.landInfo,
         currentUsage: landEditDataList[0]?.landUseCategory,
