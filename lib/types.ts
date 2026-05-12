@@ -164,6 +164,7 @@ export interface Application {
   statusUpdatedAt?: string; // 상태 변경일
   landDataList?: LandSpecificData[]; // 토지별 민원인 입력 데이터 (복수 필지)
   landJudgmentsForReview?: LandJudgmentForReview[]; // 필지별 판정 결과 (심의서 연동용)
+  businessUnit?: BusinessUnit; // 사업단
 }
 
 // 심의서 연동용 필지별 판정 결과

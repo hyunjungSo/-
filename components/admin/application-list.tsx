@@ -241,6 +241,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <TableHead>신청인</TableHead>
                   <TableHead>신청일</TableHead>
                   <TableHead>대상 지번</TableHead>
+                  <TableHead>사업단</TableHead>
                   <TableHead>담당자</TableHead>
                   <TableHead>진행상황</TableHead>
                   <TableHead>심사결과</TableHead>
@@ -269,6 +270,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                           </span>
                         )}
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className={app.businessUnit ? "text-foreground" : "text-muted-foreground"}>
+                        {app.businessUnit || "-"}
+                      </span>
                     </TableCell>
                     <TableCell>
                       <span className={app.adminName ? "text-foreground" : "text-muted-foreground"}>
