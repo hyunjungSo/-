@@ -250,7 +250,7 @@ export default function ReviewDocumentPage({
   if (!application) {
     return (
       <div className="min-h-screen bg-background">
-        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <main className="mx-auto w-full max-w-[1550px] px-4 py-8 sm:px-6 lg:px-8">
           <p className="text-muted-foreground">민원을 찾을 수 없습니다.</p>
         </main>
       </div>
@@ -259,7 +259,7 @@ export default function ReviewDocumentPage({
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full max-w-[1550px] px-4 py-8 sm:px-6 lg:px-8">
         <div className="space-y-6">
           {/* 상단 네비게이션 */}
           <div className="flex items-center justify-between print:hidden">
