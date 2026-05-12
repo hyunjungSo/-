@@ -14,6 +14,7 @@ import type { LandInfo, AIAnalysisResult, JudgmentRationale, ApplicationCartItem
 import { Search, MapPin, ChevronRight, ChevronLeft, Bot, CheckCircle2, XCircle, AlertTriangle, Loader2, RotateCcw, Info, Ban, FileText, Scale, ChevronDown, ChevronUp, ClipboardList, Plus, Trash2, X, User, Layers, PlayCircle } from "lucide-react";
 import { AIIcon } from "@/components/ui/ai-icon";
 import { LandUsageSelect, getLandUsageLabel } from "@/components/common/land-usage-select";
+import { JUDGMENT_COLORS } from "@/components/ui/judgment-badge";
 import { BuildingTypeSelect } from "@/components/common/building-type-select";
 
 interface LandSearchSectionProps {
@@ -98,7 +99,7 @@ const regionData = {
     "안성시": ["가현동", "고삼면", "공도읍", "금광면", "대덕면", "미양면", "보개면", "삼죽면", "서운면", "양성면", "원곡면", "일죽면", "죽산면"],
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
-    "음성군": ["삼성���", "대���면", "���왕���", "���������", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
+    "음���군": ["삼성���", "대���면", "���왕���", "���������", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 ��원��": ["���이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
@@ -232,11 +233,11 @@ const regionData = {
     "둔포면": ["관대리", "봉재리", "석곡리", "신왕리", "신남리", "신항리", "운교리", "염작리"],
     "선장면": ["가산리", "군덕리", "대흥리", "선장리", "죽산리", "학성리"],
     "송악면": ["강장리", "궁평리", "마곡리", "수곡리", "역촌리", "유곡리", "평촌리"],
-    "신창면": ["가덕리", "궁화리", "남성리", "읍내리", "학정리", "황���리"],
+    "신창면": ["가덕리", "궁화리", "남성리", "읍내리", "학정리", "황����리"],
     "염치읍": ["곡교리", "��동리", "백암리", "송��리", "동정��", "석정��"],
     "영인면": ["고룡리", "상���리", "신���리", "��현��", "아산��", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
-    "도고면": ["기곡리", "효자리", "금수리", "금산리"],
+    "도고면": ["���곡리", "효자리", "금수리", "금산리"],
     "신장���": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // ���종���별��치시
     "조치원읍": [],
@@ -1387,12 +1388,12 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                   {/* AI 판독 완료 뱃지 */}
                                   {hasAiResult && (
                                     <Badge 
-                                      className={`text-xs px-1.5 py-0 ${
+                                      className={`text-xs px-1.5 py-0 text-white ${
                                         landAiResult?.provisionalJudgment === "수용가능" 
-                                          ? "bg-success text-white" 
+                                          ? JUDGMENT_COLORS.수용가능.bg 
                                           : landAiResult?.provisionalJudgment === "수용불가"
-                                            ? "bg-destructive text-white"
-                                            : "bg-warning text-white"
+                                            ? JUDGMENT_COLORS.수용불가.bg
+                                            : "bg-amber-500"
                                       }`}
                                     >
                                       {landAiResult?.provisionalJudgment}
@@ -1560,10 +1561,10 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     {aiResult && selectedLand && (
                       <div className={`rounded-lg border-2 p-4 ${
                         aiResult.provisionalJudgment === "수용가능" 
-                          ? "border-success bg-success/5" 
+                          ? `${JUDGMENT_COLORS.수용가능.border} ${JUDGMENT_COLORS.수용가능.bgLight}` 
                           : aiResult.provisionalJudgment === "심의위원회 이관"
-                            ? "border-warning bg-warning/5"
-                            : "border-destructive bg-destructive/5"
+                            ? `${JUDGMENT_COLORS.이관.border} ${JUDGMENT_COLORS.이관.bgLight}`
+                            : `${JUDGMENT_COLORS.수용불가.border} ${JUDGMENT_COLORS.수용불가.bgLight}`
                       }`}>
                         {/* 헤더 */}
                         <div className="mb-3 flex items-start justify-between">
@@ -1572,12 +1573,12 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             <p className="text-sm text-muted-foreground mt-0.5">{selectedLand.address}</p>
                           </div>
                           <Badge 
-                            className={`px-2 py-1 text-sm font-semibold ${
+                            className={`px-2 py-1 text-sm font-semibold text-white ${
                               aiResult.provisionalJudgment === "수용가능" 
-                                ? "bg-success text-white" 
+                                ? JUDGMENT_COLORS.수용가능.bg 
                                 : aiResult.provisionalJudgment === "심의위원회 이관"
-                                  ? "bg-warning text-white"
-                                  : "bg-destructive text-white"
+                                  ? JUDGMENT_COLORS.이관.bg
+                                  : JUDGMENT_COLORS.수용불가.bg
                             }`}
                           >
                             {aiResult.provisionalJudgment}
@@ -1942,7 +1943,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                       <span>|</span>
                                       <span>{item.landInfo.landType}</span>
                                       <Badge 
-                                        className={`text-xs ${item.aiResult.provisionalJudgment === "수용가능" ? "bg-success text-white" : "bg-destructive text-white"}`}
+                                        className={`text-xs text-white ${item.aiResult.provisionalJudgment === "수용가능" ? JUDGMENT_COLORS.수용가능.bg : JUDGMENT_COLORS.수용불가.bg}`}
                                       >
                                         {item.aiResult.provisionalJudgment}
                                       </Badge>

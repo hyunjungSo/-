@@ -349,15 +349,15 @@ export function AIAnalysisFlowDialog({
               <div className="grid grid-cols-3 gap-3">
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
-                  finalJudgment === "수용가능" ? "border-success bg-success/5" : "border-gray-200 bg-gray-50"
+                  finalJudgment === "수용가능" ? `${JUDGMENT_COLORS.수용가능.border} ${JUDGMENT_COLORS.수용가능.bgLight}` : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className={cn("text-sm font-medium", finalJudgment === "수용가능" ? "text-success" : "text-gray-500")}>수용가능 판단</p>
+                  <p className={cn("text-sm font-medium", finalJudgment === "수용가능" ? JUDGMENT_COLORS.수용가능.text : "text-gray-500")}>수용가능 판단</p>
                 </div>
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
-                  finalJudgment === "수용불가" ? "border-destructive bg-destructive/5" : "border-gray-200 bg-gray-50"
+                  finalJudgment === "수용불가" ? `${JUDGMENT_COLORS.수용불가.border} ${JUDGMENT_COLORS.수용불가.bgLight}` : "border-gray-200 bg-gray-50"
                 )}>
-                  <p className={cn("text-sm font-medium", finalJudgment === "수용불가" ? "text-destructive" : "text-gray-500")}>수용불가 판단</p>
+                  <p className={cn("text-sm font-medium", finalJudgment === "수용불가" ? JUDGMENT_COLORS.수용불가.text : "text-gray-500")}>수용불가 판단</p>
                 </div>
               </div>
             </div>
@@ -379,7 +379,7 @@ export function AIAnalysisFlowDialog({
                   className={cn(
                     "rounded p-3 text-center text-sm font-semibold border transition-all",
                     finalJudgment === "수용가능" 
-                      ? "border-success bg-success text-white" 
+                      ? `${JUDGMENT_COLORS.수용가능.border} ${JUDGMENT_COLORS.수용가능.bg} text-white` 
                       : "border-gray-200 bg-gray-50 text-gray-400"
                   )}
                 >
@@ -390,7 +390,7 @@ export function AIAnalysisFlowDialog({
                   className={cn(
                     "rounded p-3 text-center text-sm font-semibold border transition-all",
                     finalJudgment === "수용불가"
-                      ? "border-destructive bg-destructive text-white" 
+                      ? `${JUDGMENT_COLORS.수용불가.border} ${JUDGMENT_COLORS.수용불가.bg} text-white` 
                       : "border-gray-200 bg-gray-50 text-gray-400"
                   )}
                 >
@@ -422,8 +422,8 @@ export function AIAnalysisFlowDialog({
             <div className="flex items-center gap-3">
               <span className="text-base text-gray-500">AI 잠정 판정:</span>
               <span className={cn(
-                "text-base font-bold px-4 py-1.5 rounded",
-                finalJudgment === "수용가능" ? "bg-success text-white" : "bg-destructive text-white"
+                "text-base font-bold px-4 py-1.5 rounded text-white",
+                finalJudgment === "수용가능" ? JUDGMENT_COLORS.수용가능.bg : JUDGMENT_COLORS.수용불가.bg
               )}>
                 {finalJudgment}
               </span>

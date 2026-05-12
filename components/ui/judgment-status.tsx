@@ -2,6 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { JUDGMENT_COLORS } from "@/components/ui/judgment-badge";
 
 // AI 판정 결과: 수용가능, 수용불가
 export type JudgmentType = "수용가능" | "수용불가" | "분석중";
@@ -28,16 +29,16 @@ export function JudgmentStatus({
 }: JudgmentStatusProps) {
   const getColors = () => {
     switch (judgment) {
-      // AI 판정 결과 - KRDS 색상 사용
+      // AI 판정 결과 - JUDGMENT_COLORS 사용
       case "수용가능":
         return {
-          badge: "bg-success text-white hover:bg-success",
-          text: "text-success"
+          badge: `${JUDGMENT_COLORS.수용가능.bg} text-white hover:${JUDGMENT_COLORS.수용가능.bg}`,
+          text: JUDGMENT_COLORS.수용가능.text
         };
       case "수용불가":
         return {
-          badge: "bg-destructive text-white hover:bg-destructive",
-          text: "text-destructive"
+          badge: `${JUDGMENT_COLORS.수용불가.bg} text-white hover:${JUDGMENT_COLORS.수용불가.bg}`,
+          text: JUDGMENT_COLORS.수용불가.text
         };
       default:
         return {
@@ -100,7 +101,7 @@ export function JudgmentOX({
   return (
     <span className={cn(
       "font-bold",
-      isAccepted ? "text-success" : "text-destructive",
+      isAccepted ? JUDGMENT_COLORS.수용가능.text : JUDGMENT_COLORS.수용불가.text,
       className
     )}>
       {isAccepted ? "O" : "X"}
