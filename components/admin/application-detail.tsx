@@ -1058,7 +1058,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onClick={() => handleAttachmentClick("토지대장_용인시_포곡읍_200-1.pdf")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">토지대장_���인시_포곡읍_200-1.pdf</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">토��대장_���인시_포곡읍_200-1.pdf</Badge>
                           </button>
                           <button
                             onClick={() => handleAttachmentClick("지적도_용인시_포곡읍_200-1.pdf")}
@@ -1602,7 +1602,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 {/* 섹션 2: 분석 설정 및 결과 - 좌우 레이아웃 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-semibold" style={{ fontSize: '16px' }}>분석 설정 및 결과</h4>
+                    <h4 className="font-semibold" style={{ fontSize: '16px' }}>분석 설정 및 결���</h4>
                   </div>
                   
                   <div className="flex gap-4">
@@ -2258,10 +2258,12 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 const judgmentType = getJudgmentType(judgment);
                 
                 return isReviewed && judgmentType ? (
-                  <span key={land.id} className="inline-flex items-center gap-1.5 rounded-md border border-border bg-muted/30 px-2 py-1">
-                    <span className="text-xs text-muted-foreground font-medium">{String.fromCharCode(65 + idx)}</span>
-                    <JudgmentBadge type={judgmentType} showLabel={true} />
-                  </span>
+                  <JudgmentBadge 
+                    key={land.id}
+                    type={judgmentType} 
+                    showLabel={true}
+                    prefix={String.fromCharCode(65 + idx)}
+                  />
                 ) : (
                   <span 
                     key={land.id}
@@ -2338,7 +2340,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     </p>
                   </div>
 
-                  {/* 판단 요약 */}
+                  {/* 판단 ���약 */}
                   <div className="rounded-lg border bg-muted/30 p-4">
                     <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                       <CheckCircle2 className="h-4 w-4" />
@@ -2525,7 +2527,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </div>
       )}
 
-      {/* 하단 저장 버튼 - 심사완료 시 숨김 */}
+      {/* 하단 저장 버튼 - 심사���료 시 숨김 */}
       {!isViewOnly && (
         <div className="fixed bottom-0 left-0 right-0 w-screen bg-background border-t py-4 px-6 mt-6 z-[9999]">
           <div className="flex justify-end gap-3">

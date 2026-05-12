@@ -132,15 +132,18 @@ export function JudgmentBadge({
   type, 
   count,
   showLabel = true,
+  prefix,
 }: { 
   type: JudgmentType; 
   count?: number;
   showLabel?: boolean;
+  prefix?: string;
 }) {
   const config = judgmentConfig[type];
   
   return (
     <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${config.solidClass}`}>
+      {prefix && <span className="font-medium mr-1">{prefix}</span>}
       {showLabel ? type : ""}{count !== undefined ? ` ${count}` : ""}
     </span>
   );
