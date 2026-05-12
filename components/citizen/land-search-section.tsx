@@ -59,7 +59,7 @@ const regionData = {
     "강서구": ["가양동", "개화동", "공항동", "과해동", "내발산동", "등촌동", "마곡동", "방화동", "염창동", "오곡동", "오쇠동", "외발산동", "화곡동"],
     "관악구": ["봉천동", "신림동"],
     "광진구": ["광장동", "구의동", "군자동", "능동", "자양동", "중곡동", "화양동"],
-    "구로구": ["가리봉동", "개봉��������", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
+    "구로구": ["가리봉동", "개봉���������", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
     "금천구": ["가산동", "독산동", "시흥동"],
     "노원구": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
     "도봉구": ["도봉동", "방학동", "쌍문동", "창동"],
@@ -156,7 +156,7 @@ const regionData = {
     "설성면": ["대죽리", "사곡리", "상봉리", "송계리", "신필리", "신작리", "행죽리"],
     "신둔면": ["고척리", "남정리", "도봉리", "수광리", "수남리", "용면리", "지석리"],
     "장호원읍": ["나래리", "노탑리", "선읍리", "송산리", "와현리", "장왕리", "진암리", "풍계리"],
-    "율면": ["고당리", "반룡리", "산�������리", "월포���", "이황리"],
+    "율면": ["고당리", "반룡리", "����������리", "월포���", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
     // 경기도 - 광주시
@@ -1005,7 +1005,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         {/* ���색 방식 �� */}
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/50 px-4 py-3">
-            <span className="text-sm font-medium text-foreground">검색방식</span>
+            <span className="text-sm font-medium text-foreground">검��방식</span>
           </div>
           <div className="flex flex-1 items-center gap-4 bg-background px-4 py-3">
             <label className="flex cursor-pointer items-center gap-2">
@@ -1296,7 +1296,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         {/* 좌측 사이드바 - 필지 목록 + 기본정보 패널 */}
         <div className="absolute bottom-0 left-0 top-0 z-10 flex">
           {/* 필지 목록 패널 */}
-          <div className={`bg-background transition-all duration-300 overflow-hidden ${isResultsCollapsed ? "w-0" : "w-[360px]"}`}>
+          <div className={`bg-background transition-all duration-300 overflow-hidden ${isResultsCollapsed ? "w-0" : "w-[320px]"}`}>
             {/* 필지 목록 헤더 */}
             <div className="flex items-center justify-between border-b bg-muted px-4 py-3">
               <span className="text-base font-medium text-foreground">필지 목록</span>
@@ -1421,7 +1421,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
               {/* 페이지네이션 */}
               {searchResults.length > 0 && (
-              <div className="absolute bottom-0 left-0 flex w-[360px] items-center justify-center gap-1 border-t bg-background py-3">
+              <div className="absolute bottom-0 left-0 flex w-[320px] items-center justify-center gap-1 border-t bg-background py-3">
                 {(() => {
                   const totalPages = Math.ceil(searchResults.length / itemsPerPage);
                   if (totalPages <= 1) return null;
