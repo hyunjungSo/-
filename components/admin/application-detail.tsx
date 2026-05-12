@@ -208,7 +208,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // AI 결과와 다른 최종 판정 시 사유 필수
   const [adminOverrideReason, setAdminOverrideReason] = useState("");
   
-  // 필지별 검토 데이터 업데이트 함수
+  // 필지별 검토 ���이터 업데이트 함수
   const updateLandReviewData = (index: number, field: keyof LandReviewData, value: LandReviewData[keyof LandReviewData]) => {
     setLandReviewDataList(prev => {
       const newList = [...prev];
@@ -1613,7 +1613,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       <Badge 
                         className={`text-xs ${selectedAdjacentParcel ? "bg-[#d97706] text-white" : "bg-[#2563eb] text-white"}`}
                       >
-                        필지{selectedAdjacentParcel ? (selectedAdjacentParcel.parcelNumber || (applicationLands.length + 1)) : 1}
+                        필지{selectedAdjacentParcel ? String.fromCharCode(65 + applicationLands.length + (selectedAdjacentParcel.parcelNumber ? selectedAdjacentParcel.parcelNumber - 1 : 0)) : String.fromCharCode(65 + selectedLandIndex)}
                       </Badge>
                       <span className="text-sm font-medium">검토 옵션</span>
                     </div>
