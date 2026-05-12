@@ -208,7 +208,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // AI 결과와 다른 최종 판정 시 사유 필수
   const [adminOverrideReason, setAdminOverrideReason] = useState("");
   
-  // 필지별 검토 ���이터 업데이트 함수
+  // 필지별 검토 �����이터 업데이트 함수
   const updateLandReviewData = (index: number, field: keyof LandReviewData, value: LandReviewData[keyof LandReviewData]) => {
     setLandReviewDataList(prev => {
       const newList = [...prev];
@@ -597,7 +597,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       }
       
     } else if (land.landType === "산지") {
-      // 산지 경로 + 관리자 옵션 반영
+      // ��지 경로 + 관리자 옵션 반영
       // 2. 접면 도로 상실 여부
       const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || land.remainingRatio < 25;
       criteriaChecks.push({
@@ -1058,7 +1058,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onClick={() => handleAttachmentClick("토지대장_용인시_포곡읍_200-1.pdf")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">토지대장_용인시_포곡읍_200-1.pdf</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">토지대장_���인시_포곡읍_200-1.pdf</Badge>
                           </button>
                           <button
                             onClick={() => handleAttachmentClick("지적도_용인시_포곡읍_200-1.pdf")}
@@ -2258,18 +2258,18 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 const judgmentType = getJudgmentType(judgment);
                 
                 return isReviewed && judgmentType ? (
-                  <span key={land.id} className="inline-flex items-center gap-1">
+                  <span key={land.id} className="inline-flex items-center gap-1.5 rounded-md border border-border bg-muted/30 px-2 py-1">
                     <span className="text-xs text-muted-foreground font-medium">{String.fromCharCode(65 + idx)}</span>
                     <JudgmentBadge type={judgmentType} showLabel={true} />
                   </span>
                 ) : (
-                  <Badge 
+                  <span 
                     key={land.id}
-                    variant="outline"
-                    className="border-dashed text-muted-foreground"
+                    className="inline-flex items-center gap-1.5 rounded-md border border-dashed border-border px-2 py-1 text-xs text-muted-foreground"
                   >
-                    {String.fromCharCode(65 + idx)} 미검토
-                  </Badge>
+                    <span className="font-medium">{String.fromCharCode(65 + idx)}</span>
+                    <span>미검토</span>
+                  </span>
                 );
               })}
             </div>
