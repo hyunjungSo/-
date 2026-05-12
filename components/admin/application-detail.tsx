@@ -526,7 +526,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
         description: shapeCriteria.description
       });
       
-      // 하나라도 해당 시 → 충족(매수), 전체 미해당 시 → 미충족(기각)
+      // 하나���도 해당 시 → 충족(매수), 전체 미해당 시 → 미충족(기각)
       if (areaCheckMet || roadLost || shapeCriteria.met) {
         judgment = "수용가능";
         if (areaCheckMet) reasons.push("면적 기준 충족");
@@ -1396,7 +1396,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   {/* 필지 선택 + 지적도 한 행 배치 */}
                   <div className="flex gap-3">
                     {/* 필지 선택 목록 */}
-                    <div className="w-[35%] shrink-0 rounded-lg bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
+                    <div className="w-[420px] shrink-0 rounded-lg bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
                       {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 표시 */}
                       {applicationLands[selectedLandIndex] && (
                         <div 
@@ -1469,7 +1469,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     </div>
                     
                     {/* 지적도 맵 */}
-                    <div className="w-[65%] relative h-[420px] rounded-lg overflow-hidden border">
+                    <div className="flex-1 relative h-[420px] rounded-lg overflow-hidden border">
                     <div className="absolute inset-0">
                     <LeafletMap
                       parcels={(() => {
@@ -1720,7 +1720,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                     <SelectValue placeholder="토지 모양을 선택해 주세요" />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">정형</div>
+                                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">���형</div>
                                     {landShapes.regular.map((shape) => (
                                       <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
                                     ))}
