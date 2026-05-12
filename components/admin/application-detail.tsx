@@ -921,7 +921,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </div>
       )}
 
-      {/* Section 02. 필지선�� */}
+      {/* Section 02. 필��선�� */}
       <Card className="border border-gray-200">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
@@ -1396,7 +1396,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   {/* 필지 선택 + 지적도 한 행 배치 */}
                   <div className="relative flex gap-3">
                     {/* 필지 선택 목록 */}
-                    <div className="w-[45%] shrink-0 rounded-lg bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
+                    <div className="w-[40%] shrink-0 rounded-lg bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
                       {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 표시 */}
                       {applicationLands[selectedLandIndex] && (
                         <div 
