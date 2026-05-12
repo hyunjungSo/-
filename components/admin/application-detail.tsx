@@ -1064,7 +1064,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onClick={() => handleAttachmentClick("지적도_용인시_포곡읍_200-1.pdf")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">지적도_용인시_포곡읍_200-1.pdf</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">��적도_용인시_포곡읍_200-1.pdf</Badge>
                           </button>
                           <button
                             onClick={() => handleAttachmentClick("���장사��_20260501.jpg")}
@@ -1366,7 +1366,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             </div>
                           </div>
                             
-                          {/* 판정 기준 충족 여부 */}
+                          {/* 판�� 기준 충족 여부 */}
                           {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
                             <div className="rounded-lg bg-white/60 p-3 border">
                               <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
@@ -1375,8 +1375,8 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                   <div key={cIdx} className="flex items-center justify-between text-sm">
                                     <span className="text-muted-foreground">{check.criteriaName}</span>
                                     <Badge 
-                                      variant={check.isMet ? "default" : "destructive"} 
-                                      className={`text-xs ${check.isMet ? "bg-success" : ""}`}
+                                      variant="default" 
+                                      className={`text-xs text-white ${check.isMet ? JUDGMENT_COLORS.충족.bg : JUDGMENT_COLORS.미충족.bg}`}
                                     >
                                       {check.isMet ? "충족" : "미충족"}
                                     </Badge>
@@ -2090,8 +2090,8 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                               <div key={cIdx} className="flex items-center justify-between text-sm">
                                                 <span className="text-muted-foreground">{check.criteriaName}</span>
                                                 <Badge 
-                                                  variant={check.isMet ? "default" : "destructive"} 
-                                                  className={`text-xs ${check.isMet ? "bg-success" : ""}`}
+                                                  variant="default" 
+                                                  className={`text-xs text-white ${check.isMet ? JUDGMENT_COLORS.충족.bg : JUDGMENT_COLORS.미충족.bg}`}
                                                 >
                                                   {check.isMet ? "충족" : "미충족"}
                                                 </Badge>
@@ -2341,7 +2341,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   <div className="rounded-lg border bg-muted/30 p-4">
                     <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                       <FileText className="h-4 w-4" />
-                      법적 근거
+                      법��� 근거
                     </h3>
                     <p className="text-[15px] text-muted-foreground leading-relaxed">
                       {(() => {
@@ -2412,7 +2412,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const land = allLands[expandedLandIndex];
                         const result = citizenLandAIResults[land?.id];
                         return result?.judgmentRationale?.detailedExplanation || 
-                          `[필지 정보]\n주소: ${land?.address}\n��목: ${land?.landType} (${land?.landCategory})\n편입 전 면적: ${land?.originalArea?.toLocaleString()}㎡\n잔여 면적: ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)`;
+                          `[필지 정보]\n주소: ${land?.address}\n��목: ${land?.landType} (${land?.landCategory})\n편입 전 면적: ${land?.originalArea?.toLocaleString()}㎡\n���여 면적: ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)`;
                       })()}
                     </pre>
                   </div>

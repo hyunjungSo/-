@@ -21,11 +21,12 @@ export function getJudgment(remainingRatio: number): JudgmentType {
 /**
  * 심사결과 색상 정의 (중앙 관리)
  * 
- * 매수: Emerald (#10b981)
- * 기각: Rose (#f43f5e)
+ * 매수 / 충족: Emerald (#10b981)
+ * 기각 / 미충족: Rose (#f43f5e)
  * 심의위원회 이관: Amber (#f59e0b)
  */
 export const JUDGMENT_COLORS = {
+  // 매수 / 충족 - 동일 색상
   매수: {
     hex: "#10b981",
     bg: "bg-emerald-500",
@@ -35,6 +36,16 @@ export const JUDGMENT_COLORS = {
     textDark: "text-emerald-700",
     border: "border-emerald-500",
   },
+  충족: {
+    hex: "#10b981",
+    bg: "bg-emerald-500",
+    bgLight: "bg-emerald-50",
+    bgMedium: "bg-emerald-100",
+    text: "text-emerald-600",
+    textDark: "text-emerald-700",
+    border: "border-emerald-500",
+  },
+  // 기각 / 미충족 - 동일 색상
   기각: {
     hex: "#f43f5e",
     bg: "bg-rose-500",
@@ -44,6 +55,16 @@ export const JUDGMENT_COLORS = {
     textDark: "text-rose-700",
     border: "border-rose-500",
   },
+  미충족: {
+    hex: "#f43f5e",
+    bg: "bg-rose-500",
+    bgLight: "bg-rose-50",
+    bgMedium: "bg-rose-100",
+    text: "text-rose-600",
+    textDark: "text-rose-700",
+    border: "border-rose-500",
+  },
+  // 심의위원회 이관
   이관: {
     hex: "#f59e0b",
     bg: "bg-amber-500",

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { JUDGMENT_COLORS } from "@/components/ui/judgment-badge";
 import type { LandInfo, AIAnalysisResult } from "@/lib/types";
 import {
   CheckCircle2,
@@ -473,25 +474,25 @@ function PathColumn({
   note?: string;
 }) {
   const showHighlight = isActive && animationStep >= 1;
-  // 충족/미충족 상태에 따른 색상 결정
+  // 충족/미충족 상태에 따른 색상 결정 - JUDGMENT_COLORS 사용
   const isMet = conditionStatus === "충족";
   const isUnmet = conditionStatus === "미충족";
   
-  // 색상 클래스 결정 - KRDS 색상 사용
+  // 색상 클래스 결정 - JUDGMENT_COLORS 기반
   const borderColor = showHighlight 
-    ? (isMet ? "border-success" : isUnmet ? "border-destructive" : "border-warning")
+    ? (isMet ? JUDGMENT_COLORS.충족.border : isUnmet ? JUDGMENT_COLORS.미충족.border : "border-amber-500")
     : "border-gray-200";
   const bgColor = showHighlight 
-    ? (isMet ? "bg-success/10" : isUnmet ? "bg-destructive/10" : "bg-warning/10")
+    ? (isMet ? JUDGMENT_COLORS.충족.bgLight : isUnmet ? JUDGMENT_COLORS.미충족.bgLight : "bg-amber-50")
     : "bg-white";
   const headerBorderColor = showHighlight 
-    ? (isMet ? "border-success/30" : isUnmet ? "border-destructive/30" : "border-warning/30")
+    ? (isMet ? "border-emerald-300" : isUnmet ? "border-rose-300" : "border-amber-300")
     : "border-gray-100";
   const iconColor = showHighlight 
-    ? (isMet ? "text-success" : isUnmet ? "text-destructive" : "text-warning")
+    ? (isMet ? JUDGMENT_COLORS.충족.text : isUnmet ? JUDGMENT_COLORS.미충족.text : "text-amber-600")
     : "text-gray-400";
   const titleColor = showHighlight 
-    ? (isMet ? "text-success" : isUnmet ? "text-destructive" : "text-warning")
+    ? (isMet ? JUDGMENT_COLORS.충족.text : isUnmet ? JUDGMENT_COLORS.미충족.text : "text-amber-600")
     : "text-gray-500";
 
   return (
@@ -543,9 +544,9 @@ function PathColumn({
                   <div className={cn(
                     "flex-shrink-0 w-4 h-4 rounded-sm flex items-center justify-center border",
                     isActive && c.items.some(item => item.isMet) 
-                      ? "bg-success border-success" 
+                      ? `${JUDGMENT_COLORS.충족.bg} ${JUDGMENT_COLORS.충족.border}` 
                       : isActive && !c.items.some(item => item.isMet)
-                        ? "bg-destructive border-destructive"
+                        ? `${JUDGMENT_COLORS.미충족.bg} ${JUDGMENT_COLORS.미충족.border}`
                         : "border-gray-300 bg-white"
                   )}>
                     {isActive && c.items.some(item => item.isMet) && (
@@ -572,7 +573,7 @@ function PathColumn({
                     className={cn(
                       "flex items-start gap-2 text-sm py-1 px-2 rounded",
                       isActive && item.isSelected 
-                        ? (item.isMet ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200")
+                        ? (item.isMet ? `${JUDGMENT_COLORS.충족.bgLight} border ${JUDGMENT_COLORS.충족.border}` : `${JUDGMENT_COLORS.미충족.bgLight} border ${JUDGMENT_COLORS.미충족.border}`)
                         : "bg-transparent"
                     )}
                   >
@@ -580,7 +581,7 @@ function PathColumn({
                     {isActive && item.isSelected && (
                       <div className={cn(
                         "flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center mt-0.5",
-                        item.isMet ? "bg-success" : "bg-destructive"
+                        item.isMet ? JUDGMENT_COLORS.충족.bg : JUDGMENT_COLORS.미충족.bg
                       )}>
                         {item.isMet ? (
                           <Check className="h-2.5 w-2.5 text-white" />
@@ -593,7 +594,7 @@ function PathColumn({
                       <div className="flex items-center gap-1 flex-wrap">
                         <span className={cn(
                           isActive && item.isSelected 
-                            ? (item.isMet ? "text-success font-medium" : "text-destructive font-medium")
+                            ? (item.isMet ? `${JUDGMENT_COLORS.충족.text} font-medium` : `${JUDGMENT_COLORS.미충족.text} font-medium`)
                             : "text-gray-500"
                         )}>
                           {item.label}
@@ -602,7 +603,7 @@ function PathColumn({
                           <span className={cn(
                             "text-sm",
                             isActive && item.isSelected 
-                              ? (item.isMet ? "text-success" : "text-destructive")
+                              ? (item.isMet ? JUDGMENT_COLORS.충족.text : JUDGMENT_COLORS.미충족.text)
                               : "text-gray-400"
                           )}>
                             {item.value}
@@ -615,12 +616,12 @@ function PathColumn({
                       )}
                       {/* 충족/미충족 상세 설명 */}
                       {isActive && item.isSelected && item.isMet && item.explanationMet && (
-                        <p className="text-sm text-success mt-1 font-medium">
+                        <p className={`text-sm ${JUDGMENT_COLORS.충족.text} mt-1 font-medium`}>
                           → {item.explanationMet}
                         </p>
                       )}
                       {isActive && item.isSelected && !item.isMet && item.explanationUnmet && (
-                        <p className="text-sm text-destructive mt-1 font-medium">
+                        <p className={`text-sm ${JUDGMENT_COLORS.미충족.text} mt-1 font-medium`}>
                           → {item.explanationUnmet}
                         </p>
                       )}
@@ -646,14 +647,14 @@ function PathColumn({
           className="text-sm space-y-0.5 mb-3 py-2 border-t border-gray-100"
         >
           <p className={cn(
-            conditionStatus === "충족" ? "text-success font-medium" : "text-gray-400"
+            conditionStatus === "충족" ? `${JUDGMENT_COLORS.충족.text} font-medium` : "text-gray-400"
           )}>
-            어느 하나라도 해당 시 조건 <span className="text-success">충족</span> → 수용
+            어느 하나라도 해당 시 조건 <span className={JUDGMENT_COLORS.충족.text}>충족</span> → 수용
           </p>
           <p className={cn(
-            conditionStatus === "미충족" ? "text-destructive font-medium" : "text-gray-400"
+            conditionStatus === "미충족" ? `${JUDGMENT_COLORS.미충족.text} font-medium` : "text-gray-400"
           )}>
-            전체 미해당 시 조건 <span className="text-destructive">미충족</span> → 수용
+            전체 미해당 시 조건 <span className={JUDGMENT_COLORS.미충족.text}>미충족</span> → 수용
           </p>
           <p className={cn(
             conditionStatus === "미충족" ? "text-warning font-medium" : "text-gray-400"
@@ -671,10 +672,10 @@ function PathColumn({
           className="flex justify-center"
         >
           <span className={cn(
-            "px-4 py-1.5 rounded-full text-sm font-bold",
-            conditionStatus === "충족" ? "bg-success text-white" :
-            conditionStatus === "미충족" ? "bg-destructive text-white" :
-            "bg-warning text-white"
+            "px-4 py-1.5 rounded-full text-sm font-bold text-white",
+            conditionStatus === "충족" ? JUDGMENT_COLORS.충족.bg :
+            conditionStatus === "미충족" ? JUDGMENT_COLORS.미충족.bg :
+            "bg-amber-500"
           )}>
             {conditionStatus}
           </span>
