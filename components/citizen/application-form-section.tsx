@@ -288,7 +288,7 @@ export function ApplicationFormSection({
       landDataList: isMultipleLands ? landDataList : undefined,
     };
 
-    // \uC2DC\uBBAC\uB808\uC774\uC158\uC744 \uC704\uD55C \uB51C\uB808\uC774
+    // 시뮬레이션을 위한 딜레이
     setTimeout(() => {
       setIsSubmitting(false);
       onSubmit(application);
