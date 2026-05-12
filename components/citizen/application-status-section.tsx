@@ -554,7 +554,7 @@ function LandInfoSection({
                   <span className="text-xs text-muted-foreground">
                     {application.attachments.length}개 파일 첨부됨
                   </span>
-                  <ul className="flex flex-row gap-2">
+                  <ul className="flex flex-row flex-wrap gap-2">
                     {application.attachments.map((fileName, index) => (
                       <li
                         key={index}
@@ -765,7 +765,7 @@ function ApplicationDetailPanel({
       agentName: editData.applicantRelation === "agent" ? editData.agentName : undefined,
       agentContact: editData.applicantRelation === "agent" ? editData.agentContact : undefined,
       reason: editData.reason,
-      // 토지 정보 업데이트 (첫 번�� 필지)
+      // 토지 정보 업데이트 (첫 번�� 필��)
       landInfo: application.landInfo ? {
         ...application.landInfo,
         currentUsage: landEditDataList[0]?.landUseCategory,
