@@ -208,7 +208,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // AI 결과와 다른 최종 판정 시 사유 필수
   const [adminOverrideReason, setAdminOverrideReason] = useState("");
   
-  // 필지별 검토 �����이터 업데이트 함수
+  // 필지별 검토 �������이터 업데이트 함수
   const updateLandReviewData = (index: number, field: keyof LandReviewData, value: LandReviewData[keyof LandReviewData]) => {
     setLandReviewDataList(prev => {
       const newList = [...prev];
@@ -1058,7 +1058,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onClick={() => handleAttachmentClick("토지대장_용인시_포곡읍_200-1.pdf")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">토��대장_���인시_포곡읍_200-1.pdf</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">토���대장_���인시_포곡읍_200-1.pdf</Badge>
                           </button>
                           <button
                             onClick={() => handleAttachmentClick("지적도_용인시_포곡읍_200-1.pdf")}
@@ -1097,8 +1097,8 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             
             {/* 민원인 결과 탭 */}
             <TabsContent value="citizen">
-              <div className="grid gap-6 lg:grid-cols-2">
-                {/* 좌측: 지적도 - 선택된 필지만 표시 */}
+              <div className="grid gap-6 lg:grid-cols-[1fr_35%]">
+                {/* 좌측: 지적도 - 선택된 필지만 표시 (65%) */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h4 className="font-semibold" style={{ fontSize: '16px' }}>지적도</h4>
@@ -1167,7 +1167,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   </div>
                 </div>
                 
-                {/* 우측: 분석결과 - 선택된 필지만 표시 */}
+                {/* 우측: 분석결과 - 선택된 필지만 표시 (35%) */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h4 className="font-semibold" style={{ fontSize: '16px' }}>분석결과</h4>
@@ -1602,7 +1602,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 {/* 섹션 2: 분석 설정 및 결과 - 좌우 레이아웃 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-semibold" style={{ fontSize: '16px' }}>분석 설정 및 결���</h4>
+                    <h4 className="font-semibold" style={{ fontSize: '16px' }}>분석 설정 및 ������</h4>
                   </div>
                   
                   <div className="flex gap-4">
