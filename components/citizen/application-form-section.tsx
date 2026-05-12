@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { AdminStatusBadge } from "@/components/ui/status-badge";
 import {
   Select,
   SelectContent,
@@ -982,7 +983,7 @@ export function ApplicationFormSection({
             <AlertDialogDescription asChild>
               <div className="space-y-4 text-muted-foreground">
                 <p className="flex items-center gap-2 text-sm">
-                  <Badge className="bg-teal-100 text-teal-700 hover:bg-teal-100 font-medium">접수완료</Badge>
+                  <AdminStatusBadge status="접수완료" />
                   <span>단계에서 신청 내용 수정이 가능합니다.</span>
                 </p>
                 <div className="rounded-md border bg-muted/30 p-3 space-y-2 text-sm">
