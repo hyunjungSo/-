@@ -208,7 +208,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // AI 결과와 다른 최종 판정 시 사유 필수
   const [adminOverrideReason, setAdminOverrideReason] = useState("");
   
-  // 필지별 검토 �����������이터 업데이트 함수
+  // 필지별 검토 ���������이터 업데이트 함수
   const updateLandReviewData = (index: number, field: keyof LandReviewData, value: LandReviewData[keyof LandReviewData]) => {
     setLandReviewDataList(prev => {
       const newList = [...prev];
@@ -290,7 +290,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     confidence: number;
     analysisDate: string;
     reason?: string;
-    adminOptions: typeof adminAIOptions; // 관리자가 선택한 옵션 기록
+    adminOptions: typeof adminAIOptions; // 관리자가 선택한 옵션 ��록
     adminCurrentUsage?: string;  // 담당자가 선택한 현재 활용지목
     adminLandSubType?: string;   // 담당자가 선택한 건축물 용도
     shapeIndexChange?: number; // 형상지수 변화
@@ -1329,7 +1329,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             </div>
                           )}
 
-                          {/* 상세 분�� */}
+                          {/* 상세 분석 */}
                           <div 
                             className="flex items-start gap-2 p-3 -mx-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors group"
                             onClick={() => {
