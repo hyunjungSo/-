@@ -262,10 +262,12 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <span className="truncate max-w-[180px]">{app.landInfo.address}</span>
-                        <span className="inline-flex items-center gap-1 text-emerald-600 whitespace-nowrap">
-                          <Layers className="h-4 w-4" />
-                          <span className="text-sm font-medium">{(app.additionalLands?.length || 0) + 1}</span>
-                        </span>
+                        {(app.additionalLands?.length || 0) >= 1 && (
+                          <span className="inline-flex items-center gap-1 text-emerald-600 whitespace-nowrap">
+                            <Layers className="h-4 w-4" />
+                            <span className="text-sm font-medium">{(app.additionalLands?.length || 0) + 1}</span>
+                          </span>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell>
