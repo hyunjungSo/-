@@ -156,7 +156,7 @@ const regionData = {
     "설성면": ["대죽리", "사곡리", "상봉리", "송계리", "신필리", "신작리", "행죽리"],
     "신둔면": ["고척리", "남정리", "도봉리", "수광리", "수남리", "용면리", "지석리"],
     "장호원읍": ["나래리", "노탑리", "선읍리", "송산리", "와현리", "장왕리", "진암리", "풍계리"],
-    "율면": ["고당리", "반룡리", "산���리", "월포���", "이황리"],
+    "율면": ["고당리", "반룡리", "산�����리", "월포���", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
     // 경기도 - 광주시
@@ -238,7 +238,7 @@ const regionData = {
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
     "도고면": ["기곡리", "효자리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
-    // 세종��별��치시
+    // 세종���별��치시
     "조치원읍": [],
     "금남면": ["��성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "청용리"],
@@ -404,7 +404,7 @@ function simulateAIAnalysis(
   // AI 1차 판독: 수용가능/수용불가 판정
   let provisionalJudgment: "수용가능" | "수용불가";
   
-  // 잔여 면적이 0인 경우: 잔여지가 없으������ 수용 불가
+  // 잔여 면적이 0인 ���우: 잔여지가 없으������ 수용 불가
   if (land.remainingArea === 0) {
     provisionalJudgment = "수용불가";
   } else if (metAutoCriteria >= 1) {
@@ -1000,7 +1000,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         </ol>
       </nav>
 
-      {/* 검색 필터 영역 - 고용24 스타일 테���블 형태 */}
+      {/* 검색 필터 영역 - 고��24 스타일 테���블 형태 */}
       <div className="mb-4 overflow-hidden rounded-lg border border-border">
         {/* ���색 방식 �� */}
         <div className="flex border-b border-border">
@@ -1296,7 +1296,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         {/* 좌측 사이드바 - 필지 목록 + 기본정보 패널 */}
         <div className="absolute bottom-0 left-0 top-0 z-10 flex">
           {/* 필지 목록 패널 */}
-          <div className={`bg-background transition-all duration-300 overflow-hidden ${isResultsCollapsed ? "w-0" : "w-[40%]"}`}>
+          <div className={`bg-background transition-all duration-300 overflow-hidden ${isResultsCollapsed ? "w-0" : "w-[400px]"}`}>
             {/* 필지 목록 헤더 */}
             <div className="flex items-center justify-between border-b bg-muted px-4 py-3">
               <span className="text-base font-medium text-foreground">필지 목록</span>
@@ -1421,7 +1421,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
               {/* 페이지네이션 */}
               {searchResults.length > 0 && (
-              <div className="absolute bottom-0 left-0 flex w-[40%] items-center justify-center gap-1 border-t bg-background py-3">
+              <div className="absolute bottom-0 left-0 flex w-[400px] items-center justify-center gap-1 border-t bg-background py-3">
                 {(() => {
                   const totalPages = Math.ceil(searchResults.length / itemsPerPage);
                   if (totalPages <= 1) return null;
