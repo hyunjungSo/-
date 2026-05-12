@@ -614,13 +614,15 @@ function LandInfoSection({
                     </div>
                   </div>
                 ) : getFileType(selectedFile) === 'pdf' ? (
-                  <div className="flex flex-col items-center justify-center gap-4 text-muted-foreground w-full h-full">
-                    <div className="relative">
-                      <FileText className="size-24 text-red-500/70" />
-                      <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-xs font-bold text-red-500 bg-white px-1">PDF</span>
+                  <div className="relative w-full h-full flex flex-col">
+                    <iframe 
+                      src="https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table-word.pdf"
+                      className="w-full h-full border-0"
+                      title={selectedFile}
+                    />
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full">
+                      데모용 샘플 PDF입니다
                     </div>
-                    <p className="text-base font-medium">{selectedFile}</p>
-                    <p className="text-sm text-muted-foreground">PDF 파일입니다. 다운로드하여 확인해 주세요.</p>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center gap-4 text-muted-foreground w-full h-full">
