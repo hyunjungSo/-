@@ -558,14 +558,14 @@ function LandInfoSection({
                     {application.attachments.map((fileName, index) => (
                       <li
                         key={index}
-                        className="flex items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2 cursor-pointer hover:bg-gray-50 transition-colors"
+                        className="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 cursor-pointer hover:bg-gray-50 transition-colors"
                         onClick={() => openFileViewer(fileName)}
                         title="파일 보기"
                       >
-                        <span className="truncate text-xs text-foreground">
+                        <span className="truncate max-w-[120px] text-xs text-foreground">
                           {fileName}
                         </span>
-                        <Eye className="size-[14px] text-muted-foreground" />
+                        <Eye className="size-[14px] shrink-0 text-muted-foreground" />
                       </li>
                     ))}
                   </ul>
@@ -772,7 +772,7 @@ function ApplicationDetailPanel({
         waterChannelLost: landEditDataList[index + 1]?.irrigationCanalLoss || land.waterChannelLost,
         farmMachineDifficulty: landEditDataList[index + 1]?.farmEquipmentTurnImpossible || land.farmMachineDifficulty,
       })),
-      // landDataList도 업데이트
+      // landDataList도 업데��트
       landDataList: landEditDataList.map(data => ({
         currentUsage: data.landUseCategory as "대" | "전" | "답" | "과" | "목" | "임" | "광" | "염" | "잡" | "공",
         landSubType: data.siteType as "residential-detached" | "commercial" | "industrial",
