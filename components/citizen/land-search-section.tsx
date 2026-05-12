@@ -59,7 +59,7 @@ const regionData = {
     "강서구": ["가양동", "개화동", "공항동", "과해동", "내발산동", "등촌동", "마곡동", "방화동", "염창동", "오곡동", "오쇠동", "외발산동", "화곡동"],
     "관악구": ["봉천동", "신림동"],
     "광진구": ["광장동", "구의동", "군자동", "능동", "자양동", "중곡동", "화양동"],
-    "구로구": ["가리봉동", "개봉�������������", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
+    "구로구": ["가리봉동", "개봉��������������", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
     "금천구": ["가산동", "독산동", "시흥동"],
     "노원구": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
     "도봉구": ["도봉동", "방학동", "쌍문동", "창동"],
@@ -137,7 +137,7 @@ const regionData = {
     "양산시": ["동면", "물금읍", "상북면", "웅상읍", "원동면", "하북면"],
     // 제주특별자치도
     "제주시": ["구좌읍", "애월읍", "우도면", "조천읍", "추자면", "한경면", "한림읍", "아라동", "건입동", "노형동", "봉개동", "삼도동", "연동", "오라동", "외도동", "용담동", "이도동", "이호동", "일도동", "화북동"],
-    "서귀포시": ["남원읍", "대정읍", "���산읍", "��덕면", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "법환동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
+    "서귀포시": ["남원읍", "대��읍", "���산읍", "��덕면", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "법환동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
   },
   리: {
     // 경기도 - 용인시 처인구
@@ -233,7 +233,7 @@ const regionData = {
     "선장면": ["가산리", "군덕리", "대흥리", "선장리", "죽산리", "학성리"],
     "송악면": ["강장리", "궁평리", "마곡리", "수곡리", "역촌리", "유곡리", "평촌리"],
     "신창면": ["가덕리", "궁화리", "남성리", "읍내리", "학정리", "황산리"],
-    "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정��", "석정��"],
+    "염치읍": ["곡교리", "대동리", "백암리", "송��리", "동정��", "석정��"],
     "영인면": ["고룡리", "상���리", "신���리", "��현��", "아산��", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
     "도고면": ["기곡리", "효자리", "금수리", "금산리"],
@@ -597,7 +597,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const [selectedRi, setSelectedRi] = useState<string>("");
   const [jibun, setJibun] = useState<string>("");
   
-  // 검색 결과 ���태
+  // 검색 결과 ����태
   const [searchResults, setSearchResults] = useState<LandInfo[]>([]);
   const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -1565,7 +1565,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         <div className="mb-3 flex items-start justify-between">
                           <div>
                             <span className="text-lg font-semibold">상세 판독 결과</span>
-                            <p className="text-xs text-muted-foreground mt-0.5">{selectedLand.address}</p>
+                            <p className="text-sm text-muted-foreground mt-0.5">{selectedLand.address}</p>
                           </div>
                           <Badge 
                             className={`px-2 py-1 text-sm font-semibold ${
@@ -1598,7 +1598,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <Scale className="h-4 w-4 shrink-0 text-amber-500" />
-                            <h4 className="text-base font-semibold text-foreground">법적 근거</h4>
+                            <h4 className="text-base font-semibold text-foreground">법적 ���거</h4>
                           </div>
                           <p className="text-base leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
                         </div>
@@ -1754,7 +1754,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             잔여지가 없어 매수 신청이 불가합니다
                           </p>
                           <p className="mt-1.5 text-xs text-red-600">
-                            본 토지는 전체가 공익사업에 편입되어 잔여지가 존재하지 않습니다.
+                            본 토지는 전체가 공익사업��� 편입되어 잔여지가 존재하지 않습니다.
                           </p>
                         </div>
                       </div>
