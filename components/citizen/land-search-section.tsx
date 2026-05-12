@@ -597,7 +597,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
   const [selectedRi, setSelectedRi] = useState<string>("");
   const [jibun, setJibun] = useState<string>("");
   
-  // 검색 결과 상태
+  // 검색 결과 ��태
   const [searchResults, setSearchResults] = useState<LandInfo[]>([]);
   const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -1564,7 +1564,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         {/* 헤더 */}
                         <div className="mb-3 flex items-start justify-between">
                           <div>
-                            <span className="text-base font-semibold">상세 판독 결과</span>
+                            <span className="text-lg font-semibold">상세 판독 결과</span>
                             <p className="text-xs text-muted-foreground mt-0.5">{selectedLand.address}</p>
                           </div>
                           <Badge 
