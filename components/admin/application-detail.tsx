@@ -587,7 +587,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || waterLost || roadLost || farmDifficulty || shapeCriteria.met) {
         judgment = "수용가능";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
+        if (waterLost) reasons.push("관개수로 상��" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (farmDifficulty) reasons.push("농기계 회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
@@ -1602,7 +1602,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 {/* 섹션 2: 분석 설정 및 결과 - 좌우 레이아웃 */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-semibold" style={{ fontSize: '16px' }}>분석 설정 및 ������</h4>
+                    <h4 className="font-semibold" style={{ fontSize: '16px' }}>분석 설정 및 검토</h4>
                   </div>
                   
                   <div className="flex gap-4">
@@ -1629,12 +1629,19 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         
                         return (
                           <>
-                            {/* 지목 참고 정보 - 인접 필지 ��택 시 민원인 선택 제외 */}
+                            {/* 지목 참고 정보 - 인접 필지 선택 시 민원인 선택 제외 */}
                             {(() => {
-                              const landData = application.landDataList?.[selectedLandIndex];
-                              const citizenUsage = landData?.currentUsage || landData?.actualUsage || currentParcelLandType;
-                              const aiUsage = landData?.actualUsage || currentParcelLandType;
                               const isAdjacentParcel = !!selectedAdjacentParcel;
+                              // 인접 필지인 경우 해당 인접 필지 데이터 사용, 아니면 신청 필지 데이터 사용
+                              const landData = isAdjacentParcel 
+                                ? selectedAdjacentParcel 
+                                : application.landDataList?.[selectedLandIndex];
+                              const citizenUsage = isAdjacentParcel 
+                                ? null // 인접 필지는 민원인 선택 없음
+                                : (landData?.currentUsage || landData?.actualUsage || currentParcelLandType);
+                              const aiUsage = isAdjacentParcel
+                                ? (selectedAdjacentParcel?.landType || currentParcelLandType) // 인접 필지의 AI 판단
+                                : (landData?.actualUsage || currentParcelLandType);
                               
                               return (
                                 <div className={`grid gap-2 ${isAdjacentParcel ? "grid-cols-2" : "grid-cols-3"}`}>
@@ -1650,7 +1657,12 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                   </div>
                                   <div className="text-center p-2 rounded-md bg-slate-50 border border-slate-200">
                                     <p className="text-xs text-muted-foreground mb-0.5">공부상 지목</p>
-                                    <p className="text-sm font-semibold text-slate-700">{currentParcelLandType ? (landCategories.find(c => c.value === currentParcelLandType)?.label || currentParcelLandType) : "-"}</p>
+                                    <p className="text-sm font-semibold text-slate-700">
+                                      {isAdjacentParcel 
+                                        ? (selectedAdjacentParcel?.landCategory || selectedAdjacentParcel?.landType || "-")
+                                        : (currentParcelLandType ? (landCategories.find(c => c.value === currentParcelLandType)?.label || currentParcelLandType) : "-")
+                                      }
+                                    </p>
                                   </div>
                                 </div>
                               );
