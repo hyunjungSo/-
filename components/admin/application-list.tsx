@@ -259,8 +259,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       <div className="flex flex-wrap gap-1">
                         {(() => {
                           const allLands = [app.landInfo, ...(app.additionalLands || [])];
-                          const results = allLands.map((land, idx) => {
-                            // 심사결과 판정 (간단한 로직)
+                          const maxDisplay = 3;
+                          const displayLands = allLands.slice(0, maxDisplay);
+                          const remainingCount = allLands.length - maxDisplay;
+                          
+                          const results = displayLands.map((land, idx) => {
                             const judgment = land.remainingRatio <= 30 ? "매수대상" : 
                                             land.remainingRatio <= 50 ? "검토필요" : "대상외";
                             const colorClass = judgment === "매수대상" ? "bg-blue-100 text-blue-700" :
@@ -271,6 +274,15 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                               </span>
                             );
                           });
+                          
+                          if (remainingCount > 0) {
+                            results.push(
+                              <span key="more" className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-700">
+                                +{remainingCount}개
+                              </span>
+                            );
+                          }
+                          
                           return results;
                         })()}
                       </div>
