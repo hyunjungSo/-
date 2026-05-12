@@ -558,7 +558,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       }
       
     } else if (effectiveLandType === "농지") {
-      // 농지 경로 + 관리자 옵션 반영
+      // 농�� 경로 + 관리자 옵션 반영
       // 2. 접면 도로/수로 상실 여부
       const waterLost = adminOptions?.waterChannelLost || landData?.waterChannelLost || false;
       const roadLost = adminOptions?.accessRoadLost || landData?.accessRoadLost || false;
@@ -911,7 +911,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             <div>
               <span className="text-sm text-muted-foreground">신청 구분</span>
               <p className="font-medium">
-                <Badge variant="default">본인 신청</Badge>
+                <Badge variant="primary-subtle">본인 신청</Badge>
               </p>
             </div>
             <div>
@@ -1064,7 +1064,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onClick={() => handleAttachmentClick("지적도_용인시_포곡읍_200-1.pdf")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">��적도_용인시_포곡읍_200-1.pdf</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">���적도_용인시_포곡읍_200-1.pdf</Badge>
                           </button>
                           <button
                             onClick={() => handleAttachmentClick("���장사��_20260501.jpg")}
@@ -1366,7 +1366,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             </div>
                           </div>
                             
-                          {/* 판�� 기준 충족 여부 */}
+                          {/* ���� 기준 충족 여부 */}
                           {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
                             <div className="rounded-lg bg-white/60 p-3 border">
                               <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
@@ -2163,7 +2163,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   </div>
                 </div>
                 
-                {/* AI 판정(수용가능/수용불가)과 담당자 판정(매수/기��/��의위원회 이관) 불일치 안내 */}
+                {/* AI 판정(수용가능/수용불가)과 담당자 판정(매수/기��/��의위���회 이관) 불일치 안내 */}
                 {landReview.landJudgment && aiResult?.provisionalJudgment && (
                   (aiResult.provisionalJudgment === "수용가능" && landReview.landJudgment !== "매수") ||
                   (aiResult.provisionalJudgment === "수용불가" && landReview.landJudgment === "매수")
@@ -2332,7 +2332,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const land = allLands[expandedLandIndex];
                         const result = citizenLandAIResults[land?.id];
                         return result?.judgmentRationale?.summary || 
-                          `본 필지는 ${land?.landType} 유형으로, 잔여면적 ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)입니다.`;
+                          `본 필지는 ${land?.landType} 유형으로, 잔여면�� ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)입니다.`;
                       })()}
                     </p>
                   </div>
@@ -2412,7 +2412,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const land = allLands[expandedLandIndex];
                         const result = citizenLandAIResults[land?.id];
                         return result?.judgmentRationale?.detailedExplanation || 
-                          `[필지 정보]\n주소: ${land?.address}\n��목: ${land?.landType} (${land?.landCategory})\n편입 전 면적: ${land?.originalArea?.toLocaleString()}㎡\n���여 면적: ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)`;
+                          `[필지 정보]\n주소: ${land?.address}\n��목: ${land?.landType} (${land?.landCategory})\n편입 전 면��: ${land?.originalArea?.toLocaleString()}㎡\n���여 면적: ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)`;
                       })()}
                     </pre>
                   </div>
