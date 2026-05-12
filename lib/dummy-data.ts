@@ -1757,6 +1757,31 @@ export const dummyApplications: Application[] = [
     statusUpdatedAt: "2026-04-18",
     businessUnit: "강진광주건설 사업단",
   },
+  // 심의위원회 이관 케이스 - 기준 경계 사례로 위원회 심의 필요
+  {
+    id: "app-committee",
+    applicationNumber: "2026-0407-002",
+    applicationType: "single",
+    applicantName: "김심의",
+    applicantContact: "010-7777-8888",
+    applicantAddress: "경기도 용인시 처인구 양지면 마성리 145",
+    landInfo: dummyLandInfoList[8], // AI 판정 경계 사례
+    actualUsage: "답",
+    reportedShape: "사다리형",
+    farmMachineDifficulty: true,
+    reason: "도로 편입 후 농지 형태가 크게 변경되어 정상적인 영농이 어렵습니다. 경계선 문제로 인접 토지와의 분쟁 가능성도 있어 전문가 심의가 필요합니다.",
+    attachments: ["토지대장.pdf", "농지원부.pdf", "현황사진.jpg"],
+    status: "처리완료",
+    adminStatus: "심사완료",
+    appliedAt: "2026-04-07",
+    aiResult: generateAIResult(dummyLandInfoList[8]),
+    finalJudgment: "심의위원회 이관",
+    reviewerComment: "AI 판정 결과 수용가능이나, 인접 토지와의 경계 분쟁 가능성 및 농지 활용도에 대한 현장 확인 결과 추가 검토가 필요함. 잔여면적 기준은 충족하나 형상지수 변화가 경계값에 있어 심의위원회의 전문적 판단이 요구됨.",
+    finalReviewOpinion: "본 건은 AI 분석 결과 매수 기준 충족으로 판단되었으나, 현장 조사 결과 인접 토지 소유자와의 경계 관련 민원이 제기된 상태이며, 농지 활용도에 대한 전문가 의견이 상이하여 심의위원회에 이관하여 종합적인 검토가 필요한 것으로 판단됩니다.",
+    adminName: "박담당",
+    statusUpdatedAt: "2026-04-20",
+    businessUnit: "강진광주건설 사업단",
+  },
   // 매수 불가 케이스 - 검토 중 (곧 기각 예정)
   {
     id: "app-008",
@@ -1769,7 +1794,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "세로장방형",
     farmMachineDifficulty: false,
-    reason: "토지 일부가 도로에 편입되어 잔여지 매수를 신청합니다.",
+    reason: "토지 일부가 도로에 편입되어 잔여지 매수를 신���합니다.",
     attachments: ["토지대장.pdf", "등기부등본.pdf"],
     status: "검토중",
     adminStatus: "진행중",
@@ -2053,7 +2078,7 @@ export const dummyApplications: Application[] = [
     statusUpdatedAt: "2026-04-28",
     businessUnit: "강진광주건설 사업단",
   },
-  // 복수필지 케이스 2: 최혼합 - 4필지 혼합 (대지+농지+잡종지, 검토 중)
+  // 복수필지 케이스 2: 최혼합 - 4필지 혼합 (대지+농지+잡��지, 검토 중)
   {
     id: "app-unified-002",
     applicationNumber: "2026-0426-001",
