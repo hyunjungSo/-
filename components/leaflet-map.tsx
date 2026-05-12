@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Layers, Plus, Minus, Info, Locate, Ruler, X } from "lucide-react";
+import { Layers, Plus, Minus, Info, Locate, Ruler, X, Triangle, Route } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -113,6 +113,12 @@ export function LeafletMap({
   const [measurePoints, setMeasurePoints] = useState<Array<{ lat: number; lng: number }>>([]);
   const [totalDistance, setTotalDistance] = useState(0);
   const measureLayerRef = useRef<L.LayerGroup | null>(null);
+  
+  // 각도 측정 상태
+  const [angleMeasureMode, setAngleMeasureMode] = useState(false);
+  const [anglePoints, setAnglePoints] = useState<Array<{ lat: number; lng: number }>>([]);
+  const [measuredAngle, setMeasuredAngle] = useState<number | null>(null);
+  const angleLayerRef = useRef<L.LayerGroup | null>(null);
 
   const isLayerVisible = currentZoom >= LAYER_MIN_ZOOM;
 
@@ -559,6 +565,10 @@ export function LeafletMap({
       resetMeasurement();
     } else {
       setMeasureMode(true);
+      // 거리 측정 모드 시작 시 각도 측정 모드 끄기
+      setAngleMeasureMode(false);
+      setAnglePoints([]);
+      setMeasuredAngle(null);
     }
   };
   
@@ -730,7 +740,7 @@ export function LeafletMap({
         </div>
       )}
 
-      {/* 지도 컨트롤 - 배경지도/거리측정/레이어 */}
+      {/* 지도 컨트롤 - 배경지도/거리측정/��이어 */}
       <div className="absolute right-0 top-3 z-[1000] flex flex-col gap-1.5 pr-3">
         {/* 배경지도 타입 선택 - 네이버지도 스타일 */}
         <div className="flex gap-1.5 bg-white rounded-lg p-1.5 shadow">
@@ -787,66 +797,83 @@ export function LeafletMap({
           </button>
         </div>
         
-        {/* 거리 측정 */}
-        <button
-          onClick={toggleMeasureMode}
-          className={`flex flex-col items-center justify-center w-[38px] h-10 rounded-md shadow transition-colors self-end ${
-            measureMode ? "bg-blue-500" : "bg-white hover:bg-gray-100"
-          }`}
-        >
-          <Ruler className={`h-4 w-4 mb-0.5 ${measureMode ? "text-white" : "text-gray-700"}`} strokeWidth={1.5} />
-          <span className={`text-[10px] font-medium ${measureMode ? "text-white" : "text-gray-700"}`}>거리</span>
-        </button>
-
-        {/* 레이어 선택 */}
-        <Popover>
-          <PopoverTrigger asChild>
-            <button className="flex flex-col items-center justify-center w-[38px] h-10 bg-white rounded-md shadow hover:bg-gray-100 transition-colors self-end">
-              <Layers className="h-4 w-4 text-gray-700 mb-0.5" strokeWidth={1.5} />
-              <span className="text-[10px] text-gray-700 font-medium">레이어</span>
-            </button>
-          </PopoverTrigger>
-          <PopoverContent className="z-[1001] w-52 p-3" align="end" sideOffset={5}>
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="layer-land"
-                  checked={layers.landSupplyDemand}
-                  onCheckedChange={(checked) =>
-                    setLayers((prev) => ({ ...prev, landSupplyDemand: checked === true }))
-                  }
-                />
-                <Label htmlFor="layer-land" className="text-base font-normal">
-                  국토수급
-                </Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="layer-road"
-                  checked={layers.roadArea}
-                  onCheckedChange={(checked) =>
-                    setLayers((prev) => ({ ...prev, roadArea: checked === true }))
-                  }
-                />
-                <Label htmlFor="layer-road" className="text-base font-normal">
-                  도로구역
-                </Label>
-              </div>
-
-              {/* 레이어 가시화 안내 */}
-              <div className="flex items-start gap-1.5 rounded bg-amber-50 p-2">
-                <Info className="mt-0.5 h-3 w-3 shrink-0 text-amber-500" />
-                <p className="text-base leading-relaxed text-amber-500">
-                  국토수급, 도로구역 레이어는 {LAYER_MIN_ZOOM}Level 부터 가시화됩니다.
-                  현재 Zoom Level은 <strong>{currentZoom}Level</strong> 입니다.
-                </p>
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
+        {/* 지도 도구 버튼들 - 세로 스택 */}
+        <div className="flex flex-col gap-1 bg-white rounded-lg shadow overflow-hidden">
+          {/* 국토수급 */}
+          <button
+            onClick={() => setLayers((prev) => ({ ...prev, landSupplyDemand: !prev.landSupplyDemand }))}
+            className={`flex items-center gap-2 px-3 py-2.5 transition-colors border-b border-gray-100 ${
+              layers.landSupplyDemand 
+                ? "bg-primary/10 border-2 border-primary" 
+                : "hover:bg-gray-50"
+            }`}
+          >
+            <Layers className={`h-4 w-4 ${layers.landSupplyDemand ? "text-primary" : "text-gray-600"}`} strokeWidth={1.5} />
+            <span className={`text-sm font-medium ${layers.landSupplyDemand ? "text-primary" : "text-gray-700"}`}>국토수급</span>
+          </button>
+          
+          {/* 도로구역 */}
+          <button
+            onClick={() => setLayers((prev) => ({ ...prev, roadArea: !prev.roadArea }))}
+            className={`flex items-center gap-2 px-3 py-2.5 transition-colors border-b border-gray-100 ${
+              layers.roadArea 
+                ? "bg-primary/10 border-2 border-primary" 
+                : "hover:bg-gray-50"
+            }`}
+          >
+            <Route className={`h-4 w-4 ${layers.roadArea ? "text-primary" : "text-gray-600"}`} strokeWidth={1.5} />
+            <span className={`text-sm font-medium ${layers.roadArea ? "text-primary" : "text-gray-700"}`}>도로구역</span>
+          </button>
+          
+          {/* 거리측정 */}
+          <button
+            onClick={toggleMeasureMode}
+            className={`flex items-center gap-2 px-3 py-2.5 transition-colors border-b border-gray-100 ${
+              measureMode 
+                ? "bg-primary/10 border-2 border-primary" 
+                : "hover:bg-gray-50"
+            }`}
+          >
+            <Ruler className={`h-4 w-4 ${measureMode ? "text-primary" : "text-gray-600"}`} strokeWidth={1.5} />
+            <span className={`text-sm font-medium ${measureMode ? "text-primary" : "text-gray-700"}`}>거리측정</span>
+          </button>
+          
+          {/* 각도측정 */}
+          <button
+            onClick={() => {
+              setAngleMeasureMode(!angleMeasureMode);
+              if (!angleMeasureMode) {
+                // 각도 측정 모드 시작 시 거리 측정 모드 끄기
+                setMeasureMode(false);
+                setMeasurePoints([]);
+                setTotalDistance(0);
+              }
+              setAnglePoints([]);
+              setMeasuredAngle(null);
+            }}
+            className={`flex items-center gap-2 px-3 py-2.5 transition-colors ${
+              angleMeasureMode 
+                ? "bg-primary/10 border-2 border-primary" 
+                : "hover:bg-gray-50"
+            }`}
+          >
+            <Triangle className={`h-4 w-4 ${angleMeasureMode ? "text-primary" : "text-gray-600"}`} strokeWidth={1.5} />
+            <span className={`text-sm font-medium ${angleMeasureMode ? "text-primary" : "text-gray-700"}`}>각도측정</span>
+          </button>
+        </div>
+        
+        {/* 레이어 가시화 안내 */}
+        {(layers.landSupplyDemand || layers.roadArea) && !isLayerVisible && (
+          <div className="flex items-start gap-1.5 rounded-lg bg-amber-50 p-2 mt-1 max-w-[140px] shadow">
+            <Info className="mt-0.5 h-3 w-3 shrink-0 text-amber-500" />
+            <p className="text-xs leading-relaxed text-amber-600">
+              {LAYER_MIN_ZOOM}Level 이상에서 표시
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* 줌 컨트롤 */}
+      {/* 줌 컨트�� */}
       <div className="absolute left-3 top-3 z-[1000] flex flex-col gap-1">
         <div className="flex flex-col overflow-hidden rounded-md bg-white shadow-md">
           <Button
