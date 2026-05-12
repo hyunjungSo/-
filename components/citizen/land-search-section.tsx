@@ -404,7 +404,7 @@ function simulateAIAnalysis(
   // AI 1차 판독: 수용가능/수용불가 판정
   let provisionalJudgment: "수용가능" | "수용불가";
   
-  // 잔여 면적이 0인 경우: 잔여지가 없으므��� 수용 불가
+  // 잔여 면적이 0인 경우: 잔여지가 없으������ 수용 불가
   if (land.remainingArea === 0) {
     provisionalJudgment = "수용불가";
   } else if (metAutoCriteria >= 1) {
@@ -785,7 +785,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           },
         ];
         
-        // 여러 필지를 소유한 경우 (4개 관할기관: 양평이천 2건, 부산울산 2건, 강������주 1건, 춘천원주 1건)
+        // 여러 필지를 소��한 경우 (4개 관할기관: 양평이천 2건, 부산울산 2건, 강������주 1건, 춘천원주 1건)
         results = ownerLandData.map((landData) => ({
           ...dummyLandInfoList[0],
           ...landData,
@@ -1584,72 +1584,72 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     <div className="space-y-4">
                       {/* 판단 요약 */}
                       {aiResult.judgmentRationale && (
-                        <div className="flex items-center gap-2">
-                          <FileText className="h-4 w-4 shrink-0 text-primary" />
-                          <div>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <FileText className="h-4 w-4 shrink-0 text-primary" />
                             <h4 className="text-base font-semibold text-foreground">판단 요약</h4>
-                            <p className="mt-1 text-base leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.summary}</p>
                           </div>
+                          <p className="text-base leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.summary}</p>
                         </div>
                       )}
 
                       {/* 법적 근거 */}
                       {aiResult.judgmentRationale && (
-                        <div className="flex items-center gap-2">
-                          <Scale className="h-4 w-4 shrink-0 text-amber-500" />
-                          <div>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <Scale className="h-4 w-4 shrink-0 text-amber-500" />
                             <h4 className="text-base font-semibold text-foreground">법적 근거</h4>
-                            <p className="mt-1 text-base leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
                           </div>
+                          <p className="text-base leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
                         </div>
                       )}
 
                       {/* 적용 기준 */}
                       {aiResult.judgmentRationale && (
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
-                          <div>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
                             <h4 className="text-base font-semibold text-foreground">적용 기준</h4>
-                            <ul className="mt-1 space-y-1">
-                              {aiResult.judgmentRationale.appliedCriteria.map((criteria, idx) => (
-                                <li key={idx} className="flex items-start gap-1.5 text-base text-muted-foreground">
-                                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
-                                  <span>{criteria}</span>
-                                </li>
-                              ))}
-                            </ul>
                           </div>
+                          <ul className="space-y-1">
+                            {aiResult.judgmentRationale.appliedCriteria.map((criteria, idx) => (
+                              <li key={idx} className="flex items-start gap-1.5 text-base text-muted-foreground">
+                                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
+                                <span>{criteria}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       )}
 
                       {/* 수동 확인 항목 */}
                       {aiResult.judgmentRationale?.manualCheckItems && aiResult.judgmentRationale.manualCheckItems.length > 0 && (
-                        <div className="flex items-center gap-2">
-                          <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" />
-                          <div>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" />
                             <h4 className="text-base font-semibold text-foreground">수동 확인 항목</h4>
-                            <ul className="mt-1 space-y-1">
-                              {aiResult.judgmentRationale.manualCheckItems.map((item, idx) => (
-                                <li key={idx} className="flex items-center gap-1.5 text-base text-muted-foreground">
-                                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
-                                  <span>{item}</span>
-                                </li>
-                              ))}
-                            </ul>
                           </div>
+                          <ul className="space-y-1">
+                            {aiResult.judgmentRationale.manualCheckItems.map((item, idx) => (
+                              <li key={idx} className="flex items-center gap-1.5 text-base text-muted-foreground">
+                                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" />
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       )}
 
                       {/* 상세 분석 */}
                       {aiResult.judgmentRationale?.detailedExplanation && (
-                        <div className="flex items-center gap-2">
-                          <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
-                          <div>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
                             <h4 className="text-base font-semibold text-foreground">상세 분석</h4>
-                            <pre className="mt-1 whitespace-pre-wrap text-base leading-relaxed text-muted-foreground">
-                              {aiResult.judgmentRationale.detailedExplanation}
-                            </pre>
                           </div>
+                          <pre className="whitespace-pre-wrap text-base leading-relaxed text-muted-foreground">
+                            {aiResult.judgmentRationale.detailedExplanation}
+                          </pre>
                         </div>
                       )}
 
@@ -1761,7 +1761,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     );
                   }
                   
-                  // 그 외 수용불��� 케이스: 기준 미충족이지만 신청은 가능
+                  // 그 �� 수용불��� 케이스: 기준 미충족이지만 신청은 가능
                   return (
                     <div className="space-y-2">
                       <div className="rounded bg-muted/50 p-2 text-center">
