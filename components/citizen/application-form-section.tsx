@@ -19,7 +19,7 @@ import {
 
 import { landCategories } from "@/lib/dummy-data";
 import type { LandInfo, Application, LandCategory, LandShape, AIAnalysisResult } from "@/lib/types";
-import { ArrowLeft, Upload, Send, Bot, CheckCircle2, XCircle, X, Loader2, ChevronDown, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Upload, Send, Bot, CheckCircle2, XCircle, Trash2, Loader2, ChevronDown, AlertTriangle } from "lucide-react";
 import { LandUsageSelect, getLandUsageLabel } from "@/components/common/land-usage-select";
 import { BuildingTypeSelect } from "@/components/common/building-type-select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -944,7 +944,7 @@ export function ApplicationFormSection({
                               aria-describedby={`file-${index}`}
                               aria-label="삭제"
                             >
-                              <X className="h-4 w-4" />
+                              <Trash2 className="h-4 w-4" />
                             </button>
                           )}
                         </div>
