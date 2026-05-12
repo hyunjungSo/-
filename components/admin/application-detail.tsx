@@ -30,6 +30,7 @@ import {
   Info,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
   Map as MapIcon,
   Loader2,
   RotateCcw,
