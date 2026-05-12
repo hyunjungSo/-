@@ -23,6 +23,7 @@ import type { Application, AdminStatus } from "@/lib/types";
 import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers } from "lucide-react";
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { Progress } from "@/components/ui/progress";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 
 interface ApplicationListProps {
   applications: Application[];
@@ -276,36 +277,55 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       <AdminStatusBadge status={app.adminStatus} />
                     </TableCell>
                     <TableCell>
-                      <div className="flex flex-wrap gap-1">
-                        {(() => {
-                          const allLands = [app.landInfo, ...(app.additionalLands || [])];
-                          const maxDisplay = 3;
-                          const displayLands = allLands.slice(0, maxDisplay);
-                          const remainingCount = allLands.length - maxDisplay;
-                          
-                          const results = displayLands.map((land, idx) => {
-                            const judgment = land.remainingRatio <= 30 ? "매수대상" : 
-                                            land.remainingRatio <= 50 ? "검토필요" : "대상외";
-                            const colorClass = judgment === "매수대상" ? "bg-blue-100 text-blue-700" :
-                                              judgment === "검토필요" ? "bg-yellow-100 text-yellow-700" : "bg-gray-100 text-gray-600";
-                            return (
-                              <span key={idx} className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium ${colorClass}`}>
-                                {idx + 1}:{judgment}
-                              </span>
-                            );
-                          });
-                          
-                          if (remainingCount > 0) {
-                            results.push(
-                              <span key="more" className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-700">
-                                +{remainingCount}개
-                              </span>
-                            );
-                          }
-                          
-                          return results;
-                        })()}
-                      </div>
+                      {(() => {
+                        const allLands = [app.landInfo, ...(app.additionalLands || [])];
+                        
+                        // 판정 결과별 개수 세기
+                        const judgments = allLands.map(land => 
+                          land.remainingRatio <= 30 ? "매수대상" : 
+                          land.remainingRatio <= 50 ? "검토필요" : "대상외"
+                        );
+                        
+                        const judgmentCounts = {
+                          매수대상: judgments.filter(j => j === "매수대상").length,
+                          기각: judgments.filter(j => j === "기각").length,
+                          이관: judgments.filter(j => j === "이관").length,
+                        };
+                        
+                        return (
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <button className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-700">
+                                  매수 {judgmentCounts.매수대상}
+                                </span>
+                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-700">
+                                  기각 {judgmentCounts.기각}
+                                </span>
+                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                                  이관 {judgmentCounts.이관}
+                                </span>
+                              </button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-48" align="start">
+                              <div className="space-y-2">
+                                <p className="text-sm font-medium">심사 결과 상세</p>
+                                <div className="space-y-1 max-h-40 overflow-y-auto">
+                                  {allLands.map((land, idx) => {
+                                    const judgment = land.remainingRatio <= 30 ? "매수대상" : 
+                                                    land.remainingRatio <= 50 ? "검토필요" : "대상외";
+                                    return (
+                                      <div key={idx} className="text-xs text-muted-foreground">
+                                        <span className="font-medium text-foreground">{idx + 1}:</span> {land.address} <span className="font-medium text-foreground">({judgment})</span>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        );
+                      })()}
                     </TableCell>
                     <TableCell>
                       <ChevronRight className="h-4 w-4 text-muted-foreground" />
