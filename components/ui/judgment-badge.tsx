@@ -18,26 +18,63 @@ export function getJudgment(remainingRatio: number): JudgmentType {
   return "기각";
 }
 
-// 심사결과별 스타일 설정
+/**
+ * 심사결과 색상 정의 (중앙 관리)
+ * 
+ * 매수: Emerald (#10b981)
+ * 기각: Rose (#f43f5e)
+ * 심의위원회 이관: Amber (#f59e0b)
+ */
+export const JUDGMENT_COLORS = {
+  매수: {
+    hex: "#10b981",
+    bg: "bg-emerald-500",
+    bgLight: "bg-emerald-50",
+    bgMedium: "bg-emerald-100",
+    text: "text-emerald-600",
+    textDark: "text-emerald-700",
+    border: "border-emerald-500",
+  },
+  기각: {
+    hex: "#f43f5e",
+    bg: "bg-rose-500",
+    bgLight: "bg-rose-50",
+    bgMedium: "bg-rose-100",
+    text: "text-rose-600",
+    textDark: "text-rose-700",
+    border: "border-rose-500",
+  },
+  이관: {
+    hex: "#f59e0b",
+    bg: "bg-amber-500",
+    bgLight: "bg-amber-50",
+    bgMedium: "bg-amber-100",
+    text: "text-amber-600",
+    textDark: "text-amber-700",
+    border: "border-amber-500",
+  },
+} as const;
+
+// 심사결과별 스타일 설정 (JUDGMENT_COLORS 기반)
 export const judgmentConfig: Record<JudgmentType, { 
   bgClass: string; 
   textClass: string;
   solidClass: string;
 }> = {
   매수: { 
-    bgClass: "bg-emerald-500", 
-    textClass: "text-emerald-600",
-    solidClass: "bg-emerald-500 text-white"
+    bgClass: JUDGMENT_COLORS.매수.bg, 
+    textClass: JUDGMENT_COLORS.매수.text,
+    solidClass: `${JUDGMENT_COLORS.매수.bg} text-white`
   },
   기각: { 
-    bgClass: "bg-rose-500", 
-    textClass: "text-rose-600",
-    solidClass: "bg-rose-500 text-white"
+    bgClass: JUDGMENT_COLORS.기각.bg, 
+    textClass: JUDGMENT_COLORS.기각.text,
+    solidClass: `${JUDGMENT_COLORS.기각.bg} text-white`
   },
   이관: { 
-    bgClass: "bg-amber-500", 
-    textClass: "text-amber-600",
-    solidClass: "bg-amber-500 text-white"
+    bgClass: JUDGMENT_COLORS.이관.bg, 
+    textClass: JUDGMENT_COLORS.이관.text,
+    solidClass: `${JUDGMENT_COLORS.이관.bg} text-white`
   },
 };
 

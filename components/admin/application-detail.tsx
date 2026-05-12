@@ -16,6 +16,7 @@ import { LeafletMap } from "@/components/leaflet-map";
 import { AIAnalysisFlowDialog } from "@/components/admin/ai-analysis-flow-dialog";
 import { AIIcon } from "@/components/ui/ai-icon";
 import { JudgmentStatus } from "@/components/ui/judgment-status";
+import { JUDGMENT_COLORS } from "@/components/ui/judgment-badge";
 import { landShapes, landCategories } from "@/lib/dummy-data";
 import type { Application, JudgmentResult, FinalJudgmentResult, LandShape, LandCategory, AdminStatus } from "@/lib/types";
 import {
@@ -59,11 +60,29 @@ interface ApplicationDetailProps {
   onSave: (application: Application) => void;
 }
 
-// 담당자 판정 (매수/기각/심의위원회 이관)
+// 담당자 판정 (매수/기각/심의위원회 이관) - JUDGMENT_COLORS 기반
 const judgmentConfig = {
-  매수: { label: "매수", icon: CheckCircle2, borderColor: "border-success", textColor: "text-success", color: "text-success" },
-  기각: { label: "기각", icon: XCircle, borderColor: "border-destructive", textColor: "text-destructive", color: "text-destructive" },
-  "심의위원회 이관": { label: "심의위원회 이관", icon: AlertTriangle, borderColor: "border-warning", textColor: "text-warning", color: "text-warning" },
+  매수: { 
+    label: "매수", 
+    icon: CheckCircle2, 
+    borderColor: JUDGMENT_COLORS.매수.border, 
+    textColor: JUDGMENT_COLORS.매수.text, 
+    color: JUDGMENT_COLORS.매수.text 
+  },
+  기각: { 
+    label: "기각", 
+    icon: XCircle, 
+    borderColor: JUDGMENT_COLORS.기각.border, 
+    textColor: JUDGMENT_COLORS.기각.text, 
+    color: JUDGMENT_COLORS.기각.text 
+  },
+  "심의위원회 이관": { 
+    label: "심의위원회 이관", 
+    icon: AlertTriangle, 
+    borderColor: JUDGMENT_COLORS.이관.border, 
+    textColor: JUDGMENT_COLORS.이관.text, 
+    color: JUDGMENT_COLORS.이관.text 
+  },
 };
 
 const adminStatusConfig: Record<AdminStatus, { 
