@@ -59,7 +59,7 @@ const regionData = {
     "강서구": ["가양동", "개화동", "공항동", "과해동", "내발산동", "등촌동", "마곡동", "방화동", "염창동", "오곡동", "오쇠동", "외발산동", "화곡동"],
     "관악구": ["봉천동", "신림동"],
     "광진구": ["광장동", "구의동", "군자동", "능동", "자양동", "중곡동", "화양동"],
-    "구로구": ["가리봉동", "개봉동", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
+    "구로구": ["가리봉동", "개봉��", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
     "금천구": ["가산동", "독산동", "시흥동"],
     "노원구": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
     "도봉구": ["도봉동", "방학동", "쌍문동", "창동"],
@@ -101,7 +101,7 @@ const regionData = {
     "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
-    "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
+    "청주시 서원구": ["���이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
     "청주시 청원구": ["내수읍", "북이면", "오창읍", "옥산면", "오송읍", "내덕동", "율량동"],
     "청주시 흥덕구": ["강내면", "옥산면", "오송읍", "가경동", "복대동", "봉명동", "송정동", "신봉동"],
     "충주시": ["가금면", "금가면", "노은면", "대소원면", "동량면", "산척면", "살미면", "소태면", "수안보면", "신니면", "앙성면", "엄정면", "이류면", "주덕읍", "중앙탑면"],
@@ -178,7 +178,7 @@ const regionData = {
     "장안면": ["금의리", "독정리", "수촌리", "어은리", "장안리", "덕다리"],
     "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "음양리"],
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
-    "향남읍": ["구문천리", "도이리", "발안리", "상신리", "제암리", "평리", "행정리"],
+    "향남읍": ["구문천리", "도이리", "발��리", "상신리", "제암리", "평리", "행정리"],
     "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "천천리"],
     "비봉면": ["남전리", "삼화리", "양노리", "유포리", "자안리", "청오리", "화천리"],
     "마도면": ["백곡리", "송정리", "쌍송리", "청원리", "해문리"],
@@ -234,7 +234,7 @@ const regionData = {
     "송악면": ["강장리", "궁평리", "마곡리", "수곡리", "역촌리", "유곡리", "평촌리"],
     "신창면": ["가덕리", "궁화리", "남성리", "읍내리", "학정리", "황산리"],
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
-    "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산리", "월선리"],
+    "영인면": ["고룡리", "상성리", "신봉리", "신현리", "아산��", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
     "도고면": ["기곡리", "효자리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
@@ -1002,7 +1002,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
       {/* 검색 필터 영역 - 고용24 스타일 테이블 형태 */}
       <div className="mb-4 overflow-hidden rounded-lg border border-border">
-        {/* 검색 방식 행 */}
+        {/* 검색 방식 �� */}
         <div className="flex border-b border-border">
           <div className="flex w-28 shrink-0 items-center bg-muted/50 px-4 py-3">
             <span className="text-sm font-medium text-foreground">검색방식</span>
@@ -1124,7 +1124,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             </div>
             <div className="flex border-b border-border">
               <div className="flex w-28 shrink-0 items-center bg-muted/50 px-4 py-2">
-                <span className="text-sm font-medium text-foreground">안내</span>
+                <span className="text-sm font-medium text-foreground">���내</span>
               </div>
               <div className="flex flex-1 items-center bg-background px-4 py-2">
                 <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -1467,7 +1467,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
           {/* 기본정보 패널 (선택된 토지 정보) - 슬라이드 */}
           {selectedLand && (
-          <div className={`flex h-full flex-col border-l bg-background transition-all duration-300 overflow-hidden ${isBasicInfoCollapsed ? "w-0 border-l-0" : "w-[320px]"}`}>
+          <div className={`flex h-full flex-col border-l bg-background transition-all duration-300 overflow-hidden ${isBasicInfoCollapsed ? "w-0 border-l-0" : "w-[45%]"}`}>
             {/* 헤더 */}
             <div className="flex shrink-0 items-center justify-between border-b bg-muted px-4 py-3">
               <span className="text-base font-medium text-foreground">기본정보</span>
