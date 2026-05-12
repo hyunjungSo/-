@@ -59,7 +59,7 @@ const regionData = {
     "강서구": ["가양동", "개화동", "공항동", "과해동", "내발산동", "등촌동", "마곡동", "방화동", "염창동", "오곡동", "오쇠동", "외발산동", "화곡동"],
     "관악구": ["봉천동", "신림동"],
     "광진구": ["광장동", "구의동", "군자동", "능동", "자양동", "중곡동", "화양동"],
-    "구로구": ["가리봉동", "개봉�����", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
+    "구로구": ["가리봉동", "개봉������", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
     "금천구": ["가산동", "독산동", "시흥동"],
     "노원구": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
     "도봉구": ["도봉동", "방학동", "쌍문동", "창동"],
@@ -98,7 +98,7 @@ const regionData = {
     "안성시": ["가현동", "고삼면", "공도읍", "금광면", "대덕면", "미양면", "보개면", "삼죽면", "서운면", "양성면", "원곡면", "일죽면", "죽산면"],
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
-    "음성군": ["삼성면", "대소면", "금왕읍", "맹동���", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
+    "음성군": ["삼성면", "대소면", "금왕읍", "맹������", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 ��원��": ["���이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
@@ -156,7 +156,7 @@ const regionData = {
     "설성면": ["대죽리", "사곡리", "상봉리", "송계리", "신필리", "신작리", "행죽리"],
     "신둔면": ["고척리", "남정리", "도봉리", "수광리", "수남리", "용면리", "지석리"],
     "장호원읍": ["나래리", "노탑리", "선읍리", "송산리", "와현리", "장왕리", "진암리", "풍계리"],
-    "율면": ["고당리", "반룡리", "산양리", "월포리", "이황리"],
+    "율면": ["고당리", "반룡리", "산양리", "월포���", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
     // 경기도 - 광주시
@@ -234,7 +234,7 @@ const regionData = {
     "송악면": ["강장리", "궁평리", "마곡리", "수곡리", "역촌리", "유곡리", "평촌리"],
     "신창면": ["가덕리", "궁화리", "남성리", "읍내리", "학정리", "황산리"],
     "염치읍": ["곡교리", "대동리", "백암리", "송곡리", "동정리", "석정리"],
-    "영인면": ["고룡리", "상성리", "신봉리", "��현��", "아산��", "월선리"],
+    "영인면": ["고룡리", "상성리", "신���리", "��현��", "아산��", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
     "도고면": ["기곡리", "효자리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
@@ -404,7 +404,7 @@ function simulateAIAnalysis(
   // AI 1차 판독: 수용가능/수용불가 판정
   let provisionalJudgment: "수용가능" | "수용불가";
   
-  // 잔여 면적이 0인 경우: 잔여지가 없으므로 수용 불가
+  // 잔여 면적이 0인 경우: 잔여지가 없으므��� 수용 불가
   if (land.remainingArea === 0) {
     provisionalJudgment = "수용불가";
   } else if (metAutoCriteria >= 1) {
@@ -489,7 +489,7 @@ function generateJudgmentRationale(
 2. 편입 현황
 - 편입 전 면적: ${land.originalArea.toLocaleString()}㎡
 - 편입 면적: ${land.includedArea.toLocaleString()}㎡
-- 잔여 면적: ${land.remainingArea.toLocaleString()}㎡
+- ��여 면적: ${land.remainingArea.toLocaleString()}㎡
 - 잔여 비율: ${land.remainingRatio}%
 
 3. 형상 분석
@@ -1584,8 +1584,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                     <div className="space-y-4">
                       {/* 판단 요약 */}
                       {aiResult.judgmentRationale && (
-                        <div className="flex items-start gap-2">
-                          <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                        <div className="flex items-center gap-2">
+                          <FileText className="h-4 w-4 shrink-0 text-primary" />
                           <div>
                             <h4 className="text-base font-semibold text-foreground">판단 요약</h4>
                             <p className="mt-1 text-base leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.summary}</p>
@@ -1595,8 +1595,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
                       {/* 법적 근거 */}
                       {aiResult.judgmentRationale && (
-                        <div className="flex items-start gap-2">
-                          <Scale className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+                        <div className="flex items-center gap-2">
+                          <Scale className="h-4 w-4 shrink-0 text-amber-500" />
                           <div>
                             <h4 className="text-base font-semibold text-foreground">법적 근거</h4>
                             <p className="mt-1 text-base leading-relaxed text-muted-foreground">{aiResult.judgmentRationale.legalBasis}</p>
@@ -1606,8 +1606,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
                       {/* 적용 기준 */}
                       {aiResult.judgmentRationale && (
-                        <div className="flex items-start gap-2">
-                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
                           <div>
                             <h4 className="text-base font-semibold text-foreground">적용 기준</h4>
                             <ul className="mt-1 space-y-1">
@@ -1624,8 +1624,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
                       {/* 수동 확인 항목 */}
                       {aiResult.judgmentRationale?.manualCheckItems && aiResult.judgmentRationale.manualCheckItems.length > 0 && (
-                        <div className="flex items-start gap-2">
-                          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+                        <div className="flex items-center gap-2">
+                          <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" />
                           <div>
                             <h4 className="text-base font-semibold text-foreground">수동 확인 항목</h4>
                             <ul className="mt-1 space-y-1">
@@ -1642,8 +1642,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
                       {/* 상세 분석 */}
                       {aiResult.judgmentRationale?.detailedExplanation && (
-                        <div className="flex items-start gap-2">
-                          <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                        <div className="flex items-center gap-2">
+                          <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
                           <div>
                             <h4 className="text-base font-semibold text-foreground">상세 분석</h4>
                             <pre className="mt-1 whitespace-pre-wrap text-base leading-relaxed text-muted-foreground">
@@ -1654,8 +1654,8 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       )}
 
                       {/* 안내 문구 */}
-                      <div className="flex items-start gap-2 pt-2">
-                        <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
+                      <div className="flex items-center gap-2 pt-2">
+                        <Info className="h-3 w-3 shrink-0 text-muted-foreground" />
                         <p className="text-base text-muted-foreground">
                           AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                         </p>
@@ -1916,7 +1916,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                 className="h-5 w-5"
                               />
                               <div className="flex items-center gap-2">
-                                <span className="font-medium">{businessUnit} 관할기관</span>
+                                <span className="font-medium">{businessUnit} 관할기���</span>
                                 <Badge variant="outline" className="text-xs">{items.length}필지</Badge>
                               </div>
                             </div>
