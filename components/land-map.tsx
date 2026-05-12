@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { Layers, Map as MapIcon, Plus, Minus, Info, Ruler, X, RotateCcw, Locate } from "lucide-react";
+import { Layers, Map as MapIcon, Plus, Minus, Info, Ruler, X, RotateCcw, Locate, Route, Triangle } from "lucide-react";
 import type { LandInfo } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -365,69 +365,129 @@ export function LandMap({
 
   return (
     <div className="relative w-full overflow-hidden rounded-lg border border-border bg-muted">
-      {/* 지도 컨트롤 - 우측 상단 */}
-      <div className="absolute right-0 top-3 z-[1000] flex flex-col gap-1.5 pr-2">
-        {/* 거리 측정 */}
-        <button
-          onClick={toggleMeasureMode}
-          className={`flex flex-col items-center justify-center w-[38px] h-10 rounded-md shadow transition-colors self-end ${
-            measureMode ? "bg-pink-500" : "bg-white hover:bg-gray-100"
-          }`}
-        >
-          <Ruler className={`h-4 w-4 mb-0.5 ${measureMode ? "text-white" : "text-gray-700"}`} strokeWidth={1.5} />
-          <span className={`text-[10px] font-medium ${measureMode ? "text-white" : "text-gray-700"}`}>거리</span>
-        </button>
-
-        {/* 레이어 선택 */}
-        <Popover>
-          <PopoverTrigger asChild>
-            <button className="flex flex-col items-center justify-center w-[38px] h-10 bg-white rounded-md shadow hover:bg-gray-100 transition-colors self-end">
-              <Layers className="h-4 w-4 text-gray-700 mb-0.5" strokeWidth={1.5} />
-              <span className="text-[10px] text-gray-700 font-medium">레이어</span>
-            </button>
-          </PopoverTrigger>
-          <PopoverContent className="w-52 p-3" align="end" sideOffset={5}>
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="layer-land"
-                  checked={layers.landSupplyDemand}
-                  onCheckedChange={(checked) =>
-                    setLayers((prev) => ({ ...prev, landSupplyDemand: checked === true }))
-                  }
-                />
-                <Label htmlFor="layer-land" className="text-base font-normal">
-                  국토수급
-                </Label>
+      {/* 지도 컨트롤 - 우측 상단 (배경지도/도구) */}
+      <div className="absolute right-0 top-3 z-[1000] flex flex-col gap-1.5 pr-3">
+        {/* 배경지도 타입 선택 - 네이버지도 스타일 */}
+        <div className="flex gap-1.5 bg-white rounded-lg p-1.5 shadow">
+          <button
+            onClick={() => setBaseMap("normal")}
+            className={`relative flex flex-col items-center rounded-md overflow-hidden transition-all ${
+              baseMap === "normal" 
+                ? "ring-2 ring-blue-500" 
+                : "ring-1 ring-gray-200 hover:ring-gray-300"
+            }`}
+          >
+            <div className="relative w-[60px] h-[42px] overflow-hidden bg-[#f0ede8]">
+              {/* 지도 썸네일 - 도로와 건물 표현 */}
+              <div className="absolute inset-0">
+                <div className="absolute top-2 left-2 right-2 h-[3px] bg-[#ffd54f] rounded-full" />
+                <div className="absolute top-4 left-1 w-[20px] h-[2px] bg-white" />
+                <div className="absolute bottom-3 left-3 w-[15px] h-[12px] bg-[#d4e8d4] rounded-sm" />
+                <div className="absolute bottom-2 right-2 w-[18px] h-[8px] bg-[#c5daf0] rounded-sm" />
+                <div className="absolute top-[18px] left-[50%] w-[2px] h-[20px] bg-white transform -translate-x-1/2" />
               </div>
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="layer-road"
-                  checked={layers.roadArea}
-                  onCheckedChange={(checked) =>
-                    setLayers((prev) => ({ ...prev, roadArea: checked === true }))
-                  }
-                />
-                <Label htmlFor="layer-road" className="text-base font-normal">
-                  도로구역
-                </Label>
-              </div>
-              
-              {/* 레이어 가시화 안내 */}
-              <div className="flex items-start gap-1.5 rounded bg-amber-50 p-2">
-                <Info className="mt-0.5 h-3 w-3 shrink-0 text-amber-500" />
-                <p className="text-base leading-relaxed text-amber-500">
-                  국토수급, 도로구역 레이어는 {LAYER_MIN_ZOOM}Level 부터 가시화됩니다. 
-                  현재 지도 Zoom Level은 <strong>{zoomLevel}Level</strong> 입니다.
-                </p>
+              {/* 상단 아이콘 */}
+              <div className="absolute top-0.5 left-1/2 transform -translate-x-1/2">
+                <div className="bg-white rounded-sm p-0.5 shadow-sm">
+                  <svg className="w-2.5 h-2.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                </div>
               </div>
             </div>
-          </PopoverContent>
-        </Popover>
+            <span className={`text-[11px] font-medium py-1 ${baseMap === "normal" ? "text-blue-600" : "text-gray-600"}`}>
+              일반지도
+            </span>
+          </button>
+          <button
+            onClick={() => setBaseMap("satellite")}
+            className={`relative flex flex-col items-center rounded-md overflow-hidden transition-all ${
+              baseMap === "satellite" 
+                ? "ring-2 ring-blue-500" 
+                : "ring-1 ring-gray-200 hover:ring-gray-300"
+            }`}
+          >
+            <div className="relative w-[60px] h-[42px] overflow-hidden">
+              {/* 위성 썸네일 */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#1a3d1a] via-[#2d5a2d] to-[#1a4a2a]">
+                <div className="absolute top-1 left-1 right-1 h-[2px] bg-[#3a3a3a]/40" />
+                <div className="absolute top-3 left-2 w-[12px] h-[8px] bg-[#4a5a4a] rounded-sm" />
+                <div className="absolute bottom-2 right-1 w-[20px] h-[10px] bg-[#3a4a3a] rounded-sm" />
+                <div className="absolute top-[50%] left-0 right-0 h-[1px] bg-[#5a5a5a]/30" />
+              </div>
+            </div>
+            <span className={`text-[11px] font-medium py-1 ${baseMap === "satellite" ? "text-blue-600" : "text-gray-600"}`}>
+              위성지도
+            </span>
+          </button>
+        </div>
+        
+        {/* 지도 도구 버튼들 - 세로 스택 */}
+        <div className="flex flex-col gap-1 items-end">
+          {/* 국토수급 */}
+          <button
+            onClick={() => setLayers((prev) => ({ ...prev, landSupplyDemand: !prev.landSupplyDemand }))}
+            className={`flex flex-col items-center justify-center w-[52px] h-12 rounded-md shadow transition-colors ${
+              layers.landSupplyDemand 
+                ? "bg-white ring-2 ring-primary" 
+                : "bg-white hover:bg-gray-100"
+            }`}
+          >
+            <Layers className={`h-4 w-4 mb-0.5 ${layers.landSupplyDemand ? "text-primary" : "text-gray-700"}`} strokeWidth={1.5} />
+            <span className={`text-[10px] font-medium ${layers.landSupplyDemand ? "text-primary" : "text-gray-700"}`}>국토수급</span>
+          </button>
+          
+          {/* 도로구역 */}
+          <button
+            onClick={() => setLayers((prev) => ({ ...prev, roadArea: !prev.roadArea }))}
+            className={`flex flex-col items-center justify-center w-[52px] h-12 rounded-md shadow transition-colors ${
+              layers.roadArea 
+                ? "bg-white ring-2 ring-primary" 
+                : "bg-white hover:bg-gray-100"
+            }`}
+          >
+            <Route className={`h-4 w-4 mb-0.5 ${layers.roadArea ? "text-primary" : "text-gray-700"}`} strokeWidth={1.5} />
+            <span className={`text-[10px] font-medium ${layers.roadArea ? "text-primary" : "text-gray-700"}`}>도로구역</span>
+          </button>
+          
+          {/* 거리측정 */}
+          <button
+            onClick={toggleMeasureMode}
+            className={`flex flex-col items-center justify-center w-[52px] h-12 rounded-md shadow transition-colors ${
+              measureMode 
+                ? "bg-white ring-2 ring-primary" 
+                : "bg-white hover:bg-gray-100"
+            }`}
+          >
+            <Ruler className={`h-4 w-4 mb-0.5 ${measureMode ? "text-primary" : "text-gray-700"}`} strokeWidth={1.5} />
+            <span className={`text-[10px] font-medium ${measureMode ? "text-primary" : "text-gray-700"}`}>거리측정</span>
+          </button>
+          
+          {/* 각도측정 */}
+          <button
+            onClick={() => {
+              // 각도 측정은 캔버스 기반 지도에서는 미지원 (placeholder)
+            }}
+            className="flex flex-col items-center justify-center w-[52px] h-12 rounded-md shadow transition-colors bg-white hover:bg-gray-100"
+          >
+            <Triangle className="h-4 w-4 mb-0.5 text-gray-700" strokeWidth={1.5} />
+            <span className="text-[10px] font-medium text-gray-700">각도측정</span>
+          </button>
+        </div>
+        
+        {/* 레이어 가시화 안내 */}
+        {(layers.landSupplyDemand || layers.roadArea) && zoomLevel < LAYER_MIN_ZOOM && (
+          <div className="flex items-start gap-1.5 rounded-lg bg-amber-50 p-2 mt-1 max-w-[52px] shadow">
+            <Info className="mt-0.5 h-3 w-3 shrink-0 text-amber-500" />
+            <p className="text-[9px] leading-tight text-amber-600">
+              {LAYER_MIN_ZOOM}+
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* 줌 컨트롤 */}
-      <div className="absolute left-3 top-3 z-10 flex flex-col gap-1">
+      {/* 줌 컨트롤 - 좌측 상단 */}
+      <div className="absolute left-3 top-3 z-[1000] flex flex-col gap-1">
         <div className="flex flex-col overflow-hidden rounded-md bg-white shadow-md">
           <Button 
             variant="ghost" 
@@ -458,10 +518,8 @@ export function LandMap({
           size="sm"
           className="h-8 w-8 bg-white p-0 text-[#1a1a1a] shadow-md hover:bg-gray-50 [&_svg]:text-[#1a1a1a]"
           onClick={() => {
-            // 현재 위치로 이동 (기본 중심점으로 리셋)
-            if (landInfo) {
-              setZoomLevel(17);
-            }
+            // 현재 위치로 이동 (기본 줌 레벨로 리셋)
+            setZoomLevel(17);
           }}
         >
           <Locate className="h-4 w-4" />
