@@ -156,7 +156,7 @@ const regionData = {
     "설성면": ["대죽리", "사곡리", "상봉리", "송계리", "신필리", "신작리", "행죽리"],
     "신둔면": ["고척리", "남정리", "도봉리", "수광리", "수남리", "용면리", "지석리"],
     "장호원읍": ["나래리", "노탑리", "선읍리", "송산리", "와현리", "장왕리", "진암리", "풍계리"],
-    "율면": ["고당리", "반룡리", "산양리", "월포���", "이황리"],
+    "율면": ["고당리", "반룡리", "산���리", "월포���", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
     // 경기도 - 광주시
@@ -238,7 +238,7 @@ const regionData = {
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
     "도고면": ["기곡리", "효자리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
-    // 세종특별자치시
+    // 세종특별��치시
     "조치원읍": [],
     "금남면": ["��성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "청용리"],
@@ -785,7 +785,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           },
         ];
         
-        // 여러 필지를 소����한 경우 (4개 관할기관: 양평이천 2건, 부산울산 2건, 강������주 1건, 춘천원주 1건)
+        // 여러 ��지를 소����한 경우 (4개 관할기관: 양평이천 2건, 부산울산 2건, 강������주 1건, 춘천원주 1건)
         results = ownerLandData.map((landData) => ({
           ...dummyLandInfoList[0],
           ...landData,
@@ -939,7 +939,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setHasSearched(false);
   };
   
-  // 검색 방식 변경 시 필지 목록 및 기본 정보 초기화
+  // 검색 방식 변경 시 필지 목록 및 기본 정보 초기��
   const handleSearchModeChange = (mode: "address" | "individual" | "corporation") => {
     setSearchMode(mode);
     setOwnerName("");
@@ -1000,7 +1000,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         </ol>
       </nav>
 
-      {/* 검색 필터 영역 - 고용24 스타일 테이블 형태 */}
+      {/* 검색 필터 영역 - 고용24 스타일 테���블 형태 */}
       <div className="mb-4 overflow-hidden rounded-lg border border-border">
         {/* ���색 방식 �� */}
         <div className="flex border-b border-border">
@@ -1562,7 +1562,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             : "border-destructive bg-destructive/5"
                       }`}>
                         {/* 헤더 */}
-                        <div className="mb-3 flex items-center justify-between">
+                        <div className="mb-3 flex items-start justify-between">
                           <div>
                             <span className="text-base font-semibold">상세 판독 결과</span>
                             <p className="text-xs text-muted-foreground mt-0.5">{selectedLand.address}</p>
