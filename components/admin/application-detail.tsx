@@ -208,7 +208,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // AI 결과와 다른 최종 판정 시 사유 필수
   const [adminOverrideReason, setAdminOverrideReason] = useState("");
   
-  // 필지별 검토 ���������������이터 업데이트 함수
+  // 필지별 검토 �����������������이터 업데이트 함수
   const updateLandReviewData = (index: number, field: keyof LandReviewData, value: LandReviewData[keyof LandReviewData]) => {
     setLandReviewDataList(prev => {
       const newList = [...prev];
@@ -723,7 +723,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               appliedCriteria: analysis.criteriaChecks.map(check => 
                 `${check.name}: ${check.description} ${check.met ? "✓" : "✗"}`
               ),
-              detailedExplanation: `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 ��적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n${analysis.reasons.map(r => `• ${r}`).join("\n")}`,
+              detailedExplanation: `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 ����적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n${analysis.reasons.map(r => `• ${r}`).join("\n")}`,
               manualCheckItems: analysis.criteriaChecks.filter(c => !c.met).map(c => `${c.name} 재확인 필요`),
             };
             
@@ -2220,7 +2220,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   }
                   className={`cursor-pointer border-2 ${isSelected ? "border-primary text-primary" : "border-[#E1E4E7] text-foreground"} ${isViewOnly ? "opacity-60 cursor-not-allowed" : ""}`}
                 >
-                  <Icon className={`mr-2 h-4 w-4 ${status === "진행중" && isSelected ? "animate-spin" : ""}`} />
+                  <Icon className="mr-2 h-4 w-4" />
                   {config.label}
                 </Button>
               );
