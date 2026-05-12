@@ -23,7 +23,7 @@ import type { Application, AdminStatus } from "@/lib/types";
 import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers } from "lucide-react";
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { Progress } from "@/components/ui/progress";
-import { JudgmentSummaryBadge } from "@/components/ui/judgment-badge";
+import { JudgmentSummaryBadge, PARCEL_COUNT_COLORS } from "@/components/ui/judgment-badge";
 
 interface ApplicationListProps {
   applications: Application[];
@@ -263,7 +263,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       <div className="flex items-center gap-2">
                         <span className="truncate max-w-[180px]">{app.landInfo.address}</span>
                         {(app.additionalLands?.length || 0) >= 1 && (
-                          <span className="inline-flex items-center gap-1 text-emerald-600 whitespace-nowrap">
+                          <span className={`inline-flex items-center gap-1 whitespace-nowrap ${PARCEL_COUNT_COLORS.text}`}>
                             <Layers className="h-4 w-4" />
                             <span className="text-sm font-medium">{(app.additionalLands?.length || 0) + 1}</span>
                           </span>

@@ -19,6 +19,16 @@ export function getJudgment(remainingRatio: number): JudgmentType {
 }
 
 /**
+ * 필지 건수 색상 정의 (중앙 관리)
+ * Violet (#a78bfa)
+ */
+export const PARCEL_COUNT_COLORS = {
+  hex: "#a78bfa",
+  bg: "bg-violet-100",
+  text: "text-violet-700",
+} as const;
+
+/**
  * 심사결과 색상 정의 (중앙 관리)
  * 
  * 매수 / 충족 / 수용가능: Emerald (#10b981)

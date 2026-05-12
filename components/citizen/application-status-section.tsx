@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { dummyApplications, landCategories } from "@/lib/dummy-data";
 import type { Application, AdminStatus } from "@/lib/types";
+import { PARCEL_COUNT_COLORS } from "@/components/ui/judgment-badge";
 import { 
   FileText, 
   MapPin,
@@ -263,7 +264,7 @@ function LandInfoSection({
       <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
         <h4 className="font-semibold text-foreground">토지 정보</h4>
         {isMultipleLands && (
-          <span className="flex items-center gap-1 rounded bg-violet-100 px-2 py-0.5 text-xs font-medium text-violet-700">
+          <span className={`flex items-center gap-1 rounded px-2 py-0.5 text-xs font-medium ${PARCEL_COUNT_COLORS.bg} ${PARCEL_COUNT_COLORS.text}`}>
             <Layers className="h-3 w-3" />
             {allLands.length}필지
           </span>
