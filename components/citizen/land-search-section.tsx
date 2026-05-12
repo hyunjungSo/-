@@ -238,7 +238,7 @@ const regionData = {
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
     "도고면": ["기곡리", "효자리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
-    // 세종���별��치시
+    // ��종���별��치시
     "조치원읍": [],
     "금남면": ["��성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "청용리"],
@@ -1296,7 +1296,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         {/* 좌측 사이드바 - 필지 목록 + 기본정보 패널 */}
         <div className="absolute bottom-0 left-0 top-0 z-10 flex">
           {/* 필지 목록 패널 */}
-          <div className={`bg-background transition-all duration-300 overflow-hidden ${isResultsCollapsed ? "w-0" : "w-[400px]"}`}>
+          <div className={`bg-background transition-all duration-300 overflow-hidden ${isResultsCollapsed ? "w-0" : "w-[380px]"}`}>
             {/* 필지 목록 헤더 */}
             <div className="flex items-center justify-between border-b bg-muted px-4 py-3">
               <span className="text-base font-medium text-foreground">필지 목록</span>
@@ -1421,7 +1421,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
               {/* 페이지네이션 */}
               {searchResults.length > 0 && (
-              <div className="absolute bottom-0 left-0 flex w-[400px] items-center justify-center gap-1 border-t bg-background py-3">
+              <div className="absolute bottom-0 left-0 flex w-[380px] items-center justify-center gap-1 border-t bg-background py-3">
                 {(() => {
                   const totalPages = Math.ceil(searchResults.length / itemsPerPage);
                   if (totalPages <= 1) return null;
