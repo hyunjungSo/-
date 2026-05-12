@@ -288,7 +288,7 @@ export function ApplicationFormSection({
       landDataList: isMultipleLands ? landDataList : undefined,
     };
 
-    // 시뮬��이션을 위한 딜레이
+    // 시뮬����이션을 위한 딜레이
     setTimeout(() => {
       setIsSubmitting(false);
       onSubmit(application);
@@ -923,11 +923,11 @@ export function ApplicationFormSection({
 
                 {/* 파일 리스트 - KRDS 스타일 */}
                 {formData.attachments.length > 0 && (
-                  <ul className="space-y-2" role="list" aria-label="첨부된 파일 목록">
+                  <ul className="flex flex-wrap gap-2" role="list" aria-label="첨부된 파일 목록">
                     {formData.attachments.map((file, index) => (
                       <li
                         key={index}
-                        className="group flex items-center justify-between rounded-md border border-gray-200 bg-white px-4 py-3"
+                        className="group flex items-center justify-between rounded-md border border-gray-200 bg-white px-4 py-3 max-w-full"
                         role="listitem"
                       >
                         <span className="truncate text-sm text-foreground" id={`file-${index}`}>
