@@ -53,13 +53,13 @@ const regionData = {
   },
   읍면동: {
     // 서울특별시
-    "강남구": ["개포동", "논현동", "대치동", "도곡동", "삼성동", "세곡동", "수서동", "신사동", "압구정동", "역삼동", "율현동", "일원동", "자곡동", "청담동"],
+    "강남구": ["개���동", "논현동", "대치동", "도곡동", "삼성동", "세곡동", "수서동", "신사동", "압구정동", "역삼동", "율현동", "일원동", "자곡동", "청담동"],
     "강동구": ["강일동", "고덕동", "길동", "둔촌동", "명일동", "상일동", "성내동", "암사동", "천호동"],
     "강북구": ["미아동", "번동", "수유동", "우이동"],
     "강서구": ["가양동", "개화동", "공항동", "과해동", "내발산동", "등촌동", "마곡동", "방화동", "염창동", "오곡동", "오쇠동", "외발산동", "화곡동"],
     "관악구": ["봉천동", "신림동"],
     "광진구": ["광장동", "구의동", "군자동", "능동", "자양동", "중곡동", "화양동"],
-    "구로구": ["가리봉동", "개봉���������������", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
+    "구로구": ["가리봉동", "개봉����������������", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
     "금천구": ["가산동", "독산동", "시흥동"],
     "노원구": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
     "도봉구": ["도봉동", "방학동", "쌍문동", "창동"],
@@ -98,7 +98,7 @@ const regionData = {
     "안성시": ["가현동", "고삼면", "공도읍", "금광면", "대덕면", "미양면", "보개면", "삼죽면", "서운면", "양성면", "원곡면", "일죽면", "죽산면"],
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
-    "음성군": ["삼성면", "대소면", "���왕���", "���������", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
+    "음성군": ["삼성면", "대���면", "���왕���", "���������", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 ��원��": ["���이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
@@ -237,7 +237,7 @@ const regionData = {
     "영인면": ["고룡리", "상���리", "신���리", "��현��", "아산��", "월선리"],
     "인주면": ["걸매리", "냉정리", "대음리", "문방리", "신두리", "용두리"],
     "도고면": ["기곡리", "효자리", "금수리", "금산리"],
-    "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
+    "신장���": ["국곡리", "목촌리", "팽나무골리", "하천리"],
     // ���종���별��치시
     "조치원읍": [],
     "금남면": ["��성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
@@ -1467,14 +1467,16 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
           {/* 기본정보 패널 (선택된 토지 정보) - 슬라이드 */}
           {selectedLand && (
-          <div className={`relative flex h-full flex-col border-l bg-background transition-all duration-300 overflow-hidden ${isBasicInfoCollapsed ? "w-0 border-l-0" : "w-[440px]"}`}>
+          <div className="relative flex h-full">
             {/* 토글 버튼 - 패널 왼쪽 모서리에 배치 */}
             <button 
               onClick={() => setIsBasicInfoCollapsed(!isBasicInfoCollapsed)}
-              className="absolute top-1/2 -left-6 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-l-md bg-background shadow-md transition-all duration-300"
+              className="absolute top-1/2 -left-6 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-l-md bg-background shadow-md"
             >
               <ChevronLeft className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${isBasicInfoCollapsed ? "rotate-180" : ""}`} />
             </button>
+            {/* 패널 본체 */}
+            <div className={`flex h-full flex-col border-l bg-background transition-all duration-300 overflow-hidden ${isBasicInfoCollapsed ? "w-0 border-l-0" : "w-[440px]"}`}>
             {/* 헤더 */}
             <div className="flex shrink-0 items-center justify-between border-b bg-muted px-4 py-3">
               <span className="text-base font-medium text-foreground">기본정보</span>
@@ -1787,6 +1789,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 })()}
               </div>
             )}
+            </div>
           </div>
           )}
 
