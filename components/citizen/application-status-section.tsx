@@ -554,7 +554,7 @@ function LandInfoSection({
                   <span className="text-xs text-muted-foreground">
                     {application.attachments.length}개 파일 첨부됨
                   </span>
-                  <ul className="space-y-1">
+                  <ul className="flex flex-row gap-2">
                     {application.attachments.map((fileName, index) => (
                       <li
                         key={index}
