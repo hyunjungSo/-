@@ -59,7 +59,7 @@ const regionData = {
     "강서구": ["가양동", "개화동", "공항동", "과해동", "내발산동", "등촌동", "마곡동", "방화동", "염창동", "오곡동", "오쇠동", "외발산동", "화곡동"],
     "관악구": ["봉천동", "신림동"],
     "광진구": ["광장동", "구의동", "군자동", "능동", "자양동", "중곡동", "화양동"],
-    "구로구": ["가리봉동", "��봉����������������", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
+    "구로구": ["가리봉동", "���봉����������������", "고척동", "구로동", "궁동", "신도림동", "오류동", "온수동", "천왕동", "항동"],
     "금천구": ["가산동", "독산동", "시흥동"],
     "노원구": ["공릉동", "상계동", "월계동", "중계동", "하계동"],
     "도봉구": ["도봉동", "방학동", "쌍문동", "창동"],
@@ -155,7 +155,7 @@ const regionData = {
     "백사면": ["도립리", "경사리", "내촌리", "송말리", "원적리", "조읍리", "현방리"],
     "설성면": ["대죽리", "사곡리", "상봉리", "송계리", "신필리", "신작리", "행죽리"],
     "신둔면": ["고척리", "남정리", "도봉리", "수광리", "수남리", "용면리", "지석리"],
-    "장호원읍": ["나래리", "노탑리", "선읍리", "송산리", "와현리", "장왕리", "진암리", "풍계리"],
+    "장호원읍": ["나래리", "노탑리", "선읍리", "송산리", "와현리", "장왕리", "진��리", "풍계리"],
     "율면": ["���당리", "반���리", "����������리", "월포���", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
@@ -176,7 +176,7 @@ const regionData = {
     "양감면": ["대양리", "무송리", "사창리", "신왕리", "용소리", "정문리", "초록리"],
     "우정읍": ["국화리", "매향리", "멱우리", "석천리", "운평리", "조암리", "주곡리", "화산리"],
     "장안면": ["금의리", "독정리", "수촌리", "어은리", "장안리", "덕다리"],
-    "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "음양리"],
+    "정남면": ["괘랑리", "귀래리", "문학리", "백리", "보통리", "오두리", "���양리"],
     "팔탄면": ["가재리", "기천리", "덕우리", "하저리", "해창리"],
     "향남읍": ["구문천리", "도����", "발��리", "상신리", "제암리", "평리", "행정리"],
     "매송면": ["송라리", "숙곡리", "야목리", "어천리", "원리", "천천리"],
@@ -401,7 +401,7 @@ function simulateAIAnalysis(
   const manualCheckItems = criteriaChecks.filter(c => !c.autoDetected).map(c => c.criteriaName);
   const metCriteriaNames = criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName);
   
-  // AI 1차 판독: 수용가능/수용불가 판정
+  // AI 1차 ���독: 수용가능/수용불가 판정
   let provisionalJudgment: "수���가능" | "수용불가";
   
   // 잔여 면적이 0��� ���우: 잔여지가 없으������ 수용 불가
@@ -1797,7 +1797,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         {/* 사이드바 토글 버튼 - 결과 패널용 */}
         <button 
           onClick={() => setIsResultsCollapsed(!isResultsCollapsed)}
-          className={`absolute top-1/2 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-r-md bg-background shadow-md transition-all duration-300 ${isResultsCollapsed ? "left-0" : "left-[280px]"}`}
+          className={`absolute top-1/2 z-20 flex h-12 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-r-md bg-background shadow-md transition-all duration-300 ${isResultsCollapsed ? "left-0" : "left-[320px]"}`}
           style={{ display: selectedLand && !isBasicInfoCollapsed ? "none" : "flex" }}
         >
           <ChevronLeft className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${isResultsCollapsed ? "rotate-180" : ""}`} />
