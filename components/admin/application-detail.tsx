@@ -16,7 +16,7 @@ import { LeafletMap } from "@/components/leaflet-map";
 import { AIAnalysisFlowDialog } from "@/components/admin/ai-analysis-flow-dialog";
 import { AIIcon } from "@/components/ui/ai-icon";
 import { JudgmentStatus } from "@/components/ui/judgment-status";
-import { JUDGMENT_COLORS } from "@/components/ui/judgment-badge";
+import { JUDGMENT_COLORS, JudgmentBadge } from "@/components/ui/judgment-badge";
 import { landShapes, landCategories } from "@/lib/dummy-data";
 import type { Application, JudgmentResult, FinalJudgmentResult, LandShape, LandCategory, AdminStatus } from "@/lib/types";
 import {
@@ -2244,14 +2244,31 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             <div className="flex flex-wrap gap-2">
               {applicationLands.map((land, idx) => {
                 const review = landReviewDataList[idx];
-                const isReviewed = review?.landJudgment !== null;
-                return (
+                const judgment = review?.landJudgment;
+                const isReviewed = judgment !== null && judgment !== undefined;
+                
+                // 판정 결과에 따른 JudgmentBadge 타입 매핑
+                const getJudgmentType = (j: string | null | undefined) => {
+                  if (j === "매수") return "매수";
+                  if (j === "기각") return "기각";
+                  if (j === "심의위원회 이관") return "이관";
+                  return null;
+                };
+                
+                const judgmentType = getJudgmentType(judgment);
+                
+                return isReviewed && judgmentType ? (
+                  <span key={land.id} className="inline-flex items-center gap-1">
+                    <span className="text-xs text-muted-foreground font-medium">{String.fromCharCode(65 + idx)}</span>
+                    <JudgmentBadge type={judgmentType} showLabel={true} />
+                  </span>
+                ) : (
                   <Badge 
                     key={land.id}
-                    variant={isReviewed ? "default" : "outline"}
-                    className={isReviewed ? "bg-success" : "border-dashed text-muted-foreground"}
+                    variant="outline"
+                    className="border-dashed text-muted-foreground"
                   >
-                    {String.fromCharCode(65 + idx)} {isReviewed ? review.landJudgment : "미검토"}
+                    {String.fromCharCode(65 + idx)} 미검토
                   </Badge>
                 );
               })}
