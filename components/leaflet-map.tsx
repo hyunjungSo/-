@@ -861,16 +861,6 @@ export function LeafletMap({
             <span className={`text-[10px] font-medium ${angleMeasureMode ? "text-primary" : "text-gray-700"}`}>각도측정</span>
           </button>
         </div>
-        
-        {/* 레이어 가시화 안내 */}
-        {(layers.landSupplyDemand || layers.roadArea) && !isLayerVisible && (
-          <div className="flex items-start gap-1.5 rounded-lg bg-amber-50 p-2 mt-1 max-w-[52px] shadow">
-            <Info className="mt-0.5 h-3 w-3 shrink-0 text-amber-500" />
-            <p className="text-[9px] leading-tight text-amber-600">
-              {LAYER_MIN_ZOOM}+
-            </p>
-          </div>
-        )}
       </div>
 
       {/* 줌 컨트롤 */}
