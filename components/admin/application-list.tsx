@@ -114,25 +114,25 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <span className="mt-2 text-xl font-bold text-foreground">{stats.total}</span>
                 <span className="text-xs text-muted-foreground">전체</span>
               </div>
-              <div className="flex flex-col items-center rounded-lg bg-purple-50 p-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100">
-                  <Clock className="h-4 w-4 text-purple-600" />
+              <div className="flex flex-col items-center rounded-lg bg-slate-50 p-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100">
+                  <Clock className="h-4 w-4 text-slate-500" />
                 </div>
-                <span className="mt-2 text-xl font-bold text-purple-600">{stats.접수완료}</span>
+                <span className="mt-2 text-xl font-bold text-slate-500">{stats.접수완료}</span>
                 <span className="text-xs text-muted-foreground">접수완료</span>
               </div>
               <div className="flex flex-col items-center rounded-lg bg-sky-50 p-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-100">
-                  <PlayCircle className="h-4 w-4 text-sky-700" />
+                  <PlayCircle className="h-4 w-4 text-sky-500" />
                 </div>
-                <span className="mt-2 text-xl font-bold text-sky-700">{stats.진행중}</span>
+                <span className="mt-2 text-xl font-bold text-sky-500">{stats.진행중}</span>
                 <span className="text-xs text-muted-foreground">진행중</span>
               </div>
-              <div className="flex flex-col items-center rounded-lg bg-success/10 p-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-success/20">
-                  <CheckCircle2 className="h-4 w-4 text-success" />
+              <div className="flex flex-col items-center rounded-lg bg-slate-100 p-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200">
+                  <CheckCircle2 className="h-4 w-4 text-slate-700" />
                 </div>
-                <span className="mt-2 text-xl font-bold text-success">{stats.심사완료}</span>
+                <span className="mt-2 text-xl font-bold text-slate-700">{stats.심사완료}</span>
                 <span className="text-xs text-muted-foreground">심사완료</span>
               </div>
             </div>
@@ -299,17 +299,17 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                             <HoverCardTrigger asChild>
                               <div className="flex items-center gap-2 cursor-pointer">
                                 {judgmentCounts.매수 > 0 && (
-                                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-700">
+                                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-emerald-500 text-white">
                                     매수 {judgmentCounts.매수}
                                   </span>
                                 )}
                                 {judgmentCounts.기각 > 0 && (
-                                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-700">
+                                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-rose-500 text-white">
                                     기각 {judgmentCounts.기각}
                                   </span>
                                 )}
                                 {judgmentCounts.이관 > 0 && (
-                                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-amber-100 text-amber-700">
+                                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-amber-500 text-white">
                                     이관 {judgmentCounts.이관}
                                   </span>
                                 )}
@@ -322,8 +322,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                                   {allLands.map((land, idx) => {
                                     const judgment = land.remainingRatio <= 30 ? "매수" : 
                                                     land.remainingRatio <= 50 ? "이관" : "기각";
-                                    const judgmentColor = judgment === "매수" ? "text-blue-600" :
-                                                         judgment === "기각" ? "text-red-600" : "text-amber-600";
+                                    const judgmentColor = judgment === "매수" ? "text-emerald-600" :
+                                                         judgment === "기각" ? "text-rose-600" : "text-amber-600";
                                     return (
                                       <div key={idx} className="text-xs">
                                         <span className="font-medium">{idx + 1}:</span>{" "}

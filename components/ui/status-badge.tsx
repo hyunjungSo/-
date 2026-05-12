@@ -4,26 +4,26 @@ import { Badge } from "@/components/ui/badge";
 import { Clock, PlayCircle, CheckCircle2 } from "lucide-react";
 import type { AdminStatus, ProcessStatus } from "@/lib/types";
 
-// 담당자 진행상황 (접수완료/진행중/심사완료)
+// 담당자 진행상황 (접수완료/진행중/심사완료) - Outline 스타일
 const adminStatusConfig: Record<AdminStatus, {
   label: string;
   icon: typeof Clock;
-  variant: "purple-subtle" | "info-subtle" | "success-subtle";
+  variant: "outline-slate" | "outline-sky" | "outline-slate-deep";
 }> = {
   접수완료: {
     label: "접수완료",
     icon: Clock,
-    variant: "purple-subtle",
+    variant: "outline-slate",
   },
   진행중: {
     label: "진행중",
     icon: PlayCircle,
-    variant: "info-subtle",
+    variant: "outline-sky",
   },
   심사완료: {
     label: "심사완료",
     icon: CheckCircle2,
-    variant: "success-subtle",
+    variant: "outline-slate-deep",
   },
 };
 

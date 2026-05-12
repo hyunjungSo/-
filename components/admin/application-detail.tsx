@@ -69,11 +69,11 @@ const judgmentConfig = {
 const adminStatusConfig: Record<AdminStatus, { 
   label: string; 
   icon: typeof Clock; 
-  variant: "purple-subtle" | "info-subtle" | "success-subtle";
+  variant: "outline-slate" | "outline-sky" | "outline-slate-deep";
 }> = {
-  접수완료: { label: "접수완료", icon: Clock, variant: "purple-subtle" },
-  진행중: { label: "진행중", icon: PlayCircle, variant: "info-subtle" },
-  심사완료: { label: "심사완료", icon: CheckCircle2, variant: "success-subtle" },
+  접수완료: { label: "접수완료", icon: Clock, variant: "outline-slate" },
+  진행중: { label: "진행중", icon: PlayCircle, variant: "outline-sky" },
+  심사완료: { label: "심사완료", icon: CheckCircle2, variant: "outline-slate-deep" },
 };
 
 // 담당자 목록 (실제로는 API에서 가져옴)

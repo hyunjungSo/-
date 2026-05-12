@@ -39,6 +39,22 @@ const badgeVariants = cva(
         'destructive-subtle': 'border-transparent bg-red-100 text-red-700',
         // Purple Solid-Pastel - 연한 보라색 배경 + 보라색 텍스트
         'purple-subtle': 'border-transparent bg-purple-50 text-purple-700',
+        
+        // === 진행상황 Outline 스타일 ===
+        // 접수완료: Slate Gray (#64748b)
+        'outline-slate': 'border border-slate-400 bg-transparent text-slate-500',
+        // 진행중: Sky Blue (#0ea5e9)
+        'outline-sky': 'border border-sky-500 bg-transparent text-sky-500',
+        // 심사완료: Slate Deep (#334155)
+        'outline-slate-deep': 'border border-slate-700 bg-transparent text-slate-700',
+        
+        // === 심사결과 Solid 스타일 ===
+        // 매수: Emerald (#10b981)
+        'solid-emerald': 'border-transparent bg-emerald-500 text-white',
+        // 기각: Rose (#f43f5e)
+        'solid-rose': 'border-transparent bg-rose-500 text-white',
+        // 심사위원회 이관: Amber (#f59e0b)
+        'solid-amber': 'border-transparent bg-amber-500 text-white',
       },
       size: {
         // KRDS 뱃지 크기 (8px 단위)
