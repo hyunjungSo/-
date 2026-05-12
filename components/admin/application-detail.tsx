@@ -1058,19 +1058,19 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onClick={() => handleAttachmentClick("토지대장_용인시_포곡읍_200-1.pdf")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">\uD1A0\uC9C0\uB300\uC7A5_\uC6A9\uC778\uC2DC_\uD3EC\uACE1\uC74D_200-1.pdf</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">토지대장_용인시_포곡읍_200-1.pdf</Badge>
                           </button>
                           <button
-                            onClick={() => handleAttachmentClick("\uC9C0\uC801\uB3C4_\uC6A9\uC778\uC2DC_\uD3EC\uACE1\uC74D_200-1.pdf")}
+                            onClick={() => handleAttachmentClick("지적도_용인시_포곡읍_200-1.pdf")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">\uC9C0\uC801\uB3C4_\uC6A9\uC778\uC2DC_\uD3EC\uACE1\uC74D_200-1.pdf</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">지적도_용인시_포곡읍_200-1.pdf</Badge>
                           </button>
                           <button
-                            onClick={() => handleAttachmentClick("\uD604\uC7A5\uC0AC\uC9C4_20260501.jpg")}
+                            onClick={() => handleAttachmentClick("현장사진_20260501.jpg")}
                             className="cursor-pointer hover:opacity-80 transition-opacity"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">\uD604\uC7A5\uC0AC\uC9C4_20260501.jpg</Badge>
+                            <Badge variant="outline" className="font-normal cursor-pointer">현장사진_20260501.jpg</Badge>
                           </button>
                         </div>
                       </td>
@@ -1356,7 +1356,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                 </div>
                                 <Button variant="ghost" size="sm" className="h-6 px-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity">
                                   <Maximize2 className="h-3 w-3 mr-1" />
-                                  확대 보기
+                                  확대 ���기
                                 </Button>
                               </div>
                               <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
@@ -1722,7 +1722,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                     onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
                                   >
                                     <SelectTrigger className="h-10 bg-background">
-                                      <SelectValue placeholder="건축물 용도를 선택해 주세요" />
+                                      <SelectValue placeholder="건축물 용도를 ���택해 주세요" />
                                     </SelectTrigger>
                                     <SelectContent>
                                       <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
@@ -2363,7 +2363,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const land = allLands[expandedLandIndex];
                         const result = citizenLandAIResults[land?.id];
                         return result?.judgmentRationale?.summary || 
-                          `본 필지는 ${land?.landType} 유형으로, 잔여면적 ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)입니다.`;
+                          `본 필지는 ${land?.landType} 유형으로, 잔��면적 ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)입니다.`;
                       })()}
                     </p>
                   </div>
