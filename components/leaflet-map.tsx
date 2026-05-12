@@ -740,7 +740,7 @@ export function LeafletMap({
         </div>
       )}
 
-      {/* 지도 컨트롤 - 배경지도/거리측정/��이어 */}
+      {/* 지도 컨트롤 - 배경지도/거리측정/레이어 */}
       <div className="absolute right-0 top-3 z-[1000] flex flex-col gap-1.5 pr-3">
         {/* 배경지도 타입 선택 - 네이버지도 스타일 */}
         <div className="flex gap-1.5 bg-white rounded-lg p-1.5 shadow">
@@ -873,7 +873,7 @@ export function LeafletMap({
         )}
       </div>
 
-      {/* 줌 컨트�� */}
+      {/* 줌 컨트롤 */}
       <div className="absolute left-3 top-3 z-[1000] flex flex-col gap-1">
         <div className="flex flex-col overflow-hidden rounded-md bg-white shadow-md">
           <Button

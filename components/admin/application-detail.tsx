@@ -208,7 +208,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // AI 결과와 다른 최종 판정 시 사유 필수
   const [adminOverrideReason, setAdminOverrideReason] = useState("");
   
-  // 필지별 검토 �������������이터 업데이트 함수
+  // 필지별 검토 ���������������이터 업데이트 함수
   const updateLandReviewData = (index: number, field: keyof LandReviewData, value: LandReviewData[keyof LandReviewData]) => {
     setLandReviewDataList(prev => {
       const newList = [...prev];
@@ -723,7 +723,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
               appliedCriteria: analysis.criteriaChecks.map(check => 
                 `${check.name}: ${check.description} ${check.met ? "✓" : "✗"}`
               ),
-              detailedExplanation: `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n${analysis.reasons.map(r => `• ${r}`).join("\n")}`,
+              detailedExplanation: `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 ��적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n${analysis.reasons.map(r => `• ${r}`).join("\n")}`,
               manualCheckItems: analysis.criteriaChecks.filter(c => !c.met).map(c => `${c.name} 재확인 필요`),
             };
             
@@ -1084,7 +1084,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
           {/* 2-2. AI 분석 */}
           <div className="space-y-4">
             <h3 className="text-base font-semibold" style={{ fontSize: '18px' }}>AI 분석</h3>
-            <p className="text-sm text-muted-foreground">민원인 신청 결과와 담당자 분석 결과를 확인합니��.</p>
+            <p className="text-sm text-muted-foreground">민원인 신청 결과와 담당자 분석 결과를 확인합니다.</p>
             <Tabs defaultValue="citizen" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="citizen">
@@ -1390,7 +1390,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         <div className="flex items-start gap-2 pt-2 border-t">
                           <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                           <p className="text-xs text-muted-foreground">
-                            AI 판독 결과는 참고��이��, 최종 판정��� 담당자 검토에 따라 결정됩니다.
+                            AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                           </p>
                         </div>
                       </div>
