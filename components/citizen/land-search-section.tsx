@@ -1467,7 +1467,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
 
           {/* 기본정보 패널 (선택된 토지 정보) - 슬라이드 */}
           {selectedLand && (
-          <div className={`flex h-full flex-col border-l bg-background transition-all duration-300 overflow-hidden ${isBasicInfoCollapsed ? "w-0 border-l-0" : "w-[45%]"}`}>
+          <div className={`flex h-full flex-col border-l bg-background transition-all duration-300 overflow-hidden ${isBasicInfoCollapsed ? "w-0 border-l-0" : "w-[420px]"}`}>
             {/* 헤더 */}
             <div className="flex shrink-0 items-center justify-between border-b bg-muted px-4 py-3">
               <span className="text-base font-medium text-foreground">기본정보</span>
