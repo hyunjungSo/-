@@ -79,7 +79,7 @@ export function JudgmentStatus({
   }
 
   return (
-    <Badge className={cn(colors.badge, sizeClasses.badge, className)}>
+    <Badge className={cn("font-semibold", colors.badge, sizeClasses.badge, className)}>
       {judgment}
     </Badge>
   );
