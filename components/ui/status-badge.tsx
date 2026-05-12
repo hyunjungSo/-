@@ -8,12 +8,12 @@ import type { AdminStatus, ProcessStatus } from "@/lib/types";
 const adminStatusConfig: Record<AdminStatus, {
   label: string;
   icon: typeof Clock;
-  variant: "warning-subtle" | "info-subtle" | "success-subtle";
+  variant: "purple-subtle" | "info-subtle" | "success-subtle";
 }> = {
   접수완료: {
     label: "접수완료",
     icon: Clock,
-    variant: "warning-subtle",
+    variant: "purple-subtle",
   },
   진행중: {
     label: "진행중",

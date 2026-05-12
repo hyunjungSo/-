@@ -114,11 +114,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <span className="mt-2 text-xl font-bold text-foreground">{stats.total}</span>
                 <span className="text-xs text-muted-foreground">전체</span>
               </div>
-              <div className="flex flex-col items-center rounded-lg bg-amber-50 p-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100">
-                  <Clock className="h-4 w-4 text-amber-500" />
+              <div className="flex flex-col items-center rounded-lg bg-purple-50 p-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100">
+                  <Clock className="h-4 w-4 text-purple-600" />
                 </div>
-                <span className="mt-2 text-xl font-bold text-amber-500">{stats.접수완료}</span>
+                <span className="mt-2 text-xl font-bold text-purple-600">{stats.접수완료}</span>
                 <span className="text-xs text-muted-foreground">접수완료</span>
               </div>
               <div className="flex flex-col items-center rounded-lg bg-sky-50 p-3">

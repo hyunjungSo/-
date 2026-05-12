@@ -69,9 +69,9 @@ const judgmentConfig = {
 const adminStatusConfig: Record<AdminStatus, { 
   label: string; 
   icon: typeof Clock; 
-  variant: "warning-subtle" | "info-subtle" | "success-subtle";
+  variant: "purple-subtle" | "info-subtle" | "success-subtle";
 }> = {
-  접수완료: { label: "접수완료", icon: Clock, variant: "warning-subtle" },
+  접수완료: { label: "접수완료", icon: Clock, variant: "purple-subtle" },
   진행중: { label: "진행중", icon: PlayCircle, variant: "info-subtle" },
   심사완료: { label: "심사완료", icon: CheckCircle2, variant: "success-subtle" },
 };
