@@ -921,7 +921,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </div>
       )}
 
-      {/* Section 02. 필지선택 */}
+      {/* Section 02. 필지선�� */}
       <Card className="border border-gray-200">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
@@ -1396,7 +1396,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   {/* 필지 선택 + 지적도 한 행 배치 */}
                   <div className="flex gap-3">
                     {/* 필지 선택 목록 */}
-                    <div className="w-[420px] shrink-0 rounded-lg bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
+                    <div className="w-[45%] shrink-0 rounded-lg bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
                       {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 표시 */}
                       {applicationLands[selectedLandIndex] && (
                         <div 
@@ -1720,7 +1720,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                     <SelectValue placeholder="토지 모양을 선택해 주세요" />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">���형</div>
+                                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">����형</div>
                                     {landShapes.regular.map((shape) => (
                                       <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
                                     ))}
@@ -2135,7 +2135,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   </div>
                 </div>
                 
-                {/* AI 판정(수용가능/수용불가)과 담당자 판정(매수/기각/심의위원회 이관) 불일치 안내 */}
+                {/* AI 판정(수용가능/수용불가)과 담당자 판정(매수/기각/��의위원회 이관) 불일치 안내 */}
                 {landReview.landJudgment && aiResult?.provisionalJudgment && (
                   (aiResult.provisionalJudgment === "수용가능" && landReview.landJudgment !== "매수") ||
                   (aiResult.provisionalJudgment === "수용불가" && landReview.landJudgment === "매수")
