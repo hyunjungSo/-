@@ -80,7 +80,7 @@ export function Header() {
               )}
             >
               <Shield className="h-3.5 w-3.5" />
-              <span>관리자</span>
+              <span>담당자</span>
             </button>
           </div>
 
