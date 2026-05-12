@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { Layers, Map as MapIcon, Plus, Minus, Info, Ruler, X, RotateCcw } from "lucide-react";
+import { Layers, Map as MapIcon, Plus, Minus, Info, Ruler, X, RotateCcw, Locate } from "lucide-react";
 import type { LandInfo } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -427,8 +427,8 @@ export function LandMap({
       </div>
 
       {/* 줌 컨트롤 */}
-      <div className="absolute right-0 top-3 z-10 flex flex-col gap-1 pr-3">
-        <div className="flex flex-col overflow-hidden rounded-md bg-white/90 shadow-sm">
+      <div className="absolute left-3 top-3 z-10 flex flex-col gap-1">
+        <div className="flex flex-col overflow-hidden rounded-md bg-white shadow-md">
           <Button 
             variant="ghost" 
             size="sm" 
@@ -451,6 +451,21 @@ export function LandMap({
             <Minus className="h-4 w-4" />
           </Button>
         </div>
+        
+        {/* 현재 위치 버튼 */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-8 w-8 bg-white p-0 text-[#1a1a1a] shadow-md hover:bg-gray-50 [&_svg]:text-[#1a1a1a]"
+          onClick={() => {
+            // 현재 위치로 이동 (기본 중심점으로 리셋)
+            if (landInfo) {
+              setZoomLevel(17);
+            }
+          }}
+        >
+          <Locate className="h-4 w-4" />
+        </Button>
       </div>
 
       <canvas
