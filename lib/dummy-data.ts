@@ -432,7 +432,7 @@ export const dummyLandInfoList: LandInfo[] = [
     remainingShape: "가로장방형",
     originalShapeIndex: 4.1,
     remainingShapeIndex: 4.2,
-    ownerName: "��현우",
+    ownerName: "조현우",
     ownerContact: "010-1111-2222",
     hasIncludedLand: true,
     businessUnit: "양평이천",
@@ -1435,7 +1435,7 @@ function generateRationale(
   let physicalConditions: string;
   
   if (land.landType === "농지") {
-    landTypeCriteria = "농지 기준: 면��� 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
+    landTypeCriteria = "농지 기준: 면적 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
     physicalConditions = "물리조건: ①도로/수로 상실로 농지 사용 불가 ②농기계 회전 곤란 ③형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "택지") {
     landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)";
@@ -1580,33 +1580,6 @@ export const dummyApplications: Application[] = [
     farmMachineDifficulty: false,
     reason: "토지가 양분되어 잔여지 발생. 절토 및 옹벽 설치로 진입이 곤란합니다.",
     attachments: ["토지대장.pdf"],
-    // 민원인 입력 데이터 (분석 설정에 표시)
-    landDataList: [
-      {
-        currentUsage: "잡" as const,
-        landSubType: "residential-detached" as const,
-        actualUsage: "잡" as const,
-        reportedShape: "역삼각형" as const,
-        farmMachineDifficulty: false,
-        accessRoadLost: true,
-        waterChannelLost: false,
-      },
-    ],
-    // 담당자가 검토 완료한 데이터
-    parcelReviewData: {
-      "land-004": {
-        judgment: "매수" as const,
-        comment: "잔여지 면적 45㎡로 최소 기준(60㎡) 미달. 역삼각형 형상으로 건축 불가능. 접면도로 상실로 진입 곤란하여 매수 기준 충족.",
-        adminOptions: {
-          landType: "택지" as const,
-          landSubType: "residential-detached" as const,
-          accessRoadLost: true,
-          waterChannelLost: false,
-          farmMachineDifficulty: false,
-          shapeChanged: true,
-        },
-      },
-    },
     status: "처리완료",
     adminStatus: "심사완료",
     appliedAt: "2026-04-04",
@@ -1774,40 +1747,12 @@ export const dummyApplications: Application[] = [
     farmMachineDifficulty: false,
     reason: "도로 편입으로 일부 토지가 편입되었으나 잔여지가 충분히 넓어 매수를 요청합니다.",
     attachments: ["토지대장.pdf"],
-    // 민원인 입력 데이터
-    landDataList: [
-      {
-        currentUsage: "전" as const,
-        landSubType: "farmland-field" as const,
-        actualUsage: "전" as const,
-        reportedShape: "가로장방형" as const,
-        farmMachineDifficulty: false,
-        accessRoadLost: false,
-        waterChannelLost: false,
-      },
-    ],
-    // 담당자 검토 완료 데이터
-    parcelReviewData: {
-      "land-010": {
-        judgment: "기각" as const,
-        comment: "잔여비율 90%로 매수 기준(30% 이하)을 크게 초과. 형상지수 변화 0.1로 미미하여 기존 농지 활용에 지장 없음. 접면도로 및 관개수로 모두 유지되어 종래 용도 사용 가능. 매수 기준 미충족으로 기각.",
-        adminOptions: {
-          landType: "농지" as const,
-          landSubType: "farmland-field" as const,
-          accessRoadLost: false,
-          waterChannelLost: false,
-          farmMachineDifficulty: false,
-          shapeChanged: false,
-        },
-      },
-    },
     status: "처리완료",
     adminStatus: "심사완료",
     appliedAt: "2026-04-07",
     aiResult: generateAIResult(dummyLandInfoList[9]),
     finalJudgment: "기각",
     reviewerComment: "잔여비율 90%로 매수 기준(30% 이하)을 크게 초과하며, 형상지수 변화도 0.1로 미미하여 종래 용도 사용에 지장이 없음. 매수 기준 미충족으로 기각 처리.",
-    finalReviewOpinion: "본 토지는 도로 편입 후에도 잔여면적이 900㎡(잔여비율 90%)로 충분히 넓고, 형상 변화도 미미하여 종래 농지로서의 활용에 지장이 없습니다. 접면도로 및 관개수로도 유지되어 있어 잔여지 매수 기준에 부합하지 않아 기각 처리합니다.",
     adminName: "박담당",
     statusUpdatedAt: "2026-04-18",
     businessUnit: "강진광주건설 사업단",
@@ -1826,33 +1771,6 @@ export const dummyApplications: Application[] = [
     farmMachineDifficulty: true,
     reason: "도로 편입 후 농지 형태가 크게 변경되어 정상적인 영농이 어렵습니다. 경계선 문제로 인접 토지와의 분쟁 가능성도 있어 전문가 심의가 필요합니다.",
     attachments: ["토지대장.pdf", "농지원부.pdf", "현황사진.jpg"],
-    // 민원인 입력 데이터
-    landDataList: [
-      {
-        currentUsage: "답" as const,
-        landSubType: "farmland-paddy" as const,
-        actualUsage: "답" as const,
-        reportedShape: "사다리형" as const,
-        farmMachineDifficulty: true,
-        accessRoadLost: false,
-        waterChannelLost: true,
-      },
-    ],
-    // 담당자 검토 완료 데이터
-    parcelReviewData: {
-      "land-009": {
-        judgment: "심의위원회 이관" as const,
-        comment: "AI 분석 결과 수용가능 판정이나, 잔여면적 비율 28%로 기준 경계값(30%)에 근접. 인접 토지 경계 분쟁 민원 접수 상태로 현장 확인 필요. 농지 활용도에 대한 전문가 의견 분분하여 심의위원회 이관 결정.",
-        adminOptions: {
-          landType: "농지" as const,
-          landSubType: "farmland-paddy" as const,
-          accessRoadLost: false,
-          waterChannelLost: true,
-          farmMachineDifficulty: true,
-          shapeChanged: true,
-        },
-      },
-    },
     status: "처리완료",
     adminStatus: "심사완료",
     appliedAt: "2026-04-07",
@@ -2053,7 +1971,7 @@ export const dummyApplications: Application[] = [
     applicationNumber: "2026-0412-001",
     applicantName: "이병헌",
     applicantContact: "010-7777-8888",
-    applicantAddress: "경기�� 안양시 동안구 평촌동 500",
+    applicantAddress: "경기도 안양시 동안구 평촌동 500",
     landInfo: dummyLandInfoList[3],
     actualUsage: "잡",
     reportedShape: "삼각형",
@@ -2217,7 +2135,7 @@ export const dummyApplications: Application[] = [
         waterChannelLost: false,
       },
     ],
-    attachments: ["토��대장_777-1.pdf", "토지대장_777-2.pdf", "토지대장_777-3.pdf", "토지대장_777-4.pdf", "등기부등본.pdf", "건축물대장.pdf"],
+    attachments: ["토지대장_777-1.pdf", "토지대장_777-2.pdf", "토지대장_777-3.pdf", "토지대장_777-4.pdf", "등기부등본.pdf", "건축물대장.pdf"],
     status: "검토중",
     adminStatus: "진행중",
     appliedAt: "2026-04-26",
