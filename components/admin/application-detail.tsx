@@ -587,7 +587,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || waterLost || roadLost || farmDifficulty || shapeCriteria.met) {
         judgment = "수용가능";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (waterLost) reasons.push("관개수로 상��" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
+        if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (farmDifficulty) reasons.push("농기계 회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
@@ -941,7 +941,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </div>
       )}
 
-      {/* Section 02. 필��선�� */}
+      {/* Section 02. 필지선택 */}
       <Card className="border border-gray-200">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
@@ -1329,7 +1329,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             </div>
                           )}
 
-                          {/* 상세 분�� */}
+                          {/* 상세 분석 */}
                           <div 
                             className="flex items-start gap-2 p-3 -mx-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors group"
                             onClick={() => {
@@ -1366,7 +1366,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             </div>
                           </div>
                             
-                          {/* ���� 기준 충족 여부 */}
+                          {/* 판정 기준 충족 여부 */}
                           {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
                             <div className="rounded-lg bg-white/60 p-3 border">
                               <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
@@ -1760,7 +1760,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                     <SelectValue placeholder="토지 모양을 선택해 주세요" />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">����형</div>
+                                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">토지유형</div>
                                     {landShapes.regular.map((shape) => (
                                       <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
                                     ))}
@@ -1869,7 +1869,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     </div>
                   </div>
                 
-                    {/* 우���: ���석결�� 확인 */}
+                    {/* 우측: 분석결과 확인 */}
                     <div className="w-1/2 space-y-3">
                   {Object.keys(adminLandAIResults).length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center rounded-lg border bg-muted/20">
@@ -1883,7 +1883,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     </div>
                   ) : (
                     <>
-                      {/* 선택된 필지�� 분석 결과 표�� */}
+                      {/* 선택된 필지의 분석 결과 표시 */}
                       {(() => {
                         const currentParcelId = selectedAdjacentParcel?.id || applicationLands[selectedLandIndex]?.id;
                         const land = selectedAdjacentParcel || applicationLands[selectedLandIndex];
@@ -2017,7 +2017,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                         </div>
                                       </div>
 
-                                      {/* 수�� 확인 항목 */}
+                                      {/* 수동 확인 항목 */}
                                       {aiResult?.judgmentRationale?.manualCheckItems && aiResult.judgmentRationale.manualCheckItems.length > 0 && (
                                         <div className="flex items-start gap-2">
                                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
@@ -2175,7 +2175,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   </div>
                 </div>
                 
-                {/* AI 판정(수용가능/수용불가)과 담당자 판정(매수/기��/��의위���회 이관) 불일치 안내 */}
+                {/* AI 판정(수용가능/수용불가)과 담당자 판정(매수/기각/심의위원회 이관) 불일치 안내 */}
                 {landReview.landJudgment && aiResult?.provisionalJudgment && (
                   (aiResult.provisionalJudgment === "수용가능" && landReview.landJudgment !== "매수") ||
                   (aiResult.provisionalJudgment === "수용불가" && landReview.landJudgment === "매수")
@@ -2289,7 +2289,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             </div>
           </div>
           <Textarea
-            placeholder="전체 필지에 ��한 종합 검토 의견을 입력하세요..."
+            placeholder="전체 필지에 대한 종합 검토 의견을 입력하세요..."
             rows={4}
             value={reviewData.reviewerComment || ""}
             onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}
@@ -2322,7 +2322,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       {/* 상세 판독 결과 확장 패널 (Drawer) */}
       {isDetailPanelExpanded && expandedLandIndex !== null && (
         <div className="fixed inset-0 z-50 flex">
-          {/* ��경 오버레이 */}
+          {/* 배경 오버레이 */}
           <div 
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setIsDetailPanelExpanded(false)}
@@ -2352,7 +2352,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     </p>
                   </div>
 
-                  {/* 판단 ���약 */}
+                  {/* 판단 요약 */}
                   <div className="rounded-lg border bg-muted/30 p-4">
                     <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                       <CheckCircle2 className="h-4 w-4" />
@@ -2363,7 +2363,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const land = allLands[expandedLandIndex];
                         const result = citizenLandAIResults[land?.id];
                         return result?.judgmentRationale?.summary || 
-                          `본 필지는 ${land?.landType} 유형으로, 잔여면�� ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)입니다.`;
+                          `본 필지는 ${land?.landType} 유형으로, 잔여면적 ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)입니다.`;
                       })()}
                     </p>
                   </div>
@@ -2372,7 +2372,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   <div className="rounded-lg border bg-muted/30 p-4">
                     <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                       <FileText className="h-4 w-4" />
-                      법��� 근거
+                      법적 근거
                     </h3>
                     <p className="text-[15px] text-muted-foreground leading-relaxed">
                       {(() => {
@@ -2388,7 +2388,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   <div className="rounded-lg border bg-muted/30 p-4">
                     <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                       <AlertTriangle className="h-4 w-4" />
-                      적용 기��
+                      적용 기준
                     </h3>
                     <ul className="space-y-2">
                       {(() => {
@@ -2443,7 +2443,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const land = allLands[expandedLandIndex];
                         const result = citizenLandAIResults[land?.id];
                         return result?.judgmentRationale?.detailedExplanation || 
-                          `[필지 정보]\n주소: ${land?.address}\n��목: ${land?.landType} (${land?.landCategory})\n편입 전 면��: ${land?.originalArea?.toLocaleString()}㎡\n���여 면적: ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)`;
+                          `[필지 정보]\n주소: ${land?.address}\n지목: ${land?.landType} (${land?.landCategory})\n편입 전 면적: ${land?.originalArea?.toLocaleString()}㎡\n잔여 면적: ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)`;
                       })()}
                     </pre>
                   </div>
@@ -2455,10 +2455,10 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
                     <ImageIcon className="h-5 w-5" />
-                    AI 판독 ��석 이미지
+                    AI 판독 분석 이미지
                   </h3>
                   
-                  {/* ���적도 이미지 */}
+                  {/* 지적도 이미지 */}
                   <div className="rounded-lg border bg-background overflow-hidden">
                     <div className="aspect-square relative z-0">
                       <LeafletMap
@@ -2528,7 +2528,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 border border-amber-200">
                     <Info className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
                     <p className="text-xs text-amber-700">
-                      AI 판독 분석 이미지는 참고��이며, 실제 측량 결과와 다를 수 있습니다.
+                      AI 판독 분석 이미지는 참고용이며, 실제 측량 결과와 다를 수 있습니다.
                       최종 판정은 담당자의 현장 확인 및 검토에 따라 결정됩니다.
                     </p>
                   </div>
@@ -2539,7 +2539,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </div>
       )}
 
-      {/* 하단 저장 버튼 - 심사���료 시 숨김 */}
+      {/* 하단 저장 버튼 - 심사완료 시 숨김 */}
       {!isViewOnly && (
         <div className="fixed bottom-0 left-0 right-0 w-screen bg-background border-t py-4 px-6 mt-6 z-[9999]">
           <div className="flex justify-end gap-3">
