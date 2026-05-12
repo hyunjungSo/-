@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Application, AdminStatus } from "@/lib/types";
-import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, Brain, FileCheck } from "lucide-react";
+import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, Brain, FileCheck, Layers } from "lucide-react";
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { Progress } from "@/components/ui/progress";
 
@@ -228,9 +228,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <TableHead>신청인</TableHead>
                   <TableHead>신청일</TableHead>
                   <TableHead>대상 지번</TableHead>
-                  <TableHead>토지 유형</TableHead>
-                  <TableHead>필지 수</TableHead>
-                  <TableHead>면적</TableHead>
+                  <TableHead>심사결과</TableHead>
                   <TableHead>담당자</TableHead>
                   <TableHead>진행상황</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
@@ -248,14 +246,35 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     </TableCell>
                     <TableCell>{app.applicantName}</TableCell>
                     <TableCell>{app.appliedAt}</TableCell>
-                    <TableCell className="max-w-[200px] truncate">
-                      {app.landInfo.address}
-                    </TableCell>
-                    <TableCell>{app.landInfo.landType}</TableCell>
                     <TableCell>
-                      {(app.additionalLands?.length || 0) + 1}필지
+                      <div className="flex items-center gap-2">
+                        <span className="truncate max-w-[180px]">{app.landInfo.address}</span>
+                        <span className="inline-flex items-center gap-1 text-emerald-600 whitespace-nowrap">
+                          <Layers className="h-4 w-4" />
+                          <span className="text-sm font-medium">{(app.additionalLands?.length || 0) + 1}</span>
+                        </span>
+                      </div>
                     </TableCell>
-                    <TableCell>{app.landInfo.remainingArea.toLocaleString()}㎡</TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {(() => {
+                          const allLands = [app.landInfo, ...(app.additionalLands || [])];
+                          const results = allLands.map((land, idx) => {
+                            // 심사결과 판정 (간단한 로직)
+                            const judgment = land.remainingRatio <= 30 ? "매수대상" : 
+                                            land.remainingRatio <= 50 ? "검토필요" : "대상외";
+                            const colorClass = judgment === "매수대상" ? "bg-blue-100 text-blue-700" :
+                                              judgment === "검토필요" ? "bg-yellow-100 text-yellow-700" : "bg-gray-100 text-gray-600";
+                            return (
+                              <span key={idx} className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium ${colorClass}`}>
+                                {idx + 1}:{judgment}
+                              </span>
+                            );
+                          });
+                          return results;
+                        })()}
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <span className={app.adminName ? "text-foreground" : "text-muted-foreground"}>
                         {app.adminName || "미정"}
