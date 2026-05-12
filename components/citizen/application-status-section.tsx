@@ -323,7 +323,7 @@ function LandInfoSection({
           <span className="text-sm font-medium">잔여 면적</span>
         </div>
         <div className="flex flex-1 items-center px-4 py-3">
-          <span className="font-medium text-primary">{selectedLand.remainingArea.toLocaleString()}m²</span>
+          <span className="font-medium text-black">{selectedLand.remainingArea.toLocaleString()}m²</span>
           <span className="ml-2 text-sm text-muted-foreground">(잔여 비율 {selectedLand.remainingRatio}%)</span>
         </div>
       </div>
@@ -1129,7 +1129,7 @@ function ApplicationDetailPanel({
       {application.adminStatus === "심사완료" && application.finalJudgment && (
         <div className="overflow-hidden rounded-lg border border-border">
           <div className="border-b border-border bg-muted/50 px-4 py-2.5">
-            <h4 className="font-semibold text-foreground">심사 결과</h4>
+            <h4 className="font-semibold text-foreground">��사 결과</h4>
           </div>
           <div className="flex">
             <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-4">
