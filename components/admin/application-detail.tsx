@@ -588,7 +588,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || waterLost || roadLost || farmDifficulty || shapeCriteria.met) {
         judgment = "수용가능";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (waterLost) reasons.push("관개수������� 상��" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
+        if (waterLost) reasons.push("관개수��������� 상��" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (farmDifficulty) reasons.push("농기계 회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
@@ -1847,7 +1847,8 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       {!isViewOnly && (() => {
                         const currentParcelId = selectedAdjacentParcel?.id || applicationLands[selectedLandIndex]?.id;
                         const hasCurrentUsage = currentParcelId && adminCurrentUsagePerLand[currentParcelId] && adminCurrentUsagePerLand[currentParcelId].trim() !== "";
-                        const isDisabled = isAIAnalyzing || !hasCurrentUsage;
+                        const hasLandShape = currentParcelId && adminLandShapePerLand[currentParcelId] && adminLandShapePerLand[currentParcelId].trim() !== "";
+                        const isDisabled = isAIAnalyzing || !hasCurrentUsage || !hasLandShape;
                         
                         return (
                           <div className="space-y-1.5 pt-2 mt-2">
@@ -1874,9 +1875,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                 </>
                               )}
                             </Button>
-                            {!hasCurrentUsage && (
+                            {(!hasCurrentUsage || !hasLandShape) && (
                               <p className="text-xs text-center text-red-600">
-                                필수값을 선택해 주세요
+                                필수값을 모두 선택해 주세요
                               </p>
                             )}
                           </div>
@@ -2038,7 +2039,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                         <div className="flex items-start gap-2">
                                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                                           <div>
-                                            <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
+                                            <h4 className="text-sm font-semibold text-foreground">수동 확�� 항목</h4>
                                             <ul className="mt-1 space-y-1">
                                               {aiResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
                                                 <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -2395,7 +2396,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const land = allLands[expandedLandIndex];
                         const result = citizenLandAIResults[land?.id];
                         return result?.judgmentRationale?.legalBasis || 
-                          "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조";
+                          "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행��칙 제34조";
                       })()}
                     </p>
                   </div>
