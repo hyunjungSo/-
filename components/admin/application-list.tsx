@@ -472,7 +472,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
             </div>
             {/* 기준 안내 문구 */}
-            <p className="pt-2 text-[12px] text-muted-foreground/70">
+            <p className="pt-2 text-xs text-muted-foreground/70">
               ※ 본 통계는 선택된 기간 내 접수된 민원을 기준으로 산출되었습니다.
             </p>
           </CardContent>
@@ -492,7 +492,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             <div className="space-y-3">
               {/* AI 초기 판정 막대 (매수가능/매수불가 2가지만) */}
               <div className="space-y-1.5">
-                <span className="text-xs font-medium text-muted-foreground">AI 초기 판정</span>
+                <span className="text-sm font-medium text-muted-foreground">AI 초기 판정</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
                   {stats.aiAnalyzed > 0 ? (
                     <>
@@ -523,7 +523,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               
               {/* 담당자 최종 심사 막대 */}
               <div className="space-y-1.5">
-                <span className="text-xs font-medium text-muted-foreground">담당자 최종 심사</span>
+                <span className="text-sm font-medium text-muted-foreground">담당자 최종 심사</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
                   {stats.심사완료 > 0 ? (
                     <>
