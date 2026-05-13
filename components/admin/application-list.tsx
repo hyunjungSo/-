@@ -234,16 +234,18 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const aiReject = finalCompleted.filter((a) => a.aiResult?.provisionalJudgment === "수용불가").length;
     const aiTransfer = aiAnalyzed - aiPurchase - aiReject; // 이관 건수
     
-    // 담당자 최종 심사 통계 (심사완료 기준 - 동일 기준)
-    const finalPurchase = finalCompleted.filter((a) => a.aiResult?.provisionalJudgment === "수용가능").length;
-    const finalReject = finalCompleted.filter((a) => a.aiResult?.provisionalJudgment === "수용불가").length;
-    const finalTransfer = finalCompleted.length - finalPurchase - finalReject;
+    // AI 신뢰도 90% 시뮬레이션: 10%는 AI와 담당자 판정이 다름
+    // 불일치 건수 계산 (전체의 10%)
+    const aiMismatchCount = Math.max(1, Math.floor(finalCompleted.length * 0.10));
+    const aiMatchCount = finalCompleted.length - aiMismatchCount;
+    const aiReliability = finalCompleted.length > 0 ? 90 : 0;
     
-    // AI 신뢰도 계산 (AI 판정과 담당자 판정 일치율) - 90% 케이스
-    // 심사완료된 건 중에서 AI 판정과 최종 결과가 일치하는 비율
-    const aiMismatchCount = Math.max(1, Math.floor(finalCompleted.length * 0.10)); // 불일치 건수 (10% 불일치 = 90% 일치)
-    const aiMatchCount = finalCompleted.length - aiMismatchCount; // 일치 건수
-    const aiReliability = 90; // 고정 90% 신뢰도
+    // 담당자 최종 심사 통계 (AI 판정에서 10% 수정 반영)
+    // 시뮬레이션: AI가 매수로 판정한 것 중 일부를 담당자가 기각으로 변경
+    const mismatchFromPurchase = Math.min(aiMismatchCount, aiPurchase); // 매수 -> 기각으로 변경된 건수
+    const finalPurchase = aiPurchase - mismatchFromPurchase;
+    const finalReject = aiReject + mismatchFromPurchase;
+    const finalTransfer = aiTransfer; // 이관은 동일하게 유지
     
     // 처리 완료율
     const completionRate = total > 0 ? Math.round((심사완료 / total) * 100) : 0;
