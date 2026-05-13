@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import type { Application, AdminStatus } from "@/lib/types";
-import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers, RefreshCw, CalendarIcon, Loader2 } from "lucide-react";
+import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers, RefreshCw, CalendarIcon, Loader2, X } from "lucide-react";
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { Progress } from "@/components/ui/progress";
 import { JudgmentSummaryBadge, PARCEL_COUNT_COLORS } from "@/components/ui/judgment-badge";
@@ -587,7 +587,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <span className="font-semibold">{stats.aiMatchCount}건</span>
                 </div>
                 <div className="flex items-center gap-1 text-sm">
-                  <AlertCircle className="h-4 w-4 text-rose-600" />
+                  <X className="h-4 w-4 text-rose-600" />
                   <span className="text-rose-600">판정 불일치:</span>
                   <span className="font-semibold text-rose-600">{stats.aiMismatchCount}건</span>
                 </div>
