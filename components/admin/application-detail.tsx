@@ -588,7 +588,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || waterLost || roadLost || farmDifficulty || shapeCriteria.met) {
         judgment = "수용가능";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (waterLost) reasons.push("관개수����� 상��" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
+        if (waterLost) reasons.push("관개수������� 상��" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (farmDifficulty) reasons.push("농기계 회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
@@ -720,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             const judgmentRationale = {
               summary: `${land.landType} 잔여면적 ${land.remainingArea.toLocaleString()}㎡(잔여비율 ${land.remainingRatio}%), ${analysis.reasons.join(", ")}으로 「${finalJudgment}」 판정`,
-              legalBasis: "「공익사업을 위�� 토����� 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
+              legalBasis: "「공익사업을 위��� 토����� 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
               appliedCriteria: analysis.criteriaChecks.map(check => 
                 `${check.name}: ${check.description} ${check.met ? "✓" : "✗"}`
               ),
@@ -827,6 +827,17 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const aiResult = application.aiResult;
 
   const handleSave = () => {
+    // 토지 모양 필수 입력값 검증
+    const hasAllLandShapes = allLands.every(land => adminLandShapePerLand[land.id]);
+    if (!hasAllLandShapes) {
+      toast({
+        title: "필수 입력값 누락",
+        description: "모든 필지의 토지 모양을 선택해주세요.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsSaving(true);
     
     const selectedAssignee = assigneeList.find(a => a.id === reviewData.assigneeId);
