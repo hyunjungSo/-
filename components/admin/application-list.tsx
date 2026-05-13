@@ -226,8 +226,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   return (
     <div className="space-y-6">
       {/* 글로벌 필터 바 */}
-      <div className="rounded-xl border bg-gradient-to-r from-slate-50 to-white p-4 shadow-sm">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* 좌측: 타이틀 및 업데이트 정보 */}
           <div className="flex items-center gap-3">
             <h2 className="text-lg font-semibold">대시보드</h2>
@@ -249,7 +248,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           {/* 우측: 기간 필터 */}
           <div className="flex items-center gap-2">
             <span className="text-xs font-medium text-muted-foreground">조회 기간:</span>
-            <div className="flex items-center gap-1 rounded-lg border bg-white p-1 shadow-sm">
+            <div className="flex items-center gap-1">
               {[
                 { value: "all", label: "전체" },
                 { value: "today", label: "오늘" },
@@ -262,7 +261,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   className={cn(
                     "rounded-md px-3 py-1.5 text-xs font-medium transition-all",
                     periodFilter === option.value
-                      ? "bg-primary text-primary-foreground shadow-sm"
+                      ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   )}
                 >
@@ -519,7 +518,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <TableHead>사업단</TableHead>
                   <TableHead>담당자</TableHead>
                   <TableHead>진행상황</TableHead>
-                  <TableHead>심사결과</TableHead>
+                  <TableHead>���사결과</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
