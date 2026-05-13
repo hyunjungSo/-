@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Application, AdminStatus } from "@/lib/types";
-import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers } from "lucide-react";
+import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers, RefreshCw } from "lucide-react";
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { Progress } from "@/components/ui/progress";
 import { JudgmentSummaryBadge, PARCEL_COUNT_COLORS } from "@/components/ui/judgment-badge";
@@ -30,14 +30,66 @@ interface ApplicationListProps {
   onSelect: (application: Application) => void;
 }
 
+type PeriodFilter = "all" | "year" | "month" | "week";
+
 export function ApplicationList({ applications, onSelect }: ApplicationListProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<AdminStatus | "all">("all");
   const [projectUnitFilter, setProjectUnitFilter] = useState<"all" | "gangjin-gwangju">("all");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [periodFilter, setPeriodFilter] = useState<PeriodFilter>("all");
+  const [lastUpdated, setLastUpdated] = useState(new Date());
+
+  // 기간 필터링된 데이터
+  const periodFilteredApplications = useMemo(() => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    return applications.filter((app) => {
+      const appDate = new Date(app.appliedAt);
+      
+      switch (periodFilter) {
+        case "year":
+          return appDate.getFullYear() === now.getFullYear();
+        case "month":
+          return appDate.getFullYear() === now.getFullYear() && 
+                 appDate.getMonth() === now.getMonth();
+        case "week":
+          const weekAgo = new Date(today);
+          weekAgo.setDate(weekAgo.getDate() - 7);
+          return appDate >= weekAgo;
+        default:
+          return true;
+      }
+    });
+  }, [applications, periodFilter]);
+
+  // 전일 대비 증감 계산
+  const dailyChanges = useMemo(() => {
+    const today = new Date().toISOString().split('T')[0];
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    
+    const todayNew = periodFilteredApplications.filter((a) => a.appliedAt === today).length;
+    const yesterdayNew = periodFilteredApplications.filter((a) => a.appliedAt === yesterday).length;
+    
+    const todayReceived = periodFilteredApplications.filter((a) => a.appliedAt === today && a.adminStatus === "접수완료").length;
+    const todayInProgress = periodFilteredApplications.filter((a) => a.appliedAt === today && a.adminStatus === "진행중").length;
+    const todayCompleted = periodFilteredApplications.filter((a) => a.appliedAt === today && a.adminStatus === "심사완료").length;
+    
+    return {
+      total: todayNew,
+      접수완료: todayReceived,
+      진행중: todayInProgress,
+      심사완료: todayCompleted,
+    };
+  }, [periodFilteredApplications]);
+
+  const handleRefresh = () => {
+    setLastUpdated(new Date());
+  };
 
   const filteredApplications = useMemo(() => {
-    return applications
+    return periodFilteredApplications
       .filter((app) => {
         const matchesSearch =
           app.applicationNumber.includes(searchQuery) ||
@@ -52,26 +104,26 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         const dateB = new Date(b.appliedAt).getTime();
         return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
       });
-    }, [applications, searchQuery, statusFilter, projectUnitFilter, sortOrder]);
+    }, [periodFilteredApplications, searchQuery, statusFilter, projectUnitFilter, sortOrder]);
 
-  // 상태별 통계
+  // 상태별 통계 (기간 필터 적용)
   const stats = useMemo(() => {
-    const total = applications.length;
-    const 접수완료 = applications.filter((a) => a.adminStatus === "접수완료").length;
-    const 진행중 = applications.filter((a) => a.adminStatus === "진행중").length;
-    const 심사완료 = applications.filter((a) => a.adminStatus === "심사완료").length;
+    const total = periodFilteredApplications.length;
+    const 접수완료 = periodFilteredApplications.filter((a) => a.adminStatus === "접수완료").length;
+    const 진행중 = periodFilteredApplications.filter((a) => a.adminStatus === "진행중").length;
+    const 심사완료 = periodFilteredApplications.filter((a) => a.adminStatus === "심사완료").length;
     
     // AI 판정 통계 (수용가능/수용불가)
-    const aiAnalyzed = applications.filter((a) => a.aiResult).length;
-    const aiPurchase = applications.filter((a) => a.aiResult?.provisionalJudgment === "수용가능").length;
-    const aiReject = applications.filter((a) => a.aiResult?.provisionalJudgment === "수용불가").length;
+    const aiAnalyzed = periodFilteredApplications.filter((a) => a.aiResult).length;
+    const aiPurchase = periodFilteredApplications.filter((a) => a.aiResult?.provisionalJudgment === "수용가능").length;
+    const aiReject = periodFilteredApplications.filter((a) => a.aiResult?.provisionalJudgment === "수용불가").length;
     
     // 처리 완료율
     const completionRate = total > 0 ? Math.round((심사완료 / total) * 100) : 0;
     
     // 오늘 접수된 민원
     const today = new Date().toISOString().split('T')[0];
-    const todayCount = applications.filter((a) => a.appliedAt === today).length;
+    const todayCount = periodFilteredApplications.filter((a) => a.appliedAt === today).length;
     
     return {
       total,
@@ -84,10 +136,49 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       completionRate,
       todayCount,
     };
-  }, [applications]);
+  }, [periodFilteredApplications]);
 
   return (
     <div className="space-y-6">
+      {/* 대시보드 헤더 - 기간 필터 및 업데이트 정보 */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <h2 className="text-lg font-semibold">대시보드</h2>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span>데이터 업데이트: {lastUpdated.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</span>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6"
+              onClick={handleRefresh}
+              title="새로고침"
+            >
+              <RefreshCw className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
+        <div className="flex items-center gap-1 rounded-lg border bg-muted/30 p-1">
+          {[
+            { value: "all", label: "전체" },
+            { value: "year", label: "올해" },
+            { value: "month", label: "이번 달" },
+            { value: "week", label: "이번 주" },
+          ].map((option) => (
+            <button
+              key={option.value}
+              onClick={() => setPeriodFilter(option.value as PeriodFilter)}
+              className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                periodFilter === option.value
+                  ? "bg-white text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* 대시보드 요약 */}
       <div className="grid gap-4 lg:grid-cols-3">
         {/* 민원 진행 현황 카드 */}
@@ -114,17 +205,32 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                   <Users className="h-4 w-4 text-primary" />
                 </div>
-                <span className="mt-2 text-xl font-bold text-foreground">{stats.total}</span>
+                <div className="mt-2 flex items-center gap-1">
+                  <span className="text-xl font-bold text-foreground">{stats.total}</span>
+                  {dailyChanges.total > 0 && (
+                    <span className="rounded bg-primary/10 px-1 py-0.5 text-[10px] font-medium text-primary">+{dailyChanges.total}</span>
+                  )}
+                </div>
                 <span className="text-xs text-muted-foreground">전체</span>
               </div>
               <div 
                 onClick={() => setStatusFilter("접수완료")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-3 transition-opacity hover:opacity-80"
+                className="relative flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-3 transition-opacity hover:opacity-80"
               >
+                {dailyChanges.접수완료 > 0 && (
+                  <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white shadow-sm">
+                    {dailyChanges.접수완료}
+                  </div>
+                )}
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100">
                   <Clock className="h-4 w-4 text-slate-500" />
                 </div>
-                <span className="mt-2 text-xl font-bold text-slate-500">{stats.접수완료}</span>
+                <div className="mt-2 flex items-center gap-1">
+                  <span className="text-xl font-bold text-slate-500">{stats.접수완료}</span>
+                  {dailyChanges.접수완료 > 0 && (
+                    <span className="rounded bg-amber-100 px-1 py-0.5 text-[10px] font-medium text-amber-600">+{dailyChanges.접수완료}</span>
+                  )}
+                </div>
                 <span className="text-xs text-muted-foreground">접수완료</span>
               </div>
               <div 
@@ -134,7 +240,12 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-100">
                   <PlayCircle className="h-4 w-4 text-sky-500" />
                 </div>
-                <span className="mt-2 text-xl font-bold text-sky-500">{stats.진행중}</span>
+                <div className="mt-2 flex items-center gap-1">
+                  <span className="text-xl font-bold text-sky-500">{stats.진행중}</span>
+                  {dailyChanges.진행중 > 0 && (
+                    <span className="rounded bg-sky-100 px-1 py-0.5 text-[10px] font-medium text-sky-600">+{dailyChanges.진행중}</span>
+                  )}
+                </div>
                 <span className="text-xs text-muted-foreground">진행중</span>
               </div>
               <div 
@@ -144,10 +255,19 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200">
                   <CheckCircle2 className="h-4 w-4 text-slate-700" />
                 </div>
-                <span className="mt-2 text-xl font-bold text-slate-700">{stats.심사완료}</span>
+                <div className="mt-2 flex items-center gap-1">
+                  <span className="text-xl font-bold text-slate-700">{stats.심사완료}</span>
+                  {dailyChanges.심사완료 > 0 && (
+                    <span className="rounded bg-green-100 px-1 py-0.5 text-[10px] font-medium text-green-600">+{dailyChanges.심사완료}</span>
+                  )}
+                </div>
                 <span className="text-xs text-muted-foreground">심사완료</span>
               </div>
             </div>
+            {/* 기준 안내 문구 */}
+            <p className="pt-2 text-[11px] text-muted-foreground/70">
+              ※ 본 통계는 선택된 기간 내 접수된 민원을 기준으로 산출되었습니다.
+            </p>
           </CardContent>
         </Card>
 
