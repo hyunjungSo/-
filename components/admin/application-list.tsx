@@ -50,6 +50,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   const [projectUnitFilter, setProjectUnitFilter] = useState<"all" | "gangjin-gwangju">("all");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [periodFilter, setPeriodFilter] = useState<PeriodFilter>("all");
+  const [aiMismatchFilter, setAiMismatchFilter] = useState(false);
   const [customDateRange, setCustomDateRange] = useState<DateRange>({ from: undefined, to: undefined });
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -189,14 +190,16 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           app.landInfo.address.includes(searchQuery);
       const matchesStatus = statusFilter === "all" || app.adminStatus === statusFilter;
       const matchesProjectUnit = projectUnitFilter === "all" || app.businessUnit === "강진광주";
-      return matchesSearch && matchesStatus && matchesProjectUnit;
+      // AI 불일치 필터 (시뮬레이션: 접수번호가 특정 패턴일 때 불일치로 간주)
+      const matchesAiMismatch = !aiMismatchFilter || (app.adminStatus === "심사완료" && app.applicationNumber.endsWith("2"));
+      return matchesSearch && matchesStatus && matchesProjectUnit && matchesAiMismatch;
       })
       .sort((a, b) => {
         const dateA = new Date(a.appliedAt).getTime();
         const dateB = new Date(b.appliedAt).getTime();
         return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
       });
-    }, [periodFilteredApplications, searchQuery, statusFilter, projectUnitFilter, sortOrder]);
+    }, [periodFilteredApplications, searchQuery, statusFilter, projectUnitFilter, sortOrder, aiMismatchFilter]);
 
   // 상태별 통계 (기간 필터 적용)
   const stats = useMemo(() => {
@@ -209,6 +212,19 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const aiAnalyzed = periodFilteredApplications.filter((a) => a.aiResult).length;
     const aiPurchase = periodFilteredApplications.filter((a) => a.aiResult?.provisionalJudgment === "수용가능").length;
     const aiReject = periodFilteredApplications.filter((a) => a.aiResult?.provisionalJudgment === "수용불가").length;
+    const aiTransfer = aiAnalyzed - aiPurchase - aiReject; // 이관 건수
+    
+    // 담당자 최종 심사 통계 (심사완료 기준)
+    const finalCompleted = periodFilteredApplications.filter((a) => a.adminStatus === "심사완료");
+    const finalPurchase = finalCompleted.filter((a) => a.aiResult?.provisionalJudgment === "수용가능").length;
+    const finalReject = finalCompleted.filter((a) => a.aiResult?.provisionalJudgment === "수용불가").length;
+    const finalTransfer = finalCompleted.length - finalPurchase - finalReject;
+    
+    // AI 신뢰도 계산 (AI 판정과 담당자 판정 일치율)
+    // 심사완료된 건 중에서 AI 판정과 최종 결과가 일치하는 비율
+    const aiMatchCount = finalCompleted.length; // 일치 건수 (시뮬레이션용)
+    const aiMismatchCount = Math.floor(finalCompleted.length * 0.08); // 불일치 건수 (8% 불일치 시뮬레이션)
+    const aiReliability = finalCompleted.length > 0 ? Math.round(((finalCompleted.length - aiMismatchCount) / finalCompleted.length) * 100) : 0;
     
     // 처리 완료율
     const completionRate = total > 0 ? Math.round((심사완료 / total) * 100) : 0;
@@ -225,6 +241,13 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       aiAnalyzed,
       aiPurchase,
       aiReject,
+      aiTransfer,
+      finalPurchase,
+      finalReject,
+      finalTransfer,
+      aiReliability,
+      aiMatchCount: finalCompleted.length - aiMismatchCount,
+      aiMismatchCount,
       completionRate,
       todayCount,
     };
@@ -329,7 +352,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
 
       {/* 대시보드 요약 */}
       <div className="grid gap-4 lg:grid-cols-3">
-        {/* 민원 진행 현황 ��드 */}
+        {/* 민원 진행 ��황 ��드 */}
         <Card className="lg:col-span-2">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium">민원 진행 현황</CardTitle>
@@ -411,38 +434,135 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           </CardContent>
         </Card>
 
-        {/* AI 분석 현황 카드 */}
+        {/* AI 판독 신뢰도 카드 */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-medium">
-              AI 분석 현황
-            </CardTitle>
+            <CardTitle className="text-base font-medium">AI 판독 신뢰도</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">분석 완료</span>
-              <span className="text-lg font-semibold">{stats.aiAnalyzed}건</span>
+            {/* AI 신뢰도 강조 표시 */}
+            <div className="flex items-center justify-between rounded-lg bg-primary/5 px-4 py-3">
+              <span className="text-sm font-medium text-muted-foreground">AI 신뢰도</span>
+              <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
             </div>
             
-            {/* AI 판정 결과 분포 */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between rounded-md bg-success/10 px-3 py-2">
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-success" />
-                  <span className="text-sm">매수 판정</span>
+            {/* 스택 바 비교 */}
+            <div className="space-y-3">
+              {/* AI 초기 판정 막대 */}
+              <div className="space-y-1.5">
+                <span className="text-xs font-medium text-muted-foreground">AI 초기 판정</span>
+                <div className="flex h-8 w-full overflow-hidden rounded-md">
+                  {stats.aiAnalyzed > 0 ? (
+                    <>
+                      {stats.aiPurchase > 0 && (
+                        <div 
+                          className="flex items-center justify-center bg-emerald-500 text-xs font-semibold text-white"
+                          style={{ width: `${(stats.aiPurchase / stats.aiAnalyzed) * 100}%` }}
+                        >
+                          {stats.aiPurchase}건
+                        </div>
+                      )}
+                      {stats.aiReject > 0 && (
+                        <div 
+                          className="flex items-center justify-center bg-rose-500 text-xs font-semibold text-white"
+                          style={{ width: `${(stats.aiReject / stats.aiAnalyzed) * 100}%` }}
+                        >
+                          {stats.aiReject}건
+                        </div>
+                      )}
+                      {stats.aiTransfer > 0 && (
+                        <div 
+                          className="flex items-center justify-center bg-amber-500 text-xs font-semibold text-white"
+                          style={{ width: `${(stats.aiTransfer / stats.aiAnalyzed) * 100}%` }}
+                        >
+                          {stats.aiTransfer}건
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-muted text-xs text-muted-foreground">
+                      데이터 없음
+                    </div>
+                  )}
                 </div>
-                <span className="font-semibold text-success">{stats.aiPurchase}건</span>
               </div>
-              <div className="flex items-center justify-between rounded-md bg-destructive/10 px-3 py-2">
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-destructive" />
-                  <span className="text-sm">기각 판정</span>
+              
+              {/* 담당자 최종 심사 막대 */}
+              <div className="space-y-1.5">
+                <span className="text-xs font-medium text-muted-foreground">담당자 최종 심사</span>
+                <div className="flex h-8 w-full overflow-hidden rounded-md">
+                  {stats.심사완료 > 0 ? (
+                    <>
+                      {stats.finalPurchase > 0 && (
+                        <div 
+                          className="flex items-center justify-center bg-emerald-500 text-xs font-semibold text-white"
+                          style={{ width: `${(stats.finalPurchase / stats.심사완료) * 100}%` }}
+                        >
+                          {stats.finalPurchase}건
+                        </div>
+                      )}
+                      {stats.finalReject > 0 && (
+                        <div 
+                          className="flex items-center justify-center bg-rose-500 text-xs font-semibold text-white"
+                          style={{ width: `${(stats.finalReject / stats.심사완료) * 100}%` }}
+                        >
+                          {stats.finalReject}건
+                        </div>
+                      )}
+                      {stats.finalTransfer > 0 && (
+                        <div 
+                          className="flex items-center justify-center bg-amber-500 text-xs font-semibold text-white"
+                          style={{ width: `${(stats.finalTransfer / stats.심사완료) * 100}%` }}
+                        >
+                          {stats.finalTransfer}건
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-muted text-xs text-muted-foreground">
+                      데이터 없음
+                    </div>
+                  )}
                 </div>
-                <span className="font-semibold text-destructive">{stats.aiReject}건</span>
+              </div>
+              
+              {/* 범례 */}
+              <div className="flex items-center justify-center gap-4 pt-1">
+                <div className="flex items-center gap-1.5">
+                  <div className="h-2.5 w-2.5 rounded-sm bg-emerald-500" />
+                  <span className="text-xs text-muted-foreground">매수</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="h-2.5 w-2.5 rounded-sm bg-rose-500" />
+                  <span className="text-xs text-muted-foreground">기각</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="h-2.5 w-2.5 rounded-sm bg-amber-500" />
+                  <span className="text-xs text-muted-foreground">이관</span>
+                </div>
               </div>
             </div>
-
-
+            
+            {/* 상세 지표 */}
+            <div className="flex items-center justify-between border-t pt-3">
+              <div className="flex items-center gap-1">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                <span className="text-sm text-muted-foreground">판정 일치:</span>
+                <span className="font-semibold">{stats.aiMatchCount}건</span>
+              </div>
+              <button
+                onClick={() => setAiMismatchFilter(!aiMismatchFilter)}
+                className={`flex items-center gap-1 rounded-md px-2 py-1 text-sm transition-colors ${
+                  aiMismatchFilter 
+                    ? "bg-rose-100 text-rose-700" 
+                    : "text-rose-600 hover:bg-rose-50"
+                }`}
+              >
+                <AlertCircle className="h-4 w-4" />
+                <span className="underline-offset-2 hover:underline">판정 수정:</span>
+                <span className="font-semibold">{stats.aiMismatchCount}건</span>
+              </button>
+            </div>
           </CardContent>
         </Card>
       </div>
