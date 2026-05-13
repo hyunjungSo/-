@@ -307,10 +307,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <PopoverTrigger asChild>
                   <button
                     className={cn(
-                      "flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium transition-all",
+                      "flex items-center gap-1 rounded-md border px-3 py-1.5 text-xs font-medium transition-all",
                       periodFilter === "year" && selectedYear !== null
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                        ? "border-primary bg-primary/5 text-primary"
+                        : "border-muted-foreground/30 text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground"
                     )}
                   >
                     {selectedYear !== null ? `${selectedYear}년` : "년도선택"}
@@ -349,10 +349,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   key={option.value}
                   onClick={() => handlePeriodChange(option.value as PeriodFilter)}
                   className={cn(
-                    "rounded-md px-3 py-1.5 text-xs font-medium transition-all",
+                    "rounded-md border px-3 py-1.5 text-xs font-medium transition-all",
                     periodFilter === option.value
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      ? "border-primary bg-primary/5 text-primary"
+                      : "border-muted-foreground/30 text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground"
                   )}
                 >
                   {option.label}
@@ -364,10 +364,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <PopoverTrigger asChild>
                   <button
                     className={cn(
-                      "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all",
+                      "flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-all",
                       periodFilter === "custom"
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                        ? "border-primary bg-primary/5 text-primary"
+                        : "border-muted-foreground/30 text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground"
                     )}
                   >
                     <CalendarIcon className="h-3.5 w-3.5" />
