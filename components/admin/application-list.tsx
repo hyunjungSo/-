@@ -442,7 +442,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <span className="text-sm font-medium text-slate-600" style={{ order: 1 }}>전체</span>
                 <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
                   <span className="font-bold text-slate-900" style={{ fontSize: '42px' }}>{stats.total}</span>
-                  <span className="text-xs font-medium text-slate-400 ml-0.5">건</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
               {/* 접수완료: Indigo #6366F1 (신규 접수 강조) */}
@@ -453,7 +453,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <span className="text-sm font-medium text-indigo-500" style={{ order: 1 }}>접수완료</span>
                 <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
                   <span className="font-bold text-indigo-500" style={{ fontSize: '42px' }}>{stats.접수완료}</span>
-                  <span className="text-xs font-medium text-indigo-300 ml-0.5">건</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
               {/* 진행중: Blue 계열 (활동 상태 강조) */}
@@ -464,7 +464,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <span className="text-sm font-medium text-blue-600" style={{ order: 1 }}>진행중</span>
                 <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
                   <span className="font-bold text-blue-600" style={{ fontSize: '42px' }}>{stats.진행중}</span>
-                  <span className="text-xs font-medium text-blue-300 ml-0.5">건</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
               {/* 심사완료: Green 계열 (완료 상태 강조) */}
@@ -475,7 +475,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <span className="text-sm font-medium text-green-600" style={{ order: 1 }}>심사완료</span>
                 <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
                   <span className="font-bold text-green-600" style={{ fontSize: '42px' }}>{stats.심사완료}</span>
-                  <span className="text-xs font-medium text-green-300 ml-0.5">건</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
             </div>
