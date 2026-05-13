@@ -19,12 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 import type { Application, AdminStatus } from "@/lib/types";
 import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers, RefreshCw, CalendarIcon, Loader2, XCircle } from "lucide-react";
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
@@ -281,121 +275,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
 
   return (
     <div className="space-y-6">
-      {/* 글로벌 필터 바 */}
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          {/* 좌측: 타이틀 및 업데이트 정보 */}
-          <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-semibold">담당자 서비스</h2>
-            <div className="h-4 w-px bg-border" />
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span>업데이트: {isMounted && lastUpdated ? lastUpdated.toLocaleString('ko-KR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '--'}</span>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6"
-                onClick={handleRefresh}
-                title="새로고침"
-              >
-                <RefreshCw className={cn("h-3.5 w-3.5", isLoading && "animate-spin")} />
-              </Button>
-            </div>
-          </div>
-          
-          {/* 우측: 기간 필터 */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-muted-foreground">조회 기간:</span>
-            <div className="flex items-center gap-1">
-              {/* 연도 피커 */}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button
-                    className={cn(
-                      "flex items-center gap-1 rounded-md border px-3 py-1.5 text-xs font-medium transition-all",
-                      periodFilter === "year" && selectedYear !== null
-                        ? "border-primary bg-primary/5 text-primary"
-                        : "border-muted-foreground/30 text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground"
-                    )}
-                  >
-                    {selectedYear !== null ? `${selectedYear}년` : "년도선택"}
-                    <ChevronRight className="h-3 w-3 rotate-90" />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-32 p-1" align="start">
-                  <div className="max-h-48 overflow-y-auto">
-                    {availableYears.map((year) => (
-                      <button
-                        key={year}
-                        onClick={() => {
-                          handlePeriodChange("year", year);
-                        }}
-                        className={cn(
-                          "w-full rounded-md px-3 py-1.5 text-left text-sm transition-colors",
-                          selectedYear === year && periodFilter === "year"
-                            ? "bg-primary text-primary-foreground"
-                            : "hover:bg-muted"
-                        )}
-                      >
-                        {year}년
-                      </button>
-                    ))}
-                  </div>
-                </PopoverContent>
-              </Popover>
-              
-              {/* 기간 버튼들 */}
-              {[
-                { value: "today", label: "오늘" },
-                { value: "week", label: "이번 주" },
-                { value: "month", label: "이번 달" },
-              ].map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => handlePeriodChange(option.value as PeriodFilter)}
-                  className={cn(
-                    "rounded-md border px-3 py-1.5 text-xs font-medium transition-all",
-                    periodFilter === option.value
-                      ? "border-primary bg-primary/5 text-primary"
-                      : "border-muted-foreground/30 text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground"
-                  )}
-                >
-                  {option.label}
-                </button>
-              ))}
-              
-              {/* 직접선택 */}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button
-                    className={cn(
-                      "flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-all",
-                      periodFilter === "custom"
-                        ? "border-primary bg-primary/5 text-primary"
-                        : "border-muted-foreground/30 text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="h-3.5 w-3.5" />
-                    직접선택
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="end">
-                  <Calendar
-                    mode="range"
-                    selected={{ from: customDateRange.from, to: customDateRange.to }}
-                    onSelect={(range) => {
-                      setCustomDateRange({ from: range?.from, to: range?.to });
-                      if (range?.from) {
-                        handlePeriodChange("custom");
-                      }
-                    }}
-                    numberOfMonths={2}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-          </div>
-        </div>
-
       {/* 현재 조회 기준 표시 */}
       <div className="flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-4 py-2">
         <CalendarIcon className="h-4 w-4 text-primary" />
