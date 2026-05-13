@@ -51,9 +51,16 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [periodFilter, setPeriodFilter] = useState<PeriodFilter>("all");
   const [customDateRange, setCustomDateRange] = useState<DateRange>({ from: undefined, to: undefined });
-  const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // 클라이언트 마운트 후 날짜 설정 (hydration mismatch 방지)
+  useEffect(() => {
+    setIsMounted(true);
+    setLastUpdated(new Date());
+  }, []);
 
   // 필터 변경 시 로딩 효과
   const handlePeriodChange = (newPeriod: PeriodFilter) => {
@@ -232,7 +239,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             <h2 className="text-lg font-semibold">대시보드</h2>
             <div className="h-4 w-px bg-border" />
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span>업데이트: {lastUpdated.toLocaleString('ko-KR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</span>
+              <span>업데이트: {isMounted && lastUpdated ? lastUpdated.toLocaleString('ko-KR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '--'}</span>
               <Button
                 variant="ghost"
                 size="icon"
