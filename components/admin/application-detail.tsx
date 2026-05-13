@@ -1424,38 +1424,31 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   <div className="relative flex gap-3">
                     {/* 필지 선택 목록 (30%) */}
                     <div className="w-[30%] shrink-0 rounded-lg bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
-                      {/* 신청 필지 목록 - 모든 신청 필지 표시 */}
-                      {applicationLands.map((land, index) => {
-                        const isSelected = !selectedAdjacentParcel && selectedLandIndex === index;
-                        return (
-                          <div 
-                            key={land.id}
-                            className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${
-                              isSelected 
-                                ? "border-2 border-[#2563eb] bg-[#2563eb]/15" 
-                                : "border border-[#2563eb]"
-                            }`}
-                            onClick={() => {
-                              setSelectedLandIndex(index);
-                              setSelectedAdjacentParcel(null);
-                            }}
-                            onMouseEnter={() => setHoveredLandId(land.id)}
-                            onMouseLeave={() => setHoveredLandId(null)}
-                          >
-                            <span className="flex shrink-0 items-center justify-center rounded bg-[#2563eb] px-1.5 py-0.5 text-xs font-bold text-white">
-                              필지{String.fromCharCode(65 + index)}
-                            </span>
-                            <div className="min-w-0 flex-1">
-                              <p className="text-sm font-medium text-blue-700 truncate">
-                                {land.address.split(" ").slice(-2).join(" ")}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {land.landType} | {land.originalArea.toLocaleString()}㎡
-                              </p>
-                            </div>
+                      {/* 신청 필지 - 상단 필지 선택에서 선택된 1개만 표시 */}
+                      {applicationLands[selectedLandIndex] && (
+                        <div 
+                          className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${
+                            !selectedAdjacentParcel 
+                              ? "border-2 border-[#2563eb] bg-[#2563eb]/15" 
+                              : "border border-[#2563eb]"
+                          }`}
+                          onClick={() => setSelectedAdjacentParcel(null)}
+                          onMouseEnter={() => setHoveredLandId(applicationLands[selectedLandIndex].id)}
+                          onMouseLeave={() => setHoveredLandId(null)}
+                        >
+                          <span className="flex shrink-0 items-center justify-center rounded bg-[#2563eb] px-1.5 py-0.5 text-xs font-bold text-white">
+                            필지{String.fromCharCode(65 + selectedLandIndex)}
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-blue-700 truncate">
+                              {applicationLands[selectedLandIndex].address.split(" ").slice(-2).join(" ")}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {applicationLands[selectedLandIndex].landType} | {applicationLands[selectedLandIndex].originalArea.toLocaleString()}㎡
+                            </p>
                           </div>
-                        );
-                      })}
+                        </div>
+                      )}
                       
                       {/* 인접 필지 */}
                       {[
@@ -1463,7 +1456,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         { id: "adjacent-002", address: "경기도 용인시 처인구 포곡읍 마성리 102", landType: "답", landCategory: "농지", area: 980 },
                       ].map((adjacent, index) => {
                         const isSelected = selectedAdjacentParcel?.id === adjacent.id;
-                        const adjacentNumber = index + 1; // 인접 필지 순번 (1부터 시작)
+                        const adjacentNumber = index + 1; // 인접 필지는 1부터 별도 카운팅
                         return (
                           <div 
                             key={adjacent.id}
@@ -1486,9 +1479,12 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onMouseEnter={() => setHoveredLandId(adjacent.id)}
                             onMouseLeave={() => setHoveredLandId(null)}
                           >
-                            <span className="flex shrink-0 items-center justify-center rounded bg-[#d97706] px-1.5 py-0.5 text-xs font-bold text-white">
-                              필지{adjacentNumber}
-                            </span>
+                            <div className="flex shrink-0 flex-col items-start gap-1">
+                              <span className="flex items-center justify-center rounded bg-[#d97706] px-1.5 py-0.5 text-xs font-bold text-white">
+                                필지{adjacentNumber}
+                              </span>
+                              <Badge className="bg-[#d97706] text-white text-[10px] px-1.5 py-0 h-fit">인접필지</Badge>
+                            </div>
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-medium text-amber-700 truncate">
                                 {adjacent.address.split(" ").slice(-2).join(" ")}
@@ -1627,7 +1623,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       <Badge 
                         className={`text-xs ${selectedAdjacentParcel ? "bg-[#d97706] text-white" : "bg-[#2563eb] text-white"}`}
                       >
-                        필지{selectedAdjacentParcel ? selectedAdjacentParcel.parcelNumber : String.fromCharCode(65 + selectedLandIndex)}
+                        필지{selectedAdjacentParcel ? (selectedAdjacentParcel.parcelNumber || (applicationLands.length + 1)) : (selectedLandIndex + 1)}
                       </Badge>
                       <span className="text-sm font-medium">검토 옵션</span>
                     </div>
@@ -1789,7 +1785,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             
                             {/* 현장확인 옵션 */}
                             <div className="space-y-3 pt-2 border-t">
-                              <label className="text-sm font-medium text-foreground">현장 ���인 항목</label>
+                              <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
                               {isViewOnly ? (
                                 <div className="space-y-2 text-sm">
                                   <div className="flex items-center gap-3 p-2">
