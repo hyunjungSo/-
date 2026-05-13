@@ -363,7 +363,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 onClick={() => setStatusFilter("접수완료")}
                 className="relative flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-3 transition-opacity hover:opacity-80"
               >
-                {dailyChanges.���수완료 > 0 && (
+                {dailyChanges.접수완료 > 0 && (
                   <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white shadow-sm">
                     {dailyChanges.접수완료}
                   </div>
