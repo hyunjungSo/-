@@ -415,10 +415,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       <div className="grid gap-4 lg:grid-cols-11">
         {/* 민원 진행 현황 카드 */}
         <Card className="lg:col-span-6">
-          <CardHeader className="pb-1.5">
+          <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium" style={{ fontSize: '18px', fontWeight: '600' }}>민원 진행 현황</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 pt-0">
+          <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
             {/* 진행률 바 */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
@@ -480,13 +480,13 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
 
         {/* AI 판독 신뢰도 카드 */}
         <Card className="lg:col-span-5">
-          <CardHeader className="pb-1.5">
+          <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium flex items-center justify-between">
               <span style={{ fontSize: '18px', fontWeight: '600' }}>AI 판독 신뢰도</span>
               <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 pt-0">
+          <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
             
             {/* 스택 바 비교 */}
             <div className="space-y-3">
