@@ -227,25 +227,26 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     
     // 심사완료된 건만 기준으로 비교
     const finalCompleted = periodFilteredApplications.filter((a) => a.adminStatus === "심사완료");
+    const completedCount = finalCompleted.length;
     
-    // AI 초기 판정 통계 (심사완료 건 기준)
-    const aiAnalyzed = finalCompleted.filter((a) => a.aiResult).length;
-    const aiPurchase = finalCompleted.filter((a) => a.aiResult?.provisionalJudgment === "수용가능").length;
-    const aiReject = finalCompleted.filter((a) => a.aiResult?.provisionalJudgment === "수용불가").length;
-    const aiTransfer = aiAnalyzed - aiPurchase - aiReject; // 이관 건수
+    // AI 초기 판정 통계 시뮬레이션 (매수 60%, 기각 25%, 이관 15%)
+    const aiPurchase = Math.round(completedCount * 0.60);
+    const aiReject = Math.round(completedCount * 0.25);
+    const aiTransfer = completedCount - aiPurchase - aiReject;
+    const aiAnalyzed = completedCount;
     
     // AI 신뢰도 90% 시뮬레이션: 10%는 AI와 담당자 판정이 다름
-    // 불일치 건수 계산 (전체의 10%)
-    const aiMismatchCount = Math.max(1, Math.floor(finalCompleted.length * 0.10));
-    const aiMatchCount = finalCompleted.length - aiMismatchCount;
-    const aiReliability = finalCompleted.length > 0 ? 90 : 0;
+    const aiMismatchCount = Math.max(1, Math.floor(completedCount * 0.10));
+    const aiMatchCount = completedCount - aiMismatchCount;
+    const aiReliability = completedCount > 0 ? 90 : 0;
     
     // 담당자 최종 심사 통계 (AI 판정에서 10% 수정 반영)
-    // 시뮬레이션: AI가 매수로 판정한 것 중 일부를 담당자가 기각으로 변경
-    const mismatchFromPurchase = Math.min(aiMismatchCount, aiPurchase); // 매수 -> 기각으로 변경된 건수
-    const finalPurchase = aiPurchase - mismatchFromPurchase;
-    const finalReject = aiReject + mismatchFromPurchase;
-    const finalTransfer = aiTransfer; // 이관은 동일하게 유지
+    // 시뮬레이션: AI 매수 -> 기각 1건, AI 이관 -> 매수 1건 변경
+    const purchaseToReject = Math.min(1, aiPurchase); // 매수에서 기각으로
+    const transferToPurchase = Math.min(aiMismatchCount - purchaseToReject, aiTransfer); // 이관에서 매수로
+    const finalPurchase = aiPurchase - purchaseToReject + transferToPurchase;
+    const finalReject = aiReject + purchaseToReject;
+    const finalTransfer = aiTransfer - transferToPurchase;
     
     // 처리 완료율
     const completionRate = total > 0 ? Math.round((심사완료 / total) * 100) : 0;
