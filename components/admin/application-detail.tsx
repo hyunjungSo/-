@@ -620,7 +620,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || waterLost || roadLost || farmDifficulty || shapeCriteria.met) {
         judgment = "수용가능";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (waterLost) reasons.push("관개수����������� 상��" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
+        if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (farmDifficulty) reasons.push("농기계 회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
@@ -752,7 +752,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             const judgmentRationale = {
               summary: `${land.landType} 잔여면적 ${land.remainingArea.toLocaleString()}㎡(잔여비율 ${land.remainingRatio}%), ${analysis.reasons.join(", ")}으로 「${finalJudgment}」 판정`,
-              legalBasis: "「공익사업을 위��� 토����� 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
+              legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
               appliedCriteria: analysis.criteriaChecks.map(check => 
                 `${check.name}: ${check.description} ${check.met ? "✓" : "✗"}`
               ),
@@ -904,7 +904,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       reviewerComment: reviewData.reviewerComment,
       finalJudgment: reviewData.finalJudgment,
       adminStatus: reviewData.adminStatus,
-      status: reviewData.adminStatus === "심사완료" ? "처리완��" : application.status,
+      status: reviewData.adminStatus === "심사완료" ? "처리완료" : application.status,
       adminName: selectedAssignee?.name || application.adminName,
       statusUpdatedAt: new Date().toISOString().split("T")[0],
       // 필지별 판정 결과 저장 (심의서 연동)
@@ -1355,7 +1355,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                     </li>
                                     <li className="flex items-start gap-1.5 text-sm text-muted-foreground">
                                       <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
-                                      <span>잔여비������� ��준: {land.remainingRatio}%</span>
+                                      <span>잔여비율 기준: {land.remainingRatio}%</span>
                                     </li>
                                   </>
                                 )}
@@ -1408,7 +1408,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                 </div>
                                 <Button variant="ghost" size="sm" className="h-6 px-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity">
                                   <Maximize2 className="h-3 w-3 mr-1" />
-                                  확대 ���기
+                                  확대 보기
                                 </Button>
                               </div>
                               <pre className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
@@ -1769,7 +1769,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                     onValueChange={(value) => setAdminLandSubTypePerLand(prev => ({ ...prev, [currentParcelId]: value }))}
                                   >
                                     <SelectTrigger className="h-10 bg-background">
-                                      <SelectValue placeholder="건축물 용도를 ���택해 주세요" />
+                                      <SelectValue placeholder="건축물 용도를 선택해 주세요" />
                                     </SelectTrigger>
                                     <SelectContent>
                                       <SelectItem value="residential-detached">주거용 - 단독주택 (기준: 90㎡)</SelectItem>
@@ -2070,7 +2070,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                         <div className="flex items-start gap-2">
                                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                                           <div>
-                                            <h4 className="text-sm font-semibold text-foreground">수동 확�� 항목</h4>
+                                            <h4 className="text-sm font-semibold text-foreground">수동 확인 항목</h4>
                                             <ul className="mt-1 space-y-1">
                                               {aiResult.judgmentRationale.manualCheckItems.map((item, mIdx) => (
                                                 <li key={mIdx} className="flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -2233,12 +2233,12 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   <div className="flex items-start gap-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
                     <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
                     <p className="text-sm text-amber-700">
-                      AI 판정({aiResult.provisionalJudgment})과 다른 결정입니다. 검토 의견에 사유를 ���성해주세요.
+                      AI 판정({aiResult.provisionalJudgment})과 다른 결정입니다. 검토 의견에 사유를 작성해주세요.
                     </p>
                   </div>
                 )}
                 
-                {/* 검토 의��� */}
+                {/* 검토 의견 */}
                 <div className="space-y-3">
                   <Label className="text-sm font-medium">검토 의견</Label>
                   <Textarea
@@ -2349,7 +2349,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </CardContent>
       </Card>
 
-      {/* AI 분석 프���세스 다이얼로그 - 관리자 재판독 결과 우선 표시 */}
+      {/* AI 분석 프로세스 다이얼로그 - 관리자 재판독 결과 우선 표시 */}
       <AIAnalysisFlowDialog
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
@@ -2413,7 +2413,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const land = allLands[expandedLandIndex];
                         const result = citizenLandAIResults[land?.id];
                         return result?.judgmentRationale?.summary || 
-                          `본 필지는 ${land?.landType} 유형으로, 잔��면적 ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)입니다.`;
+                          `본 필지는 ${land?.landType} 유형으로, 잔여면적 ${land?.remainingArea?.toLocaleString()}㎡ (${land?.remainingRatio}%)입니다.`;
                       })()}
                     </p>
                   </div>
@@ -2429,7 +2429,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const land = allLands[expandedLandIndex];
                         const result = citizenLandAIResults[land?.id];
                         return result?.judgmentRationale?.legalBasis || 
-                          "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행��칙 제34조";
+                          "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조";
                       })()}
                     </p>
                   </div>
@@ -2500,7 +2500,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 </div>
               </div>
 
-              {/* 오른쪽: AI ��독 분석 이미지 */}
+              {/* 오른쪽: AI 판독 분석 이미지 */}
               <div className="w-1/4 bg-muted/20 p-6 overflow-y-auto">
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
@@ -2665,7 +2665,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 ) : (
                   <div className="flex flex-col items-center justify-center gap-4 text-muted-foreground w-full h-full">
                     <FileText className="size-24 text-muted-foreground/50" />
-                    <p className="text-base">미리보���를 지원��지 않는 파일 형식입니다.</p>
+                    <p className="text-base">미리보기를 지원하지 않는 파일 형식입니다.</p>
                     <p className="text-sm">파일을 다운로드하여 확인해 주세요.</p>
                   </div>
                 )}
