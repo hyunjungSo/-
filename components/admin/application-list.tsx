@@ -107,28 +107,40 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             
             {/* 상태별 현황 그리드 */}
             <div className="grid grid-cols-4 gap-3 pt-2">
-              <div className="flex flex-col items-center rounded-lg bg-muted/50 p-3">
+              <div 
+                onClick={() => setStatusFilter("all")}
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-muted/50 p-3 transition-opacity hover:opacity-80"
+              >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                   <Users className="h-4 w-4 text-primary" />
                 </div>
                 <span className="mt-2 text-xl font-bold text-foreground">{stats.total}</span>
                 <span className="text-xs text-muted-foreground">전체</span>
               </div>
-              <div className="flex flex-col items-center rounded-lg bg-slate-50 p-3">
+              <div 
+                onClick={() => setStatusFilter("접수완료")}
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-3 transition-opacity hover:opacity-80"
+              >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100">
                   <Clock className="h-4 w-4 text-slate-500" />
                 </div>
                 <span className="mt-2 text-xl font-bold text-slate-500">{stats.접수완료}</span>
                 <span className="text-xs text-muted-foreground">접수완료</span>
               </div>
-              <div className="flex flex-col items-center rounded-lg bg-sky-50 p-3">
+              <div 
+                onClick={() => setStatusFilter("진행중")}
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-sky-50 p-3 transition-opacity hover:opacity-80"
+              >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-100">
                   <PlayCircle className="h-4 w-4 text-sky-500" />
                 </div>
                 <span className="mt-2 text-xl font-bold text-sky-500">{stats.진행중}</span>
                 <span className="text-xs text-muted-foreground">진행중</span>
               </div>
-              <div className="flex flex-col items-center rounded-lg bg-slate-100 p-3">
+              <div 
+                onClick={() => setStatusFilter("심사완료")}
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-100 p-3 transition-opacity hover:opacity-80"
+              >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200">
                   <CheckCircle2 className="h-4 w-4 text-slate-700" />
                 </div>
