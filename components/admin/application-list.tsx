@@ -587,9 +587,9 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <span className="text-sm text-muted-foreground">판정 일치:</span>
                   <span className="font-semibold">{stats.aiMatchCount}건</span>
                 </div>
-                <div className="flex items-center gap-1 text-sm">
+                <div className="flex items-center gap-1">
                   <XCircle className="h-4 w-4 text-rose-600" />
-                  <span className="text-rose-600">판정 불일치:</span>
+                  <span className="text-sm text-rose-600">판정 불일치:</span>
                   <span className="font-semibold text-rose-600">{stats.aiMismatchCount}건</span>
                 </div>
               </div>
