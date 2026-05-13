@@ -351,7 +351,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-muted/50 p-3 transition-opacity hover:opacity-80"
               >
                 <span className="text-sm font-medium text-muted-foreground" style={{ order: 1 }}>전체</span>
-                <div className="mt-2 flex items-center gap-1" style={{ order: 2 }}>
+                <div className="mt-2 flex items-end gap-1" style={{ order: 2 }}>
                   <span className="font-bold text-foreground" style={{ fontSize: '38px' }}>{stats.total}</span>
                   <span className="text-sm font-medium text-foreground">건</span>
                   {dailyChanges.total > 0 && (
@@ -369,7 +369,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   </div>
                 )}
                 <span className="text-sm font-medium text-slate-600" style={{ order: 1 }}>접수완료</span>
-                <div className="mt-2 flex items-center gap-1" style={{ order: 2 }}>
+                <div className="mt-2 flex items-end gap-1" style={{ order: 2 }}>
                   <span className="font-bold text-slate-500" style={{ fontSize: '38px' }}>{stats.접수완료}</span>
                   <span className="text-sm font-medium text-slate-500">건</span>
                   {dailyChanges.접수완료 > 0 && (
@@ -382,7 +382,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-sky-50 p-3 transition-opacity hover:opacity-80"
               >
                 <span className="text-sm font-medium text-sky-700" style={{ order: 1 }}>진행중</span>
-                <div className="mt-2 flex items-center gap-1" style={{ order: 2 }}>
+                <div className="mt-2 flex items-end gap-1" style={{ order: 2 }}>
                   <span className="font-bold text-sky-500" style={{ fontSize: '38px' }}>{stats.진행중}</span>
                   <span className="text-sm font-medium text-sky-500">건</span>
                   {dailyChanges.진행중 > 0 && (
@@ -395,7 +395,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-100 p-3 transition-opacity hover:opacity-80"
               >
                 <span className="text-sm font-medium text-slate-700" style={{ order: 1 }}>심사완료</span>
-                <div className="mt-2 flex items-center gap-1" style={{ order: 2 }}>
+                <div className="mt-2 flex items-end gap-1" style={{ order: 2 }}>
                   <span className="font-bold text-slate-700" style={{ fontSize: '38px' }}>{stats.심사완료}</span>
                   <span className="text-sm font-medium text-slate-700">건</span>
                   {dailyChanges.심사완료 > 0 && (
