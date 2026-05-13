@@ -613,20 +613,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <span className="font-semibold">{stats.aiMismatchCount}건</span>
                 </button>
               </div>
-              {/* 불일치 유형 상세 */}
-              {aiMismatchFilter && (
-                <div className="flex items-center gap-3 rounded-md bg-rose-50 px-3 py-2 text-xs">
-                  <div className="flex items-center gap-1.5">
-                    <span className="rounded bg-rose-200 px-1.5 py-0.5 font-medium text-rose-700">반대 결정</span>
-                    <span className="text-rose-600">{stats.mismatchOpposite}건</span>
-                  </div>
-                  <div className="h-3 w-px bg-rose-200" />
-                  <div className="flex items-center gap-1.5">
-                    <span className="rounded bg-amber-200 px-1.5 py-0.5 font-medium text-amber-700">판단 보류</span>
-                    <span className="text-amber-600">{stats.mismatchDeferred}건</span>
-                  </div>
-                </div>
-              )}
+
             </div>
           </CardContent>
         </Card>
