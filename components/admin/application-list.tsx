@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useTransition } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,18 +19,30 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import type { Application, AdminStatus } from "@/lib/types";
-import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers, RefreshCw } from "lucide-react";
+import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers, RefreshCw, CalendarIcon, Loader2 } from "lucide-react";
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { Progress } from "@/components/ui/progress";
 import { JudgmentSummaryBadge, PARCEL_COUNT_COLORS } from "@/components/ui/judgment-badge";
+import { cn } from "@/lib/utils";
 
 interface ApplicationListProps {
   applications: Application[];
   onSelect: (application: Application) => void;
 }
 
-type PeriodFilter = "all" | "year" | "month" | "week";
+type PeriodFilter = "all" | "today" | "week" | "month" | "custom";
+
+interface DateRange {
+  from: Date | undefined;
+  to: Date | undefined;
+}
 
 export function ApplicationList({ applications, onSelect }: ApplicationListProps) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -38,31 +50,104 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   const [projectUnitFilter, setProjectUnitFilter] = useState<"all" | "gangjin-gwangju">("all");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [periodFilter, setPeriodFilter] = useState<PeriodFilter>("all");
+  const [customDateRange, setCustomDateRange] = useState<DateRange>({ from: undefined, to: undefined });
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
+
+  // 필터 변경 시 로딩 효과
+  const handlePeriodChange = (newPeriod: PeriodFilter) => {
+    setIsLoading(true);
+    startTransition(() => {
+      setPeriodFilter(newPeriod);
+      setTimeout(() => setIsLoading(false), 300);
+    });
+  };
+
+  // 현재 조회 기간 계산
+  const currentDateRange = useMemo(() => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    switch (periodFilter) {
+      case "today":
+        return { from: today, to: today };
+      case "week": {
+        const weekAgo = new Date(today);
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        return { from: weekAgo, to: today };
+      }
+      case "month": {
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        return { from: monthStart, to: today };
+      }
+      case "custom":
+        return customDateRange;
+      default:
+        return { from: undefined, to: undefined };
+    }
+  }, [periodFilter, customDateRange]);
+
+  // 조회 기간 텍스트
+  const dateRangeText = useMemo(() => {
+    if (periodFilter === "all") return "전체 기간";
+    if (!currentDateRange.from) return "전체 기간";
+    
+    const formatDate = (date: Date) => {
+      return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+    };
+    
+    if (periodFilter === "today") {
+      return formatDate(currentDateRange.from);
+    }
+    
+    if (currentDateRange.to && currentDateRange.from.getTime() !== currentDateRange.to.getTime()) {
+      return `${formatDate(currentDateRange.from)} ~ ${formatDate(currentDateRange.to)}`;
+    }
+    
+    return formatDate(currentDateRange.from);
+  }, [periodFilter, currentDateRange]);
 
   // 기간 필터링된 데이터
   const periodFilteredApplications = useMemo(() => {
+    if (periodFilter === "all") return applications;
+    
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
     
     return applications.filter((app) => {
       const appDate = new Date(app.appliedAt);
       
       switch (periodFilter) {
-        case "year":
-          return appDate.getFullYear() === now.getFullYear();
-        case "month":
-          return appDate.getFullYear() === now.getFullYear() && 
-                 appDate.getMonth() === now.getMonth();
-        case "week":
+        case "today":
+          return appDate >= today && appDate < tomorrow;
+        case "week": {
           const weekAgo = new Date(today);
           weekAgo.setDate(weekAgo.getDate() - 7);
-          return appDate >= weekAgo;
+          return appDate >= weekAgo && appDate < tomorrow;
+        }
+        case "month": {
+          const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+          return appDate >= monthStart && appDate < tomorrow;
+        }
+        case "custom": {
+          if (!customDateRange.from) return true;
+          const fromDate = new Date(customDateRange.from);
+          fromDate.setHours(0, 0, 0, 0);
+          if (customDateRange.to) {
+            const toDate = new Date(customDateRange.to);
+            toDate.setHours(23, 59, 59, 999);
+            return appDate >= fromDate && appDate <= toDate;
+          }
+          return appDate >= fromDate;
+        }
         default:
           return true;
       }
     });
-  }, [applications, periodFilter]);
+  }, [applications, periodFilter, customDateRange]);
 
   // 전일 대비 증감 계산
   const dailyChanges = useMemo(() => {
@@ -140,44 +225,102 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
 
   return (
     <div className="space-y-6">
-      {/* 대시보드 헤더 - 기간 필터 및 업데이트 정보 */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <h2 className="text-lg font-semibold">대시보드</h2>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>데이터 업데이트: {lastUpdated.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</span>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={handleRefresh}
-              title="새로고침"
-            >
-              <RefreshCw className="h-3.5 w-3.5" />
-            </Button>
+      {/* 글로벌 필터 바 */}
+      <div className="rounded-xl border bg-gradient-to-r from-slate-50 to-white p-4 shadow-sm">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          {/* 좌측: 타이틀 및 업데이트 정보 */}
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-semibold">대시보드</h2>
+            <div className="h-4 w-px bg-border" />
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span>업데이트: {lastUpdated.toLocaleString('ko-KR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</span>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={handleRefresh}
+                title="새로고침"
+              >
+                <RefreshCw className={cn("h-3.5 w-3.5", isLoading && "animate-spin")} />
+              </Button>
+            </div>
+          </div>
+          
+          {/* 우측: 기간 필터 */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-medium text-muted-foreground">조회 기간:</span>
+            <div className="flex items-center gap-1 rounded-lg border bg-white p-1 shadow-sm">
+              {[
+                { value: "all", label: "전체" },
+                { value: "today", label: "오늘" },
+                { value: "week", label: "이번 주" },
+                { value: "month", label: "이번 달" },
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => handlePeriodChange(option.value as PeriodFilter)}
+                  className={cn(
+                    "rounded-md px-3 py-1.5 text-xs font-medium transition-all",
+                    periodFilter === option.value
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  {option.label}
+                </button>
+              ))}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    className={cn(
+                      "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all",
+                      periodFilter === "custom"
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="h-3.5 w-3.5" />
+                    직접선택
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="end">
+                  <Calendar
+                    mode="range"
+                    selected={{ from: customDateRange.from, to: customDateRange.to }}
+                    onSelect={(range) => {
+                      setCustomDateRange({ from: range?.from, to: range?.to });
+                      if (range?.from) {
+                        handlePeriodChange("custom");
+                      }
+                    }}
+                    numberOfMonths={2}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-1 rounded-lg border bg-muted/30 p-1">
-          {[
-            { value: "all", label: "전체" },
-            { value: "year", label: "올해" },
-            { value: "month", label: "이번 달" },
-            { value: "week", label: "이번 주" },
-          ].map((option) => (
-            <button
-              key={option.value}
-              onClick={() => setPeriodFilter(option.value as PeriodFilter)}
-              className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-                periodFilter === option.value
-                  ? "bg-white text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
       </div>
+
+      {/* 현재 조회 기준 표시 */}
+      {periodFilter !== "all" && (
+        <div className="flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-4 py-2">
+          <CalendarIcon className="h-4 w-4 text-primary" />
+          <span className="text-sm font-medium text-primary">현재 조회 기준: {dateRangeText}</span>
+          <span className="text-xs text-muted-foreground">({periodFilteredApplications.length}건)</span>
+        </div>
+      )}
+
+      {/* 로딩 오버레이 */}
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm">
+          <div className="flex items-center gap-2 rounded-lg bg-white px-4 py-3 shadow-lg">
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+            <span className="text-sm font-medium">데이터를 불러오는 중...</span>
+          </div>
+        </div>
+      )}
 
       {/* 대시보드 요약 */}
       <div className="grid gap-4 lg:grid-cols-3">
