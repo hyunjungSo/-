@@ -1321,7 +1321,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                     </li>
                                     <li className="flex items-start gap-1.5 text-sm text-muted-foreground">
                                       <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
-                                      <span>잔여비율 ��준: {land.remainingRatio}%</span>
+                                      <span>잔여비��� ��준: {land.remainingRatio}%</span>
                                     </li>
                                   </>
                                 )}
@@ -1426,9 +1426,6 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h4 className="font-semibold" style={{ fontSize: '16px' }}>지적도</h4>
-                    <Badge variant="outline" className="font-normal text-xs">
-                      {applicationLands.length + 2}개 필지
-                    </Badge>
                   </div>
                   
                   {/* 필지 선택 + 지적도 한 행 배치 */}
