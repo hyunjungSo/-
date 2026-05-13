@@ -553,7 +553,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       {stats.finalPurchase > 0 && (
                         <div 
                           className="flex items-center justify-center bg-emerald-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.finalPurchase / stats.��사완료) * 100}%` }}
+                          style={{ width: `${(stats.finalPurchase / stats.심사완료) * 100}%` }}
                         >
                           {stats.finalPurchase}건
                         </div>
