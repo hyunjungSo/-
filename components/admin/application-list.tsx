@@ -399,8 +399,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       {/* 현재 조회 기준 표시 */}
       <div className="flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-4 py-2">
         <CalendarIcon className="h-4 w-4 text-primary" />
-        <span className="text-sm font-medium text-primary">현�� 조회 기준: {dateRangeText}</span>
-        <span className="text-xs text-muted-foreground">({periodFilteredApplications.length}건)</span>
+        <span className="text-sm font-medium text-primary">현재 조회 기준: {dateRangeText}</span>
       </div>
 
       {/* 로딩 오버레이 */}
