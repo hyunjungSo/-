@@ -419,55 +419,63 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             <CardTitle className="text-base font-medium" style={{ fontSize: '18px', fontWeight: '600' }}>민원 진행 현황</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
-            {/* 진행률 바 */}
+            {/* 진행률 바 - Green 계열로 심사완료와 동기화 */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">전체 처리 완료율</span>
-                <span className="text-primary" style={{ fontSize: '24px', fontWeight: '800' }}>{stats.completionRate}%</span>
+                <span className="text-green-600" style={{ fontSize: '24px', fontWeight: '800' }}>{stats.completionRate}%</span>
               </div>
-              <Progress value={stats.completionRate} className="h-[18px]" />
+              <Progress 
+                value={stats.completionRate} 
+                className="h-[18px] bg-green-100" 
+                indicatorClassName="bg-green-500"
+              />
             </div>
             
-            {/* 상태별 ��황 그리드 */}
+            {/* 상태별 현황 그리드 - 카드별 포인트 컬러 적용 */}
             <div className="grid grid-cols-4 gap-3 pt-2">
+              {/* 전체: Slate 계열 */}
               <div 
                 onClick={() => setStatusFilter("all")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-muted/50 p-3 transition-opacity hover:opacity-80"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 border border-slate-200 p-3 transition-all hover:bg-slate-100 hover:border-slate-300"
               >
-                <span className="text-sm font-medium text-muted-foreground" style={{ order: 1 }}>전체</span>
-                <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
-                  <span className="font-bold text-foreground" style={{ fontSize: '38px' }}>{stats.total}</span>
-                  <span className="text-sm font-medium text-foreground">건</span>
+                <span className="text-sm font-medium text-slate-600" style={{ order: 1 }}>전체</span>
+                <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
+                  <span className="font-bold text-slate-900" style={{ fontSize: '42px' }}>{stats.total}</span>
+                  <span className="text-xs font-medium text-slate-400 ml-0.5">건</span>
                 </div>
               </div>
+              {/* 접수완료: Indigo 계열 (신규 발생 강조) */}
               <div 
                 onClick={() => setStatusFilter("접수완료")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-3 transition-opacity hover:opacity-80"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-indigo-50 border border-indigo-200 p-3 transition-all hover:bg-indigo-100 hover:border-indigo-300"
               >
-                <span className="text-sm font-medium text-slate-600" style={{ order: 1 }}>접수완료</span>
-                <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
-                  <span className="font-bold text-slate-500" style={{ fontSize: '38px' }}>{stats.접수완료}</span>
-                  <span className="text-sm font-medium text-slate-500">건</span>
+                <span className="text-sm font-medium text-indigo-600" style={{ order: 1 }}>접수완료</span>
+                <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
+                  <span className="font-bold text-indigo-600" style={{ fontSize: '42px' }}>{stats.접수완료}</span>
+                  <span className="text-xs font-medium text-indigo-300 ml-0.5">건</span>
                 </div>
               </div>
+              {/* 진행중: Blue 계열 (활동 상태 강조) */}
               <div 
                 onClick={() => setStatusFilter("진행중")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-sky-50 p-3 transition-opacity hover:opacity-80"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-blue-50 border border-blue-200 p-3 transition-all hover:bg-blue-100 hover:border-blue-300"
               >
-                <span className="text-sm font-medium text-sky-700" style={{ order: 1 }}>진행중</span>
-                <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
-                  <span className="font-bold text-sky-500" style={{ fontSize: '38px' }}>{stats.진행중}</span>
-                  <span className="text-sm font-medium text-sky-500">건</span>
+                <span className="text-sm font-medium text-blue-600" style={{ order: 1 }}>진행중</span>
+                <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
+                  <span className="font-bold text-blue-600" style={{ fontSize: '42px' }}>{stats.진행중}</span>
+                  <span className="text-xs font-medium text-blue-300 ml-0.5">건</span>
                 </div>
               </div>
+              {/* 심사완료: Green 계열 (완료 상태 강조) */}
               <div 
                 onClick={() => setStatusFilter("심사완료")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-100 p-3 transition-opacity hover:opacity-80"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-green-50 border border-green-200 p-3 transition-all hover:bg-green-100 hover:border-green-300"
               >
-                <span className="text-sm font-medium text-slate-700" style={{ order: 1 }}>심사완료</span>
-                <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
-                  <span className="font-bold text-slate-700" style={{ fontSize: '38px' }}>{stats.심사완료}</span>
-                  <span className="text-sm font-medium text-slate-700">건</span>
+                <span className="text-sm font-medium text-green-600" style={{ order: 1 }}>심사완료</span>
+                <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
+                  <span className="font-bold text-green-600" style={{ fontSize: '42px' }}>{stats.심사완료}</span>
+                  <span className="text-xs font-medium text-green-300 ml-0.5">건</span>
                 </div>
               </div>
             </div>
