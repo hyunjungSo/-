@@ -182,26 +182,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     });
   }, [applications, periodFilter, customDateRange, selectedYear]);
 
-  // 전일 대비 증감 계산
-  const dailyChanges = useMemo(() => {
-    const today = new Date().toISOString().split('T')[0];
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-    
-    const todayNew = periodFilteredApplications.filter((a) => a.appliedAt === today).length;
-    const yesterdayNew = periodFilteredApplications.filter((a) => a.appliedAt === yesterday).length;
-    
-    const todayReceived = periodFilteredApplications.filter((a) => a.appliedAt === today && a.adminStatus === "접수완료").length;
-    const todayInProgress = periodFilteredApplications.filter((a) => a.appliedAt === today && a.adminStatus === "진행중").length;
-    const todayCompleted = periodFilteredApplications.filter((a) => a.appliedAt === today && a.adminStatus === "심사완료").length;
-    
-    return {
-      total: todayNew,
-      접수완료: todayReceived,
-      진행중: todayInProgress,
-      심사완료: todayCompleted,
-    };
-  }, [periodFilteredApplications]);
-
   const handleRefresh = () => {
     setLastUpdated(new Date());
   };
@@ -452,27 +432,16 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
                   <span className="font-bold text-foreground" style={{ fontSize: '38px' }}>{stats.total}</span>
                   <span className="text-sm font-medium text-foreground">건</span>
-                  {dailyChanges.total > 0 && (
-                    <span className="rounded bg-primary/10 px-1 py-0.5 text-[10px] font-medium text-primary">+{dailyChanges.total}</span>
-                  )}
                 </div>
               </div>
               <div 
                 onClick={() => setStatusFilter("접수완료")}
-                className="relative flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-3 transition-opacity hover:opacity-80"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-3 transition-opacity hover:opacity-80"
               >
-                {dailyChanges.접수완료 > 0 && (
-                  <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white shadow-sm">
-                    {dailyChanges.접수완료}
-                  </div>
-                )}
                 <span className="text-sm font-medium text-slate-600" style={{ order: 1 }}>접수완료</span>
                 <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
                   <span className="font-bold text-slate-500" style={{ fontSize: '38px' }}>{stats.접수완료}</span>
                   <span className="text-sm font-medium text-slate-500">건</span>
-                  {dailyChanges.접수완료 > 0 && (
-                    <span className="rounded bg-amber-100 px-1 py-0.5 text-[10px] font-medium text-amber-600">+{dailyChanges.접수완료}</span>
-                  )}
                 </div>
               </div>
               <div 
@@ -483,9 +452,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
                   <span className="font-bold text-sky-500" style={{ fontSize: '38px' }}>{stats.진행중}</span>
                   <span className="text-sm font-medium text-sky-500">건</span>
-                  {dailyChanges.진행중 > 0 && (
-                    <span className="rounded bg-sky-100 px-1 py-0.5 text-[10px] font-medium text-sky-600">+{dailyChanges.진행중}</span>
-                  )}
                 </div>
               </div>
               <div 
@@ -496,9 +462,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
                   <span className="font-bold text-slate-700" style={{ fontSize: '38px' }}>{stats.심사완료}</span>
                   <span className="text-sm font-medium text-slate-700">건</span>
-                  {dailyChanges.심사완료 > 0 && (
-                    <span className="rounded bg-green-100 px-1 py-0.5 text-[10px] font-medium text-green-600">+{dailyChanges.심사완료}</span>
-                  )}
                 </div>
               </div>
             </div>
