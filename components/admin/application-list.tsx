@@ -37,19 +37,23 @@ interface ApplicationListProps {
   onSelect: (application: Application) => void;
 }
 
-type PeriodFilter = "all" | "today" | "week" | "month" | "custom";
+type PeriodFilter = "year" | "today" | "week" | "month" | "custom";
 
 interface DateRange {
   from: Date | undefined;
   to: Date | undefined;
 }
 
+const currentYear = new Date().getFullYear();
+const availableYears = Array.from({ length: 10 }, (_, i) => currentYear - i);
+
 export function ApplicationList({ applications, onSelect }: ApplicationListProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<AdminStatus | "all">("all");
   const [projectUnitFilter, setProjectUnitFilter] = useState<"all" | "gangjin-gwangju">("all");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [periodFilter, setPeriodFilter] = useState<PeriodFilter>("all");
+  const [periodFilter, setPeriodFilter] = useState<PeriodFilter>("year");
+  const [selectedYear, setSelectedYear] = useState(currentYear);
   const [aiMismatchFilter, setAiMismatchFilter] = useState(false);
   const [customDateRange, setCustomDateRange] = useState<DateRange>({ from: undefined, to: undefined });
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
@@ -78,6 +82,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     
     switch (periodFilter) {
+      case "year": {
+        const yearStart = new Date(selectedYear, 0, 1);
+        const yearEnd = new Date(selectedYear, 11, 31);
+        return { from: yearStart, to: yearEnd };
+      }
       case "today":
         return { from: today, to: today };
       case "week": {
@@ -94,16 +103,19 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       default:
         return { from: undefined, to: undefined };
     }
-  }, [periodFilter, customDateRange]);
+  }, [periodFilter, customDateRange, selectedYear]);
 
   // 조회 기간 텍스트
   const dateRangeText = useMemo(() => {
-    if (periodFilter === "all") return "전체 기간";
     if (!currentDateRange.from) return "전체 기간";
     
     const formatDate = (date: Date) => {
       return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
     };
+    
+    if (periodFilter === "year") {
+      return `${selectedYear}년 (${selectedYear}.01.01 ~ ${selectedYear}.12.31)`;
+    }
     
     if (periodFilter === "today") {
       return formatDate(currentDateRange.from);
@@ -114,7 +126,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     }
     
     return formatDate(currentDateRange.from);
-  }, [periodFilter, currentDateRange]);
+  }, [periodFilter, currentDateRange, selectedYear]);
 
   // 기간 필터링된 데이터
   const periodFilteredApplications = useMemo(() => {
@@ -129,6 +141,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       const appDate = new Date(app.appliedAt);
       
       switch (periodFilter) {
+        case "year": {
+          const yearStart = new Date(selectedYear, 0, 1);
+          const yearEnd = new Date(selectedYear, 11, 31, 23, 59, 59, 999);
+          return appDate >= yearStart && appDate <= yearEnd;
+        }
         case "today":
           return appDate >= today && appDate < tomorrow;
         case "week": {
@@ -155,7 +172,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           return true;
       }
     });
-  }, [applications, periodFilter, customDateRange]);
+  }, [applications, periodFilter, customDateRange, selectedYear]);
 
   // 전일 대비 증감 계산
   const dailyChanges = useMemo(() => {
@@ -279,8 +296,46 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           <div className="flex items-center gap-2">
             <span className="text-xs font-medium text-muted-foreground">조회 기간:</span>
             <div className="flex items-center gap-1">
+              {/* 연도 피커 */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    className={cn(
+                      "flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium transition-all",
+                      periodFilter === "year"
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    )}
+                  >
+                    {selectedYear}년
+                    <ChevronRight className="h-3 w-3 rotate-90" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-32 p-1" align="start">
+                  <div className="max-h-48 overflow-y-auto">
+                    {availableYears.map((year) => (
+                      <button
+                        key={year}
+                        onClick={() => {
+                          setSelectedYear(year);
+                          handlePeriodChange("year");
+                        }}
+                        className={cn(
+                          "w-full rounded-md px-3 py-1.5 text-left text-sm transition-colors",
+                          selectedYear === year && periodFilter === "year"
+                            ? "bg-primary text-primary-foreground"
+                            : "hover:bg-muted"
+                        )}
+                      >
+                        {year}년
+                      </button>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+              
+              {/* 기간 버튼들 */}
               {[
-                { value: "all", label: "전체" },
                 { value: "today", label: "오늘" },
                 { value: "week", label: "이번 주" },
                 { value: "month", label: "이번 달" },
@@ -298,13 +353,15 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   {option.label}
                 </button>
               ))}
+              
+              {/* 직접선택 */}
               <Popover>
                 <PopoverTrigger asChild>
                   <button
                     className={cn(
                       "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all",
                       periodFilter === "custom"
-                        ? "bg-primary text-primary-foreground shadow-sm"
+                        ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"
                     )}
                   >
@@ -332,13 +389,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         </div>
 
       {/* 현재 조회 기준 표시 */}
-      {periodFilter !== "all" && (
-        <div className="flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-4 py-2">
-          <CalendarIcon className="h-4 w-4 text-primary" />
-          <span className="text-sm font-medium text-primary">현재 조회 기준: {dateRangeText}</span>
-          <span className="text-xs text-muted-foreground">({periodFilteredApplications.length}건)</span>
-        </div>
-      )}
+      <div className="flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-4 py-2">
+        <CalendarIcon className="h-4 w-4 text-primary" />
+        <span className="text-sm font-medium text-primary">현재 조회 기준: {dateRangeText}</span>
+        <span className="text-xs text-muted-foreground">({periodFilteredApplications.length}건)</span>
+      </div>
 
       {/* 로딩 오버레이 */}
       {isLoading && (
