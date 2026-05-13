@@ -437,44 +437,44 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               {/* 전체: Slate 계열 */}
               <div 
                 onClick={() => setStatusFilter("all")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-3 transition-all hover:bg-slate-100"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-4 transition-all hover:bg-slate-100"
               >
                 <span className="text-sm font-medium text-slate-600" style={{ order: 1 }}>전체</span>
-                <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
-                  <span className="font-bold text-slate-900" style={{ fontSize: '42px' }}>{stats.total}</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold text-slate-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.total}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
               {/* 접수완료: Indigo #6366F1 (신규 접수 강조) */}
               <div 
                 onClick={() => setStatusFilter("접수완료")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-indigo-50 p-3 transition-all hover:bg-indigo-100"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-indigo-50 p-4 transition-all hover:bg-indigo-100"
               >
                 <span className="text-sm font-medium text-indigo-500" style={{ order: 1 }}>접수완료</span>
-                <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
-                  <span className="font-bold text-indigo-500" style={{ fontSize: '42px' }}>{stats.접수완료}</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold text-indigo-500" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.접수완료}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
               {/* 진행중: Blue 계열 (활동 상태 강조) */}
               <div 
                 onClick={() => setStatusFilter("진행중")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-blue-50 p-3 transition-all hover:bg-blue-100"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-blue-50 p-4 transition-all hover:bg-blue-100"
               >
                 <span className="text-sm font-medium text-blue-600" style={{ order: 1 }}>진행중</span>
-                <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
-                  <span className="font-bold text-blue-600" style={{ fontSize: '42px' }}>{stats.진행중}</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold text-blue-600" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.진행중}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
               {/* 심사완료: Green 계열 (완료 상태 강조) */}
               <div 
                 onClick={() => setStatusFilter("심사완료")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-green-50 p-3 transition-all hover:bg-green-100"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-green-50 p-4 transition-all hover:bg-green-100"
               >
                 <span className="text-sm font-medium text-green-600" style={{ order: 1 }}>심사완료</span>
-                <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
-                  <span className="font-bold text-green-600" style={{ fontSize: '42px' }}>{stats.심사완료}</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold text-green-600" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.심사완료}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
