@@ -38,15 +38,6 @@ export default function AdminPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
-          담당자 서비스
-        </h1>
-        <p className="mt-1 text-muted-foreground">
-          민원 목록 관리 및 AI 분석 결과 검토
-        </p>
-      </div>
-
       {selectedApplication ? (
         <ApplicationDetail
           application={selectedApplication}
