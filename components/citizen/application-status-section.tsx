@@ -1138,7 +1138,7 @@ function ApplicationDetailPanel({
             <div className="flex flex-1 items-center gap-3 px-4 py-4">
               {application.finalJudgment === "매수" && <CheckCircle2 className="h-5 w-5 text-success" />}
               {application.finalJudgment === "기각" && <AlertTriangle className="h-5 w-5 text-destructive" />}
-              {application.finalJudgment === "이관" && <Info className="h-5 w-5 text-warning" />}
+              {application.finalJudgment === "심의위원회 이관" && <Info className="h-5 w-5 text-warning" />}
               <JudgmentStatus 
                 judgment={application.finalJudgment} 
                 variant="text" 

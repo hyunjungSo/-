@@ -2,8 +2,8 @@
 
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 
-// 심사결과 타입
-export type JudgmentType = "매수" | "기각" | "이관";
+// 심사결과 타입 (이관은 목록 등 공간 제약이 있는 곳에서 사용, 심의위원회 이관은 풀네임)
+export type JudgmentType = "매수" | "기각" | "이관" | "심의위원회 이관";
 
 // 필지 정보 인터페이스
 export interface LandInfo {
@@ -109,6 +109,7 @@ export const judgmentConfig: Record<JudgmentType, {
   bgClass: string; 
   textClass: string;
   solidClass: string;
+  displayLabel?: string; // 공간이 좁은 곳에서 표시할 짧은 레이블
 }> = {
   매수: { 
     bgClass: JUDGMENT_COLORS.매수.bg, 
@@ -125,6 +126,12 @@ export const judgmentConfig: Record<JudgmentType, {
     textClass: JUDGMENT_COLORS.이관.text,
     solidClass: `${JUDGMENT_COLORS.이관.bg} text-white`
   },
+  "심의위원회 이관": { 
+    bgClass: JUDGMENT_COLORS.이관.bg, 
+    textClass: JUDGMENT_COLORS.이관.text,
+    solidClass: `${JUDGMENT_COLORS.이관.bg} text-white`,
+    displayLabel: "이관" // 목록 등 공간이 좁은 곳에서는 "이관"으로 표시
+  },
 };
 
 // 단일 심사결과 배지
@@ -133,18 +140,21 @@ export function JudgmentBadge({
   count,
   showLabel = true,
   prefix,
+  useShortLabel = true, // 기본값: 공간이 좁은 곳에서는 짧은 레이블 사용
 }: { 
   type: JudgmentType; 
   count?: number;
   showLabel?: boolean;
   prefix?: string;
+  useShortLabel?: boolean;
 }) {
   const config = judgmentConfig[type];
+  const displayText = useShortLabel && config.displayLabel ? config.displayLabel : type;
   
   return (
     <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${config.solidClass}`}>
       {prefix && <span className="font-medium mr-1">{prefix}</span>}
-      {showLabel ? type : ""}{count !== undefined ? ` ${count}` : ""}
+      {showLabel ? displayText : ""}{count !== undefined ? ` ${count}` : ""}
     </span>
   );
 }

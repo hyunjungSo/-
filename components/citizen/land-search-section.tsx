@@ -138,7 +138,7 @@ const regionData = {
     "양산시": ["동면", "물금읍", "상북면", "웅상읍", "원동면", "하북면"],
     // 제주특별자치도
     "제주시": ["구좌읍", "애월읍", "우도면", "조천읍", "추자면", "한경면", "한림읍", "아라동", "건입동", "노형동", "봉개동", "삼도동", "연동", "오라동", "외도동", "용담동", "이도동", "이호동", "일도동", "화북동"],
-    "서귀포시": ["남원���", "대정읍", "안덕면", "성산읍", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "법환동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
+    "���귀포시": ["남원���", "대정읍", "안덕면", "성산읍", "표선면", "동홍동", "서귀동", "서홍동", "송산동", "영천동", "정방동", "천지동", "효돈동", "대륜동", "대천동", "도순동", "법환동", "색달동", "상효동", "신효동", "토평동", "하원동", "하효동", "호근동", "회수동"],
   },
   리: {
     // 경기도 - 용인시 처인구
@@ -239,7 +239,7 @@ const regionData = {
     "인주면": ["걸매리", "냉정리", "대율리", "문방리", "신두리", "용두리"],
     "도고면": ["신곡리", "효자리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
-    // 세종특별자치��
+    // 세종특별자치���
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "청용리"],
@@ -405,7 +405,7 @@ function simulateAIAnalysis(
     // AI 1차 판독: 수용가능/수용불가 판정
     let provisionalJudgment: "수용가능" | "수용불가";
   
-  // 잔여 면적이 0인 경우: 잔여지가 없으므로 수용 불가
+  // 잔여 면적이 0인 경우: 잔여지가 없��므로 수용 불가
   if (land.remainingArea === 0) {
     provisionalJudgment = "수용불가";
   } else if (metAutoCriteria >= 1) {
@@ -786,7 +786,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           },
         ];
         
-        // 여러 필지를 소유한 경우 (4개 관할기관: 양평이천 2건, 부산울산 2건, 강원원주 1건, 충천원주 1건)
+        // 여러 필지를 소���한 경우 (4개 관할기관: 양평이천 2건, 부산울산 2건, 강원원주 1건, 충천원주 1건)
         results = ownerLandData.map((landData) => ({
           ...dummyLandInfoList[0],
           ...landData,
@@ -1563,7 +1563,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       <div className={`rounded-lg border-2 p-4 ${
                         aiResult.provisionalJudgment === "수용가능" 
                           ? `${JUDGMENT_COLORS.수용가능.border} ${JUDGMENT_COLORS.수용가능.bgLight}` 
-                          : aiResult.provisionalJudgment === "이관"
+                          : aiResult.provisionalJudgment === "심의위원회 이관"
                             ? `${JUDGMENT_COLORS.이관.border} ${JUDGMENT_COLORS.이관.bgLight}`
                             : `${JUDGMENT_COLORS.수용불가.border} ${JUDGMENT_COLORS.수용불가.bgLight}`
                       }`}>
@@ -1577,7 +1577,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                             className={`px-2 py-1 text-sm font-semibold text-white ${
                               aiResult.provisionalJudgment === "수용가능" 
                                 ? JUDGMENT_COLORS.수용가능.bg 
-                                : aiResult.provisionalJudgment === "이관"
+                                : aiResult.provisionalJudgment === "심의위원회 이관"
                                   ? JUDGMENT_COLORS.이관.bg
                                   : JUDGMENT_COLORS.수용불가.bg
                             }`}
@@ -1823,7 +1823,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
             onClick={() => setIsCartOpen(false)}
           />
           
-          {/* 패널 */}
+          {/* 패��� */}
           <div className="relative z-10 flex h-full w-full max-w-md flex-col bg-background shadow-2xl">
             {/* 헤더 */}
             <div className="flex items-center justify-between border-b px-4 py-4">
