@@ -413,17 +413,17 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
 
       {/* 대시보드 요약 */}
       <div className="grid gap-4 lg:grid-cols-3">
-        {/* 민원 진행 ��황 ��드 */}
+        {/* 민원 진행 현황 카드 */}
         <Card className="lg:col-span-2">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-medium">민원 진행 현황</CardTitle>
+            <CardTitle className="text-lg font-semibold">민원 진행 현황</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {/* 진행률 바 */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">전체 처리 완료율</span>
-                <span className="text-primary" style={{ fontSize: '20px', fontWeight: '700' }}>{stats.completionRate}%</span>
+                <span className="text-primary" style={{ fontSize: '24px', fontWeight: '800' }}>{stats.completionRate}%</span>
               </div>
               <Progress value={stats.completionRate} className="h-2" />
             </div>
@@ -436,7 +436,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               >
                 <span className="text-sm font-medium text-muted-foreground" style={{ order: 1 }}>전체</span>
                 <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
-                  <span className="font-bold text-foreground" style={{ fontSize: '38px' }}>{stats.total}</span>
+                  <span className="text-foreground" style={{ fontSize: '38px', fontWeight: '800' }}>{stats.total}</span>
                   <span className="text-sm font-medium text-foreground">건</span>
                 </div>
               </div>
@@ -446,7 +446,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               >
                 <span className="text-sm font-medium text-slate-600" style={{ order: 1 }}>접수완료</span>
                 <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
-                  <span className="font-bold text-slate-500" style={{ fontSize: '38px' }}>{stats.접수완료}</span>
+                  <span className="text-slate-500" style={{ fontSize: '38px', fontWeight: '800' }}>{stats.접수완료}</span>
                   <span className="text-sm font-medium text-slate-500">건</span>
                 </div>
               </div>
@@ -456,7 +456,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               >
                 <span className="text-sm font-medium text-sky-700" style={{ order: 1 }}>진행중</span>
                 <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
-                  <span className="font-bold text-sky-500" style={{ fontSize: '38px' }}>{stats.진행중}</span>
+                  <span className="text-sky-500" style={{ fontSize: '38px', fontWeight: '800' }}>{stats.진행중}</span>
                   <span className="text-sm font-medium text-sky-500">건</span>
                 </div>
               </div>
@@ -466,7 +466,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               >
                 <span className="text-sm font-medium text-slate-700" style={{ order: 1 }}>심사완료</span>
                 <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
-                  <span className="font-bold text-slate-700" style={{ fontSize: '38px' }}>{stats.심사완료}</span>
+                  <span className="text-slate-700" style={{ fontSize: '38px', fontWeight: '800' }}>{stats.심사완료}</span>
                   <span className="text-sm font-medium text-slate-700">건</span>
                 </div>
               </div>
@@ -481,9 +481,9 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         {/* AI 판독 신뢰도 카드 */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-medium flex items-center justify-between">
+            <CardTitle className="text-lg font-semibold flex items-center justify-between">
               <span>AI 판독 신뢰도</span>
-              <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
+              <span className="text-2xl font-black text-primary">{stats.aiReliability}%</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -583,12 +583,12 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <div className="flex items-center gap-1">
                   <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                   <span className="text-sm text-muted-foreground">판정 일치:</span>
-                  <span className="font-semibold">{stats.aiMatchCount}건</span>
+                  <span className="font-bold">{stats.aiMatchCount}건</span>
                 </div>
-                <div className="flex items-center gap-1 text-sm">
+                <div className="flex items-center gap-1">
                   <XCircle className="h-4 w-4 text-rose-600" />
-                  <span className="text-rose-600">판정 불일치:</span>
-                  <span className="font-semibold text-rose-600">{stats.aiMismatchCount}건</span>
+                  <span className="text-sm text-rose-600">판정 불일치:</span>
+                  <span className="text-base font-bold text-rose-600">{stats.aiMismatchCount}건</span>
                 </div>
               </div>
 
