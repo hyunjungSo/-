@@ -783,7 +783,7 @@ export const dummyLandInfoList: LandInfo[] = [
       { lat: 37.0053, lng: 127.2775 },
     ],
   },
-  // 복수필지: 대지+농지 혼합 (4필지, 다양한 용도)
+  // 복수필지: 대��+농지 혼합 (4필지, 다양한 용도)
   {
     id: "land-unified-004",
     address: "충청남도 천안시 서북구 성정동 777-1",
@@ -1014,7 +1014,7 @@ export const dummyLandInfoList: LandInfo[] = [
   },
   {
     id: "land-recognized-006",
-    address: "강원도 원주시 지정면 신평리 산 104",
+    address: "강���도 원주시 지정면 신평리 산 104",
     originalArea: 2200,
     includedArea: 1600,
     remainingArea: 600,
@@ -1543,10 +1543,60 @@ function generateRationale(
 
 // 더미 민원 신청 목록
 export const dummyApplications: Application[] = [
+  // 대리인 신청 케이스
+  {
+    id: "app-agent-001",
+    applicationNumber: "2026-0513-101",
+    applicationType: "single",
+    applicantRelation: "agent", // 대리인 신청
+    applicantName: "이영자", // 토지 소유자
+    applicantContact: "010-5555-1234",
+    applicantAddress: "서울특별시 강남구 역삼동 123-45",
+    agentName: "김대리", // 대리인 성명
+    agentContact: "010-9999-8888", // 대리인 연락처
+    landInfo: dummyLandInfoList[3],
+    actualUsage: "대",
+    reportedShape: "자루형",
+    farmMachineDifficulty: false,
+    reason: "고령의 토지 소유자를 대신하여 대리인이 신청합니다. 도로 개설로 인해 잔여지가 자루형으로 남아 진입로가 협소하여 건축이 불가능합니다.",
+    attachments: ["토지대장.pdf", "위임장.pdf", "대리인신분증.pdf", "현황사진.jpg"],
+    status: "AI분석완료",
+    adminStatus: "접수완료",
+    appliedAt: TODAY,
+    aiResult: generateAIResult(dummyLandInfoList[3]),
+    adminName: "박민수",
+    businessUnit: "강진광주건설 사업단",
+  },
+  // 대리인 신청 케이스 2 - 법인 대리인
+  {
+    id: "app-agent-002",
+    applicationNumber: "2026-0512-102",
+    applicationType: "multiple",
+    applicantRelation: "agent", // 대리인 신청
+    applicantName: "주식회사 한국부동산", // 토지 소유자 (법인)
+    applicantContact: "02-1234-5678",
+    applicantAddress: "서울특별시 서초구 서초동 1000",
+    agentName: "박법무", // 대리인 (법무사)
+    agentContact: "010-7777-6666",
+    landInfo: dummyLandInfoList[4],
+    actualUsage: "임",
+    reportedShape: "부정형",
+    farmMachineDifficulty: false,
+    reason: "법인 소유 토지에 대해 법무사가 대리 신청합니다. 고속도로 편입으로 산림이 분할되어 임업 경영이 불가능해졌습니다.",
+    attachments: ["토지대장.pdf", "법인등기부등본.pdf", "위임장.pdf", "대리인자격증명.pdf"],
+    status: "검토중",
+    adminStatus: "진행중",
+    appliedAt: YESTERDAY,
+    aiResult: generateAIResult(dummyLandInfoList[4]),
+    adminName: "홍길동",
+    statusUpdatedAt: YESTERDAY,
+    businessUnit: "강진광주건설 사업단",
+  },
   {
     id: "app-001",
     applicationNumber: "2026-0401-001",
     applicationType: "single",
+    applicantRelation: "owner", // 본인 신청
     applicantName: "김철수",
     applicantContact: "010-1234-5678",
     applicantAddress: "경기도 용인시 처인구 포곡읍 마성리 100",
@@ -1831,7 +1881,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "세로장방형",
     farmMachineDifficulty: false,
-    reason: "토지 일부가 도로에 편입되어 잔여지 매수를 신청합니다.",
+    reason: "토지 일부가 도로에 편입되어 잔여지 매수를 신청합니��.",
     attachments: ["토지대장.pdf", "등기부등본.pdf"],
     status: "검토중",
     adminStatus: "진행중",
@@ -2133,7 +2183,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "천안 도시개발사업으로 인해 소유한 4개 필지(대지 1, 농지 2, 잡종지 1)가 모두 도로에 편입되었습니다. 대지에는 주택이 있었으나 철거되었고, 인접한 농지와 잡종지는 주택 부속 텃밭과 창고용지로 사용해 왔습니다. 편입 후 각 필지가 불규칙한 형태로 남아 건축 및 농업이 불가능합니다. 4필지 모두 매수를 신청합니다.",
+    reason: "천안 도시개발사업으로 인해 소유한 4개 필지(대지 1, 농지 2, 잡종지 1)가 모두 도로에 편입되��습니다. 대지에는 주택이 있었으나 철거되었고, 인접한 농지와 잡종지는 주택 부속 텃밭과 창고용지로 사용해 왔습니다. 편입 후 각 필지가 불규칙한 형태로 남아 건축 및 농업이 불가능합니다. 4필지 모두 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "대" as const,
