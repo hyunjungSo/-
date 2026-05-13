@@ -720,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             const judgmentRationale = {
               summary: `${land.landType} 잔여면적 ${land.remainingArea.toLocaleString()}㎡(잔여비율 ${land.remainingRatio}%), ${analysis.reasons.join(", ")}으로 「${finalJudgment}」 판정`,
-              legalBasis: "「공익사업을 위한 토����� 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
+              legalBasis: "「공익사업을 위�� 토����� 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
               appliedCriteria: analysis.criteriaChecks.map(check => 
                 `${check.name}: ${check.description} ${check.met ? "✓" : "✗"}`
               ),
@@ -1617,11 +1617,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     <div className="w-1/2 rounded-lg border bg-white">
                     {/* 헤더 - 필지 선택과 연동 */}
                     <div className="flex items-center gap-2 border-b bg-muted/30 px-3 py-2.5">
-                      <Badge 
-                        className={`text-xs ${selectedAdjacentParcel ? "bg-[#d97706] text-white" : "bg-[#2563eb] text-white"}`}
-                      >
-                        필지{selectedAdjacentParcel ? (selectedAdjacentParcel.parcelNumber || (applicationLands.length + 1)) : (selectedLandIndex + 1)}
-                      </Badge>
+                      <span className={`flex items-center justify-center rounded px-1.5 py-0.5 text-xs font-bold text-white ${selectedAdjacentParcel ? "bg-[#d97706]" : "bg-[#2563eb]"}`}>
+                        필지{selectedAdjacentParcel ? selectedAdjacentParcel.parcelNumber : String.fromCharCode(65 + selectedLandIndex)}
+                      </span>
                       <span className="text-sm font-medium">검토 옵션</span>
                     </div>
                     
@@ -2457,7 +2455,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 </div>
               </div>
 
-              {/* 오른쪽: AI 판독 분석 이미지 */}
+              {/* 오른쪽: AI ��독 분석 이미지 */}
               <div className="w-1/4 bg-muted/20 p-6 overflow-y-auto">
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
