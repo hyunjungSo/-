@@ -1133,8 +1133,10 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
 
           {/* 2-2. AI 분석 */}
           <div className="space-y-4">
-            <h3 className="text-base font-semibold" style={{ fontSize: '18px' }}>AI 분석</h3>
-            <p className="text-sm text-muted-foreground">민원인 신청 결과와 담당자 분석 결과를 확인합니다.</p>
+            <div className="space-y-1">
+              <h3 className="text-base font-semibold" style={{ fontSize: '18px' }}>AI 분석</h3>
+              <p className="text-sm text-muted-foreground">민원인 신청 결과와 담당자 분석 결과를 확인합니다.</p>
+            </div>
             <Tabs defaultValue="citizen" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="citizen">
@@ -2182,8 +2184,10 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
 
           {/* 2-3. 담당자 검토 */}
           <div className="space-y-4">
-            <h3 className="text-base font-semibold" style={{ fontSize: '18px' }}>담당자 검토</h3>
-            <p className="text-sm text-muted-foreground">선택된 필지의 판정과 검토 의견을 입력하세요</p>
+            <div className="space-y-1">
+              <h3 className="text-base font-semibold" style={{ fontSize: '18px' }}>담당자 검토</h3>
+              <p className="text-sm text-muted-foreground">선택된 필지의 판정과 검토 의견을 입력하세요</p>
+            </div>
           {(() => {
             const landReview = landReviewDataList[selectedLandIndex];
             const land = applicationLands[selectedLandIndex];
