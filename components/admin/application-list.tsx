@@ -544,9 +544,9 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                         </div>
                       )}
                       {stats.finalTransfer > 0 && (
-                        <div 
+                        <div
                           className="flex items-center justify-center bg-amber-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.finalTransfer / stats.심��완료) * 100}%` }}
+                          style={{ width: `${(stats.finalTransfer / stats.심사완료) * 100}%` }}
                         >
                           {stats.finalTransfer}건
                         </div>
@@ -583,12 +583,12 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <div className="flex items-center gap-1">
                   <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                   <span className="text-sm text-muted-foreground">판정 일치:</span>
-                  <span className="text-sm font-bold" style={{ fontSize: '16px' }}>{stats.aiMatchCount}건</span>
+                  <span className="font-bold" style={{ fontSize: '16px' }}>{stats.aiMatchCount}건</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <XCircle className="h-4 w-4 text-rose-600" />
                   <span className="text-sm text-rose-600">판정 불일치:</span>
-                  <span className="text-sm font-bold text-rose-600" style={{ fontSize: '16px' }}>{stats.aiMismatchCount}건</span>
+                  <span className="font-bold text-rose-600" style={{ fontSize: '16px' }}>{stats.aiMismatchCount}건</span>
                 </div>
               </div>
 
