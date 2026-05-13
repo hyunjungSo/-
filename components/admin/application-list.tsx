@@ -329,7 +329,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
 
       {/* 대시보드 요약 */}
       <div className="grid gap-4 lg:grid-cols-3">
-        {/* 민원 진행 현황 카드 */}
+        {/* 민원 진행 현황 ��드 */}
         <Card className="lg:col-span-2">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium">민원 진행 현황</CardTitle>
@@ -350,16 +350,14 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 onClick={() => setStatusFilter("all")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-muted/50 p-3 transition-opacity hover:opacity-80"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
-                  <Users className="h-4 w-4 text-primary" />
-                </div>
-                <div className="mt-2 flex items-center gap-1">
-                  <span className="text-xl font-bold text-foreground">{stats.total}</span>
+                <span className="text-sm font-medium text-muted-foreground" style={{ order: 1 }}>전체</span>
+                <div className="mt-2 flex items-center gap-1" style={{ order: 2 }}>
+                  <span className="font-bold text-foreground" style={{ fontSize: '38px' }}>{stats.total}</span>
+                  <span className="text-sm font-medium text-foreground">건</span>
                   {dailyChanges.total > 0 && (
                     <span className="rounded bg-primary/10 px-1 py-0.5 text-[10px] font-medium text-primary">+{dailyChanges.total}</span>
                   )}
                 </div>
-                <span className="text-xs text-muted-foreground">전체</span>
               </div>
               <div 
                 onClick={() => setStatusFilter("접수완료")}
@@ -370,46 +368,40 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     {dailyChanges.접수완료}
                   </div>
                 )}
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100">
-                  <Clock className="h-4 w-4 text-slate-500" />
-                </div>
-                <div className="mt-2 flex items-center gap-1">
-                  <span className="text-xl font-bold text-slate-500">{stats.접수완료}</span>
+                <span className="text-sm font-medium text-slate-600" style={{ order: 1 }}>접수완료</span>
+                <div className="mt-2 flex items-center gap-1" style={{ order: 2 }}>
+                  <span className="font-bold text-slate-500" style={{ fontSize: '38px' }}>{stats.접수완료}</span>
+                  <span className="text-sm font-medium text-slate-500">건</span>
                   {dailyChanges.접수완료 > 0 && (
                     <span className="rounded bg-amber-100 px-1 py-0.5 text-[10px] font-medium text-amber-600">+{dailyChanges.접수완료}</span>
                   )}
                 </div>
-                <span className="text-xs text-muted-foreground">접수완료</span>
               </div>
               <div 
                 onClick={() => setStatusFilter("진행중")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-sky-50 p-3 transition-opacity hover:opacity-80"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-100">
-                  <PlayCircle className="h-4 w-4 text-sky-500" />
-                </div>
-                <div className="mt-2 flex items-center gap-1">
-                  <span className="text-xl font-bold text-sky-500">{stats.진행중}</span>
+                <span className="text-sm font-medium text-sky-700" style={{ order: 1 }}>진행중</span>
+                <div className="mt-2 flex items-center gap-1" style={{ order: 2 }}>
+                  <span className="font-bold text-sky-500" style={{ fontSize: '38px' }}>{stats.진행중}</span>
+                  <span className="text-sm font-medium text-sky-500">건</span>
                   {dailyChanges.진행중 > 0 && (
                     <span className="rounded bg-sky-100 px-1 py-0.5 text-[10px] font-medium text-sky-600">+{dailyChanges.진행중}</span>
                   )}
                 </div>
-                <span className="text-xs text-muted-foreground">진행중</span>
               </div>
               <div 
                 onClick={() => setStatusFilter("심사완료")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-100 p-3 transition-opacity hover:opacity-80"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200">
-                  <CheckCircle2 className="h-4 w-4 text-slate-700" />
-                </div>
-                <div className="mt-2 flex items-center gap-1">
-                  <span className="text-xl font-bold text-slate-700">{stats.심사완료}</span>
+                <span className="text-sm font-medium text-slate-700" style={{ order: 1 }}>심사완료</span>
+                <div className="mt-2 flex items-center gap-1" style={{ order: 2 }}>
+                  <span className="font-bold text-slate-700" style={{ fontSize: '38px' }}>{stats.심사완료}</span>
+                  <span className="text-sm font-medium text-slate-700">건</span>
                   {dailyChanges.심사완료 > 0 && (
                     <span className="rounded bg-green-100 px-1 py-0.5 text-[10px] font-medium text-green-600">+{dailyChanges.심사완료}</span>
                   )}
                 </div>
-                <span className="text-xs text-muted-foreground">심사완료</span>
               </div>
             </div>
             {/* 기준 안내 문구 */}
