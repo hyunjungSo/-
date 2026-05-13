@@ -30,6 +30,9 @@ import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingU
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { Progress } from "@/components/ui/progress";
 import { JudgmentSummaryBadge, PARCEL_COUNT_COLORS } from "@/components/ui/judgment-badge";
+import { PeriodFilter, type PeriodFilterType, type DateRange } from "@/components/ui/period-filter";
+import { StatCard, StatCardGroup } from "@/components/ui/stat-card";
+import { formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 interface ApplicationListProps {
