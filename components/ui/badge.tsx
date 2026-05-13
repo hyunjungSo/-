@@ -41,8 +41,8 @@ const badgeVariants = cva(
         'purple-subtle': 'border-transparent bg-purple-50 text-purple-700',
         
         // === 진행상황 Outline 스타일 (새 컬러 시스템) ===
-        // 접수완료: Indigo (신규 발생 강조)
-        'outline-indigo': 'border border-indigo-400 bg-indigo-50 text-indigo-600',
+        // 접수완료: Amber (대기/신규 접수 강조)
+        'outline-amber': 'border border-amber-400 bg-amber-50 text-amber-600',
         // 진행중: Blue (활동 상태 강조)
         'outline-blue': 'border border-blue-400 bg-blue-50 text-blue-600',
         // 심사완료: Green (완료 상태 강조)

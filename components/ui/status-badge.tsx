@@ -8,12 +8,12 @@ import type { AdminStatus, ProcessStatus } from "@/lib/types";
 const adminStatusConfig: Record<AdminStatus, {
   label: string;
   icon: typeof Clock;
-  variant: "outline-indigo" | "outline-blue" | "outline-green";
+  variant: "outline-amber" | "outline-blue" | "outline-green";
 }> = {
   접수완료: {
     label: "접수완료",
     icon: Clock,
-    variant: "outline-indigo", // Indigo: 신규 발생 강조
+    variant: "outline-amber", // Amber: 대기/신규 접수 강조
   },
   진행중: {
     label: "진행중",
