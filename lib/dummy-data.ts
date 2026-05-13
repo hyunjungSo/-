@@ -1,5 +1,31 @@
 import type { LandInfo, Application, AIAnalysisResult, JudgmentRationale } from "./types";
 
+// 동적 날짜 생성 헬퍼 함수
+const getDateString = (daysAgo: number): string => {
+  const date = new Date();
+  date.setDate(date.getDate() - daysAgo);
+  return date.toISOString().split('T')[0];
+};
+
+// 날짜 상수 (현재 날짜 기준)
+const TODAY = getDateString(0);           // 오늘
+const YESTERDAY = getDateString(1);       // 어제
+const TWO_DAYS_AGO = getDateString(2);    // 2일 전
+const THREE_DAYS_AGO = getDateString(3);  // 3일 전
+const FOUR_DAYS_AGO = getDateString(4);   // 4일 전
+const FIVE_DAYS_AGO = getDateString(5);   // 5일 전
+const SIX_DAYS_AGO = getDateString(6);    // 6일 전
+const ONE_WEEK_AGO = getDateString(7);    // 1주일 전
+const TEN_DAYS_AGO = getDateString(10);   // 10일 전
+const TWO_WEEKS_AGO = getDateString(14);  // 2주 전
+const THREE_WEEKS_AGO = getDateString(21);// 3주 전
+const ONE_MONTH_AGO = getDateString(30);  // 1달 전
+const TWO_MONTHS_AGO = getDateString(60); // 2달 전
+const THREE_MONTHS_AGO = getDateString(90);// 3달 전
+const SIX_MONTHS_AGO = getDateString(180);// 6달 전
+const ONE_YEAR_AGO = getDateString(365);  // 1년 전
+const TWO_YEARS_AGO = getDateString(730); // 2년 전
+
 // 더미 토지 정보
 export const dummyLandInfoList: LandInfo[] = [
   {
@@ -1438,7 +1464,7 @@ function generateRationale(
     landTypeCriteria = "농지 기준: 면��� 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
     physicalConditions = "물리조건: ①도로/수로 상실로 농지 사용 불가 ②농기계 회전 곤란 ③형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "택지") {
-    landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (잔여비율 25% 이하 시 1.5배 완화)";
+    landTypeCriteria = "택지 기준: 주거 90㎡, 상업 150㎡, 공업 330㎡ 이하 (���여비율 25% 이하 시 1.5배 완화)";
     physicalConditions = "물리조건: ①접면도로 상실로 건축허가 불가 ②형상 부정형(사각형 폭 5m이하/삼각형 한변 11m이하)";
   } else if (land.landType === "임야") {
     landTypeCriteria = "산지 기준: 면적 330㎡ 이하 (잔여비율 25% 이하 시 495㎡까지 완화)";
@@ -1521,7 +1547,7 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장.jpg", "현황사진.jpg", "지적도.jpg"],
     status: "AI분석완료",
     adminStatus: "접수완료",
-    appliedAt: "2026-05-13",
+    appliedAt: TODAY,
     aiResult: generateAIResult(dummyLandInfoList[0]),
     adminName: "박민수",
     businessUnit: "강진광주건설 사업단",
@@ -1541,10 +1567,10 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장.pdf", "농지원부.pdf"],
     status: "검토중",
     adminStatus: "진행중",
-    appliedAt: "2026-05-13",
+    appliedAt: TODAY,
     aiResult: generateAIResult(dummyLandInfoList[1]),
     adminName: "홍길동",
-    statusUpdatedAt: "2026-04-10",
+    statusUpdatedAt: TODAY,
     businessUnit: "강진광주건설 사업단",
   },
   {
@@ -1562,7 +1588,7 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장.pdf", "산지전용허가서.pdf"],
     status: "접수완료",
     adminStatus: "접수완료",
-    appliedAt: "2026-05-12",
+    appliedAt: YESTERDAY,
     aiResult: generateAIResult(dummyLandInfoList[2]),
     adminName: "이정은",
     businessUnit: "강진광주건설 사업단",
@@ -1582,13 +1608,13 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장.pdf"],
     status: "처리완료",
     adminStatus: "심사완료",
-    appliedAt: "2026-05-11",
+    appliedAt: TWO_DAYS_AGO,
     aiResult: generateAIResult(dummyLandInfoList[3]),
     finalJudgment: "매수",
     reviewerComment: "잔여지 형상 및 면적 기준 충족으로 매수 판정",
     finalReviewOpinion: "본 토지는 도로사업 편입으로 인해 잔여지가 발생하였으며, 잔여지 면적이 기준 미달이고 형상지수 악화로 정상적인 이용이 곤란한 것으로 판단됩니다. 따라서 잔여지 매수 기준에 부합하여 매수 결정이 적정합니다.",
     adminName: "홍길동",
-    statusUpdatedAt: "2026-04-15",
+    statusUpdatedAt: YESTERDAY,
     businessUnit: "강진광주건설 사업단",
   },
   // 동일 소유자 복수 필지 신청 케이스
@@ -1635,10 +1661,10 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장_100-1.pdf", "토지대장_100-2.pdf", "등기부등본.pdf"],
     status: "검토중",
     adminStatus: "진행중",
-    appliedAt: "2026-05-10",
+    appliedAt: THREE_DAYS_AGO,
     aiResult: generateAIResult(dummyLandInfoList[6]),
     adminName: "홍길동",
-    statusUpdatedAt: "2026-04-12",
+    statusUpdatedAt: TWO_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
   // AI 판정 경계 사례 (심의위원회 이관 필요)
@@ -1657,7 +1683,7 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장.pdf", "농지원부.pdf"],
     status: "AI분석완료",
   adminStatus: "접수완료",
-    appliedAt: "2026-05-09",
+    appliedAt: FOUR_DAYS_AGO,
   aiResult: generateAIResult(dummyLandInfoList[8]),
   adminName: "최영호",
   businessUnit: "강진광주건설 사업단",
@@ -1678,10 +1704,10 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장.pdf", "지적도.pdf"],
     status: "검토중",
     adminStatus: "진행중",
-    appliedAt: "2026-05-07",
+    appliedAt: SIX_DAYS_AGO,
     aiResult: generateAIResult(dummyLandInfoList[4]),
     adminName: "홍길동",
-    statusUpdatedAt: "2026-04-21",
+    statusUpdatedAt: THREE_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
   // 검토필요 케이스 - 실측 및 추가 검토 필요
@@ -1700,7 +1726,7 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장.pdf", "지적도.pdf", "현황사진.jpg"],
     status: "검토중",
     adminStatus: "진행중",
-    appliedAt: "2026-05-05",
+    appliedAt: TEN_DAYS_AGO,
     aiResult: {
       landTypePath: "택지",
       criteriaChecks: [
@@ -1730,7 +1756,7 @@ export const dummyApplications: Application[] = [
       },
     },
     adminName: "홍길동",
-    statusUpdatedAt: "2026-04-22",
+    statusUpdatedAt: FOUR_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
   // 매수 불가 케이스 - 기각 처리됨
@@ -1749,12 +1775,12 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장.pdf"],
     status: "처리완료",
     adminStatus: "심사완료",
-    appliedAt: "2025-12-15",
+    appliedAt: THREE_MONTHS_AGO,
     aiResult: generateAIResult(dummyLandInfoList[9]),
     finalJudgment: "기각",
     reviewerComment: "잔여비율 90%로 매수 기준(30% 이하)을 크게 초과하며, 형상지수 변화도 0.1로 미미하여 종래 용도 사용에 지장이 없음. 매수 기준 미충족으로 기각 처리.",
     adminName: "박담당",
-    statusUpdatedAt: "2026-04-18",
+    statusUpdatedAt: FIVE_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
   // 심의위원회 이관 케이스 - 기준 경계 사례로 위원회 심의 필요
@@ -1769,17 +1795,17 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "사다리형",
     farmMachineDifficulty: true,
-    reason: "도로 편입 후 농지 형태가 크게 변경되어 정상적인 영농이 어렵습니다. 경계선 문제로 인접 토지와의 분쟁 가능성도 있어 전문가 심의가 필요합니다.",
+    reason: "도로 편입 후 농지 형태��� 크게 변경되어 정상적인 영농이 어렵습니다. 경계선 문제로 인접 토지와의 분쟁 가능성도 있어 전문가 심의가 필요합니다.",
     attachments: ["토지대장.pdf", "농지원부.pdf", "현황사진.jpg"],
     status: "처리완료",
     adminStatus: "심사완료",
-    appliedAt: "2025-11-20",
+    appliedAt: SIX_MONTHS_AGO,
     aiResult: generateAIResult(dummyLandInfoList[8]),
     finalJudgment: "심의위원회 이관",
     reviewerComment: "AI 판정 결과 수용가능이나, 인접 토지와의 경계 분쟁 가능성 및 농지 활용도에 대한 현장 확인 결과 추가 검토가 필요함. 잔여면적 기준은 충족하나 형상지수 변화가 경계값에 있어 심의위원회의 전문적 판단이 요구됨.",
     finalReviewOpinion: "본 건은 AI 분석 결과 매수 기준 충족으로 판단되었으나, 현장 조사 결과 인접 토지 소유자와의 경계 관련 민원이 제기된 상태이며, 농지 활용도에 대한 전문가 의견이 상이하여 심의위원회에 이관하여 종합적인 검토가 필요한 것으로 판단됩니다.",
     adminName: "박담당",
-    statusUpdatedAt: "2026-04-20",
+    statusUpdatedAt: SIX_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
   // 매수 불가 케이스 - 검토 중 (곧 기각 예정)
@@ -1798,10 +1824,10 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장.pdf", "등기부등본.pdf"],
     status: "검토중",
     adminStatus: "진행중",
-    appliedAt: "2025-10-05",
+    appliedAt: SIX_MONTHS_AGO,
     aiResult: generateAIResult(dummyLandInfoList[10]),
     adminName: "홍길동",
-    statusUpdatedAt: "2026-04-19",
+    statusUpdatedAt: ONE_WEEK_AGO,
     businessUnit: "강진광주건설 사업단",
   },
   // 복수 필지 8건 신청 케이스 (복수 필지 개별 신청)
@@ -1920,10 +1946,10 @@ export const dummyApplications: Application[] = [
     ],
     status: "검토중",
     adminStatus: "진행중",
-    appliedAt: "2026-05-03",
+    appliedAt: TWO_WEEKS_AGO,
     aiResult: generateAIResult(dummyLandInfoList[11]),
     adminName: "홍길동",
-    statusUpdatedAt: "2026-05-05",
+    statusUpdatedAt: TEN_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
   // 추가 더미 데이터 (스크롤 테스트용)
@@ -1941,7 +1967,7 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장.pdf"],
     status: "접수완료",
     adminStatus: "접수완료",
-    appliedAt: "2026-05-02",
+    appliedAt: THREE_WEEKS_AGO,
     aiResult: generateAIResult(dummyLandInfoList[0]),
     adminName: "이정은",
     businessUnit: "강진광주건설 사업단",
@@ -1960,10 +1986,10 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장.pdf"],
     status: "검토중",
     adminStatus: "진행중",
-    appliedAt: "2026-04-25",
+    appliedAt: ONE_MONTH_AGO,
     aiResult: generateAIResult(dummyLandInfoList[2]),
     adminName: "홍길동",
-    statusUpdatedAt: "2026-04-18",
+    statusUpdatedAt: FIVE_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
   {
@@ -1971,7 +1997,7 @@ export const dummyApplications: Application[] = [
     applicationNumber: "2026-0412-001",
     applicantName: "이병헌",
     applicantContact: "010-7777-8888",
-    applicantAddress: "경기도 안양시 동안구 평촌동 500",
+    applicantAddress: "경기�� 안양시 동안구 평촌동 500",
     landInfo: dummyLandInfoList[3],
     actualUsage: "잡",
     reportedShape: "삼각형",
@@ -1980,12 +2006,12 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장.pdf"],
     status: "처리완료",
     adminStatus: "심사완료",
-    appliedAt: "2026-04-15",
+    appliedAt: ONE_MONTH_AGO,
     aiResult: generateAIResult(dummyLandInfoList[3]),
     finalJudgment: "매수",
     reviewerComment: "매수 기준 충족",
     adminName: "최영호",
-    statusUpdatedAt: "2026-04-20",
+    statusUpdatedAt: SIX_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
   // ===== 복수필지 매수 케이스 (신규) =====
@@ -2040,7 +2066,7 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장_501-1.pdf", "토지대장_501-2.pdf", "토지대장_501-3.pdf", "등기부등본.pdf", "농지원부.pdf"],
     status: "처리완료",
     adminStatus: "심사완료",
-    appliedAt: "2025-09-15",
+    appliedAt: ONE_YEAR_AGO,
     aiResult: {
       landTypePath: "농지",
       criteriaChecks: [
@@ -2075,7 +2101,7 @@ export const dummyApplications: Application[] = [
     reviewerComment: "3필지 농지로 확인됨. 관개수로 단절 및 형상 변경으로 농업 활동 불가. 매수 기준 충족으로 매수 결정.",
     finalReviewOpinion: "안성-천안 국도확장사업으로 편입된 3필지 농지입니다. 현장 확인 결과, 도로 편입 후 관개수로가 단절되고, 각 필지가 삼각형, 역삼각형, 부정형으로 변경되어 농기계 회전 및 회전이 불가능한 상태입니다. 매수 기준 충족하여 매수가 적정합니다.",
     adminName: "홍길동",
-    statusUpdatedAt: "2026-04-28",
+    statusUpdatedAt: TWO_WEEKS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
   // 복수필지 케이스 2: 최혼합 - 4필지 혼합 (대지+농지+잡��지, 검토 중)
@@ -2135,10 +2161,10 @@ export const dummyApplications: Application[] = [
         waterChannelLost: false,
       },
     ],
-    attachments: ["토지대장_777-1.pdf", "토지대장_777-2.pdf", "토지대장_777-3.pdf", "토지대장_777-4.pdf", "등기부등본.pdf", "건축물대장.pdf"],
+    attachments: ["��지대장_777-1.pdf", "토지대장_777-2.pdf", "토지대장_777-3.pdf", "토지대장_777-4.pdf", "등기부등본.pdf", "건축물대장.pdf"],
     status: "검토중",
     adminStatus: "진행중",
-    appliedAt: "2026-03-15",
+    appliedAt: TWO_MONTHS_AGO,
     aiResult: {
       landTypePath: "택지",
       criteriaChecks: [
@@ -2170,7 +2196,7 @@ export const dummyApplications: Application[] = [
       },
     },
     adminName: "홍길동",
-    statusUpdatedAt: "2026-04-27",
+    statusUpdatedAt: THREE_WEEKS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
   // ===== 소규모 복수필지 케이스 =====
@@ -2216,7 +2242,7 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장_123-1.pdf", "토지대장_123-2.pdf", "등기부등본.pdf", "현황사진.jpg"],
     status: "처리완료",
     adminStatus: "심사완료",
-    appliedAt: "2026-02-10",
+    appliedAt: THREE_MONTHS_AGO,
     aiResult: {
       landTypePath: "택지",
       criteriaChecks: [
@@ -2248,7 +2274,7 @@ export const dummyApplications: Application[] = [
     reviewerComment: "맹지 판정으로 매수 인정. 현장 확인 결과 두 필지 모두 접면도로 상실 확인.",
     finalReviewOpinion: "용인-안성 고속도로 확장으로 편입된 2필지 대지입니다. 고속도로 편입으로 양 필지 모두 접면도로가 상실되어 맹지가 되었습니다. 건축이 불가능한 맹지 상태이므로 매수가 적정합니다.",
     adminName: "김철수",
-    statusUpdatedAt: "2026-04-29",
+    statusUpdatedAt: ONE_MONTH_AGO,
     businessUnit: "강진광주건설 사업단",
   },
   // 소규모 복수필지 케이스 2: 이산림 - 5필지 산지 (조림지 분단으로 매수 인정)
@@ -2320,7 +2346,7 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장_산101.pdf", "토지대장_산102.pdf", "토지대장_산103.pdf", "토지대장_산104.pdf", "토지대장_산105.pdf", "등기부등본.pdf", "산림경영계획서.pdf", "조림현황사진.jpg"],
     status: "검토중",
     adminStatus: "진행중",
-    appliedAt: "2026-01-20",
+    appliedAt: SIX_MONTHS_AGO,
     aiResult: {
       landTypePath: "산지",
       criteriaChecks: [
@@ -2349,7 +2375,7 @@ export const dummyApplications: Application[] = [
       },
     },
     adminName: "박영희",
-    statusUpdatedAt: "2026-04-29",
+    statusUpdatedAt: ONE_MONTH_AGO,
     businessUnit: "강진광주건설 사업단",
   },
   // ===== 혼합 케이스: 일부 매수 + 일부 미해당 =====
@@ -2412,10 +2438,10 @@ export const dummyApplications: Application[] = [
         waterChannelLost: false,
       },
     ],
-    attachments: ["토지대장_200-1.pdf", "토지대장_200-2.pdf", "토지대장_55-1.pdf", "토지대장_55-2.pdf", "등기부등본.pdf"],
+    attachments: ["토지대장_200-1.pdf", "토지대장_200-2.pdf", "토지대장_55-1.pdf", "토지대장_55-2.pdf", "���기부등본.pdf"],
     status: "검토중",
     adminStatus: "진행중",
-    appliedAt: "2024-11-10",
+    appliedAt: TWO_YEARS_AGO,
     aiResult: {
       landTypePath: "농지",
       criteriaChecks: [
@@ -2469,7 +2495,7 @@ export const dummyApplications: Application[] = [
       ],
     },
     adminName: "홍길동",
-    statusUpdatedAt: "2026-04-30",
+    statusUpdatedAt: TWO_MONTHS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
   // 복수필지 신청 케이스
@@ -2551,7 +2577,7 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장_용인시_포곡읍_200-1.pdf", "지적도_용인시_포곡읍_200-1.pdf", "현장사진_20260501.jpg"],
     status: "검토중",
     adminStatus: "진행중",
-    appliedAt: "2026-05-06",
+    appliedAt: ONE_WEEK_AGO,
     // 민원인 AI 분석 결과 - 농지 2필지 개별 분석
     aiResult: {
       provisionalJudgment: "수용가능",
@@ -2598,7 +2624,7 @@ export const dummyApplications: Application[] = [
       waterChannelLost: true,
       farmMachineDifficulty: true,
       judgmentRationale: {
-        summary: "농지 2필지 담당자 분석 - 200-1(전): 농기계 진입 곤란 확인, 200-2(답): 관개수로 상실 확인",
+        summary: "농지 2필지 담당자 분석 - 200-1(전): 농기계 진��� 곤란 확인, 200-2(답): 관개수로 상실 확인",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
           "토지유형: 농지 (전, 답)",
@@ -2615,7 +2641,7 @@ export const dummyApplications: Application[] = [
       ],
     },
     adminName: "김철수",
-    statusUpdatedAt: "2026-05-05",
+    statusUpdatedAt: TEN_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
   // 접수완료 상태의 3필지 신청 건
@@ -2664,7 +2690,7 @@ export const dummyApplications: Application[] = [
     attachments: ["토지대장_매탄동_100.pdf", "토지대장_매탄동_101.pdf", "토지대장_매탄동_102.pdf", "등기부등본.pdf"],
     status: "접수완료",
     adminStatus: "접수완료",
-    appliedAt: "2026-05-10",
+    appliedAt: THREE_DAYS_AGO,
     aiResult: {
       provisionalJudgment: "수용가능",
       confidence: 78,
@@ -2757,7 +2783,7 @@ export const landCategories = [
 // 토지 형상 목록
 export const landShapes = {
   regular: [
-    { value: "정방형", label: "정방형" },
+    { value: "정방���", label: "정방형" },
     { value: "가로장방형", label: "가로장방형" },
     { value: "세로장방형", label: "세로장방형" },
   ],
