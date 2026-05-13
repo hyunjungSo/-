@@ -164,14 +164,46 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const initializeLandReviewData = (): LandReviewData[] => {
     return allLands.map((land, index) => {
       const landData = application.landDataList?.[index];
+      
+      // 심사완료된 케이스의 경우 저장된 판정/의견 데이터 로드
+      let savedJudgment: JudgmentResult | null = null;
+      let savedComment = "";
+      
+      if (application.adminStatus === "심사완료") {
+        // 1. landJudgmentsForReview에서 필지별 판정 찾기
+        const landJudgmentForReview = application.landJudgmentsForReview?.find(
+          lj => lj.landId === land.id
+        );
+        if (landJudgmentForReview) {
+          // purchaseDecision을 JudgmentResult로 변환
+          if (landJudgmentForReview.purchaseDecision === "O") {
+            savedJudgment = "매수";
+          } else if (landJudgmentForReview.purchaseDecision === "X") {
+            savedJudgment = "기각";
+          } else if (landJudgmentForReview.purchaseDecision === "-") {
+            savedJudgment = "심의위원회 이관";
+          }
+        }
+        
+        // 2. landJudgmentsForReview가 없으면 application.finalJudgment 사용 (모든 필지에 동일 적용)
+        if (!savedJudgment && application.finalJudgment) {
+          savedJudgment = application.finalJudgment;
+        }
+        
+        // 3. 검토 의견은 application.reviewerComment 사용 (첫 번째 필지에만 또는 모든 필지에)
+        if (application.reviewerComment) {
+          savedComment = application.reviewerComment;
+        }
+      }
+      
       return {
         actualUsage: (landData?.actualUsage || land.landCategory) as LandCategory,
         landShape: (landData?.reportedShape || land.remainingShape) as LandShape,
         farmMachineDifficulty: landData?.farmMachineDifficulty ? "해당" : "미입력",
         accessRoadLost: landData?.accessRoadLost || false,
         waterChannelLost: landData?.waterChannelLost || false,
-        landJudgment: null,
-        landComment: "",
+        landJudgment: savedJudgment,
+        landComment: savedComment,
       };
     });
   };
@@ -1321,7 +1353,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                     </li>
                                     <li className="flex items-start gap-1.5 text-sm text-muted-foreground">
                                       <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
-                                      <span>잔여비����� ��준: {land.remainingRatio}%</span>
+                                      <span>잔여비������� ��준: {land.remainingRatio}%</span>
                                     </li>
                                   </>
                                 )}
