@@ -237,31 +237,31 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const finalCompleted = periodFilteredApplications.filter((a) => a.adminStatus === "심사완료");
     const completedCount = finalCompleted.length;
     
-    // AI 초기 판정 통계 시뮬레이션 (매수 60%, 기각 25%, 이관 15%)
-    const aiPurchase = Math.round(completedCount * 0.60);
-    const aiReject = Math.round(completedCount * 0.25);
-    const aiTransfer = completedCount - aiPurchase - aiReject;
+    // AI 초기 판정: 매수가능/매수불가 (2가지만 존재, 이관 없음)
+    const aiPurchasable = Math.round(completedCount * 0.65);    // 매수가능 65%
+    const aiNotPurchasable = completedCount - aiPurchasable;     // 매수불가 35%
     const aiAnalyzed = completedCount;
     
     // AI 신뢰도 계산 로직:
-    // - AI(매수불가/기각) -> 담당자(기각) = 일치
-    // - AI(매수불가/기각) -> 담당자(이관) = 불일치 (판단 보류)
-    // - AI(매수) -> 담당자(기각) = 불일치 (반대 결정)
-    // - AI(매수) -> 담당자(이관) = 불일치 (판단 보류)
+    // - AI(매수가능) -> 담당자(매수) = 일치
+    // - AI(매수가능) -> 담당자(기각) = 불일치 (반대 결정)
+    // - AI(매수가능) -> 담당자(이관) = 불일치 (판단 보류)
+    // - AI(매수불가) -> 담당자(기각) = 일치
+    // - AI(매수불가) -> 담당자(이관) = 불일치 (판단 보류)
     
     // 시뮬레이션: 불일치 유형 구분
-    const mismatchOpposite = Math.max(1, Math.floor(completedCount * 0.05)); // 반대 결정 (5%)
-    const mismatchDeferred = Math.max(1, Math.floor(completedCount * 0.05)); // 판단 보류/이관 (5%)
+    const mismatchOpposite = Math.max(1, Math.floor(completedCount * 0.05)); // 반대 결정: AI(매수가능)->담당자(기각)
+    const mismatchDeferred = Math.max(1, Math.floor(completedCount * 0.05)); // 판단 보류: AI 판정과 무관하게 담당자가 이관
     const aiMismatchCount = mismatchOpposite + mismatchDeferred;
     const aiMatchCount = completedCount - aiMismatchCount;
     const aiReliability = completedCount > 0 ? Math.round((aiMatchCount / completedCount) * 100) : 0;
     
-    // 담당자 최종 심사 통계 (AI 판정에서 불일치 반영)
-    const purchaseToReject = mismatchOpposite; // AI 매수 -> 담당자 기각 (반대 결정)
-    const rejectToTransfer = mismatchDeferred; // AI 기각 -> 담당자 이관 (판단 보류)
-    const finalPurchase = aiPurchase - purchaseToReject;
-    const finalReject = aiReject - rejectToTransfer + purchaseToReject;
-    const finalTransfer = aiTransfer + rejectToTransfer;
+    // 담당자 최종 심사 통계: 매수/기각/이관 (3가지)
+    // AI(매수가능) 중 일부가 기각(반대결정) 또는 이관(판단보류)으로 변경
+    // AI(매수불가) 중 일부가 이관(판단보류)으로 변경
+    const finalPurchase = aiPurchasable - mismatchOpposite - Math.floor(mismatchDeferred * 0.6); // 매수가능에서 반대결정/보류 제외
+    const finalReject = aiNotPurchasable - Math.floor(mismatchDeferred * 0.4) + mismatchOpposite; // 매수불가에서 보류 제외 + 반대결정 추가
+    const finalTransfer = mismatchDeferred; // 이관 = 판단 보류 건수
     
     // 처리 완료율
     const completionRate = total > 0 ? Math.round((심사완료 / total) * 100) : 0;
@@ -276,12 +276,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       진행중,
       심사완료,
       aiAnalyzed,
-      aiPurchase,
-      aiReject,
-      aiTransfer,
-      finalPurchase,
-      finalReject,
-      finalTransfer,
+      aiPurchasable,    // AI 초기 판정: 매수가능
+      aiNotPurchasable, // AI 초기 판정: 매수불가
+      finalPurchase,    // 담당자 최종: 매수
+      finalReject,      // 담당자 최종: 기각
+      finalTransfer,    // 담당자 최종: 이관
       aiReliability,
       aiMatchCount,
       aiMismatchCount,
@@ -524,34 +523,26 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             
             {/* 스택 바 비교 */}
             <div className="space-y-3">
-              {/* AI 초기 판정 막대 */}
+              {/* AI 초기 판정 막대 (매수가능/매수불가 2가지만) */}
               <div className="space-y-1.5">
                 <span className="text-xs font-medium text-muted-foreground">AI 초기 판정</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
                   {stats.aiAnalyzed > 0 ? (
                     <>
-                      {stats.aiPurchase > 0 && (
+                      {stats.aiPurchasable > 0 && (
                         <div 
                           className="flex items-center justify-center bg-emerald-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.aiPurchase / stats.aiAnalyzed) * 100}%` }}
+                          style={{ width: `${(stats.aiPurchasable / stats.aiAnalyzed) * 100}%` }}
                         >
-                          {stats.aiPurchase}건
+                          {stats.aiPurchasable}건
                         </div>
                       )}
-                      {stats.aiReject > 0 && (
+                      {stats.aiNotPurchasable > 0 && (
                         <div 
                           className="flex items-center justify-center bg-rose-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.aiReject / stats.aiAnalyzed) * 100}%` }}
+                          style={{ width: `${(stats.aiNotPurchasable / stats.aiAnalyzed) * 100}%` }}
                         >
-                          {stats.aiReject}건
-                        </div>
-                      )}
-                      {stats.aiTransfer > 0 && (
-                        <div 
-                          className="flex items-center justify-center bg-amber-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.aiTransfer / stats.aiAnalyzed) * 100}%` }}
-                        >
-                          {stats.aiTransfer}건
+                          {stats.aiNotPurchasable}건
                         </div>
                       )}
                     </>
@@ -603,18 +594,32 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
               
               {/* 범례 */}
-              <div className="flex items-center justify-center gap-4 pt-1">
-                <div className="flex items-center gap-1.5">
-                  <div className="h-2.5 w-2.5 rounded-sm bg-emerald-500" />
-                  <span className="text-xs text-muted-foreground">매수</span>
+              <div className="space-y-2 pt-2">
+                <div className="flex items-center justify-center gap-4">
+                  <span className="text-[10px] font-medium text-muted-foreground">AI 판정:</span>
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-2.5 w-2.5 rounded-sm bg-emerald-500" />
+                    <span className="text-xs text-muted-foreground">매수가능</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-2.5 w-2.5 rounded-sm bg-rose-500" />
+                    <span className="text-xs text-muted-foreground">매수불가</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="h-2.5 w-2.5 rounded-sm bg-rose-500" />
-                  <span className="text-xs text-muted-foreground">기각</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="h-2.5 w-2.5 rounded-sm bg-amber-500" />
-                  <span className="text-xs text-muted-foreground">이관</span>
+                <div className="flex items-center justify-center gap-4">
+                  <span className="text-[10px] font-medium text-muted-foreground">담당자:</span>
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-2.5 w-2.5 rounded-sm bg-emerald-500" />
+                    <span className="text-xs text-muted-foreground">매수</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-2.5 w-2.5 rounded-sm bg-rose-500" />
+                    <span className="text-xs text-muted-foreground">기각</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-2.5 w-2.5 rounded-sm bg-amber-500" />
+                    <span className="text-xs text-muted-foreground">이관</span>
+                  </div>
                 </div>
               </div>
             </div>
