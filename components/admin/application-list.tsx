@@ -586,18 +586,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <span className="text-sm text-muted-foreground">판정 일치:</span>
                   <span className="font-semibold">{stats.aiMatchCount}건</span>
                 </div>
-                <button
-                  onClick={() => setAiMismatchFilter(!aiMismatchFilter)}
-                  className={`flex items-center gap-1 rounded-md px-2 py-1 text-sm transition-colors ${
-                    aiMismatchFilter 
-                      ? "bg-rose-100 text-rose-700" 
-                      : "text-rose-600 hover:bg-rose-50"
-                  }`}
-                >
-                  <AlertCircle className="h-4 w-4" />
-                  <span className="underline-offset-2 hover:underline">판정 불일치:</span>
-                  <span className="font-semibold">{stats.aiMismatchCount}건</span>
-                </button>
+                <div className="flex items-center gap-1 text-sm">
+                  <AlertCircle className="h-4 w-4 text-rose-600" />
+                  <span className="text-rose-600">판정 불일치:</span>
+                  <span className="font-semibold text-rose-600">{stats.aiMismatchCount}건</span>
+                </div>
               </div>
 
             </div>
