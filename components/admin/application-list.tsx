@@ -416,7 +416,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         {/* 민원 진행 현황 카드 */}
         <Card className="lg:col-span-6">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-medium">민원 진행 현황</CardTitle>
+            <CardTitle className="text-base font-medium" style={{ fontSize: '18px', fontWeight: '600' }}>민원 진행 현황</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {/* 진행률 바 */}
