@@ -53,7 +53,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   const [projectUnitFilter, setProjectUnitFilter] = useState<"all" | "gangjin-gwangju">("all");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [periodFilter, setPeriodFilter] = useState<PeriodFilter>("year");
-  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [selectedYear, setSelectedYear] = useState<number | null>(currentYear);
   const [aiMismatchFilter, setAiMismatchFilter] = useState(false);
   const [customDateRange, setCustomDateRange] = useState<DateRange>({ from: undefined, to: undefined });
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
@@ -68,10 +68,16 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   }, []);
 
   // 필터 변경 시 로딩 효과
-  const handlePeriodChange = (newPeriod: PeriodFilter) => {
+  const handlePeriodChange = (newPeriod: PeriodFilter, year?: number) => {
     setIsLoading(true);
     startTransition(() => {
       setPeriodFilter(newPeriod);
+      // 연도 필터가 아닌 다른 필터 선택 시 연도 초기화
+      if (newPeriod !== "year") {
+        setSelectedYear(null);
+      } else if (year !== undefined) {
+        setSelectedYear(year);
+      }
       setTimeout(() => setIsLoading(false), 300);
     });
   };
@@ -83,6 +89,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     
     switch (periodFilter) {
       case "year": {
+        if (selectedYear === null) return { from: undefined, to: undefined };
         const yearStart = new Date(selectedYear, 0, 1);
         const yearEnd = new Date(selectedYear, 11, 31);
         return { from: yearStart, to: yearEnd };
@@ -113,7 +120,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
     };
     
-    if (periodFilter === "year") {
+    if (periodFilter === "year" && selectedYear !== null) {
       return `${selectedYear}년 (${selectedYear}.01.01 ~ ${selectedYear}.12.31)`;
     }
     
@@ -142,6 +149,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       
       switch (periodFilter) {
         case "year": {
+          if (selectedYear === null) return true;
           const yearStart = new Date(selectedYear, 0, 1);
           const yearEnd = new Date(selectedYear, 11, 31, 23, 59, 59, 999);
           return appDate >= yearStart && appDate <= yearEnd;
@@ -307,12 +315,12 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <button
                     className={cn(
                       "flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium transition-all",
-                      periodFilter === "year"
+                      periodFilter === "year" && selectedYear !== null
                         ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"
                     )}
                   >
-                    {selectedYear}년
+                    {selectedYear !== null ? `${selectedYear}년` : "년도선택"}
                     <ChevronRight className="h-3 w-3 rotate-90" />
                   </button>
                 </PopoverTrigger>
@@ -322,8 +330,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       <button
                         key={year}
                         onClick={() => {
-                          setSelectedYear(year);
-                          handlePeriodChange("year");
+                          handlePeriodChange("year", year);
                         }}
                         className={cn(
                           "w-full rounded-md px-3 py-1.5 text-left text-sm transition-colors",
