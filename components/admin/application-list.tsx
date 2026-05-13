@@ -225,14 +225,16 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const 진행중 = periodFilteredApplications.filter((a) => a.adminStatus === "진행중").length;
     const 심사완료 = periodFilteredApplications.filter((a) => a.adminStatus === "심사완료").length;
     
-    // AI 판정 통계 (수용가능/수용불가)
-    const aiAnalyzed = periodFilteredApplications.filter((a) => a.aiResult).length;
-    const aiPurchase = periodFilteredApplications.filter((a) => a.aiResult?.provisionalJudgment === "수용가능").length;
-    const aiReject = periodFilteredApplications.filter((a) => a.aiResult?.provisionalJudgment === "수용불가").length;
+    // 심사완료된 건만 기준으로 비교
+    const finalCompleted = periodFilteredApplications.filter((a) => a.adminStatus === "심사완료");
+    
+    // AI 초기 판정 통계 (심사완료 건 기준)
+    const aiAnalyzed = finalCompleted.filter((a) => a.aiResult).length;
+    const aiPurchase = finalCompleted.filter((a) => a.aiResult?.provisionalJudgment === "수용가능").length;
+    const aiReject = finalCompleted.filter((a) => a.aiResult?.provisionalJudgment === "수용불가").length;
     const aiTransfer = aiAnalyzed - aiPurchase - aiReject; // 이관 건수
     
-    // 담당자 최종 심사 통계 (심사완료 기준)
-    const finalCompleted = periodFilteredApplications.filter((a) => a.adminStatus === "심사완료");
+    // 담당자 최종 심사 통계 (심사완료 기준 - 동일 기준)
     const finalPurchase = finalCompleted.filter((a) => a.aiResult?.provisionalJudgment === "수용가능").length;
     const finalReject = finalCompleted.filter((a) => a.aiResult?.provisionalJudgment === "수용불가").length;
     const finalTransfer = finalCompleted.length - finalPurchase - finalReject;
@@ -551,7 +553,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       {stats.finalPurchase > 0 && (
                         <div 
                           className="flex items-center justify-center bg-emerald-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.finalPurchase / stats.심사완료) * 100}%` }}
+                          style={{ width: `${(stats.finalPurchase / stats.��사완료) * 100}%` }}
                         >
                           {stats.finalPurchase}건
                         </div>
