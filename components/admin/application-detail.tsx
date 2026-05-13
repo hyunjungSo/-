@@ -904,7 +904,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       reviewerComment: reviewData.reviewerComment,
       finalJudgment: reviewData.finalJudgment,
       adminStatus: reviewData.adminStatus,
-      status: reviewData.adminStatus === "심사완료" ? "처리완료" : application.status,
+      status: reviewData.adminStatus === "심사완료" ? "처리완��" : application.status,
       adminName: selectedAssignee?.name || application.adminName,
       statusUpdatedAt: new Date().toISOString().split("T")[0],
       // 필지별 판정 결과 저장 (심의서 연동)
@@ -944,7 +944,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       {/* Section 01. 신청인 정보 */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">신청인 정보</CardTitle>
+          <CardTitle className="text-lg" style={{ fontSize: '20px' }}>신청인 정보</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
@@ -989,7 +989,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       <Card className="border border-gray-200">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">대상 필지 분석 및 검토</CardTitle>
+            <CardTitle className="text-lg" style={{ fontSize: '20px' }}>대상 필지 분석 및 검토</CardTitle>
             {/* 필지 선택 - 강조된 UI */}
             <div className="flex items-center gap-3 bg-blue-50 rounded-lg px-3 py-2">
               <div className="flex items-center gap-2">
@@ -2260,7 +2260,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       {/* Section 03. 진행상황 선택 - 복수필지 전체에 대한 한 건 처리 */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">진행상황 선택</CardTitle>
+          <CardTitle className="text-lg" style={{ fontSize: '20px' }}>진행상황 선택</CardTitle>
           <CardDescription>
             민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다
           </CardDescription>
@@ -2294,7 +2294,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       {/* Section 04. 최종 검토 의견 */}
       <Card className="border-2 border-primary/20 bg-primary/5">
         <CardHeader>
-          <CardTitle className="text-lg">최종 검토 의견</CardTitle>
+          <CardTitle className="text-lg" style={{ fontSize: '20px' }}>최종 검토 의견</CardTitle>
           <CardDescription>
             모든 필지에 대한 종합적인 검토 의견을 작성해주세요. 이 내용은 심의서에 자동 입력됩니다.
           </CardDescription>
