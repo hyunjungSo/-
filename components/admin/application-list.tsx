@@ -412,9 +412,9 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       )}
 
       {/* 대시보드 요약 */}
-      <div className="grid gap-4 lg:grid-cols-3">
-        {/* 민원 진행 ��황 ��드 */}
-        <Card className="lg:col-span-2">
+      <div className="grid gap-4 lg:grid-cols-11">
+        {/* 민원 진행 현황 카드 */}
+        <Card className="lg:col-span-6">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium">민원 진행 현황</CardTitle>
           </CardHeader>
@@ -479,7 +479,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         </Card>
 
         {/* AI 판독 신뢰도 카드 */}
-        <Card>
+        <Card className="lg:col-span-5">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium flex items-center justify-between">
               <span>AI 판독 신뢰도</span>
