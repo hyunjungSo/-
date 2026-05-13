@@ -588,7 +588,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || waterLost || roadLost || farmDifficulty || shapeCriteria.met) {
         judgment = "수용가능";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (waterLost) reasons.push("관개수로 상��" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
+        if (waterLost) reasons.push("관개수��� 상��" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (farmDifficulty) reasons.push("농기계 회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
@@ -1310,7 +1310,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                     </li>
                                     <li className="flex items-start gap-1.5 text-sm text-muted-foreground">
                                       <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
-                                      <span>잔여비율 기준: {land.remainingRatio}%</span>
+                                      <span>잔여비율 ��준: {land.remainingRatio}%</span>
                                     </li>
                                   </>
                                 )}
@@ -1442,9 +1442,12 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onMouseEnter={() => setHoveredLandId(land.id)}
                             onMouseLeave={() => setHoveredLandId(null)}
                           >
-                            <span className="flex shrink-0 items-center justify-center rounded bg-[#2563eb] px-1.5 py-0.5 text-xs font-bold text-white">
-                              필지{index + 1}
-                            </span>
+                            <div className="flex shrink-0 flex-col items-start gap-1">
+                              <span className="flex items-center justify-center rounded bg-[#2563eb] px-1.5 py-0.5 text-xs font-bold text-white">
+                                필지{index + 1}
+                              </span>
+                              <Badge className="bg-[#2563eb] text-white text-[10px] px-1.5 py-0 h-fit">신청필지</Badge>
+                            </div>
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-medium text-blue-700 truncate">
                                 {land.address.split(" ").slice(-2).join(" ")}
@@ -1486,9 +1489,12 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onMouseEnter={() => setHoveredLandId(adjacent.id)}
                             onMouseLeave={() => setHoveredLandId(null)}
                           >
-                            <span className="flex shrink-0 items-center justify-center rounded bg-[#d97706] px-1.5 py-0.5 text-xs font-bold text-white">
-                              필지{adjacentNumber}
-                            </span>
+                            <div className="flex shrink-0 flex-col items-start gap-1">
+                              <span className="flex items-center justify-center rounded bg-[#d97706] px-1.5 py-0.5 text-xs font-bold text-white">
+                                필지{adjacentNumber}
+                              </span>
+                              <Badge className="bg-[#d97706] text-white text-[10px] px-1.5 py-0 h-fit">인접필지</Badge>
+                            </div>
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-medium text-amber-700 truncate">
                                 {adjacent.address.split(" ").slice(-2).join(" ")}
