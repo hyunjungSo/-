@@ -698,7 +698,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <TableRow>
                   <TableHead>접수번호</TableHead>
                   <TableHead>신청인</TableHead>
-                  <TableHead>신청일</TableHead>
+                  <TableHead>신청일시</TableHead>
                   <TableHead>대상 지번</TableHead>
                   <TableHead>사업단</TableHead>
                   <TableHead>담당자</TableHead>
