@@ -1321,7 +1321,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                     </li>
                                     <li className="flex items-start gap-1.5 text-sm text-muted-foreground">
                                       <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
-                                      <span>잔여비��� ��준: {land.remainingRatio}%</span>
+                                      <span>잔여비����� ��준: {land.remainingRatio}%</span>
                                     </li>
                                   </>
                                 )}
@@ -2303,7 +2303,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             </div>
           </div>
           <Textarea
-            placeholder="��체 필지에 대한 종합 검토 의견을 입력하세��..."
+            placeholder="전체 필지에 대한 종합 검토 의견을 입력하세요..."
             rows={4}
             value={reviewData.reviewerComment || ""}
             onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}
