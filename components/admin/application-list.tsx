@@ -396,7 +396,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         </div>
 
       {/* 현재 조회 기준 표시 */}
-      <div className="flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-4 py-2">
+      <div className="flex items-center gap-2 rounded-lg bg-primary/5 px-4 py-2">
         <CalendarIcon className="h-4 w-4 text-primary" />
         <span className="text-sm font-medium text-primary">현재 조회 기준: {dateRangeText}</span>
       </div>
@@ -425,7 +425,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <span className="text-muted-foreground">전체 처리 완료율</span>
                 <span className="text-primary" style={{ fontSize: '20px', fontWeight: '700' }}>{stats.completionRate}%</span>
               </div>
-              <Progress value={stats.completionRate} className="h-[18px]" />
+              <Progress value={stats.completionRate} className="h-2" />
             </div>
             
             {/* 상태별 ��황 그리드 */}
@@ -481,14 +481,12 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         {/* AI 판독 신뢰도 카드 */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-medium">AI 판독 신뢰도</CardTitle>
+            <CardTitle className="text-base font-medium flex items-center justify-between">
+              <span>AI 판독 신뢰도</span>
+              <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* AI 신뢰도 강조 표시 */}
-            <div className="flex items-center justify-between rounded-lg bg-primary/5 px-4 py-3">
-              <span className="text-sm font-medium text-muted-foreground">AI 신뢰도</span>
-              <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
-            </div>
             
             {/* 스택 바 비교 */}
             <div className="space-y-3">
@@ -587,9 +585,9 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <span className="text-sm text-muted-foreground">판정 일치:</span>
                   <span className="font-semibold">{stats.aiMatchCount}건</span>
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 text-sm">
                   <XCircle className="h-4 w-4 text-rose-600" />
-                  <span className="text-sm text-rose-600">판정 불일치:</span>
+                  <span className="text-rose-600">판정 불일치:</span>
                   <span className="font-semibold text-rose-600">{stats.aiMismatchCount}건</span>
                 </div>
               </div>
