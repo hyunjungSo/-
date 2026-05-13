@@ -492,7 +492,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             <div className="space-y-3">
               {/* AI 초기 판정 막대 (매수가능/매수불가 2가지만) */}
               <div className="space-y-1.5">
-                <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 초기 판정</span>
+                <span className="text-sm font-medium text-muted-foreground">AI 초기 판정</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
                   {stats.aiAnalyzed > 0 ? (
                     <>
@@ -523,7 +523,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               
               {/* 담당자 최종 심사 막대 */}
               <div className="space-y-1.5">
-                <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>담당자 최종 심사</span>
+                <span className="text-sm font-medium text-muted-foreground">담당자 최종 심사</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
                   {stats.심사완료 > 0 ? (
                     <>
@@ -583,7 +583,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <div className="flex items-center gap-1">
                   <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                   <span className="text-sm text-muted-foreground">판정 일치:</span>
-                  <span className="text-sm font-bold">{stats.aiMatchCount}건</span>
+                  <span className="font-bold" style={{ fontSize: '18px' }}>{stats.aiMatchCount}</span>
+                  <span className="font-bold" style={{ fontSize: '14px' }}>건</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <XCircle className="h-4 w-4 text-rose-600" />
