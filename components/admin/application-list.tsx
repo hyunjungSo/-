@@ -472,7 +472,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
             </div>
             {/* 기준 안내 문구 */}
-            <p className="pt-2 text-[11px] text-muted-foreground/70">
+            <p className="pt-2 text-[12px] text-muted-foreground/70">
               ※ 본 통계는 선택된 기간 내 접수된 민원을 기준으로 산출되었습니다.
             </p>
           </CardContent>
