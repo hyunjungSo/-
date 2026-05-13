@@ -562,32 +562,18 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
               
               {/* 범례 */}
-              <div className="space-y-2 pt-2">
-                <div className="flex items-center justify-center gap-4">
-                  <span className="text-[10px] font-medium text-muted-foreground">AI 판정:</span>
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-2.5 w-2.5 rounded-sm bg-emerald-500" />
-                    <span className="text-xs text-muted-foreground">매수가능</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-2.5 w-2.5 rounded-sm bg-rose-500" />
-                    <span className="text-xs text-muted-foreground">매수불가</span>
-                  </div>
+              <div className="flex items-center justify-center gap-4 pt-2">
+                <div className="flex items-center gap-1.5">
+                  <div className="h-2.5 w-2.5 rounded-sm bg-emerald-500" />
+                  <span className="text-xs text-muted-foreground">매수</span>
                 </div>
-                <div className="flex items-center justify-center gap-4">
-                  <span className="text-[10px] font-medium text-muted-foreground">담당자:</span>
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-2.5 w-2.5 rounded-sm bg-emerald-500" />
-                    <span className="text-xs text-muted-foreground">매수</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-2.5 w-2.5 rounded-sm bg-rose-500" />
-                    <span className="text-xs text-muted-foreground">기각</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-2.5 w-2.5 rounded-sm bg-amber-500" />
-                    <span className="text-xs text-muted-foreground">이관</span>
-                  </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="h-2.5 w-2.5 rounded-sm bg-rose-500" />
+                  <span className="text-xs text-muted-foreground">기각</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="h-2.5 w-2.5 rounded-sm bg-amber-500" />
+                  <span className="text-xs text-muted-foreground">이관</span>
                 </div>
               </div>
             </div>
