@@ -243,18 +243,25 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const aiTransfer = completedCount - aiPurchase - aiReject;
     const aiAnalyzed = completedCount;
     
-    // AI 신뢰도 90% 시뮬레이션: 10%는 AI와 담당자 판정이 다름
-    const aiMismatchCount = Math.max(1, Math.floor(completedCount * 0.10));
-    const aiMatchCount = completedCount - aiMismatchCount;
-    const aiReliability = completedCount > 0 ? 90 : 0;
+    // AI 신뢰도 계산 로직:
+    // - AI(매수불가/기각) -> 담당자(기각) = 일치
+    // - AI(매수불가/기각) -> 담당자(이관) = 불일치 (판단 보류)
+    // - AI(매수) -> 담당자(기각) = 불일치 (반대 결정)
+    // - AI(매수) -> 담당자(이관) = 불일치 (판단 보류)
     
-    // 담당자 최종 심사 통계 (AI 판정에서 10% 수정 반영)
-    // 시뮬레이션: AI 매수 -> 기각 1건, AI 이관 -> 매수 1건 변경
-    const purchaseToReject = Math.min(1, aiPurchase); // 매수에서 기각으로
-    const transferToPurchase = Math.min(aiMismatchCount - purchaseToReject, aiTransfer); // 이관에서 매수로
-    const finalPurchase = aiPurchase - purchaseToReject + transferToPurchase;
-    const finalReject = aiReject + purchaseToReject;
-    const finalTransfer = aiTransfer - transferToPurchase;
+    // 시뮬레이션: 불일치 유형 구분
+    const mismatchOpposite = Math.max(1, Math.floor(completedCount * 0.05)); // 반대 결정 (5%)
+    const mismatchDeferred = Math.max(1, Math.floor(completedCount * 0.05)); // 판단 보류/이관 (5%)
+    const aiMismatchCount = mismatchOpposite + mismatchDeferred;
+    const aiMatchCount = completedCount - aiMismatchCount;
+    const aiReliability = completedCount > 0 ? Math.round((aiMatchCount / completedCount) * 100) : 0;
+    
+    // 담당자 최종 심사 통계 (AI 판정에서 불일치 반영)
+    const purchaseToReject = mismatchOpposite; // AI 매수 -> 담당자 기각 (반대 결정)
+    const rejectToTransfer = mismatchDeferred; // AI 기각 -> 담당자 이관 (판단 보류)
+    const finalPurchase = aiPurchase - purchaseToReject;
+    const finalReject = aiReject - rejectToTransfer + purchaseToReject;
+    const finalTransfer = aiTransfer + rejectToTransfer;
     
     // 처리 완료율
     const completionRate = total > 0 ? Math.round((심사완료 / total) * 100) : 0;
@@ -276,8 +283,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       finalReject,
       finalTransfer,
       aiReliability,
-      aiMatchCount: finalCompleted.length - aiMismatchCount,
+      aiMatchCount,
       aiMismatchCount,
+      mismatchOpposite, // 반대 결정 건수
+      mismatchDeferred, // 판단 보류(이관) 건수
       completionRate,
       todayCount,
     };
@@ -611,24 +620,40 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             </div>
             
             {/* 상세 지표 */}
-            <div className="flex items-center justify-between border-t pt-3">
-              <div className="flex items-center gap-1">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                <span className="text-sm text-muted-foreground">판정 일치:</span>
-                <span className="font-semibold">{stats.aiMatchCount}건</span>
+            <div className="space-y-2 border-t pt-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                  <span className="text-sm text-muted-foreground">판정 일치:</span>
+                  <span className="font-semibold">{stats.aiMatchCount}건</span>
+                </div>
+                <button
+                  onClick={() => setAiMismatchFilter(!aiMismatchFilter)}
+                  className={`flex items-center gap-1 rounded-md px-2 py-1 text-sm transition-colors ${
+                    aiMismatchFilter 
+                      ? "bg-rose-100 text-rose-700" 
+                      : "text-rose-600 hover:bg-rose-50"
+                  }`}
+                >
+                  <AlertCircle className="h-4 w-4" />
+                  <span className="underline-offset-2 hover:underline">판정 불일치:</span>
+                  <span className="font-semibold">{stats.aiMismatchCount}건</span>
+                </button>
               </div>
-              <button
-                onClick={() => setAiMismatchFilter(!aiMismatchFilter)}
-                className={`flex items-center gap-1 rounded-md px-2 py-1 text-sm transition-colors ${
-                  aiMismatchFilter 
-                    ? "bg-rose-100 text-rose-700" 
-                    : "text-rose-600 hover:bg-rose-50"
-                }`}
-              >
-                <AlertCircle className="h-4 w-4" />
-                <span className="underline-offset-2 hover:underline">판정 수정:</span>
-                <span className="font-semibold">{stats.aiMismatchCount}건</span>
-              </button>
+              {/* 불일치 유형 상세 */}
+              {aiMismatchFilter && (
+                <div className="flex items-center gap-3 rounded-md bg-rose-50 px-3 py-2 text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <span className="rounded bg-rose-200 px-1.5 py-0.5 font-medium text-rose-700">반대 결정</span>
+                    <span className="text-rose-600">{stats.mismatchOpposite}건</span>
+                  </div>
+                  <div className="h-3 w-px bg-rose-200" />
+                  <div className="flex items-center gap-1.5">
+                    <span className="rounded bg-amber-200 px-1.5 py-0.5 font-medium text-amber-700">판단 보류</span>
+                    <span className="text-amber-600">{stats.mismatchDeferred}건</span>
+                  </div>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -715,7 +740,17 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     onClick={() => onSelect(app)}
                   >
                     <TableCell className="font-medium">
-                      {app.applicationNumber}
+                      <div className="flex items-center gap-2">
+                        {app.applicationNumber}
+                        {aiMismatchFilter && app.adminStatus === "심사완료" && (
+                          // 시뮬레이션: 접수번호 끝자리로 불일치 유형 구분
+                          app.applicationNumber.endsWith("2") ? (
+                            <span className="rounded bg-rose-100 px-1.5 py-0.5 text-[10px] font-medium text-rose-700">반대 결정</span>
+                          ) : app.applicationNumber.endsWith("5") ? (
+                            <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">판단 보류</span>
+                          ) : null
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell>{app.applicantName}</TableCell>
                     <TableCell>{app.appliedAt}</TableCell>
@@ -770,6 +805,13 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     <span className="font-medium text-foreground">
                       {app.applicationNumber}
                     </span>
+                    {aiMismatchFilter && app.adminStatus === "심사완료" && (
+                      app.applicationNumber.endsWith("2") ? (
+                        <span className="rounded bg-rose-100 px-1.5 py-0.5 text-[10px] font-medium text-rose-700">반대 결정</span>
+                      ) : app.applicationNumber.endsWith("5") ? (
+                        <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">판단 보류</span>
+                      ) : null
+                    )}
                     {(() => {
                       const isMultiple = app.additionalLands && app.additionalLands.length > 0;
                       
