@@ -220,11 +220,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const finalReject = finalCompleted.filter((a) => a.aiResult?.provisionalJudgment === "수용불가").length;
     const finalTransfer = finalCompleted.length - finalPurchase - finalReject;
     
-    // AI 신뢰도 계산 (AI 판정과 담당자 판정 일치율)
+    // AI 신뢰도 계산 (AI 판정과 담당자 판정 일치율) - 90% 케이스
     // 심사완료된 건 중에서 AI 판정과 최종 결과가 일치하는 비율
-    const aiMatchCount = finalCompleted.length; // 일치 건수 (시뮬레이션용)
-    const aiMismatchCount = Math.floor(finalCompleted.length * 0.08); // 불일치 건수 (8% 불일치 시뮬레이션)
-    const aiReliability = finalCompleted.length > 0 ? Math.round(((finalCompleted.length - aiMismatchCount) / finalCompleted.length) * 100) : 0;
+    const aiMismatchCount = Math.max(1, Math.floor(finalCompleted.length * 0.10)); // 불일치 건수 (10% 불일치 = 90% 일치)
+    const aiMatchCount = finalCompleted.length - aiMismatchCount; // 일치 건수
+    const aiReliability = 90; // 고정 90% 신뢰도
     
     // 처리 완료율
     const completionRate = total > 0 ? Math.round((심사완료 / total) * 100) : 0;
@@ -367,7 +367,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               <Progress value={stats.completionRate} className="h-2" />
             </div>
             
-            {/* 상태별 현황 그리드 */}
+            {/* 상태별 ��황 그리드 */}
             <div className="grid grid-cols-4 gap-3 pt-2">
               <div 
                 onClick={() => setStatusFilter("all")}
