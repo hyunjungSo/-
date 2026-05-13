@@ -720,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             const judgmentRationale = {
               summary: `${land.landType} 잔여면적 ${land.remainingArea.toLocaleString()}㎡(잔여비율 ${land.remainingRatio}%), ${analysis.reasons.join(", ")}으로 「${finalJudgment}」 판정`,
-              legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
+              legalBasis: "「공익사업을 위한 토��� 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
               appliedCriteria: analysis.criteriaChecks.map(check => 
                 `${check.name}: ${check.description} ${check.met ? "✓" : "✗"}`
               ),
@@ -1442,12 +1442,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onMouseEnter={() => setHoveredLandId(land.id)}
                             onMouseLeave={() => setHoveredLandId(null)}
                           >
-                            <div className="flex shrink-0 flex-col items-start gap-1">
-                              <span className="flex items-center justify-center rounded bg-[#2563eb] px-1.5 py-0.5 text-xs font-bold text-white">
-                                필지{index + 1}
-                              </span>
-                              <Badge className="bg-[#2563eb] text-white text-[10px] px-1.5 py-0 h-fit">신청필지</Badge>
-                            </div>
+                            <span className="flex shrink-0 items-center justify-center rounded bg-[#2563eb] px-1.5 py-0.5 text-xs font-bold text-white">
+                              필지{String.fromCharCode(65 + index)}
+                            </span>
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-medium text-blue-700 truncate">
                                 {land.address.split(" ").slice(-2).join(" ")}
@@ -1466,7 +1463,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         { id: "adjacent-002", address: "경기도 용인시 처인구 포곡읍 마성리 102", landType: "답", landCategory: "농지", area: 980 },
                       ].map((adjacent, index) => {
                         const isSelected = selectedAdjacentParcel?.id === adjacent.id;
-                        const adjacentNumber = applicationLands.length + index + 1; // 신청 필지 수 + 인접 필지 순번
+                        const adjacentNumber = index + 1; // 인접 필지 순번 (1부터 시작)
                         return (
                           <div 
                             key={adjacent.id}
@@ -1489,12 +1486,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onMouseEnter={() => setHoveredLandId(adjacent.id)}
                             onMouseLeave={() => setHoveredLandId(null)}
                           >
-                            <div className="flex shrink-0 flex-col items-start gap-1">
-                              <span className="flex items-center justify-center rounded bg-[#d97706] px-1.5 py-0.5 text-xs font-bold text-white">
-                                필지{adjacentNumber}
-                              </span>
-                              <Badge className="bg-[#d97706] text-white text-[10px] px-1.5 py-0 h-fit">인접필지</Badge>
-                            </div>
+                            <span className="flex shrink-0 items-center justify-center rounded bg-[#d97706] px-1.5 py-0.5 text-xs font-bold text-white">
+                              필지{adjacentNumber}
+                            </span>
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-medium text-amber-700 truncate">
                                 {adjacent.address.split(" ").slice(-2).join(" ")}
@@ -1633,7 +1627,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       <Badge 
                         className={`text-xs ${selectedAdjacentParcel ? "bg-[#d97706] text-white" : "bg-[#2563eb] text-white"}`}
                       >
-                        필지{selectedAdjacentParcel ? (selectedAdjacentParcel.parcelNumber || (applicationLands.length + 1)) : (selectedLandIndex + 1)}
+                        필지{selectedAdjacentParcel ? selectedAdjacentParcel.parcelNumber : String.fromCharCode(65 + selectedLandIndex)}
                       </Badge>
                       <span className="text-sm font-medium">검토 옵션</span>
                     </div>
@@ -1795,7 +1789,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             
                             {/* 현장확인 옵션 */}
                             <div className="space-y-3 pt-2 border-t">
-                              <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
+                              <label className="text-sm font-medium text-foreground">현장 ���인 항목</label>
                               {isViewOnly ? (
                                 <div className="space-y-2 text-sm">
                                   <div className="flex items-center gap-3 p-2">
