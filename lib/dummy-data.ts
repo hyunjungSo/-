@@ -1,30 +1,41 @@
 import type { LandInfo, Application, AIAnalysisResult, JudgmentRationale } from "./types";
 
-// 동적 날짜 생성 헬퍼 함수
+// 동적 날짜+시간 생성 헬퍼 함수
+const getDateTimeString = (daysAgo: number, hour?: number, minute?: number): string => {
+  const date = new Date();
+  date.setDate(date.getDate() - daysAgo);
+  // 시간이 지정되지 않으면 랜덤 업무시간 (9~18시) 생성
+  const h = hour ?? Math.floor(Math.random() * 9) + 9;
+  const m = minute ?? Math.floor(Math.random() * 60);
+  date.setHours(h, m, 0, 0);
+  return date.toISOString();
+};
+
+// 날짜만 필요한 경우 (필터링용)
 const getDateString = (daysAgo: number): string => {
   const date = new Date();
   date.setDate(date.getDate() - daysAgo);
   return date.toISOString().split('T')[0];
 };
 
-// 날짜 상수 (현재 날짜 기준)
-const TODAY = getDateString(0);           // 오늘
-const YESTERDAY = getDateString(1);       // 어제
-const TWO_DAYS_AGO = getDateString(2);    // 2일 전
-const THREE_DAYS_AGO = getDateString(3);  // 3일 전
-const FOUR_DAYS_AGO = getDateString(4);   // 4일 전
-const FIVE_DAYS_AGO = getDateString(5);   // 5일 전
-const SIX_DAYS_AGO = getDateString(6);    // 6일 전
-const ONE_WEEK_AGO = getDateString(7);    // 1주일 전
-const TEN_DAYS_AGO = getDateString(10);   // 10일 전
-const TWO_WEEKS_AGO = getDateString(14);  // 2주 전
-const THREE_WEEKS_AGO = getDateString(21);// 3주 전
-const ONE_MONTH_AGO = getDateString(30);  // 1달 전
-const TWO_MONTHS_AGO = getDateString(60); // 2달 전
-const THREE_MONTHS_AGO = getDateString(90);// 3달 전
-const SIX_MONTHS_AGO = getDateString(180);// 6달 전
-const ONE_YEAR_AGO = getDateString(365);  // 1년 전
-const TWO_YEARS_AGO = getDateString(730); // 2년 전
+// 날짜+시간 상수 (현재 날짜 기준, ISO 형식)
+const TODAY = getDateTimeString(0, 9, 30);           // 오늘 09:30
+const YESTERDAY = getDateTimeString(1, 14, 15);      // 어제 14:15
+const TWO_DAYS_AGO = getDateTimeString(2, 11, 45);   // 2일 전 11:45
+const THREE_DAYS_AGO = getDateTimeString(3, 10, 20); // 3일 전 10:20
+const FOUR_DAYS_AGO = getDateTimeString(4, 16, 30);  // 4일 전 16:30
+const FIVE_DAYS_AGO = getDateTimeString(5, 13, 10);  // 5일 전 13:10
+const SIX_DAYS_AGO = getDateTimeString(6, 15, 45);   // 6일 전 15:45
+const ONE_WEEK_AGO = getDateTimeString(7, 9, 0);     // 1주일 전 09:00
+const TEN_DAYS_AGO = getDateTimeString(10, 11, 30);  // 10일 전 11:30
+const TWO_WEEKS_AGO = getDateTimeString(14, 14, 0);  // 2주 전 14:00
+const THREE_WEEKS_AGO = getDateTimeString(21, 10, 45);// 3주 전 10:45
+const ONE_MONTH_AGO = getDateTimeString(30, 16, 20); // 1달 전 16:20
+const TWO_MONTHS_AGO = getDateTimeString(60, 9, 15); // 2달 전 09:15
+const THREE_MONTHS_AGO = getDateTimeString(90, 13, 30);// 3달 전 13:30
+const SIX_MONTHS_AGO = getDateTimeString(180, 11, 0);// 6달 전 11:00
+const ONE_YEAR_AGO = getDateTimeString(365, 15, 30); // 1년 전 15:30
+const TWO_YEARS_AGO = getDateTimeString(730, 10, 0); // 2년 전 10:00
 
 // 더미 토지 정보
 export const dummyLandInfoList: LandInfo[] = [
@@ -1028,7 +1039,7 @@ export const dummyLandInfoList: LandInfo[] = [
   },
   {
     id: "land-recognized-007",
-    address: "��원도 원주시 지정면 신평리 산 105",
+    address: "���원도 원주시 지정면 신평리 산 105",
     originalArea: 1800,
     includedArea: 1300,
     remainingArea: 500,
@@ -1604,7 +1615,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "잡",
     reportedShape: "역삼각형",
     farmMachineDifficulty: false,
-    reason: "토지가 양분되어 잔여지 발생. 절토 및 옹벽 설��로 진입이 곤란합니다.",
+    reason: "토지가 양분되어 잔여지 발생. 절��� 및 옹벽 설��로 진입이 곤란합니다.",
     attachments: ["토지대장.pdf"],
     status: "처리완료",
     adminStatus: "심사완료",
@@ -1771,14 +1782,14 @@ export const dummyApplications: Application[] = [
     actualUsage: "전",
     reportedShape: "가로장방형",
     farmMachineDifficulty: false,
-    reason: "도로 편입으로 일부 토지가 편입되었으나 잔여지가 충분히 넓어 매수를 요청합니다.",
+    reason: "도로 편입으로 일부 토지가 편입되었으나 잔여지가 충분히 넓어 매수를 요��합니다.",
     attachments: ["토지대장.pdf"],
     status: "처리완료",
     adminStatus: "심사완료",
     appliedAt: THREE_MONTHS_AGO,
     aiResult: generateAIResult(dummyLandInfoList[9]),
     finalJudgment: "기각",
-    reviewerComment: "잔여비율 90%로 매수 기준(30% 이하)을 크게 초과하며, 형상지수 변화도 0.1로 미미하여 종래 용도 사용에 지장이 없음. ��수 기준 미충족으로 기각 처리.",
+    reviewerComment: "잔여비율 90%로 매수 기준(30% 이하)을 크게 초과하며, 형상지수 변화도 0.1로 미미하여 종래 용도 사용에 지장이 없���. ��수 기준 미충족으로 기각 처리.",
     adminName: "박담당",
     statusUpdatedAt: FIVE_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
@@ -1964,7 +1975,7 @@ export const dummyApplications: Application[] = [
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
     reason: "도로 편입으로 인한 잔여지 매수 신청",
-    attachments: ["토지대장.pdf"],
+    attachments: ["토지대��.pdf"],
     status: "접수완료",
     adminStatus: "접수완료",
     appliedAt: THREE_WEEKS_AGO,

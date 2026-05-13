@@ -692,7 +692,14 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       </div>
                     </TableCell>
                     <TableCell>{app.applicantName}</TableCell>
-                    <TableCell>{app.appliedAt}</TableCell>
+                    <TableCell>
+                      {(() => {
+                        const date = new Date(app.appliedAt);
+                        const dateStr = date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, '-').replace('.', '');
+                        const timeStr = date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+                        return `${dateStr} ${timeStr}`;
+                      })()}
+                    </TableCell>
                     <TableCell style={{ width: "220px" }}>
                       <div className="flex items-center gap-2">
                         <span>{app.landInfo.address}</span>
@@ -763,7 +770,12 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     <ProcessStatusBadge status={app.status} />
                   </div>
                   <p className="text-base text-muted-foreground">
-                    {app.applicantName} | {app.appliedAt}
+                    {app.applicantName} | {(() => {
+                      const date = new Date(app.appliedAt);
+                      const dateStr = date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, '-').replace('.', '');
+                      const timeStr = date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+                      return `${dateStr} ${timeStr}`;
+                    })()}
                   </p>
                   <p className="text-base text-muted-foreground">
                     {app.landInfo.address}
