@@ -437,7 +437,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               {/* 전체: Slate 계열 */}
               <div 
                 onClick={() => setStatusFilter("all")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 border border-slate-200 p-3 transition-all hover:bg-slate-100 hover:border-slate-300"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-3 transition-all hover:bg-slate-100"
               >
                 <span className="text-sm font-medium text-slate-600" style={{ order: 1 }}>전체</span>
                 <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
@@ -448,7 +448,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               {/* 접수완료: Indigo #6366F1 (신규 접수 강조) */}
               <div 
                 onClick={() => setStatusFilter("접수완료")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-indigo-50 border border-indigo-200 p-3 transition-all hover:bg-indigo-100 hover:border-indigo-300"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-indigo-50 p-3 transition-all hover:bg-indigo-100"
               >
                 <span className="text-sm font-medium text-indigo-500" style={{ order: 1 }}>접수완료</span>
                 <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
@@ -459,7 +459,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               {/* 진행중: Blue 계열 (활동 상태 강조) */}
               <div 
                 onClick={() => setStatusFilter("진행중")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-blue-50 border border-blue-200 p-3 transition-all hover:bg-blue-100 hover:border-blue-300"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-blue-50 p-3 transition-all hover:bg-blue-100"
               >
                 <span className="text-sm font-medium text-blue-600" style={{ order: 1 }}>진행중</span>
                 <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
@@ -470,7 +470,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               {/* 심사완료: Green 계열 (완료 상태 강조) */}
               <div 
                 onClick={() => setStatusFilter("심사완료")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-green-50 border border-green-200 p-3 transition-all hover:bg-green-100 hover:border-green-300"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-green-50 p-3 transition-all hover:bg-green-100"
               >
                 <span className="text-sm font-medium text-green-600" style={{ order: 1 }}>심사완료</span>
                 <div className="mt-2 flex items-baseline gap-0.5" style={{ order: 2 }}>
@@ -498,7 +498,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             
             {/* 스택 바 비교 */}
             <div className="space-y-3">
-              {/* AI 초기 판정 막대 (매수가능/매수불가 2가지만) */}
+              {/* AI 초기 판정 막대 (매��가능/매수불가 2가지만) */}
               <div className="space-y-1.5">
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 초기 판정</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
