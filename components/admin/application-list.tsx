@@ -214,7 +214,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <SelectValue placeholder="처리상태" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">전체 상태</SelectItem>
+                <SelectItem value="all">전체 상황</SelectItem>
                 <SelectItem value="접수완료">접수완료</SelectItem>
                 <SelectItem value="진행중">진행중</SelectItem>
                 <SelectItem value="심사완료">심사완료</SelectItem>
