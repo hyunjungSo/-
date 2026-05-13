@@ -40,7 +40,15 @@ const badgeVariants = cva(
         // Purple Solid-Pastel - 연한 보라색 배경 + 보라색 텍스트
         'purple-subtle': 'border-transparent bg-purple-50 text-purple-700',
         
-        // === 진행상황 Outline 스타일 ===
+        // === 진행상황 Outline 스타일 (새 컬러 시스템) ===
+        // 접수완료: Indigo (신규 발생 강조)
+        'outline-indigo': 'border border-indigo-400 bg-indigo-50 text-indigo-600',
+        // 진행중: Blue (활동 상태 강조)
+        'outline-blue': 'border border-blue-400 bg-blue-50 text-blue-600',
+        // 심사완료: Green (완료 상태 강조)
+        'outline-green': 'border border-green-400 bg-green-50 text-green-600',
+        
+        // === 진행상황 Outline 스타일 (레거시 - 호환성 유지) ===
         // 접수완료: Slate Gray (#64748b)
         'outline-slate': 'border border-slate-400 bg-transparent text-slate-500',
         // 진행중: Sky Blue (#0ea5e9)
