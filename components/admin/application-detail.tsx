@@ -48,7 +48,6 @@ import {
   ListChecks,
   Locate,
   Download,
-  Eye,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -588,7 +587,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || waterLost || roadLost || farmDifficulty || shapeCriteria.met) {
         judgment = "수용가능";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (waterLost) reasons.push("관개수로 상��" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
+        if (waterLost) reasons.push("관개수로 상실" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (farmDifficulty) reasons.push("농기계 회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
@@ -1054,26 +1053,32 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     <tr>
                       <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground align-top">첨부서류</td>
                       <td className="px-4 py-3" colSpan={3}>
-                        <div className="flex flex-wrap gap-2">
-                          <button
+                        <ul className="flex flex-row flex-wrap gap-2">
+                          <li
                             onClick={() => handleAttachmentClick("토지대장_용인시_포곡읍_200-1.pdf")}
-                            className="cursor-pointer hover:opacity-80 transition-opacity"
+                            className="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 cursor-pointer hover:bg-gray-50 transition-colors"
+                            title="파일 보기"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">토지대장_용인시_포곡읍_200-1.pdf</Badge>
-                          </button>
-                          <button
+                            <span className="truncate max-w-[120px] text-xs text-foreground">토지대장_용인시_포곡읍_200-1.pdf</span>
+                            <Eye className="size-[14px] shrink-0 text-muted-foreground" />
+                          </li>
+                          <li
                             onClick={() => handleAttachmentClick("지적도_용인시_포곡읍_200-1.pdf")}
-                            className="cursor-pointer hover:opacity-80 transition-opacity"
+                            className="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 cursor-pointer hover:bg-gray-50 transition-colors"
+                            title="파일 보기"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">지적도_용인시_포곡읍_200-1.pdf</Badge>
-                          </button>
-                          <button
+                            <span className="truncate max-w-[120px] text-xs text-foreground">지적도_용인시_포곡읍_200-1.pdf</span>
+                            <Eye className="size-[14px] shrink-0 text-muted-foreground" />
+                          </li>
+                          <li
                             onClick={() => handleAttachmentClick("현장사진_20260501.jpg")}
-                            className="cursor-pointer hover:opacity-80 transition-opacity"
+                            className="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 cursor-pointer hover:bg-gray-50 transition-colors"
+                            title="파일 보기"
                           >
-                            <Badge variant="outline" className="font-normal cursor-pointer">현장사진_20260501.jpg</Badge>
-                          </button>
-                        </div>
+                            <span className="truncate max-w-[120px] text-xs text-foreground">현장사진_20260501.jpg</span>
+                            <Eye className="size-[14px] shrink-0 text-muted-foreground" />
+                          </li>
+                        </ul>
                       </td>
                     </tr>
                   </tbody>
@@ -1410,7 +1415,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   <div className="flex items-center justify-between">
                     <h4 className="font-semibold" style={{ fontSize: '16px' }}>지적도</h4>
                     <Badge variant="outline" className="font-normal text-xs">
-                      {applicationLands.length + 2}개 필지
+                      {applicationLands.length}개 필지
                     </Badge>
                   </div>
                   
@@ -1418,38 +1423,31 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   <div className="relative flex gap-3">
                     {/* 필지 선택 목록 (30%) */}
                     <div className="w-[30%] shrink-0 rounded-lg bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
-                      {/* 신청 필지 목록 - 모든 신청 필지 표시 */}
-                      {applicationLands.map((land, index) => {
-                        const isSelected = !selectedAdjacentParcel && selectedLandIndex === index;
-                        return (
-                          <div 
-                            key={land.id}
-                            className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${
-                              isSelected 
-                                ? "border-2 border-[#2563eb] bg-[#2563eb]/15" 
-                                : "border border-[#2563eb]"
-                            }`}
-                            onClick={() => {
-                              setSelectedLandIndex(index);
-                              setSelectedAdjacentParcel(null);
-                            }}
-                            onMouseEnter={() => setHoveredLandId(land.id)}
-                            onMouseLeave={() => setHoveredLandId(null)}
-                          >
-                            <span className="flex shrink-0 items-center justify-center rounded bg-[#2563eb] px-1.5 py-0.5 text-xs font-bold text-white">
-                              필지{index + 1}
-                            </span>
-                            <div className="min-w-0 flex-1">
-                              <p className="text-sm font-medium text-blue-700 truncate">
-                                {land.address.split(" ").slice(-2).join(" ")}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {land.landType} | {land.originalArea.toLocaleString()}㎡
-                              </p>
-                            </div>
+                      {/* 신청 필지 - 대상 필지 분석 및 검토에서 선택된 필지만 표시 */}
+                      {applicationLands[selectedLandIndex] && (
+                        <div 
+                          className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${
+                            !selectedAdjacentParcel 
+                              ? "border-2 border-[#2563eb] bg-[#2563eb]/15" 
+                              : "border border-[#2563eb]"
+                          }`}
+                          onClick={() => setSelectedAdjacentParcel(null)}
+                          onMouseEnter={() => setHoveredLandId(applicationLands[selectedLandIndex].id)}
+                          onMouseLeave={() => setHoveredLandId(null)}
+                        >
+                          <span className="flex shrink-0 items-center justify-center rounded bg-[#2563eb] px-1.5 py-0.5 text-xs font-bold text-white">
+                            필지1
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-blue-700 truncate">
+                              {applicationLands[selectedLandIndex].address.split(" ").slice(-2).join(" ")}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {applicationLands[selectedLandIndex].landType} | {applicationLands[selectedLandIndex].originalArea.toLocaleString()}㎡
+                            </p>
                           </div>
-                        );
-                      })}
+                        </div>
+                      )}
                       
                       {/* 인접 필지 */}
                       {[
@@ -1457,7 +1455,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         { id: "adjacent-002", address: "경기도 용인시 처인구 포곡읍 마성리 102", landType: "답", landCategory: "농지", area: 980 },
                       ].map((adjacent, index) => {
                         const isSelected = selectedAdjacentParcel?.id === adjacent.id;
-                        const adjacentNumber = applicationLands.length + index + 1; // 신청 필지 수 + 인접 필지 순번
+                        const adjacentNumber = index + 2; // 신청 필지가 1번이므로 인접 필지는 2번부터
                         return (
                           <div 
                             key={adjacent.id}
@@ -1621,7 +1619,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       <Badge 
                         className={`text-xs ${selectedAdjacentParcel ? "bg-[#d97706] text-white" : "bg-[#2563eb] text-white"}`}
                       >
-                        필지{selectedAdjacentParcel ? (selectedAdjacentParcel.parcelNumber || (applicationLands.length + 1)) : (selectedLandIndex + 1)}
+                        필지{selectedAdjacentParcel ? String.fromCharCode(65 + applicationLands.length + (selectedAdjacentParcel.parcelNumber ? selectedAdjacentParcel.parcelNumber - 1 : 0)) : String.fromCharCode(65 + selectedLandIndex)}
                       </Badge>
                       <span className="text-sm font-medium">검토 옵션</span>
                     </div>
@@ -2191,12 +2189,12 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   <div className="flex items-start gap-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
                     <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
                     <p className="text-sm text-amber-700">
-                      AI 판정({aiResult.provisionalJudgment})과 다른 결정입니다. 검토 의견에 사유를 ���성해주세요.
+                      AI 판정({aiResult.provisionalJudgment})과 다른 결정입니다. 검토 의견에 사유를 작성해주세요.
                     </p>
                   </div>
                 )}
                 
-                {/* 검토 의��� */}
+                {/* 검토 의견 */}
                 <div className="space-y-3">
                   <Label className="text-sm font-medium">검토 의견</Label>
                   <Textarea
@@ -2561,73 +2559,58 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </div>
       )}
 
-      {/* 파일 미리보기 Dialog - 풀페이지 */}
+      {/* 파일 미리보기 Dialog */}
       <Dialog open={showPdfPreview} onOpenChange={setShowPdfPreview}>
-        <DialogContent className="fixed inset-0 w-[100vw] h-[100vh] !max-w-none rounded-none border-none overflow-hidden flex flex-col p-0 translate-x-0 translate-y-0 top-0 left-0">
-          <DialogHeader className="shrink-0 px-6 py-4 border-b bg-background pr-16">
-            <div className="flex items-center justify-between">
-              <DialogTitle className="text-base">
-                첨부파일 미리보기
-              </DialogTitle>
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-muted-foreground">{selectedAttachment?.name}</span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-1.5"
-                  onClick={() => {
-                    if (selectedAttachment) {
-                      const link = document.createElement('a');
-                      link.href = selectedAttachment.url;
-                      link.download = selectedAttachment.name;
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
-                    }
-                  }}
-                >
-                  <Download className="size-4" />
-                  다운로드
-                </Button>
-              </div>
-            </div>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="flex flex-row items-center justify-between">
+            <DialogTitle>{selectedAttachment?.name}</DialogTitle>
+            <Button
+              size="sm"
+              onClick={() => {
+                if (selectedAttachment) {
+                  const link = document.createElement('a');
+                  link.href = selectedAttachment.url;
+                  link.download = selectedAttachment.name;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }
+              }}
+              className="ml-auto"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              다운로드
+            </Button>
           </DialogHeader>
-          <div className="flex-1 overflow-auto bg-muted/30 w-full">
+          <div className="mt-4 flex flex-col gap-4">
             {selectedAttachment && (
-              <div className="w-full h-full flex items-center justify-center">
-                {selectedAttachment.name.toLowerCase().endsWith('.jpg') || 
-                 selectedAttachment.name.toLowerCase().endsWith('.jpeg') || 
-                 selectedAttachment.name.toLowerCase().endsWith('.png') || 
-                 selectedAttachment.name.toLowerCase().endsWith('.gif') ? (
-                  <div className="relative w-full h-full flex items-center justify-center p-8">
-                    <img 
-                      src={`https://picsum.photos/seed/${encodeURIComponent(selectedAttachment.name)}/800/600`}
-                      alt={selectedAttachment.name}
-                      className="max-w-full max-h-full object-contain rounded-lg"
-                    />
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full">
-                      데모용 샘플 이미지입니다
-                    </div>
-                  </div>
-                ) : selectedAttachment.name.toLowerCase().endsWith('.pdf') ? (
-                  <div className="relative w-full h-full flex flex-col">
-                    <iframe 
-                      src="https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table-word.pdf"
-                      className="w-full h-full border-0"
-                      title={selectedAttachment.name}
-                    />
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full">
-                      데모용 샘플 PDF입니다
+              <>
+                {selectedAttachment.name.toLowerCase().endsWith('.pdf') ? (
+                  <div className="w-full bg-gray-100 rounded-lg border p-4 min-h-[500px]">
+                    <div className="flex flex-col items-center justify-center h-full gap-4">
+                      <FileText className="h-16 w-16 text-muted-foreground" />
+                      <div className="text-center">
+                        <p className="font-semibold text-foreground">{selectedAttachment.name}</p>
+                        <p className="text-sm text-muted-foreground mt-2">
+                          PDF 문서
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center gap-4 text-muted-foreground w-full h-full">
-                    <FileText className="size-24 text-muted-foreground/50" />
-                    <p className="text-base">미리보기를 지원��지 않는 파일 형식입니다.</p>
-                    <p className="text-sm">파일을 다운로드하여 확인해 주세요.</p>
+                  <div className="w-full bg-gray-100 rounded-lg border p-4">
+                    <div className="flex flex-col items-center justify-center gap-4 py-8">
+                      <ImageIcon className="h-16 w-16 text-muted-foreground" />
+                      <div className="text-center">
+                        <p className="font-semibold text-foreground">{selectedAttachment.name}</p>
+                        <p className="text-sm text-muted-foreground mt-2">
+                          이미지 문서
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 )}
-              </div>
+              </>
             )}
           </div>
         </DialogContent>
