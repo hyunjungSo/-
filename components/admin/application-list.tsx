@@ -609,7 +609,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         </CardHeader>
         <CardContent>
           {/* 필터 및 검색 */}
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
             {/* 검색 입력 */}
             <div className="relative flex-1">
               <Input
