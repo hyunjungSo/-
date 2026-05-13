@@ -588,7 +588,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || waterLost || roadLost || farmDifficulty || shapeCriteria.met) {
         judgment = "수용가능";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (waterLost) reasons.push("관개수��� 상��" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
+        if (waterLost) reasons.push("관개수����� 상��" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (farmDifficulty) reasons.push("농기계 회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
@@ -720,7 +720,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
             
             const judgmentRationale = {
               summary: `${land.landType} 잔여면적 ${land.remainingArea.toLocaleString()}㎡(잔여비율 ${land.remainingRatio}%), ${analysis.reasons.join(", ")}으로 「${finalJudgment}」 판정`,
-              legalBasis: "「공익사업을 위한 토��� 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
+              legalBasis: "「공익사업을 위한 토����� 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
               appliedCriteria: analysis.criteriaChecks.map(check => 
                 `${check.name}: ${check.description} ${check.met ? "✓" : "✗"}`
               ),
@@ -1479,12 +1479,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             onMouseEnter={() => setHoveredLandId(adjacent.id)}
                             onMouseLeave={() => setHoveredLandId(null)}
                           >
-                            <div className="flex shrink-0 flex-col items-start gap-1">
-                              <span className="flex items-center justify-center rounded bg-[#d97706] px-1.5 py-0.5 text-xs font-bold text-white">
-                                필지{adjacentNumber}
-                              </span>
-                              <Badge className="bg-[#d97706] text-white text-[10px] px-1.5 py-0 h-fit">인접필지</Badge>
-                            </div>
+                            <span className="flex shrink-0 items-center justify-center rounded bg-[#d97706] px-1.5 py-0.5 text-xs font-bold text-white">
+                              필지{adjacentNumber}
+                            </span>
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-medium text-amber-700 truncate">
                                 {adjacent.address.split(" ").slice(-2).join(" ")}
@@ -2299,7 +2296,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             </div>
           </div>
           <Textarea
-            placeholder="전체 필지에 대한 종합 검토 의견을 입력하세요..."
+            placeholder="��체 필지에 대한 종합 검토 의견을 입력하세요..."
             rows={4}
             value={reviewData.reviewerComment || ""}
             onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}
@@ -2309,7 +2306,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </CardContent>
       </Card>
 
-      {/* AI 분석 프로세스 다이얼로그 - 관리자 재판독 결과 우선 표시 */}
+      {/* AI 분석 프���세스 다이얼로그 - 관리자 재판독 결과 우선 표시 */}
       <AIAnalysisFlowDialog
         open={showAnalysisFlow}
         onOpenChange={setShowAnalysisFlow}
