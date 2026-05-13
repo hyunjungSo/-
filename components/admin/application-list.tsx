@@ -482,7 +482,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         <Card className="lg:col-span-5">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium flex items-center justify-between">
-              <span>AI 판독 신뢰도</span>
+              <span style={{ fontSize: '18px', fontWeight: '600' }}>AI 판독 신뢰도</span>
               <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
             </CardTitle>
           </CardHeader>
