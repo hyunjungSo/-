@@ -237,11 +237,16 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const aiReliability = completedCount > 0 ? Math.round((aiMatchCount / completedCount) * 100) : 0;
     
     // 담당자 최종 심사 통계: 매수/기각/이관 (3가지)
-    // AI(매수가능) 중 일부가 기각(반대결정) 또는 이관(판단보류)으로 변경
-    // AI(매수불가) 중 일부가 이관(판단보류)으로 변경
-    const finalPurchase = aiPurchasable - mismatchOpposite - Math.floor(mismatchDeferred * 0.6); // 매수가능에서 반대결정/보류 제외
-    const finalReject = aiNotPurchasable - Math.floor(mismatchDeferred * 0.4) + mismatchOpposite; // 매수불가에서 보류 제외 + 반대결정 추가
-    const finalTransfer = mismatchDeferred; // 이관 = 판단 보류 건수
+    // 전체 건수 = completedCount로 동일해야 함
+    // 이관 건수 = 판단 보류 건수
+    const finalTransfer = mismatchDeferred;
+    // 매수 건수 = AI 매수가능 - 반대결정(기각으로 변경) - 일부 이관
+    const deferredFromPurchasable = Math.floor(mismatchDeferred * 0.6); // 매수가능에서 이관된 건
+    const deferredFromNotPurchasable = mismatchDeferred - deferredFromPurchasable; // 매수불가에서 이관된 건
+    const finalPurchase = aiPurchasable - mismatchOpposite - deferredFromPurchasable;
+    // 기각 건수 = AI 매수불가 - 이관 + 반대결정(매수가능->기각)
+    const finalReject = aiNotPurchasable - deferredFromNotPurchasable + mismatchOpposite;
+    // 검증: finalPurchase + finalReject + finalTransfer = completedCount
     
     // 처리 완료율
     const completionRate = total > 0 ? Math.round((심사완료 / total) * 100) : 0;
@@ -391,7 +396,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       {/* 현재 조회 기준 표시 */}
       <div className="flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-4 py-2">
         <CalendarIcon className="h-4 w-4 text-primary" />
-        <span className="text-sm font-medium text-primary">현재 조회 기준: {dateRangeText}</span>
+        <span className="text-sm font-medium text-primary">현�� 조회 기준: {dateRangeText}</span>
         <span className="text-xs text-muted-foreground">({periodFilteredApplications.length}건)</span>
       </div>
 
