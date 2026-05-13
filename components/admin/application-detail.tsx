@@ -61,7 +61,7 @@ interface ApplicationDetailProps {
   onSave: (application: Application) => void;
 }
 
-// 담당자 판정 (매수/기각/심의위원회 이관) - JUDGMENT_COLORS 기반
+// 담당자 판정 (매수/기각/이관) - JUDGMENT_COLORS 기반
 const judgmentConfig = {
   매수: { 
     label: "매수", 
@@ -77,8 +77,8 @@ const judgmentConfig = {
     textColor: JUDGMENT_COLORS.기각.text, 
     color: JUDGMENT_COLORS.기각.text 
   },
-  "심의위원회 이관": { 
-    label: "심의위원회 이관", 
+  "이관": { 
+    label: "이관", 
     icon: AlertTriangle, 
     borderColor: JUDGMENT_COLORS.이관.border, 
     textColor: JUDGMENT_COLORS.이관.text, 
@@ -181,7 +181,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
           } else if (landJudgmentForReview.purchaseDecision === "X") {
             savedJudgment = "기각";
           } else if (landJudgmentForReview.purchaseDecision === "-") {
-            savedJudgment = "심의위원회 이관";
+            savedJudgment = "이관";
           }
         }
         
@@ -716,7 +716,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     // 분석 실행 (최대 5초 이내 완료 보장)
     const runAnalysis = async () => {
       const totalLands = adminCheckedLandIds.length;
-      const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수에 따라 동적 조절
+      const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수��� 따라 동적 조절
       
       // 모든 필지를 병렬로 분석
       const analysisPromises = adminCheckedLandIds.map(async (landId) => {
@@ -2200,11 +2200,11 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             
             return (
               <div className="space-y-6">
-                {/* 담당자 판정 (매수/기각/심의위원회 이관) */}
+                {/* 담당자 판정 (매수/기각/이관) */}
                 <div className="space-y-3">
                   <Label className="text-sm font-medium">담당자 판정</Label>
                   <div className="flex flex-wrap gap-2">
-                    {(["매수", "기각", "심의위원회 이관"] as FinalJudgmentResult[]).map((judgment) => {
+                    {(["매수", "기각", "이관"] as FinalJudgmentResult[]).map((judgment) => {
                       const config = judgmentConfig[judgment];
                       const Icon = config.icon;
                       const isSelected = landReview.landJudgment === judgment;
@@ -2225,7 +2225,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   </div>
                 </div>
                 
-                {/* AI 판정(수용가능/수용불가)과 담당자 판정(매수/기각/심의위원회 이관) 불일치 안내 */}
+                {/* AI 판정(수용가능/수용불가)과 담당자 판정(매수/기각/이관) 불일치 안내 */}
                 {landReview.landJudgment && aiResult?.provisionalJudgment && (
                   (aiResult.provisionalJudgment === "수용가능" && landReview.landJudgment !== "매수") ||
                   (aiResult.provisionalJudgment === "수용불가" && landReview.landJudgment === "매수")
@@ -2300,7 +2300,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* 필지별 검토 현황 요약 */}
+          {/* 필지별 검토 현황 요�� */}
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-muted-foreground shrink-0">필지별 검토 현황</span>
             <div className="flex flex-wrap gap-2">
@@ -2313,7 +2313,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 const getJudgmentType = (j: string | null | undefined) => {
                   if (j === "매수") return "매수";
                   if (j === "기각") return "기각";
-                  if (j === "심의위원회 이관") return "이관";
+                  if (j === "이관") return "이관";
                   return null;
                 };
                 

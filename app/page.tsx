@@ -193,7 +193,7 @@ export default function HomePage() {
               </div>
               <h3 className="mt-4 font-semibold text-foreground">결과 통보</h3>
               <p className="mt-1 max-w-[180px] text-base leading-[140%] text-muted-foreground">
-                매수, 기각, 또는 심의위원회 이관 결과를 통보합니다
+                매수, 기각, 또는 이관 결과를 통보합니다
               </p>
             </div>
           </div>

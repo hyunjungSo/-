@@ -14,7 +14,7 @@ interface ApplicationResultSectionProps {
 const judgmentConfig = {
   매수: { label: "매수 결정", variant: "outline" as const, className: "border-success text-success" },
   기각: { label: "기각", variant: "outline" as const, className: "border-destructive text-destructive" },
-  "심의위원회 이관": { label: "심의위원회 이관", variant: "outline" as const, className: "border-warning text-warning" },
+  "이관": { label: "이관", variant: "outline" as const, className: "border-warning text-warning" },
 };
 
 export function ApplicationResultSection({ application, onNewApplication }: ApplicationResultSectionProps) {
@@ -141,7 +141,7 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
                 <strong className="text-destructive">기각:</strong> 매수 기준 미충족. 사유가 안내됩니다.
               </li>
               <li>
-                <strong className="text-amber-500">심의위원회 이관:</strong> 추가 심의가 필요한 경우입니다.
+                <strong className="text-amber-500">이관:</strong> 추가 심의가 필요한 경우입니다.
               </li>
             </ul>
           </div>

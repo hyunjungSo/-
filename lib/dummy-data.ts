@@ -1014,7 +1014,7 @@ export const dummyLandInfoList: LandInfo[] = [
   },
   {
     id: "land-recognized-006",
-    address: "강���도 원주시 지정면 신평리 산 104",
+    address: "������도 원주시 지정면 신평리 산 104",
     originalArea: 2200,
     includedArea: 1600,
     remainingArea: 600,
@@ -1778,7 +1778,7 @@ export const dummyApplications: Application[] = [
     applicationType: "single",
     applicantName: "박검토",
     applicantContact: "010-9999-8888",
-    applicantAddress: "경기도 용인시 처인구 양지면 마성리 137",
+    applicantAddress: "경기��� 용인시 처인구 양지면 마성리 137",
     landInfo: dummyLandInfoList[5], // land-005-review (검토필요 케이스)
     actualUsage: "대",
     reportedShape: "자루형",
@@ -1862,7 +1862,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "심사완료",
     appliedAt: SIX_MONTHS_AGO,
     aiResult: generateAIResult(dummyLandInfoList[8]),
-    finalJudgment: "심의위원회 이관",
+    finalJudgment: "이관",
     reviewerComment: "AI 판정 결과 수용가능이나, 인접 토지와의 경계 분쟁 가능성 및 농지 활용도에 대한 현장 확인 결과 추가 검토가 필요함. 잔여면적 기준은 충족하나 형상지수 변화가 경계값에 있어 심의위원회의 전문적 판단이 요구됨.",
     finalReviewOpinion: "본 건은 AI 분석 결과 매수 기준 충족으로 판단되었으나, 현장 조사 결과 인접 토지 소유자와의 경계 관련 민원이 제기된 상태이며, 농지 활용도에 대한 전문가 의견이 상이하여 심의위원회에 이관하여 종합적인 검토가 필요한 것으로 판단됩니다.",
     adminName: "박담당",
@@ -2043,7 +2043,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "임",
     reportedShape: "자루형",
     farmMachineDifficulty: false,
-    reason: "산지 접근이 불가능해졌습니다.",
+    reason: "산지 접���이 불가능해졌습니다.",
     attachments: ["토지대장.pdf"],
     status: "검토중",
     adminStatus: "진행중",
@@ -2670,7 +2670,7 @@ export const dummyApplications: Application[] = [
         { landId: "land-unified-002", judgment: "매수", reason: "답: 관개수로 상실(형상지수 5.2), 부정형으로 논농사 불가" },
       ],
     },
-    // 담당자 AI 재분석 결과 - 농지 2��지 분석
+    // 담당자 AI ���분석 결과 - 농지 2��지 분석
     adminAiResult: {
       provisionalJudgment: "수용가능",
       confidence: 82,
@@ -2823,7 +2823,7 @@ export const dummyApplications: Application[] = [
           legalBasis: "「공익사업법」 제74조",
           appliedCriteria: ["사다리꼴 형상으로 건축 효율 저하", "형상지수 불량"],
           detailedExplanation: "사다리꼴 형상으로 인해 효율적인 건축물 배치가 어려워 매수 가능으로 판정합니다.",
-          manualCheckItems: ["최종 형상 확인"],
+          manualCheckItems: ["최�� 형상 확인"],
         },
       },
     },
