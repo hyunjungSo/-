@@ -588,7 +588,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       if (areaCheckMet || waterLost || roadLost || farmDifficulty || shapeCriteria.met) {
         judgment = "수용가능";
         if (areaCheckMet) reasons.push("면적 기준 충족");
-        if (waterLost) reasons.push("관개수��������� 상��" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
+        if (waterLost) reasons.push("관개수����������� 상��" + (adminOptions?.waterChannelLost ? " (관리자 확인)" : ""));
         if (roadLost) reasons.push("접면도로 상실" + (adminOptions?.accessRoadLost ? " (관리자 확인)" : ""));
         if (farmDifficulty) reasons.push("농기계 회전 곤란" + (adminOptions?.farmMachineDifficulty ? " (관리자 확인)" : ""));
         if (shapeCriteria.met) reasons.push("형상 부정형 변경");
@@ -2120,7 +2120,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                                 <span className="text-muted-foreground">{check.criteriaName}</span>
                                                 <Badge 
                                                   variant="default" 
-                                                  className={`text-xs text-white ${check.isMet ? JUDGMENT_COLORS.충족.bg : JUDGMENT_COLORS.���충족.bg}`}
+                                                  className={`text-xs text-white ${check.isMet ? JUDGMENT_COLORS.충족.bg : JUDGMENT_COLORS.미충족.bg}`}
                                                 >
                                                   {check.isMet ? "충족" : "미충족"}
                                                 </Badge>
