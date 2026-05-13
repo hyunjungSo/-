@@ -416,7 +416,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         {/* 민원 진행 현황 카드 */}
         <Card className="lg:col-span-6">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-medium">민원 진행 현황</CardTitle>
+            <CardTitle className="text-base font-medium" style={{ fontSize: '18px', fontWeight: '600' }}>민원 진행 현황</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {/* 진행률 바 */}
@@ -482,7 +482,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         <Card className="lg:col-span-5">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium flex items-center justify-between">
-              <span>AI 판독 신뢰도</span>
+              <span style={{ fontSize: '18px', fontWeight: '600' }}>AI 판독 신뢰도</span>
               <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
             </CardTitle>
           </CardHeader>
