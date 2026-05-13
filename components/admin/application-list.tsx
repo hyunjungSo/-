@@ -300,7 +300,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             </div>
           </div>
         </div>
-      </div>
 
       {/* 현재 조회 기준 표시 */}
       {periodFilter !== "all" && (
