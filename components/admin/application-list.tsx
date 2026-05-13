@@ -636,7 +636,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <TableHead>사업단</TableHead>
                   <TableHead>담당자</TableHead>
                   <TableHead>진행상황</TableHead>
-                  <TableHead>���사결과</TableHead>
+                  <TableHead>심사결과</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
