@@ -1434,7 +1434,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   {/* 필지 선택 + 지적도 한 행 배치 */}
                   <div className="relative flex gap-3">
                     {/* 필지 선택 목록 (30%) */}
-                    <div className="w-[30%] shrink-0 rounded-lg bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
+                    <div className="w-[340px] shrink-0 rounded-lg bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
                       {/* 신청 필지 - 상단 필지 선택에서 선택된 1개만 표시 */}
                       {applicationLands[selectedLandIndex] && (
                         <div 
@@ -2120,7 +2120,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                                 <span className="text-muted-foreground">{check.criteriaName}</span>
                                                 <Badge 
                                                   variant="default" 
-                                                  className={`text-xs text-white ${check.isMet ? JUDGMENT_COLORS.충족.bg : JUDGMENT_COLORS.미충족.bg}`}
+                                                  className={`text-xs text-white ${check.isMet ? JUDGMENT_COLORS.충족.bg : JUDGMENT_COLORS.���충족.bg}`}
                                                 >
                                                   {check.isMet ? "충족" : "미충족"}
                                                 </Badge>
@@ -2306,7 +2306,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             </div>
           </div>
           <Textarea
-            placeholder="��체 필지에 대한 종합 검토 의견을 입력하세요..."
+            placeholder="��체 필지에 대한 종합 검토 의견을 입력하세��..."
             rows={4}
             value={reviewData.reviewerComment || ""}
             onChange={(e) => setReviewData((prev) => ({ ...prev, reviewerComment: e.target.value }))}
