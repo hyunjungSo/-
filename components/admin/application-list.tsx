@@ -428,7 +428,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               <Progress 
                 value={stats.completionRate} 
                 className="h-[18px]" 
-                indicatorClassName="bg-teal-500"
+                indicatorClassName="bg-teal-600"
                 style={{ backgroundColor: '#e8f2f0' }}
               />
             </div>
@@ -603,7 +603,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <div className="flex items-center gap-1">
                   <XCircle className="h-4 w-4 text-rose-600" />
                   <span className="text-sm text-rose-600">판정 불일치:</span>
-                  <span className="font-bold text-rose-600" style={{ fontSize: '16px' }}>{stats.aiMismatchCount}건</span>
+                  <span className="font-bold text-rose-600" style={{ fontSize: '18px' }}>{stats.aiMismatchCount}건</span>
                 </div>
               </div>
 
@@ -654,7 +654,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <SelectItem value="all">전체 상황</SelectItem>
                 <SelectItem value="접수완료">접수완료</SelectItem>
                 <SelectItem value="진행중">진행중</SelectItem>
-                <SelectItem value="심사완료">심사완료</SelectItem>
+                <SelectItem value="심사완료">심사���료</SelectItem>
               </SelectContent>
             </Select>
             
