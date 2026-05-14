@@ -430,6 +430,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 className="h-[18px]" 
                 indicatorClassName="bg-teal-600"
                 style={{ backgroundColor: '#e8f2f0' }}
+                indicatorStyle={{ backgroundColor: 'rgb(20, 113, 97)' }}
               />
             </div>
             
