@@ -499,7 +499,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium flex items-center justify-between">
               <span style={{ fontSize: '18px', fontWeight: '600' }}>AI 판독 신뢰도</span>
-              <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
+              <span className="text-2xl font-bold text-primary" style={{ fontSize: '30px' }}>{stats.aiReliability}%</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
@@ -653,7 +653,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">전체 상황</SelectItem>
-                <SelectItem value="접수완료">접수완료</SelectItem>
+                <SelectItem value="���수완료">접수완료</SelectItem>
                 <SelectItem value="진��중">진행중</SelectItem>
                 <SelectItem value="심사완료">심사����료</SelectItem>
               </SelectContent>
