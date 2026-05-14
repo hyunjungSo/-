@@ -280,7 +280,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   }, [periodFilteredApplications]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" style={{ marginBottom: '8px' }}>
       {/* 글로벌 필터 바 */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* 좌측: 타이틀 및 업데이트 정보 */}
