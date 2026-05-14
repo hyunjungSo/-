@@ -280,7 +280,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   }, [periodFilteredApplications]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" style={{ marginBottom: '8px' }}>
       {/* 글로벌 필터 바 */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* 좌측: 타이틀 및 업데이트 정보 */}
@@ -423,7 +423,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             <div className="space-y-2">
   <div className="flex items-center justify-between text-sm">
   <span className="text-muted-foreground" style={{ fontWeight: '500' }}>전체 처리 완료율</span>
-                <span style={{ fontSize: '30px', fontWeight: '800', color: 'rgb(20, 113, 97)' }}>{stats.completionRate}%</span>
+                <span style={{ fontSize: '24px', fontWeight: '800', color: 'rgb(20, 113, 97)' }}>{stats.completionRate}%</span>
               </div>
               <Progress 
                 value={stats.completionRate} 
@@ -498,7 +498,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium flex items-center justify-between">
               <span style={{ fontSize: '18px', fontWeight: '600' }}>AI 판독 신뢰도</span>
-              <span className="text-2xl font-bold text-primary" style={{ fontSize: '30px' }}>{stats.aiReliability}%</span>
+              <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
@@ -653,7 +653,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               <SelectContent>
                 <SelectItem value="all">전체 상황</SelectItem>
                 <SelectItem value="접수완료">접수완료</SelectItem>
-                <SelectItem value="진행중">진행중</SelectItem>
+                <SelectItem value="진��중">진행중</SelectItem>
                 <SelectItem value="심사완료">심사����료</SelectItem>
               </SelectContent>
             </Select>
