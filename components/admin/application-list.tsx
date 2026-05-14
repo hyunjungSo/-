@@ -598,7 +598,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <div className="flex items-center gap-1">
                   <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                   <span className="text-sm text-muted-foreground">판정 일치:</span>
-                  <span className="font-bold" style={{ fontSize: '16px' }}>{stats.aiMatchCount}건</span>
+                  <span className="font-bold" style={{ fontSize: '18px' }}>{stats.aiMatchCount}건</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <XCircle className="h-4 w-4 text-rose-600" />
