@@ -504,7 +504,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
             
             {/* 스택 바 비교 */}
-            <div className="space-y-3" style={{ marginTop: '4px' }}>
+            <div className="space-y-3">
               {/* AI 초기 판정 막대 (매��가능/매수불가 2가지만) */}
               <div className="space-y-1.5">
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 초기 판정</span>
