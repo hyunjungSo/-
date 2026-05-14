@@ -280,7 +280,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   }, [periodFilteredApplications]);
 
   return (
-    <div className="space-y-6" style={{ marginBottom: '8px' }}>
+    <div className="space-y-6">
       {/* 글로벌 필터 바 */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* 좌측: 타이틀 및 업데이트 정보 */}
@@ -498,7 +498,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium flex items-center justify-between">
               <span style={{ fontSize: '18px', fontWeight: '600' }}>AI 판독 신뢰도</span>
-              <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
+              <span className="text-2xl font-bold text-primary" style={{ fontSize: '30px' }}>{stats.aiReliability}%</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
