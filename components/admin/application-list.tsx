@@ -456,14 +456,17 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
-              {/* 진행중: Blue 계열 (활동 상태 강조) */}
+              {/* 진행중: #0091fd (활동 상태 강조) */}
               <div 
                 onClick={() => setStatusFilter("진행중")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-blue-50 p-4 transition-all hover:bg-blue-100"
+                className="flex cursor-pointer flex-col items-center rounded-lg p-4 transition-all"
+                style={{ backgroundColor: '#e6f4ff' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#cce8ff'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e6f4ff'}
               >
-                <span className="text-sm font-medium text-blue-600" style={{ order: 1 }}>진행중</span>
+                <span className="text-sm font-medium" style={{ order: 1, color: '#0091fd' }}>진행중</span>
                 <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
-                  <span className="font-bold text-blue-600" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.진행중}</span>
+                  <span className="font-bold" style={{ fontSize: '42px', lineHeight: '1em', color: '#0091fd' }}>{stats.진행중}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
