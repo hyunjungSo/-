@@ -419,16 +419,17 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             <CardTitle className="text-base font-medium" style={{ fontSize: '18px', fontWeight: '600' }}>민원 진행 현황</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
-            {/* 진행률 바 - Green 계열로 심사완료와 동기화 */}
+            {/* 진행률 바 - Slate 계열로 심사완료와 동기화 */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">전체 처리 완료율</span>
-                <span className="text-green-600" style={{ fontSize: '24px', fontWeight: '800' }}>{stats.completionRate}%</span>
+                <span style={{ fontSize: '24px', fontWeight: '800', color: '#64748b' }}>{stats.completionRate}%</span>
               </div>
               <Progress 
                 value={stats.completionRate} 
-                className="h-[18px] bg-green-100" 
-                indicatorClassName="bg-green-500"
+                className="h-[18px]" 
+                indicatorClassName="bg-slate-400"
+                style={{ backgroundColor: 'rgba(100, 116, 139, 0.15)' }}
               />
             </div>
             
@@ -470,14 +471,17 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
-              {/* 심사완료: Green 계열 (완료 상태 강조) */}
+              {/* 심사완료: Slate 계열 (완료 상태 강조) */}
               <div 
                 onClick={() => setStatusFilter("심사완료")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-green-50 p-4 transition-all hover:bg-green-100"
+                className="flex cursor-pointer flex-col items-center rounded-lg p-4 transition-all"
+                style={{ backgroundColor: 'rgba(100, 116, 139, 0.12)' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(100, 116, 139, 0.18)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(100, 116, 139, 0.12)'}
               >
-                <span className="text-sm font-medium text-green-600" style={{ order: 1 }}>심사완료</span>
+                <span className="text-sm font-medium" style={{ order: 1, color: '#64748b' }}>심사완료</span>
                 <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
-                  <span className="font-bold text-green-600" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.심사완료}</span>
+                  <span className="font-bold" style={{ fontSize: '42px', lineHeight: '1em', color: '#64748b' }}>{stats.심사완료}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
