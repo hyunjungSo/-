@@ -81,11 +81,19 @@ export function AdminStatusBadge({ status, showIcon = false, size = "default" }:
   }
   
   const Icon = config.icon;
+  
+  // 심사완료의 경우 특정 색상 적용
+  const badgeStyle = status === "심사완료" ? {
+    borderColor: 'rgb(20, 113, 97)',
+    backgroundColor: 'rgb(20, 113, 97)',
+    color: 'white'
+  } : undefined;
 
   return (
     <Badge 
       variant={config.variant} 
       className={size === "sm" ? "text-xs" : ""}
+      style={badgeStyle}
     >
       {showIcon && <Icon className="mr-1 h-3 w-3" />}
       {config.label}
