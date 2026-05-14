@@ -505,8 +505,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             
             {/* 스택 바 비교 */}
             <div className="space-y-3">
-              {/* AI 초기 판정 막대 (매��가능/매수불가 2가지만) */}
-              <div className="space-y-1.5">
+              {/* AI 초기 판정 막대 (매수가능/매수불가 2가지만) */}
+              <div className="space-y-1.5" style={{ marginBottom: '4px' }}>
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 초기 판정</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
                   {stats.aiAnalyzed > 0 ? (
@@ -537,7 +537,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
               
               {/* 담당자 최종 심사 막대 */}
-              <div className="space-y-1.5">
+              <div className="space-y-1.5" style={{ marginBottom: '4px' }}>
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>담당자 최종 심사</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
                   {stats.심사완료 > 0 ? (
@@ -654,7 +654,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <SelectItem value="all">전체 상황</SelectItem>
                 <SelectItem value="접수완료">접수완료</SelectItem>
                 <SelectItem value="진행중">진행중</SelectItem>
-                <SelectItem value="심사완료">심사���료</SelectItem>
+                <SelectItem value="심사완료">심사����료</SelectItem>
               </SelectContent>
             </Select>
             
