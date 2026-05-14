@@ -423,7 +423,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">전체 처리 완료율</span>
-                <span style={{ fontSize: '24px', fontWeight: '800', color: 'rgb(20, 113, 97)' }}>{stats.completionRate}%</span>
+                <span style={{ fontSize: '30px', fontWeight: '800', color: 'rgb(20, 113, 97)' }}>{stats.completionRate}%</span>
               </div>
               <Progress 
                 value={stats.completionRate} 
