@@ -421,8 +421,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
             {/* 진행률 바 - Teal 계열로 심사완료와 동기화 */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">전체 처리 완료율</span>
+  <div className="flex items-center justify-between text-sm">
+  <span className="text-muted-foreground" style={{ fontWeight: '500' }}>전체 처리 완료율</span>
                 <span style={{ fontSize: '30px', fontWeight: '800', color: 'rgb(20, 113, 97)' }}>{stats.completionRate}%</span>
               </div>
               <Progress 
