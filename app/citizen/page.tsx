@@ -2,13 +2,13 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { LandSearchSection } from "@/components/citizen/land-search-section";
+import { MyParcelList } from "@/components/citizen/my-parcel-list";
 import { ApplicationFormSection } from "@/components/citizen/application-form-section";
 import { ApplicationResultSection } from "@/components/citizen/application-result-section";
 import { ApplicationStatusSection } from "@/components/citizen/application-status-section";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FilePlus, ClipboardList } from "lucide-react";
-import type { LandInfo, Application, AIAnalysisResult, ApplicationCartItem } from "@/lib/types";
+import type { LandInfo, Application, AIAnalysisResult, PreRegisteredParcel } from "@/lib/types";
 
 // 신청 프로세스 단계
 type ApplicationStep = "search" | "apply" | "result";
@@ -26,7 +26,7 @@ function CitizenPageContent() {
   const [applicationStep, setApplicationStep] = useState<ApplicationStep>("search");
   
   // 장바구니 (신청 목록)
-  const [cartItems, setCartItems] = useState<ApplicationCartItem[]>([]);
+  const [cartItems, setCartItems] = useState<PreRegisteredParcel[]>([]);
   
   // URL 파라미터 변경 시 탭 상태 업데이트
   useEffect(() => {
@@ -35,55 +35,32 @@ function CitizenPageContent() {
     }
   }, [tabParam]);
 
-  // 장바구니에 추가
-  const handleAddToCart = (land: LandInfo, result: AIAnalysisResult) => {
-    // 이미 장바구니에 있는지 확인
-    if (cartItems.some(item => item.landInfo.id === land.id)) {
+  // 장바구니에 추가 (PreRegisteredParcel 타입)
+  const handleAddToCart = (parcel: PreRegisteredParcel) => {
+    if (cartItems.some(item => item.id === parcel.id)) {
       return;
     }
-    
-    const newItem: ApplicationCartItem = {
-      id: land.id,
-      landInfo: land,
-      aiResult: result,
-      addedAt: new Date().toISOString(),
-      businessUnit: land.businessUnit || "수도권", // 관할기관 기준 그룹핑
-    };
-    
-    setCartItems(prev => [...prev, newItem]);
+    setCartItems(prev => [...prev, parcel]);
   };
   
   // 장바구니에서 제거
-  const handleRemoveFromCart = (itemId: string) => {
-    setCartItems(prev => prev.filter(item => item.id !== itemId));
+  const handleRemoveFromCart = (parcelId: string) => {
+    setCartItems(prev => prev.filter(item => item.id !== parcelId));
   };
   
   // 장바구니 아이템들로 신청 진행
-  const handleSubmitCart = (items: ApplicationCartItem[]) => {
-    if (items.length === 0) return;
+  const handleSubmitApplication = (parcels: PreRegisteredParcel[]) => {
+    if (parcels.length === 0) return;
     
-    // 복수 필지 신청 설정
-    const lands = items.map(item => item.landInfo);
-    const results = items.map(item => item.aiResult);
+    // PreRegisteredParcel에서 LandInfo와 AIAnalysisResult 추출
+    const lands = parcels.map(p => p.landInfo);
+    const results = parcels.map(p => p.aiResult);
     
     setSelectedLands(lands);
     setAiResults(results);
-    setSelectedLand(lands[0]); // 첫 번째 필지를 대표로
+    setSelectedLand(lands[0]);
     setAiResult(results[0]);
     setApplicationStep("apply");
-  };
-
-  const handleLandSelect = (land: LandInfo, result: AIAnalysisResult) => {
-    setSelectedLand(land);
-    setSelectedLands([land]);
-    setAiResult(result);
-    setAiResults([result]);
-    setApplicationStep("apply");
-  };
-
-  const handleApplicationSubmit = (application: Application) => {
-    setSubmittedApplication(application);
-    setApplicationStep("result");
   };
 
   const handleNewApplication = () => {
@@ -93,14 +70,13 @@ function CitizenPageContent() {
     setAiResults([]);
     setSubmittedApplication(null);
     setApplicationStep("search");
-    // 장바구니는 유지 (신청 완료된 항목만 제거하려면 별도 로직 필요)
   };
   
   // 신청 완료 후 해당 항목들 장바구니에서 제거
   const handleApplicationSubmitWithCartCleanup = (application: Application) => {
     // 신청된 필지들 장바구니에서 제거
     const submittedIds = selectedLands.map(land => land.id);
-    setCartItems(prev => prev.filter(item => !submittedIds.includes(item.id)));
+    setCartItems(prev => prev.filter(item => !submittedIds.includes(item.landInfo.id)));
     
     setSubmittedApplication(application);
     setApplicationStep("result");
@@ -147,12 +123,11 @@ function CitizenPageContent() {
           aria-labelledby="tab-new"
         >
           {applicationStep === "search" && (
-            <LandSearchSection 
-              onLandSelect={handleLandSelect}
-              cartItems={cartItems}
+            <MyParcelList 
               onAddToCart={handleAddToCart}
               onRemoveFromCart={handleRemoveFromCart}
-              onSubmitCart={handleSubmitCart}
+              cartItems={cartItems}
+              onSubmitApplication={handleSubmitApplication}
             />
           )}
 
