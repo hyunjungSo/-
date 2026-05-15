@@ -38,12 +38,14 @@ import { preRegisteredParcels } from "@/lib/dummy-data";
 
 interface RegisteredParcelSearchProps {
   onAddToCart: (parcel: PreRegisteredParcel) => void;
+  onRemoveFromCart: (parcelId: string) => void;
   cartItems: PreRegisteredParcel[];
   onSubmitApplication: (parcels: PreRegisteredParcel[]) => void;
 }
 
 export function RegisteredParcelSearch({ 
   onAddToCart, 
+  onRemoveFromCart,
   cartItems, 
   onSubmitApplication 
 }: RegisteredParcelSearchProps) {
@@ -230,11 +232,7 @@ export function RegisteredParcelSearch({
                   <Button 
                     variant="ghost" 
                     size="sm"
-                    onClick={() => {
-                      // 장바구니에서 제거는 부모 컴포넌트에서 처리
-                      // 현재는 cartItems가 props로 전달되므로 여기서는 처리 불가
-                      // 필요시 onRemoveFromCart 콜백 추가
-                    }}
+                    onClick={() => onRemoveFromCart(parcel.id)}
                     className="text-destructive hover:text-destructive gap-1"
                   >
                     <Trash2 className="h-4 w-4" />

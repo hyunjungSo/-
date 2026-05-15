@@ -125,6 +125,7 @@ function CitizenPageContent() {
           {applicationStep === "search" && (
             <RegisteredParcelSearch 
               onAddToCart={handleAddToCart}
+              onRemoveFromCart={handleRemoveFromCart}
               cartItems={cartItems}
               onSubmitApplication={handleSubmitApplication}
             />
