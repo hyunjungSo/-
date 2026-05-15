@@ -22,8 +22,6 @@ import {
   FileText,
   ShoppingCart,
   Trash2,
-  ChevronRight,
-  ChevronLeft,
   RefreshCw,
   Loader2,
   X,
@@ -322,26 +320,6 @@ export function MyParcelList({
           selectedParcelId={selectedParcel?.landInfo.id}
           className="h-full w-full"
         />
-      </div>
-                  <FileText className="h-4 w-4 mr-1.5" />
-                  신청서 작성
-                </Button>
-              </div>
-            )}
-          </>
-        )}
-
-        {/* 접기/펼치기 버튼 */}
-        <button
-          onClick={() => setIsListCollapsed(!isListCollapsed)}
-          className="absolute -right-6 top-1/2 -translate-y-1/2 w-6 h-12 bg-background border rounded-r-md shadow-md flex items-center justify-center hover:bg-muted/50 transition-colors z-20"
-        >
-          {isListCollapsed ? (
-            <ChevronRight className="h-4 w-4" />
-          ) : (
-            <ChevronLeft className="h-4 w-4" />
-          )}
-        </button>
       </div>
 
       {/* 우측 패널 - AI 분석 결과 */}
