@@ -71,11 +71,11 @@ export function RegisteredParcelSearch({
   // 검색 중 상태
   const [isSearching, setIsSearching] = useState(false);
 
-  // 매수가능 필지만 필터링 (민원인은 매수가능 필지만 조회 가능)
+  // 매수 신청 가능 필지만 필터링 (민원인은 매수 신청 가능 필지만 조회 가능)
   const availableParcels = useMemo(() => {
     return preRegisteredParcels.filter(
       p => p.preRegistrationStatus === "등록완료" && 
-           p.aiResult.provisionalJudgment === "매수가능"
+           p.aiResult.provisionalJudgment === "매수 신청 가능"
     );
   }, []);
 
@@ -250,7 +250,7 @@ export function RegisteredParcelSearch({
                         <Badge 
                           className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90"
                         >
-                          매수가능
+                          매수 신청 가능
                         </Badge>
                       </TableCell>
                       <TableCell>{parcel.landInfo.ownerName}</TableCell>
@@ -396,7 +396,7 @@ export function RegisteredParcelSearch({
                   <Badge 
                     className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-base px-3 py-1"
                   >
-                    매수가능
+                    매수 신청 가능
                   </Badge>
                 </div>
                 

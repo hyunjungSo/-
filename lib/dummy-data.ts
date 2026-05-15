@@ -1371,15 +1371,15 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   const physicalConditionMet = criteriaChecks.some(c => !c.autoDetected && c.isMet);
   
   // PRD 판정 원칙:
-  // - AI 판정은 "매수가능", "매수불가" 두 가지
-  // - 물리 조건 중 하나라도 해당 시 '매수가능'
-  // - 전체 조건 미해당시 '매수불가'
-  // - 잔여 면적이 0인 경우 잔여지가 없으므로 '매수불가'
-  let provisionalJudgment: "매수가능" | "매수불가";
+  // - AI 판정은 "매수 신청 가능", "매수 신청 불가능" 두 가지
+  // - 물리 조건 중 하나라도 해당 시 '매수 신청 가능'
+  // - 전체 조건 미해당시 '매수 신청 불가능'
+  // - 잔여 면적이 0인 경우 잔여지가 없으므로 '매수 신청 불가능'
+  let provisionalJudgment: "매수 신청 가능" | "매수 신청 불가능";
   
   // 잔여 면적이 0인 경우: 잔여지 자체가 없으므로 신청 불가
   if (landInfo.remainingArea === 0) {
-    provisionalJudgment = "매수불가";
+    provisionalJudgment = "매수 신청 불가능";
   } else {
     // 면적 기준 충족 여부
     const coreCriteriaMet = areaMet;
@@ -1388,23 +1388,23 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
     if (landInfo.landType === "임야") {
     // 산지: 면적 기준 + 접면 도로 상실만 (형상 조건 없음!)
     if (coreCriteriaMet) {
-      provisionalJudgment = "매수가능";
+      provisionalJudgment = "매수 신청 가능";
     } else {
-      provisionalJudgment = "매수불가";
+      provisionalJudgment = "매수 신청 불가능";
     }
   } else if (landInfo.landType === "택지" || landInfo.landType === "농지") {
     // 택지/농지: 면적 기준 + 형상 조건 적용
     if (coreCriteriaMet || isIrregularShape || shapeIndexMet) {
-      provisionalJudgment = "매수가능";
+      provisionalJudgment = "매수 신청 가능";
     } else {
-      provisionalJudgment = "매수불가";
+      provisionalJudgment = "매수 신청 불가능";
     }
   } else {
     // 그 밖의 토지: 면적 기준 + 잔여비율 50% 이하 + 형상 변경
     if (coreCriteriaMet || isBlindLand || isIrregularShape || shapeIndexMet) {
-      provisionalJudgment = "매수가능";
+      provisionalJudgment = "매수 신청 가능";
     } else {
-      provisionalJudgment = "매수불가";
+      provisionalJudgment = "매수 신청 불가능";
     }
   }
   } // end of remainingArea > 0 check
@@ -1432,7 +1432,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
 // 판단 근거 생성 헬퍼 함수 (PRD v2.0 기준 - 중앙토지수용위원회 참고문서)
 function generateRationale(
   land: LandInfo,
-  judgment: "매수가능" | "매수불가",
+  judgment: "매수 신청 가능" | "매수 신청 불가능",
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],
@@ -1479,8 +1479,8 @@ function generateRationale(
   const shapeIndexStr = shapeIndexChange.toFixed(1);
   const criteriaStr = metCriteriaNames.join(", ");
 
-  if (judgment === "매수가능") {
-    summary = landTypeStr + " 수용 조건 충족으로 매수가능 판정";
+  if (judgment === "매수 신청 가능") {
+    summary = landTypeStr + " 수용 조건 충족으로 매수 신청 가능 판정";
     detailedExplanation = [
       "소재지: " + addressStr,
       "토지유형: " + landTypeStr + ", 지목: " + landCategoryStr,
@@ -1493,13 +1493,13 @@ function generateRationale(
   } else {
     const areaThreshold = land.landType === "택지" ? 90 : 330;
     const rejectionReason = "잔여면적 " + remainingAreaStr + "m2(기준 " + areaThreshold + "m2 초과), 잔여비율 " + remainingRatioStr + "%(기준 초과), 물리조건 미해당";
-    summary = landTypeStr + " 수용 조건 미충족으로 매수불가 판정";
+    summary = landTypeStr + " 수용 조건 미충족으로 매수 신청 불가능 판정";
     detailedExplanation = [
       "소재지: " + addressStr,
       "토지유형: " + landTypeStr + ", 지목: " + landCategoryStr,
       "편입현황: " + originalAreaStr + "m2 -> 잔여 " + remainingAreaStr + "m2 (잔여비율 " + remainingRatioStr + "%)",
       "형상변화: " + originalShapeStr + " -> " + remainingShapeStr + " (형상지수 +" + shapeIndexStr + ")",
-      "매수불가사유: " + rejectionReason,
+      "매수 신청 불가능사유: " + rejectionReason,
       "",
       "* 면적/비율 기준 및 물리조건 전체 미해당"
     ].join("\n");
@@ -1769,7 +1769,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 불가", isMet: false, autoDetected: false },
       ],
-      provisionalJudgment: "매수가능",
+      provisionalJudgment: "매수 신청 가능",
       originalShapeIndex: 4.0,
       remainingShapeIndex: 5.2,
       shapeIndexChange: 1.2,
@@ -1836,7 +1836,7 @@ export const dummyApplications: Application[] = [
     appliedAt: SIX_MONTHS_AGO,
     aiResult: generateAIResult(dummyLandInfoList[8]),
     finalJudgment: "심의위원회 이관",
-    reviewerComment: "AI 판정 결과 매수가능이나, 인접 토지와의 경계 분쟁 가능성 및 농지 활용도에 대한 현장 확인 결과 추가 검토가 필요함. 잔여면적 기준은 충족하나 형상지수 변화가 경계값에 있어 심의위원회의 전문적 판단이 요구됨.",
+    reviewerComment: "AI 판정 결과 매수 신청 가능이나, 인접 토지와의 경계 분쟁 가능성 및 농지 활용도에 대한 현장 확인 결과 추가 검토가 필요함. 잔여면적 기준은 충족하나 형상지수 변화가 경계값에 있어 심의위원회의 전문적 판단이 요구됨.",
     finalReviewOpinion: "본 건은 AI 분석 결과 매수 기준 충족으로 판단되었으나, 현장 조사 결과 인접 토지 소유자와의 경계 관련 민원이 제기된 상태이며, 농지 활용도에 대한 전문가 의견이 상이하여 심의위원회에 이관하여 종합적인 검토가 필요한 것으로 판단됩니다.",
     adminName: "박담당",
     statusUpdatedAt: SIX_DAYS_AGO,
@@ -2110,7 +2110,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "도로/수로 상실", criteriaDescription: "관개수로 상실로 농지 사용 불가", isMet: true, autoDetected: false },
         { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란으로 경작 불가", isMet: true, autoDetected: false },
       ],
-      provisionalJudgment: "매수가능",
+      provisionalJudgment: "매수 신청 가능",
       originalShapeIndex: 4.2,
       remainingShapeIndex: 5.9,
       shapeIndexChange: 1.7,
@@ -2207,7 +2207,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 불가", isMet: true, autoDetected: false },
       ],
-      provisionalJudgment: "매수가능",
+      provisionalJudgment: "매수 신청 가능",
       originalShapeIndex: 4.2,
       remainingShapeIndex: 5.8,
       shapeIndexChange: 1.6,
@@ -2284,7 +2284,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "맹지 판정", criteriaDescription: "접면도로 상실로 양 필지 모두 맹지화", isMet: true, autoDetected: true },
       ],
-      provisionalJudgment: "매수가능",
+      provisionalJudgment: "매수 신청 가능",
       originalShapeIndex: 4.1,
       remainingShapeIndex: 5.95,
       shapeIndexChange: 1.85,
@@ -2388,7 +2388,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },
       ],
-      provisionalJudgment: "매수가능",
+      provisionalJudgment: "매수 신청 가능",
       originalShapeIndex: 5.1,
       remainingShapeIndex: 6.48,
       shapeIndexChange: 1.38,
@@ -2487,7 +2487,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "면적 기준 (55-2)", criteriaDescription: "잔여 550㎡ > 330㎡ (농지 기준 미충족)", isMet: false, autoDetected: true },
         { criteriaName: "형상지수 (55-2)", criteriaDescription: "형상지수 1.3 < 2.0 (양호)", isMet: false, autoDetected: true },
       ],
-      provisionalJudgment: "매수가능",
+      provisionalJudgment: "매수 신청 가능",
       originalShapeIndex: 4.1,
       remainingShapeIndex: 5.0,
       shapeIndexChange: 0.9,
@@ -2614,7 +2614,7 @@ export const dummyApplications: Application[] = [
     appliedAt: ONE_WEEK_AGO,
     // 민원인 AI 분석 결과 - 농지 2필지 개별 분석
     aiResult: {
-      provisionalJudgment: "매수가능",
+      provisionalJudgment: "매수 신청 가능",
       confidence: 85,
       originalArea: 3950,
       remainingArea: 2480,
@@ -2645,7 +2645,7 @@ export const dummyApplications: Application[] = [
     },
     // 담당자 AI ���분석 결과 - 농지 2��지 분석
     adminAiResult: {
-      provisionalJudgment: "매수가능",
+      provisionalJudgment: "매수 신청 가능",
       confidence: 82,
       originalArea: 3950,
       remainingArea: 2480,
@@ -2726,7 +2726,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "접수완료",
     appliedAt: THREE_DAYS_AGO,
     aiResult: {
-      provisionalJudgment: "매수가능",
+      provisionalJudgment: "매수 신청 가능",
       confidence: 78,
       originalArea: 1350,
       remainingArea: 800,
@@ -2758,7 +2758,7 @@ export const dummyApplications: Application[] = [
     },
     landAIResults: {
       "land-3parcel-001": {
-        provisionalJudgment: "매수불가",
+        provisionalJudgment: "매수 신청 불가능",
         confidence: 75,
         originalArea: 450,
         remainingArea: 270,
@@ -2772,7 +2772,7 @@ export const dummyApplications: Application[] = [
         },
       },
       "land-3parcel-002": {
-        provisionalJudgment: "매수불가",
+        provisionalJudgment: "매수 신청 불가능",
         confidence: 72,
         originalArea: 380,
         remainingArea: 230,
@@ -2786,7 +2786,7 @@ export const dummyApplications: Application[] = [
         },
       },
       "land-3parcel-003": {
-        provisionalJudgment: "매수가능",
+        provisionalJudgment: "매수 신청 가능",
         confidence: 80,
         originalArea: 520,
         remainingArea: 300,
@@ -3203,7 +3203,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란으로 경작 불가", isMet: true, autoDetected: false },
       ],
-      provisionalJudgment: "매수가능",
+      provisionalJudgment: "매수 신청 가능",
       originalShapeIndex: 4.0,
       remainingShapeIndex: 5.5,
       shapeIndexChange: 1.5,
@@ -3212,7 +3212,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       waterChannelLost: false,
       farmMachineDifficulty: true,
       judgmentRationale: {
-        summary: "농지 잔여지 - 형상 변화 및 농기계 회전 곤란으로 「매수가능」 판정",
+        summary: "농지 잔여지 - 형상 변화 및 농기계 회전 곤란으로 「매수 신청 가능」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: ["토지유형: 농지", "형상지수 변화: 1.5 (기준 충족)", "농기계 회전 곤란: 해당"],
         detailedExplanation: "도로확장사업으로 인해 잔여지가 삼각형으로 변형되어 농기계 진입 및 회전이 곤란합니다.",
@@ -3260,7 +3260,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "접면도로 상실", criteriaDescription: "맹지화로 건축허가 불가", isMet: true, autoDetected: false },
       ],
-      provisionalJudgment: "매수가능",
+      provisionalJudgment: "매수 신청 가능",
       originalShapeIndex: 3.8,
       remainingShapeIndex: 6.2,
       shapeIndexChange: 2.4,
@@ -3269,7 +3269,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       waterChannelLost: false,
       farmMachineDifficulty: false,
       judgmentRationale: {
-        summary: "택지 잔여지 - 접면도로 상실로 「매수가능」 판정",
+        summary: "택지 잔여지 - 접면도로 상실로 「매수 신청 가능」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: ["토지유형: 택지", "형상지수 변화: 2.4 (기준 초과)", "접면도로 상실: 해당"],
         detailedExplanation: "도로확장으로 인해 접면도로가 상실되어 맹지가 되었으며, 건축허가가 불가능한 상태입니다.",
@@ -3318,7 +3318,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
         { criteriaName: "관개수로 상실", criteriaDescription: "관개수로 상실로 농업용수 공급 불가", isMet: true, autoDetected: false },
         { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란으로 경작 불가", isMet: true, autoDetected: false },
       ],
-      provisionalJudgment: "매수가능",
+      provisionalJudgment: "매수 신청 가능",
       originalShapeIndex: 4.2,
       remainingShapeIndex: 5.8,
       shapeIndexChange: 1.6,
@@ -3327,7 +3327,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       waterChannelLost: true,
       farmMachineDifficulty: true,
       judgmentRationale: {
-        summary: "농지 잔여지 - 관개수로 상실 및 농기계 회전 곤란으로 「매수가능」 판정",
+        summary: "농지 잔여지 - 관개수로 상실 및 농기계 회전 곤란으로 「매수 신청 가능」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: ["토지유형: 농지", "관개수로 상실: 해당", "농기계 회전 곤란: 해당"],
         detailedExplanation: "도로확장으로 관개수로가 단절되어 농업용수 공급이 불가능하며, 잔여지 형상이 역삼각형으로 변형되어 농기계 회전이 곤란합니다.",
@@ -3377,7 +3377,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "접면도로 상실", criteriaDescription: "맹지화로 건축허가 불가", isMet: true, autoDetected: false },
       ],
-      provisionalJudgment: "매수가능",
+      provisionalJudgment: "매수 신청 가능",
       originalShapeIndex: 4.0,
       remainingShapeIndex: 5.9,
       shapeIndexChange: 1.9,
@@ -3386,7 +3386,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       waterChannelLost: false,
       farmMachineDifficulty: false,
       judgmentRationale: {
-        summary: "택지 잔여지 - 접면도로 상실로 「매수가능」 판정",
+        summary: "택지 잔여지 - 접면도로 상실로 「매수 신청 가능」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: ["토지유형: 택지", "형상지수 변화: 1.9 (기준 충족)", "접면도로 상실: 해당"],
         detailedExplanation: "도시개발사업으로 접면도로가 상실되어 맹지가 되었습니다.",
@@ -3435,7 +3435,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
         { criteriaName: "관개수로 상실", criteriaDescription: "관개수로 상실", isMet: true, autoDetected: false },
         { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란", isMet: true, autoDetected: false },
       ],
-      provisionalJudgment: "매수가능",
+      provisionalJudgment: "매수 신청 가능",
       originalShapeIndex: 3.5,
       remainingShapeIndex: 5.2,
       shapeIndexChange: 1.7,
@@ -3444,7 +3444,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       waterChannelLost: true,
       farmMachineDifficulty: true,
       judgmentRationale: {
-        summary: "농지 잔여지 - 면적, 형상, 관개수로 등 모든 기준 충족으로 「매수가능」 판정",
+        summary: "농지 잔여지 - 면적, 형상, 관개수로 등 모든 기준 충족으로 「매수 신청 가능」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: ["토지유형: 농지", "면적: 300㎡ (기준 충족)", "관개수로 상실: 해당", "농기계 회전 곤란: 해당"],
         detailedExplanation: "도시개발사업으로 잔여지 면적이 기준 이하로 감소하고, 관개수로가 단절되어 농업 활동이 불가능합니다.",
@@ -3493,7 +3493,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란", isMet: true, autoDetected: false },
       ],
-      provisionalJudgment: "매수가능",
+      provisionalJudgment: "매수 신청 가능",
       originalShapeIndex: 4.1,
       remainingShapeIndex: 5.7,
       shapeIndexChange: 1.6,
@@ -3502,7 +3502,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       waterChannelLost: false,
       farmMachineDifficulty: true,
       judgmentRationale: {
-        summary: "농지 잔여지 - 형상 변화 및 농기계 회전 곤란으로 「매수가능」 판정",
+        summary: "농지 잔여지 - 형상 변화 및 농기계 회전 곤란으로 「매수 신청 가능」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: ["토지유형: 농지", "형상지수 변화: 1.6 (기준 충족)", "농기계 회전 곤란: 해당"],
         detailedExplanation: "행정복합도시 건설로 잔여지가 삼각형으로 변형되어 농기계 작업이 불가능합니다.",
@@ -3512,7 +3512,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
     registeredAt: FIVE_DAYS_AGO,
     registeredBy: "최담당",
   },
-  // 매수불가 케이스
+  // 매수 신청 불가능 케이스
   {
     id: "pre-007",
     businessUnit: "수도권",
@@ -3551,7 +3551,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: false, autoDetected: true },
         { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란", isMet: false, autoDetected: false },
       ],
-      provisionalJudgment: "매수불가",
+      provisionalJudgment: "매수 신청 불가능",
       originalShapeIndex: 4.0,
       remainingShapeIndex: 4.2,
       shapeIndexChange: 0.2,
@@ -3560,7 +3560,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       waterChannelLost: false,
       farmMachineDifficulty: false,
       judgmentRationale: {
-        summary: "농지 잔여지 - 매수 기준 미충족으로 「매수불가」 판정",
+        summary: "농지 잔여지 - 매수 기준 미충족으로 「매수 신청 불가능」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: ["토지유형: 농지", "잔여면적: 4,500㎡ (기준 초과)", "형상지수 변화: 0.2 (기준 미충족)"],
         detailedExplanation: "편입 면적이 적어 잔여지가 충분히 크고, 형상 변화도 미미하여 종전 용도대로 사용 가능합니다.",

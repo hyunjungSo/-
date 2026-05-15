@@ -47,8 +47,8 @@ export type AdminStatus = "사전등록" | "접수완료" | "진행중" | "심�
 // 사전등록 필지 상태
 export type PreRegistrationStatus = "등록완료" | "민원접수" | "처리완료";
 
-// AI 1차 판독 결과 (수용가능/수용불가) - 담당자 사전분석 결과
-export type AIJudgmentResult = "매수가능" | "매수불가";
+// AI 1차 판독 결과 - 담당자 사전분석 결과
+export type AIJudgmentResult = "매수 신청 가능" | "매수 신청 불가능";
 
 // 최종 판정 결과 (매수/기각/심의위원회 이관)
 export type FinalJudgmentResult = "매수" | "기각" | "심의위원회 이관";

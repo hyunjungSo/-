@@ -220,20 +220,20 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const finalCompleted = periodFilteredApplications.filter((a) => a.adminStatus === "심사완료");
     const completedCount = finalCompleted.length;
     
-    // AI 초기 판정: 매수가능/매수불가 (2가지만 존재, 이관 없음)
-    const aiPurchasable = Math.round(completedCount * 0.65);    // 매수가능 65%
-    const aiNotPurchasable = completedCount - aiPurchasable;     // 매수불가 35%
+    // AI 초기 판정: 매수 신청 가능/매수 신청 불가능 (2가지만 존재, 이관 없음)
+    const aiPurchasable = Math.round(completedCount * 0.65);    // 매수 신청 가능 65%
+    const aiNotPurchasable = completedCount - aiPurchasable;     // 매수 신청 불가능 35%
     const aiAnalyzed = completedCount;
     
     // AI 신뢰도 계산 로직:
-    // - AI(매수가능) -> 담당자(매수) = 일치
-    // - AI(매수가능) -> 담당자(기각) = 불일치 (반대 결정)
-    // - AI(매수가능) -> 담당자(이관) = 불일치 (판단 보류)
-    // - AI(매수불가) -> 담당자(기각) = 일치
-    // - AI(매수불가) -> 담당자(이관) = 불일치 (판단 보류)
+    // - AI(매수 신청 가능) -> 담당자(매수) = 일치
+    // - AI(매수 신청 가능) -> 담당자(기각) = 불일치 (반대 결정)
+    // - AI(매수 신청 가능) -> 담당자(이관) = 불일치 (판단 보류)
+    // - AI(매수 신청 불가능) -> 담당자(기각) = 일치
+    // - AI(매수 신청 불가능) -> 담당자(이관) = 불일치 (판단 보류)
     
     // 시뮬레이션: 불일치 유형 구분
-    const mismatchOpposite = Math.max(1, Math.floor(completedCount * 0.05)); // 반대 결정: AI(매수가능)->담당자(기각)
+    const mismatchOpposite = Math.max(1, Math.floor(completedCount * 0.05)); // 반대 결정: AI(매수 신청 가능)->담당자(기각)
     const mismatchDeferred = Math.max(1, Math.floor(completedCount * 0.05)); // 판단 보류: AI 판정과 무관하게 담당자가 이관
     const aiMismatchCount = mismatchOpposite + mismatchDeferred;
     const aiMatchCount = completedCount - aiMismatchCount;
@@ -243,11 +243,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     // 전체 건수 = completedCount로 동일해야 함
     // 이관 건수 = 판단 보류 건수
     const finalTransfer = mismatchDeferred;
-    // 매수 건수 = AI 매수가능 - 반대결정(기각으로 변경) - 일부 이관
-    const deferredFromPurchasable = Math.floor(mismatchDeferred * 0.6); // 매수가능에서 이관된 건
-    const deferredFromNotPurchasable = mismatchDeferred - deferredFromPurchasable; // 매수불가에서 이관된 건
+    // 매수 건수 = AI 매수 신청 가능 - 반대결정(기각으로 변경) - 일부 이관
+    const deferredFromPurchasable = Math.floor(mismatchDeferred * 0.6); // 매수 신청 가능에서 이관된 건
+    const deferredFromNotPurchasable = mismatchDeferred - deferredFromPurchasable; // 매수 신청 불가능에서 이관된 건
     const finalPurchase = aiPurchasable - mismatchOpposite - deferredFromPurchasable;
-    // 기각 건수 = AI 매수불가 - 이관 + 반대결정(매수가능->기각)
+    // 기각 건수 = AI 매수 신청 불가능 - 이관 + 반대결정(매수 신청 가능->기각)
     const finalReject = aiNotPurchasable - deferredFromNotPurchasable + mismatchOpposite;
     // 검증: finalPurchase + finalReject + finalTransfer = completedCount
     
@@ -264,8 +264,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       진행중,
       심사완료,
       aiAnalyzed,
-      aiPurchasable,    // AI 초기 판정: 매수가능
-      aiNotPurchasable, // AI 초기 판정: 매수불가
+      aiPurchasable,    // AI 초기 판정: 매수 신청 가능
+      aiNotPurchasable, // AI 초기 판정: 매수 신청 불가능
       finalPurchase,    // 담당자 최종: 매수
       finalReject,      // 담당자 최종: 기각
       finalTransfer,    // 담당자 최종: 이관
@@ -506,7 +506,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             
             {/* 스택 바 비교 */}
             <div className="space-y-3">
-              {/* AI 초기 판정 막대 (매수가능/매수불가 2가지만) */}
+              {/* AI 초기 판정 막대 (매수 신청 가능/매수 신청 불가능 2가지만) */}
               <div className="space-y-1.5" style={{ marginBottom: '4px' }}>
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 초기 판정</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
