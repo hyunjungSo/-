@@ -4,6 +4,8 @@ import { useState, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +14,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { LeafletMap } from "@/components/leaflet-map";
 import { 
   MapPin, 
@@ -25,11 +34,13 @@ import {
   ShoppingCart,
   Trash2,
   ChevronRight,
-  ChevronLeft
+  ChevronLeft,
+  RefreshCw,
+  Loader2
 } from "lucide-react";
 import { AIIcon } from "@/components/ui/ai-icon";
-import type { PreRegisteredParcel } from "@/lib/types";
-import { preRegisteredParcels } from "@/lib/dummy-data";
+import type { PreRegisteredParcel, AdminCheckItems, LandShape, LandCategory, AIAnalysisResult } from "@/lib/types";
+import { preRegisteredParcels, adminCheckItemOptions } from "@/lib/dummy-data";
 
 interface MyParcelListProps {
   onAddToCart: (parcel: PreRegisteredParcel) => void;
@@ -51,6 +62,17 @@ export function MyParcelList({
   
   // 좌측 패널 접힘 상태
   const [isListCollapsed, setIsListCollapsed] = useState(false);
+  
+  // AI 재분석용 상태
+  const [checkItems, setCheckItems] = useState<AdminCheckItems>({
+    farmMachineDifficulty: false,
+    accessRoadLost: false,
+    waterChannelLost: false,
+  });
+  const [selectedLandShape, setSelectedLandShape] = useState<LandShape | "">("");
+  const [selectedLandUsage, setSelectedLandUsage] = useState<LandCategory | "">("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [reanalyzedResult, setReanalyzedResult] = useState<AIAnalysisResult | null>(null);
 
   // 현재 로그인한 민원인 정보 (실제로는 인증 시스템에서 가져옴)
   const currentUser = {
@@ -75,7 +97,90 @@ export function MyParcelList({
   // 필지 상세 보기
   const handleViewDetail = (parcel: PreRegisteredParcel) => {
     setSelectedParcel(parcel);
+    // 기존 확인 항목으로 초기화
+    setCheckItems(parcel.adminCheckItems);
+    setSelectedLandShape(parcel.landShape);
+    setSelectedLandUsage(parcel.currentUsage);
+    setReanalyzedResult(null);
     setShowDetailDialog(true);
+  };
+  
+  // AI 재분석 실행
+  const handleReanalyze = async () => {
+    if (!selectedParcel) return;
+    
+    setIsAnalyzing(true);
+    
+    // 시뮬레이션된 AI 분석 (실제로는 API 호출)
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // 확인 항목 중 하나라도 true면 매수 신청 가능으로 판정 (시뮬레이션)
+    const hasAnyCheckItem = checkItems.farmMachineDifficulty || checkItems.accessRoadLost || checkItems.waterChannelLost;
+    const shapeIndexChange = selectedParcel.aiResult.shapeIndexChange;
+    const meetsCriteria = hasAnyCheckItem || shapeIndexChange >= 1.0;
+    
+    const newResult: AIAnalysisResult = {
+      ...selectedParcel.aiResult,
+      provisionalJudgment: meetsCriteria ? "매수 신청 가능" : "매수 신청 불가능",
+      farmMachineDifficulty: checkItems.farmMachineDifficulty,
+      accessRoadLost: checkItems.accessRoadLost,
+      waterChannelLost: checkItems.waterChannelLost,
+      criteriaChecks: [
+        { 
+          criteriaName: "면적 기준", 
+          criteriaDescription: `${selectedParcel.landInfo.landType} 기준 면적 이하`, 
+          isMet: selectedParcel.landInfo.remainingArea <= 330, 
+          autoDetected: true 
+        },
+        { 
+          criteriaName: "형상 기준", 
+          criteriaDescription: `비정형 형상 (${selectedLandShape})`, 
+          isMet: !["정방형", "가로장방형", "세로장방형"].includes(selectedLandShape), 
+          autoDetected: true 
+        },
+        { 
+          criteriaName: "형상지수 변화", 
+          criteriaDescription: "형상지수 1.0 이상 상승", 
+          isMet: shapeIndexChange >= 1.0, 
+          autoDetected: true 
+        },
+        ...(checkItems.farmMachineDifficulty ? [{
+          criteriaName: "농기계 회전 곤란",
+          criteriaDescription: "농기계 회전 곤란으로 경작 불가",
+          isMet: true,
+          autoDetected: false,
+        }] : []),
+        ...(checkItems.accessRoadLost ? [{
+          criteriaName: "접면도로 상실",
+          criteriaDescription: "맹지화로 건축허가 불가",
+          isMet: true,
+          autoDetected: false,
+        }] : []),
+        ...(checkItems.waterChannelLost ? [{
+          criteriaName: "관개수로 상실",
+          criteriaDescription: "관개수로 상실로 농업용수 공급 불가",
+          isMet: true,
+          autoDetected: false,
+        }] : []),
+      ],
+      judgmentRationale: {
+        ...selectedParcel.aiResult.judgmentRationale,
+        summary: meetsCriteria 
+          ? `${selectedParcel.landInfo.landType} 잔여지 - 선택된 기준 충족으로 「매수 신청 가능」 판정`
+          : `${selectedParcel.landInfo.landType} 잔여지 - 기준 미충족으로 「매수 신청 불가능」 판정`,
+        appliedCriteria: [
+          `토지유형: ${selectedParcel.landInfo.landType}`,
+          `토지형상: ${selectedLandShape}`,
+          `활용지목: ${selectedLandUsage}`,
+          ...(checkItems.farmMachineDifficulty ? ["농기계 회전 곤란: 해당"] : []),
+          ...(checkItems.accessRoadLost ? ["접면도로 상실: 해당"] : []),
+          ...(checkItems.waterChannelLost ? ["관개수로 상실: 해당"] : []),
+        ],
+      },
+    };
+    
+    setReanalyzedResult(newResult);
+    setIsAnalyzing(false);
   };
 
   // 장바구니에 추가
@@ -346,11 +451,11 @@ export function MyParcelList({
 
       {/* 필지 상세 다이얼로그 */}
       <Dialog open={showDetailDialog} onOpenChange={setShowDetailDialog}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-xl">필지 상세 정보</DialogTitle>
             <DialogDescription>
-              AI 분석 결과와 필지 정보를 확인하세요.
+              확인 항목을 선택하고 AI 분석을 실행해보세요.
             </DialogDescription>
           </DialogHeader>
 
@@ -382,21 +487,121 @@ export function MyParcelList({
                 </div>
               </div>
 
+              {/* 확인 항목 선택 (AI 재분석용) */}
+              <div className="space-y-4 border rounded-lg p-4">
+                <h4 className="font-semibold text-base flex items-center gap-2">
+                  <RefreshCw className="h-4 w-4" />
+                  확인 항목 선택 (AI 재분석)
+                </h4>
+                <p className="text-sm text-muted-foreground">
+                  아래 항목을 선택하고 AI 분석을 다시 실행해볼 수 있습니다.
+                </p>
+                
+                {/* 담당자 확인항목 체크박스 */}
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">담당자 확인항목</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {adminCheckItemOptions.map((option) => (
+                      <div 
+                        key={option.value}
+                        className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                          checkItems[option.value as keyof AdminCheckItems] 
+                            ? 'bg-primary/10 border-primary' 
+                            : 'hover:bg-muted/50'
+                        }`}
+                        onClick={() => setCheckItems(prev => ({
+                          ...prev,
+                          [option.value]: !prev[option.value as keyof AdminCheckItems]
+                        }))}
+                      >
+                        <Checkbox 
+                          id={option.value}
+                          checked={checkItems[option.value as keyof AdminCheckItems]}
+                          onCheckedChange={(checked) => setCheckItems(prev => ({
+                            ...prev,
+                            [option.value]: !!checked
+                          }))}
+                        />
+                        <Label htmlFor={option.value} className="cursor-pointer font-normal">
+                          {option.label}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* 토지 형상 및 활용지목 선택 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">토지 형상</Label>
+                    <Select value={selectedLandShape} onValueChange={(v) => setSelectedLandShape(v as LandShape)}>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="토지 형상 선택" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["정방형", "가로장방형", "세로장방형", "사다리형", "역사다리형", "변형사다리형", "삼각형", "역삼각형", "부정형", "자루형"].map((shape) => (
+                          <SelectItem key={shape} value={shape}>{shape}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">현재 활용지목</Label>
+                    <Select value={selectedLandUsage} onValueChange={(v) => setSelectedLandUsage(v as LandCategory)}>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="활용지목 선택" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["전", "답", "과", "대", "임", "목", "잡", "구", "도", "제", "천", "묘", "장", "양", "창", "주유소"].map((usage) => (
+                          <SelectItem key={usage} value={usage}>{usage}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                {/* AI 재분석 버튼 */}
+                <Button 
+                  onClick={handleReanalyze}
+                  disabled={isAnalyzing}
+                  className="w-full h-12 gap-2"
+                >
+                  {isAnalyzing ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      AI 분석 중...
+                    </>
+                  ) : (
+                    <>
+                      <AIIcon className="h-5 w-5" />
+                      AI 분석 실행
+                    </>
+                  )}
+                </Button>
+              </div>
+
               {/* AI 판정 결과 */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <h4 className="font-semibold flex items-center gap-2">
                     <AIIcon className="h-5 w-5" />
                     AI 분석 결과
+                    {reanalyzedResult && <Badge variant="outline" className="ml-2">재분석</Badge>}
                   </h4>
-                  <Badge className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-base px-3 py-1">
-                    매수 신청 가능
-                  </Badge>
+                  {(() => {
+                    const result = reanalyzedResult || selectedParcel.aiResult;
+                    const isApproved = result.provisionalJudgment === "매수 신청 가능";
+                    return (
+                      <Badge className={`text-base px-3 py-1 ${isApproved ? 'bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90' : 'bg-destructive'}`}>
+                        {result.provisionalJudgment}
+                      </Badge>
+                    );
+                  })()}
                 </div>
                 
                 {/* 기준 충족 여부 */}
                 <div className="space-y-2">
-                  {selectedParcel.aiResult.criteriaChecks.map((check, index) => (
+                  {(reanalyzedResult || selectedParcel.aiResult).criteriaChecks.map((check, index) => (
                     <div 
                       key={index}
                       className={`flex items-center justify-between p-3 rounded-lg border ${
@@ -425,12 +630,20 @@ export function MyParcelList({
               {/* AI 상세 분석 */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-3">
                 <p className="font-medium text-blue-900">
-                  {selectedParcel.aiResult.judgmentRationale.summary}
+                  {(reanalyzedResult || selectedParcel.aiResult).judgmentRationale.summary}
                 </p>
                 <div className="text-sm text-blue-800">
                   <p>
-                    <strong>법적 근거:</strong> {selectedParcel.aiResult.judgmentRationale.legalBasis}
+                    <strong>법적 근거:</strong> {(reanalyzedResult || selectedParcel.aiResult).judgmentRationale.legalBasis}
                   </p>
+                  <div className="mt-2">
+                    <strong>적용 기준:</strong>
+                    <ul className="list-disc list-inside mt-1">
+                      {(reanalyzedResult || selectedParcel.aiResult).judgmentRationale.appliedCriteria.map((criteria, idx) => (
+                        <li key={idx}>{criteria}</li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
 
@@ -463,7 +676,7 @@ export function MyParcelList({
             <Button variant="outline" onClick={() => setShowDetailDialog(false)}>
               닫기
             </Button>
-            {selectedParcel && !isInCart(selectedParcel.id) && (
+            {selectedParcel && !isInCart(selectedParcel.id) && (reanalyzedResult?.provisionalJudgment === "매수 신청 가능" || (!reanalyzedResult && selectedParcel.aiResult.provisionalJudgment === "매수 신청 가능")) && (
               <Button onClick={() => handleAddToCart(selectedParcel)} className="gap-2">
                 <ShoppingCart className="h-4 w-4" />
                 신청 목록에 추가
