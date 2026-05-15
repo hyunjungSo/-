@@ -1,19 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -28,15 +20,14 @@ import {
   XCircle, 
   Info, 
   FileText,
-  User,
-  Phone,
-  AlertCircle,
   ShoppingCart,
   Trash2,
   ChevronRight,
   ChevronLeft,
   RefreshCw,
-  Loader2
+  Loader2,
+  X,
+  Scale
 } from "lucide-react";
 import { AIIcon } from "@/components/ui/ai-icon";
 import type { PreRegisteredParcel, AdminCheckItems, LandShape, LandCategory, AIAnalysisResult } from "@/lib/types";
@@ -57,7 +48,6 @@ export function MyParcelList({
 }: MyParcelListProps) {
   // 선택된 필지
   const [selectedParcel, setSelectedParcel] = useState<PreRegisteredParcel | null>(null);
-  const [showDetailDialog, setShowDetailDialog] = useState(false);
   const [hoveredParcelId, setHoveredParcelId] = useState<string | null>(null);
   
   // 좌측 패널 접힘 상태
@@ -101,22 +91,28 @@ export function MyParcelList({
     return appliedParcelIds.includes(parcelId);
   };
 
-  // 필지 선택
-  const handleParcelSelect = (parcel: PreRegisteredParcel) => {
-    setSelectedParcel(parcel);
+  // 장바구니에 담겼는지 확인
+  const isInCart = (parcelId: string) => {
+    return cartItems.some(item => item.id === parcelId);
   };
 
-  // 필지 상세 보기
-  const handleViewDetail = (parcel: PreRegisteredParcel) => {
+  // 필지 선택 핸들러
+  const handleParcelSelect = (parcel: PreRegisteredParcel) => {
     setSelectedParcel(parcel);
     // 기존 확인 항목으로 초기화
     setCheckItems(parcel.adminCheckItems);
     setSelectedLandShape(parcel.landShape);
     setSelectedLandUsage(parcel.currentUsage);
     setReanalyzedResult(null);
-    setShowDetailDialog(true);
   };
-  
+
+  // 장바구니에 추가
+  const handleAddToCart = (parcel: PreRegisteredParcel) => {
+    if (!isInCart(parcel.id) && !isAlreadyApplied(parcel.landInfo.id)) {
+      onAddToCart(parcel);
+    }
+  };
+
   // AI 재분석 실행
   const handleReanalyze = async () => {
     if (!selectedParcel) return;
@@ -195,400 +191,276 @@ export function MyParcelList({
     setIsAnalyzing(false);
   };
 
-  // 장바구니에 추가
-  const handleAddToCart = (parcel: PreRegisteredParcel) => {
-    onAddToCart(parcel);
-    setShowDetailDialog(false);
-  };
-
-  // 이미 장바구니에 있는지 확인
-  const isInCart = (parcelId: string) => {
-    return cartItems.some(item => item.id === parcelId);
-  };
-
-  // 지도용 필지 데이터 (좌표 생성)
+  // 지도 데이터
   const mapParcels = useMemo(() => {
-    return myParcels.map((parcel, index) => {
-      // 더미 좌표 생성 (실제로는 DB에서 가져옴)
-      const baseCoords = [
-        [
-          { lat: 37.2215 + index * 0.005, lng: 127.2985 + index * 0.003 },
-          { lat: 37.2220 + index * 0.005, lng: 127.2995 + index * 0.003 },
-          { lat: 37.2213 + index * 0.005, lng: 127.3000 + index * 0.003 },
-          { lat: 37.2208 + index * 0.005, lng: 127.2990 + index * 0.003 },
-        ]
-      ];
-      
-      return {
-        id: parcel.id,
-        coordinates: parcel.landInfo.coordinates || baseCoords[0],
-        address: parcel.landInfo.address,
-        isIncluded: true,
-        isOwned: true,
-      };
-    });
-  }, [myParcels]);
+    return myParcels.map(p => ({
+      id: p.landInfo.id,
+      address: p.landInfo.address,
+      coordinates: p.landInfo.coordinates || [],
+      isSelected: selectedParcel?.id === p.id,
+      isHovered: hoveredParcelId === p.id,
+    }));
+  }, [myParcels, selectedParcel, hoveredParcelId]);
+
+  const aiResult = reanalyzedResult || selectedParcel?.aiResult;
+  const alreadyApplied = selectedParcel ? isAlreadyApplied(selectedParcel.landInfo.id) : false;
 
   return (
-    <div className="space-y-4">
-      {/* 안내 메시지 */}
-      <Card className="border-blue-200 bg-blue-50">
-        <CardContent className="py-4">
-          <div className="flex gap-3">
-            <Info className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
-            <p className="text-blue-800">
-              <strong>{currentUser.name}</strong>님이 소유하신 잔여지 중 
-              <strong className="text-[rgb(20,113,97)]"> 매수 신청 가능</strong> 판정을 받은 필지입니다.
-              신청하실 필지를 선택해주세요.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* 지도 + 좌측 필지 목록 레이아웃 */}
-      <div className="relative h-[calc(100vh-320px)] min-h-[500px] w-full rounded-lg overflow-hidden border">
-        {/* 지도 (전체 영역) */}
-        <div className="absolute inset-0 z-[5]">
-          <LeafletMap 
-            zoomControlsPosition="sidebar-right"
-            onParcelClick={(id) => {
-              const parcel = myParcels.find(p => p.id === id);
-              if (parcel) {
-                handleParcelSelect(parcel);
-              }
-            }}
-            parcels={mapParcels}
-            selectedParcelId={selectedParcel?.id}
-            hoveredParcelId={hoveredParcelId}
-            onParcelHover={setHoveredParcelId}
-          />
-        </div>
-
-        {/* 좌측 사이드바 - 필지 목록 */}
-        <div className="absolute bottom-0 left-0 top-0 z-10 flex">
-          <div className="relative">
-            <div className={`h-full bg-background transition-all duration-300 overflow-hidden ${isListCollapsed ? "w-0" : "w-[360px]"}`}>
-              {/* 필지 목록 헤더 */}
-              <div className="flex items-center justify-between border-b bg-muted px-4 py-3">
-                <span className="text-base font-semibold text-foreground flex items-center gap-2">
-                  <MapPin className="h-4 w-4" />
-                  나의 잔여지
-                </span>
-                <Badge variant="secondary" className="text-sm">
-                  {myParcels.length}건
-                </Badge>
-              </div>
-              
-              {/* 필지 목록 */}
-              <div className="max-h-[calc(100%-52px)] overflow-y-auto">
-                {myParcels.length > 0 ? (
-                  <div className="divide-y">
-                    {myParcels.map((parcel) => {
-                      const alreadyApplied = isAlreadyApplied(parcel.landInfo.id);
-                      return (
-                        <div
-                          key={parcel.id}
-                          className={`p-4 cursor-pointer transition-colors ${
-                            alreadyApplied ? "opacity-60 bg-muted/30" :
-                            selectedParcel?.id === parcel.id 
-                              ? "bg-primary/10 border-l-4 border-l-primary" 
-                              : "hover:bg-muted/50"
-                          }`}
-                          onClick={() => handleParcelSelect(parcel)}
-                          onMouseEnter={() => setHoveredParcelId(parcel.id)}
-                          onMouseLeave={() => setHoveredParcelId(null)}
-                        >
-                          <div className="space-y-2">
-                            <div className="flex items-start justify-between gap-2">
-                              <p className="font-medium text-foreground leading-tight flex-1">
-                                {parcel.landInfo.address}
-                              </p>
-                              {alreadyApplied && (
-                                <Badge variant="secondary" className="text-xs shrink-0 bg-blue-100 text-blue-700">
-                                  신청완료
-                                </Badge>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <Badge variant="outline" className="text-xs">
-                                {parcel.landInfo.landType}
-                              </Badge>
-                              <span>잔여 {parcel.landInfo.remainingArea.toLocaleString()}㎡</span>
-                              <span>({parcel.landInfo.remainingRatio.toFixed(1)}%)</span>
-                            </div>
-                            <div className="flex items-center justify-between pt-1">
-                              <Badge className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-xs">
-                                매수 신청 가능
-                              </Badge>
-                              {alreadyApplied ? (
-                                <span className="text-xs text-muted-foreground">처리중</span>
-                              ) : isInCart(parcel.id) ? (
-                                <Badge variant="secondary" className="text-xs">추가됨</Badge>
-                              ) : (
-                                <Button 
-                                  size="sm" 
-                                  variant="outline"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleAddToCart(parcel);
-                                  }}
-                                  className="h-7 text-xs gap-1"
-                                >
-                                  <ShoppingCart className="h-3 w-3" />
-                                  담기
-                                </Button>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center h-full px-4 py-12 text-center">
-                    <AlertCircle className="h-10 w-10 text-muted-foreground/50 mb-3" />
-                    <p className="font-medium text-muted-foreground">
-                      매수 신청 가능한<br />잔여지가 없습니다.
-                    </p>
-                    <p className="text-sm text-muted-foreground mt-2">
-                      담당자 사전 분석 완료 후<br />목록에 표시됩니다.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-            
-            {/* 접기/펼치기 버튼 */}
-            <Button
-              variant="secondary"
-              size="icon"
-              className="absolute -right-3 top-1/2 -translate-y-1/2 h-8 w-6 rounded-l-none rounded-r-md shadow-md z-20"
-              onClick={() => setIsListCollapsed(!isListCollapsed)}
-            >
-              {isListCollapsed ? (
-                <ChevronRight className="h-4 w-4" />
-              ) : (
-                <ChevronLeft className="h-4 w-4" />
-              )}
-            </Button>
-          </div>
-        </div>
-
-        {/* 우측 하단 - 선택된 필지 정보 카드 */}
-        {selectedParcel && (
-          <div className="absolute bottom-4 right-4 z-10 w-[320px]">
-            <Card className="shadow-lg">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-primary" />
-                  선택된 필지
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="font-medium">{selectedParcel.landInfo.address}</p>
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div>
-                    <span className="text-muted-foreground">토지유형</span>
-                    <p className="font-medium">{selectedParcel.landInfo.landType}</p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">잔여면적</span>
-                    <p className="font-medium">{selectedParcel.landInfo.remainingArea.toLocaleString()}㎡</p>
-                  </div>
-                </div>
-                <div className="flex gap-2 pt-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="flex-1"
-                    onClick={() => handleViewDetail(selectedParcel)}
-                  >
-                    상세보기
-                  </Button>
-                  {!isInCart(selectedParcel.id) && (
-                    <Button 
-                      size="sm" 
-                      className="flex-1 gap-1"
-                      onClick={() => handleAddToCart(selectedParcel)}
-                    >
-                      <ShoppingCart className="h-3 w-3" />
-                      신청 담기
-                    </Button>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+    <div className="relative h-[calc(100vh-220px)] min-h-[600px] w-full overflow-hidden rounded-lg border bg-background">
+      {/* 전체화면 지도 */}
+      <div className="absolute inset-0">
+        <LeafletMap
+          parcels={mapParcels}
+          onParcelClick={(id) => {
+            const parcel = myParcels.find(p => p.landInfo.id === id);
+            if (parcel) handleParcelSelect(parcel);
+          }}
+          selectedParcelId={selectedParcel?.landInfo.id}
+          className="h-full w-full"
+        />
       </div>
 
-      {/* 장바구니 (신청 목록) */}
-      {cartItems.length > 0 && (
-        <Card className="border-primary max-w-2xl">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg flex items-center justify-between">
-              <span className="flex items-center gap-2">
-                <ShoppingCart className="h-5 w-5 text-primary" />
-                신청 목록
-              </span>
-              <Badge className="text-sm px-3 py-1">
-                {cartItems.length}건
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2 mb-4 max-h-[200px] overflow-y-auto">
-              {cartItems.map((parcel) => (
-                <div 
-                  key={parcel.id}
-                  className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
-                    <div className="min-w-0">
-                      <p className="font-medium text-sm truncate">{parcel.landInfo.address}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {parcel.landInfo.landType} | {parcel.landInfo.remainingArea.toLocaleString()}㎡
-                      </p>
-                    </div>
-                  </div>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => onRemoveFromCart(parcel.id)}
-                    className="text-destructive hover:text-destructive h-8 px-2 flex-shrink-0"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
+      {/* 좌측 패널 - 필지 목록 */}
+      <div 
+        className={`absolute left-0 top-0 h-full bg-background border-r shadow-lg transition-all duration-300 z-10 flex flex-col ${
+          isListCollapsed ? "w-0" : "w-[320px]"
+        }`}
+      >
+        {!isListCollapsed && (
+          <>
+            {/* 헤더 */}
+            <div className="p-4 border-b bg-muted/30 shrink-0">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-semibold text-base">{currentUser.name}님의 잔여지</h3>
+                <Badge variant="secondary">{myParcels.length}건</Badge>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                매수 신청 가능한 필지 목록입니다.
+              </p>
             </div>
-            <Button 
-              className="w-full h-11 text-base gap-2"
-              onClick={() => onSubmitApplication(cartItems)}
-            >
-              <FileText className="h-5 w-5" />
-              신청서 작성
-            </Button>
-          </CardContent>
-        </Card>
-      )}
 
-      {/* 필지 상세 다이얼로그 */}
-      <Dialog open={showDetailDialog} onOpenChange={setShowDetailDialog}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-lg">필지 상세</DialogTitle>
-            <DialogDescription>
-              확인 항목 선택 후 AI 분석을 실행하세요.
-            </DialogDescription>
-          </DialogHeader>
-
-          {selectedParcel && (
-            <div className="space-y-5">
-              {/* 기본 정보 */}
-              <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-                <div className="flex items-start gap-2">
-                  <MapPin className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
-                  <p className="font-medium text-sm leading-snug">
-                    {selectedParcel.landInfo.address}
+            {/* 필지 목록 */}
+            <div className="flex-1 overflow-y-auto">
+              {myParcels.length > 0 ? (
+                <div className="divide-y">
+                  {myParcels.map((parcel) => {
+                    const applied = isAlreadyApplied(parcel.landInfo.id);
+                    return (
+                      <div
+                        key={parcel.id}
+                        className={`p-3 cursor-pointer transition-colors ${
+                          applied ? "opacity-60 bg-muted/30" :
+                          selectedParcel?.id === parcel.id 
+                            ? "bg-primary/10 border-l-4 border-l-primary" 
+                            : "hover:bg-muted/50"
+                        }`}
+                        onClick={() => handleParcelSelect(parcel)}
+                        onMouseEnter={() => setHoveredParcelId(parcel.id)}
+                        onMouseLeave={() => setHoveredParcelId(null)}
+                      >
+                        <div className="space-y-1.5">
+                          <div className="flex items-start justify-between gap-2">
+                            <p className="font-medium text-sm leading-tight flex-1 line-clamp-2">
+                              {parcel.landInfo.address}
+                            </p>
+                            {applied && (
+                              <Badge variant="secondary" className="text-xs shrink-0 bg-blue-100 text-blue-700">
+                                신청완료
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <Badge variant="outline" className="text-xs h-5">
+                              {parcel.landInfo.landType}
+                            </Badge>
+                            <span>{parcel.landInfo.remainingArea.toLocaleString()}㎡</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <Badge className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-xs h-5">
+                              신청 가능
+                            </Badge>
+                            {applied ? (
+                              <span className="text-xs text-blue-600">처리중</span>
+                            ) : isInCart(parcel.id) ? (
+                              <Badge variant="secondary" className="text-xs h-5">추가됨</Badge>
+                            ) : (
+                              <Button 
+                                size="sm" 
+                                variant="ghost"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleAddToCart(parcel);
+                                }}
+                                className="h-6 text-xs gap-1 px-2"
+                              >
+                                <ShoppingCart className="h-3 w-3" />
+                                담기
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+                  <MapPin className="h-10 w-10 text-muted-foreground/50 mb-3" />
+                  <p className="text-sm text-muted-foreground">
+                    매수 신청 가능한 필지가 없습니다.
                   </p>
                 </div>
-                <div className="grid grid-cols-4 gap-3 text-sm pt-2">
-                  <div>
-                    <span className="text-xs text-muted-foreground">토지유형</span>
-                    <p className="font-medium">{selectedParcel.landInfo.landType}</p>
-                  </div>
-                  <div>
-                    <span className="text-xs text-muted-foreground">지목</span>
-                    <p className="font-medium">{selectedParcel.landInfo.landCategory}</p>
-                  </div>
-                  <div>
-                    <span className="text-xs text-muted-foreground">잔여면적</span>
-                    <p className="font-medium">{selectedParcel.landInfo.remainingArea.toLocaleString()}㎡</p>
-                  </div>
-                  <div>
-                    <span className="text-xs text-muted-foreground">잔여비율</span>
-                    <p className="font-medium">{selectedParcel.landInfo.remainingRatio.toFixed(1)}%</p>
-                  </div>
+              )}
+            </div>
+
+            {/* 장바구니 요약 */}
+            {cartItems.length > 0 && (
+              <div className="p-3 border-t bg-muted/30 shrink-0">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium flex items-center gap-1.5">
+                    <ShoppingCart className="h-4 w-4 text-primary" />
+                    신청 목록
+                  </span>
+                  <Badge>{cartItems.length}건</Badge>
+                </div>
+                <Button 
+                  className="w-full h-9 text-sm"
+                  onClick={() => onSubmitApplication(cartItems)}
+                >
+                  <FileText className="h-4 w-4 mr-1.5" />
+                  신청서 작성
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* 접기/펼치기 버튼 */}
+        <button
+          onClick={() => setIsListCollapsed(!isListCollapsed)}
+          className="absolute -right-6 top-1/2 -translate-y-1/2 w-6 h-12 bg-background border rounded-r-md shadow-md flex items-center justify-center hover:bg-muted/50 transition-colors z-20"
+        >
+          {isListCollapsed ? (
+            <ChevronRight className="h-4 w-4" />
+          ) : (
+            <ChevronLeft className="h-4 w-4" />
+          )}
+        </button>
+      </div>
+
+      {/* 우측 패널 - AI 분석 결과 */}
+      {selectedParcel && (
+        <div className="absolute right-4 top-4 bottom-4 w-[360px] bg-background border rounded-lg shadow-xl z-10 flex flex-col overflow-hidden">
+          {/* 헤더 */}
+          <div className="p-3 border-b bg-muted/30 shrink-0">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex-1 min-w-0">
+                <h4 className="font-semibold text-sm truncate">{selectedParcel.landInfo.address}</h4>
+                <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                  <span>{selectedParcel.landInfo.landType}</span>
+                  <span>|</span>
+                  <span>{selectedParcel.landInfo.remainingArea.toLocaleString()}㎡</span>
+                  <span>({selectedParcel.landInfo.remainingRatio.toFixed(1)}%)</span>
                 </div>
               </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 shrink-0"
+                onClick={() => setSelectedParcel(null)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
 
-              {/* 확인 항목 선택 (AI 재분석용) */}
-              <div className="space-y-3 border rounded-lg p-4">
-                <h4 className="font-semibold text-sm flex items-center gap-2">
-                  <RefreshCw className="h-4 w-4" />
+          {/* 컨텐츠 */}
+          <div className="flex-1 overflow-y-auto p-3 space-y-3">
+            {/* 신청 완료 안내 */}
+            {alreadyApplied && (
+              <div className="rounded-lg border border-blue-200 bg-blue-50 p-3">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm font-medium text-blue-700">이미 신청된 필지입니다.</span>
+                </div>
+                <p className="text-xs text-blue-600 mt-1">현재 검토 중이며 처리 완료 시 알림 드립니다.</p>
+              </div>
+            )}
+
+            {/* 확인 항목 선택 */}
+            {!alreadyApplied && (
+              <div className="space-y-2 border rounded-lg p-3">
+                <h5 className="font-medium text-sm flex items-center gap-1.5">
+                  <RefreshCw className="h-3.5 w-3.5" />
                   확인 항목 (AI 재분석)
-                </h4>
+                </h5>
                 
-                {/* 담당자 확인항목 체크박스 */}
-                <div className="space-y-2">
-                  <Label className="text-xs text-muted-foreground">확인항목</Label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {adminCheckItemOptions.map((option) => (
-                      <div 
-                        key={option.value}
-                        className={`flex items-center gap-2 p-2 rounded-lg border cursor-pointer transition-colors text-sm ${
-                          checkItems[option.value as keyof AdminCheckItems] 
-                            ? 'bg-primary/10 border-primary' 
-                            : 'hover:bg-muted/50'
-                        }`}
-                        onClick={() => setCheckItems(prev => ({
+                {/* 체크박스 */}
+                <div className="grid grid-cols-1 gap-1.5">
+                  {adminCheckItemOptions.map((option) => (
+                    <div 
+                      key={option.value}
+                      className={`flex items-center gap-2 p-2 rounded border cursor-pointer transition-colors text-xs ${
+                        checkItems[option.value as keyof AdminCheckItems] 
+                          ? 'bg-primary/10 border-primary' 
+                          : 'hover:bg-muted/50'
+                      }`}
+                      onClick={() => setCheckItems(prev => ({
+                        ...prev,
+                        [option.value]: !prev[option.value as keyof AdminCheckItems]
+                      }))}
+                    >
+                      <Checkbox 
+                        id={option.value}
+                        checked={checkItems[option.value as keyof AdminCheckItems]}
+                        onCheckedChange={(checked) => setCheckItems(prev => ({
                           ...prev,
-                          [option.value]: !prev[option.value as keyof AdminCheckItems]
+                          [option.value]: !!checked
                         }))}
-                      >
-                        <Checkbox 
-                          id={option.value}
-                          checked={checkItems[option.value as keyof AdminCheckItems]}
-                          onCheckedChange={(checked) => setCheckItems(prev => ({
-                            ...prev,
-                            [option.value]: !!checked
-                          }))}
-                        />
-                        <Label htmlFor={option.value} className="cursor-pointer font-normal text-xs">
-                          {option.label}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
+                      />
+                      <Label htmlFor={option.value} className="cursor-pointer font-normal text-xs flex-1">
+                        {option.label}
+                      </Label>
+                    </div>
+                  ))}
                 </div>
                 
-                {/* 토지 형상 및 활용지목 선택 */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1">
+                {/* 형상/지목 선택 */}
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <div>
                     <Label className="text-xs text-muted-foreground">토지 형상</Label>
                     <Select value={selectedLandShape} onValueChange={(v) => setSelectedLandShape(v as LandShape)}>
-                      <SelectTrigger className="h-10">
+                      <SelectTrigger className="h-8 text-xs mt-1">
                         <SelectValue placeholder="선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        {["정방형", "가로장방형", "세로장방형", "사다리형", "역사다리형", "변형사다리형", "삼각형", "역삼각형", "부정형", "자루형"].map((shape) => (
-                          <SelectItem key={shape} value={shape}>{shape}</SelectItem>
+                        {["정방형", "가로장방형", "세로장방형", "사다리형", "역사다리형", "부정형", "삼각형", "역삼각형", "자루형"].map((shape) => (
+                          <SelectItem key={shape} value={shape} className="text-xs">{shape}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-1">
+                  <div>
                     <Label className="text-xs text-muted-foreground">활용지목</Label>
                     <Select value={selectedLandUsage} onValueChange={(v) => setSelectedLandUsage(v as LandCategory)}>
-                      <SelectTrigger className="h-10">
+                      <SelectTrigger className="h-8 text-xs mt-1">
                         <SelectValue placeholder="선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        {["전", "답", "과", "대", "임", "목", "잡", "구", "도", "제", "천", "묘", "장", "양", "창", "주유소"].map((usage) => (
-                          <SelectItem key={usage} value={usage}>{usage}</SelectItem>
+                        {["전", "답", "과", "대", "임", "목", "잡"].map((usage) => (
+                          <SelectItem key={usage} value={usage} className="text-xs">{usage}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
                 
-                {/* AI 재분석 버튼 */}
+                {/* AI 분석 버튼 */}
                 <Button 
                   onClick={handleReanalyze}
                   disabled={isAnalyzing}
-                  className="w-full h-10 gap-2"
+                  className="w-full h-9 gap-1.5 mt-2"
+                  size="sm"
                 >
                   {isAnalyzing ? (
                     <>
@@ -603,94 +475,190 @@ export function MyParcelList({
                   )}
                 </Button>
               </div>
+            )}
 
-              {/* AI 판정 결과 */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-semibold text-sm flex items-center gap-2">
+            {/* AI 판정 결과 */}
+            {aiResult && (
+              <div className={`rounded-lg border-2 p-3 ${
+                aiResult.provisionalJudgment === "매수 신청 가능"
+                  ? "border-[rgb(20,113,97)] bg-[rgb(20,113,97)]/5"
+                  : "border-destructive bg-destructive/5"
+              }`}>
+                {/* 헤더 */}
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-semibold flex items-center gap-1.5">
                     <AIIcon className="h-4 w-4" />
-                    AI 결과
-                    {reanalyzedResult && <Badge variant="outline" className="text-xs">재분석</Badge>}
-                  </h4>
-                  {(() => {
-                    const result = reanalyzedResult || selectedParcel.aiResult;
-                    const isApproved = result.provisionalJudgment === "매수 신청 가능";
-                    return (
-                      <Badge className={`text-sm px-2 py-0.5 ${isApproved ? 'bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90' : 'bg-destructive'}`}>
-                        {isApproved ? "신청 가능" : "신청 불가"}
-                      </Badge>
-                    );
-                  })()}
+                    AI 분석 결과
+                    {reanalyzedResult && <Badge variant="outline" className="text-xs ml-1">재분석</Badge>}
+                  </span>
+                  <Badge className={`text-xs ${
+                    aiResult.provisionalJudgment === "매수 신청 가능"
+                      ? "bg-[rgb(20,113,97)]"
+                      : "bg-destructive"
+                  }`}>
+                    {aiResult.provisionalJudgment === "매수 신청 가능" ? "신청 가능" : "신청 불가"}
+                  </Badge>
                 </div>
-                
-                {/* 기준 충족 여부 */}
-                <div className="space-y-1.5 max-h-[180px] overflow-y-auto">
-                  {(reanalyzedResult || selectedParcel.aiResult).criteriaChecks.map((check, index) => (
+
+                {/* 판단 요약 */}
+                {aiResult.judgmentRationale && (
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-start gap-2">
+                      <FileText className="h-4 w-4 shrink-0 text-primary mt-0.5" />
+                      <p className="text-muted-foreground leading-relaxed">
+                        {aiResult.judgmentRationale.summary}
+                      </p>
+                    </div>
+                    
+                    {/* 법적 근거 */}
+                    <div className="flex items-start gap-2">
+                      <Scale className="h-4 w-4 shrink-0 text-amber-500 mt-0.5" />
+                      <p className="text-xs text-muted-foreground">
+                        {aiResult.judgmentRationale.legalBasis}
+                      </p>
+                    </div>
+                    
+                    {/* 적용 기준 */}
+                    <div className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-primary mt-0.5" />
+                      <ul className="text-xs text-muted-foreground space-y-0.5">
+                        {aiResult.judgmentRationale.appliedCriteria.slice(0, 4).map((criteria, idx) => (
+                          <li key={idx} className="flex items-center gap-1">
+                            <span className="h-1 w-1 rounded-full bg-muted-foreground" />
+                            <span>{criteria}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+
+                {/* 안내 문구 */}
+                <div className="flex items-center gap-1.5 mt-3 pt-2 border-t">
+                  <Info className="h-3 w-3 shrink-0 text-muted-foreground" />
+                  <p className="text-xs text-muted-foreground">
+                    AI 결과는 참고용이며, 최종 판정은 담당자 검토에 따릅니다.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* 기준 충족 여부 */}
+            {aiResult && (
+              <div className="space-y-1.5">
+                <h5 className="font-medium text-sm">기준 충족 여부</h5>
+                <div className="space-y-1">
+                  {aiResult.criteriaChecks.map((check, index) => (
                     <div 
                       key={index}
-                      className={`flex items-center justify-between p-2 rounded-lg border text-sm ${
+                      className={`flex items-center justify-between p-2 rounded border text-xs ${
                         check.isMet ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'
                       }`}
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         {check.isMet ? (
-                          <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0" />
+                          <CheckCircle2 className="h-3.5 w-3.5 text-green-600 shrink-0" />
                         ) : (
-                          <XCircle className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                          <XCircle className="h-3.5 w-3.5 text-gray-400 shrink-0" />
                         )}
                         <span className="font-medium">{check.criteriaName}</span>
                       </div>
-                      <Badge variant={check.isMet ? "default" : "secondary"} className="text-xs">
+                      <Badge variant={check.isMet ? "default" : "secondary"} className="text-xs h-5">
                         {check.isMet ? "충족" : "미충족"}
                       </Badge>
                     </div>
                   ))}
                 </div>
               </div>
-
-              {/* AI 상세 분석 */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 space-y-2">
-                <p className="font-medium text-sm text-blue-900">
-                  {(reanalyzedResult || selectedParcel.aiResult).judgmentRationale.summary}
-                </p>
-                <p className="text-xs text-blue-700">
-                  {(reanalyzedResult || selectedParcel.aiResult).judgmentRationale.legalBasis}
-                </p>
-              </div>
-
-              {/* 소유자 정보 */}
-              <div className="flex items-center gap-4 p-3 bg-muted/30 rounded-lg text-sm">
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  <span>{selectedParcel.landInfo.ownerName}</span>
-                </div>
-                {selectedParcel.landInfo.ownerContact && (
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span>{selectedParcel.landInfo.ownerContact}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDetailDialog(false)}>
-              닫기
-            </Button>
-            {selectedParcel && isAlreadyApplied(selectedParcel.landInfo.id) ? (
-              <Badge variant="secondary" className="h-9 px-4 flex items-center bg-blue-100 text-blue-700">
-                신청완료
-              </Badge>
-            ) : selectedParcel && !isInCart(selectedParcel.id) && (reanalyzedResult?.provisionalJudgment === "매수 신청 가능" || (!reanalyzedResult && selectedParcel.aiResult.provisionalJudgment === "매수 신청 가능")) && (
-              <Button onClick={() => handleAddToCart(selectedParcel)} className="gap-2">
-                <ShoppingCart className="h-4 w-4" />
-                추가
-              </Button>
             )}
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+
+          {/* 하단 액션 */}
+          <div className="p-3 border-t bg-muted/30 shrink-0">
+            {alreadyApplied ? (
+              <Badge variant="secondary" className="w-full h-9 flex items-center justify-center bg-blue-100 text-blue-700">
+                신청완료 - 처리 중
+              </Badge>
+            ) : isInCart(selectedParcel.id) ? (
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  className="flex-1 h-9 text-sm"
+                  onClick={() => onRemoveFromCart(selectedParcel.id)}
+                >
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  제거
+                </Button>
+                <Badge className="flex-1 h-9 flex items-center justify-center">
+                  추가됨
+                </Badge>
+              </div>
+            ) : aiResult?.provisionalJudgment === "매수 신청 가능" ? (
+              <Button 
+                className="w-full h-9 text-sm gap-1.5"
+                onClick={() => handleAddToCart(selectedParcel)}
+              >
+                <ShoppingCart className="h-4 w-4" />
+                신청 목록에 담기
+              </Button>
+            ) : (
+              <div className="text-center">
+                <p className="text-xs text-muted-foreground mb-2">
+                  매수 기준에 충족하지 않습니다.
+                </p>
+                <button
+                  onClick={() => handleAddToCart(selectedParcel)}
+                  className="text-xs text-muted-foreground/60 underline-offset-2 hover:text-muted-foreground hover:underline"
+                >
+                  그래도 담기
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* 장바구니 플로팅 카드 (우측 패널 없을 때) */}
+      {!selectedParcel && cartItems.length > 0 && (
+        <Card className="absolute right-4 bottom-4 w-72 shadow-xl z-10">
+          <CardHeader className="p-3 pb-2">
+            <CardTitle className="text-sm flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <ShoppingCart className="h-4 w-4 text-primary" />
+                신청 목록
+              </span>
+              <Badge>{cartItems.length}건</Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-3 pt-0">
+            <div className="space-y-1.5 mb-3 max-h-[120px] overflow-y-auto">
+              {cartItems.map((parcel) => (
+                <div 
+                  key={parcel.id}
+                  className="flex items-center justify-between p-2 bg-muted/50 rounded text-xs"
+                >
+                  <span className="truncate flex-1 mr-2">{parcel.landInfo.address}</span>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => onRemoveFromCart(parcel.id)}
+                    className="h-6 w-6 text-destructive hover:text-destructive shrink-0"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+            <Button 
+              className="w-full h-9 text-sm"
+              onClick={() => onSubmitApplication(cartItems)}
+            >
+              <FileText className="h-4 w-4 mr-1.5" />
+              신청서 작성
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
