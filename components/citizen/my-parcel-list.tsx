@@ -203,7 +203,7 @@ export function MyParcelList({
             <CardTitle className="text-xl flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <ShoppingCart className="h-5 w-5 text-primary" />
-                신��� 목록
+                신청 목록
               </span>
               <Badge className="text-base px-3 py-1">
                 {cartItems.length}건
