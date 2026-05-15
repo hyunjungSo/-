@@ -1,15 +1,20 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Clock, PlayCircle, CheckCircle2 } from "lucide-react";
-import type { AdminStatus, ProcessStatus } from "@/lib/types";
+import { Clock, PlayCircle, CheckCircle2, FileCheck, MapPinPlus } from "lucide-react";
+import type { AdminStatus, ProcessStatus, PreRegistrationStatus } from "@/lib/types";
 
-// 담당자 진행상황 (접수완료/진행중/심사완료) - 새 컬러 시스템 적용
+// 담당자 진행상황 (사전등록/접수완료/진행중/심사완료) - 새 컬러 시스템 적용
 const adminStatusConfig: Record<AdminStatus, {
   label: string;
   icon: typeof Clock;
-  variant: "outline-indigo" | "outline-blue" | "outline-green";
+  variant: "outline-indigo" | "outline-blue" | "outline-green" | "outline-purple";
 }> = {
+  사전등록: {
+    label: "사전등록",
+    icon: MapPinPlus,
+    variant: "outline-purple", // Purple: 사전등록 단계
+  },
   접수완료: {
     label: "접수완료",
     icon: Clock,
@@ -27,12 +32,17 @@ const adminStatusConfig: Record<AdminStatus, {
   },
 };
 
-// 처리 상태 (접수완료/AI분석완료/검토중/처리완료)
+// 처리 상태 (사전등록/접수완료/AI분석완료/검토중/처리완료)
 const processStatusConfig: Record<ProcessStatus, {
   label: string;
   icon: typeof Clock;
-  variant: "secondary" | "info" | "warning" | "success";
+  variant: "secondary" | "info" | "warning" | "success" | "purple";
 }> = {
+  사전등록: {
+    label: "사전등록",
+    icon: MapPinPlus,
+    variant: "purple",
+  },
   접수완료: {
     label: "접수완료",
     icon: Clock,
@@ -52,6 +62,29 @@ const processStatusConfig: Record<ProcessStatus, {
     label: "처리 완료",
     icon: CheckCircle2,
     variant: "success",
+  },
+};
+
+// 사전등록 필지 상태 (등록완료/민원접수/처리완료)
+const preRegistrationStatusConfig: Record<PreRegistrationStatus, {
+  label: string;
+  icon: typeof Clock;
+  variant: "outline-green" | "outline-blue" | "secondary";
+}> = {
+  등록완료: {
+    label: "등록완료",
+    icon: FileCheck,
+    variant: "outline-green",
+  },
+  민원접수: {
+    label: "민원접수",
+    icon: Clock,
+    variant: "outline-blue",
+  },
+  처리완료: {
+    label: "처리완료",
+    icon: CheckCircle2,
+    variant: "secondary",
   },
 };
 
@@ -119,5 +152,37 @@ export function ProcessStatusBadge({ status, showIcon = false, size = "default" 
   );
 }
 
+interface PreRegistrationStatusBadgeProps {
+  status: PreRegistrationStatus;
+  showIcon?: boolean;
+  size?: "sm" | "default";
+}
+
+// 사전등록 상태 Badge
+export function PreRegistrationStatusBadge({ status, showIcon = false, size = "default" }: PreRegistrationStatusBadgeProps) {
+  const config = preRegistrationStatusConfig[status];
+  
+  // 안전한 처리: config가 없으면 기본값 사용
+  if (!config) {
+    return (
+      <Badge variant="secondary" className={size === "sm" ? "text-xs" : ""}>
+        {status || "알 수 없음"}
+      </Badge>
+    );
+  }
+  
+  const Icon = config.icon;
+
+  return (
+    <Badge 
+      variant={config.variant} 
+      className={size === "sm" ? "text-xs" : ""}
+    >
+      {showIcon && <Icon className="mr-1 h-3 w-3" />}
+      {config.label}
+    </Badge>
+  );
+}
+
 // 설정값 export (통계 등에서 사용)
-export { adminStatusConfig, processStatusConfig };
+export { adminStatusConfig, processStatusConfig, preRegistrationStatusConfig };

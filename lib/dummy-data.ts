@@ -1,4 +1,4 @@
-import type { LandInfo, Application, AIAnalysisResult, JudgmentRationale } from "./types";
+import type { LandInfo, Application, AIAnalysisResult, JudgmentRationale, PreRegisteredParcel, BusinessUnit } from "./types";
 
 // 동적 날짜+시간 생성 헬퍼 함수
 const getDateTimeString = (daysAgo: number, hour?: number, minute?: number): string => {
@@ -1398,15 +1398,15 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   const physicalConditionMet = criteriaChecks.some(c => !c.autoDetected && c.isMet);
   
   // PRD 판정 원칙:
-  // - AI 판정은 "수용가능", "수용불가" 두 가지
-  // - 물리 조건 중 하나라도 해당 시 '수용가능'
-  // - 전체 조건 미해당시 '수용불가'
-  // - 잔여 면적이 0인 경우 잔여지가 없으므로 '수용불가'
-  let provisionalJudgment: "수용가능" | "수용불가";
+  // - AI 판정은 "매수가능", "매수불가" 두 가지
+  // - 물리 조건 중 하나라도 해당 시 '매수가능'
+  // - 전체 조건 미해당시 '매수불가'
+  // - 잔여 면적이 0인 경우 잔여지가 없으므로 '매수불가'
+  let provisionalJudgment: "매수가능" | "매수불가";
   
   // 잔여 면적이 0인 경우: 잔여지 자체가 없으므로 신청 불가
   if (landInfo.remainingArea === 0) {
-    provisionalJudgment = "수용불가";
+    provisionalJudgment = "매수불가";
   } else {
     // 면적 기준 충족 여부
     const coreCriteriaMet = areaMet;
@@ -1415,23 +1415,23 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
     if (landInfo.landType === "임야") {
     // 산지: 면적 기준 + 접면 도로 상실만 (형상 조건 없음!)
     if (coreCriteriaMet) {
-      provisionalJudgment = "수용가능";
+      provisionalJudgment = "매수가능";
     } else {
-      provisionalJudgment = "수용불가";
+      provisionalJudgment = "매수불가";
     }
   } else if (landInfo.landType === "택지" || landInfo.landType === "농지") {
     // 택지/농지: 면적 기준 + 형상 조건 적용
     if (coreCriteriaMet || isIrregularShape || shapeIndexMet) {
-      provisionalJudgment = "수용가능";
+      provisionalJudgment = "매수가능";
     } else {
-      provisionalJudgment = "수용불가";
+      provisionalJudgment = "매수불가";
     }
   } else {
     // 그 밖의 토지: 면적 기준 + 잔여비율 50% 이하 + 형상 변경
     if (coreCriteriaMet || isBlindLand || isIrregularShape || shapeIndexMet) {
-      provisionalJudgment = "수용가능";
+      provisionalJudgment = "매수가능";
     } else {
-      provisionalJudgment = "수용불가";
+      provisionalJudgment = "매수불가";
     }
   }
   } // end of remainingArea > 0 check
@@ -1459,7 +1459,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
 // 판단 근거 생성 헬퍼 함수 (PRD v2.0 기준 - 중앙토지수용위원회 참고문서)
 function generateRationale(
   land: LandInfo,
-  judgment: "수용가능" | "수용불가",
+  judgment: "매수가능" | "매수불가",
   metCriteriaCount: number,
   metCriteriaNames: string[],
   manualCheckItems: string[],
@@ -1506,27 +1506,27 @@ function generateRationale(
   const shapeIndexStr = shapeIndexChange.toFixed(1);
   const criteriaStr = metCriteriaNames.join(", ");
 
-  if (judgment === "수용가능") {
-    summary = landTypeStr + " 수용 조건 충족으로 수용가능 판정";
+  if (judgment === "매수가능") {
+    summary = landTypeStr + " 수용 조건 충족으로 매수가능 판정";
     detailedExplanation = [
       "소재지: " + addressStr,
       "토지유형: " + landTypeStr + ", 지목: " + landCategoryStr,
       "편입현황: " + originalAreaStr + "m2 -> 잔여 " + remainingAreaStr + "m2 (잔여비율 " + remainingRatioStr + "%)",
       "형상변화: " + originalShapeStr + " -> " + remainingShapeStr + " (형상지수 +" + shapeIndexStr + ")",
-      "충족기준: " + criteriaStr,
+      "충���기준: " + criteriaStr,
       "",
       "* 물리 조건 중 하나 이상 해당으로 수용 조건 충족"
     ].join("\n");
   } else {
     const areaThreshold = land.landType === "택지" ? 90 : 330;
     const rejectionReason = "잔여면적 " + remainingAreaStr + "m2(기준 " + areaThreshold + "m2 초과), 잔여비율 " + remainingRatioStr + "%(기준 초과), 물리조건 미해당";
-    summary = landTypeStr + " 수용 조건 미충족으로 수용불가 판정";
+    summary = landTypeStr + " 수용 조건 미충족으로 매수불가 판정";
     detailedExplanation = [
       "소재지: " + addressStr,
       "토지유형: " + landTypeStr + ", 지목: " + landCategoryStr,
       "편입현황: " + originalAreaStr + "m2 -> 잔여 " + remainingAreaStr + "m2 (잔여비율 " + remainingRatioStr + "%)",
       "형상변화: " + originalShapeStr + " -> " + remainingShapeStr + " (형상지수 +" + shapeIndexStr + ")",
-      "수용불가사유: " + rejectionReason,
+      "매수불가사유: " + rejectionReason,
       "",
       "* 면적/비율 기준 및 물리조건 전체 미해당"
     ].join("\n");
@@ -1796,7 +1796,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 불가", isMet: false, autoDetected: false },
       ],
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수가능",
       originalShapeIndex: 4.0,
       remainingShapeIndex: 5.2,
       shapeIndexChange: 1.2,
@@ -1842,7 +1842,7 @@ export const dummyApplications: Application[] = [
     reviewerComment: "잔여비율 90%로 매수 기준(30% 이하)을 크게 초과하며, 형상지수 변화도 0.1로 미미하여 종래 용도 사용에 지장이 없���. ��수 기준 미충족으로 기각 처리.",
     adminName: "박담당",
     statusUpdatedAt: FIVE_DAYS_AGO,
-    businessUnit: "강진광주건설 사업단",
+    businessUnit: "강진광주건설 사���단",
   },
   // 심의위원회 이관 케이스 - 기준 경계 사례로 위원회 심의 필요
   {
@@ -1863,7 +1863,7 @@ export const dummyApplications: Application[] = [
     appliedAt: SIX_MONTHS_AGO,
     aiResult: generateAIResult(dummyLandInfoList[8]),
     finalJudgment: "심의위원회 이관",
-    reviewerComment: "AI 판정 결과 수용가능이나, 인접 토지와의 경계 분쟁 가능성 및 농지 활용도에 대한 현장 확인 결과 추가 검토가 필요함. 잔여면적 기준은 충족하나 형상지수 변화가 경계값에 있어 심의위원회의 전문적 판단이 요구됨.",
+    reviewerComment: "AI 판정 결과 매수가능이나, 인접 토지와의 경계 분쟁 가능성 및 농지 활용도에 대한 현장 확인 결과 추가 검토가 필요함. 잔여면적 기준은 충족하나 형상지수 변화가 경계값에 있어 심의위원회의 전문적 판단이 요구됨.",
     finalReviewOpinion: "본 건은 AI 분석 결과 매수 기준 충족으로 판단되었으나, 현장 조사 결과 인접 토지 소유자와의 경계 관련 민원이 제기된 상태이며, 농지 활용도에 대한 전문가 의견이 상이하여 심의위원회에 이관하여 종합적인 검토가 필요한 것으로 판단됩니다.",
     adminName: "박담당",
     statusUpdatedAt: SIX_DAYS_AGO,
@@ -2137,7 +2137,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "도로/수로 상실", criteriaDescription: "관개수로 상실로 농지 사용 불가", isMet: true, autoDetected: false },
         { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란으로 경작 불가", isMet: true, autoDetected: false },
       ],
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수가능",
       originalShapeIndex: 4.2,
       remainingShapeIndex: 5.9,
       shapeIndexChange: 1.7,
@@ -2234,7 +2234,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
         { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 불가", isMet: true, autoDetected: false },
       ],
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수가능",
       originalShapeIndex: 4.2,
       remainingShapeIndex: 5.8,
       shapeIndexChange: 1.6,
@@ -2311,7 +2311,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "맹지 판정", criteriaDescription: "접면도로 상실로 양 필지 모두 맹지화", isMet: true, autoDetected: true },
       ],
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수가능",
       originalShapeIndex: 4.1,
       remainingShapeIndex: 5.95,
       shapeIndexChange: 1.85,
@@ -2356,7 +2356,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "임",
     reportedShape: "부정형",
     farmMachineDifficulty: false,
-    reason: "원주-제천 고속도로 ���설로 인해 소유한 5개 산지 필지가 편입되었습니다. 30년간 조림하여 관리해 온 임야로, 고속도로가 중앙을 관통하여 조림지가 양분되었습니다. 각 필지별로 형상이 불량해지고 접근로가 차단되어 산림경영이 불가능합니다. 5필지 모두 매수를 신청합니다.",
+    reason: "원주-제천 고속도로 ���설로 인해 소유한 5개 산지 필지가 편입되었습니다. 30년간 조���하여 관리해 온 임야로, 고속도로가 중앙을 관통하여 조림지가 양분되었습니다. 각 필지별로 형상이 불량해지고 접근로가 차단되어 산림경영이 불가능합니다. 5필지 모두 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "임" as const,
@@ -2415,7 +2415,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },
       ],
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수가능",
       originalShapeIndex: 5.1,
       remainingShapeIndex: 6.48,
       shapeIndexChange: 1.38,
@@ -2514,7 +2514,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "면적 기준 (55-2)", criteriaDescription: "잔여 550㎡ > 330㎡ (농지 기준 미충족)", isMet: false, autoDetected: true },
         { criteriaName: "형상지수 (55-2)", criteriaDescription: "형상지수 1.3 < 2.0 (양호)", isMet: false, autoDetected: true },
       ],
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수가능",
       originalShapeIndex: 4.1,
       remainingShapeIndex: 5.0,
       shapeIndexChange: 0.9,
@@ -2641,7 +2641,7 @@ export const dummyApplications: Application[] = [
     appliedAt: ONE_WEEK_AGO,
     // 민원인 AI 분석 결과 - 농지 2필지 개별 분석
     aiResult: {
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수가능",
       confidence: 85,
       originalArea: 3950,
       remainingArea: 2480,
@@ -2672,7 +2672,7 @@ export const dummyApplications: Application[] = [
     },
     // 담당자 AI ���분석 결과 - 농지 2��지 분석
     adminAiResult: {
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수가능",
       confidence: 82,
       originalArea: 3950,
       remainingArea: 2480,
@@ -2753,7 +2753,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "접수완료",
     appliedAt: THREE_DAYS_AGO,
     aiResult: {
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "매수가능",
       confidence: 78,
       originalArea: 1350,
       remainingArea: 800,
@@ -2767,7 +2767,7 @@ export const dummyApplications: Application[] = [
       farmMachineDifficulty: false,
       judgmentRationale: {
         summary: "3필지 택지 분석 - 매탄동 100(270㎡), 101(230㎡), 102(300㎡) 모두 주거용 택지 기준 면적 초과로 개별 검토 필요",
-        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률��� 제74조 및 동법 시행규칙 제34조",
+        legalBasis: "「공익사업을 위한 토지 ��의 취득 및 보상에 관한 법률��� 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
           "토지유형: 택지 (주거용)",
           "매탄동 100: 잔여면적 270㎡ > 기준 90㎡ - 추가 검토 필요",
@@ -2785,7 +2785,7 @@ export const dummyApplications: Application[] = [
     },
     landAIResults: {
       "land-3parcel-001": {
-        provisionalJudgment: "수용불가",
+        provisionalJudgment: "매수불가",
         confidence: 75,
         originalArea: 450,
         remainingArea: 270,
@@ -2799,7 +2799,7 @@ export const dummyApplications: Application[] = [
         },
       },
       "land-3parcel-002": {
-        provisionalJudgment: "수용불가",
+        provisionalJudgment: "매수불가",
         confidence: 72,
         originalArea: 380,
         remainingArea: 230,
@@ -2813,7 +2813,7 @@ export const dummyApplications: Application[] = [
         },
       },
       "land-3parcel-003": {
-        provisionalJudgment: "수용가능",
+        provisionalJudgment: "매수가능",
         confidence: 80,
         originalArea: 520,
         remainingArea: 300,
@@ -2822,7 +2822,7 @@ export const dummyApplications: Application[] = [
           summary: "매탄동 102번지: 사다리꼴 형상으로 건축 효율 저하, 매수 대상",
           legalBasis: "「공익사업법」 제74조",
           appliedCriteria: ["사다리꼴 형상으로 건축 효율 저하", "형상지수 불량"],
-          detailedExplanation: "사다리꼴 형상으로 인해 효율적인 건축물 배치가 어려워 매수 가능으로 판정합니다.",
+          detailedExplanation: "사다리꼴 형상으로 인해 효율적인 건축물 배치가 어려워 매수 가능으로 ��정합니다.",
           manualCheckItems: ["최�� 형상 확인"],
         },
       },
@@ -3181,3 +3181,466 @@ export const landShapes = {
     { value: "자루형", label: "자루형" },
   ],
 } as const;
+
+// 담당자 확인항목 목록
+export const adminCheckItemOptions = [
+  { value: "farmMachineDifficulty", label: "농기계 회전 불가" },
+  { value: "accessRoadLost", label: "접면도로 상실" },
+  { value: "waterChannelLost", label: "관개수로 상실" },
+] as const;
+
+// 사전등록 필지 더미데이터 (사업단별 잔여지)
+export const preRegisteredParcels: PreRegisteredParcel[] = [
+  // 수도권 사업단 필지들
+  {
+    id: "pre-001",
+    businessUnit: "수도권",
+    projectName: "용인-양지 도로확장사업",
+    landInfo: {
+      id: "land-pre-001",
+      address: "경기도 용인시 처인구 양지면 대대리 산 45-2",
+      originalArea: 1500,
+      includedArea: 1100,
+      remainingArea: 400,
+      remainingRatio: 26.7,
+      landType: "농지",
+      landCategory: "답",
+      originalShape: "가로장방형",
+      remainingShape: "삼각형",
+      originalShapeIndex: 4.0,
+      remainingShapeIndex: 5.5,
+      ownerName: "이순신",
+      ownerContact: "010-1111-2222",
+      hasIncludedLand: true,
+      businessUnit: "수도권",
+      projectName: "용인-양지 도로확장사업",
+    },
+    adminCheckItems: {
+      farmMachineDifficulty: true,
+      accessRoadLost: false,
+      waterChannelLost: false,
+    },
+    currentUsage: "답",
+    landShape: "삼각형",
+    aiResult: {
+      landTypePath: "농지",
+      criteriaChecks: [
+        { criteriaName: "면적 기준", criteriaDescription: "농지 기준 330㎡ 이하", isMet: false, autoDetected: true },
+        { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형)", isMet: true, autoDetected: true },
+        { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
+        { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란으로 경작 불가", isMet: true, autoDetected: false },
+      ],
+      provisionalJudgment: "매수가능",
+      originalShapeIndex: 4.0,
+      remainingShapeIndex: 5.5,
+      shapeIndexChange: 1.5,
+      isBlindLand: false,
+      accessRoadLost: false,
+      waterChannelLost: false,
+      farmMachineDifficulty: true,
+      judgmentRationale: {
+        summary: "농지 잔여지 - 형상 변화 및 농기계 회전 곤란으로 「매수가능」 판정",
+        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
+        appliedCriteria: ["토지유형: 농지", "형상지수 변화: 1.5 (기준 충족)", "농기계 회전 곤란: 해당"],
+        detailedExplanation: "도로확장사업으로 인해 잔여지가 삼각형으로 변형되어 농기계 진입 및 회전이 곤란합니다.",
+      },
+    },
+    preRegistrationStatus: "등록완료",
+    registeredAt: THREE_DAYS_AGO,
+    registeredBy: "김담당",
+  },
+  {
+    id: "pre-002",
+    businessUnit: "수도권",
+    projectName: "용인-양지 도로확장사업",
+    landInfo: {
+      id: "land-pre-002",
+      address: "경기도 용인시 처인구 양지면 대대리 123-5",
+      originalArea: 800,
+      includedArea: 650,
+      remainingArea: 150,
+      remainingRatio: 18.75,
+      landType: "택지",
+      landCategory: "대",
+      originalShape: "정방형",
+      remainingShape: "자루형",
+      originalShapeIndex: 3.8,
+      remainingShapeIndex: 6.2,
+      ownerName: "강감찬",
+      ownerContact: "010-3333-4444",
+      hasIncludedLand: true,
+      businessUnit: "수도권",
+      projectName: "용인-양지 도로확장사업",
+    },
+    adminCheckItems: {
+      farmMachineDifficulty: false,
+      accessRoadLost: true,
+      waterChannelLost: false,
+    },
+    currentUsage: "대",
+    landShape: "자루형",
+    aiResult: {
+      landTypePath: "택지",
+      criteriaChecks: [
+        { criteriaName: "면적 기준", criteriaDescription: "대지 기준 90㎡ 이하", isMet: false, autoDetected: true },
+        { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (자루형)", isMet: true, autoDetected: true },
+        { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
+        { criteriaName: "접면도로 상실", criteriaDescription: "맹지화로 건축허가 불가", isMet: true, autoDetected: false },
+      ],
+      provisionalJudgment: "매수가능",
+      originalShapeIndex: 3.8,
+      remainingShapeIndex: 6.2,
+      shapeIndexChange: 2.4,
+      isBlindLand: true,
+      accessRoadLost: true,
+      waterChannelLost: false,
+      farmMachineDifficulty: false,
+      judgmentRationale: {
+        summary: "택지 잔여지 - 접면도로 상실로 「매수가능」 판정",
+        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
+        appliedCriteria: ["토지유형: 택지", "형상지수 변화: 2.4 (기준 초과)", "접면도로 상실: 해당"],
+        detailedExplanation: "도로확장으로 인해 접면도로가 상실되어 맹지가 되었으며, 건축허가가 불가능한 상태입니다.",
+      },
+    },
+    preRegistrationStatus: "등록완료",
+    registeredAt: YESTERDAY,
+    registeredBy: "김담당",
+  },
+  {
+    id: "pre-003",
+    businessUnit: "수도권",
+    projectName: "용인-양지 도로확장사업",
+    landInfo: {
+      id: "land-pre-003",
+      address: "경기도 용인시 처인구 양지면 송문리 78-3",
+      originalArea: 2200,
+      includedArea: 1800,
+      remainingArea: 400,
+      remainingRatio: 18.2,
+      landType: "농지",
+      landCategory: "전",
+      originalShape: "세로장방형",
+      remainingShape: "역삼각형",
+      originalShapeIndex: 4.2,
+      remainingShapeIndex: 5.8,
+      ownerName: "을지문덕",
+      ownerContact: "010-5555-6666",
+      hasIncludedLand: true,
+      businessUnit: "수도권",
+      projectName: "용인-양지 도로확장사업",
+    },
+    adminCheckItems: {
+      farmMachineDifficulty: true,
+      accessRoadLost: false,
+      waterChannelLost: true,
+    },
+    currentUsage: "전",
+    landShape: "역삼각형",
+    aiResult: {
+      landTypePath: "농지",
+      criteriaChecks: [
+        { criteriaName: "면적 기준", criteriaDescription: "농지 기준 330㎡ 이하", isMet: false, autoDetected: true },
+        { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (역삼각형)", isMet: true, autoDetected: true },
+        { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
+        { criteriaName: "관개수로 상실", criteriaDescription: "관개수로 상실로 농업용수 공급 불가", isMet: true, autoDetected: false },
+        { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란으로 경작 불가", isMet: true, autoDetected: false },
+      ],
+      provisionalJudgment: "매수가능",
+      originalShapeIndex: 4.2,
+      remainingShapeIndex: 5.8,
+      shapeIndexChange: 1.6,
+      isBlindLand: false,
+      accessRoadLost: false,
+      waterChannelLost: true,
+      farmMachineDifficulty: true,
+      judgmentRationale: {
+        summary: "농지 잔여지 - 관개수로 상실 및 농기계 회전 곤란으로 「매수가능」 판정",
+        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
+        appliedCriteria: ["토지유형: 농지", "관개수로 상실: 해당", "농기계 회전 곤란: 해당"],
+        detailedExplanation: "도로확장으로 관개수로가 단절되어 농업용수 공급이 불가능하며, 잔여지 형상이 역삼각형으로 변형되어 농기계 회전이 곤란합니다.",
+      },
+    },
+    preRegistrationStatus: "민원접수",
+    registeredAt: ONE_WEEK_AGO,
+    registeredBy: "김담당",
+    applicationId: "APP-2025-0001",
+  },
+  // 화성평택 사업단 필지들
+  {
+    id: "pre-004",
+    businessUnit: "화성평택",
+    projectName: "동탄2 도시개발사업",
+    landInfo: {
+      id: "land-pre-004",
+      address: "경기도 화성시 동탄면 신리 501-7",
+      originalArea: 950,
+      includedArea: 700,
+      remainingArea: 250,
+      remainingRatio: 26.3,
+      landType: "택지",
+      landCategory: "대",
+      originalShape: "가로장방형",
+      remainingShape: "부정형",
+      originalShapeIndex: 4.0,
+      remainingShapeIndex: 5.9,
+      ownerName: "홍길동",
+      ownerContact: "010-7777-8888",
+      hasIncludedLand: true,
+      businessUnit: "화성평택",
+      projectName: "동탄2 도시개발사업",
+    },
+    adminCheckItems: {
+      farmMachineDifficulty: false,
+      accessRoadLost: true,
+      waterChannelLost: false,
+    },
+    currentUsage: "대",
+    landShape: "부정형",
+    aiResult: {
+      landTypePath: "택지",
+      criteriaChecks: [
+        { criteriaName: "면적 기준", criteriaDescription: "대지 기준 90㎡ 이하", isMet: false, autoDetected: true },
+        { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (부정형)", isMet: true, autoDetected: true },
+        { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
+        { criteriaName: "접면도로 상실", criteriaDescription: "맹지화로 건축허가 불가", isMet: true, autoDetected: false },
+      ],
+      provisionalJudgment: "매수가능",
+      originalShapeIndex: 4.0,
+      remainingShapeIndex: 5.9,
+      shapeIndexChange: 1.9,
+      isBlindLand: true,
+      accessRoadLost: true,
+      waterChannelLost: false,
+      farmMachineDifficulty: false,
+      judgmentRationale: {
+        summary: "택지 잔여지 - 접면도로 상실로 「매수가능」 판정",
+        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
+        appliedCriteria: ["토지유형: 택지", "형상지수 변화: 1.9 (기준 충족)", "접면도로 상실: 해당"],
+        detailedExplanation: "도시개발사업으로 접면도로가 상실되어 맹지가 되었습니다.",
+      },
+    },
+    preRegistrationStatus: "등록완료",
+    registeredAt: TWO_DAYS_AGO,
+    registeredBy: "박담당",
+  },
+  {
+    id: "pre-005",
+    businessUnit: "화성평택",
+    projectName: "동탄2 도시개발사업",
+    landInfo: {
+      id: "land-pre-005",
+      address: "경기도 화성시 동탄면 신리 502-1",
+      originalArea: 1800,
+      includedArea: 1500,
+      remainingArea: 300,
+      remainingRatio: 16.7,
+      landType: "농지",
+      landCategory: "답",
+      originalShape: "정방형",
+      remainingShape: "사다리형",
+      originalShapeIndex: 3.5,
+      remainingShapeIndex: 5.2,
+      ownerName: "김유신",
+      ownerContact: "010-9999-0000",
+      hasIncludedLand: true,
+      businessUnit: "화성평택",
+      projectName: "동탄2 도시개발사업",
+    },
+    adminCheckItems: {
+      farmMachineDifficulty: true,
+      accessRoadLost: false,
+      waterChannelLost: true,
+    },
+    currentUsage: "답",
+    landShape: "사다리형",
+    aiResult: {
+      landTypePath: "농지",
+      criteriaChecks: [
+        { criteriaName: "면적 기준", criteriaDescription: "농지 기준 330㎡ 이하", isMet: true, autoDetected: true },
+        { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (사다리형)", isMet: true, autoDetected: true },
+        { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
+        { criteriaName: "관개수로 상실", criteriaDescription: "관개수로 상실", isMet: true, autoDetected: false },
+        { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란", isMet: true, autoDetected: false },
+      ],
+      provisionalJudgment: "매수가능",
+      originalShapeIndex: 3.5,
+      remainingShapeIndex: 5.2,
+      shapeIndexChange: 1.7,
+      isBlindLand: false,
+      accessRoadLost: false,
+      waterChannelLost: true,
+      farmMachineDifficulty: true,
+      judgmentRationale: {
+        summary: "농지 잔여지 - 면적, 형상, 관개수로 등 모든 기준 충족으로 「매수가능」 판정",
+        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
+        appliedCriteria: ["토지유형: 농지", "면적: 300㎡ (기준 충족)", "관개수로 상실: 해당", "농기계 회전 곤란: 해당"],
+        detailedExplanation: "도시개발사업으로 잔여지 면적이 기준 이하로 감소하고, 관개수로가 단절되어 농업 활동이 불가능합니다.",
+      },
+    },
+    preRegistrationStatus: "등록완료",
+    registeredAt: FOUR_DAYS_AGO,
+    registeredBy: "박담당",
+  },
+  // 세종천안 사업단 필지들
+  {
+    id: "pre-006",
+    businessUnit: "세종천안",
+    projectName: "세종시 행정중심복합도시 건설사업",
+    landInfo: {
+      id: "land-pre-006",
+      address: "세종특별자치시 연기면 세종리 234-1",
+      originalArea: 3500,
+      includedArea: 2800,
+      remainingArea: 700,
+      remainingRatio: 20.0,
+      landType: "농지",
+      landCategory: "전",
+      originalShape: "가로장방형",
+      remainingShape: "삼각형",
+      originalShapeIndex: 4.1,
+      remainingShapeIndex: 5.7,
+      ownerName: "정약용",
+      ownerContact: "010-1234-9876",
+      hasIncludedLand: true,
+      businessUnit: "세종천안",
+      projectName: "세종시 행정중심복합도시 건설사업",
+    },
+    adminCheckItems: {
+      farmMachineDifficulty: true,
+      accessRoadLost: false,
+      waterChannelLost: false,
+    },
+    currentUsage: "전",
+    landShape: "삼각형",
+    aiResult: {
+      landTypePath: "농지",
+      criteriaChecks: [
+        { criteriaName: "면적 기준", criteriaDescription: "농지 기준 330㎡ 이하", isMet: false, autoDetected: true },
+        { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형)", isMet: true, autoDetected: true },
+        { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
+        { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란", isMet: true, autoDetected: false },
+      ],
+      provisionalJudgment: "매수가능",
+      originalShapeIndex: 4.1,
+      remainingShapeIndex: 5.7,
+      shapeIndexChange: 1.6,
+      isBlindLand: false,
+      accessRoadLost: false,
+      waterChannelLost: false,
+      farmMachineDifficulty: true,
+      judgmentRationale: {
+        summary: "농지 잔여지 - 형상 변화 및 농기계 회전 곤란으로 「매수가능」 판정",
+        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
+        appliedCriteria: ["토지유형: 농지", "형상지수 변화: 1.6 (기준 충족)", "농기계 회전 곤란: 해당"],
+        detailedExplanation: "행정복합도시 건설로 잔여지가 삼각형으로 변형되어 농기계 작업이 불가능합니다.",
+      },
+    },
+    preRegistrationStatus: "등록완료",
+    registeredAt: FIVE_DAYS_AGO,
+    registeredBy: "최담당",
+  },
+  // 매수불가 케이스
+  {
+    id: "pre-007",
+    businessUnit: "수도권",
+    projectName: "용인-양지 도로확장사업",
+    landInfo: {
+      id: "land-pre-007",
+      address: "경기도 용인시 처인구 양지면 주북리 456-2",
+      originalArea: 5000,
+      includedArea: 500,
+      remainingArea: 4500,
+      remainingRatio: 90.0,
+      landType: "농지",
+      landCategory: "답",
+      originalShape: "가로장방형",
+      remainingShape: "가로장방형",
+      originalShapeIndex: 4.0,
+      remainingShapeIndex: 4.2,
+      ownerName: "김부자",
+      ownerContact: "010-2222-3333",
+      hasIncludedLand: true,
+      businessUnit: "수도권",
+      projectName: "용인-양지 도로확장사업",
+    },
+    adminCheckItems: {
+      farmMachineDifficulty: false,
+      accessRoadLost: false,
+      waterChannelLost: false,
+    },
+    currentUsage: "답",
+    landShape: "가로장방형",
+    aiResult: {
+      landTypePath: "농지",
+      criteriaChecks: [
+        { criteriaName: "면적 기준", criteriaDescription: "농지 기준 330㎡ 이하", isMet: false, autoDetected: true },
+        { criteriaName: "형상 기준", criteriaDescription: "비정형 형상", isMet: false, autoDetected: true },
+        { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: false, autoDetected: true },
+        { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란", isMet: false, autoDetected: false },
+      ],
+      provisionalJudgment: "매수불가",
+      originalShapeIndex: 4.0,
+      remainingShapeIndex: 4.2,
+      shapeIndexChange: 0.2,
+      isBlindLand: false,
+      accessRoadLost: false,
+      waterChannelLost: false,
+      farmMachineDifficulty: false,
+      judgmentRationale: {
+        summary: "농지 잔여지 - 매수 기준 미충족으로 「매수불가」 판정",
+        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
+        appliedCriteria: ["토지유형: 농지", "잔여면적: 4,500㎡ (기준 초과)", "형상지수 변화: 0.2 (기준 미충족)"],
+        detailedExplanation: "편입 면적이 적어 잔여지가 충분히 크고, 형상 변화도 미미하여 종전 용도대로 사용 가능합니다.",
+      },
+    },
+    preRegistrationStatus: "등록완료",
+    registeredAt: SIX_DAYS_AGO,
+    registeredBy: "김담당",
+  },
+];
+
+// 사업단별 필지 데이터 조회 함수
+export function getParcelsByBusinessUnit(businessUnit: BusinessUnit): PreRegisteredParcel[] {
+  return preRegisteredParcels.filter(parcel => parcel.businessUnit === businessUnit);
+}
+
+// 사업단 목록
+export const businessUnitList: { value: BusinessUnit; label: string; region: string }[] = [
+  // 수도권
+  { value: "수도권", label: "수도권 사업단", region: "수도권" },
+  { value: "김포파주", label: "김포파주 사업단", region: "수도권" },
+  { value: "양평이천", label: "양평이천 사업단", region: "수도권" },
+  { value: "고양의정부", label: "고양의정부 사업단", region: "수도권" },
+  { value: "남양주구리", label: "남양주구리 사업단", region: "수도권" },
+  { value: "화성평택", label: "화성평택 사업단", region: "수도권" },
+  // 강원권
+  { value: "춘천원주", label: "춘천원주 사업단", region: "강원권" },
+  { value: "강릉속초", label: "강릉속초 사업단", region: "강원권" },
+  { value: "원주영월", label: "원주영월 사업단", region: "강원권" },
+  // 충청권
+  { value: "세종천안", label: "세종천안 사업단", region: "충청권" },
+  { value: "천안안성", label: "천안안성 사업단", region: "충청권" },
+  { value: "서산아산", label: "서산아산 사업단", region: "충청권" },
+  { value: "청주충주", label: "청주충주 사업단", region: "충청권" },
+  { value: "대전세종", label: "대전세종 사업단", region: "충청권" },
+  { value: "홍성예산", label: "홍성예산 사업단", region: "충청권" },
+  // 전라권
+  { value: "새만금전주", label: "새만금전주 사업단", region: "전라권" },
+  { value: "강진광주", label: "강진광주 사업단", region: "전라권" },
+  { value: "목포순천", label: "목포순천 사업단", region: "전라권" },
+  { value: "여수광양", label: "여수광양 사업단", region: "전라권" },
+  { value: "익산군산", label: "익산군산 사업단", region: "전라권" },
+  { value: "남원정읍", label: "남원정읍 사업단", region: "전라권" },
+  // 경상권
+  { value: "포항영덕", label: "포항영덕 사업단", region: "경상권" },
+  { value: "함양합천", label: "함양합천 사업단", region: "경상권" },
+  { value: "합천창녕", label: "합천창녕 사업단", region: "경상권" },
+  { value: "대구경산", label: "대구경산 사업단", region: "경상권" },
+  { value: "부산울산", label: "부산울산 사업단", region: "경상권" },
+  { value: "창원김해", label: "창원김해 사업단", region: "경상권" },
+  { value: "진주통영", label: "진주통영 사업단", region: "경상권" },
+  { value: "안동영주", label: "안동영주 사업단", region: "경상권" },
+  { value: "구미김천", label: "구미김천 사업단", region: "경상권" },
+  // 제주권
+  { value: "제주서귀포", label: "제주서귀포 사업단", region: "제주권" },
+];
