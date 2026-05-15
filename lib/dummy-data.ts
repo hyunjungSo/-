@@ -37,6 +37,13 @@ const SIX_MONTHS_AGO = getDateTimeString(180, 11, 0);// 6달 전 11:00
 const ONE_YEAR_AGO = getDateTimeString(365, 15, 30); // 1년 전 15:30
 const TWO_YEARS_AGO = getDateTimeString(730, 10, 0); // 2년 전 10:00
 
+// 담당자 확인항목 옵션
+export const adminCheckItemOptions = [
+  { value: "farmMachineDifficulty", label: "농기계 진입불가" },
+  { value: "accessRoadLost", label: "접면도로 상실" },
+  { value: "waterChannelLost", label: "관개수로 상실" },
+];
+
 // 더미 토지 정보
 export const dummyLandInfoList: LandInfo[] = [
   {
@@ -786,7 +793,7 @@ export const dummyLandInfoList: LandInfo[] = [
   // 복수필지: 대��+농지 혼합 (4필지, 다양한 용도)
   {
     id: "land-unified-004",
-    address: "충청남도 천안��� 서북구 성정동 777-1",
+    address: "충청남도 ���안��� 서북구 성정동 777-1",
     originalArea: 300,
     includedArea: 210,
     remainingArea: 90,
@@ -2835,7 +2842,7 @@ export const dummyApplications: Application[] = [
           "매탄동 101: 잔여면적 230㎡ > 기준 90㎡ - 추가 검토 필요",
           "매탄동 102: 잔여면적 300㎡ > 기준 90㎡ - 추가 검토 필요",
         ],
-        detailedExplanation: "영통지구 도시개발사업으로 3필지가 동시에 편입되었습니다. 각 필지의 잔여 면적이 주거용 택지 기준(90㎡)을 초과하나, 형상 변화 및 접도 조건을 종합적으로 검토하여 매수 가능 여부를 판단해야 합니다.",
+        detailedExplanation: "영통지구 도시개발사업으로 3필지가 동시에 편입되었습니다. 각 필지의 잔여 면적이 주거용 택�� 기준(90㎡)을 초과하나, 형상 변화 및 접도 조건을 종합적으로 검토하여 매수 가능 여부를 판단해야 합니다.",
         manualCheckItems: ["현장 형상 확인", "접도 조건 확인", "건축 가능 여부 확인"],
       },
       landJudgments: [
@@ -3141,7 +3148,7 @@ export const dummyApplications: Application[] = [
     aiResult: generateAIResult(dummyLandInfoList[10]),
     finalJudgment: "기각",
     reviewerComment: "잔여면적 충분하여 기각",
-    adminName: "홍길동",
+    adminName: "홍��동",
     statusUpdatedAt: ONE_WEEK_AGO,
     businessUnit: "강진광주건설 사업단",
   },
@@ -3233,7 +3240,7 @@ export const landShapes = {
     { value: "세로장방형", label: "세로장방형" },
   ],
   irregular: [
-    { value: "변형사다리형", label: "변형사다리형" },
+    { value: "변형사다리형", label: "변형사다��형" },
     { value: "역사다리형", label: "역사다리형" },
     { value: "사다리형", label: "사다리형" },
     { value: "삼각형", label: "삼각형" },
