@@ -1543,6 +1543,67 @@ function generateRationale(
 
 // 더미 민원 신청 목록
 export const dummyApplications: Application[] = [
+  // 이순신 - 신청 완료된 필지 (pre-001-2 필지)
+  {
+    id: "app-sunsin-001",
+    applicationNumber: "2026-0510-001",
+    applicationType: "single",
+    applicantRelation: "owner",
+    applicantName: "이순신",
+    applicantContact: "010-1111-2222",
+    applicantAddress: "경기도 용인시 처인구 양지면 양지리 100",
+    landInfo: {
+      id: "land-pre-001-2",
+      address: "경기도 용인시 처인구 양지면 대대리 산 45-7",
+      originalArea: 2200,
+      includedArea: 1700,
+      remainingArea: 500,
+      remainingRatio: 22.7,
+      landType: "농지",
+      landCategory: "전",
+      originalShape: "세로장방형",
+      remainingShape: "역삼각형",
+      originalShapeIndex: 4.2,
+      remainingShapeIndex: 5.8,
+      ownerName: "이순신",
+      ownerContact: "010-1111-2222",
+      hasIncludedLand: true,
+      businessUnit: "수도권",
+      projectName: "용인-양지 도로확장사업",
+    },
+    actualUsage: "전",
+    reportedShape: "역삼각형",
+    farmMachineDifficulty: true,
+    reason: "도로확장사업으로 인해 잔여지 형상이 역삼각형으로 변형되고 관개수로가 단절되어 농업 활동이 불가능합니다.",
+    attachments: ["토지대장.pdf", "현황사진.jpg"],
+    status: "검토중",
+    adminStatus: "진행중",
+    appliedAt: TWO_DAYS_AGO,
+    aiResult: {
+      landTypePath: "농지",
+      criteriaChecks: [
+        { criteriaName: "면적 기준", criteriaDescription: "농지 기준 330㎡ 이하", isMet: false, autoDetected: true },
+        { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (역삼각형)", isMet: true, autoDetected: true },
+        { criteriaName: "농기계 회전 곤란", criteriaDescription: "농기계 회전 곤란으로 경작 불가", isMet: true, autoDetected: false },
+      ],
+      provisionalJudgment: "매수 신청 가능",
+      originalShapeIndex: 4.2,
+      remainingShapeIndex: 5.8,
+      shapeIndexChange: 1.6,
+      isBlindLand: false,
+      accessRoadLost: false,
+      waterChannelLost: true,
+      farmMachineDifficulty: true,
+      judgmentRationale: {
+        summary: "농지 잔여지 - 형상 변화 및 농기계 회전 곤란으로 「매수 신청 가능」 판정",
+        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
+        appliedCriteria: ["토지유형: 농지", "형상지수 변화: 1.6", "농기계 회전 곤란: 해당"],
+        detailedExplanation: "도로확장사업으로 잔여지가 역삼각형으로 변형되어 농기계 운용이 불가능합니다.",
+      },
+    },
+    adminName: "김담당",
+    businessUnit: "수도권",
+  },
   // 대리인 신청 케이스
   {
     id: "app-agent-001",
@@ -1842,7 +1903,7 @@ export const dummyApplications: Application[] = [
     reviewerComment: "잔여비율 90%로 매수 기준(30% 이하)을 크게 초과하며, 형상지수 변화도 0.1로 미미하여 종래 용도 사용에 지장이 없���. ��수 기준 미충족으로 기각 처리.",
     adminName: "박담당",
     statusUpdatedAt: FIVE_DAYS_AGO,
-    businessUnit: "강진광주건설 사업단",
+    businessUnit: "강진광주건설 사���단",
   },
   // 심의위원회 이관 케이스 - 기준 경계 사례로 위원회 심의 필요
   {
@@ -2356,7 +2417,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "임",
     reportedShape: "부정형",
     farmMachineDifficulty: false,
-    reason: "원주-제천 고속도로 ���설로 인해 소유한 5개 산지 필지가 편입되었습니다. 30년간 조림하여 관리해 온 임야로, 고속도로가 중앙을 관통하여 조림지가 양분되었습니다. 각 필지별로 형상이 불량해지고 접근로가 차단되어 산림경영이 불가능합니다. 5필지 모두 매수를 신청합니다.",
+    reason: "원주-제천 고속도로 ���설로 인해 소유한 5개 산지 필지가 편입되었습니다. 30년간 조���하여 관리해 온 임야로, 고속도로가 중앙을 관통하여 조림지가 양분되었습니다. 각 필지별로 형상이 불량해지고 접근로가 차단되어 산림경영이 불가능합니다. 5필지 모두 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "임" as const,
@@ -2767,7 +2828,7 @@ export const dummyApplications: Application[] = [
       farmMachineDifficulty: false,
       judgmentRationale: {
         summary: "3필지 택지 분석 - 매탄동 100(270㎡), 101(230㎡), 102(300㎡) 모두 주거용 택지 기준 면적 초과로 개별 검토 필요",
-        legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률��� 제74조 및 동법 시행규칙 제34조",
+        legalBasis: "「공익사업을 위한 토지 ��의 취득 및 보상에 관한 법률��� 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
           "토지유형: 택지 (주거용)",
           "매탄동 100: 잔여면적 270㎡ > 기준 90㎡ - 추가 검토 필요",
@@ -2822,7 +2883,7 @@ export const dummyApplications: Application[] = [
           summary: "매탄동 102번지: 사다리꼴 형상으로 건축 효율 저하, 매수 대상",
           legalBasis: "「공익사업법」 제74조",
           appliedCriteria: ["사다리꼴 형상으로 건축 효율 저하", "형상지수 불량"],
-          detailedExplanation: "사다리꼴 형상으로 인해 효율적인 건축물 배치가 어려워 매수 가능으로 판정합니다.",
+          detailedExplanation: "사다리꼴 형상으로 인해 효율적인 건축물 배치가 어려워 매수 가능으로 ��정합니다.",
           manualCheckItems: ["최�� 형상 확인"],
         },
       },

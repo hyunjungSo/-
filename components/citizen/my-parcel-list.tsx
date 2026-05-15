@@ -40,7 +40,7 @@ import {
 } from "lucide-react";
 import { AIIcon } from "@/components/ui/ai-icon";
 import type { PreRegisteredParcel, AdminCheckItems, LandShape, LandCategory, AIAnalysisResult } from "@/lib/types";
-import { preRegisteredParcels, adminCheckItemOptions } from "@/lib/dummy-data";
+import { preRegisteredParcels, adminCheckItemOptions, dummyApplications } from "@/lib/dummy-data";
 
 interface MyParcelListProps {
   onAddToCart: (parcel: PreRegisteredParcel) => void;
@@ -88,6 +88,18 @@ export function MyParcelList({
            p.landInfo.ownerName === currentUser.name
     );
   }, [currentUser.name]);
+
+  // 이미 신청된 필지 ID 목록
+  const appliedParcelIds = useMemo(() => {
+    return dummyApplications
+      .filter(app => app.applicantName === currentUser.name)
+      .map(app => app.landInfo.id);
+  }, [currentUser.name]);
+
+  // 필지가 이미 신청되었는지 확인
+  const isAlreadyApplied = (parcelId: string) => {
+    return appliedParcelIds.includes(parcelId);
+  };
 
   // 필지 선택
   const handleParcelSelect = (parcel: PreRegisteredParcel) => {
@@ -271,53 +283,66 @@ export function MyParcelList({
               <div className="max-h-[calc(100%-52px)] overflow-y-auto">
                 {myParcels.length > 0 ? (
                   <div className="divide-y">
-                    {myParcels.map((parcel) => (
-                      <div
-                        key={parcel.id}
-                        className={`p-4 cursor-pointer transition-colors ${
-                          selectedParcel?.id === parcel.id 
-                            ? "bg-primary/10 border-l-4 border-l-primary" 
-                            : "hover:bg-muted/50"
-                        }`}
-                        onClick={() => handleParcelSelect(parcel)}
-                        onMouseEnter={() => setHoveredParcelId(parcel.id)}
-                        onMouseLeave={() => setHoveredParcelId(null)}
-                      >
-                        <div className="space-y-2">
-                          <p className="font-medium text-foreground leading-tight">
-                            {parcel.landInfo.address}
-                          </p>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Badge variant="outline" className="text-xs">
-                              {parcel.landInfo.landType}
-                            </Badge>
-                            <span>잔여 {parcel.landInfo.remainingArea.toLocaleString()}㎡</span>
-                            <span>({parcel.landInfo.remainingRatio.toFixed(1)}%)</span>
-                          </div>
-                          <div className="flex items-center justify-between pt-1">
-                            <Badge className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-xs">
-                              매수 신청 가능
-                            </Badge>
-                            {isInCart(parcel.id) ? (
-                              <Badge variant="secondary" className="text-xs">추가됨</Badge>
-                            ) : (
-                              <Button 
-                                size="sm" 
-                                variant="outline"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleAddToCart(parcel);
-                                }}
-                                className="h-7 text-xs gap-1"
-                              >
-                                <ShoppingCart className="h-3 w-3" />
-                                담기
-                              </Button>
-                            )}
+                    {myParcels.map((parcel) => {
+                      const alreadyApplied = isAlreadyApplied(parcel.landInfo.id);
+                      return (
+                        <div
+                          key={parcel.id}
+                          className={`p-4 cursor-pointer transition-colors ${
+                            alreadyApplied ? "opacity-60 bg-muted/30" :
+                            selectedParcel?.id === parcel.id 
+                              ? "bg-primary/10 border-l-4 border-l-primary" 
+                              : "hover:bg-muted/50"
+                          }`}
+                          onClick={() => handleParcelSelect(parcel)}
+                          onMouseEnter={() => setHoveredParcelId(parcel.id)}
+                          onMouseLeave={() => setHoveredParcelId(null)}
+                        >
+                          <div className="space-y-2">
+                            <div className="flex items-start justify-between gap-2">
+                              <p className="font-medium text-foreground leading-tight flex-1">
+                                {parcel.landInfo.address}
+                              </p>
+                              {alreadyApplied && (
+                                <Badge variant="secondary" className="text-xs shrink-0 bg-blue-100 text-blue-700">
+                                  신청완료
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <Badge variant="outline" className="text-xs">
+                                {parcel.landInfo.landType}
+                              </Badge>
+                              <span>잔여 {parcel.landInfo.remainingArea.toLocaleString()}㎡</span>
+                              <span>({parcel.landInfo.remainingRatio.toFixed(1)}%)</span>
+                            </div>
+                            <div className="flex items-center justify-between pt-1">
+                              <Badge className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-xs">
+                                매수 신청 가능
+                              </Badge>
+                              {alreadyApplied ? (
+                                <span className="text-xs text-muted-foreground">처리중</span>
+                              ) : isInCart(parcel.id) ? (
+                                <Badge variant="secondary" className="text-xs">추가됨</Badge>
+                              ) : (
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleAddToCart(parcel);
+                                  }}
+                                  className="h-7 text-xs gap-1"
+                                >
+                                  <ShoppingCart className="h-3 w-3" />
+                                  담기
+                                </Button>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center h-full px-4 py-12 text-center">
@@ -653,7 +678,11 @@ export function MyParcelList({
             <Button variant="outline" onClick={() => setShowDetailDialog(false)}>
               닫기
             </Button>
-            {selectedParcel && !isInCart(selectedParcel.id) && (reanalyzedResult?.provisionalJudgment === "매수 신청 가능" || (!reanalyzedResult && selectedParcel.aiResult.provisionalJudgment === "매수 신청 가능")) && (
+            {selectedParcel && isAlreadyApplied(selectedParcel.landInfo.id) ? (
+              <Badge variant="secondary" className="h-9 px-4 flex items-center bg-blue-100 text-blue-700">
+                신청완료
+              </Badge>
+            ) : selectedParcel && !isInCart(selectedParcel.id) && (reanalyzedResult?.provisionalJudgment === "매수 신청 가능" || (!reanalyzedResult && selectedParcel.aiResult.provisionalJudgment === "매수 신청 가능")) && (
               <Button onClick={() => handleAddToCart(selectedParcel)} className="gap-2">
                 <ShoppingCart className="h-4 w-4" />
                 추가
