@@ -4,8 +4,6 @@ import { useState, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { 
   Table, 
   TableBody, 
@@ -23,27 +21,19 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { 
-  Search, 
   MapPin, 
   CheckCircle2, 
   XCircle, 
   Info, 
   FileText,
-  ChevronRight,
   User,
   Phone,
-  Home,
   AlertCircle,
-  Loader2,
-  ShoppingCart
+  ShoppingCart,
+  Trash2
 } from "lucide-react";
 import { AIIcon } from "@/components/ui/ai-icon";
-import type { 
-  PreRegisteredParcel, 
-  LandInfo, 
-  AIAnalysisResult,
-  ApplicationCartItem 
-} from "@/lib/types";
+import type { PreRegisteredParcel } from "@/lib/types";
 import { preRegisteredParcels } from "@/lib/dummy-data";
 
 interface RegisteredParcelSearchProps {
@@ -57,54 +47,25 @@ export function RegisteredParcelSearch({
   cartItems, 
   onSubmitApplication 
 }: RegisteredParcelSearchProps) {
-  // 검색 조건
-  const [searchAddress, setSearchAddress] = useState("");
-  const [searchOwner, setSearchOwner] = useState("");
-  
-  // 검색 실행 여부
-  const [hasSearched, setHasSearched] = useState(false);
-  
   // 선택된 필지 상세 보기
   const [selectedParcel, setSelectedParcel] = useState<PreRegisteredParcel | null>(null);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
-  
-  // 검색 중 상태
-  const [isSearching, setIsSearching] = useState(false);
 
-  // 매수 신청 가능 필지만 필터링 (민원인은 매수 신청 가능 필지만 조회 가능)
-  const availableParcels = useMemo(() => {
+  // 현재 로그인한 민원인 정보 (실제로는 인증 시스템에서 가져옴)
+  // 더미: 이순신으로 가정
+  const currentUser = {
+    name: "이순신",
+    contact: "010-1111-2222"
+  };
+
+  // 본인 소유 잔여지 중 매수 신청 가능한 필지만 필터링
+  const myParcels = useMemo(() => {
     return preRegisteredParcels.filter(
       p => p.preRegistrationStatus === "등록완료" && 
-           p.aiResult.provisionalJudgment === "매수 신청 가능"
+           p.aiResult.provisionalJudgment === "매수 신청 가능" &&
+           p.landInfo.ownerName === currentUser.name
     );
-  }, []);
-
-  // 검색 결과 필터링
-  const searchResults = useMemo(() => {
-    if (!hasSearched) return [];
-    
-    return availableParcels.filter(parcel => {
-      const addressMatch = searchAddress === "" || 
-        parcel.landInfo.address.toLowerCase().includes(searchAddress.toLowerCase());
-      const ownerMatch = searchOwner === "" || 
-        parcel.landInfo.ownerName.includes(searchOwner);
-      return addressMatch && ownerMatch;
-    });
-  }, [availableParcels, searchAddress, searchOwner, hasSearched]);
-
-  // 검색 실행
-  const handleSearch = async () => {
-    if (!searchAddress && !searchOwner) {
-      alert("주소 또는 소유자명을 입력해주세요.");
-      return;
-    }
-    
-    setIsSearching(true);
-    // 검색 시뮬레이션
-    await new Promise(resolve => setTimeout(resolve, 800));
-    setHasSearched(true);
-    setIsSearching(false);
-  };
+  }, [currentUser.name]);
 
   // 필지 상세 보기
   const handleViewDetail = (parcel: PreRegisteredParcel) => {
@@ -133,163 +94,105 @@ export function RegisteredParcelSearch({
             <div className="space-y-2">
               <p className="font-semibold text-blue-900">잔여지 매수 신청 안내</p>
               <p className="text-blue-800">
-                담당자가 사전 분석한 잔여지 중 매수 가능 판정을 받은 필지만 조회 및 신청할 수 있습니다.
-                주소 또는 소유자명으로 검색하여 해당 필지를 찾아 신청해 주세요.
+                <strong>{currentUser.name}</strong>님이 소유하신 잔여지 중 담당자 사전 분석 결과 
+                <strong> 매수 신청 가능</strong> 판정을 받은 필지 목록입니다.
+                신청하실 필지를 선택하여 신청서를 작성해 주세요.
               </p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* 검색 폼 */}
+      {/* 본인 소유 잔여지 목록 */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-xl flex items-center gap-2">
-            <Search className="h-5 w-5" />
-            필지 검색
+          <CardTitle className="text-xl flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <MapPin className="h-5 w-5" />
+              나의 잔여지 목록
+            </span>
+            <Badge variant="secondary" className="text-base px-3 py-1">
+              {myParcels.length}건
+            </Badge>
           </CardTitle>
           <CardDescription>
-            매수 신청 가능한 잔여지를 검색합니다. 주소 또는 소유자명으로 검색하세요.
+            매수 신청 가능한 본인 소유 잔여지입니다. 필지를 클릭하면 상세 정보를 확인할 수 있습니다.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="address" className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                지번 주소
-              </Label>
-              <Input
-                id="address"
-                placeholder="예: 용인시 처인구 양지면"
-                value={searchAddress}
-                onChange={(e) => setSearchAddress(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                className="h-12 text-base"
-              />
+          {myParcels.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>지번주소</TableHead>
+                  <TableHead>토지유형</TableHead>
+                  <TableHead className="text-right">잔여면적</TableHead>
+                  <TableHead className="text-right">잔여비율</TableHead>
+                  <TableHead>AI 판정</TableHead>
+                  <TableHead className="text-center">신청</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {myParcels.map((parcel) => (
+                  <TableRow 
+                    key={parcel.id} 
+                    className="cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleViewDetail(parcel)}
+                  >
+                    <TableCell className="font-medium">
+                      {parcel.landInfo.address}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{parcel.landInfo.landType}</Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {parcel.landInfo.remainingArea.toLocaleString()}㎡
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {parcel.landInfo.remainingRatio.toFixed(1)}%
+                    </TableCell>
+                    <TableCell>
+                      <Badge 
+                        className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90"
+                      >
+                        매수 신청 가능
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {isInCart(parcel.id) ? (
+                        <Badge variant="secondary">추가됨</Badge>
+                      ) : (
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToCart(parcel);
+                          }}
+                          className="gap-1"
+                        >
+                          <ShoppingCart className="h-3 w-3" />
+                          담기
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="text-center py-12">
+              <AlertCircle className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
+              <p className="text-lg font-medium text-muted-foreground">
+                매수 신청 가능한 잔여지가 없습니다.
+              </p>
+              <p className="text-muted-foreground mt-2">
+                담당자가 사전 분석을 완료하면 목록에 표시됩니다.
+              </p>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="owner" className="flex items-center gap-2">
-                <User className="h-4 w-4 text-muted-foreground" />
-                소유자명
-              </Label>
-              <Input
-                id="owner"
-                placeholder="예: 홍길동"
-                value={searchOwner}
-                onChange={(e) => setSearchOwner(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                className="h-12 text-base"
-              />
-            </div>
-          </div>
-          <Button 
-            onClick={handleSearch} 
-            disabled={isSearching}
-            className="w-full mt-4 h-12 text-base gap-2"
-          >
-            {isSearching ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                검색 중...
-              </>
-            ) : (
-              <>
-                <Search className="h-4 w-4" />
-                필지 검색
-              </>
-            )}
-          </Button>
+          )}
         </CardContent>
       </Card>
-
-      {/* 검색 결과 */}
-      {hasSearched && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl flex items-center justify-between">
-              <span className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
-                검색 결과
-              </span>
-              <Badge variant="secondary" className="text-base px-3 py-1">
-                {searchResults.length}건
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {searchResults.length > 0 ? (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>지번주소</TableHead>
-                    <TableHead>토지유형</TableHead>
-                    <TableHead className="text-right">잔여면적</TableHead>
-                    <TableHead>AI 판정</TableHead>
-                    <TableHead>소유자</TableHead>
-                    <TableHead className="text-center">신청</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {searchResults.map((parcel) => (
-                    <TableRow 
-                      key={parcel.id} 
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => handleViewDetail(parcel)}
-                    >
-                      <TableCell className="font-medium">
-                        {parcel.landInfo.address}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{parcel.landInfo.landType}</Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {parcel.landInfo.remainingArea.toLocaleString()}㎡
-                      </TableCell>
-                      <TableCell>
-                        <Badge 
-                          className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90"
-                        >
-                          매수 신청 가능
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{parcel.landInfo.ownerName}</TableCell>
-                      <TableCell className="text-center">
-                        {isInCart(parcel.id) ? (
-                          <Badge variant="secondary">추가됨</Badge>
-                        ) : (
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleAddToCart(parcel);
-                            }}
-                            className="gap-1"
-                          >
-                            <ShoppingCart className="h-3 w-3" />
-                            담기
-                          </Button>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            ) : (
-              <div className="text-center py-12">
-                <AlertCircle className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
-                <p className="text-lg font-medium text-muted-foreground">
-                  검색 조건에 맞는 필지가 없습니다.
-                </p>
-                <p className="text-muted-foreground mt-2">
-                  다른 검색어로 다시 시도해 주세요.
-                </p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
 
       {/* 장바구니 (신청 목록) */}
       {cartItems.length > 0 && (
@@ -313,14 +216,14 @@ export function RegisteredParcelSearch({
               {cartItems.map((parcel) => (
                 <div 
                   key={parcel.id}
-                  className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                  className="flex items-center justify-between p-4 bg-muted/50 rounded-lg"
                 >
                   <div className="flex items-center gap-3">
-                    <MapPin className="h-4 w-4 text-primary" />
+                    <MapPin className="h-5 w-5 text-primary" />
                     <div>
                       <p className="font-medium">{parcel.landInfo.address}</p>
                       <p className="text-sm text-muted-foreground">
-                        {parcel.landInfo.landType} | {parcel.landInfo.remainingArea.toLocaleString()}㎡
+                        {parcel.landInfo.landType} | {parcel.landInfo.remainingArea.toLocaleString()}㎡ | 잔여비율 {parcel.landInfo.remainingRatio.toFixed(1)}%
                       </p>
                     </div>
                   </div>
@@ -328,20 +231,23 @@ export function RegisteredParcelSearch({
                     variant="ghost" 
                     size="sm"
                     onClick={() => {
-                      // 장바구니에서 제거 로직 (부모에서 처리)
+                      // 장바구니에서 제거는 부모 컴포넌트에서 처리
+                      // 현재는 cartItems가 props로 전달되므로 여기서는 처리 불가
+                      // 필요시 onRemoveFromCart 콜백 추가
                     }}
-                    className="text-destructive hover:text-destructive"
+                    className="text-destructive hover:text-destructive gap-1"
                   >
+                    <Trash2 className="h-4 w-4" />
                     삭제
                   </Button>
                 </div>
               ))}
             </div>
             <Button 
-              className="w-full h-12 text-base gap-2"
+              className="w-full h-14 text-lg gap-2"
               onClick={() => onSubmitApplication(cartItems)}
             >
-              <FileText className="h-4 w-4" />
+              <FileText className="h-5 w-5" />
               신청서 작성하기
             </Button>
           </CardContent>
@@ -369,19 +275,19 @@ export function RegisteredParcelSearch({
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
                     <span className="text-muted-foreground">토지유형</span>
-                    <p className="font-medium">{selectedParcel.landInfo.landType}</p>
+                    <p className="font-medium text-base">{selectedParcel.landInfo.landType}</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground">지목</span>
-                    <p className="font-medium">{selectedParcel.landInfo.landCategory}</p>
+                    <p className="font-medium text-base">{selectedParcel.landInfo.landCategory}</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground">잔여면적</span>
-                    <p className="font-medium">{selectedParcel.landInfo.remainingArea.toLocaleString()}㎡</p>
+                    <p className="font-medium text-base">{selectedParcel.landInfo.remainingArea.toLocaleString()}㎡</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground">잔여비율</span>
-                    <p className="font-medium">{selectedParcel.landInfo.remainingRatio.toFixed(1)}%</p>
+                    <p className="font-medium text-base">{selectedParcel.landInfo.remainingRatio.toFixed(1)}%</p>
                   </div>
                 </div>
               </div>
