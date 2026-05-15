@@ -253,6 +253,28 @@ export interface BusinessUnitGroupedCart {
   items: ApplicationCartItem[];
 }
 
+// 담당자 확인항목 (사전등록용)
+export interface AdminCheckItems {
+  farmMachineDifficulty: boolean;
+  accessRoadLost: boolean;
+  waterChannelLost: boolean;
+}
+
+// 사전등록 필지 (민원인 화면용)
+export interface PreRegisteredParcel {
+  id: string;
+  businessUnit: BusinessUnit;
+  projectName: string;
+  landInfo: LandInfo;
+  adminCheckItems: AdminCheckItems;
+  currentUsage: LandCategory;
+  landShape: LandShape;
+  aiResult: AIAnalysisResult;
+  preRegistrationStatus: "등록완료" | "대기중";
+  registeredAt: string;
+  registeredBy: string;
+}
+
 // 심의서 데이터
 export interface ReviewDocument {
   applicationId: string;
