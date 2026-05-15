@@ -39,18 +39,14 @@ const badgeVariants = cva(
         'destructive-subtle': 'border-transparent bg-red-100 text-red-700',
         // Purple Solid-Pastel - 연한 보라색 배경 + 보라색 텍스트
         'purple-subtle': 'border-transparent bg-purple-50 text-purple-700',
-        // Purple Filled - 보라색 배경 (사전등록 상태용)
-        'purple': 'border-transparent bg-purple-500 text-white',
         
         // === 진행상황 Outline 스타일 (새 컬러 시스템) ===
-        // 사전등록: Purple (사전등록 단계)
-        'outline-purple': 'border border-purple-400 bg-purple-50 text-purple-600',
         // 접수완료: Indigo #6366F1 (신규 접수 강조)
         'outline-indigo': 'border border-indigo-400 bg-indigo-50 text-indigo-500',
         // 진행중: #0091fd (활동 상태 강조)
         'outline-blue': 'border bg-[#e6f4ff] text-[#0091fd] border-[#0091fd]/40',
-        // 심사완료: Green (완료 상태 강조) - rgb(20, 113, 97)
-        'outline-green': 'border bg-[rgb(20,113,97)]/10 text-[rgb(20,113,97)] border-[rgb(20,113,97)]',
+        // 심사완료: Green (완료 상태 강조)
+        'outline-green': 'border border-green-400 bg-green-50 text-green-600',
         
         // === 진행상황 Outline 스타일 (레거시 - 호환성 유지) ===
         // 접수완료: Slate Gray (#64748b)
@@ -87,7 +83,6 @@ function Badge({
   variant,
   size,
   asChild = false,
-  style,
   ...props
 }: React.ComponentProps<'span'> &
   VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
@@ -97,7 +92,6 @@ function Badge({
     <Comp
       data-slot="badge"
       className={cn(badgeVariants({ variant, size }), className)}
-      style={style}
       {...props}
     />
   )

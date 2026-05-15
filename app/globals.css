@@ -204,15 +204,15 @@
     @apply border-border outline-ring/50;
   }
   
-  /* KRDS Typography Scale - 고령자 접근성 강화 (기본 폰트 크기 확대) */
+  /* KRDS Typography Scale */
   html {
-    font-size: 18px; /* Base 18px (기존 16px에서 확대) */
+    font-size: 16px; /* Base 16px */
   }
   
   body {
     @apply bg-background text-foreground;
-    font-size: 1rem; /* 18px - Body1 */
-    line-height: 1.6; /* 더 넓은 line-height for 가독성 */
+    font-size: 1rem; /* 16px - Body1 */
+    line-height: 1.5; /* KRDS 기본 line-height */
     letter-spacing: -0.01em;
     font-feature-settings: "kern" 1;
     -webkit-font-smoothing: antialiased;
@@ -221,30 +221,30 @@
     overflow-wrap: break-word;
   }
   
-  /* KRDS Heading Styles - 고령자용 확대 */
+  /* KRDS Heading Styles */
   h1 {
-    font-size: 2.25rem; /* 40.5px - Display1 */
+    font-size: 2rem; /* 32px - Display1 */
     font-weight: 700;
     line-height: 1.3;
     letter-spacing: -0.02em;
   }
   
   h2 {
-    font-size: 1.75rem; /* 31.5px - Heading1 */
+    font-size: 1.5rem; /* 24px - Heading1 */
     font-weight: 700;
     line-height: 1.35;
     letter-spacing: -0.02em;
   }
   
   h3 {
-    font-size: 1.5rem; /* 27px - Heading2 */
+    font-size: 1.25rem; /* 20px - Heading2 */
     font-weight: 600;
     line-height: 1.4;
     letter-spacing: -0.01em;
   }
   
   h4 {
-    font-size: 1.25rem; /* 22.5px - Heading3 */
+    font-size: 1.125rem; /* 18px - Heading3 */
     font-weight: 600;
     line-height: 1.45;
     letter-spacing: -0.01em;
@@ -256,45 +256,40 @@
     opacity: 1;
   }
   
-  /* KRDS Text Styles - 고령자용 최소 폰트 크기 보장 */
+  /* KRDS Text Styles */
   .text-xs {
-    font-size: 0.833rem !important; /* 15px - Caption (기존 12px에서 확대) */
+    font-size: 0.75rem !important; /* 12px - Caption */
     line-height: 1.5;
   }
   
   .text-sm {
-    font-size: 0.944rem; /* 17px - Body2 (기존 14px에서 확대) */
+    font-size: 0.875rem; /* 14px - Body2 */
     line-height: 1.5;
   }
   
   .text-base {
-    font-size: 1rem; /* 18px - Body1 */
+    font-size: 1rem; /* 16px - Body1 */
     line-height: 1.5;
   }
   
   .text-lg {
-    font-size: 1.167rem; /* 21px */
+    font-size: 1.125rem; /* 18px */
     line-height: 1.45;
   }
   
   .text-xl {
-    font-size: 1.333rem; /* 24px */
+    font-size: 1.25rem; /* 20px */
     line-height: 1.4;
   }
   
   .text-2xl {
-    font-size: 1.667rem; /* 30px */
+    font-size: 1.5rem; /* 24px */
     line-height: 1.35;
   }
   
-  .text-3xl {
-    font-size: 2rem; /* 36px */
-    line-height: 1.3;
-  }
-  
-  /* KRDS 포커스 스타일 - 고령자용 강화 */
+  /* KRDS 포커스 스타일 */
   :focus-visible {
-    outline: 3px solid var(--ring);
+    outline: 2px solid var(--ring);
     outline-offset: 2px;
   }
   
@@ -403,7 +398,7 @@
   animation: float 3s ease-in-out infinite;
 }
 
-/* KRDS 컴포넌트 스타일 - 고령자 접근성 강화 */
+/* KRDS 컴포넌트 스타일 */
 @layer components {
   /* KRDS 버튼 스타일 */
   .krds-btn {
@@ -423,27 +418,27 @@
     background-color: var(--primary-active);
   }
   
-  /* KRDS 버튼 크기 - 고령자용 확대 (터치 타겟 최소 44px) */
+  /* KRDS 버튼 크기 (8px 단위) */
   .krds-btn-sm {
-    @apply h-10 px-4 text-base; /* 40px height (기존 32px) */
+    @apply h-8 px-3 text-sm; /* 32px height */
   }
   
   .krds-btn-md {
-    @apply h-12 px-5 text-base; /* 48px height (기존 40px) */
+    @apply h-10 px-4 text-sm; /* 40px height */
   }
   
   .krds-btn-lg {
-    @apply h-14 px-6 text-lg; /* 56px height (기존 48px) */
+    @apply h-12 px-6 text-base; /* 48px height */
   }
   
-  /* 뱃지 기본 스타일 - 고령자용 확대 */
+  /* 뱃지 기본 스타일 */
   .krds-badge {
-    @apply inline-flex items-center rounded px-3 py-1 text-sm font-medium;
+    @apply inline-flex items-center rounded px-2 py-0.5 text-xs font-medium;
   }
   
-  /* 스텝 인디케이터 - 고령자용 확대 */
+  /* 스텝 인디케이터 (8px 단위) */
   .krds-step {
-    @apply flex h-10 w-10 items-center justify-center rounded-full text-base font-semibold;
+    @apply flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold;
   }
   
   .krds-step-active {
@@ -460,32 +455,32 @@
   
   /* KRDS 카드 스타일 */
   .krds-card {
-    @apply rounded-lg border border-border bg-card p-5;
+    @apply rounded-lg border border-border bg-card p-4;
   }
   
   .krds-card-header {
     @apply pb-4 border-b border-border mb-4;
   }
   
-  /* 리스트 아이템 - 고령자용 여백 확대 */
+  /* 리스트 아이템 */
   .krds-list-item {
-    @apply border-b border-border py-5 last:border-b-0;
+    @apply border-b border-border py-4 last:border-b-0;
   }
   
-  /* KRDS Input 스타일 - 고령자용 확대 */
+  /* KRDS Input 스타일 */
   .krds-input {
-    @apply h-12 w-full rounded border border-input bg-background px-4 text-base;
+    @apply h-10 w-full rounded border border-input bg-background px-3 text-sm;
     @apply placeholder:text-muted-foreground;
     @apply focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary;
   }
   
   .krds-input-lg {
-    @apply h-14 px-5 text-lg;
+    @apply h-12 px-4 text-base;
   }
   
-  /* KRDS Select 스타일 - 고령자용 확대 */
+  /* KRDS Select 스타일 */
   .krds-select {
-    @apply h-12 w-full rounded border border-input bg-background px-4 text-base;
+    @apply h-10 w-full rounded border border-input bg-background px-3 text-sm;
     @apply focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary;
   }
 }

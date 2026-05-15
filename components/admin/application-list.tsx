@@ -220,20 +220,20 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const finalCompleted = periodFilteredApplications.filter((a) => a.adminStatus === "심사완료");
     const completedCount = finalCompleted.length;
     
-    // AI 초기 판정: 매수 신청 가능/매수 신청 불가능 (2가지만 존재, 이관 없음)
-    const aiPurchasable = Math.round(completedCount * 0.65);    // 매수 신청 가능 65%
-    const aiNotPurchasable = completedCount - aiPurchasable;     // 매수 신청 불가능 35%
+    // AI 초기 판정: 매수가능/매수불가 (2가지만 존재, 이관 없음)
+    const aiPurchasable = Math.round(completedCount * 0.65);    // 매수가능 65%
+    const aiNotPurchasable = completedCount - aiPurchasable;     // 매수불가 35%
     const aiAnalyzed = completedCount;
     
     // AI 신뢰도 계산 로직:
-    // - AI(매수 신청 가능) -> 담당자(매수) = 일치
-    // - AI(매수 신청 가능) -> 담당자(기각) = 불일치 (반대 결정)
-    // - AI(매수 신청 가능) -> 담당자(이관) = 불일치 (판단 보류)
-    // - AI(매수 신청 불가능) -> 담당자(기각) = 일치
-    // - AI(매수 신청 불가능) -> 담당자(이관) = 불일치 (판단 보류)
+    // - AI(매수가능) -> 담당자(매수) = 일치
+    // - AI(매수가능) -> 담당자(기각) = 불일치 (반대 결정)
+    // - AI(매수가능) -> 담당자(이관) = 불일치 (판단 보류)
+    // - AI(매수불가) -> 담당자(기각) = 일치
+    // - AI(매수불가) -> 담당자(이관) = 불일치 (판단 보류)
     
     // 시뮬레이션: 불일치 유형 구분
-    const mismatchOpposite = Math.max(1, Math.floor(completedCount * 0.05)); // 반대 결정: AI(매수 신청 가능)->담당자(기각)
+    const mismatchOpposite = Math.max(1, Math.floor(completedCount * 0.05)); // 반대 결정: AI(매수가능)->담당자(기각)
     const mismatchDeferred = Math.max(1, Math.floor(completedCount * 0.05)); // 판단 보류: AI 판정과 무관하게 담당자가 이관
     const aiMismatchCount = mismatchOpposite + mismatchDeferred;
     const aiMatchCount = completedCount - aiMismatchCount;
@@ -243,11 +243,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     // 전체 건수 = completedCount로 동일해야 함
     // 이관 건수 = 판단 보류 건수
     const finalTransfer = mismatchDeferred;
-    // 매수 건수 = AI 매수 신청 가능 - 반대결정(기각으로 변경) - 일부 이관
-    const deferredFromPurchasable = Math.floor(mismatchDeferred * 0.6); // 매수 신청 가능에서 이관된 건
-    const deferredFromNotPurchasable = mismatchDeferred - deferredFromPurchasable; // 매수 신청 불가능에서 이관된 건
+    // 매수 건수 = AI 매수가능 - 반대결정(기각으로 변경) - 일부 이관
+    const deferredFromPurchasable = Math.floor(mismatchDeferred * 0.6); // 매수가능에서 이관된 건
+    const deferredFromNotPurchasable = mismatchDeferred - deferredFromPurchasable; // 매수불가에서 이관된 건
     const finalPurchase = aiPurchasable - mismatchOpposite - deferredFromPurchasable;
-    // 기각 건수 = AI 매수 신청 불가능 - 이관 + 반대결정(매수 신청 가능->기각)
+    // 기각 건수 = AI 매수불가 - 이관 + 반대결정(매수가능->기각)
     const finalReject = aiNotPurchasable - deferredFromNotPurchasable + mismatchOpposite;
     // 검증: finalPurchase + finalReject + finalTransfer = completedCount
     
@@ -264,8 +264,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       진행중,
       심사완료,
       aiAnalyzed,
-      aiPurchasable,    // AI 초기 판정: 매수 신청 가능
-      aiNotPurchasable, // AI 초기 판정: 매수 신청 불가능
+      aiPurchasable,    // AI 초기 판정: 매수가능
+      aiNotPurchasable, // AI 초기 판정: 매수불가
       finalPurchase,    // 담당자 최종: 매수
       finalReject,      // 담당자 최종: 기각
       finalTransfer,    // 담당자 최종: 이관
@@ -280,7 +280,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   }, [periodFilteredApplications]);
 
   return (
-    <div className="space-y-6" style={{ marginBottom: '8px' }}>
+    <div className="space-y-6">
       {/* 글로벌 필터 바 */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* 좌측: 타이틀 및 업데이트 정보 */}
@@ -421,16 +421,15 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
             {/* 진행률 바 - Teal 계열로 심사완료와 동기화 */}
             <div className="space-y-2">
-  <div className="flex items-center justify-between text-sm">
-  <span className="text-muted-foreground" style={{ fontWeight: '500' }}>전체 처리 완료율</span>
-                <span style={{ fontSize: '24px', fontWeight: '800', color: 'rgb(20, 113, 97)' }}>{stats.completionRate}%</span>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">전체 처리 완료율</span>
+                <span style={{ fontSize: '30px', fontWeight: '800', color: 'rgb(20, 113, 97)' }}>{stats.completionRate}%</span>
               </div>
               <Progress 
                 value={stats.completionRate} 
                 className="h-[18px]" 
                 indicatorClassName="bg-teal-600"
                 style={{ backgroundColor: '#e8f2f0' }}
-                indicatorStyle={{ backgroundColor: 'rgb(20, 113, 97)' }}
               />
             </div>
             
@@ -499,15 +498,15 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium flex items-center justify-between">
               <span style={{ fontSize: '18px', fontWeight: '600' }}>AI 판독 신뢰도</span>
-              <span className="text-2xl font-bold text-primary" style={{ fontSize: '30px' }}>{stats.aiReliability}%</span>
+              <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
             
             {/* 스택 바 비교 */}
-            <div className="space-y-3">
-              {/* AI 초기 판정 막대 (매수 신청 가능/매수 신청 불가능 2가지만) */}
-              <div className="space-y-1.5" style={{ marginBottom: '4px' }}>
+            <div className="space-y-3" style={{ marginTop: '4px' }}>
+              {/* AI 초기 판정 막대 (매��가능/매수불가 2가지만) */}
+              <div className="space-y-1.5">
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 초기 판정</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
                   {stats.aiAnalyzed > 0 ? (
@@ -538,7 +537,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
               
               {/* 담당자 최종 심사 막대 */}
-              <div className="space-y-1.5" style={{ marginBottom: '4px' }}>
+              <div className="space-y-1.5">
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>담당자 최종 심사</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
                   {stats.심사완료 > 0 ? (
@@ -655,7 +654,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <SelectItem value="all">전체 상황</SelectItem>
                 <SelectItem value="접수완료">접수완료</SelectItem>
                 <SelectItem value="진행중">진행중</SelectItem>
-                <SelectItem value="심사완료">심사완료</SelectItem>
+                <SelectItem value="심사완료">심사���료</SelectItem>
               </SelectContent>
             </Select>
             
@@ -753,7 +752,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             </Table>
           </div>
 
-          {/* 카드 목록 (모바��) */}
+          {/* 카드 목록 (모바일) */}
           <div className="space-y-3 md:hidden">
             {filteredApplications.map((app) => (
               <button

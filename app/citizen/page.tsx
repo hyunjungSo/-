@@ -2,13 +2,13 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { MyParcelList } from "@/components/citizen/my-parcel-list";
+import { LandSearchSection } from "@/components/citizen/land-search-section";
 import { ApplicationFormSection } from "@/components/citizen/application-form-section";
 import { ApplicationResultSection } from "@/components/citizen/application-result-section";
 import { ApplicationStatusSection } from "@/components/citizen/application-status-section";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FilePlus, ClipboardList } from "lucide-react";
-import type { LandInfo, Application, AIAnalysisResult, PreRegisteredParcel } from "@/lib/types";
+import type { LandInfo, Application, AIAnalysisResult, ApplicationCartItem } from "@/lib/types";
 
 // 신청 프로세스 단계
 type ApplicationStep = "search" | "apply" | "result";
@@ -25,8 +25,8 @@ function CitizenPageContent() {
   const [mainTab, setMainTab] = useState<"new" | "status">(tabParam === "status" ? "status" : "new");
   const [applicationStep, setApplicationStep] = useState<ApplicationStep>("search");
   
-  // 장바구니 (신청 목록) - 사전등록된 필지
-  const [cartItems, setCartItems] = useState<PreRegisteredParcel[]>([]);
+  // 장바구니 (신청 목록)
+  const [cartItems, setCartItems] = useState<ApplicationCartItem[]>([]);
   
   // URL 파라미터 변경 시 탭 상태 업데이트
   useEffect(() => {
@@ -36,26 +36,35 @@ function CitizenPageContent() {
   }, [tabParam]);
 
   // 장바구니에 추가
-  const handleAddToCart = (parcel: PreRegisteredParcel) => {
+  const handleAddToCart = (land: LandInfo, result: AIAnalysisResult) => {
     // 이미 장바구니에 있는지 확인
-    if (cartItems.some(item => item.id === parcel.id)) {
+    if (cartItems.some(item => item.landInfo.id === land.id)) {
       return;
     }
-    setCartItems(prev => [...prev, parcel]);
+    
+    const newItem: ApplicationCartItem = {
+      id: land.id,
+      landInfo: land,
+      aiResult: result,
+      addedAt: new Date().toISOString(),
+      businessUnit: land.businessUnit || "수도권", // 관할기관 기준 그룹핑
+    };
+    
+    setCartItems(prev => [...prev, newItem]);
   };
   
   // 장바구니에서 제거
-  const handleRemoveFromCart = (parcelId: string) => {
-    setCartItems(prev => prev.filter(item => item.id !== parcelId));
+  const handleRemoveFromCart = (itemId: string) => {
+    setCartItems(prev => prev.filter(item => item.id !== itemId));
   };
   
   // 장바구니 아이템들로 신청 진행
-  const handleSubmitApplication = (parcels: PreRegisteredParcel[]) => {
-    if (parcels.length === 0) return;
+  const handleSubmitCart = (items: ApplicationCartItem[]) => {
+    if (items.length === 0) return;
     
     // 복수 필지 신청 설정
-    const lands = parcels.map(p => p.landInfo);
-    const results = parcels.map(p => p.aiResult);
+    const lands = items.map(item => item.landInfo);
+    const results = items.map(item => item.aiResult);
     
     setSelectedLands(lands);
     setAiResults(results);
@@ -64,11 +73,15 @@ function CitizenPageContent() {
     setApplicationStep("apply");
   };
 
+  const handleLandSelect = (land: LandInfo, result: AIAnalysisResult) => {
+    setSelectedLand(land);
+    setSelectedLands([land]);
+    setAiResult(result);
+    setAiResults([result]);
+    setApplicationStep("apply");
+  };
+
   const handleApplicationSubmit = (application: Application) => {
-    // 신청된 필지들 장바구니에서 제거
-    const submittedIds = selectedLands.map(land => land.id);
-    setCartItems(prev => prev.filter(item => !submittedIds.includes(item.landInfo.id)));
-    
     setSubmittedApplication(application);
     setApplicationStep("result");
   };
@@ -80,32 +93,17 @@ function CitizenPageContent() {
     setAiResults([]);
     setSubmittedApplication(null);
     setApplicationStep("search");
-    setReapplyData(null);
+    // 장바구니는 유지 (신청 완료된 항목만 제거하려면 별도 로직 필요)
   };
   
-  // 취소 후 재신청 처리 - 기존 신청 데이터를 프리필하여 신청 화면으로 이동
-  const [reapplyData, setReapplyData] = useState<Application | null>(null);
-  
-  const handleReapply = (application: Application) => {
-    // 기존 신청 데이터를 저장하고 신규 신청 탭으로 전환
-    setReapplyData(application);
+  // 신청 완료 후 해당 항목들 장바구니에서 제거
+  const handleApplicationSubmitWithCartCleanup = (application: Application) => {
+    // 신청된 필지들 장바구니에서 제거
+    const submittedIds = selectedLands.map(land => land.id);
+    setCartItems(prev => prev.filter(item => !submittedIds.includes(item.id)));
     
-    // 필지 정보 설정
-    const lands = application.additionalLands 
-      ? [application.landInfo, ...application.additionalLands]
-      : [application.landInfo];
-    
-    // AI 결과 설정 (기존 데이터에서 가져옴)
-    const results = application.aiResultList || (application.aiResult ? [application.aiResult] : []);
-    
-    setSelectedLands(lands);
-    setSelectedLand(lands[0]);
-    setAiResults(results);
-    setAiResult(results[0] || null);
-    
-    // 신규 신청 탭으로 전환하고 신청 단계로 이동
-    setMainTab("new");
-    setApplicationStep("apply");
+    setSubmittedApplication(application);
+    setApplicationStep("result");
   };
 
   return (
@@ -149,11 +147,12 @@ function CitizenPageContent() {
           aria-labelledby="tab-new"
         >
           {applicationStep === "search" && (
-            <MyParcelList 
+            <LandSearchSection 
+              onLandSelect={handleLandSelect}
+              cartItems={cartItems}
               onAddToCart={handleAddToCart}
               onRemoveFromCart={handleRemoveFromCart}
-              cartItems={cartItems}
-              onSubmitApplication={handleSubmitApplication}
+              onSubmitCart={handleSubmitCart}
             />
           )}
 
@@ -163,9 +162,8 @@ function CitizenPageContent() {
               landInfoList={selectedLands.length > 1 ? selectedLands : undefined}
               aiResult={aiResult}
               aiResultList={aiResults.length > 1 ? aiResults : undefined}
-              onSubmit={handleApplicationSubmit}
+              onSubmit={handleApplicationSubmitWithCartCleanup}
               onBack={() => setApplicationStep("search")}
-              prefillData={reapplyData}
             />
           )}
 
@@ -185,7 +183,7 @@ function CitizenPageContent() {
           id="tabpanel-status"
           aria-labelledby="tab-status"
         >
-          <ApplicationStatusSection onReapply={handleReapply} />
+          <ApplicationStatusSection />
         </TabsContent>
       </Tabs>
     </div>

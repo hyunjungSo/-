@@ -38,46 +38,20 @@ export type ApplicationType =
   | "single"      // 단일 필지 신청
   | "multiple";   // 복수 필지 개별 신청 (각 필지 개별 분석)
 
-// 처리 상태 (변경된 프로세스 반영)
-export type ProcessStatus = "사전등록" | "접수완료" | "AI분석완료" | "검토중" | "처리완료";
+// 처리 상태
+export type ProcessStatus = "접수완료" | "AI분석완료" | "검토중" | "처리완료";
 
 // 담당자 진행상황
-export type AdminStatus = "사전등록" | "접수완료" | "진행중" | "심사완료";
+export type AdminStatus = "접수완료" | "진행중" | "심사완료";
 
-// 사전등록 필지 상태
-export type PreRegistrationStatus = "등록완료" | "민원접수" | "처리완료";
-
-// AI 1차 판독 결과 - 담당자 사전분석 결과
-export type AIJudgmentResult = "매수 신청 가능" | "매수 신청 불가능";
+// AI 1차 판독 결과 (수용가능/수용불가)
+export type AIJudgmentResult = "수용가능" | "수용불가";
 
 // 최종 판정 결과 (매수/기각/심의위원회 이관)
 export type FinalJudgmentResult = "매수" | "기각" | "심의위원회 이관";
 
 // 판정 결과 (하위 호환용)
 export type JudgmentResult = FinalJudgmentResult;
-
-// 담당자 확인항목
-export interface AdminCheckItems {
-  farmMachineDifficulty: boolean; // 농기계 회전 불가
-  accessRoadLost: boolean; // 접면도로 상실
-  waterChannelLost: boolean; // 관개수로 상실
-}
-
-// 사전등록 필지 (담당자가 AI 판독 후 등록)
-export interface PreRegisteredParcel {
-  id: string;
-  businessUnit: BusinessUnit; // 사업단
-  projectName: string; // 사업명
-  landInfo: LandInfo; // 필지 정보
-  adminCheckItems: AdminCheckItems; // 담당자 확인항목
-  currentUsage: LandCategory; // 현재 활용지목
-  landShape: LandShape; // 토지모양
-  aiResult: AIAnalysisResult; // AI 분석 결과
-  preRegistrationStatus: PreRegistrationStatus; // 등록 상태
-  registeredAt: string; // 등록일시
-  registeredBy: string; // 등록자
-  applicationId?: string; // 연결된 민원 ID (민원접수 시)
-}
 
 // 관할기관 타입
 export type BusinessUnit = 

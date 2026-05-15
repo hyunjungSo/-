@@ -399,7 +399,7 @@ export function MyParcelList({
 
       {/* 장바구니 (신청 목록) */}
       {cartItems.length > 0 && (
-        <Card className="border-primary">
+        <Card className="border-primary max-w-2xl">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center justify-between">
               <span className="flex items-center gap-2">
@@ -412,16 +412,16 @@ export function MyParcelList({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2 mb-4">
+            <div className="space-y-2 mb-4 max-h-[200px] overflow-y-auto">
               {cartItems.map((parcel) => (
                 <div 
                   key={parcel.id}
                   className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
                     <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
-                    <div>
-                      <p className="font-medium text-sm">{parcel.landInfo.address}</p>
+                    <div className="min-w-0">
+                      <p className="font-medium text-sm truncate">{parcel.landInfo.address}</p>
                       <p className="text-xs text-muted-foreground">
                         {parcel.landInfo.landType} | {parcel.landInfo.remainingArea.toLocaleString()}㎡
                       </p>
@@ -431,7 +431,7 @@ export function MyParcelList({
                     variant="ghost" 
                     size="sm"
                     onClick={() => onRemoveFromCart(parcel.id)}
-                    className="text-destructive hover:text-destructive h-8 px-2"
+                    className="text-destructive hover:text-destructive h-8 px-2 flex-shrink-0"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -439,11 +439,11 @@ export function MyParcelList({
               ))}
             </div>
             <Button 
-              className="w-full h-12 text-base gap-2"
+              className="w-full h-11 text-base gap-2"
               onClick={() => onSubmitApplication(cartItems)}
             >
               <FileText className="h-5 w-5" />
-              신청서 작성하기
+              신청서 작성
             </Button>
           </CardContent>
         </Card>
@@ -451,60 +451,59 @@ export function MyParcelList({
 
       {/* 필지 상세 다이얼로그 */}
       <Dialog open={showDetailDialog} onOpenChange={setShowDetailDialog}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-xl">필지 상세 정보</DialogTitle>
+            <DialogTitle className="text-lg">필지 상세</DialogTitle>
             <DialogDescription>
-              확인 항목을 선택하고 AI 분석을 실행해보세요.
+              확인 항목 선택 후 AI 분석을 실행하세요.
             </DialogDescription>
           </DialogHeader>
 
           {selectedParcel && (
-            <div className="space-y-6">
+            <div className="space-y-5">
               {/* 기본 정보 */}
-              <div className="bg-muted/50 rounded-lg p-4 space-y-3">
-                <div className="flex items-center gap-2 text-lg font-semibold">
-                  <MapPin className="h-5 w-5 text-primary" />
-                  {selectedParcel.landInfo.address}
+              <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+                <div className="flex items-start gap-2">
+                  <MapPin className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
+                  <p className="font-medium text-sm leading-snug">
+                    {selectedParcel.landInfo.address}
+                  </p>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div className="grid grid-cols-4 gap-3 text-sm pt-2">
                   <div>
-                    <span className="text-muted-foreground">토지유형</span>
-                    <p className="font-medium text-base">{selectedParcel.landInfo.landType}</p>
+                    <span className="text-xs text-muted-foreground">토지유형</span>
+                    <p className="font-medium">{selectedParcel.landInfo.landType}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">지목</span>
-                    <p className="font-medium text-base">{selectedParcel.landInfo.landCategory}</p>
+                    <span className="text-xs text-muted-foreground">지목</span>
+                    <p className="font-medium">{selectedParcel.landInfo.landCategory}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">잔여면적</span>
-                    <p className="font-medium text-base">{selectedParcel.landInfo.remainingArea.toLocaleString()}㎡</p>
+                    <span className="text-xs text-muted-foreground">잔여면적</span>
+                    <p className="font-medium">{selectedParcel.landInfo.remainingArea.toLocaleString()}㎡</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">잔여비율</span>
-                    <p className="font-medium text-base">{selectedParcel.landInfo.remainingRatio.toFixed(1)}%</p>
+                    <span className="text-xs text-muted-foreground">잔여비율</span>
+                    <p className="font-medium">{selectedParcel.landInfo.remainingRatio.toFixed(1)}%</p>
                   </div>
                 </div>
               </div>
 
               {/* 확인 항목 선택 (AI 재분석용) */}
-              <div className="space-y-4 border rounded-lg p-4">
-                <h4 className="font-semibold text-base flex items-center gap-2">
+              <div className="space-y-3 border rounded-lg p-4">
+                <h4 className="font-semibold text-sm flex items-center gap-2">
                   <RefreshCw className="h-4 w-4" />
-                  확인 항목 선택 (AI 재분석)
+                  확인 항목 (AI 재분석)
                 </h4>
-                <p className="text-sm text-muted-foreground">
-                  아래 항목을 선택하고 AI 분석을 다시 실행해볼 수 있습니다.
-                </p>
                 
                 {/* 담당자 확인항목 체크박스 */}
-                <div className="space-y-3">
-                  <Label className="text-sm font-medium">담당자 확인항목</Label>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="space-y-2">
+                  <Label className="text-xs text-muted-foreground">확인항목</Label>
+                  <div className="grid grid-cols-3 gap-2">
                     {adminCheckItemOptions.map((option) => (
                       <div 
                         key={option.value}
-                        className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                        className={`flex items-center gap-2 p-2 rounded-lg border cursor-pointer transition-colors text-sm ${
                           checkItems[option.value as keyof AdminCheckItems] 
                             ? 'bg-primary/10 border-primary' 
                             : 'hover:bg-muted/50'
@@ -522,7 +521,7 @@ export function MyParcelList({
                             [option.value]: !!checked
                           }))}
                         />
-                        <Label htmlFor={option.value} className="cursor-pointer font-normal">
+                        <Label htmlFor={option.value} className="cursor-pointer font-normal text-xs">
                           {option.label}
                         </Label>
                       </div>
@@ -531,12 +530,12 @@ export function MyParcelList({
                 </div>
                 
                 {/* 토지 형상 및 활용지목 선택 */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">토지 형상</Label>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">토지 형상</Label>
                     <Select value={selectedLandShape} onValueChange={(v) => setSelectedLandShape(v as LandShape)}>
-                      <SelectTrigger className="h-12">
-                        <SelectValue placeholder="토지 형상 선택" />
+                      <SelectTrigger className="h-10">
+                        <SelectValue placeholder="선택" />
                       </SelectTrigger>
                       <SelectContent>
                         {["정방형", "가로장방형", "세로장방형", "사다리형", "역사다리형", "변형사다리형", "삼각형", "역삼각형", "부정형", "자루형"].map((shape) => (
@@ -545,11 +544,11 @@ export function MyParcelList({
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">현재 활용지목</Label>
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">활용지목</Label>
                     <Select value={selectedLandUsage} onValueChange={(v) => setSelectedLandUsage(v as LandCategory)}>
-                      <SelectTrigger className="h-12">
-                        <SelectValue placeholder="활용지목 선택" />
+                      <SelectTrigger className="h-10">
+                        <SelectValue placeholder="선택" />
                       </SelectTrigger>
                       <SelectContent>
                         {["전", "답", "과", "대", "임", "목", "잡", "구", "도", "제", "천", "묘", "장", "양", "창", "주유소"].map((usage) => (
@@ -564,62 +563,59 @@ export function MyParcelList({
                 <Button 
                   onClick={handleReanalyze}
                   disabled={isAnalyzing}
-                  className="w-full h-12 gap-2"
+                  className="w-full h-10 gap-2"
                 >
                   {isAnalyzing ? (
                     <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                      AI 분석 중...
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      분석 중...
                     </>
                   ) : (
                     <>
-                      <AIIcon className="h-5 w-5" />
-                      AI 분석 실행
+                      <AIIcon className="h-4 w-4" />
+                      AI 분석
                     </>
                   )}
                 </Button>
               </div>
 
               {/* AI 판정 결과 */}
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-semibold flex items-center gap-2">
-                    <AIIcon className="h-5 w-5" />
-                    AI 분석 결과
-                    {reanalyzedResult && <Badge variant="outline" className="ml-2">재분석</Badge>}
+                  <h4 className="font-semibold text-sm flex items-center gap-2">
+                    <AIIcon className="h-4 w-4" />
+                    AI 결과
+                    {reanalyzedResult && <Badge variant="outline" className="text-xs">재분석</Badge>}
                   </h4>
                   {(() => {
                     const result = reanalyzedResult || selectedParcel.aiResult;
                     const isApproved = result.provisionalJudgment === "매수 신청 가능";
                     return (
-                      <Badge className={`text-base px-3 py-1 ${isApproved ? 'bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90' : 'bg-destructive'}`}>
-                        {result.provisionalJudgment}
+                      <Badge className={`text-sm px-2 py-0.5 ${isApproved ? 'bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90' : 'bg-destructive'}`}>
+                        {isApproved ? "신청 가능" : "신청 불가"}
                       </Badge>
                     );
                   })()}
                 </div>
                 
                 {/* 기준 충족 여부 */}
-                <div className="space-y-2">
+                <div className="space-y-1.5 max-h-[180px] overflow-y-auto">
                   {(reanalyzedResult || selectedParcel.aiResult).criteriaChecks.map((check, index) => (
                     <div 
                       key={index}
-                      className={`flex items-center justify-between p-3 rounded-lg border ${
+                      className={`flex items-center justify-between p-2 rounded-lg border text-sm ${
                         check.isMet ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'
                       }`}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
                         {check.isMet ? (
-                          <CheckCircle2 className="h-5 w-5 text-green-600" />
+                          <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0" />
                         ) : (
-                          <XCircle className="h-5 w-5 text-gray-400" />
+                          <XCircle className="h-4 w-4 text-gray-400 flex-shrink-0" />
                         )}
-                        <div>
-                          <p className="font-medium">{check.criteriaName}</p>
-                          <p className="text-sm text-muted-foreground">{check.criteriaDescription}</p>
-                        </div>
+                        <span className="font-medium">{check.criteriaName}</span>
                       </div>
-                      <Badge variant={check.isMet ? "default" : "secondary"}>
+                      <Badge variant={check.isMet ? "default" : "secondary"} className="text-xs">
                         {check.isMet ? "충족" : "미충족"}
                       </Badge>
                     </div>
@@ -628,46 +624,27 @@ export function MyParcelList({
               </div>
 
               {/* AI 상세 분석 */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-3">
-                <p className="font-medium text-blue-900">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 space-y-2">
+                <p className="font-medium text-sm text-blue-900">
                   {(reanalyzedResult || selectedParcel.aiResult).judgmentRationale.summary}
                 </p>
-                <div className="text-sm text-blue-800">
-                  <p>
-                    <strong>법적 근거:</strong> {(reanalyzedResult || selectedParcel.aiResult).judgmentRationale.legalBasis}
-                  </p>
-                  <div className="mt-2">
-                    <strong>적용 기준:</strong>
-                    <ul className="list-disc list-inside mt-1">
-                      {(reanalyzedResult || selectedParcel.aiResult).judgmentRationale.appliedCriteria.map((criteria, idx) => (
-                        <li key={idx}>{criteria}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+                <p className="text-xs text-blue-700">
+                  {(reanalyzedResult || selectedParcel.aiResult).judgmentRationale.legalBasis}
+                </p>
               </div>
 
               {/* 소유자 정보 */}
-              <div className="space-y-3">
-                <h4 className="font-semibold">소유자 정보</h4>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                    <div>
-                      <span className="text-sm text-muted-foreground">소유자명</span>
-                      <p className="font-medium">{selectedParcel.landInfo.ownerName}</p>
-                    </div>
-                  </div>
-                  {selectedParcel.landInfo.ownerContact && (
-                    <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
-                      <Phone className="h-4 w-4 text-muted-foreground" />
-                      <div>
-                        <span className="text-sm text-muted-foreground">연락처</span>
-                        <p className="font-medium">{selectedParcel.landInfo.ownerContact}</p>
-                      </div>
-                    </div>
-                  )}
+              <div className="flex items-center gap-4 p-3 bg-muted/30 rounded-lg text-sm">
+                <div className="flex items-center gap-2">
+                  <User className="h-4 w-4 text-muted-foreground" />
+                  <span>{selectedParcel.landInfo.ownerName}</span>
                 </div>
+                {selectedParcel.landInfo.ownerContact && (
+                  <div className="flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    <span>{selectedParcel.landInfo.ownerContact}</span>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -679,7 +656,7 @@ export function MyParcelList({
             {selectedParcel && !isInCart(selectedParcel.id) && (reanalyzedResult?.provisionalJudgment === "매수 신청 가능" || (!reanalyzedResult && selectedParcel.aiResult.provisionalJudgment === "매수 신청 가능")) && (
               <Button onClick={() => handleAddToCart(selectedParcel)} className="gap-2">
                 <ShoppingCart className="h-4 w-4" />
-                신청 목록에 추가
+                추가
               </Button>
             )}
           </DialogFooter>

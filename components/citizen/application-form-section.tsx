@@ -42,7 +42,6 @@ interface ApplicationFormSectionProps {
   aiResultList?: AIAnalysisResult[]; // 복수 필지 AI 결과
   onSubmit: (application: Application) => void;
   onBack: () => void;
-  prefillData?: Application | null; // 재신청 시 기존 데이터 프리필
 }
 
 // 샘플 주소 데이터
@@ -166,7 +165,6 @@ export function ApplicationFormSection({
   aiResultList,
   onSubmit,
   onBack,
-  prefillData,
 }: ApplicationFormSectionProps) {
   // 복수 필지 여부
   const isMultipleLands = landInfoList && landInfoList.length > 1;
@@ -190,48 +188,33 @@ export function ApplicationFormSection({
   }
 
   // 토지별 초기 데이터 생성
-  const createInitialLandData = (land: LandInfo, index?: number): LandSpecificData => {
-    // 재신청 시 기존 데이터가 있으면 프리필
-    if (prefillData?.landDataList && index !== undefined && prefillData.landDataList[index]) {
-      const existingData = prefillData.landDataList[index];
-      return {
-        currentUsage: existingData.currentUsage || (land.landCategory as LandCategory),
-        landSubType: existingData.landSubType || "",
-        actualUsage: existingData.actualUsage || (land.landCategory as LandCategory),
-        reportedShape: existingData.reportedShape || (land.remainingShape as LandShape),
-        farmMachineDifficulty: existingData.farmMachineDifficulty || false,
-        accessRoadLost: existingData.accessRoadLost || false,
-        waterChannelLost: existingData.waterChannelLost || false,
-      };
-    }
-    return {
-      currentUsage: land.landCategory as LandCategory,
-      landSubType: "",
-      actualUsage: land.landCategory as LandCategory,
-      reportedShape: land.remainingShape as LandShape,
-      farmMachineDifficulty: false,
-      accessRoadLost: false,
-      waterChannelLost: false,
-    };
-  };
+  const createInitialLandData = (land: LandInfo): LandSpecificData => ({
+    currentUsage: land.landCategory as LandCategory,
+    landSubType: "",
+    actualUsage: land.landCategory as LandCategory,
+    reportedShape: land.remainingShape as LandShape,
+    farmMachineDifficulty: false,
+    accessRoadLost: false,
+    waterChannelLost: false,
+  });
 
   const [formData, setFormData] = useState({
-    applicantName: prefillData?.applicantName || landInfo.ownerName,
-    applicantContact: prefillData?.applicantContact || landInfo.ownerContact || "",
+    applicantName: landInfo.ownerName,
+    applicantContact: landInfo.ownerContact || "",
     postalCode: "",
-    baseAddress: prefillData?.applicantAddress || "",
+    baseAddress: "",
     detailAddress: "",
     // 신청인과 소유자 관계 (본인/대리인)
-    applicantRelation: (prefillData?.applicantRelation || "owner") as "owner" | "agent",
-    agentName: prefillData?.agentName || "",
-    agentContact: prefillData?.agentContact || "",
-    reason: prefillData?.reason || "",
+    applicantRelation: "owner" as "owner" | "agent",
+    agentName: "",
+    agentContact: "",
+    reason: "",
     attachments: [] as FileItem[],
   });
 
   // 토지별 개별 데이터 상태
   const [landDataList, setLandDataList] = useState<LandSpecificData[]>(
-    allLands.map((land, index) => createInitialLandData(land, index))
+    allLands.map(createInitialLandData)
   );
 
   // 토지별 데이터 업데이트 함수

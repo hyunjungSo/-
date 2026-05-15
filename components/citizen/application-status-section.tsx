@@ -649,18 +649,15 @@ function ApplicationDetailPanel({
   application,
   isEditMode,
   onEditModeChange,
-  onSave,
-  onReapply
+  onSave
 }: { 
   application: Application;
   isEditMode: boolean;
   onEditModeChange: (value: boolean) => void;
   onSave: (updatedApp: Application) => void;
-  onReapply?: (application: Application) => void;
 }) {
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [showReapplyModal, setShowReapplyModal] = useState(false);
   const [selectedLandIndex, setSelectedLandIndex] = useState(0);
   
   // 모든 필지 목록
@@ -845,7 +842,7 @@ function ApplicationDetailPanel({
           </Badge>
           <span className="text-lg font-semibold text-foreground">{application.applicationNumber}</span>
         </div>
-        {/* 취소 후 재신청 버튼 - 접수완료 상태에서만 활성화 */}
+        {/* 수정/저장/취소 버튼 - 접수완료 상태에서만 활성화 */}
         {isEditMode ? (
           <div className="flex gap-2">
             <Button
@@ -870,18 +867,18 @@ function ApplicationDetailPanel({
           <div className="flex items-center gap-2">
             {!canEdit && (
               <span className="text-xs text-muted-foreground">
-                이미 심사가 완료되어 수정이 제한됩니다
+                이미 심사가 완료되어 정보 수정이 제한됩니다
               </span>
             )}
             <Button
               variant="outline"
               size="sm"
               disabled={!canEdit}
-              onClick={() => setShowReapplyModal(true)}
+              onClick={() => onEditModeChange(true)}
               className={`h-8 gap-1.5 text-xs ${!canEdit ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               <Pencil className="size-[18px]" />
-              취소 후 재신청
+              수정
             </Button>
           </div>
         )}
@@ -1185,59 +1182,12 @@ function ApplicationDetailPanel({
         </div>
       )}
 
-      {/* 취소 후 재신청 컨펌 모달 */}
-      {showReapplyModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="mx-4 w-full max-w-lg rounded-lg bg-background p-6 shadow-xl">
-            <h3 className="mb-3 text-lg font-semibold">취소 후 재신청 안내</h3>
-            <p className="mb-6 text-base text-foreground leading-relaxed">
-              수정하시려면 해당 신청건이 <span className="font-semibold text-destructive">취소</span>된 후 재신청해야 합니다. 
-              <br />진행하시겠습니까?
-            </p>
-            <div className="rounded-lg bg-amber-50 border border-amber-200 p-4 mb-6">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
-                <div className="text-sm text-amber-800">
-                  <p className="font-medium mb-1">참고사항</p>
-                  <ul className="list-disc list-inside space-y-1 text-amber-700">
-                    <li>기존에 입력한 정보는 그대로 유지됩니다.</li>
-                    <li>신청번호가 새로 부여됩니다.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end gap-3">
-              <Button
-                variant="outline"
-                onClick={() => setShowReapplyModal(false)}
-                className="h-11"
-              >
-                취소
-              </Button>
-              <Button 
-                variant="destructive"
-                onClick={() => {
-                  setShowReapplyModal(false);
-                  // 기존 신청 취소 처리 후 재신청 화면으로 이동
-                  if (onReapply) {
-                    onReapply(application);
-                  }
-                }}
-                className="h-11"
-              >
-                기존 신청 취소 후 재신청
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
       
     </div>
   );
 }
 
-export function ApplicationStatusSection({ onReapply }: { onReapply?: (application: Application) => void }) {
+export function ApplicationStatusSection() {
   const [applications, setApplications] = useState<Application[]>(dummyApplications);
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -1365,7 +1315,6 @@ export function ApplicationStatusSection({ onReapply }: { onReapply?: (applicati
             isEditMode={isEditMode}
             onEditModeChange={setIsEditMode}
             onSave={handleApplicationUpdate}
-            onReapply={onReapply}
           />
         ) : (
           <div className="overflow-hidden rounded-lg border border-border">
