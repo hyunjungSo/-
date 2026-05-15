@@ -280,7 +280,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   }, [periodFilteredApplications]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" style={{ marginBottom: '8px' }}>
       {/* 글로벌 필터 바 */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* 좌측: 타이틀 및 업데이트 정보 */}
@@ -415,59 +415,75 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       <div className="grid gap-4 lg:grid-cols-11">
         {/* 민원 진행 현황 카드 */}
         <Card className="lg:col-span-6">
-          <CardHeader className="pb-2">
+          <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium" style={{ fontSize: '18px', fontWeight: '600' }}>민원 진행 현황</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {/* 진행률 바 */}
+          <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
+            {/* 진행률 바 - Teal 계열로 심사완료와 동기화 */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">전체 처리 완료율</span>
-                <span className="text-primary" style={{ fontSize: '24px', fontWeight: '800' }}>{stats.completionRate}%</span>
+  <div className="flex items-center justify-between text-sm">
+  <span className="text-muted-foreground" style={{ fontWeight: '500' }}>전체 처리 완료율</span>
+                <span style={{ fontSize: '24px', fontWeight: '800', color: 'rgb(20, 113, 97)' }}>{stats.completionRate}%</span>
               </div>
-              <Progress value={stats.completionRate} className="h-[18px]" />
+              <Progress 
+                value={stats.completionRate} 
+                className="h-[18px]" 
+                indicatorClassName="bg-teal-600"
+                style={{ backgroundColor: '#e8f2f0' }}
+                indicatorStyle={{ backgroundColor: 'rgb(20, 113, 97)' }}
+              />
             </div>
             
-            {/* 상태별 ��황 그리드 */}
+            {/* 상태별 현황 그리드 - 카드별 포인트 컬러 적용 */}
             <div className="grid grid-cols-4 gap-3 pt-2">
+              {/* 전체: Slate 계열 */}
               <div 
                 onClick={() => setStatusFilter("all")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-muted/50 p-3 transition-opacity hover:opacity-80"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-4 transition-all hover:bg-slate-100"
               >
-                <span className="text-sm font-medium text-muted-foreground" style={{ order: 1 }}>전체</span>
-                <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
-                  <span className="font-bold text-foreground" style={{ fontSize: '38px' }}>{stats.total}</span>
-                  <span className="text-sm font-medium text-foreground">건</span>
+                <span className="text-sm font-medium text-slate-600" style={{ order: 1 }}>전체</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold text-slate-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.total}</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
+              {/* 접수완료: Indigo #6366F1 (신규 접수 강조) */}
               <div 
                 onClick={() => setStatusFilter("접수완료")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-3 transition-opacity hover:opacity-80"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-indigo-50 p-4 transition-all hover:bg-indigo-100"
               >
-                <span className="text-sm font-medium text-slate-600" style={{ order: 1 }}>접수완료</span>
-                <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
-                  <span className="font-bold text-slate-500" style={{ fontSize: '38px' }}>{stats.접수완료}</span>
-                  <span className="text-sm font-medium text-slate-500">건</span>
+                <span className="text-sm font-medium text-indigo-500" style={{ order: 1 }}>접수완료</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold text-indigo-500" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.접수완료}</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
+              {/* 진행중: #0091fd (활동 상태 강조) */}
               <div 
                 onClick={() => setStatusFilter("진행중")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-sky-50 p-3 transition-opacity hover:opacity-80"
+                className="flex cursor-pointer flex-col items-center rounded-lg p-4 transition-all"
+                style={{ backgroundColor: '#e6f4ff' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#cce8ff'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e6f4ff'}
               >
-                <span className="text-sm font-medium text-sky-700" style={{ order: 1 }}>진행중</span>
-                <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
-                  <span className="font-bold text-sky-500" style={{ fontSize: '38px' }}>{stats.진행중}</span>
-                  <span className="text-sm font-medium text-sky-500">건</span>
+                <span className="text-sm font-medium" style={{ order: 1, color: '#0091fd' }}>진행중</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold" style={{ fontSize: '42px', lineHeight: '1em', color: '#0091fd' }}>{stats.진행중}</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
+              {/* 심사완료: Teal 계열 (완료 상태 강조) */}
               <div 
                 onClick={() => setStatusFilter("심사완료")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-100 p-3 transition-opacity hover:opacity-80"
+                className="flex cursor-pointer flex-col items-center rounded-lg p-4 transition-all"
+                style={{ backgroundColor: '#e8f2f0' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(20, 113, 97, 0.15)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e8f2f0'}
               >
-                <span className="text-sm font-medium text-slate-700" style={{ order: 1 }}>심사완료</span>
-                <div className="mt-2 flex items-baseline gap-1" style={{ order: 2 }}>
-                  <span className="font-bold text-slate-700" style={{ fontSize: '38px' }}>{stats.심사완료}</span>
-                  <span className="text-sm font-medium text-slate-700">건</span>
+                <span className="text-sm font-medium" style={{ order: 1, color: 'rgb(20, 113, 97)' }}>심사완료</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold" style={{ fontSize: '42px', lineHeight: '1em', color: 'rgb(20, 113, 97)' }}>{stats.심사완료}</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
             </div>
@@ -480,18 +496,18 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
 
         {/* AI 판독 신뢰도 카드 */}
         <Card className="lg:col-span-5">
-          <CardHeader className="pb-2">
+          <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium flex items-center justify-between">
               <span style={{ fontSize: '18px', fontWeight: '600' }}>AI 판독 신뢰도</span>
-              <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
+              <span className="text-2xl font-bold text-primary" style={{ fontSize: '30px' }}>{stats.aiReliability}%</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
             
             {/* 스택 바 비교 */}
             <div className="space-y-3">
               {/* AI 초기 판정 막대 (매수가능/매수불가 2가지만) */}
-              <div className="space-y-1.5">
+              <div className="space-y-1.5" style={{ marginBottom: '4px' }}>
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 초기 판정</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
                   {stats.aiAnalyzed > 0 ? (
@@ -522,7 +538,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
               
               {/* 담당자 최종 심사 막대 */}
-              <div className="space-y-1.5">
+              <div className="space-y-1.5" style={{ marginBottom: '4px' }}>
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>담당자 최종 심사</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
                   {stats.심사완료 > 0 ? (
@@ -583,12 +599,12 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <div className="flex items-center gap-1">
                   <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                   <span className="text-sm text-muted-foreground">판정 일치:</span>
-                  <span className="font-bold" style={{ fontSize: '16px' }}>{stats.aiMatchCount}건</span>
+                  <span className="font-bold" style={{ fontSize: '18px' }}>{stats.aiMatchCount}건</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <XCircle className="h-4 w-4 text-rose-600" />
                   <span className="text-sm text-rose-600">판정 불일치:</span>
-                  <span className="font-bold text-rose-600" style={{ fontSize: '16px' }}>{stats.aiMismatchCount}건</span>
+                  <span className="font-bold text-rose-600" style={{ fontSize: '18px' }}>{stats.aiMismatchCount}건</span>
                 </div>
               </div>
 
@@ -737,7 +753,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             </Table>
           </div>
 
-          {/* 카드 목록 (모바일) */}
+          {/* 카드 목록 (모바��) */}
           <div className="space-y-3 md:hidden">
             {filteredApplications.map((app) => (
               <button

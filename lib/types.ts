@@ -201,7 +201,7 @@ export interface AIAnalysisResult {
 // 필지별 판정 결과 (일부 일단지 + 일부 미해당 혼합 케이스)
 export interface LandJudgment {
   landId: string; // 토지 ID
-  judgment: "매수" | "기각" | "심의위원회 이관"; // 담당자 판정 결과
+    judgment: "매수" | "기각" | "심의위원회 이관"; // 담당자 판정 결과
   unifiedGroupId: string | null; // 일단지 그룹 ID (null이면 미해당)
   reason: string; // 판정 사유
 }
