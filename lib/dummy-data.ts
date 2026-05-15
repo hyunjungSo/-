@@ -65,33 +65,6 @@ export const dummyLandInfoList: LandInfo[] = [
     ],
   },
 
-  // 잔여지 0 케이스 (전체 편입)
-  {
-    id: "land-002",
-    address: "경기도 용인시 처인구 양지면 마성리 125-1",
-    originalArea: 600,
-    includedArea: 600,
-    remainingArea: 0,
-    remainingRatio: 0,
-    landType: "농지",
-    landCategory: "전",
-    originalShape: "정방형",
-    remainingShape: "-",
-    originalShapeIndex: 4.0,
-    remainingShapeIndex: 0,
-    ownerName: "박영희",
-    ownerContact: "010-9876-5432",
-    hasIncludedLand: true,
-    businessUnit: "수도권",
-    projectName: "용인-양지 도로확장사업",
-    coordinates: [
-      { lat: 37.2186, lng: 127.2958 },
-      { lat: 37.2191, lng: 127.2968 },
-      { lat: 37.2184, lng: 127.2973 },
-      { lat: 37.2179, lng: 127.2963 },
-    ],
-  },
-
   {
     id: "land-003",
     address: "경기도 용인시 처인구 양지면 마성리 127",
@@ -1588,7 +1561,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "진행중",
     appliedAt: YESTERDAY,
     aiResult: generateAIResult(dummyLandInfoList[4]),
-    adminName: "홍길동",
+    adminName: "���길동",
     statusUpdatedAt: YESTERDAY,
     businessUnit: "강진광주건설 사업단",
   },
@@ -1783,7 +1756,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "대",
     reportedShape: "자루형",
     farmMachineDifficulty: false,
-    reason: "도로 편입으로 토지가 자루형으로 변형되었습니다. 면적 기준은 애매하여 실측이 필요합니다.",
+    reason: "도로 편입으로 토지가 자루형으로 변형되었습니다. 면적 기준은 애매하여 실��이 필요합니다.",
     attachments: ["토지���장.pdf", "지적도.pdf", "현황사진.jpg"],
     status: "검토중",
     adminStatus: "진행중",
@@ -2146,7 +2119,7 @@ export const dummyApplications: Application[] = [
       waterChannelLost: true,
       farmMachineDifficulty: true,
       judgmentRationale: {
-        summary: "농지 3필지 - 모든 매수 기준 충족으로 「매수」 판정",
+        summary: "농지 3필�� - 모든 매수 기준 충족으로 「매수」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조",
         appliedCriteria: [
           "토지유형: 농지",
@@ -2356,7 +2329,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "임",
     reportedShape: "부정형",
     farmMachineDifficulty: false,
-    reason: "원주-제천 고속도로 ���설로 인해 소유한 5개 산지 필지가 편입되었습니다. 30년간 조���하여 관리해 온 임야로, 고속도로가 중앙을 관통하여 조림지가 양분되었습니다. 각 필지별로 형상이 불량해지고 접근로가 차단되어 산림경영이 불가능합니다. 5필지 모두 매수를 신청합니다.",
+    reason: "원주-제천 고속도로 ���설로 인해 소유한 5개 ���지 필지가 편입되었습니다. 30년간 조���하여 관리해 온 임야로, 고속도로가 중앙을 관통하여 조림지가 양분되었습니다. 각 필지별로 형상이 불량해지고 접근로가 차단되어 산림경영이 불가능합니다. 5필지 모두 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "임" as const,
@@ -2822,7 +2795,7 @@ export const dummyApplications: Application[] = [
           summary: "매탄동 102번지: 사다리꼴 형상으로 건축 효율 저하, 매수 대상",
           legalBasis: "「공익사업법」 제74조",
           appliedCriteria: ["사다리꼴 형상으로 건축 효율 저하", "형상지수 불량"],
-          detailedExplanation: "사다리꼴 형상으로 인해 효율적인 건축물 배치가 어려워 매수 가능으로 ��정합니다.",
+          detailedExplanation: "사다리꼴 형상으로 인해 효���적인 건축물 배치가 어려워 매수 가능으로 ��정합니다.",
           manualCheckItems: ["최�� 형상 확인"],
         },
       },
@@ -3599,7 +3572,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
   },
 ];
 
-// 사업단별 필지 데이터 조회 함수
+// 사업단별 필지 ���이터 조회 함수
 export function getParcelsByBusinessUnit(businessUnit: BusinessUnit): PreRegisteredParcel[] {
   return preRegisteredParcels.filter(parcel => parcel.businessUnit === businessUnit);
 }
