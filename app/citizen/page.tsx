@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { RegisteredParcelSearch } from "@/components/citizen/registered-parcel-search";
+import { MyParcelList } from "@/components/citizen/my-parcel-list";
 import { ApplicationFormSection } from "@/components/citizen/application-form-section";
 import { ApplicationResultSection } from "@/components/citizen/application-result-section";
 import { ApplicationStatusSection } from "@/components/citizen/application-status-section";
@@ -123,7 +123,7 @@ function CitizenPageContent() {
           aria-labelledby="tab-new"
         >
           {applicationStep === "search" && (
-            <RegisteredParcelSearch 
+            <MyParcelList 
               onAddToCart={handleAddToCart}
               onRemoveFromCart={handleRemoveFromCart}
               cartItems={cartItems}

@@ -36,19 +36,19 @@ import { AIIcon } from "@/components/ui/ai-icon";
 import type { PreRegisteredParcel } from "@/lib/types";
 import { preRegisteredParcels } from "@/lib/dummy-data";
 
-interface RegisteredParcelSearchProps {
+interface MyParcelListProps {
   onAddToCart: (parcel: PreRegisteredParcel) => void;
   onRemoveFromCart: (parcelId: string) => void;
   cartItems: PreRegisteredParcel[];
   onSubmitApplication: (parcels: PreRegisteredParcel[]) => void;
 }
 
-export function RegisteredParcelSearch({ 
+export function MyParcelList({ 
   onAddToCart, 
   onRemoveFromCart,
   cartItems, 
   onSubmitApplication 
-}: RegisteredParcelSearchProps) {
+}: MyParcelListProps) {
   // 선택된 필지 상세 보기
   const [selectedParcel, setSelectedParcel] = useState<PreRegisteredParcel | null>(null);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
@@ -203,7 +203,7 @@ export function RegisteredParcelSearch({
             <CardTitle className="text-xl flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <ShoppingCart className="h-5 w-5 text-primary" />
-                신청 목록
+                신��� 목록
               </span>
               <Badge className="text-base px-3 py-1">
                 {cartItems.length}건
