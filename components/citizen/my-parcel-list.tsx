@@ -50,9 +50,6 @@ export function MyParcelList({
   const [selectedParcel, setSelectedParcel] = useState<PreRegisteredParcel | null>(null);
   const [hoveredParcelId, setHoveredParcelId] = useState<string | null>(null);
   
-  // 좌측 패널 접힘 상태
-  const [isListCollapsed, setIsListCollapsed] = useState(false);
-  
   // AI 재분석용 상태
   const [checkItems, setCheckItems] = useState<AdminCheckItems>({
     farmMachineDifficulty: false,
@@ -207,8 +204,115 @@ export function MyParcelList({
 
   return (
     <div className="relative h-[calc(100vh-220px)] min-h-[600px] w-full overflow-hidden rounded-lg border bg-background">
-      {/* 전체화면 지도 */}
-      <div className="absolute inset-0">
+      {/* 좌측 패널 - 필지 목록 */}
+      <div className="absolute left-0 top-0 h-full w-[320px] bg-background border-r shadow-lg z-10 flex flex-col">
+        {/* 헤더 */}
+        <div className="p-4 border-b bg-muted/30 shrink-0">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="font-semibold text-base">{currentUser.name}님의 잔여지</h3>
+            <Badge variant="secondary">{myParcels.length}건</Badge>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            매수 신청 가능한 필지 목록입니다.
+          </p>
+        </div>
+
+        {/* 필지 목록 */}
+        <div className="flex-1 overflow-y-auto">
+          {myParcels.length > 0 ? (
+            <div className="divide-y">
+              {myParcels.map((parcel) => {
+                const applied = isAlreadyApplied(parcel.landInfo.id);
+                return (
+                  <div
+                    key={parcel.id}
+                    className={`p-3 cursor-pointer transition-colors ${
+                      applied ? "opacity-60 bg-muted/30" :
+                      selectedParcel?.id === parcel.id 
+                        ? "bg-primary/10 border-l-4 border-l-primary" 
+                        : "hover:bg-muted/50"
+                    }`}
+                    onClick={() => handleParcelSelect(parcel)}
+                    onMouseEnter={() => setHoveredParcelId(parcel.id)}
+                    onMouseLeave={() => setHoveredParcelId(null)}
+                  >
+                    <div className="space-y-1.5">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="font-medium text-sm leading-tight flex-1 line-clamp-2">
+                          {parcel.landInfo.address}
+                        </p>
+                        {applied && (
+                          <Badge variant="secondary" className="text-xs shrink-0 bg-blue-100 text-blue-700">
+                            신청완료
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <Badge variant="outline" className="text-xs h-5">
+                          {parcel.landInfo.landType}
+                        </Badge>
+                        <span>{parcel.landInfo.remainingArea.toLocaleString()}㎡</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <Badge className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-xs h-5">
+                          신청 가능
+                        </Badge>
+                        {applied ? (
+                          <span className="text-xs text-blue-600">처리중</span>
+                        ) : isInCart(parcel.id) ? (
+                          <Badge variant="secondary" className="text-xs h-5">추가됨</Badge>
+                        ) : (
+                          <Button 
+                            size="sm" 
+                            variant="ghost"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddToCart(parcel);
+                            }}
+                            className="h-6 text-xs gap-1 px-2"
+                          >
+                            <ShoppingCart className="h-3 w-3" />
+                            담기
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+              <MapPin className="h-10 w-10 text-muted-foreground/50 mb-3" />
+              <p className="text-sm text-muted-foreground">
+                매수 신청 가능한 필지가 없습니다.
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* 장바구니 요약 */}
+        {cartItems.length > 0 && (
+          <div className="p-3 border-t bg-muted/30 shrink-0">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium flex items-center gap-1.5">
+                <ShoppingCart className="h-4 w-4 text-primary" />
+                신청 목록
+              </span>
+              <Badge>{cartItems.length}건</Badge>
+            </div>
+            <Button 
+              className="w-full h-9 text-sm"
+              onClick={() => onSubmitApplication(cartItems)}
+            >
+              신청서 작성
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {/* 중앙 지도 */}
+      <div className="absolute left-[320px] right-0 top-0 h-full">
         <LeafletMap
           parcels={mapParcels}
           onParcelClick={(id) => {
@@ -219,114 +323,6 @@ export function MyParcelList({
           className="h-full w-full"
         />
       </div>
-
-      {/* 좌측 패널 - 필지 목록 */}
-      <div 
-        className={`absolute left-0 top-0 h-full bg-background border-r shadow-lg transition-all duration-300 z-10 flex flex-col ${
-          isListCollapsed ? "w-0" : "w-[320px]"
-        }`}
-      >
-        {!isListCollapsed && (
-          <>
-            {/* 헤더 */}
-            <div className="p-4 border-b bg-muted/30 shrink-0">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-base">{currentUser.name}님의 잔여지</h3>
-                <Badge variant="secondary">{myParcels.length}건</Badge>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                매수 신청 가능한 필지 목록입니다.
-              </p>
-            </div>
-
-            {/* 필지 목록 */}
-            <div className="flex-1 overflow-y-auto">
-              {myParcels.length > 0 ? (
-                <div className="divide-y">
-                  {myParcels.map((parcel) => {
-                    const applied = isAlreadyApplied(parcel.landInfo.id);
-                    return (
-                      <div
-                        key={parcel.id}
-                        className={`p-3 cursor-pointer transition-colors ${
-                          applied ? "opacity-60 bg-muted/30" :
-                          selectedParcel?.id === parcel.id 
-                            ? "bg-primary/10 border-l-4 border-l-primary" 
-                            : "hover:bg-muted/50"
-                        }`}
-                        onClick={() => handleParcelSelect(parcel)}
-                        onMouseEnter={() => setHoveredParcelId(parcel.id)}
-                        onMouseLeave={() => setHoveredParcelId(null)}
-                      >
-                        <div className="space-y-1.5">
-                          <div className="flex items-start justify-between gap-2">
-                            <p className="font-medium text-sm leading-tight flex-1 line-clamp-2">
-                              {parcel.landInfo.address}
-                            </p>
-                            {applied && (
-                              <Badge variant="secondary" className="text-xs shrink-0 bg-blue-100 text-blue-700">
-                                신청완료
-                              </Badge>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <Badge variant="outline" className="text-xs h-5">
-                              {parcel.landInfo.landType}
-                            </Badge>
-                            <span>{parcel.landInfo.remainingArea.toLocaleString()}㎡</span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <Badge className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-xs h-5">
-                              신청 가능
-                            </Badge>
-                            {applied ? (
-                              <span className="text-xs text-blue-600">처리중</span>
-                            ) : isInCart(parcel.id) ? (
-                              <Badge variant="secondary" className="text-xs h-5">추가됨</Badge>
-                            ) : (
-                              <Button 
-                                size="sm" 
-                                variant="ghost"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleAddToCart(parcel);
-                                }}
-                                className="h-6 text-xs gap-1 px-2"
-                              >
-                                <ShoppingCart className="h-3 w-3" />
-                                담기
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-                  <MapPin className="h-10 w-10 text-muted-foreground/50 mb-3" />
-                  <p className="text-sm text-muted-foreground">
-                    매수 신청 가능한 필지가 없습니다.
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* 장바구니 요약 */}
-            {cartItems.length > 0 && (
-              <div className="p-3 border-t bg-muted/30 shrink-0">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium flex items-center gap-1.5">
-                    <ShoppingCart className="h-4 w-4 text-primary" />
-                    신청 목록
-                  </span>
-                  <Badge>{cartItems.length}건</Badge>
-                </div>
-                <Button 
-                  className="w-full h-9 text-sm"
-                  onClick={() => onSubmitApplication(cartItems)}
-                >
                   <FileText className="h-4 w-4 mr-1.5" />
                   신청서 작성
                 </Button>
