@@ -18,7 +18,6 @@ import {
   MapPin, 
   CheckCircle2, 
   XCircle, 
-  Info, 
   FileText,
   ShoppingCart,
   Trash2,
@@ -350,206 +349,181 @@ export function MyParcelList({
 
           {/* 컨텐츠 */}
           <div className="flex-1 overflow-y-auto p-3 space-y-3">
-            {/* 신청 완료 안내 */}
-            {alreadyApplied && (
-              <div className="rounded-lg border border-blue-200 bg-blue-50 p-3">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-blue-600" />
-                  <span className="text-sm font-medium text-blue-700">이미 신청된 필지입니다.</span>
-                </div>
-                <p className="text-xs text-blue-600 mt-1">현재 검토 중이며 처리 완료 시 알림 드립니다.</p>
-              </div>
-            )}
-
-            {/* 확인 항목 선택 */}
-            {!alreadyApplied && (
-              <div className="space-y-2 border rounded-lg p-3">
-                <h5 className="font-medium text-sm flex items-center gap-1.5">
-                  <RefreshCw className="h-3.5 w-3.5" />
-                  확인 항목 (AI 재분석)
-                </h5>
-                
-                {/* 체크박스 */}
-                <div className="grid grid-cols-1 gap-1.5">
-                  {adminCheckItemOptions.map((option) => (
-                    <div 
-                      key={option.value}
-                      className={`flex items-center gap-2 p-2 rounded border cursor-pointer transition-colors text-xs ${
-                        checkItems[option.value as keyof AdminCheckItems] 
-                          ? 'bg-primary/10 border-primary' 
-                          : 'hover:bg-muted/50'
-                      }`}
-                      onClick={() => setCheckItems(prev => ({
-                        ...prev,
-                        [option.value]: !prev[option.value as keyof AdminCheckItems]
-                      }))}
-                    >
-                      <Checkbox 
-                        id={option.value}
-                        checked={checkItems[option.value as keyof AdminCheckItems]}
-                        onCheckedChange={(checked) => setCheckItems(prev => ({
-                          ...prev,
-                          [option.value]: !!checked
-                        }))}
-                      />
-                      <Label htmlFor={option.value} className="cursor-pointer font-normal text-xs flex-1">
-                        {option.label}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-                
-                {/* 형상/지목 선택 */}
-                <div className="grid grid-cols-2 gap-2 pt-1">
-                  <div>
-                    <Label className="text-xs text-muted-foreground">토지 형상</Label>
-                    <Select value={selectedLandShape} onValueChange={(v) => setSelectedLandShape(v as LandShape)}>
-                      <SelectTrigger className="h-8 text-xs mt-1">
-                        <SelectValue placeholder="선택" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {["정방형", "가로장방형", "세로장방형", "사다리형", "역사다리형", "부정형", "삼각형", "역삼각형", "자루형"].map((shape) => (
-                          <SelectItem key={shape} value={shape} className="text-xs">{shape}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label className="text-xs text-muted-foreground">활용지목</Label>
-                    <Select value={selectedLandUsage} onValueChange={(v) => setSelectedLandUsage(v as LandCategory)}>
-                      <SelectTrigger className="h-8 text-xs mt-1">
-                        <SelectValue placeholder="선택" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {["전", "답", "과", "대", "임", "목", "잡"].map((usage) => (
-                          <SelectItem key={usage} value={usage} className="text-xs">{usage}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                
-                {/* AI 분석 버튼 */}
-                <Button 
-                  onClick={handleReanalyze}
-                  disabled={isAnalyzing}
-                  className="w-full h-9 gap-1.5 mt-2"
-                  size="sm"
-                >
-                  {isAnalyzing ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      분석 중...
-                    </>
-                  ) : (
-                    <>
-                      <AIIcon className="h-4 w-4" />
-                      AI 분석
-                    </>
-                  )}
-                </Button>
-              </div>
-            )}
-
-            {/* AI 판정 결과 */}
-            {aiResult && (
-              <div className={`rounded-lg border-2 p-3 ${
-                aiResult.provisionalJudgment === "매수 신청 가능"
-                  ? "border-[rgb(20,113,97)] bg-[rgb(20,113,97)]/5"
-                  : "border-destructive bg-destructive/5"
-              }`}>
-                {/* 헤더 */}
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-semibold flex items-center gap-1.5">
-                    <AIIcon className="h-4 w-4" />
-                    AI 분석 결과
-                    {reanalyzedResult && <Badge variant="outline" className="text-xs ml-1">재분석</Badge>}
-                  </span>
-                  <Badge className={`text-xs ${
-                    aiResult.provisionalJudgment === "매수 신청 가능"
-                      ? "bg-[rgb(20,113,97)]"
-                      : "bg-destructive"
-                  }`}>
-                    {aiResult.provisionalJudgment === "매수 신청 가능" ? "신청 가능" : "신청 불가"}
-                  </Badge>
-                </div>
-
-                {/* 판단 요약 */}
-                {aiResult.judgmentRationale && (
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-start gap-2">
-                      <FileText className="h-4 w-4 shrink-0 text-primary mt-0.5" />
-                      <p className="text-muted-foreground leading-relaxed">
-                        {aiResult.judgmentRationale.summary}
-                      </p>
-                    </div>
-                    
-                    {/* 법적 근거 */}
-                    <div className="flex items-start gap-2">
-                      <Scale className="h-4 w-4 shrink-0 text-amber-500 mt-0.5" />
-                      <p className="text-xs text-muted-foreground">
-                        {aiResult.judgmentRationale.legalBasis}
-                      </p>
-                    </div>
-                    
-                    {/* 적용 기준 */}
-                    <div className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 shrink-0 text-primary mt-0.5" />
-                      <ul className="text-xs text-muted-foreground space-y-0.5">
-                        {aiResult.judgmentRationale.appliedCriteria.slice(0, 4).map((criteria, idx) => (
-                          <li key={idx} className="flex items-center gap-1">
-                            <span className="h-1 w-1 rounded-full bg-muted-foreground" />
-                            <span>{criteria}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                )}
-
-                {/* 안내 문구 */}
-                <div className="flex items-center gap-1.5 mt-3 pt-2 border-t">
-                  <Info className="h-3 w-3 shrink-0 text-muted-foreground" />
-                  <p className="text-xs text-muted-foreground">
-                    AI 결과는 참고용이며, 최종 판정은 담당자 검토에 따릅니다.
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* 기준 충족 여부 */}
-            {aiResult && (
-              <div className="space-y-1.5">
-                <h5 className="font-medium text-sm">기준 충족 여부</h5>
-                <div className="space-y-1">
-                  {aiResult.criteriaChecks.map((check, index) => (
-                    <div 
-                      key={index}
-                      className={`flex items-center justify-between p-2 rounded border text-xs ${
-                        check.isMet ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'
-                      }`}
-                    >
-                      <div className="flex items-center gap-1.5">
-                        {check.isMet ? (
-                          <CheckCircle2 className="h-3.5 w-3.5 text-green-600 shrink-0" />
-                        ) : (
-                          <XCircle className="h-3.5 w-3.5 text-gray-400 shrink-0" />
-                        )}
-                        <span className="font-medium">{check.criteriaName}</span>
+            {/* 현재 AI 결과 (선택 즉시 표시) */}
+            {(() => {
+              const aiResult = reanalyzedResult || selectedParcel.aiResult;
+              const alreadyApplied = isAlreadyApplied(selectedParcel.landInfo.id);
+              
+              return (
+                <>
+                  {/* 신청 완료 안내 */}
+                  {alreadyApplied && (
+                    <div className="rounded-lg border border-blue-200 bg-blue-50 p-3">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-blue-600" />
+                        <span className="text-sm font-medium text-blue-700">이미 신청된 필지입니다.</span>
                       </div>
-                      <Badge variant={check.isMet ? "default" : "secondary"} className="text-xs h-5">
-                        {check.isMet ? "충족" : "미충족"}
+                      <p className="text-xs text-blue-600 mt-1">현재 검토 중이며 처리 완료 시 알림 드립니다.</p>
+                    </div>
+                  )}
+
+                  {/* AI 판정 결과 (항상 표시) */}
+                  <div className={`rounded-lg border-2 p-3 ${
+                    aiResult.provisionalJudgment === "매수 신청 가능"
+                      ? "border-[rgb(20,113,97)] bg-[rgb(20,113,97)]/5"
+                      : "border-destructive bg-destructive/5"
+                  }`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-semibold flex items-center gap-1.5">
+                        <AIIcon className="h-4 w-4" />
+                        AI 분석 결과
+                        {reanalyzedResult && <Badge variant="outline" className="text-xs ml-1">재분석</Badge>}
+                      </span>
+                      <Badge className={`text-xs ${
+                        aiResult.provisionalJudgment === "매수 신청 가능"
+                          ? "bg-[rgb(20,113,97)]"
+                          : "bg-destructive"
+                      }`}>
+                        {aiResult.provisionalJudgment === "매수 신청 가능" ? "신청 가능" : "신청 불가"}
                       </Badge>
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
+
+                    {aiResult.judgmentRationale && (
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-start gap-2">
+                          <FileText className="h-4 w-4 shrink-0 text-primary mt-0.5" />
+                          <p className="text-muted-foreground leading-relaxed text-xs">
+                            {aiResult.judgmentRationale.summary}
+                          </p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <Scale className="h-4 w-4 shrink-0 text-amber-500 mt-0.5" />
+                          <p className="text-xs text-muted-foreground">
+                            {aiResult.judgmentRationale.legalBasis}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 기준 충족 여부 */}
+                    <div className="mt-3 space-y-1">
+                      {aiResult.criteriaChecks.map((check, idx) => (
+                        <div 
+                          key={idx}
+                          className={`flex items-center justify-between p-1.5 rounded text-xs ${
+                            check.isMet ? 'bg-green-50' : 'bg-gray-50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-1.5">
+                            {check.isMet ? (
+                              <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />
+                            ) : (
+                              <XCircle className="h-3.5 w-3.5 text-gray-400" />
+                            )}
+                            <span>{check.criteriaName}</span>
+                          </div>
+                          <Badge variant={check.isMet ? "default" : "secondary"} className="text-xs h-5">
+                            {check.isMet ? "충족" : "미충족"}
+                          </Badge>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 확인 항목 선택 (재분석용) - 신청 완료가 아닐 때만 */}
+                  {!alreadyApplied && (
+                    <div className="space-y-2 border rounded-lg p-3">
+                      <h5 className="font-medium text-sm flex items-center gap-1.5">
+                        <RefreshCw className="h-3.5 w-3.5" />
+                        확인 항목 변경 (AI 재분석)
+                      </h5>
+                      
+                      <div className="grid grid-cols-1 gap-1.5">
+                        {adminCheckItemOptions.map((option) => (
+                          <div 
+                            key={option.value}
+                            className={`flex items-center gap-2 p-2 rounded border cursor-pointer transition-colors text-xs ${
+                              checkItems[option.value as keyof AdminCheckItems] 
+                                ? 'bg-primary/10 border-primary' 
+                                : 'hover:bg-muted/50'
+                            }`}
+                            onClick={() => setCheckItems(prev => ({
+                              ...prev,
+                              [option.value]: !prev[option.value as keyof AdminCheckItems]
+                            }))}
+                          >
+                            <Checkbox 
+                              id={option.value}
+                              checked={checkItems[option.value as keyof AdminCheckItems]}
+                              onCheckedChange={(checked) => setCheckItems(prev => ({
+                                ...prev,
+                                [option.value]: !!checked
+                              }))}
+                            />
+                            <Label htmlFor={option.value} className="cursor-pointer font-normal text-xs flex-1">
+                              {option.label}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        <div>
+                          <Label className="text-xs text-muted-foreground">토지 형상</Label>
+                          <Select value={selectedLandShape} onValueChange={(v) => setSelectedLandShape(v as LandShape)}>
+                            <SelectTrigger className="h-8 text-xs mt-1">
+                              <SelectValue placeholder="선택" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {["정방형", "가로장방형", "세로장방형", "사다리형", "역사다리형", "부정형", "삼각형", "역삼각형", "자루형"].map((shape) => (
+                                <SelectItem key={shape} value={shape} className="text-xs">{shape}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label className="text-xs text-muted-foreground">활용지목</Label>
+                          <Select value={selectedLandUsage} onValueChange={(v) => setSelectedLandUsage(v as LandCategory)}>
+                            <SelectTrigger className="h-8 text-xs mt-1">
+                              <SelectValue placeholder="선택" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {["전", "답", "과", "대", "임", "목", "잡"].map((usage) => (
+                                <SelectItem key={usage} value={usage} className="text-xs">{usage}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      
+                      <Button 
+                        onClick={handleReanalyze}
+                        disabled={isAnalyzing}
+                        className="w-full h-9 gap-1.5 mt-2"
+                        size="sm"
+                      >
+                        {isAnalyzing ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            분석 중...
+                          </>
+                        ) : (
+                          <>
+                            <AIIcon className="h-4 w-4" />
+                            AI 재분석
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
           </div>
 
           {/* 하단 액션 */}
           <div className="p-3 border-t bg-muted/30 shrink-0">
-            {alreadyApplied ? (
+            {isAlreadyApplied(selectedParcel.landInfo.id) ? (
               <Badge variant="secondary" className="w-full h-9 flex items-center justify-center bg-blue-100 text-blue-700">
                 신청완료 - 처리 중
               </Badge>
@@ -567,7 +541,7 @@ export function MyParcelList({
                   추가됨
                 </Badge>
               </div>
-            ) : aiResult?.provisionalJudgment === "매수 신청 가능" ? (
+            ) : (reanalyzedResult || selectedParcel.aiResult).provisionalJudgment === "매수 신청 가능" ? (
               <Button 
                 className="w-full h-9 text-sm gap-1.5"
                 onClick={() => handleAddToCart(selectedParcel)}
@@ -590,48 +564,6 @@ export function MyParcelList({
             )}
           </div>
         </div>
-      )}
-
-      {/* 장바구니 플로팅 카드 (우측 패널 없을 때) */}
-      {!selectedParcel && cartItems.length > 0 && (
-        <Card className="absolute right-4 bottom-4 w-72 shadow-xl z-10">
-          <CardHeader className="p-3 pb-2">
-            <CardTitle className="text-sm flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <ShoppingCart className="h-4 w-4 text-primary" />
-                신청 목록
-              </span>
-              <Badge>{cartItems.length}건</Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-3 pt-0">
-            <div className="space-y-1.5 mb-3 max-h-[120px] overflow-y-auto">
-              {cartItems.map((parcel) => (
-                <div 
-                  key={parcel.id}
-                  className="flex items-center justify-between p-2 bg-muted/50 rounded text-xs"
-                >
-                  <span className="truncate flex-1 mr-2">{parcel.landInfo.address}</span>
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    onClick={() => onRemoveFromCart(parcel.id)}
-                    className="h-6 w-6 text-destructive hover:text-destructive shrink-0"
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-            <Button 
-              className="w-full h-9 text-sm"
-              onClick={() => onSubmitApplication(cartItems)}
-            >
-              <FileText className="h-4 w-4 mr-1.5" />
-              신청서 작성
-            </Button>
-          </CardContent>
-        </Card>
       )}
     </div>
   );
