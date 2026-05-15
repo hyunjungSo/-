@@ -80,6 +80,32 @@ function CitizenPageContent() {
     setAiResults([]);
     setSubmittedApplication(null);
     setApplicationStep("search");
+    setReapplyData(null);
+  };
+  
+  // 취소 후 재신청 처리 - 기존 신청 데이터를 프리필하여 신청 화면으로 이동
+  const [reapplyData, setReapplyData] = useState<Application | null>(null);
+  
+  const handleReapply = (application: Application) => {
+    // 기존 신청 데이터를 저장하고 신규 신청 탭으로 전환
+    setReapplyData(application);
+    
+    // 필지 정보 설정
+    const lands = application.additionalLands 
+      ? [application.landInfo, ...application.additionalLands]
+      : [application.landInfo];
+    
+    // AI 결과 설정 (기존 데이터에서 가져옴)
+    const results = application.aiResultList || (application.aiResult ? [application.aiResult] : []);
+    
+    setSelectedLands(lands);
+    setSelectedLand(lands[0]);
+    setAiResults(results);
+    setAiResult(results[0] || null);
+    
+    // 신규 신청 탭으로 전환하고 신청 단계로 이동
+    setMainTab("new");
+    setApplicationStep("apply");
   };
 
   return (
@@ -139,6 +165,7 @@ function CitizenPageContent() {
               aiResultList={aiResults.length > 1 ? aiResults : undefined}
               onSubmit={handleApplicationSubmit}
               onBack={() => setApplicationStep("search")}
+              prefillData={reapplyData}
             />
           )}
 
@@ -158,7 +185,7 @@ function CitizenPageContent() {
           id="tabpanel-status"
           aria-labelledby="tab-status"
         >
-          <ApplicationStatusSection />
+          <ApplicationStatusSection onReapply={handleReapply} />
         </TabsContent>
       </Tabs>
     </div>
