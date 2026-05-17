@@ -885,7 +885,7 @@ function ApplicationDetailPanel({
               }}
               className={`h-8 text-xs ${!canEdit ? "opacity-50 cursor-not-allowed" : ""}`}
             >
-              재작성
+              수정
             </Button>
           </div>
         )}
