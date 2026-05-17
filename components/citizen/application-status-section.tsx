@@ -883,10 +883,9 @@ function ApplicationDetailPanel({
                   onEditModeChange(true);
                 }
               }}
-              className={`h-8 gap-1.5 text-xs ${!canEdit ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`h-8 text-xs ${!canEdit ? "opacity-50 cursor-not-allowed" : ""}`}
             >
-              <Pencil className="size-[18px]" />
-              수정
+              재작성
             </Button>
           </div>
         )}
