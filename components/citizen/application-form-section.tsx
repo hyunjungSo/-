@@ -981,21 +981,13 @@ export function ApplicationFormSection({
           <AlertDialogHeader>
             <AlertDialogTitle>잔여지 매수 신청서를 제출하시겠습니까?</AlertDialogTitle>
             <AlertDialogDescription asChild>
-              <div className="space-y-4 text-muted-foreground">
-                <p className="flex items-center gap-2 text-sm">
-                  <AdminStatusBadge status="접수완료" />
-                  <span>단계에서 신청 내용 수정이 가능합니다.</span>
+              <div className="space-y-3 text-muted-foreground">
+                <p className="text-sm">
+                  제출 후 신청 내용 수정이 필요한 경우, 기존 신청을 취소하고 새로 신청서를 작성해야 합니다.
                 </p>
-                <div className="rounded-md border bg-muted/30 p-3 space-y-2 text-sm">
-                  <p className="flex gap-2">
-                    <span className="text-success font-medium shrink-0">수정 가능:</span>
-                    <span>신청인 정보, 토지 정보, 신청 사유, 첨부 서류</span>
-                  </p>
-                  <p className="flex gap-2">
-                    <span className="text-destructive font-medium shrink-0">수정 불가:</span>
-                    <span>대상 필지 선택</span>
-                  </p>
-                </div>
+                <p className="text-xs text-muted-foreground/70">
+                  제출 전 신청 내용을 다시 한번 확인해 주세요.
+                </p>
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
