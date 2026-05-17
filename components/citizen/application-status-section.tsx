@@ -649,12 +649,14 @@ function ApplicationDetailPanel({
   application,
   isEditMode,
   onEditModeChange,
-  onSave
+  onSave,
+  onReapplyClick
 }: { 
   application: Application;
   isEditMode: boolean;
   onEditModeChange: (value: boolean) => void;
   onSave: (updatedApp: Application) => void;
+  onReapplyClick?: () => void;
 }) {
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -874,7 +876,13 @@ function ApplicationDetailPanel({
               variant="outline"
               size="sm"
               disabled={!canEdit}
-              onClick={() => onEditModeChange(true)}
+              onClick={() => {
+                if (onReapplyClick) {
+                  onReapplyClick();
+                } else {
+                  onEditModeChange(true);
+                }
+              }}
               className={`h-8 gap-1.5 text-xs ${!canEdit ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               <Pencil className="size-[18px]" />
@@ -1187,12 +1195,18 @@ function ApplicationDetailPanel({
   );
 }
 
-export function ApplicationStatusSection() {
+interface ApplicationStatusSectionProps {
+  onReapply?: (application: Application) => void;
+}
+
+export function ApplicationStatusSection({ onReapply }: ApplicationStatusSectionProps) {
   const [applications, setApplications] = useState<Application[]>(dummyApplications);
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [showLeaveWarning, setShowLeaveWarning] = useState(false);
   const [pendingApplication, setPendingApplication] = useState<Application | null>(null);
+  const [showReapplyAlert, setShowReapplyAlert] = useState(false);
+  const [reapplyTarget, setReapplyTarget] = useState<Application | null>(null);
 
   // 현재 로그인한 사용자의 신청 목록
   const myApplications = applications;
@@ -1315,6 +1329,10 @@ export function ApplicationStatusSection() {
             isEditMode={isEditMode}
             onEditModeChange={setIsEditMode}
             onSave={handleApplicationUpdate}
+            onReapplyClick={() => {
+              setReapplyTarget(displayedApplication);
+              setShowReapplyAlert(true);
+            }}
           />
         ) : (
           <div className="overflow-hidden rounded-lg border border-border">
@@ -1345,6 +1363,56 @@ export function ApplicationStatusSection() {
               </Button>
               <Button variant="destructive" onClick={handleConfirmLeave}>
                 저장하지 않고 이동
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 재신청 알림 모달 */}
+      {showReapplyAlert && reapplyTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="mx-4 w-full max-w-md rounded-lg bg-background p-6 shadow-xl">
+            <div className="flex items-start gap-3 mb-4">
+              <div className="rounded-full bg-amber-100 p-2">
+                <AlertTriangle className="h-5 w-5 text-amber-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg">수정 안내</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  신청 내용 수정을 위해 기존 신청을 취소하고<br />
+                  새로 신청서를 작성해야 합니다.
+                </p>
+              </div>
+            </div>
+            
+            <div className="rounded-lg bg-muted/50 p-3 mb-5">
+              <div className="text-xs text-muted-foreground space-y-1">
+                <p>• 기존 입력 정보는 유지됩니다.</p>
+                <p>• 신청번호가 새로 부여됩니다.</p>
+              </div>
+            </div>
+            
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowReapplyAlert(false);
+                  setReapplyTarget(null);
+                }}
+              >
+                취소
+              </Button>
+              <Button 
+                onClick={() => {
+                  setShowReapplyAlert(false);
+                  if (onReapply && reapplyTarget) {
+                    onReapply(reapplyTarget);
+                  }
+                  setReapplyTarget(null);
+                }}
+              >
+                확인
               </Button>
             </div>
           </div>

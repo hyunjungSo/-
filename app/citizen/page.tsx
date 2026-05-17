@@ -82,6 +82,22 @@ function CitizenPageContent() {
     setApplicationStep("result");
   };
 
+  // 신청 현황에서 재신청 처리 (기존 신청 정보로 신청서 작성 화면 이동)
+  const handleReapply = (application: Application) => {
+    // 기존 신청의 필지 정보로 신청서 작성 화면으로 이동
+    setSelectedLand(application.landInfo);
+    setSelectedLands([application.landInfo]);
+    
+    // AI 결과가 있으면 사용, 없으면 기본 결과 생성
+    if (application.aiResult) {
+      setAiResult(application.aiResult);
+      setAiResults([application.aiResult]);
+    }
+    
+    setMainTab("new");
+    setApplicationStep("apply");
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -158,7 +174,7 @@ function CitizenPageContent() {
           id="tabpanel-status"
           aria-labelledby="tab-status"
         >
-          <ApplicationStatusSection />
+          <ApplicationStatusSection onReapply={handleReapply} />
         </TabsContent>
       </Tabs>
     </div>
