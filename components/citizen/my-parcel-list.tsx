@@ -202,20 +202,20 @@ export function MyParcelList({
   return (
     <div className="relative h-[calc(100vh-220px)] min-h-[600px] w-full overflow-hidden rounded-lg border bg-background">
       {/* 좌측 패널 - 필지 목록 */}
-      <div className="absolute left-0 top-0 h-full w-[320px] bg-background border-r shadow-lg z-10 flex flex-col">
+      <div className="absolute left-0 top-0 h-full w-[320px] bg-white border-r border-gray-200 shadow-lg z-10 flex flex-col">
         {/* 헤더 */}
-        <div className="p-4 border-b bg-muted/30 shrink-0">
+        <div className="p-4 border-b border-gray-200 bg-gray-50 shrink-0">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-semibold text-base">{currentUser.name}님의 잔여지</h3>
-            <Badge variant="secondary">{myParcels.length}건</Badge>
+            <h3 className="font-semibold text-base text-gray-900">{currentUser.name}님의 잔여지</h3>
+            <Badge variant="secondary" className="bg-gray-100 text-gray-700">{myParcels.length}건</Badge>
           </div>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-gray-600">
             매수 신청 가능한 필지 목록입니다.
           </p>
         </div>
 
         {/* 필지 목록 */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto bg-white">
           {myParcels.length > 0 ? (
             <div className="divide-y">
               {myParcels.map((parcel) => {
@@ -223,11 +223,11 @@ export function MyParcelList({
                 return (
                   <div
                     key={parcel.id}
-                    className={`p-3 cursor-pointer transition-colors ${
-                      applied ? "opacity-60 bg-muted/30" :
+                    className={`p-3 cursor-pointer transition-colors border-b border-gray-100 ${
+                      applied ? "opacity-60 bg-gray-50" :
                       selectedParcel?.id === parcel.id 
-                        ? "bg-primary/10 border-l-4 border-l-primary" 
-                        : "hover:bg-muted/50"
+                        ? "bg-blue-50 border-l-4 border-l-blue-500" 
+                        : "hover:bg-gray-50"
                     }`}
                     onClick={() => handleParcelSelect(parcel)}
                     onMouseEnter={() => setHoveredParcelId(parcel.id)}
@@ -235,7 +235,7 @@ export function MyParcelList({
                   >
                     <div className="space-y-1.5">
                       <div className="flex items-start justify-between gap-2">
-                        <p className="font-medium text-sm leading-tight flex-1 line-clamp-2">
+                        <p className="font-medium text-sm leading-tight flex-1 line-clamp-2 text-gray-900">
                           {parcel.landInfo.address}
                         </p>
                         {applied && (
@@ -244,8 +244,8 @@ export function MyParcelList({
                           </Badge>
                         )}
                       </div>
-                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <Badge variant="outline" className="text-xs h-5">
+                      <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                        <Badge variant="outline" className="text-xs h-5 border-gray-200 text-gray-600">
                           {parcel.landInfo.landType}
                         </Badge>
                         <span>{parcel.landInfo.remainingArea.toLocaleString()}㎡</span>
@@ -291,8 +291,8 @@ export function MyParcelList({
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-              <MapPin className="h-10 w-10 text-muted-foreground/50 mb-3" />
-              <p className="text-sm text-muted-foreground">
+              <MapPin className="h-10 w-10 text-gray-300 mb-3" />
+              <p className="text-sm text-gray-500">
                 매수 신청 가능한 필지가 없습니다.
               </p>
             </div>
@@ -301,13 +301,13 @@ export function MyParcelList({
 
         {/* 신청 목록 요약 */}
         {cartItems.length > 0 && (
-          <div className="p-3 border-t bg-muted/30 shrink-0">
+          <div className="p-3 border-t border-gray-200 bg-gray-50 shrink-0">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium flex items-center gap-1.5">
-                <FileText className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium flex items-center gap-1.5 text-gray-900">
+                <FileText className="h-4 w-4 text-blue-600" />
                 신청 목록
               </span>
-              <Badge>{cartItems.length}건</Badge>
+              <Badge className="bg-gray-200 text-gray-800">{cartItems.length}건</Badge>
             </div>
             
             {/* 선택된 필지 목록 */}
@@ -315,14 +315,14 @@ export function MyParcelList({
               {cartItems.map((item) => (
                 <div 
                   key={item.id}
-                  className="flex items-center justify-between p-1.5 bg-background rounded border text-xs"
+                  className="flex items-center justify-between p-1.5 bg-white rounded border border-gray-200 text-xs"
                 >
-                  <span className="truncate flex-1 mr-2">
+                  <span className="truncate flex-1 mr-2 text-gray-700">
                     {item.landInfo.address.split(' ').slice(-2).join(' ')}
                   </span>
                   <button
                     onClick={() => onRemoveFromCart(item.id)}
-                    className="text-muted-foreground hover:text-destructive transition-colors p-0.5"
+                    className="text-gray-400 hover:text-red-600 transition-colors p-0.5"
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>
