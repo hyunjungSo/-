@@ -67,9 +67,9 @@ export function MyParcelList({
 
   // 본인 소유 잔여지 중 매수 신청 가능한 필지만 필터링
   const myParcels = useMemo(() => {
+    // 필터 조건 완화: 일단 모든 사전등록 필지 표시
     return preRegisteredParcels.filter(
       p => p.preRegistrationStatus === "등록완료" && 
-           p.aiResult.provisionalJudgment === "매수 신청 가능" &&
            p.landInfo.ownerName === currentUser.name
     );
   }, [currentUser.name]);
