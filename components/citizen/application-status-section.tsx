@@ -1378,9 +1378,9 @@ export function ApplicationStatusSection({ onReapply }: ApplicationStatusSection
                 <AlertTriangle className="h-5 w-5 text-amber-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-lg">수정 안내</h3>
+                <h3 className="font-semibold text-lg">신청 내용 수정 안내</h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  신청 내용 수정을 위해 기존 신청을 취소하고<br />
+                  신청 내용을 수정하시려면 기존 신청을 취소하고<br />
                   새로 신청서를 작성해야 합니다.
                 </p>
               </div>
@@ -1388,8 +1388,9 @@ export function ApplicationStatusSection({ onReapply }: ApplicationStatusSection
             
             <div className="rounded-lg bg-muted/50 p-3 mb-5">
               <div className="text-xs text-muted-foreground space-y-1">
-                <p>• 기존 입력 정보는 유지됩니다.</p>
-                <p>• 신청번호가 새로 부여됩니다.</p>
+                <p>• 기존 신청 건은 자동으로 취소 처리됩니다.</p>
+                <p>• 해당 필지 정보를 바탕으로 신청서를 다시 작성합니다.</p>
+                <p>• 새로운 신청번호가 부여됩니다.</p>
               </div>
             </div>
             
