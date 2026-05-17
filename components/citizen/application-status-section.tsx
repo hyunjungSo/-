@@ -1413,7 +1413,7 @@ export function ApplicationStatusSection({ onReapply }: ApplicationStatusSection
                   setReapplyTarget(null);
                 }}
               >
-                확인
+                새로 신청서 작성하기
               </Button>
             </div>
           </div>
