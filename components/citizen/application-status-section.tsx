@@ -1373,25 +1373,11 @@ export function ApplicationStatusSection({ onReapply }: ApplicationStatusSection
       {showReapplyAlert && reapplyTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="mx-4 w-full max-w-md rounded-lg bg-background p-6 shadow-xl">
-            <div className="flex items-start gap-3 mb-4">
-              <div className="rounded-full bg-amber-100 p-2">
-                <AlertTriangle className="h-5 w-5 text-amber-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg">신청 내용 수정 안내</h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  신청 내용을 수정하시려면 기존 신청을 취소하고<br />
-                  새로 신청서를 작성해야 합니다.
-                </p>
-              </div>
-            </div>
+            <h3 className="font-semibold text-lg mb-3">신청 내용 수정 안내</h3>
             
-            <div className="rounded-lg bg-muted/50 p-3 mb-5">
-              <div className="text-xs text-muted-foreground space-y-1">
-                <p>• 기존 신청 건은 자동으로 취소 처리됩니다.</p>
-                <p>• 해당 필지 정보를 바탕으로 신청서를 다시 작성합니다.</p>
-                <p>• 새로운 신청번호가 부여됩니다.</p>
-              </div>
+            <div className="text-sm text-muted-foreground space-y-2 mb-6">
+              <p>신청 내용 수정 시 기존 신청은 자동 취소되며, 해당 필지로 새 신청서를 작성합니다.</p>
+              <p className="text-xs">* 새로운 신청번호가 부여됩니다.</p>
             </div>
             
             <div className="flex justify-end gap-2">
