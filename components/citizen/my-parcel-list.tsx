@@ -24,7 +24,8 @@ import {
   RefreshCw,
   Loader2,
   X,
-  Scale
+  Scale,
+  Plus
 } from "lucide-react";
 import { AIIcon } from "@/components/ui/ai-icon";
 import type { PreRegisteredParcel, AdminCheckItems, LandShape, LandCategory, AIAnalysisResult } from "@/lib/types";
@@ -257,7 +258,18 @@ export function MyParcelList({
                         {applied ? (
                           <span className="text-xs text-blue-600">처리중</span>
                         ) : isInCart(parcel.id) ? (
-                          <Badge variant="secondary" className="text-xs h-5">추가됨</Badge>
+                          <Button 
+                            size="sm" 
+                            variant="ghost"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onRemoveFromCart(parcel.id);
+                            }}
+                            className="h-6 text-xs gap-1 px-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          >
+                            <X className="h-3 w-3" />
+                            제외
+                          </Button>
                         ) : (
                           <Button 
                             size="sm" 
@@ -268,8 +280,8 @@ export function MyParcelList({
                             }}
                             className="h-6 text-xs gap-1 px-2"
                           >
-                            <ShoppingCart className="h-3 w-3" />
-                            담기
+                            <Plus className="h-3 w-3" />
+                            선택
                           </Button>
                         )}
                       </div>
@@ -288,16 +300,37 @@ export function MyParcelList({
           )}
         </div>
 
-        {/* 장바구니 요약 */}
+        {/* 신청 목록 요약 */}
         {cartItems.length > 0 && (
           <div className="p-3 border-t bg-muted/30 shrink-0">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium flex items-center gap-1.5">
-                <ShoppingCart className="h-4 w-4 text-primary" />
+                <FileText className="h-4 w-4 text-primary" />
                 신청 목록
               </span>
               <Badge>{cartItems.length}건</Badge>
             </div>
+            
+            {/* 선택된 필지 목록 */}
+            <div className="space-y-1.5 mb-3 max-h-[120px] overflow-y-auto">
+              {cartItems.map((item) => (
+                <div 
+                  key={item.id}
+                  className="flex items-center justify-between p-1.5 bg-background rounded border text-xs"
+                >
+                  <span className="truncate flex-1 mr-2">
+                    {item.landInfo.address.split(' ').slice(-2).join(' ')}
+                  </span>
+                  <button
+                    onClick={() => onRemoveFromCart(item.id)}
+                    className="text-muted-foreground hover:text-destructive transition-colors p-0.5"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+            
             <Button 
               className="w-full h-9 text-sm"
               onClick={() => onSubmitApplication(cartItems)}
