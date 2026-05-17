@@ -342,8 +342,8 @@ export function MyParcelList({
       </div>
 
       {/* 중앙 지도 */}
-      <div className={`absolute left-[320px] top-0 h-full transition-all duration-300 ${
-        selectedParcel ? "right-[380px]" : "right-0"
+      <div className={`absolute top-0 h-full transition-all duration-300 right-0 ${
+        selectedParcel ? "left-[700px]" : "left-[320px]"
       }`}>
         <LeafletMap
           parcels={mapParcels}
@@ -356,9 +356,9 @@ export function MyParcelList({
         />
       </div>
 
-      {/* 우측 패널 - AI 분석 결과 */}
+      {/* AI 분석 결과 패널 - 필지 목록 바로 옆 */}
       {selectedParcel && (
-        <div className="absolute right-0 top-0 bottom-0 w-[380px] bg-background border-l shadow-xl z-10 flex flex-col overflow-hidden">
+        <div className="absolute left-[320px] top-0 bottom-0 w-[380px] bg-background border-r shadow-lg z-10 flex flex-col overflow-hidden">
           {/* 헤더 */}
           <div className="p-3 border-b bg-muted/30 shrink-0">
             <div className="flex items-start justify-between gap-2">
