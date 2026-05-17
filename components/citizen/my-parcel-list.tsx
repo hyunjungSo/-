@@ -356,9 +356,12 @@ export function MyParcelList({
         />
       </div>
 
-      {/* AI 분석 결과 패널 - 필지 목록 바로 옆 */}
-      {selectedParcel && (
-        <div className="absolute left-[320px] top-0 bottom-0 w-[380px] bg-background border-r shadow-lg z-10 flex flex-col overflow-hidden">
+      {/* AI 분석 결과 패널 - 필지 목록 바로 옆 (slide in/out) */}
+      <div className={`absolute left-[320px] top-0 bottom-0 w-[380px] bg-background border-r shadow-lg z-10 flex flex-col overflow-hidden transition-transform duration-300 ease-in-out ${
+        selectedParcel ? "translate-x-0" : "-translate-x-full"
+      }`}>
+        {selectedParcel && (
+          <>
           {/* 헤더 */}
           <div className="p-3 border-b bg-muted/30 shrink-0">
             <div className="flex items-start justify-between gap-2">
@@ -598,8 +601,9 @@ export function MyParcelList({
               </div>
             )}
           </div>
-        </div>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 }
