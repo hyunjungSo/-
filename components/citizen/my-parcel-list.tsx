@@ -219,10 +219,12 @@ export function MyParcelList({
             <div className="divide-y divide-gray-200">
               {myParcels.map((parcel) => {
                 const applied = isAlreadyApplied(parcel.landInfo.id);
+                const isEligible = parcel.aiResult.provisionalJudgment === "매수 신청 가능";
                 return (
                   <div
                     key={parcel.id}
                     className={`p-3 cursor-pointer transition-colors border-b border-gray-100 ${
+                      !isEligible ? "opacity-70 bg-gray-50" :
                       applied ? "opacity-60 bg-gray-50" :
                       selectedParcel?.id === parcel.id 
                         ? "bg-blue-50 border-l-4 border-l-blue-500" 
@@ -250,10 +252,18 @@ export function MyParcelList({
                         <span>{parcel.landInfo.remainingArea.toLocaleString()}㎡</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <Badge className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-xs h-5">
-                          신청 가능
-                        </Badge>
-                        {applied ? (
+                        {isEligible ? (
+                          <Badge className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-xs h-5">
+                            신청 가능
+                          </Badge>
+                        ) : (
+                          <Badge variant="secondary" className="bg-gray-200 text-gray-600 text-xs h-5">
+                            신청 불가
+                          </Badge>
+                        )}
+                        {!isEligible ? (
+                          <span className="text-xs text-gray-500">기준 미충족</span>
+                        ) : applied ? (
                           <span className="text-xs text-blue-600">처리중</span>
                         ) : isInCart(parcel.id) ? (
                           <Button 
@@ -574,16 +584,13 @@ export function MyParcelList({
                 신청 목록에 담기
               </Button>
             ) : (
-              <div className="text-center">
-                <p className="text-xs text-muted-foreground mb-2">
-                  매수 기준에 충족하지 않습니다.
+              <div className="text-center py-2">
+                <p className="text-xs text-gray-500 mb-1">
+                  AI 분석 결과, 매수 신청 기준을 충족하지 않습니다.
                 </p>
-                <button
-                  onClick={() => handleAddToCart(selectedParcel)}
-                  className="text-xs text-muted-foreground/60 underline-offset-2 hover:text-muted-foreground hover:underline"
-                >
-                  그래도 담기
-                </button>
+                <p className="text-xs text-gray-400">
+                  이의가 있으신 경우 담당자에게 문의해 주세요.
+                </p>
               </div>
             )}
           </div>
