@@ -93,7 +93,11 @@ export function MyParcelList({
   const handleParcelSelect = (parcel: PreRegisteredParcel) => {
     setSelectedParcel(parcel);
     // 기존 확인 항목으로 초기화
-    setCheckItems(parcel.adminCheckItems);
+    setCheckItems(parcel.checkItems || {
+      farmMachineDifficulty: false,
+      accessRoadLost: false,
+      waterChannelLost: false,
+    });
     setSelectedLandShape(parcel.landShape);
     setSelectedLandUsage(parcel.currentUsage);
     setReanalyzedResult(null);
