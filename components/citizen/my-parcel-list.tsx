@@ -289,10 +289,16 @@ export function MyParcelList({
               })}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-              <MapPin className="h-10 w-10 text-gray-300 mb-3" />
-              <p className="text-sm text-gray-500">
-                매수 신청 가능한 필지가 없습니다.
+            <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+              <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                <MapPin className="h-8 w-8 text-gray-400" />
+              </div>
+              <p className="text-sm font-medium text-gray-700 mb-1">
+                소유하신 잔여지가 없습니다
+              </p>
+              <p className="text-xs text-gray-500 leading-relaxed">
+                사업지구 내 소유 토지가 잔여지로<br />
+                결정되면 이곳에 표시됩니다.
               </p>
             </div>
           )}
