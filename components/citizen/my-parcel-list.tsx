@@ -346,7 +346,7 @@ export function MyParcelList({
             </div>
             
             <Button 
-              className="w-full h-9 text-sm"
+              className="w-full h-11 text-sm"
               onClick={() => onSubmitApplication(cartItems)}
             >
               신청서 작성
