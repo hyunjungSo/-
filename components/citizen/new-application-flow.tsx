@@ -161,11 +161,6 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     );
   }, [searchQuery]);
 
-  // 진행률 계산
-  const totalSteps = questions.length + 2; // 선택 + 질문들 + 확인
-  const currentStep = step === "select" ? 1 : step === "questions" ? currentQuestion + 2 : totalSteps;
-  const progress = (currentStep / totalSteps) * 100;
-
   // 잔여지 선택
   const handleSelectParcel = (parcel: typeof myParcels[0]) => {
     setSelectedParcel(parcel);
@@ -259,20 +254,85 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
   const currentQuestionData = questions[currentQuestion];
   const hasAnswer = currentQuestionData ? !!answers[currentQuestionData.id] : false;
 
+  // 스텝 정보 정의
+  const steps = [
+    { id: "select", label: "잔여지 선택" },
+    { id: "questions", label: "정보 입력" },
+    { id: "confirm", label: "신청 확인" },
+  ];
+
+  // 현재 스텝 인덱스 계산
+  const getCurrentStepIndex = () => {
+    switch (step) {
+      case "select": return 0;
+      case "questions": return 1;
+      case "confirm": return 2;
+      case "complete": return 3;
+      default: return 0;
+    }
+  };
+
+  const currentStepIndex = getCurrentStepIndex();
+
   return (
     <div className="max-w-2xl mx-auto">
-      {/* 진행률 바 */}
+      {/* 스텝 인디케이터 */}
       {step !== "complete" && (
-        <div className="mb-8">
-          <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-[#2E8B57] transition-all duration-500 ease-out"
-              style={{ width: `${progress}%` }}
-            />
+        <div className="mb-10">
+          <div className="flex items-center justify-between">
+            {steps.map((s, index) => (
+              <div key={s.id} className="flex items-center flex-1">
+                {/* 스텝 원형 + 라벨 */}
+                <div className="flex flex-col items-center">
+                  <div 
+                    className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
+                      index < currentStepIndex
+                        ? "bg-[#2E8B57] text-white"
+                        : index === currentStepIndex
+                        ? "bg-[#2E8B57] text-white ring-4 ring-green-100"
+                        : "bg-gray-200 text-gray-500"
+                    }`}
+                  >
+                    {index < currentStepIndex ? (
+                      <Check className="w-5 h-5" />
+                    ) : (
+                      index + 1
+                    )}
+                  </div>
+                  <span className={`mt-2 text-xs font-medium whitespace-nowrap ${
+                    index <= currentStepIndex ? "text-[#2E8B57]" : "text-gray-400"
+                  }`}>
+                    {s.label}
+                  </span>
+                </div>
+                
+                {/* 연결선 (마지막 아이템 제외) */}
+                {index < steps.length - 1 && (
+                  <div className="flex-1 mx-4 mt-[-20px]">
+                    <div className={`h-1 rounded-full transition-all ${
+                      index < currentStepIndex ? "bg-[#2E8B57]" : "bg-gray-200"
+                    }`} />
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
-          <p className="text-sm text-gray-500 mt-2 text-right">
-            {currentStep} / {totalSteps}
-          </p>
+
+          {/* 질문 진행 상황 (질문 단계일 때만) */}
+          {step === "questions" && (
+            <div className="mt-6 bg-gray-50 rounded-lg p-4">
+              <div className="flex items-center justify-between text-sm mb-2">
+                <span className="text-gray-600 font-medium">질문 {currentQuestion + 1} / {questions.length}</span>
+                <span className="text-[#2E8B57] font-medium">{Math.round(((currentQuestion + 1) / questions.length) * 100)}%</span>
+              </div>
+              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[#2E8B57] transition-all duration-300 ease-out"
+                  style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
 
