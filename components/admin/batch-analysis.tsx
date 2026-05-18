@@ -274,6 +274,19 @@ export function BatchAnalysis({
     }));
   };
 
+  // 미노출 처리
+  const handleUnpublish = (parcelId: string) => {
+    setParcels(prev => prev.map(p => {
+      if (p.id === parcelId) {
+        return {
+          ...p,
+          publishStatus: "담당자확인완료",
+        } as ProcessedParcel;
+      }
+      return p;
+    }));
+  };
+
   const getStatusBadge = (status: ParcelPublishStatus) => {
     switch (status) {
       case "대기중":
@@ -496,35 +509,33 @@ export function BatchAnalysis({
                   <TableCell className="text-sm text-muted-foreground">
                     {parcel.lastAnalyzedAt ? formatDateTime(parcel.lastAnalyzedAt) : "-"}
                   </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        onClick={() => handleViewHistory(parcel)}
-                      >
-                        <History className="h-4 w-4" />
-                      </Button>
-                      {parcel.publishStatus === "2차분석중" && (
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => handleConfirm(parcel.id)}
-                        >
-                          <CheckCircle2 className="h-4 w-4 mr-1" />
-                          확인
-                        </Button>
-                      )}
-                      {parcel.publishStatus === "담당자확인완료" && (
-                        <Button 
-                          size="sm"
-                          onClick={() => handlePublish(parcel.id)}
-                        >
-                          <Eye className="h-4 w-4 mr-1" />
-                          공개
-                        </Button>
-                      )}
-                    </div>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
+                    <RadioGroup 
+                      value={parcel.publishStatus === "공개" ? "published" : "unpublished"}
+                      onValueChange={(value) => {
+                        if (value === "published") {
+                          handlePublish(parcel.id);
+                        } else {
+                          handleUnpublish(parcel.id);
+                        }
+                      }}
+                      className="flex items-center gap-3"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <RadioGroupItem value="published" id={`publish-${parcel.id}`} />
+                        <Label htmlFor={`publish-${parcel.id}`} className="text-xs cursor-pointer flex items-center gap-1">
+                          <Eye className="h-3 w-3" />
+                          노출
+                        </Label>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <RadioGroupItem value="unpublished" id={`unpublish-${parcel.id}`} />
+                        <Label htmlFor={`unpublish-${parcel.id}`} className="text-xs cursor-pointer flex items-center gap-1">
+                          <EyeOff className="h-3 w-3" />
+                          미노출
+                        </Label>
+                      </div>
+                    </RadioGroup>
                   </TableCell>
                 </TableRow>
               ))}
