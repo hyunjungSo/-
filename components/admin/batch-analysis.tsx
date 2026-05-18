@@ -290,37 +290,50 @@ export function BatchAnalysis({
   return (
     <div className="space-y-6">
       {/* 통계 카드 */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <Card>
-          <CardContent className="pt-4">
-            <div className="text-2xl font-bold">{stats.total}</div>
-            <p className="text-sm text-muted-foreground">전체 필지</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-emerald-600">{stats.highPossibility}</div>
-            <p className="text-sm text-muted-foreground">매수 가능성 높음</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-rose-600">{stats.lowPossibility}</div>
-            <p className="text-sm text-muted-foreground">매수 가능성 낮음</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-purple-600">{stats.confirmed}</div>
-            <p className="text-sm text-muted-foreground">확인 완료</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-amber-600">{stats.pending}</div>
-            <p className="text-sm text-muted-foreground">확인 대기</p>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-4 gap-3">
+        {/* 매수 가능성 높음: Emerald */}
+        <div 
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-emerald-50 p-4 transition-all hover:bg-emerald-100"
+        >
+          <span className="text-sm font-medium text-emerald-600">매수 가능성 높음</span>
+          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
+            <span className="font-bold text-emerald-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.highPossibility}</span>
+            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+          </div>
+        </div>
+        
+        {/* 매수 가능성 낮음: Rose */}
+        <div 
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-rose-50 p-4 transition-all hover:bg-rose-100"
+        >
+          <span className="text-sm font-medium text-rose-600">매수 가능성 낮음</span>
+          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
+            <span className="font-bold text-rose-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.lowPossibility}</span>
+            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+          </div>
+        </div>
+        
+        {/* 확인 완료: Purple */}
+        <div 
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-purple-50 p-4 transition-all hover:bg-purple-100"
+        >
+          <span className="text-sm font-medium text-purple-600">확인 완료</span>
+          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
+            <span className="font-bold text-purple-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.confirmed}</span>
+            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+          </div>
+        </div>
+        
+        {/* 확인 대기: Amber */}
+        <div 
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-amber-50 p-4 transition-all hover:bg-amber-100"
+        >
+          <span className="text-sm font-medium text-amber-600">확인 대기</span>
+          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
+            <span className="font-bold text-amber-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.pending}</span>
+            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+          </div>
+        </div>
       </div>
 
       {/* 검색 및 필터 */}
