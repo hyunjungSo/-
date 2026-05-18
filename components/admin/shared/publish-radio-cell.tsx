@@ -1,7 +1,6 @@
 "use client";
 
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 
 interface PublishRadioCellProps {
@@ -16,25 +15,25 @@ export function PublishRadioCell({
   onPublishChange 
 }: PublishRadioCellProps) {
   return (
-    <RadioGroup 
-      value={isPublished ? "published" : "unpublished"}
-      onValueChange={(value) => onPublishChange(value === "published")}
-      className="flex items-center gap-3"
-    >
-      <div className="flex items-center gap-1.5">
-        <RadioGroupItem value="published" id={`publish-${id}`} />
-        <Label htmlFor={`publish-${id}`} className="text-xs cursor-pointer flex items-center gap-1">
-          <Eye className="h-3 w-3" />
-          노출
-        </Label>
-      </div>
-      <div className="flex items-center gap-1.5">
-        <RadioGroupItem value="unpublished" id={`unpublish-${id}`} />
-        <Label htmlFor={`unpublish-${id}`} className="text-xs cursor-pointer flex items-center gap-1">
-          <EyeOff className="h-3 w-3" />
-          미노출
-        </Label>
-      </div>
-    </RadioGroup>
+    <div className="flex items-center gap-2">
+      <Button
+        onClick={() => onPublishChange(true)}
+        variant={isPublished ? "default" : "outline"}
+        size="sm"
+        className="flex items-center gap-1"
+      >
+        <Eye className="h-3.5 w-3.5" />
+        노출
+      </Button>
+      <Button
+        onClick={() => onPublishChange(false)}
+        variant={!isPublished ? "default" : "outline"}
+        size="sm"
+        className="flex items-center gap-1"
+      >
+        <EyeOff className="h-3.5 w-3.5" />
+        미노출
+      </Button>
+    </div>
   );
 }

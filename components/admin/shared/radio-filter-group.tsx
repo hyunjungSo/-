@@ -1,7 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ReactNode } from "react";
 
 export interface RadioFilterOption {
@@ -29,24 +29,20 @@ export function RadioFilterGroup({
   return (
     <div className="flex items-center gap-3">
       <Label className="text-sm font-medium whitespace-nowrap">{label}:</Label>
-      <RadioGroup 
-        value={value} 
-        onValueChange={onChange}
-        className="flex items-center gap-4"
-      >
+      <div className="flex items-center gap-2">
         {options.map((option) => (
-          <div key={option.value} className="flex items-center gap-1.5">
-            <RadioGroupItem value={option.value} id={`${name}-${option.value}`} />
-            <Label 
-              htmlFor={`${name}-${option.value}`} 
-              className={`text-sm cursor-pointer flex items-center gap-1 ${option.className || ""}`}
-            >
-              {option.icon}
-              {option.label}
-            </Label>
-          </div>
+          <Button
+            key={option.value}
+            onClick={() => onChange(option.value)}
+            variant={value === option.value ? "default" : "outline"}
+            size="sm"
+            className={`flex items-center gap-1.5 ${option.className || ""}`}
+          >
+            {option.icon}
+            {option.label}
+          </Button>
         ))}
-      </RadioGroup>
+      </div>
     </div>
   );
 }
