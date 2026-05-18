@@ -239,7 +239,7 @@ const regionData = {
     "인주면": ["걸매리", "냉정리", "대율리", "문방리", "신두리", "용두리"],
     "도고면": ["신곡리", "효자리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
-    // 세종특별자�����
+    // 세종��별자�����
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "청용리"],
@@ -405,7 +405,7 @@ function simulateAIAnalysis(
     // AI 1차 판독: 수용가능/수용불가 판정
     let provisionalJudgment: "수용가능" | "수용불가";
   
-  // 잔여 면적이 0인 경우: 잔여지가 없��므로 수용 불가
+  // 잔여 면적이 0��� 경우: 잔여지가 없��므로 수용 불가
   if (land.remainingArea === 0) {
     provisionalJudgment = "수용불가";
   } else if (metAutoCriteria >= 1) {
@@ -786,7 +786,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
           },
         ];
         
-        // 여러 필지를 소���한 경우 (4개 관할기관: 양평이천 2건, 부산울산 2건, 강원원주 1건, 충천원주 1건)
+        // 여�� 필지를 소���한 경우 (4개 관할기관: 양평이천 2건, 부산울산 2건, 강원원주 1건, 충천원주 1건)
         results = ownerLandData.map((landData) => ({
           ...dummyLandInfoList[0],
           ...landData,
@@ -1001,7 +1001,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
         </ol>
       </nav>
 
-      {/* 검색 필터 영역 - 정부24 스타일 테이블 형태 */}
+      {/* 검색 필터 영역 - 정부24 스타일 테이블 형�� */}
       <div className="mb-4 overflow-hidden rounded-lg border border-border">
         {/* 검색 방식 행 */}
         <div className="flex border-b border-border">
@@ -1526,7 +1526,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                   <div className="rounded border border-destructive bg-destructive/5 p-3">
                     <div className="flex items-center gap-2">
                       <Ban className="h-4 w-4 text-destructive" />
-                      <span className="text-base font-medium text-destructive">편입토지 없음 - 매수 신청 불가</span>
+                      <span className="text-base font-medium text-destructive">편입토지 없음 - 매수 가능성 낮음</span>
                     </div>
                   </div>
                 )}

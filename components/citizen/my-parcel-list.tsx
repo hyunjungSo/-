@@ -119,14 +119,14 @@ export function MyParcelList({
     // 시뮬레이션된 AI 분석 (실제로는 API 호출)
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // 확인 항목 중 하나라도 true면 매수 신청 가능으로 판정 (시뮬레이션)
+    // 확인 항목 중 하나라도 true면 매수 가능성 높음으로 판정 (시뮬레이션)
     const hasAnyCheckItem = checkItems.farmMachineDifficulty || checkItems.accessRoadLost || checkItems.waterChannelLost;
     const shapeIndexChange = selectedParcel.aiResult.shapeIndexChange;
     const meetsCriteria = hasAnyCheckItem || shapeIndexChange >= 1.0;
     
     const newResult: AIAnalysisResult = {
       ...selectedParcel.aiResult,
-      provisionalJudgment: meetsCriteria ? "매수 신청 가능" : "매수 신청 불가능",
+      provisionalJudgment: meetsCriteria ? "매수 가능성 높음" : "매수 가능성 낮음",
       farmMachineDifficulty: checkItems.farmMachineDifficulty,
       accessRoadLost: checkItems.accessRoadLost,
       waterChannelLost: checkItems.waterChannelLost,
@@ -171,8 +171,8 @@ export function MyParcelList({
       judgmentRationale: {
         ...selectedParcel.aiResult.judgmentRationale,
         summary: meetsCriteria 
-          ? `${selectedParcel.landInfo.landType} 잔여지 - 선택된 기준 충족으로 「매수 신청 가능」 판정`
-          : `${selectedParcel.landInfo.landType} 잔여지 - 기준 미충족으로 「매수 신청 불가능」 판정`,
+          ? `${selectedParcel.landInfo.landType} 잔여지 - 선택된 기준 충족으로 「매수 가능성 높음」 판정`
+          : `${selectedParcel.landInfo.landType} 잔여지 - 기준 미충족으로 「매수 가능성 낮음」 판정`,
         appliedCriteria: [
           `토지유형: ${selectedParcel.landInfo.landType}`,
           `토지형상: ${selectedLandShape}`,
@@ -213,7 +213,7 @@ export function MyParcelList({
             <Badge variant="secondary" className="bg-gray-100 text-gray-700">{myParcels.length}건</Badge>
           </div>
           <p className="text-xs text-gray-600">
-            매수 신청 가능한 필지 목록입니다.
+            매수 가능성 높음한 필지 목록입니다.
           </p>
         </div>
 
@@ -223,7 +223,7 @@ export function MyParcelList({
             <div className="divide-y divide-gray-200">
               {myParcels.map((parcel) => {
                 const applied = isAlreadyApplied(parcel.landInfo.id);
-                const isEligible = parcel.aiResult.provisionalJudgment === "매수 신청 가능";
+                const isEligible = parcel.aiResult.provisionalJudgment === "매수 가능성 높음";
                 return (
                   <div
                     key={parcel.id}
@@ -404,7 +404,7 @@ export function MyParcelList({
 
                   {/* AI 판정 결과 (항상 표시) */}
                   <div className={`rounded-lg border-2 p-3 ${
-                    aiResult.provisionalJudgment === "매수 신청 가능"
+                    aiResult.provisionalJudgment === "매수 가능성 높음"
                       ? "border-[rgb(20,113,97)] bg-[rgb(20,113,97)]/5"
                       : "border-destructive bg-destructive/5"
                   }`}>
@@ -415,11 +415,11 @@ export function MyParcelList({
                         {reanalyzedResult && <Badge variant="outline" className="text-xs ml-1">재분석</Badge>}
                       </span>
                       <Badge className={`text-xs ${
-                        aiResult.provisionalJudgment === "매수 신청 가능"
+                        aiResult.provisionalJudgment === "매수 가능성 높음"
                           ? "bg-[rgb(20,113,97)]"
                           : "bg-red-500"
                       }`}>
-                        {aiResult.provisionalJudgment === "매수 신청 가능" ? "매수 가능성 높음" : "매수 가능성 낮음"}
+                        {aiResult.provisionalJudgment === "매수 가능성 높음" ? "매수 가능성 높음" : "매수 가능성 낮음"}
                       </Badge>
                     </div>
 
@@ -575,7 +575,7 @@ export function MyParcelList({
                   신청 목록에 추가됨
                 </span>
               </div>
-            ) : (reanalyzedResult || selectedParcel.aiResult).provisionalJudgment === "매수 신청 가능" ? (
+            ) : (reanalyzedResult || selectedParcel.aiResult).provisionalJudgment === "매수 가능성 높음" ? (
               <Button 
                 className="w-full gap-1.5"
                 onClick={() => handleAddToCart(selectedParcel)}

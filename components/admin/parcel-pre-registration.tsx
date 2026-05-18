@@ -192,7 +192,7 @@ export function ParcelPreRegistration({ businessUnit, onRegisterComplete }: Parc
     if (checks.farmMachineDifficulty) {
       criteriaChecks.push({ 
         criteriaName: "농기계 회전 곤란", 
-        criteriaDescription: "농기계 회전 곤란으로 경작 불가", 
+        criteriaDescription: "농기계 회전 곤란으��� 경작 불가", 
         isMet: true, 
         autoDetected: false 
       });
@@ -219,7 +219,7 @@ export function ParcelPreRegistration({ businessUnit, onRegisterComplete }: Parc
     return {
       landTypePath: parcel.landType,
       criteriaChecks,
-      provisionalJudgment: canPurchase ? "매수 신청 가능" : "매수 신청 불가능",
+      provisionalJudgment: canPurchase ? "매수 가능성 높음" : "매수 가능성 낮음",
       originalShapeIndex: parcel.originalShapeIndex,
       remainingShapeIndex: parcel.remainingShapeIndex,
       shapeIndexChange,
@@ -229,8 +229,8 @@ export function ParcelPreRegistration({ businessUnit, onRegisterComplete }: Parc
       farmMachineDifficulty: checks.farmMachineDifficulty,
       judgmentRationale: {
         summary: canPurchase 
-          ? `${parcel.landType} 잔여지 - 매수 기준 충족으로 「매수 신청 가능」 판정`
-          : `${parcel.landType} 잔여지 - 매수 기준 미충족으로 「매수 신청 불가능」 판정`,
+          ? `${parcel.landType} 잔여지 - 매수 기준 충족으로 「매수 가능성 높음」 판정`
+          : `${parcel.landType} 잔여지 - 매수 기준 미충족으로 「매수 가능성 낮음」 판정`,
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: criteriaChecks.filter(c => c.isMet).map(c => c.criteriaName),
         detailedExplanation: canPurchase
@@ -285,9 +285,9 @@ export function ParcelPreRegistration({ businessUnit, onRegisterComplete }: Parc
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">매수 신청 가능 필지</p>
+                <p className="text-sm text-muted-foreground">매수 가능성 높음 필지</p>
                 <p className="text-3xl font-bold text-green-600">
-                  {registeredParcels.filter(p => p.aiResult.provisionalJudgment === "매수 신청 가능").length}
+                  {registeredParcels.filter(p => p.aiResult.provisionalJudgment === "매수 가능성 높음").length}
                 </p>
               </div>
               <CheckCircle2 className="h-10 w-10 text-green-600/20" />
@@ -298,9 +298,9 @@ export function ParcelPreRegistration({ businessUnit, onRegisterComplete }: Parc
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">매수 신청 불가능 필지</p>
+                <p className="text-sm text-muted-foreground">매수 가능성 낮음 필지</p>
                 <p className="text-3xl font-bold text-red-600">
-                  {registeredParcels.filter(p => p.aiResult.provisionalJudgment === "매수 신청 불가능").length}
+                  {registeredParcels.filter(p => p.aiResult.provisionalJudgment === "매수 가능성 낮음").length}
                 </p>
               </div>
               <XCircle className="h-10 w-10 text-red-600/20" />
@@ -413,8 +413,8 @@ export function ParcelPreRegistration({ businessUnit, onRegisterComplete }: Parc
                     </TableCell>
                     <TableCell>
                       <Badge 
-                        variant={parcel.aiResult.provisionalJudgment === "매수 신청 가능" ? "default" : "destructive"}
-                        className={parcel.aiResult.provisionalJudgment === "매수 신청 가능" 
+                        variant={parcel.aiResult.provisionalJudgment === "매수 가능성 높음" ? "default" : "destructive"}
+                        className={parcel.aiResult.provisionalJudgment === "매수 가능성 높음" 
                           ? "bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90" 
                           : ""
                         }
@@ -604,8 +604,8 @@ export function ParcelPreRegistration({ businessUnit, onRegisterComplete }: Parc
               AI 분석 결과
               {analysisResult && (
                 <Badge 
-                  variant={analysisResult.provisionalJudgment === "매수 신청 가능" ? "default" : "destructive"}
-                  className={analysisResult.provisionalJudgment === "매수 신청 가능" 
+                  variant={analysisResult.provisionalJudgment === "매수 가능성 높음" ? "default" : "destructive"}
+                  className={analysisResult.provisionalJudgment === "매수 가능성 높음" 
                     ? "bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-lg px-3 py-1" 
                     : "text-lg px-3 py-1"
                   }

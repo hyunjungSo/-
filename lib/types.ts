@@ -44,8 +44,9 @@ export type ProcessStatus = "접수완료" | "AI분석완료" | "검토중" | "�
 // 담당자 진행상황
 export type AdminStatus = "접수완료" | "진행중" | "심사완료";
 
-// AI 1차 판독 결과 (수용가능/수용불가)
-export type AIJudgmentResult = "수용가능" | "수용불가";
+// AI 1차 판독 결과
+// 관리자: 수용가능/수용불가, 시민: 매수 가능성 높음/매수 가능성 낮음
+export type AIJudgmentResult = "수용가능" | "수용불가" | "매수 가능성 높음" | "매수 가능성 낮음";
 
 // 최종 판정 결과 (매수/기각/심의위원회 이관)
 export type FinalJudgmentResult = "매수" | "기각" | "심의위원회 이관";

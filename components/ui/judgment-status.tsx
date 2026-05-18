@@ -4,8 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { JUDGMENT_COLORS } from "@/components/ui/judgment-badge";
 
-// AI 판정 결과: 수용가능, 수용불가
-export type JudgmentType = "수용가능" | "수용불가" | "분석중";
+// AI 판정 결과: 관리자(수용가능/수용불가), 시민(매수 가능성 높음/매수 가능성 낮음)
+export type JudgmentType = "수용가능" | "수용불가" | "매수 가능성 높음" | "매수 가능성 낮음" | "분석중";
 
 interface JudgmentStatusProps {
   judgment: JudgmentType | string;
@@ -36,6 +36,16 @@ export function JudgmentStatus({
           text: JUDGMENT_COLORS.수용가능.text
         };
       case "수용불가":
+        return {
+          badge: `${JUDGMENT_COLORS.수용불가.bg} text-white hover:${JUDGMENT_COLORS.수용불가.bg}`,
+          text: JUDGMENT_COLORS.수용불가.text
+        };
+      case "매수 가능성 높음":
+        return {
+          badge: `${JUDGMENT_COLORS.수용가능.bg} text-white hover:${JUDGMENT_COLORS.수용가능.bg}`,
+          text: JUDGMENT_COLORS.수용가능.text
+        };
+      case "매수 가능성 낮음":
         return {
           badge: `${JUDGMENT_COLORS.수용불가.bg} text-white hover:${JUDGMENT_COLORS.수용불가.bg}`,
           text: JUDGMENT_COLORS.수용불가.text
@@ -96,7 +106,7 @@ export function JudgmentOX({
   judgment: JudgmentType | string;
   className?: string;
 }) {
-  const isAccepted = judgment === "수용가능" || judgment === "매수";
+  const isAccepted = judgment === "수용가능" || judgment === "매수" || judgment === "매수 가능성 높음";
   
   return (
     <span className={cn(
