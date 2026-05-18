@@ -9,9 +9,8 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
@@ -36,14 +35,17 @@ import {
   XCircle, 
   Loader2,
   RotateCcw,
-  History,
   Eye,
   EyeOff,
-  Filter,
-  Search
+  Filter
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { 
+  SearchInput, 
+  RadioFilterGroup, 
+  PublishRadioCell, 
+  AIJudgmentBadge, 
+  isHighPossibility 
+} from "@/components/admin/shared";
 import type { 
   ProcessedParcel, 
   AnalysisHistory,
@@ -120,8 +122,7 @@ export function BatchAnalysis({
       
       // AI 판정 필터 (라디오)
       if (aiJudgmentFilter !== "all") {
-        const isHigh = parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
-                       parcel.aiResult.provisionalJudgment === "수용가능";
+        const isHigh = isHighPossibility(parcel.aiResult.provisionalJudgment);
         if (aiJudgmentFilter === "high" && !isHigh) return false;
         if (aiJudgmentFilter === "low" && isHigh) return false;
       }
@@ -141,8 +142,7 @@ export function BatchAnalysis({
   const stats = useMemo(() => {
     const total = filteredParcels.length;
     const highPossibility = filteredParcels.filter(p => 
-      p.aiResult.provisionalJudgment === "매수 가능성 높음" || 
-      p.aiResult.provisionalJudgment === "수용가능"
+      isHighPossibility(p.aiResult.provisionalJudgment)
     ).length;
     const lowPossibility = total - highPossibility;
     const confirmed = filteredParcels.filter(p => 
@@ -287,30 +287,6 @@ export function BatchAnalysis({
     }));
   };
 
-  const getStatusBadge = (status: ParcelPublishStatus) => {
-    switch (status) {
-      case "대기중":
-        return <Badge variant="outline" className="text-gray-500">대기중</Badge>;
-      case "1차분석완료":
-        return <Badge className="bg-blue-500 text-white">1차분석완료</Badge>;
-      case "2차분석중":
-        return <Badge className="bg-amber-500 text-white">2차분석중</Badge>;
-      case "담당자확인완료":
-        return <Badge className="bg-purple-500 text-white">확인완료</Badge>;
-      case "공개":
-        return <Badge className="bg-emerald-500 text-white">공개</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
-  };
-
-  const getResultBadge = (result: AIJudgmentResult) => {
-    if (result === "매수 가능성 높음" || result === "수용가능") {
-      return <Badge className="bg-emerald-500 text-white">매수 가능성 높음</Badge>;
-    }
-    return <Badge className="bg-rose-500 text-white">매수 가능성 낮음</Badge>;
-  };
-
   return (
     <div className="space-y-6">
       {/* 통계 카드 */}
@@ -357,69 +333,39 @@ export function BatchAnalysis({
         </CardHeader>
         <CardContent className="space-y-4">
           {/* 검색바 */}
-          <div className="relative">
-            <Input
-              placeholder="소재지, 소유자명, 사업단으로 검색"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pr-10"
-            />
-            <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          </div>
+          <SearchInput
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="소재지, 소유자명, 사업단으로 검색"
+          />
           
           {/* 필터 영역 */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-6">
-            {/* AI 판정 필터 (라디오 버튼) */}
-            <div className="flex items-center gap-3">
-              <Label className="text-sm font-medium whitespace-nowrap">AI 판정:</Label>
-              <RadioGroup 
-                value={aiJudgmentFilter} 
-                onValueChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low")}
-                className="flex items-center gap-4"
-              >
-                <div className="flex items-center gap-1.5">
-                  <RadioGroupItem value="all" id="ai-all" />
-                  <Label htmlFor="ai-all" className="text-sm cursor-pointer">전체</Label>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <RadioGroupItem value="high" id="ai-high" />
-                  <Label htmlFor="ai-high" className="text-sm cursor-pointer text-emerald-600">매수 가능성 높음</Label>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <RadioGroupItem value="low" id="ai-low" />
-                  <Label htmlFor="ai-low" className="text-sm cursor-pointer text-rose-600">매수 가능성 낮음</Label>
-                </div>
-              </RadioGroup>
-            </div>
+            {/* AI 판정 필터 */}
+            <RadioFilterGroup
+              label="AI 판정"
+              name="ai-judgment"
+              value={aiJudgmentFilter}
+              onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low")}
+              options={[
+                { value: "all", label: "전체" },
+                { value: "high", label: "매수 가능성 높음", className: "text-emerald-600" },
+                { value: "low", label: "매수 가능성 낮음", className: "text-rose-600" }
+              ]}
+            />
             
-            {/* 관리(노출) 필터 (라디오 버튼) */}
-            <div className="flex items-center gap-3">
-              <Label className="text-sm font-medium whitespace-nowrap">관리:</Label>
-              <RadioGroup 
-                value={publishFilter} 
-                onValueChange={(v) => setPublishFilter(v as "all" | "published" | "unpublished")}
-                className="flex items-center gap-4"
-              >
-                <div className="flex items-center gap-1.5">
-                  <RadioGroupItem value="all" id="publish-all" />
-                  <Label htmlFor="publish-all" className="text-sm cursor-pointer">전체</Label>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <RadioGroupItem value="published" id="publish-yes" />
-                  <Label htmlFor="publish-yes" className="text-sm cursor-pointer flex items-center gap-1">
-                    <Eye className="h-3.5 w-3.5" />
-                    노출
-                  </Label>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <RadioGroupItem value="unpublished" id="publish-no" />
-                  <Label htmlFor="publish-no" className="text-sm cursor-pointer flex items-center gap-1">
-                    <EyeOff className="h-3.5 w-3.5" />
-                    미노출
-                  </Label>
-                </div>
-              </RadioGroup>
-            </div>
+            {/* 관리(노출) 필터 */}
+            <RadioFilterGroup
+              label="관리"
+              name="publish"
+              value={publishFilter}
+              onChange={(v) => setPublishFilter(v as "all" | "published" | "unpublished")}
+              options={[
+                { value: "all", label: "전체" },
+                { value: "published", label: "노출", icon: <Eye className="h-3.5 w-3.5" /> },
+                { value: "unpublished", label: "미노출", icon: <EyeOff className="h-3.5 w-3.5" /> }
+              ]}
+            />
           </div>
           
           {/* 액션 버튼 */}
@@ -434,7 +380,7 @@ export function BatchAnalysis({
               {isAnalyzing ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  분�� 중...
+                  분��� 중...
                 </>
               ) : (
                 <>
@@ -499,7 +445,9 @@ export function BatchAnalysis({
                   </TableCell>
                   <TableCell className="font-medium">{parcel.landInfo.address}</TableCell>
                   <TableCell>{parcel.landInfo.remainingArea.toLocaleString()}</TableCell>
-                  <TableCell>{getResultBadge(parcel.aiResult.provisionalJudgment as AIJudgmentResult)}</TableCell>
+                  <TableCell>
+                    <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
+                  </TableCell>
                   <TableCell>
                     <span className="text-sm">{parcel.analysisHistory.length}회</span>
                   </TableCell>
@@ -507,32 +455,17 @@ export function BatchAnalysis({
                     {parcel.lastAnalyzedAt ? formatDateTime(parcel.lastAnalyzedAt) : "-"}
                   </TableCell>
                   <TableCell onClick={(e) => e.stopPropagation()}>
-                    <RadioGroup 
-                      value={parcel.publishStatus === "공개" ? "published" : "unpublished"}
-                      onValueChange={(value) => {
-                        if (value === "published") {
+                    <PublishRadioCell
+                      id={parcel.id}
+                      isPublished={parcel.publishStatus === "공개"}
+                      onPublishChange={(published) => {
+                        if (published) {
                           handlePublish(parcel.id);
                         } else {
                           handleUnpublish(parcel.id);
                         }
                       }}
-                      className="flex items-center gap-3"
-                    >
-                      <div className="flex items-center gap-1.5">
-                        <RadioGroupItem value="published" id={`publish-${parcel.id}`} />
-                        <Label htmlFor={`publish-${parcel.id}`} className="text-xs cursor-pointer flex items-center gap-1">
-                          <Eye className="h-3 w-3" />
-                          노출
-                        </Label>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <RadioGroupItem value="unpublished" id={`unpublish-${parcel.id}`} />
-                        <Label htmlFor={`unpublish-${parcel.id}`} className="text-xs cursor-pointer flex items-center gap-1">
-                          <EyeOff className="h-3 w-3" />
-                          미노출
-                        </Label>
-                      </div>
-                    </RadioGroup>
+                    />
                   </TableCell>
                 </TableRow>
               ))}
