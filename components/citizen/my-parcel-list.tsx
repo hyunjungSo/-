@@ -478,18 +478,18 @@ export function MyParcelList({
                           <div 
                             key={option.value}
                             className={`flex items-center gap-2 p-2 rounded border cursor-pointer transition-colors text-xs ${
-                              checkItems[option.value as keyof AdminCheckItems] 
+                              checkItems?.[option.value as keyof AdminCheckItems] 
                                 ? 'bg-primary/10 border-primary' 
                                 : 'hover:bg-muted/50'
                             }`}
                             onClick={() => setCheckItems(prev => ({
                               ...prev,
-                              [option.value]: !prev[option.value as keyof AdminCheckItems]
+                              [option.value]: !prev?.[option.value as keyof AdminCheckItems]
                             }))}
                           >
                             <Checkbox 
                               id={option.value}
-                              checked={checkItems[option.value as keyof AdminCheckItems]}
+                              checked={checkItems?.[option.value as keyof AdminCheckItems] ?? false}
                               onCheckedChange={(checked) => setCheckItems(prev => ({
                                 ...prev,
                                 [option.value]: !!checked
