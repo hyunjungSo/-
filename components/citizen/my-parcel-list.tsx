@@ -533,8 +533,7 @@ export function MyParcelList({
                       <Button 
                         onClick={handleReanalyze}
                         disabled={isAnalyzing}
-                        className="w-full h-9 gap-1.5 mt-2"
-                        size="sm"
+                        className="w-full h-11 gap-1.5 mt-2"
                       >
                         {isAnalyzing ? (
                           <>
@@ -577,7 +576,7 @@ export function MyParcelList({
               </div>
             ) : (reanalyzedResult || selectedParcel.aiResult).provisionalJudgment === "매수 신청 가능" ? (
               <Button 
-                className="w-full h-9 text-sm gap-1.5"
+                className="w-full h-11 text-sm gap-1.5"
                 onClick={() => handleAddToCart(selectedParcel)}
               >
                 <ShoppingCart className="h-4 w-4" />
