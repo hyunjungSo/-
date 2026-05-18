@@ -261,13 +261,11 @@ export function MyParcelList({
                             신청 가능
                           </Badge>
                         ) : (
-                          <Badge variant="secondary" className="bg-gray-200 text-gray-600 text-xs h-5">
+                          <Badge className="bg-red-500 hover:bg-red-500/90 text-white text-xs h-5">
                             신청 불가
                           </Badge>
                         )}
-                        {!isEligible ? (
-                          <span className="text-xs text-gray-500">기준 미충족</span>
-                        ) : applied ? (
+                        {applied ? (
                           <span className="text-xs text-blue-600">처리중</span>
                         ) : isInCart(parcel.id) ? (
                           <Button 
