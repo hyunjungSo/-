@@ -256,11 +256,11 @@ export function MyParcelList({
                       </div>
                       <div className="flex items-center justify-between">
                         {isEligible ? (
-                          <Badge className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-xs px-2.5 py-2">
+                          <Badge className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-xs px-2 py-1">
                             신청 가능
                           </Badge>
                         ) : (
-                          <Badge className="bg-red-500 hover:bg-red-500/90 text-white text-xs px-2.5 py-2">
+                          <Badge className="bg-red-500 hover:bg-red-500/90 text-white text-xs px-2 py-1">
                             신청 불가
                           </Badge>
                         )}
