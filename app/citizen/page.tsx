@@ -1,44 +1,55 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { CitizenSidebar } from "@/components/citizen/citizen-sidebar";
 import { MyParcelList } from "@/components/citizen/my-parcel-list";
 import { ApplicationFormSection } from "@/components/citizen/application-form-section";
 import { ApplicationResultSection } from "@/components/citizen/application-result-section";
 import { ApplicationStatusSection } from "@/components/citizen/application-status-section";
 import { OwnerParcelSearch } from "@/components/citizen/owner-parcel-search";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { FilePlus, ClipboardList, Search } from "lucide-react";
+import { ChevronRight, Home } from "lucide-react";
+import Link from "next/link";
 import type { LandInfo, Application, AIAnalysisResult, PreRegisteredParcel } from "@/lib/types";
 
 // 신청 프로세스 단계
 type ApplicationStep = "search" | "apply" | "result";
 
+// 탭별 제목 및 브레드크럼
+const tabConfig: Record<string, { title: string; breadcrumb: string }> = {
+  new: { title: "신규 신청", breadcrumb: "신규 신청" },
+  status: { title: "신청 현황 조회", breadcrumb: "신청 현황 조회" },
+  myparcel: { title: "내 잔여지 조회", breadcrumb: "내 잔여지 조회" },
+};
+
 function CitizenPageContent() {
   const searchParams = useSearchParams();
-  const tabParam = searchParams.get("tab");
+  const tabParam = searchParams.get("tab") || "new";
   
+  const [activeTab, setActiveTab] = useState<"new" | "status" | "myparcel">(
+    tabParam === "status" ? "status" : tabParam === "myparcel" ? "myparcel" : "new"
+  );
   const [selectedLand, setSelectedLand] = useState<LandInfo | null>(null);
-  const [selectedLands, setSelectedLands] = useState<LandInfo[]>([]); // 복수 필지 신청용
+  const [selectedLands, setSelectedLands] = useState<LandInfo[]>([]);
   const [aiResult, setAiResult] = useState<AIAnalysisResult | null>(null);
-  const [aiResults, setAiResults] = useState<AIAnalysisResult[]>([]); // 복수 필지 AI 결과
+  const [aiResults, setAiResults] = useState<AIAnalysisResult[]>([]);
   const [submittedApplication, setSubmittedApplication] = useState<Application | null>(null);
-  const [mainTab, setMainTab] = useState<"new" | "status" | "myparcel">(tabParam === "status" ? "status" : tabParam === "myparcel" ? "myparcel" : "new");
   const [applicationStep, setApplicationStep] = useState<ApplicationStep>("search");
   
   // 장바구니 (신청 목록)
   const [cartItems, setCartItems] = useState<PreRegisteredParcel[]>([]);
-  
-  // URL 파라미터 변경 시 탭 상태 업데이트
-  useEffect(() => {
-    if (tabParam === "status") {
-      setMainTab("status");
-    } else if (tabParam === "myparcel") {
-      setMainTab("myparcel");
-    }
-  }, [tabParam]);
 
-  // 장바구니에 추가 (PreRegisteredParcel 타입)
+  const currentConfig = tabConfig[activeTab] || tabConfig.new;
+
+  // 탭 변경 핸들러
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab as "new" | "status" | "myparcel");
+    if (tab === "new") {
+      handleNewApplication();
+    }
+  };
+
+  // 장바구니에 추가
   const handleAddToCart = (parcel: PreRegisteredParcel) => {
     if (cartItems.some(item => item.id === parcel.id)) {
       return;
@@ -55,7 +66,6 @@ function CitizenPageContent() {
   const handleSubmitApplication = (parcels: PreRegisteredParcel[]) => {
     if (parcels.length === 0) return;
     
-    // PreRegisteredParcel에서 LandInfo와 AIAnalysisResult 추출
     const lands = parcels.map(p => p.landInfo);
     const results = parcels.map(p => p.aiResult);
     
@@ -75,9 +85,8 @@ function CitizenPageContent() {
     setApplicationStep("search");
   };
   
-  // 신청 완료 후 해당 항목들 장바구니에서 제거
+  // 신청 완료 후 장바구니 정리
   const handleApplicationSubmitWithCartCleanup = (application: Application) => {
-    // 신청된 필지들 장바구니에서 제거
     const submittedIds = selectedLands.map(land => land.id);
     setCartItems(prev => prev.filter(item => !submittedIds.includes(item.landInfo.id)));
     
@@ -85,116 +94,90 @@ function CitizenPageContent() {
     setApplicationStep("result");
   };
 
-  // 신청 현황에서 재신청 처리 (기존 신청 정보로 신청서 작성 화면 이동)
+  // 재신청 처리
   const handleReapply = (application: Application) => {
-    // 기존 신청의 필지 정보로 신청서 작성 화면으로 이동
     setSelectedLand(application.landInfo);
     setSelectedLands([application.landInfo]);
     
-    // AI 결과가 있으면 사용, 없으면 기본 결과 생성
     if (application.aiResult) {
       setAiResult(application.aiResult);
       setAiResults([application.aiResult]);
     }
     
-    setMainTab("new");
+    setActiveTab("new");
     setApplicationStep("apply");
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
-          잔여지 매수
+    <div className="flex gap-8">
+      {/* 좌측 사이드바 */}
+      <CitizenSidebar activeTab={activeTab} onTabChange={handleTabChange} />
+      
+      {/* 우측 콘텐츠 영역 */}
+      <div className="flex-1 min-w-0">
+        {/* 브레드크럼 */}
+        <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+          <Link href="/" className="hover:text-gray-700 flex items-center gap-1">
+            <Home className="h-4 w-4" />
+          </Link>
+          <ChevronRight className="h-4 w-4" />
+          <span>마이페이지</span>
+          <ChevronRight className="h-4 w-4" />
+          <span>잔여지 매수</span>
+          <ChevronRight className="h-4 w-4" />
+          <span className="text-gray-900 font-medium">{currentConfig.breadcrumb}</span>
+        </nav>
+        
+        {/* 페이지 제목 */}
+        <h1 className="text-2xl font-bold text-gray-900 mb-6 pb-4 border-b">
+          {currentConfig.title}
         </h1>
+
+        {/* 콘텐츠 */}
+        <div className="space-y-6">
+          {/* 신규 신청 */}
+          {activeTab === "new" && (
+            <>
+              {applicationStep === "search" && (
+                <MyParcelList 
+                  onAddToCart={handleAddToCart}
+                  onRemoveFromCart={handleRemoveFromCart}
+                  cartItems={cartItems}
+                  onSubmitApplication={handleSubmitApplication}
+                />
+              )}
+
+              {applicationStep === "apply" && selectedLand && aiResult && (
+                <ApplicationFormSection
+                  landInfo={selectedLand}
+                  landInfoList={selectedLands.length > 1 ? selectedLands : undefined}
+                  aiResult={aiResult}
+                  aiResultList={aiResults.length > 1 ? aiResults : undefined}
+                  onSubmit={handleApplicationSubmitWithCartCleanup}
+                  onBack={() => setApplicationStep("search")}
+                />
+              )}
+
+              {applicationStep === "result" && submittedApplication && (
+                <ApplicationResultSection 
+                  application={submittedApplication} 
+                  onNewApplication={handleNewApplication}
+                />
+              )}
+            </>
+          )}
+
+          {/* 신청 현황 조회 */}
+          {activeTab === "status" && (
+            <ApplicationStatusSection onReapply={handleReapply} />
+          )}
+
+          {/* 내 잔여지 조회 */}
+          {activeTab === "myparcel" && (
+            <OwnerParcelSearch />
+          )}
+        </div>
       </div>
-
-      {/* 상위 메뉴: 신규 신청 / 신청 현황 조회 - KRDS 라인형 탭 */}
-      <Tabs 
-        value={mainTab} 
-        onValueChange={(v) => {
-          const newTab = v as "new" | "status" | "myparcel";
-          setMainTab(newTab);
-          // 신규 신청 탭 클릭 시 데이터 초기화
-          if (newTab === "new") {
-            handleNewApplication();
-          }
-        }} 
-        className="w-full"
-      >
-        <TabsList aria-label="서비스 메뉴">
-          <TabsTrigger value="new">
-            <FilePlus className="h-5 w-5" />
-            <span>신규 신청</span>
-          </TabsTrigger>
-          <TabsTrigger value="status">
-            <ClipboardList className="h-5 w-5" />
-            <span>신청 현황 조회</span>
-          </TabsTrigger>
-          <TabsTrigger value="myparcel">
-            <Search className="h-5 w-5" />
-            <span>내 잔여지 조회</span>
-          </TabsTrigger>
-        </TabsList>
-
-        {/* 신규 신청 */}
-        <TabsContent 
-          value="new" 
-          className="mt-6 space-y-6"
-          role="tabpanel"
-          id="tabpanel-new"
-          aria-labelledby="tab-new"
-        >
-          {applicationStep === "search" && (
-            <MyParcelList 
-              onAddToCart={handleAddToCart}
-              onRemoveFromCart={handleRemoveFromCart}
-              cartItems={cartItems}
-              onSubmitApplication={handleSubmitApplication}
-            />
-          )}
-
-          {applicationStep === "apply" && selectedLand && aiResult && (
-            <ApplicationFormSection
-              landInfo={selectedLand}
-              landInfoList={selectedLands.length > 1 ? selectedLands : undefined}
-              aiResult={aiResult}
-              aiResultList={aiResults.length > 1 ? aiResults : undefined}
-              onSubmit={handleApplicationSubmitWithCartCleanup}
-              onBack={() => setApplicationStep("search")}
-            />
-          )}
-
-          {applicationStep === "result" && submittedApplication && (
-            <ApplicationResultSection 
-              application={submittedApplication} 
-              onNewApplication={handleNewApplication}
-            />
-          )}
-        </TabsContent>
-
-        {/* 신청 현황 조회 */}
-        <TabsContent 
-          value="status" 
-          className="mt-6"
-          role="tabpanel"
-          id="tabpanel-status"
-          aria-labelledby="tab-status"
-        >
-          <ApplicationStatusSection onReapply={handleReapply} />
-        </TabsContent>
-
-        {/* 내 잔여지 조회 */}
-        <TabsContent 
-          value="myparcel" 
-          className="mt-6"
-          role="tabpanel"
-          id="tabpanel-myparcel"
-          aria-labelledby="tab-myparcel"
-        >
-          <OwnerParcelSearch />
-        </TabsContent>
-      </Tabs>
     </div>
   );
 }
