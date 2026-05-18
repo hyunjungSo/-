@@ -228,7 +228,6 @@ export function MyParcelList({
                   <div
                     key={parcel.id}
                     className={`p-3 cursor-pointer transition-colors border-b border-gray-100 ${
-                      !isEligible ? "opacity-70 bg-gray-50" :
                       applied ? "opacity-60 bg-gray-50" :
                       selectedParcel?.id === parcel.id 
                         ? "bg-blue-50 border-l-4 border-l-blue-500" 
