@@ -157,10 +157,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     if (!searchQuery.trim()) return myParcels;
     const query = searchQuery.toLowerCase();
     return myParcels.filter(
-      parcel =>
-        parcel.address.toLowerCase().includes(query) ||
-        parcel.projectName.toLowerCase().includes(query) ||
-        parcel.landCategory.toLowerCase().includes(query)
+      parcel => parcel.address.toLowerCase().includes(query)
     );
   }, [searchQuery]);
 
@@ -295,7 +292,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <Input
-              placeholder="주소, 사업명, 지목으로 검색"
+              placeholder="주소로 검색"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 h-12 text-base"
