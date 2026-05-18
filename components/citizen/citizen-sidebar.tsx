@@ -21,15 +21,7 @@ const menuItems: MenuItem[] = [
     label: "잔여지 매수",
     children: [
       { id: "new", label: "신규 신청", href: "/citizen?tab=new" },
-      { id: "status", label: "신청 현황 조회", href: "/citizen?tab=status" },
-      { id: "myparcel", label: "내 잔여지 조회", href: "/citizen?tab=myparcel" },
-    ],
-  },
-  {
-    id: "member",
-    label: "회원정보 관리",
-    children: [
-      { id: "profile", label: "내 정보 수정", href: "/citizen/profile" },
+      { id: "status", label: "신청현황 조회", href: "/citizen?tab=status" },
     ],
   },
 ];
