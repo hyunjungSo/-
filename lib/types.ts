@@ -290,3 +290,75 @@ export interface ReviewDocument {
   signatureArea?: string; // 서명란
   generatedAt: string;
 }
+
+// ===== 프로세스 구조 변경 관련 신규 타입 =====
+
+// 분석 단계
+export type AnalysisStage = "1차분석" | "2차분석";
+
+// 필지 공개 상태 (민원인 조회 가능 여부)
+export type ParcelPublishStatus = "대기중" | "1차분석완료" | "2차분석중" | "담당자확인완료" | "공개";
+
+// 분석 히스토리
+export interface AnalysisHistory {
+  id: string;
+  parcelId: string;                           // 필지 ID
+  stage: AnalysisStage;                       // 분석 단계 (1차/2차)
+  analyzedAt: string;                         // 분석일시
+  analyzedBy: string;                         // 분석 담당자
+  previousResult?: AIJudgmentResult;          // 이전 판정 결과
+  newResult: AIJudgmentResult;                // 새 판정 결과
+  previousShapeIndex?: number;                // 이전 형상지수
+  newShapeIndex?: number;                     // 새 형상지수
+  changedOptions?: {                          // 변경된 옵션값
+    currentUsage?: LandCategory;              // 활용지목
+    landShape?: LandShape;                    // 토지형상
+    farmMachineDifficulty?: boolean;          // 농기계 진입불가
+    accessRoadLost?: boolean;                 // 접면도로 상실
+    waterChannelLost?: boolean;               // 관개수로 상실
+  };
+  changeReason?: string;                      // 변경 사유
+  memo?: string;                              // 메모
+  aiResult: AIAnalysisResult;                 // 전체 AI 분석 결과
+}
+
+// 확장된 사전등록 필지 (분석 프로세스용)
+export interface ProcessedParcel extends PreRegisteredParcel {
+  publishStatus: ParcelPublishStatus;         // 공개 상태
+  analysisHistory: AnalysisHistory[];         // 분석 히스토리
+  firstAnalyzedAt?: string;                   // 1차 분석 완료일
+  lastAnalyzedAt?: string;                    // 최종 분석일
+  confirmedAt?: string;                       // 담당자 확인 완료일
+  confirmedBy?: string;                       // 확인 담당자
+  ownerIdentifier?: string;                   // 소유자 식별자 (주민번호 뒷자리 등)
+}
+
+// 일괄 분석 요청
+export interface BatchAnalysisRequest {
+  parcelIds: string[];                        // 분석 대상 필지 IDs
+  analysisOptions: {                          // 분석 옵션
+    useCurrentUsage: boolean;                 // 현재 활용지목 사용
+    useLandShape: boolean;                    // 토지형상 사용
+  };
+  stage: AnalysisStage;                       // 분석 단계
+  analyzedBy: string;                         // 분석 담당자
+}
+
+// 일괄 분석 결과
+export interface BatchAnalysisResult {
+  totalCount: number;                         // 전체 건수
+  successCount: number;                       // 성공 건수
+  failedCount: number;                        // 실패 건수
+  highPossibilityCount: number;               // 매수 가능성 높음 건수
+  lowPossibilityCount: number;                // 매수 가능성 낮음 건수
+  processedParcels: ProcessedParcel[];        // 처리된 필지 목록
+}
+
+// 소유자 인증 정보
+export interface OwnerVerification {
+  verificationType: "주민번호" | "소재지" | "로그인";
+  ownerName: string;                          // 소유자명
+  identifier: string;                         // 식별값 (주민번호 뒷자리 또는 소재지)
+  verifiedAt: string;                         // 인증일시
+  isVerified: boolean;                        // 인증 성공 여부
+}

@@ -1,4 +1,4 @@
-import type { LandInfo, Application, AIAnalysisResult, JudgmentRationale, PreRegisteredParcel } from "./types";
+import type { LandInfo, Application, AIAnalysisResult, JudgmentRationale, PreRegisteredParcel, ProcessedParcel, AnalysisHistory } from "./types";
 
 // 동적 날짜+시간 생성 헬퍼 함수
 const getDateTimeString = (daysAgo: number, hour?: number, minute?: number): string => {
@@ -30,6 +30,7 @@ const ONE_WEEK_AGO = getDateTimeString(7, 9, 0);     // 1주일 전 09:00
 const TEN_DAYS_AGO = getDateTimeString(10, 11, 30);  // 10일 전 11:30
 const TWO_WEEKS_AGO = getDateTimeString(14, 14, 0);  // 2주 전 14:00
 const THREE_WEEKS_AGO = getDateTimeString(21, 10, 45);// 3주 전 10:45
+const SIX_WEEKS_AGO = getDateTimeString(42, 14, 30);  // 6주 전 14:30
 const ONE_MONTH_AGO = getDateTimeString(30, 16, 20); // 1달 전 16:20
 const TWO_MONTHS_AGO = getDateTimeString(60, 9, 15); // 2달 전 09:15
 const THREE_MONTHS_AGO = getDateTimeString(90, 13, 30);// 3달 전 13:30
@@ -2506,7 +2507,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 ���태로 남아 농기계 회전이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -3593,3 +3594,253 @@ export const landShapes = {
     { value: "자루형", label: "자루형" },
   ],
 } as const;
+
+// ===== 분석 히스토리 샘플 데이터 =====
+export const dummyAnalysisHistory: AnalysisHistory[] = [
+  // 필지 1: 1차 분석만 완료
+  {
+    id: "history-001",
+    parcelId: "processed-001",
+    stage: "1차분석",
+    analyzedAt: TWO_WEEKS_AGO,
+    analyzedBy: "시스템",
+    newResult: "매수 가능성 높음",
+    newShapeIndex: 0.35,
+    aiResult: generateAIResult(dummyLandInfoList[0]),
+  },
+  // 필지 2: 1차 분석 후 2차 재분석 (결과 변경됨)
+  {
+    id: "history-002-1",
+    parcelId: "processed-002",
+    stage: "1차분석",
+    analyzedAt: TWO_WEEKS_AGO,
+    analyzedBy: "시스템",
+    newResult: "매수 가능성 낮음",
+    newShapeIndex: 0.72,
+    aiResult: generateAIResult(dummyLandInfoList[1]),
+  },
+  {
+    id: "history-002-2",
+    parcelId: "processed-002",
+    stage: "2차분석",
+    analyzedAt: ONE_WEEK_AGO,
+    analyzedBy: "김담당",
+    previousResult: "매수 가능성 낮음",
+    newResult: "매수 가능성 높음",
+    previousShapeIndex: 0.72,
+    newShapeIndex: 0.38,
+    changedOptions: {
+      currentUsage: "답",
+      landShape: "삼각형",
+      farmMachineDifficulty: true,
+    },
+    changeReason: "현장 확인 결과 농기계 진입 불가 확인",
+    memo: "도로 확장으로 인해 형상이 변경됨",
+    aiResult: generateAIResult(dummyLandInfoList[1]),
+  },
+  // 필지 3: 여러 번 재분석 (히스토리 3건)
+  {
+    id: "history-003-1",
+    parcelId: "processed-003",
+    stage: "1차분석",
+    analyzedAt: THREE_WEEKS_AGO,
+    analyzedBy: "시스템",
+    newResult: "매수 가능성 낮음",
+    newShapeIndex: 0.68,
+    aiResult: generateAIResult(dummyLandInfoList[2]),
+  },
+  {
+    id: "history-003-2",
+    parcelId: "processed-003",
+    stage: "2차분석",
+    analyzedAt: TWO_WEEKS_AGO,
+    analyzedBy: "이검토",
+    previousResult: "매수 가능성 낮음",
+    newResult: "매수 가능성 낮음",
+    previousShapeIndex: 0.68,
+    newShapeIndex: 0.65,
+    changedOptions: {
+      landShape: "사다리형",
+    },
+    changeReason: "형상 재측정",
+    aiResult: generateAIResult(dummyLandInfoList[2]),
+  },
+  {
+    id: "history-003-3",
+    parcelId: "processed-003",
+    stage: "2차분석",
+    analyzedAt: FIVE_DAYS_AGO,
+    analyzedBy: "이검토",
+    previousResult: "매수 가능성 낮음",
+    newResult: "매수 가능성 높음",
+    previousShapeIndex: 0.65,
+    newShapeIndex: 0.32,
+    changedOptions: {
+      currentUsage: "전",
+      landShape: "역삼각형",
+      accessRoadLost: true,
+    },
+    changeReason: "공사 진행으로 접면도로 상실 확인",
+    memo: "2차 현장조사 결과 반영",
+    aiResult: generateAIResult(dummyLandInfoList[2]),
+  },
+];
+
+// ===== 프로세스 적용된 필지 데이터 (ProcessedParcel) =====
+export const dummyProcessedParcels: ProcessedParcel[] = [
+  // 1. 1차 분석만 완료된 필지 (담당자 확인 대기)
+  {
+    id: "processed-001",
+    businessUnit: "수도권건설사업단",
+    projectName: "평택-오송 고속도로 2공구",
+    landInfo: dummyLandInfoList[0],
+    adminCheckItems: {
+      farmMachineDifficulty: false,
+      accessRoadLost: false,
+      waterChannelLost: false,
+    },
+    currentUsage: "답",
+    landShape: "가로장방형",
+    aiResult: generateAIResult(dummyLandInfoList[0]),
+    preRegistrationStatus: "등록완료",
+    registeredAt: THREE_WEEKS_AGO,
+    registeredBy: "관리자",
+    publishStatus: "1차분석완료",
+    analysisHistory: dummyAnalysisHistory.filter(h => h.parcelId === "processed-001"),
+    firstAnalyzedAt: TWO_WEEKS_AGO,
+    lastAnalyzedAt: TWO_WEEKS_AGO,
+    ownerIdentifier: "1234",
+  },
+  // 2. 2차 분석 중인 필지 (재분석 1회)
+  {
+    id: "processed-002",
+    businessUnit: "수도권건설사업단",
+    projectName: "평택-오송 고속도로 2공구",
+    landInfo: dummyLandInfoList[1],
+    adminCheckItems: {
+      farmMachineDifficulty: true,
+      accessRoadLost: false,
+      waterChannelLost: false,
+    },
+    currentUsage: "답",
+    landShape: "삼각형",
+    aiResult: {
+      ...generateAIResult(dummyLandInfoList[1]),
+      provisionalJudgment: "매수 가능성 높음",
+    },
+    preRegistrationStatus: "등록완료",
+    registeredAt: THREE_WEEKS_AGO,
+    registeredBy: "관리자",
+    publishStatus: "2차분석중",
+    analysisHistory: dummyAnalysisHistory.filter(h => h.parcelId === "processed-002"),
+    firstAnalyzedAt: TWO_WEEKS_AGO,
+    lastAnalyzedAt: ONE_WEEK_AGO,
+    ownerIdentifier: "5678",
+  },
+  // 3. 담당자 확인 완료 (공개 대기)
+  {
+    id: "processed-003",
+    businessUnit: "천안안성건설사업단",
+    projectName: "안성-천안 국도확장",
+    landInfo: dummyLandInfoList[2],
+    adminCheckItems: {
+      farmMachineDifficulty: false,
+      accessRoadLost: true,
+      waterChannelLost: false,
+    },
+    currentUsage: "전",
+    landShape: "역삼각형",
+    aiResult: {
+      ...generateAIResult(dummyLandInfoList[2]),
+      provisionalJudgment: "매수 가능성 높음",
+    },
+    preRegistrationStatus: "등록완료",
+    registeredAt: ONE_MONTH_AGO,
+    registeredBy: "관리자",
+    publishStatus: "담당자확인완료",
+    analysisHistory: dummyAnalysisHistory.filter(h => h.parcelId === "processed-003"),
+    firstAnalyzedAt: THREE_WEEKS_AGO,
+    lastAnalyzedAt: FIVE_DAYS_AGO,
+    confirmedAt: THREE_DAYS_AGO,
+    confirmedBy: "이검토",
+    ownerIdentifier: "9012",
+  },
+  // 4. 공개된 필지 (민원인 조회 가능)
+  {
+    id: "processed-004",
+    businessUnit: "천안안성건설사업단",
+    projectName: "안성-천안 국도확장",
+    landInfo: dummyLandInfoList[3],
+    adminCheckItems: {
+      farmMachineDifficulty: true,
+      accessRoadLost: false,
+      waterChannelLost: true,
+    },
+    currentUsage: "답",
+    landShape: "부정형",
+    aiResult: {
+      ...generateAIResult(dummyLandInfoList[3]),
+      provisionalJudgment: "매수 가능성 높음",
+    },
+    preRegistrationStatus: "등록완료",
+    registeredAt: TWO_MONTHS_AGO,
+    registeredBy: "관리자",
+    publishStatus: "공개",
+    analysisHistory: [
+      {
+        id: "history-004-1",
+        parcelId: "processed-004",
+        stage: "1차분석",
+        analyzedAt: TWO_MONTHS_AGO,
+        analyzedBy: "시스템",
+        newResult: "매수 가능성 높음",
+        newShapeIndex: 0.28,
+        aiResult: generateAIResult(dummyLandInfoList[3]),
+      },
+    ],
+    firstAnalyzedAt: TWO_MONTHS_AGO,
+    lastAnalyzedAt: TWO_MONTHS_AGO,
+    confirmedAt: ONE_MONTH_AGO,
+    confirmedBy: "박확인",
+    ownerIdentifier: "3456",
+  },
+  // 5. 매수 가능성 낮음으로 공개된 필지
+  {
+    id: "processed-005",
+    businessUnit: "강진광주건설사업단",
+    projectName: "광주-강진 고속도로",
+    landInfo: dummyLandInfoList[4],
+    adminCheckItems: {
+      farmMachineDifficulty: false,
+      accessRoadLost: false,
+      waterChannelLost: false,
+    },
+    currentUsage: "대",
+    landShape: "정방형",
+    aiResult: {
+      ...generateAIResult(dummyLandInfoList[4]),
+      provisionalJudgment: "매수 가능성 낮음",
+    },
+    preRegistrationStatus: "등록완료",
+    registeredAt: TWO_MONTHS_AGO,
+    registeredBy: "관리자",
+    publishStatus: "공개",
+    analysisHistory: [
+      {
+        id: "history-005-1",
+        parcelId: "processed-005",
+        stage: "1차분석",
+        analyzedAt: TWO_MONTHS_AGO,
+        analyzedBy: "시스템",
+        newResult: "매수 가능성 낮음",
+        newShapeIndex: 0.85,
+        aiResult: generateAIResult(dummyLandInfoList[4]),
+      },
+    ],
+    firstAnalyzedAt: TWO_MONTHS_AGO,
+    lastAnalyzedAt: TWO_MONTHS_AGO,
+    confirmedAt: SIX_WEEKS_AGO,
+    confirmedBy: "최승인",
+    ownerIdentifier: "7890",
+  },
+];
