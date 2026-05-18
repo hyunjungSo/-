@@ -257,11 +257,11 @@ export function MyParcelList({
                       <div className="flex items-center justify-between">
                         {isEligible ? (
                           <Badge className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-xs px-2 py-1">
-                            매수 신청 가능
+                            매수 가능성 높음
                           </Badge>
                         ) : (
                           <Badge className="bg-red-500 hover:bg-red-500/90 text-white text-xs px-2 py-1">
-                            조건 미흡
+                            매수 가능성 낮음
                           </Badge>
                         )}
                         {applied ? (
@@ -419,7 +419,7 @@ export function MyParcelList({
                           ? "bg-[rgb(20,113,97)]"
                           : "bg-red-500"
                       }`}>
-                        {aiResult.provisionalJudgment === "매수 신청 가능" ? "매수 신청 가능" : "조건 미흡"}
+                        {aiResult.provisionalJudgment === "매수 신청 가능" ? "매수 가능성 높음" : "매수 가능성 낮음"}
                       </Badge>
                     </div>
 
