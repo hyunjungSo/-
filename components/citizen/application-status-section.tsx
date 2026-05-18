@@ -1375,7 +1375,7 @@ export function ApplicationStatusSection({ onReapply }: ApplicationStatusSection
             <h3 className="font-semibold text-lg mb-3">신청 내용 수정 안내</h3>
             
             <div className="text-sm text-muted-foreground space-y-2 mb-6">
-              <p>신청 내용 수정 시 기존 신청은 자동 취소되며, 해당 필지로 새 신청서를 작성합니다.</p>
+              <p>신청 내용 수정 시 기존 신청은 자동 취소되며, 해당 필지로 새 신청서를 작성해야합니다.</p>
               <p className="text-xs">* 새로운 신청번호가 부여됩니다.</p>
             </div>
             
@@ -1398,7 +1398,7 @@ export function ApplicationStatusSection({ onReapply }: ApplicationStatusSection
                   setReapplyTarget(null);
                 }}
               >
-                새로 신청서 작성하기
+                신청서 새로 작성하기
               </Button>
             </div>
           </div>
