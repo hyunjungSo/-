@@ -360,11 +360,8 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           </div>
 
           {/* 잔여지 개수 표시 */}
-          <div className="flex items-center justify-between text-sm text-gray-500">
+          <div className="text-sm text-gray-500">
             <span>총 {filteredParcels.length}개의 잔여지</span>
-            {selectedParcel && (
-              <span className="text-[#2E8B57] font-medium">1개 선택됨</span>
-            )}
           </div>
 
           {/* 잔여지 카드 그리드 */}
@@ -605,7 +602,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
             신청이 완료되었습니다
           </h2>
           <p className="text-gray-500 mb-8">
-            신청 내역은 &apos;신청현황 조회&apos;에서 확인하실 수 있습니다
+            신청 내역�� &apos;신청현황 조회&apos;에서 확인하실 수 있습니다
           </p>
         </div>
       )}
