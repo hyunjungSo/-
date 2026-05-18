@@ -6,8 +6,9 @@ import { MyParcelList } from "@/components/citizen/my-parcel-list";
 import { ApplicationFormSection } from "@/components/citizen/application-form-section";
 import { ApplicationResultSection } from "@/components/citizen/application-result-section";
 import { ApplicationStatusSection } from "@/components/citizen/application-status-section";
+import { OwnerParcelSearch } from "@/components/citizen/owner-parcel-search";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { FilePlus, ClipboardList } from "lucide-react";
+import { FilePlus, ClipboardList, Search } from "lucide-react";
 import type { LandInfo, Application, AIAnalysisResult, PreRegisteredParcel } from "@/lib/types";
 
 // 신청 프로세스 단계
@@ -22,7 +23,7 @@ function CitizenPageContent() {
   const [aiResult, setAiResult] = useState<AIAnalysisResult | null>(null);
   const [aiResults, setAiResults] = useState<AIAnalysisResult[]>([]); // 복수 필지 AI 결과
   const [submittedApplication, setSubmittedApplication] = useState<Application | null>(null);
-  const [mainTab, setMainTab] = useState<"new" | "status">(tabParam === "status" ? "status" : "new");
+  const [mainTab, setMainTab] = useState<"new" | "status" | "myparcel">(tabParam === "status" ? "status" : tabParam === "myparcel" ? "myparcel" : "new");
   const [applicationStep, setApplicationStep] = useState<ApplicationStep>("search");
   
   // 장바구니 (신청 목록)
@@ -32,6 +33,8 @@ function CitizenPageContent() {
   useEffect(() => {
     if (tabParam === "status") {
       setMainTab("status");
+    } else if (tabParam === "myparcel") {
+      setMainTab("myparcel");
     }
   }, [tabParam]);
 
@@ -110,7 +113,7 @@ function CitizenPageContent() {
       <Tabs 
         value={mainTab} 
         onValueChange={(v) => {
-          const newTab = v as "new" | "status";
+          const newTab = v as "new" | "status" | "myparcel";
           setMainTab(newTab);
           // 신규 신청 탭 클릭 시 데이터 초기화
           if (newTab === "new") {
@@ -127,6 +130,10 @@ function CitizenPageContent() {
           <TabsTrigger value="status">
             <ClipboardList className="h-5 w-5" />
             <span>신청 현황 조회</span>
+          </TabsTrigger>
+          <TabsTrigger value="myparcel">
+            <Search className="h-5 w-5" />
+            <span>내 잔여지 조회</span>
           </TabsTrigger>
         </TabsList>
 
@@ -175,6 +182,17 @@ function CitizenPageContent() {
           aria-labelledby="tab-status"
         >
           <ApplicationStatusSection onReapply={handleReapply} />
+        </TabsContent>
+
+        {/* 내 잔여지 조회 */}
+        <TabsContent 
+          value="myparcel" 
+          className="mt-6"
+          role="tabpanel"
+          id="tabpanel-myparcel"
+          aria-labelledby="tab-myparcel"
+        >
+          <OwnerParcelSearch />
         </TabsContent>
       </Tabs>
     </div>
