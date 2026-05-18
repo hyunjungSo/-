@@ -288,7 +288,7 @@ export function ApplicationFormSection({
       landDataList: isMultipleLands ? landDataList : undefined,
     };
 
-    // 시뮬레이션을 위한 딜레이
+    // 시뮬레이��을 위한 딜레이
     setTimeout(() => {
       setIsSubmitting(false);
       onSubmit(application);
@@ -359,7 +359,7 @@ export function ApplicationFormSection({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmitClick} className="space-y-6">
+            <form onSubmit={handleSubmitClick} className="space-y-6 max-w-[500px]">
               {/* 신청인 정보 - 깔끔한 선택형 레이아웃 */}
               <div className="space-y-5">
                 <h4 className="border-b border-border pb-2 text-base font-medium text-foreground">신청인 정보</h4>
