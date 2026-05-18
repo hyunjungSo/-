@@ -365,7 +365,7 @@ export function ApplicationFormSection({
                 <h4 className="border-b border-border pb-2 text-base font-medium text-foreground">신청인 정보</h4>
                 
                 {/* 신청 구분 */}
-                <div className="space-y-2">
+                <div className="space-y-2 max-w-[500px]">
                   <label className="text-sm font-medium">신청 구분 <span className="text-destructive">*</span></label>
                   <div className="flex items-center gap-6">
                     <label className="flex cursor-pointer items-center gap-2">
@@ -400,7 +400,7 @@ export function ApplicationFormSection({
                 </div>
 
                 {/* 소유자 정보 */}
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2 max-w-[500px]">
                   <div className="space-y-1.5">
                     <label className="text-sm font-medium">소유자 성명 <span className="text-destructive">*</span></label>
                     <Input
@@ -433,7 +433,7 @@ export function ApplicationFormSection({
 
                 {/* 대리인 정보 (대리인 신청 시만 표시) */}
                 {formData.applicantRelation === "agent" && (
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-4 sm:grid-cols-2 max-w-[500px]">
                     <div className="space-y-1.5">
                       <label className="text-sm font-medium">대리인 성명 <span className="text-destructive">*</span></label>
                       <Input
@@ -466,7 +466,7 @@ export function ApplicationFormSection({
                 )}
 
                 {/* 주소 */}
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 max-w-[500px]">
                   <label className="text-sm font-medium">주소 <span className="text-destructive">*</span></label>
                   <div className="flex gap-2">
                     <Input
