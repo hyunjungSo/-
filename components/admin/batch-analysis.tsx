@@ -434,7 +434,7 @@ export function BatchAnalysis({
               {isAnalyzing ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  분석 중...
+                  분�� 중...
                 </>
               ) : (
                 <>
@@ -501,10 +501,7 @@ export function BatchAnalysis({
                   <TableCell>{parcel.landInfo.remainingArea.toLocaleString()}</TableCell>
                   <TableCell>{getResultBadge(parcel.aiResult.provisionalJudgment as AIJudgmentResult)}</TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="cursor-pointer" onClick={(e) => { e.stopPropagation(); handleViewHistory(parcel); }}>
-                      <History className="h-3 w-3 mr-1" />
-                      {parcel.analysisHistory.length}회
-                    </Badge>
+                    <span className="text-sm">{parcel.analysisHistory.length}회</span>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {parcel.lastAnalyzedAt ? formatDateTime(parcel.lastAnalyzedAt) : "-"}
