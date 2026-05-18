@@ -1,16 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { ChevronDown, ChevronUp, User, MapPin, FileText, ClipboardList, Search } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MenuItem {
   id: string;
   label: string;
-  icon?: React.ReactNode;
-  href?: string;
   children?: {
     id: string;
     label: string;
@@ -22,7 +19,6 @@ const menuItems: MenuItem[] = [
   {
     id: "residual-land",
     label: "잔여지 매수",
-    icon: <MapPin className="h-4 w-4" />,
     children: [
       { id: "new", label: "신규 신청", href: "/citizen?tab=new" },
       { id: "status", label: "신청 현황 조회", href: "/citizen?tab=status" },
@@ -32,7 +28,6 @@ const menuItems: MenuItem[] = [
   {
     id: "member",
     label: "회원정보 관리",
-    icon: <User className="h-4 w-4" />,
     children: [
       { id: "profile", label: "내 정보 수정", href: "/citizen/profile" },
     ],
@@ -45,7 +40,6 @@ interface CitizenSidebarProps {
 }
 
 export function CitizenSidebar({ activeTab, onTabChange }: CitizenSidebarProps) {
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentTab = searchParams.get("tab") || "new";
   
@@ -69,11 +63,11 @@ export function CitizenSidebar({ activeTab, onTabChange }: CitizenSidebarProps) 
       const tabValue = href.split("tab=")[1];
       return currentTab === tabValue;
     }
-    return pathname === href;
+    return false;
   };
 
-  const handleMenuClick = (menuId: string, href?: string) => {
-    if (href && onTabChange) {
+  const handleSubMenuClick = (href: string) => {
+    if (onTabChange) {
       const tabMatch = href.match(/tab=(\w+)/);
       if (tabMatch) {
         onTabChange(tabMatch[1]);
@@ -83,57 +77,62 @@ export function CitizenSidebar({ activeTab, onTabChange }: CitizenSidebarProps) 
 
   return (
     <aside className="w-[280px] flex-shrink-0">
-      {/* 헤더 */}
-      <div className="bg-[#0B6138] text-white p-6 rounded-t-lg">
-        <h2 className="text-xl font-bold">마이페이지</h2>
-      </div>
-      
-      {/* 메뉴 */}
-      <nav className="border border-t-0 rounded-b-lg bg-white">
-        {menuItems.map((menu) => (
-          <div key={menu.id} className="border-b last:border-b-0">
-            {/* 상위 메뉴 */}
-            <button
-              onClick={() => toggleMenu(menu.id)}
-              className={cn(
-                "w-full flex items-center justify-between px-5 py-4 text-left font-medium transition-colors",
-                "hover:bg-gray-50",
-                expandedMenus.has(menu.id) ? "bg-[#0B6138] text-white hover:bg-[#0B6138]/90" : "text-gray-900"
-              )}
-            >
-              <span className="flex items-center gap-2">
-                {menu.icon}
-                {menu.label}
-              </span>
-              {menu.children && (
-                expandedMenus.has(menu.id) 
-                  ? <ChevronUp className="h-4 w-4" />
-                  : <ChevronDown className="h-4 w-4" />
-              )}
-            </button>
+      <div className="rounded-lg shadow-md overflow-hidden bg-white">
+        {/* 헤더 - 녹색 배경, 둥근 상단 모서리 */}
+        <div className="bg-[#2E8B57] text-white px-6 py-8 text-center">
+          <h2 className="text-xl font-bold">마이페이지</h2>
+        </div>
+        
+        {/* 메뉴 */}
+        <nav>
+          {menuItems.map((menu, index) => {
+            const isExpanded = expandedMenus.has(menu.id);
             
-            {/* 하위 메뉴 */}
-            {menu.children && expandedMenus.has(menu.id) && (
-              <div className="bg-gray-50">
-                {menu.children.map((child) => (
-                  <button
-                    key={child.id}
-                    onClick={() => handleMenuClick(child.id, child.href)}
-                    className={cn(
-                      "w-full text-left px-5 py-3 pl-10 text-sm transition-colors border-l-4",
-                      isActive(child.href)
-                        ? "border-l-[#0B6138] bg-white text-[#0B6138] font-medium"
-                        : "border-l-transparent text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                    )}
-                  >
-                    - {child.label}
-                  </button>
-                ))}
+            return (
+              <div key={menu.id}>
+                {/* 상위 메뉴 버튼 */}
+                <button
+                  onClick={() => toggleMenu(menu.id)}
+                  className={cn(
+                    "w-full flex items-center justify-between px-5 py-4 text-left font-medium transition-colors",
+                    isExpanded 
+                      ? "bg-[#2E8B57] text-white" 
+                      : "bg-white text-gray-900 hover:bg-gray-50 border-b border-gray-200"
+                  )}
+                >
+                  <span>{menu.label}</span>
+                  {isExpanded ? (
+                    <Minus className="h-4 w-4" />
+                  ) : (
+                    <Plus className="h-4 w-4" />
+                  )}
+                </button>
+                
+                {/* 하위 메뉴 */}
+                {menu.children && isExpanded && (
+                  <div className="bg-white border-b border-gray-200">
+                    {menu.children.map((child) => (
+                      <button
+                        key={child.id}
+                        onClick={() => handleSubMenuClick(child.href)}
+                        className={cn(
+                          "w-full text-left px-5 py-3 text-sm transition-colors",
+                          isActive(child.href)
+                            ? "text-[#2E8B57] font-medium"
+                            : "text-gray-600 hover:text-gray-900"
+                        )}
+                      >
+                        <span className="text-gray-400 mr-2">-</span>
+                        {child.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        ))}
-      </nav>
+            );
+          })}
+        </nav>
+      </div>
     </aside>
   );
 }
