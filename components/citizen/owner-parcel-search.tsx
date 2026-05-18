@@ -24,15 +24,25 @@ import {
 import { 
   Search,
   MapPin,
-  Ruler,
   CheckCircle2,
   AlertTriangle,
   Lock,
   User,
   FileText,
-  ChevronRight,
-  Info
+  Info,
+  Eye,
+  EyeOff,
+  Building2,
+  BarChart3
 } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import type { 
   ProcessedParcel, 
   OwnerVerification,
@@ -278,42 +288,126 @@ export function OwnerParcelSearch({ onSelectParcel }: OwnerParcelSearchProps) {
         </CardHeader>
         <CardContent>
           {myParcels.length > 0 ? (
-            <div className="space-y-4">
-              {myParcels.map((parcel) => (
-                <div 
-                  key={parcel.id}
-                  className="p-4 border rounded-lg hover:border-primary transition-colors cursor-pointer"
-                  onClick={() => handleViewDetail(parcel)}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold">{parcel.landInfo.address}</h3>
-                        <Badge 
-                          className={
-                            parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
-                            parcel.aiResult.provisionalJudgment === "수용가능"
-                              ? "bg-emerald-500 text-white" 
-                              : "bg-rose-500 text-white"
-                          }
-                        >
-                          {parcel.aiResult.provisionalJudgment === "수용가능" ? "매수 가능성 높음" : 
-                           parcel.aiResult.provisionalJudgment === "수용불가" ? "매수 가능성 낮음" :
-                           parcel.aiResult.provisionalJudgment}
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span>{parcel.projectName}</span>
-                        <span>|</span>
-                        <span>잔여면적: {parcel.landInfo.remainingArea.toLocaleString()} ㎡</span>
-                        <span>|</span>
-                        <span>잔여비율: {parcel.landInfo.remainingRatio}%</span>
-                      </div>
-                    </div>
-                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                </div>
-              ))}
+            <div className="border rounded-lg overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/50">
+                    <TableHead className="font-semibold">소재지</TableHead>
+                    <TableHead className="font-semibold">사업단</TableHead>
+                    <TableHead className="font-semibold">소유자</TableHead>
+                    <TableHead className="font-semibold text-right">잔여 면적</TableHead>
+                    <TableHead className="font-semibold text-center">상태</TableHead>
+                    <TableHead className="font-semibold text-center">AI 판정</TableHead>
+                    <TableHead className="font-semibold text-center">분석 횟수</TableHead>
+                    <TableHead className="font-semibold">최종 분석일시</TableHead>
+                    <TableHead className="font-semibold text-center">관리</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {myParcels.map((parcel) => {
+                    const isHighPossibility = 
+                      parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
+                      parcel.aiResult.provisionalJudgment === "수용가능";
+                    const ownerType = parcel.landInfo.ownerType === "individual" ? "개인" : "법인";
+                    const analysisCount = parcel.analysisHistory?.length || 1;
+                    const isPublished = parcel.publishStatus === "공개";
+                    
+                    return (
+                      <TableRow 
+                        key={parcel.id}
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => handleViewDetail(parcel)}
+                      >
+                        {/* 소재지 */}
+                        <TableCell className="font-medium max-w-[200px]">
+                          <div className="truncate" title={parcel.landInfo.address}>
+                            {parcel.landInfo.address}
+                          </div>
+                        </TableCell>
+                        
+                        {/* 사업단 */}
+                        <TableCell>
+                          <div className="flex items-center gap-1.5">
+                            <Building2 className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm">{parcel.businessUnit}</span>
+                          </div>
+                        </TableCell>
+                        
+                        {/* 소유자(개인/법인) */}
+                        <TableCell>
+                          <div className="flex items-center gap-1.5">
+                            <User className="h-4 w-4 text-muted-foreground" />
+                            <span>{parcel.landInfo.ownerName}</span>
+                            <Badge variant="outline" className="text-xs">
+                              {ownerType}
+                            </Badge>
+                          </div>
+                        </TableCell>
+                        
+                        {/* 잔여 면적 */}
+                        <TableCell className="text-right font-medium">
+                          {parcel.landInfo.remainingArea.toLocaleString()} ㎡
+                        </TableCell>
+                        
+                        {/* 상태 */}
+                        <TableCell className="text-center">
+                          <Badge 
+                            variant="outline"
+                            className={
+                              parcel.publishStatus === "공개" 
+                                ? "border-emerald-500 text-emerald-600 bg-emerald-50" 
+                                : "border-amber-500 text-amber-600 bg-amber-50"
+                            }
+                          >
+                            {parcel.publishStatus}
+                          </Badge>
+                        </TableCell>
+                        
+                        {/* AI 판정 */}
+                        <TableCell className="text-center">
+                          <Badge 
+                            className={
+                              isHighPossibility
+                                ? "bg-emerald-500 hover:bg-emerald-500/90 text-white" 
+                                : "bg-rose-500 hover:bg-rose-500/90 text-white"
+                            }
+                          >
+                            {isHighPossibility ? "매수 가능성 높음" : "매수 가능성 낮음"}
+                          </Badge>
+                        </TableCell>
+                        
+                        {/* 분석 횟수 */}
+                        <TableCell className="text-center">
+                          <div className="flex items-center justify-center gap-1">
+                            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                            <span className="font-medium">{analysisCount}회</span>
+                          </div>
+                        </TableCell>
+                        
+                        {/* 최종 분석일시 */}
+                        <TableCell className="text-sm text-muted-foreground">
+                          {parcel.lastAnalyzedAt ? formatDateTime(parcel.lastAnalyzedAt) : "-"}
+                        </TableCell>
+                        
+                        {/* 관리(노출/미노출) */}
+                        <TableCell className="text-center">
+                          {isPublished ? (
+                            <div className="flex items-center justify-center gap-1 text-emerald-600">
+                              <Eye className="h-4 w-4" />
+                              <span className="text-xs">노출</span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-center gap-1 text-muted-foreground">
+                              <EyeOff className="h-4 w-4" />
+                              <span className="text-xs">미노출</span>
+                            </div>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
             </div>
           ) : (
             <div className="text-center py-12">
