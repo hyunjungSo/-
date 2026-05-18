@@ -309,7 +309,7 @@ export function MyParcelList({
               </p>
               <p className="text-xs text-gray-500 leading-relaxed">
                 사업지구 내 소유 토지가 잔여지로<br />
-                결정되면 이곳에 표시됩니다.
+                결정되면 이곳에 표���됩니다.
               </p>
             </div>
           )}
@@ -417,7 +417,7 @@ export function MyParcelList({
                       <Badge className={`text-xs ${
                         aiResult.provisionalJudgment === "매수 신청 가능"
                           ? "bg-[rgb(20,113,97)]"
-                          : "bg-destructive"
+                          : "bg-red-500"
                       }`}>
                         {aiResult.provisionalJudgment === "매수 신청 가능" ? "매수 신청 가능" : "조건 미흡"}
                       </Badge>
