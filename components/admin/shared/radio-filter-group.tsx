@@ -34,9 +34,12 @@ export function RadioFilterGroup({
           <Button
             key={option.value}
             onClick={() => onChange(option.value)}
-            variant={value === option.value ? "default" : "outline"}
             size="sm"
-            className={`flex items-center gap-1.5 ${option.className || ""}`}
+            className={`flex items-center gap-1.5 ${
+              value === option.value
+                ? "bg-black text-white hover:bg-black/90"
+                : "border-black text-black hover:bg-black/5"
+            } ${option.className || ""}`}
           >
             {option.icon}
             {option.label}
