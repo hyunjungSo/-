@@ -65,13 +65,12 @@ export function MyParcelList({
     contact: "010-1111-2222"
   };
 
-  // 본인 소유 잔여지 필터링
+  // 본인 소유 잔여지 필터링 (등록완료 상태인 필지만)
   const myParcels = useMemo(() => {
     return preRegisteredParcels.filter(
-      p => p.preRegistrationStatus === "등록완료" && 
-           p.landInfo.ownerName === currentUser.name
+      p => p.preRegistrationStatus === "등록완료"
     );
-  }, [currentUser.name]);
+  }, []);
 
   // 이미 신청된 필지 ID 목록
   const appliedParcelIds = useMemo(() => {
@@ -200,9 +199,9 @@ export function MyParcelList({
   const alreadyApplied = selectedParcel ? isAlreadyApplied(selectedParcel.landInfo.id) : false;
 
   return (
-    <div className="relative h-[calc(100vh-220px)] min-h-[600px] w-full overflow-hidden rounded-lg border bg-background">
+    <div className="flex h-[calc(100vh-220px)] min-h-[600px] w-full overflow-hidden rounded-lg border bg-background">
       {/* 좌측 패널 - 필지 목록 */}
-      <div className="absolute left-0 top-0 h-full w-[320px] bg-white border-r border-gray-200 shadow-lg z-10 flex flex-col">
+      <div className="w-[320px] shrink-0 bg-white border-r border-gray-200 flex flex-col">
         {/* 헤더 */}
         <div className="p-4 border-b border-gray-200 bg-gray-50 shrink-0">
           <div className="flex items-center justify-between mb-2">
@@ -340,27 +339,9 @@ export function MyParcelList({
         )}
       </div>
 
-      {/* 중앙 지도 */}
-      <div className={`absolute top-0 h-full transition-all duration-300 right-0 ${
-        selectedParcel ? "left-[700px]" : "left-[320px]"
-      }`}>
-        <LeafletMap
-          parcels={mapParcels}
-          onParcelClick={(id) => {
-            const parcel = myParcels.find(p => p.landInfo.id === id);
-            if (parcel) handleParcelSelect(parcel);
-          }}
-          selectedParcelId={selectedParcel?.landInfo.id}
-          className="h-full w-full"
-        />
-      </div>
-
-      {/* AI 분석 결과 패널 - 필지 목록 바로 옆 (slide in/out) */}
-      <div className={`absolute left-[320px] top-0 bottom-0 w-[380px] bg-background border-r shadow-lg z-10 flex flex-col overflow-hidden transition-transform duration-300 ease-in-out ${
-        selectedParcel ? "translate-x-0" : "-translate-x-full"
-      }`}>
-        {selectedParcel && (
-          <>
+      {/* AI 분석 결과 패널 */}
+      {selectedParcel && (
+        <div className="w-[380px] shrink-0 bg-background border-r flex flex-col overflow-hidden">
           {/* 헤더 */}
           <div className="p-3 border-b bg-muted/30 shrink-0">
             <div className="flex items-start justify-between gap-2">
@@ -600,8 +581,20 @@ export function MyParcelList({
               </div>
             )}
           </div>
-          </>
-        )}
+        </div>
+      )}
+
+      {/* 지도 영역 */}
+      <div className="flex-1 min-w-0">
+        <LeafletMap
+          parcels={mapParcels}
+          onParcelClick={(id) => {
+            const parcel = myParcels.find(p => p.landInfo.id === id);
+            if (parcel) handleParcelSelect(parcel);
+          }}
+          selectedParcelId={selectedParcel?.landInfo.id}
+          className="h-full w-full"
+        />
       </div>
     </div>
   );
