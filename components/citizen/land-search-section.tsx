@@ -99,7 +99,7 @@ const regionData = {
     "안성시": ["가현동", "고삼면", "공도읍", "금광면", "대덕면", "미양면", "보개면", "삼죽면", "서운면", "양성면", "원곡면", "일죽면", "죽산면"],
     "남양주시": ["별내동", "오남읍", "와부읍", "진건읍", "진접읍", "퇴계원읍", "화도읍", "호평동", "평내동", "금곡동", "다산동"],
     // 충청북도
-    "음성군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
+    "음��군": ["삼성면", "대소면", "금왕읍", "맹동면", "생극면", "소이면", "원남면", "음성읍", "감곡면"],
     "진천군": ["진천읍", "덕산면", "초평면", "광혜원면", "만승면", "백곡면", "이월면", "문백면"],
     "청주시 상당구": ["가덕면", "낭성면", "미원면", "문의면", "남일면", "내덕동", "용정동", "용암동"],
     "청주시 서원구": ["남이면", "현도면", "분평동", "사직동", "산남동", "수곡동"],
@@ -157,7 +157,7 @@ const regionData = {
     "설성면": ["대죽리", "사곡리", "상봉리", "송계리", "신필리", "신작리", "행죽리"],
     "신둔면": ["고척리", "남정리", "도봉리", "수광리", "수남리", "용면리", "지석리"],
     "장호원읍": ["나래리", "노탑리", "선읍리", "송산리", "와현리", "장왕리", "진암리", "풍계리"],
-    "율면": ["���당리", "반농리", "산성리", "월포리", "이황리"],
+    "율면": ["�����당리", "반농리", "산성리", "월포리", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
     // 경기도 - 광주시
@@ -239,7 +239,7 @@ const regionData = {
     "인주면": ["걸매리", "냉정리", "대율리", "문방리", "신두리", "용두리"],
     "도고면": ["신곡리", "효자리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
-    // 세종��별자�����
+    // 세종���별자�����
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "청용리"],
@@ -940,7 +940,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
     setHasSearched(false);
   };
   
-  // 검색 방식 변경 시 필지 목록 및 기본 정보 초기화
+  // 검색 방식 변경 시 필지 목록 및 기본 정보 초기���
   const handleSearchModeChange = (mode: "address" | "individual" | "corporation") => {
     setSearchMode(mode);
     setOwnerName("");
@@ -1575,14 +1575,14 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                           </div>
                           <Badge 
                             className={`px-2 py-1 text-sm font-semibold text-white ${
-                              aiResult.provisionalJudgment === "수용가능" 
+                              aiResult.provisionalJudgment === "수용가능" || aiResult.provisionalJudgment === "매수 가능성 높음"
                                 ? JUDGMENT_COLORS.수용가능.bg 
                                 : aiResult.provisionalJudgment === "심의위원회 이관"
                                   ? JUDGMENT_COLORS.이관.bg
                                   : JUDGMENT_COLORS.수용불가.bg
                             }`}
                           >
-                            {aiResult.provisionalJudgment}
+                            {aiResult.provisionalJudgment === "수용가능" || aiResult.provisionalJudgment === "매수 가능성 높음" ? "매수 가능성 높음" : aiResult.provisionalJudgment === "심의위원회 이관" ? "심의위원회 이관" : "매수 가능성 낮음"}
                           </Badge>
                         </div>
 
@@ -1943,9 +1943,9 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                       <span>|</span>
                                       <span>{item.landInfo.landType}</span>
                                       <Badge 
-                                        className={`text-xs text-white ${item.aiResult.provisionalJudgment === "수용가능" ? JUDGMENT_COLORS.수용가능.bg : JUDGMENT_COLORS.수용��가.bg}`}
+                                        className={`text-xs text-white ${item.aiResult.provisionalJudgment === "수용가능" || item.aiResult.provisionalJudgment === "매수 가능성 높음" ? JUDGMENT_COLORS.수용가능.bg : JUDGMENT_COLORS.수용불가.bg}`}
                                       >
-                                        {item.aiResult.provisionalJudgment}
+                                        {item.aiResult.provisionalJudgment === "수용가능" || item.aiResult.provisionalJudgment === "매수 가능성 높음" ? "매수 가능성 높음" : "매수 가능성 낮음"}
                                       </Badge>
                                     </div>
                                   </div>
