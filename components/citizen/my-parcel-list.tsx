@@ -309,7 +309,7 @@ export function MyParcelList({
               </p>
               <p className="text-xs text-gray-500 leading-relaxed">
                 사업지구 내 소유 토지가 잔여지로<br />
-                결정되면 이곳에 표���됩니다.
+                결정되면 이곳에 표������니다.
               </p>
             </div>
           )}
@@ -477,7 +477,7 @@ export function MyParcelList({
                         {adminCheckItemOptions.map((option) => (
                           <div 
                             key={option.value}
-                            className={`flex items-center gap-2 p-2 rounded border cursor-pointer transition-colors text-xs ${
+                            className={`flex items-center gap-2 p-2 rounded border cursor-pointer transition-colors text-base ${
                               checkItems?.[option.value as keyof AdminCheckItems] 
                                 ? 'bg-primary/10 border-primary' 
                                 : 'hover:bg-muted/50'
@@ -495,7 +495,7 @@ export function MyParcelList({
                                 [option.value]: !!checked
                               }))}
                             />
-                            <Label htmlFor={option.value} className="cursor-pointer font-normal text-xs flex-1">
+                            <Label htmlFor={option.value} className="cursor-pointer font-normal text-base flex-1">
                               {option.label}
                             </Label>
                           </div>
