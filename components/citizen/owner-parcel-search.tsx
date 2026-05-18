@@ -296,7 +296,7 @@ export function OwnerParcelSearch({ onSelectParcel }: OwnerParcelSearchProps) {
                     <TableHead className="font-semibold">사업단</TableHead>
                     <TableHead className="font-semibold">소유자</TableHead>
                     <TableHead className="font-semibold text-right">잔여 면적</TableHead>
-                    <TableHead className="font-semibold text-center">상태</TableHead>
+                    <TableHead className="font-semibold text-center">공부상 지목</TableHead>
                     <TableHead className="font-semibold text-center">AI 판정</TableHead>
                     <TableHead className="font-semibold text-center">분석 횟수</TableHead>
                     <TableHead className="font-semibold">최종 분석일시</TableHead>
@@ -349,17 +349,10 @@ export function OwnerParcelSearch({ onSelectParcel }: OwnerParcelSearchProps) {
                           {parcel.landInfo.remainingArea.toLocaleString()} ㎡
                         </TableCell>
                         
-                        {/* 상태 */}
+                        {/* 공부상 지목 */}
                         <TableCell className="text-center">
-                          <Badge 
-                            variant="outline"
-                            className={
-                              parcel.publishStatus === "공개" 
-                                ? "border-emerald-500 text-emerald-600 bg-emerald-50" 
-                                : "border-amber-500 text-amber-600 bg-amber-50"
-                            }
-                          >
-                            {parcel.publishStatus}
+                          <Badge variant="outline">
+                            {parcel.landInfo.landCategory}
                           </Badge>
                         </TableCell>
                         
