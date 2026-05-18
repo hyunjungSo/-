@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { dummyApplications, landCategories } from "@/lib/dummy-data";
+import { formatDateTime } from "@/lib/format";
 import type { Application, AdminStatus } from "@/lib/types";
 import { PARCEL_COUNT_COLORS } from "@/components/ui/judgment-badge";
 import { 
@@ -903,7 +904,7 @@ function ApplicationDetailPanel({
             <span className="text-sm font-medium">신청일</span>
           </div>
           <div className="flex flex-1 items-center px-4 py-3">
-            <span className="text-sm">{application.appliedAt}</span>
+            <span className="text-sm">{formatDateTime(application.appliedAt)}</span>
           </div>
         </div>
 
@@ -1300,7 +1301,7 @@ export function ApplicationStatusSection({ onReapply }: ApplicationStatusSection
 
                       {/* 하단: 날짜 + 결과 */}
                       <div className="mt-2 flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">{app.appliedAt}</span>
+                        <span className="text-xs text-muted-foreground">{formatDateTime(app.appliedAt)}</span>
                         {app.adminStatus === "심사완료" && app.finalJudgment && (
                           <span className={`text-xs font-medium ${
                             app.finalJudgment === "매수" 
