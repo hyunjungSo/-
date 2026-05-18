@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Check, ChevronLeft, MapPin, Ruler, Home, Calendar } from "lucide-react";
+import { Check, ChevronLeft, MapPin, Ruler, Home, Calendar, Search } from "lucide-react";
 import type { LandInfo, AIAnalysisResult, Application } from "@/lib/types";
 
-// 더미 잔여지 데이터 (사용자 소유)
+// 더미 잔여지 데이터 (사용자 소유) - 많은 항목 시뮬레이션
 const myParcels = [
   {
     id: "parcel-1",
@@ -44,6 +44,39 @@ const myParcels = [
     roadContact: "12m 도로" as const,
     ownerName: "홍길동",
     projectName: "강남순환도로",
+  },
+  {
+    id: "parcel-4",
+    address: "경기도 화성시 동탄면 석우동 234-56",
+    area: 320,
+    remainingArea: 85,
+    landCategory: "답" as const,
+    landUse: "계획관리지역",
+    roadContact: "4m 도로" as const,
+    ownerName: "홍길동",
+    projectName: "동탄-오산 연결도로",
+  },
+  {
+    id: "parcel-5",
+    address: "경기도 수원시 영통구 원천동 567-89",
+    area: 180,
+    remainingArea: 55,
+    landCategory: "대" as const,
+    landUse: "제1종일반주거지역",
+    roadContact: "6m 도로" as const,
+    ownerName: "홍길동",
+    projectName: "수원-용인 고속도로",
+  },
+  {
+    id: "parcel-6",
+    address: "인천시 연수구 송도동 123-99",
+    area: 420,
+    remainingArea: 150,
+    landCategory: "잡종지" as const,
+    landUse: "일반상업지역",
+    roadContact: "20m 도로" as const,
+    ownerName: "홍길동",
+    projectName: "송도국제도시 2단계",
   },
 ];
 
@@ -117,6 +150,19 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // 검색 필터링된 잔여지 목록
+  const filteredParcels = useMemo(() => {
+    if (!searchQuery.trim()) return myParcels;
+    const query = searchQuery.toLowerCase();
+    return myParcels.filter(
+      parcel =>
+        parcel.address.toLowerCase().includes(query) ||
+        parcel.projectName.toLowerCase().includes(query) ||
+        parcel.landCategory.toLowerCase().includes(query)
+    );
+  }, [searchQuery]);
 
   // 진행률 계산
   const totalSteps = questions.length + 2; // 선택 + 질문들 + 확인
@@ -236,7 +282,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
       {/* Step 1: 잔여지 선택 */}
       {step === "select" && (
         <div className="space-y-6">
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
               매수 신청할 잔여지를 선택해 주세요
             </h2>
@@ -245,58 +291,87 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
             </p>
           </div>
 
-          <div className="space-y-3">
-            {myParcels.map((parcel) => (
-              <Card
-                key={parcel.id}
-                className={`p-5 cursor-pointer transition-all border-2 ${
-                  selectedParcel?.id === parcel.id
-                    ? "border-[#2E8B57] bg-green-50"
-                    : "border-gray-200 hover:border-gray-300 hover:shadow-sm"
-                }`}
-                onClick={() => handleSelectParcel(parcel)}
-              >
-                <div className="flex items-start gap-4">
-                  {/* 선택 인디케이터 */}
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-1 ${
-                    selectedParcel?.id === parcel.id
-                      ? "border-[#2E8B57] bg-[#2E8B57]"
-                      : "border-gray-300"
-                  }`}>
-                    {selectedParcel?.id === parcel.id && (
-                      <Check className="w-4 h-4 text-white" />
-                    )}
-                  </div>
-
-                  {/* 토지 정보 */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">
-                        {parcel.projectName}
-                      </span>
-                    </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">
-                      {parcel.address}
-                    </h3>
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500">
-                      <span className="flex items-center gap-1">
-                        <Ruler className="w-4 h-4" />
-                        잔여 면적: {parcel.remainingArea}m²
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Home className="w-4 h-4" />
-                        {parcel.landCategory} / {parcel.landUse}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <MapPin className="w-4 h-4" />
-                        {parcel.roadContact}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
+          {/* 검색바 */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Input
+              placeholder="주소, 사업명, 지목으로 검색"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 h-12 text-base"
+            />
           </div>
+
+          {/* 잔여지 개수 표시 */}
+          <div className="flex items-center justify-between text-sm text-gray-500">
+            <span>총 {filteredParcels.length}개의 잔여지</span>
+            {selectedParcel && (
+              <span className="text-[#2E8B57] font-medium">1개 선택됨</span>
+            )}
+          </div>
+
+          {/* 잔여지 카드 그리드 */}
+          <div className="max-h-[400px] overflow-y-auto pr-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {filteredParcels.map((parcel) => (
+                <Card
+                  key={parcel.id}
+                  className={`p-4 cursor-pointer transition-all border-2 ${
+                    selectedParcel?.id === parcel.id
+                      ? "border-[#2E8B57] bg-green-50 shadow-md"
+                      : "border-gray-200 hover:border-gray-300 hover:shadow-sm"
+                  }`}
+                  onClick={() => handleSelectParcel(parcel)}
+                >
+                  <div className="flex items-start gap-3">
+                    {/* 선택 인디케이터 */}
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                      selectedParcel?.id === parcel.id
+                        ? "border-[#2E8B57] bg-[#2E8B57]"
+                        : "border-gray-300"
+                    }`}>
+                      {selectedParcel?.id === parcel.id && (
+                        <Check className="w-3 h-3 text-white" />
+                      )}
+                    </div>
+
+                    {/* 토지 정보 */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded truncate max-w-[150px]">
+                          {parcel.projectName}
+                        </span>
+                        <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-600 rounded">
+                          {parcel.landCategory}
+                        </span>
+                      </div>
+                      <h3 className="font-medium text-gray-900 text-sm mb-2 line-clamp-2">
+                        {parcel.address}
+                      </h3>
+                      <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500">
+                        <span className="flex items-center gap-1">
+                          <Ruler className="w-3 h-3" />
+                          잔여 {parcel.remainingArea}m²
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-3 h-3" />
+                          {parcel.roadContact}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          {filteredParcels.length === 0 && (
+            <div className="text-center py-12 text-gray-500">
+              <Search className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <p className="font-medium">검색 결과가 없습니다</p>
+              <p className="text-sm mt-1">다른 검색어로 시도해 보세요</p>
+            </div>
+          )}
 
           {myParcels.length === 0 && (
             <div className="text-center py-12 text-gray-500">
