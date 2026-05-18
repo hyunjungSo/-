@@ -313,22 +313,22 @@ export function BatchAnalysis({
           </div>
         </div>
         
-        {/* 확인 완료: Purple */}
+        {/* 분석완료: Purple */}
         <div 
           className="flex cursor-pointer flex-col items-center rounded-lg bg-purple-50 p-4 transition-all hover:bg-purple-100"
         >
-          <span className="text-sm font-medium text-purple-600">확인 완료</span>
+          <span className="text-sm font-medium text-purple-600">분석완료</span>
           <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
             <span className="font-bold text-purple-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.confirmed}</span>
             <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
           </div>
         </div>
         
-        {/* 확인 대기: Amber */}
+        {/* 분석대기: Amber */}
         <div 
           className="flex cursor-pointer flex-col items-center rounded-lg bg-amber-50 p-4 transition-all hover:bg-amber-100"
         >
-          <span className="text-sm font-medium text-amber-600">확인 대기</span>
+          <span className="text-sm font-medium text-amber-600">분석대기</span>
           <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
             <span className="font-bold text-amber-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.pending}</span>
             <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
