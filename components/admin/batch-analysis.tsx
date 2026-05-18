@@ -38,8 +38,12 @@ import {
   RotateCcw,
   History,
   Eye,
-  Filter
+  EyeOff,
+  Filter,
+  Search
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import type { 
   ProcessedParcel, 
   AnalysisHistory,
@@ -67,9 +71,12 @@ export function BatchAnalysis({ businessUnit, onAnalysisComplete }: BatchAnalysi
   // 선택된 필지들
   const [selectedParcelIds, setSelectedParcelIds] = useState<Set<string>>(new Set());
   
-  // 필터
-  const [statusFilter, setStatusFilter] = useState<ParcelPublishStatus | "전체">("전체");
-  const [resultFilter, setResultFilter] = useState<AIJudgmentResult | "전체">("전체");
+  // 검색어
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  // 필터 (라디오 버튼)
+  const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low">("all");
+  const [publishFilter, setPublishFilter] = useState<"all" | "published" | "unpublished">("all");
   
   // 일괄 분석 진행 상태
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -90,12 +97,36 @@ export function BatchAnalysis({ businessUnit, onAnalysisComplete }: BatchAnalysi
   // 필터링된 필지 목록
   const filteredParcels = useMemo(() => {
     return parcels.filter(parcel => {
+      // 사업단 필터
       if (businessUnit && parcel.businessUnit !== businessUnit) return false;
-      if (statusFilter !== "전체" && parcel.publishStatus !== statusFilter) return false;
-      if (resultFilter !== "전체" && parcel.aiResult.provisionalJudgment !== resultFilter) return false;
+      
+      // 검색어 필터
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesAddress = parcel.landInfo.address.toLowerCase().includes(query);
+        const matchesOwner = parcel.landInfo.ownerName.toLowerCase().includes(query);
+        const matchesBusinessUnit = parcel.businessUnit.toLowerCase().includes(query);
+        if (!matchesAddress && !matchesOwner && !matchesBusinessUnit) return false;
+      }
+      
+      // AI 판정 필터 (라디오)
+      if (aiJudgmentFilter !== "all") {
+        const isHigh = parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
+                       parcel.aiResult.provisionalJudgment === "수용가능";
+        if (aiJudgmentFilter === "high" && !isHigh) return false;
+        if (aiJudgmentFilter === "low" && isHigh) return false;
+      }
+      
+      // 관리(노출) 필터 (라디오)
+      if (publishFilter !== "all") {
+        const isPublished = parcel.publishStatus === "공개";
+        if (publishFilter === "published" && !isPublished) return false;
+        if (publishFilter === "unpublished" && isPublished) return false;
+      }
+      
       return true;
     });
-  }, [parcels, businessUnit, statusFilter, resultFilter]);
+  }, [parcels, businessUnit, searchQuery, aiJudgmentFilter, publishFilter]);
 
   // 통계
   const stats = useMemo(() => {
@@ -287,70 +318,102 @@ export function BatchAnalysis({ businessUnit, onAnalysisComplete }: BatchAnalysi
         </Card>
       </div>
 
-      {/* 필터 및 액션 */}
+      {/* 검색 및 필터 */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            필터 및 일괄 분석
+            검색 및 필터
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Label>상태:</Label>
-              <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as ParcelPublishStatus | "전체")}>
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="전체">전체</SelectItem>
-                  <SelectItem value="대기중">대기중</SelectItem>
-                  <SelectItem value="1차분석완료">1차분석완료</SelectItem>
-                  <SelectItem value="2차분석중">2차분석중</SelectItem>
-                  <SelectItem value="담당자확인완료">확인완료</SelectItem>
-                  <SelectItem value="공개">공개</SelectItem>
-                </SelectContent>
-              </Select>
+        <CardContent className="space-y-4">
+          {/* 검색바 */}
+          <div className="relative">
+            <Input
+              placeholder="소재지, 소유자명, 사업단으로 검색"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pr-10"
+            />
+            <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          </div>
+          
+          {/* 필터 영역 */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+            {/* AI 판정 필터 (라디오 버튼) */}
+            <div className="flex items-center gap-3">
+              <Label className="text-sm font-medium whitespace-nowrap">AI 판정:</Label>
+              <RadioGroup 
+                value={aiJudgmentFilter} 
+                onValueChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low")}
+                className="flex items-center gap-4"
+              >
+                <div className="flex items-center gap-1.5">
+                  <RadioGroupItem value="all" id="ai-all" />
+                  <Label htmlFor="ai-all" className="text-sm cursor-pointer">전체</Label>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <RadioGroupItem value="high" id="ai-high" />
+                  <Label htmlFor="ai-high" className="text-sm cursor-pointer text-emerald-600">매수 가능성 높음</Label>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <RadioGroupItem value="low" id="ai-low" />
+                  <Label htmlFor="ai-low" className="text-sm cursor-pointer text-rose-600">매수 가능성 낮음</Label>
+                </div>
+              </RadioGroup>
             </div>
             
-            <div className="flex items-center gap-2">
-              <Label>AI 판정:</Label>
-              <Select value={resultFilter} onValueChange={(v) => setResultFilter(v as AIJudgmentResult | "전체")}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="전체">전체</SelectItem>
-                  <SelectItem value="매수 가능성 높음">매수 가능성 높음</SelectItem>
-                  <SelectItem value="매수 가능성 낮음">매수 가능성 낮음</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex-1" />
-
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">
-                {selectedParcelIds.size}건 선택됨
-              </span>
-              <Button 
-                onClick={() => setShowAnalysisOptionsDialog(true)}
-                disabled={selectedParcelIds.size === 0 || isAnalyzing}
+            {/* 관리(노출) 필터 (라디오 버튼) */}
+            <div className="flex items-center gap-3">
+              <Label className="text-sm font-medium whitespace-nowrap">관리:</Label>
+              <RadioGroup 
+                value={publishFilter} 
+                onValueChange={(v) => setPublishFilter(v as "all" | "published" | "unpublished")}
+                className="flex items-center gap-4"
               >
-                {isAnalyzing ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    분석 중...
-                  </>
-                ) : (
-                  <>
-                    <Play className="h-4 w-4 mr-2" />
-                    일괄 분석 실행
-                  </>
-                )}
-              </Button>
+                <div className="flex items-center gap-1.5">
+                  <RadioGroupItem value="all" id="publish-all" />
+                  <Label htmlFor="publish-all" className="text-sm cursor-pointer">전체</Label>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <RadioGroupItem value="published" id="publish-yes" />
+                  <Label htmlFor="publish-yes" className="text-sm cursor-pointer flex items-center gap-1">
+                    <Eye className="h-3.5 w-3.5" />
+                    노출
+                  </Label>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <RadioGroupItem value="unpublished" id="publish-no" />
+                  <Label htmlFor="publish-no" className="text-sm cursor-pointer flex items-center gap-1">
+                    <EyeOff className="h-3.5 w-3.5" />
+                    미노출
+                  </Label>
+                </div>
+              </RadioGroup>
             </div>
+          </div>
+          
+          {/* 액션 버튼 */}
+          <div className="flex items-center justify-between pt-2 border-t">
+            <span className="text-sm text-muted-foreground">
+              {selectedParcelIds.size}건 선택됨
+            </span>
+            <Button 
+              onClick={() => setShowAnalysisOptionsDialog(true)}
+              disabled={selectedParcelIds.size === 0 || isAnalyzing}
+            >
+              {isAnalyzing ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  분석 중...
+                </>
+              ) : (
+                <>
+                  <Play className="h-4 w-4 mr-2" />
+                  일괄 분석 실행
+                </>
+              )}
+            </Button>
           </div>
 
           {/* 분석 진행률 */}
