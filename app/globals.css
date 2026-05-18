@@ -258,7 +258,7 @@
   
   /* KRDS Text Styles - 중장년층 접근성 강화 */
   .text-xs {
-    font-size: 0.8125rem !important; /* 13px - Caption */
+    font-size: 0.875rem !important; /* 14px - Caption */
     line-height: 1.5;
   }
   
