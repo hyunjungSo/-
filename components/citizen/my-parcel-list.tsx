@@ -315,7 +315,7 @@ export function MyParcelList({
           )}
         </div>
 
-        {/* 신청 목록 요약 */}
+        {/* ���청 목록 요약 */}
         {cartItems.length > 0 && (
           <div className="p-3 border-t border-gray-200 bg-gray-50 shrink-0">
             <div className="flex items-center justify-between mb-2">
@@ -347,7 +347,7 @@ export function MyParcelList({
             </div>
             
             <Button 
-              className="w-full h-11 text-sm"
+              className="w-full"
               onClick={() => onSubmitApplication(cartItems)}
             >
               신청서 작성
@@ -534,7 +534,7 @@ export function MyParcelList({
                       <Button 
                         onClick={handleReanalyze}
                         disabled={isAnalyzing}
-                        className="w-full h-11 gap-1.5 mt-2"
+                        className="w-full gap-1.5 mt-2"
                       >
                         {isAnalyzing ? (
                           <>
@@ -558,26 +558,26 @@ export function MyParcelList({
           {/* 하단 액션 */}
           <div className="p-3 border-t bg-muted/30 shrink-0">
             {isAlreadyApplied(selectedParcel.landInfo.id) ? (
-              <Badge variant="secondary" className="w-full h-9 flex items-center justify-center bg-blue-100 text-blue-700">
+              <Badge variant="secondary" className="w-full h-12 flex items-center justify-center bg-blue-100 text-blue-700">
                 신청완료 - 처리 중
               </Badge>
             ) : isInCart(selectedParcel.id) ? (
               <div className="flex items-center gap-3">
                 <Button 
                   variant="outline" 
-                  className="flex-1 h-11 text-sm"
+                  className="flex-1"
                   onClick={() => onRemoveFromCart(selectedParcel.id)}
                 >
                   <Trash2 className="h-4 w-4 mr-1.5" />
                   제거
                 </Button>
-                <span className="flex-1 text-center text-sm font-medium text-primary">
+                <span className="flex-1 text-center font-medium text-primary">
                   신청 목록에 추가됨
                 </span>
               </div>
             ) : (reanalyzedResult || selectedParcel.aiResult).provisionalJudgment === "매수 신청 가능" ? (
               <Button 
-                className="w-full h-11 text-sm gap-1.5"
+                className="w-full gap-1.5"
                 onClick={() => handleAddToCart(selectedParcel)}
               >
                 <ShoppingCart className="h-4 w-4" />
@@ -585,13 +585,13 @@ export function MyParcelList({
               </Button>
             ) : (
               <div className="space-y-3">
-                <p className="text-xs text-gray-500 text-center">
+                <p className="text-sm text-gray-500 text-center">
                   AI 분석 결과, 매수 신청 기준을 충족하지 않습니다.
                 </p>
                 <Button
                   variant="ghost"
                   onClick={() => handleAddToCart(selectedParcel)}
-                  className="w-full h-9 text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                  className="w-full text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-100"
                 >
                   기준 미충족 필지 신청 진행
                 </Button>

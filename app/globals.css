@@ -256,14 +256,14 @@
     opacity: 1;
   }
   
-  /* KRDS Text Styles */
+  /* KRDS Text Styles - 중장년층 접근성 강화 */
   .text-xs {
-    font-size: 0.75rem !important; /* 12px - Caption */
+    font-size: 0.8125rem !important; /* 13px - Caption */
     line-height: 1.5;
   }
   
   .text-sm {
-    font-size: 0.875rem; /* 14px - Body2 */
+    font-size: 0.9375rem; /* 15px - Body2 */
     line-height: 1.5;
   }
   
