@@ -587,16 +587,17 @@ export function MyParcelList({
                 신청 목록에 담기
               </Button>
             ) : (
-              <div className="text-center py-2">
-                <p className="text-xs text-gray-500 mb-3">
+              <div className="space-y-3">
+                <p className="text-xs text-gray-500 text-center">
                   AI 분석 결과, 매수 신청 기준을 충족하지 않습니다.
                 </p>
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => handleAddToCart(selectedParcel)}
-                  className="text-xs text-gray-400 underline underline-offset-2 hover:text-gray-600 transition-colors"
+                  className="w-full h-9 text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100"
                 >
-                  그래도 신청 목록에 담기
-                </button>
+                  기준 미충족 필지 신청 진행
+                </Button>
               </div>
             )}
           </div>
