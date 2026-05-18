@@ -561,18 +561,18 @@ export function MyParcelList({
                 신청완료 - 처리 중
               </Badge>
             ) : isInCart(selectedParcel.id) ? (
-              <div className="flex gap-2">
+              <div className="flex items-center gap-3">
                 <Button 
                   variant="outline" 
-                  className="flex-1 h-9 text-sm"
+                  className="flex-1 h-11 text-sm"
                   onClick={() => onRemoveFromCart(selectedParcel.id)}
                 >
-                  <Trash2 className="h-4 w-4 mr-1" />
+                  <Trash2 className="h-4 w-4 mr-1.5" />
                   제거
                 </Button>
-                <Badge className="flex-1 h-9 flex items-center justify-center">
-                  추가됨
-                </Badge>
+                <span className="flex-1 text-center text-sm font-medium text-primary">
+                  신청 목록에 추가됨
+                </span>
               </div>
             ) : (reanalyzedResult || selectedParcel.aiResult).provisionalJudgment === "매수 신청 가능" ? (
               <Button 
