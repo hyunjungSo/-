@@ -448,9 +448,7 @@ export function BatchAnalysis({ businessUnit, onAnalysisComplete }: BatchAnalysi
                   />
                 </TableHead>
                 <TableHead>소재지</TableHead>
-                <TableHead>사업명</TableHead>
                 <TableHead>면적(㎡)</TableHead>
-                <TableHead>상태</TableHead>
                 <TableHead>AI 판정</TableHead>
                 <TableHead>분석 횟수</TableHead>
                 <TableHead>최종 분석일</TableHead>
@@ -467,9 +465,7 @@ export function BatchAnalysis({ businessUnit, onAnalysisComplete }: BatchAnalysi
                     />
                   </TableCell>
                   <TableCell className="font-medium">{parcel.landInfo.address}</TableCell>
-                  <TableCell>{parcel.projectName}</TableCell>
                   <TableCell>{parcel.landInfo.remainingArea.toLocaleString()}</TableCell>
-                  <TableCell>{getStatusBadge(parcel.publishStatus)}</TableCell>
                   <TableCell>{getResultBadge(parcel.aiResult.provisionalJudgment as AIJudgmentResult)}</TableCell>
                   <TableCell>
                     <Badge variant="outline" className="cursor-pointer" onClick={() => handleViewHistory(parcel)}>
@@ -514,7 +510,7 @@ export function BatchAnalysis({ businessUnit, onAnalysisComplete }: BatchAnalysi
               ))}
               {filteredParcels.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                     조건에 맞는 필지가 없습니다.
                   </TableCell>
                 </TableRow>
