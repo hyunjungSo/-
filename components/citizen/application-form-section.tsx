@@ -474,13 +474,12 @@ export function ApplicationFormSection({
                       placeholder="우편번호"
                       value={formData.postalCode}
                       readOnly
-                      className="h-9 w-24 bg-muted text-sm"
+                      className="w-28 bg-muted"
                     />
                     <Button
                       type="button"
                       variant="secondary"
-                      size="sm"
-                      className="h-9 shrink-0"
+                      className="shrink-0"
                       onClick={() => setIsAddressSearchOpen(true)}
                     >
                       주소 검색
@@ -491,7 +490,7 @@ export function ApplicationFormSection({
                     placeholder="기본주소"
                     value={formData.baseAddress}
                     readOnly
-                    className="bg-muted text-sm"
+                    className="bg-muted"
                   />
                   <Input
                     id="detailAddress"
@@ -500,7 +499,6 @@ export function ApplicationFormSection({
                     onChange={(e) =>
                       setFormData((prev) => ({ ...prev, detailAddress: e.target.value }))
                     }
-                    className="text-sm"
                   />
                 </div>
               </div>
@@ -560,13 +558,13 @@ export function ApplicationFormSection({
                         </div>
                         <div className="space-y-1.5">
                           <label className="text-sm font-medium text-muted-foreground">공부상 지목</label>
-                          <div className="flex w-fit items-center whitespace-nowrap rounded-md border border-input bg-muted px-3 py-2 h-10 text-sm text-muted-foreground cursor-not-allowed opacity-70">
+                          <div className="flex w-fit items-center whitespace-nowrap rounded-md border border-input bg-muted px-4 py-3 h-12 text-base text-muted-foreground cursor-not-allowed opacity-70">
                             {getLandUsageLabel(land.landCategory)}
                           </div>
                         </div>
                         <div className="space-y-1.5">
                           <label className="text-sm font-medium text-muted-foreground">공부상 지목</label>
-                          <div className="flex w-fit items-center whitespace-nowrap rounded-md border border-input bg-muted px-3 py-2 h-10 text-sm text-muted-foreground cursor-not-allowed opacity-70">
+                          <div className="flex w-fit items-center whitespace-nowrap rounded-md border border-input bg-muted px-4 py-3 h-12 text-base text-muted-foreground cursor-not-allowed opacity-70">
                             {landCategories.find(c => c.value === land.landCategory)?.label || land.landCategory}
                           </div>
                         </div>
