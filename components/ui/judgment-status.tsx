@@ -42,13 +42,13 @@ export function JudgmentStatus({
         };
       case "매수 가능성 높음":
         return {
-          badge: `${JUDGMENT_COLORS.수용가능.bg} text-white hover:${JUDGMENT_COLORS.수용가능.bg}`,
-          text: JUDGMENT_COLORS.수용가능.text
+          badge: `${JUDGMENT_COLORS["매수 가능성 높음"].bg} text-white hover:${JUDGMENT_COLORS["매수 가능성 높음"].bg}`,
+          text: JUDGMENT_COLORS["매수 가능성 높음"].text
         };
       case "매수 가능성 낮음":
         return {
-          badge: `${JUDGMENT_COLORS.수용불가.bg} text-white hover:${JUDGMENT_COLORS.수용불가.bg}`,
-          text: JUDGMENT_COLORS.수용불가.text
+          badge: `${JUDGMENT_COLORS["매수 가능성 낮음"].bg} text-white hover:${JUDGMENT_COLORS["매수 가능성 낮음"].bg}`,
+          text: JUDGMENT_COLORS["매수 가능성 낮음"].text
         };
       default:
         return {

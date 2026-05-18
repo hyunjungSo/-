@@ -413,10 +413,9 @@ export function ParcelPreRegistration({ businessUnit, onRegisterComplete }: Parc
                     </TableCell>
                     <TableCell>
                       <Badge 
-                        variant={parcel.aiResult.provisionalJudgment === "매수 가능성 높음" ? "default" : "destructive"}
                         className={parcel.aiResult.provisionalJudgment === "매수 가능성 높음" 
-                          ? "bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90" 
-                          : ""
+                          ? "bg-emerald-500 hover:bg-emerald-500/90 text-white" 
+                          : "bg-rose-500 hover:bg-rose-500/90 text-white"
                         }
                       >
                         {parcel.aiResult.provisionalJudgment}
@@ -604,10 +603,9 @@ export function ParcelPreRegistration({ businessUnit, onRegisterComplete }: Parc
               AI 분석 결과
               {analysisResult && (
                 <Badge 
-                  variant={analysisResult.provisionalJudgment === "매수 가능성 높음" ? "default" : "destructive"}
                   className={analysisResult.provisionalJudgment === "매수 가능성 높음" 
-                    ? "bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-lg px-3 py-1" 
-                    : "text-lg px-3 py-1"
+                    ? "bg-emerald-500 hover:bg-emerald-500/90 text-white text-lg px-3 py-1" 
+                    : "bg-rose-500 hover:bg-rose-500/90 text-white text-lg px-3 py-1"
                   }
                 >
                   {analysisResult.provisionalJudgment}

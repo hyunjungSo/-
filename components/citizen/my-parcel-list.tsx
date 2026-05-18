@@ -256,11 +256,11 @@ export function MyParcelList({
                       </div>
                       <div className="flex items-center justify-between">
                         {isEligible ? (
-                          <Badge className="bg-[rgb(20,113,97)] hover:bg-[rgb(20,113,97)]/90 text-xs px-2 py-1">
+                          <Badge className="bg-emerald-500 hover:bg-emerald-500/90 text-white text-xs px-2 py-1">
                             매수 가능성 높음
                           </Badge>
                         ) : (
-                          <Badge className="bg-red-500 hover:bg-red-500/90 text-white text-xs px-2 py-1">
+                          <Badge className="bg-rose-500 hover:bg-rose-500/90 text-white text-xs px-2 py-1">
                             매수 가능성 낮음
                           </Badge>
                         )}
@@ -405,8 +405,8 @@ export function MyParcelList({
                   {/* AI 판정 결과 (항상 표시) */}
                   <div className={`rounded-lg border-2 p-3 ${
                     aiResult.provisionalJudgment === "매수 가능성 높음"
-                      ? "border-[rgb(20,113,97)] bg-[rgb(20,113,97)]/5"
-                      : "border-destructive bg-destructive/5"
+                      ? "border-emerald-500 bg-emerald-500/5"
+                      : "border-rose-500 bg-rose-500/5"
                   }`}>
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-sm font-semibold flex items-center gap-1.5">
@@ -414,10 +414,10 @@ export function MyParcelList({
                         AI 분석 결과
                         {reanalyzedResult && <Badge variant="outline" className="text-xs ml-1">재분석</Badge>}
                       </span>
-                      <Badge className={`text-xs ${
+                      <Badge className={`text-xs text-white ${
                         aiResult.provisionalJudgment === "매수 가능성 높음"
-                          ? "bg-[rgb(20,113,97)]"
-                          : "bg-red-500"
+                          ? "bg-emerald-500"
+                          : "bg-rose-500"
                       }`}>
                         {aiResult.provisionalJudgment === "매수 가능성 높음" ? "매수 가능성 높음" : "매수 가능성 낮음"}
                       </Badge>
