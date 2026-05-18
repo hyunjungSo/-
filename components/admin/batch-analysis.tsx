@@ -62,11 +62,20 @@ import { formatDateTime } from "@/lib/format";
 interface BatchAnalysisProps {
   businessUnit?: string;
   onAnalysisComplete?: () => void;
+  parcels?: ProcessedParcel[];
+  onParcelsUpdate?: (parcels: ProcessedParcel[]) => void;
+  onParcelSelect?: (parcel: ProcessedParcel) => void;
 }
 
-export function BatchAnalysis({ businessUnit, onAnalysisComplete }: BatchAnalysisProps) {
+export function BatchAnalysis({ 
+  businessUnit, 
+  onAnalysisComplete,
+  parcels: externalParcels,
+  onParcelsUpdate,
+  onParcelSelect
+}: BatchAnalysisProps) {
   // 필지 목록
-  const [parcels, setParcels] = useState<ProcessedParcel[]>(dummyProcessedParcels);
+  const [parcels, setParcels] = useState<ProcessedParcel[]>(externalParcels || dummyProcessedParcels);
   
   // 선택된 필지들
   const [selectedParcelIds, setSelectedParcelIds] = useState<Set<string>>(new Set());
@@ -228,6 +237,13 @@ export function BatchAnalysis({ businessUnit, onAnalysisComplete }: BatchAnalysi
   const handleViewHistory = (parcel: ProcessedParcel) => {
     setSelectedHistoryParcel(parcel);
     setShowHistoryDialog(true);
+  };
+
+  // 필지 상세 보기 (테이블 행 클릭)
+  const handleParcelClick = (parcel: ProcessedParcel) => {
+    if (onParcelSelect) {
+      onParcelSelect(parcel);
+    }
   };
 
   // 담당자 확인 완료 처리
@@ -457,8 +473,12 @@ export function BatchAnalysis({ businessUnit, onAnalysisComplete }: BatchAnalysi
             </TableHeader>
             <TableBody>
               {filteredParcels.map((parcel) => (
-                <TableRow key={parcel.id}>
-                  <TableCell>
+                <TableRow 
+                  key={parcel.id} 
+                  className="cursor-pointer hover:bg-muted/50"
+                  onClick={() => handleParcelClick(parcel)}
+                >
+                  <TableCell onClick={(e) => e.stopPropagation()}>
                     <Checkbox 
                       checked={selectedParcelIds.has(parcel.id)}
                       onCheckedChange={(checked) => handleSelectParcel(parcel.id, !!checked)}
@@ -468,7 +488,7 @@ export function BatchAnalysis({ businessUnit, onAnalysisComplete }: BatchAnalysi
                   <TableCell>{parcel.landInfo.remainingArea.toLocaleString()}</TableCell>
                   <TableCell>{getResultBadge(parcel.aiResult.provisionalJudgment as AIJudgmentResult)}</TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="cursor-pointer" onClick={() => handleViewHistory(parcel)}>
+                    <Badge variant="outline" className="cursor-pointer" onClick={(e) => { e.stopPropagation(); handleViewHistory(parcel); }}>
                       <History className="h-3 w-3 mr-1" />
                       {parcel.analysisHistory.length}회
                     </Badge>

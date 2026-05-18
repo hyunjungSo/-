@@ -53,10 +53,10 @@ import { formatDateTime } from "@/lib/format";
 interface ParcelDetailReviewProps {
   parcel: ProcessedParcel;
   onUpdate: (updatedParcel: ProcessedParcel) => void;
-  onClose: () => void;
+  onBack: () => void;
 }
 
-export function ParcelDetailReview({ parcel, onUpdate, onClose }: ParcelDetailReviewProps) {
+export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailReviewProps) {
   // 분석 옵션 상태
   const [currentUsage, setCurrentUsage] = useState<LandCategory>(parcel.currentUsage);
   const [landShape, setLandShape] = useState<LandShape>(parcel.landShape);
@@ -468,7 +468,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onClose }: ParcelDetailRe
 
       {/* 하단 액션 버튼 */}
       <div className="flex items-center justify-between pt-4 border-t">
-        <Button variant="outline" onClick={onClose}>
+        <Button variant="outline" onClick={onBack}>
           닫기
         </Button>
         <div className="flex items-center gap-2">
