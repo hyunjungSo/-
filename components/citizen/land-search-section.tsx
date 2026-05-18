@@ -157,7 +157,7 @@ const regionData = {
     "설성면": ["대죽리", "사곡리", "상봉리", "송계리", "신필리", "신작리", "행죽리"],
     "신둔면": ["고척리", "남정리", "도봉리", "수광리", "수남리", "용면리", "지석리"],
     "장호원읍": ["나래리", "노탑리", "선읍리", "송산리", "와현리", "장왕리", "진암리", "풍계리"],
-    "율면": ["본당리", "반농리", "산성리", "월포리", "이황리"],
+    "율면": ["���당리", "반농리", "산성리", "월포리", "이황리"],
     "호법면": ["동산리", "매곡리", "유산리", "주미리", "후안리"],
     "부발읍": ["가좌리", "고백리", "신하리", "아미리", "응암리"],
     // 경기도 - 광주시
@@ -235,11 +235,11 @@ const regionData = {
     "송악면": ["강장리", "궁평리", "마곡리", "수곡리", "역촌리", "유곡리", "평촌리"],
     "신창면": ["가덕리", "궁화리", "남성리", "읍내리", "학정리", "황산리"],
     "염치읍": ["곡교리", "산동리", "백암리", "송곡리", "동정리", "석정리"],
-    "영인면": ["고룡리", "상성리", "신봉리", "삼현리", "아산리", "월선리"],
+    "영인��": ["고룡리", "상성리", "신봉리", "삼현리", "아산리", "월선리"],
     "인주면": ["걸매리", "냉정리", "대율리", "문방리", "신두리", "용두리"],
     "도고면": ["신곡리", "효자리", "금수리", "금산리"],
     "신장면": ["국곡리", "목촌리", "팽나무골리", "하천리"],
-    // 세종특별자치���
+    // 세종특별자�����
     "조치원읍": [],
     "금남면": ["감성리", "금천리", "대박리", "발산리", "부용리", "용포리"],
     "부강면": ["금산리", "노호리", "등곡리", "문곡리", "청용리"],
@@ -1495,7 +1495,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                         {selectedLand.remainingRatio}%
                       </span>
                     </div>
-                    {/* 현재 활용 지목 선택 */}
+                    {/* 현재 활용 지목 ��택 */}
                     {!noIncludedLand && !aiResult && (
                       <div className="border-t border-border pt-3">
                         <div className="mb-2 flex items-center justify-between">
@@ -1903,7 +1903,6 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                   }
                                   setSelectedCartItems(newSelected);
                                 }}
-                                className="h-5 w-5"
                               />
                               <div className="flex items-center gap-2">
                                 <span className="font-medium">{businessUnit} 관할기관</span>
@@ -1944,7 +1943,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                                       <span>|</span>
                                       <span>{item.landInfo.landType}</span>
                                       <Badge 
-                                        className={`text-xs text-white ${item.aiResult.provisionalJudgment === "수용가능" ? JUDGMENT_COLORS.수용가능.bg : JUDGMENT_COLORS.수용불가.bg}`}
+                                        className={`text-xs text-white ${item.aiResult.provisionalJudgment === "수용가능" ? JUDGMENT_COLORS.수용가능.bg : JUDGMENT_COLORS.수용��가.bg}`}
                                       >
                                         {item.aiResult.provisionalJudgment}
                                       </Badge>
