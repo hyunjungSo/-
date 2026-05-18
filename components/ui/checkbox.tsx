@@ -14,8 +14,8 @@ function Checkbox({
     <CheckboxPrimitive.Root
       data-slot="checkbox"
       className={cn(
-        // KRDS 체크박스 스타일: 18px 크기
-        'peer border-gray-400 dark:bg-input/30 data-[state=checked]:bg-gray-900 data-[state=checked]:text-white dark:data-[state=checked]:bg-gray-900 data-[state=checked]:border-gray-900 focus-visible:border-gray-900 focus-visible:ring-ring/20 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-[18px] shrink-0 rounded border-[1.5px] transition-colors outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50',
+        // 중장년층 접근성: 24px 크기 (size-6)
+        'peer border-gray-400 dark:bg-input/30 data-[state=checked]:bg-gray-900 data-[state=checked]:text-white dark:data-[state=checked]:bg-gray-900 data-[state=checked]:border-gray-900 focus-visible:border-gray-900 focus-visible:ring-ring/20 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-6 shrink-0 rounded border-[1.5px] transition-colors outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50',
         className,
       )}
       {...props}
@@ -24,7 +24,7 @@ function Checkbox({
         data-slot="checkbox-indicator"
         className="flex items-center justify-center text-current transition-none"
       >
-        <CheckIcon className="size-3.5" strokeWidth={2.5} />
+        <CheckIcon className="size-4" strokeWidth={2.5} />
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   )
