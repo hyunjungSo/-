@@ -215,9 +215,9 @@ export function MyParcelList({
         </div>
 
         {/* 필지 목록 */}
-        <div className="flex-1 overflow-y-auto bg-white">
+        <div className="flex-1 min-h-0 overflow-y-auto bg-white">
           {myParcels.length > 0 ? (
-            <div className="divide-y">
+            <div className="divide-y divide-gray-200">
               {myParcels.map((parcel) => {
                 const applied = isAlreadyApplied(parcel.landInfo.id);
                 return (
