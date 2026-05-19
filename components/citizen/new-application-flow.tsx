@@ -653,7 +653,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       <div className="flex-1 min-w-0">
                         {/* 상단: 프로젝트명(좌), 신청완료(우) */}
                         <div className="flex items-center justify-between gap-2 mb-2">
-                          <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded truncate max-w-[180px]">
+                          <span className="text-xs text-gray-600 truncate max-w-[180px]">
                             {parcel.projectName}
                           </span>
                           {isApplied && (
