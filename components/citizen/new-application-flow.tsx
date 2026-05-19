@@ -195,7 +195,7 @@ const questions = [
   {
     id: "originalUseDifficult",
     title: "종래의 목적대로 사용이 곤란한가요?",
-    subtitle: "잔여지의 위치, 형상, 접근 상태를 고려하여 기존 용도 사용이 어려운지 확인해 주세요",
+    subtitle: "잔��지의 위치, 형상, 접근 상태를 고려하여 기존 용도 사용이 어려운지 확인해 주세요",
     type: "radio" as const,
     showWhen: { questionId: "landType", value: "산지" },
     options: [
@@ -410,7 +410,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
         <div className="mb-10">
           <div className="flex items-center justify-between">
             {steps.map((s, index) => (
-              <div key={s.id} className="flex items-center flex-1">
+              <div key={s.id} className={`flex items-center ${index < steps.length - 1 ? "flex-1" : ""}`}>
                 {/* 스텝 원형 + 라벨 */}
                 <div className="flex flex-col items-center">
                   <div 
