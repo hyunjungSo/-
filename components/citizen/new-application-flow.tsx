@@ -92,7 +92,6 @@ const questions = [
       { value: "택지", label: "택지 (주거용, 상업용, 공업용 건물 부지)" },
       { value: "농지", label: "농지 (전, 답, 과수원 등)" },
       { value: "산지", label: "산지 (임야)" },
-      { value: "소규모토지", label: "소규모토지" },
       { value: "기타", label: "그 밖의 토지" },
     ],
   },
@@ -169,18 +168,6 @@ const questions = [
     options: [
       { value: "yes", label: "네, 접면도로가 상실되었습니다" },
       { value: "no", label: "아니오, 접면도로 유지" },
-    ],
-  },
-  // ===== 소규모토지 확인 항목 (판독 일부 지원) =====
-  {
-    id: "accessDifficult",
-    title: "진입이 곤란해졌나요?",
-    subtitle: "절토, 성토, 옹벽 설치 등으로 진입이 어려워졌는지 확인해 주세요",
-    type: "radio" as const,
-    showWhen: { questionId: "landType", value: "소규모토지" },
-    options: [
-      { value: "yes", label: "네, 진입이 곤란해졌습니다" },
-      { value: "no", label: "아니오, 진입에 문제 없음" },
     ],
   },
   // ===== 그 밖의 토지 확인 항목 (판독 일부 지원) =====
