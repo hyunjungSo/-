@@ -672,7 +672,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                             <Ruler className="w-3 h-3" />
                             잔여 {parcel.remainingArea}m²
                           </span>
-                          <span className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded font-medium">
+                          <span className="text-gray-500">
                             {parcel.landCategory}
                           </span>
                         </div>
@@ -1441,7 +1441,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 className="w-full bg-[#2E8B57] hover:bg-[#256b45] text-white py-6 text-lg"
               >
                 {selectedCartItems.size > 0 
-                  ? `선택한 ${selectedCartItems.size}건 신청하기`
+                  ? `선택�� ${selectedCartItems.size}건 신청하기`
                   : "항목을 선택해 주세요"}
               </Button>
             </div>
