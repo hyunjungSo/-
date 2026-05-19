@@ -606,14 +606,14 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   <Label
                     key={option.value}
                     htmlFor={option.value}
-                    className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                    className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
                       answers[currentQuestionData.id] === option.value
                         ? "border-[#2E8B57] bg-green-50"
                         : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
                     <RadioGroupItem value={option.value} id={option.value} className="sr-only" />
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                    <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 ${
                       answers[currentQuestionData.id] === option.value
                         ? "border-[#2E8B57] bg-[#2E8B57]"
                         : "border-gray-300"
@@ -633,7 +633,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 value={answers[currentQuestionData.id] || ""}
                 onChange={(e) => handleAnswer(currentQuestionData.id, e.target.value)}
                 placeholder={currentQuestionData.placeholder}
-                className="min-h-[150px] text-lg p-4 rounded-xl border-2 border-gray-200 focus:border-[#2E8B57] focus:ring-[#2E8B57]"
+                className="min-h-[150px] text-lg p-4 rounded-xl border border-gray-200 focus:border-[#2E8B57] focus:ring-[#2E8B57]"
               />
             )}
           </div>
@@ -689,7 +689,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               </div>
 
               {/* 분석 결과 카드 */}
-              <Card className={`p-6 border-2 ${
+              <Card className={`p-6 border ${
                 aiResult.judgment === "매수 가능성 높음" 
                   ? "border-emerald-200 bg-emerald-50" 
                   : "border-rose-200 bg-rose-50"
@@ -724,7 +724,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
 
               {/* 선택한 토지 정보 */}
               {selectedParcel && (
-                <Card className="p-5 border-2 border-gray-200">
+                <Card className="p-5 border border-gray-200">
                   <h3 className="font-semibold text-gray-900 mb-3">분석 대상 토지</h3>
                   <p className="text-gray-700">{selectedParcel.address}</p>
                   <p className="text-sm text-gray-500 mt-1">
@@ -761,7 +761,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
 
           {/* AI 결과 요약 */}
           {aiResult && (
-            <Card className={`p-4 border-2 ${
+            <Card className={`p-4 border ${
               aiResult.judgment === "매수 가능성 높음" 
                 ? "border-emerald-200 bg-emerald-50" 
                 : "border-rose-200 bg-rose-50"
@@ -796,7 +796,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
             <Button
               onClick={handleDeclineAndReset}
               variant="outline"
-              className="flex-1 py-6 text-lg rounded-xl border-2"
+              className="flex-1 py-6 text-lg rounded-xl border"
             >
               아니오, 다시 선택할게��
             </Button>
@@ -832,7 +832,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           </div>
 
           {/* 신청자 정보 */}
-          <Card className="p-5 border-2 border-gray-200">
+          <Card className="p-5 border border-gray-200">
             <h3 className="font-semibold text-gray-900 mb-4">신청자 정보</h3>
             <div className="space-y-4">
               <div>
@@ -864,7 +864,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           </Card>
 
           {/* 대상 토지 */}
-          <Card className="p-5 border-2 border-gray-200">
+          <Card className="p-5 border border-gray-200">
             <h3 className="font-semibold text-gray-900 mb-3">대상 토지</h3>
             <p className="text-gray-700">{selectedParcel.address}</p>
             <p className="text-sm text-gray-500 mt-1">
