@@ -600,7 +600,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               <RadioGroup
                 value={answers[currentQuestionData.id] || ""}
                 onValueChange={(value) => handleAnswer(currentQuestionData.id, value)}
-                className="space-y-3"
+                className="grid gap-3"
               >
                 {currentQuestionData.options.map((option) => (
                   <Label
