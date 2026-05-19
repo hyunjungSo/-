@@ -796,7 +796,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 AI가 분석 중입니다
               </h2>
               <p className="text-gray-500">
-                입력하��� 정보를 바탕으로 매수 가능성을 분석하고 있어요.<br />
+                입력하���� 정보를 바탕으로 매수 가능성을 분석하고 있어요.<br />
                 잠시만 기다려 주세요.
               </p>
             </div>
@@ -979,7 +979,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               <div className="flex flex-col gap-3 pt-4">
                 <Button
                   onClick={handleAddToCart}
-                  className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl w-full"
+                  className="bg-[#2E8B57] hover:bg-[#256b45] text-white h-14 text-base rounded-xl w-full"
                 >
                   <ClipboardList className="w-5 h-5 mr-2" />
                   매수신청 목록에 추가
@@ -987,7 +987,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 <Button
                   variant="outline"
                   onClick={handleReset}
-                  className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-6 text-lg rounded-xl w-full"
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50 h-14 text-base rounded-xl w-full"
                 >
                   다른 잔여지 분석하기
                 </Button>
@@ -1395,7 +1395,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               <div className="space-y-4">
                 {/* 사업단별로 그룹화 */}
                 {(() => {
-                  // 사업단별로 그룹화
+                  // 사업단별로 그���화
                   const groupedByProject = cartItems.reduce((acc, item) => {
                     const projectName = item.parcel.projectName;
                     if (!acc[projectName]) {
