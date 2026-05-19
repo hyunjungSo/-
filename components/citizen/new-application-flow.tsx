@@ -672,10 +672,6 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                             <Ruler className="w-3 h-3" />
                             잔여 {parcel.remainingArea}m²
                           </span>
-                          <span className="flex items-center gap-1">
-                            <MapPin className="w-3 h-3" />
-                            {parcel.roadContact}
-                          </span>
                         </div>
                       </div>
                     </div>
