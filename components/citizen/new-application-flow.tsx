@@ -345,7 +345,9 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
   const [aiResult, setAiResult] = useState<{ judgment: string; score: number; reasoning: string } | null>(null);
   const [applicationForm, setApplicationForm] = useState({
     contact: user?.contact || "",
+    postalCode: "",
     address: user?.address || "",
+    addressDetail: "",
     reason: "",
     attachments: [] as File[],
   });
@@ -1234,12 +1236,38 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 />
               </div>
               <div>
-                <Label className="text-sm text-gray-600 mb-1.5 block">주소 *</Label>
-                <Input
-                  placeholder="주소를 입력해 주세요"
-                  value={applicationForm.address}
-                  onChange={(e) => setApplicationForm(prev => ({ ...prev, address: e.target.value }))}
-                />
+                <Label className="text-sm text-gray-600 mb-1.5 block">주소 <span className="text-red-500">*</span></Label>
+                <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="우편번호"
+                      value={applicationForm.postalCode || ""}
+                      disabled
+                      className="w-32 bg-gray-50"
+                    />
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        // 주소 검색 (실제로는 다음 주소 API 등 연동)
+                        alert("주소 검색 기능은 추후 구현 예정입니다.");
+                      }}
+                      className="bg-gray-900 hover:bg-gray-800 text-white px-4"
+                    >
+                      주소 검색
+                    </Button>
+                  </div>
+                  <Input
+                    placeholder="기본주소"
+                    value={applicationForm.address}
+                    disabled
+                    className="bg-gray-50"
+                  />
+                  <Input
+                    placeholder="상세주소를 입력해주세요"
+                    value={applicationForm.addressDetail || ""}
+                    onChange={(e) => setApplicationForm(prev => ({ ...prev, addressDetail: e.target.value }))}
+                  />
+                </div>
               </div>
             </div>
           </Card>
@@ -1298,47 +1326,109 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                           {/* 필지 상세 정보 - 펼쳐진 경우에만 표시 */}
                           {isExpanded && (
                             <div className="p-4 space-y-4 border-t border-gray-200">
-                              {/* 활용 지목 */}
+                              {/* 활용 지목 + 공부상 지목 */}
+                              <div className="flex gap-4">
+                                <div className="flex-1">
+                                  <Label className="text-sm text-gray-600 mb-1.5 block">활용 지목 <span className="text-red-500">*</span></Label>
+                                  <select
+                                    value={landType}
+                                    onChange={(e) => {
+                                      setCartItems(prev => prev.map(ci => 
+                                        ci.id === item.id 
+                                          ? { ...ci, answers: { ...ci.answers, landType: e.target.value } }
+                                          : ci
+                                      ));
+                                    }}
+                                    className="w-full h-10 px-3 rounded-md border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2E8B57] focus:border-transparent"
+                                  >
+                                    <option value="택지">대(택지)</option>
+                                    <option value="농지">답(논)</option>
+                                    <option value="산지">임(산지)</option>
+                                    <option value="기타">그 밖의 토지</option>
+                                  </select>
+                                  <p className="text-xs text-gray-500 mt-1">AI 판단: {item.parcel.landCategory}({landType})</p>
+                                </div>
+                                <div className="w-32">
+                                  <Label className="text-sm text-gray-600 mb-1.5 block">공부상 지목</Label>
+                                  <Input
+                                    value={`${item.parcel.landCategory}(택지)`}
+                                    disabled
+                                    className="bg-gray-100 text-gray-500"
+                                  />
+                                </div>
+                              </div>
+                              
+                              {/* 확인 항목 - 체크박스 가로 배치 */}
                               <div>
-                                <Label className="text-sm text-gray-600 mb-1.5 block">활용 지목</Label>
-                                <select
-                                  value={landType}
+                                <Label className="text-sm text-gray-900 font-semibold mb-1 block">확인 항목</Label>
+                                <p className="text-xs text-gray-500 mb-3">AI가 자동 판독할 수 없는 사항입니다. 해당되는 경우 체크해 주세요.</p>
+                                <div className="flex flex-wrap gap-6">
+                                  <label className="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                      type="checkbox"
+                                      checked={item.answers.roadLoss === "yes"}
+                                      onChange={(e) => {
+                                        setCartItems(prev => prev.map(ci => 
+                                          ci.id === item.id 
+                                            ? { ...ci, answers: { ...ci.answers, roadLoss: e.target.checked ? "yes" : "no" } }
+                                            : ci
+                                        ));
+                                      }}
+                                      className="w-5 h-5 rounded border-gray-300 text-[#2E8B57] focus:ring-[#2E8B57]"
+                                    />
+                                    <span className="text-sm text-gray-700">접면도로 상실</span>
+                                  </label>
+                                  <label className="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                      type="checkbox"
+                                      checked={item.answers.waterChannelLost === "yes"}
+                                      onChange={(e) => {
+                                        setCartItems(prev => prev.map(ci => 
+                                          ci.id === item.id 
+                                            ? { ...ci, answers: { ...ci.answers, waterChannelLost: e.target.checked ? "yes" : "no" } }
+                                            : ci
+                                        ));
+                                      }}
+                                      className="w-5 h-5 rounded border-gray-300 text-[#2E8B57] focus:ring-[#2E8B57]"
+                                    />
+                                    <span className="text-sm text-gray-700">관개수로 상실</span>
+                                  </label>
+                                  <label className="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                      type="checkbox"
+                                      checked={item.answers.farmMachineDifficulty === "yes"}
+                                      onChange={(e) => {
+                                        setCartItems(prev => prev.map(ci => 
+                                          ci.id === item.id 
+                                            ? { ...ci, answers: { ...ci.answers, farmMachineDifficulty: e.target.checked ? "yes" : "no" } }
+                                            : ci
+                                        ));
+                                      }}
+                                      className="w-5 h-5 rounded border-gray-300 text-[#2E8B57] focus:ring-[#2E8B57]"
+                                    />
+                                    <span className="text-sm text-gray-700">농기계 회전 곤란</span>
+                                  </label>
+                                </div>
+                              </div>
+                              
+                              {/* 필지별 신청 사유 */}
+                              <div>
+                                <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유 <span className="text-red-500">*</span></Label>
+                                <Textarea
+                                  placeholder="이 필지의 매수 신청 사유를 작성해 주세요."
+                                  value={item.reason || ""}
                                   onChange={(e) => {
                                     setCartItems(prev => prev.map(ci => 
                                       ci.id === item.id 
-                                        ? { ...ci, answers: { ...ci.answers, landType: e.target.value } }
+                                        ? { ...ci, reason: e.target.value }
                                         : ci
                                     ));
                                   }}
-                                  className="w-full h-10 px-3 rounded-md border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2E8B57] focus:border-transparent"
-                                >
-                                  <option value="택지">택지</option>
-                                  <option value="농지">농지</option>
-                                  <option value="산지">산지</option>
-                                  <option value="기타">그 밖의 토지</option>
-                                </select>
+                                  className="min-h-[80px]"
+                                />
                               </div>
-                              
-                              {/* 확인 항목 */}
-                              <div>
-                                <Label className="text-sm text-gray-600 mb-1.5 block">확인 항목</Label>
-                                <div className="space-y-2 p-3 bg-gray-50 rounded-lg text-sm">
-                                  {landType === "택지" && (
-                                    <>
-                                      <div className="flex items-center justify-between">
-                                        <span className="text-gray-600">접면도로 상태 변경</span>
-                                        <span className={item.answers.roadStatusChange === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
-                                          {item.answers.roadStatusChange === "yes" ? "해당" : "해당 없음"}
-                                        </span>
-                                      </div>
-                                      <div className="flex items-center justify-between">
-                                        <span className="text-gray-600">형상 부정형 변경</span>
-                                        <span className={item.answers.shapeChange === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
-                                          {item.answers.shapeChange === "yes" ? "해당" : "해당 없음"}
-                                        </span>
-                                      </div>
-                                    </>
-                                  )}
+                            </div>
+                          )}
                                   {landType === "농지" && (
                                     <>
                                       <div className="flex items-center justify-between">
@@ -1372,7 +1462,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                                         </span>
                                       </div>
                                       <div className="flex items-center justify-between">
-                                        <span className="text-gray-600">종래 목적 사용 곤란</span>
+                                        <span className="text-gray-600">종래 목적 사�� 곤란</span>
                                         <span className={item.answers.otherLandUseDifficult === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
                                           {item.answers.otherLandUseDifficult === "yes" ? "해당" : "해당 없음"}
                                         </span>
@@ -1418,76 +1508,71 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       잔여 면적: {selectedParcel?.remainingArea}m<sup>2</sup> | {selectedParcel?.landCategory} | {selectedParcel?.roadContact}
                     </p>
                   </div>
-                  <div>
-                    <Label className="text-sm text-gray-600 mb-1.5 block">활용 지목</Label>
-                    <select
-                      value={answers.landType || ""}
-                      onChange={(e) => setAnswers(prev => ({ ...prev, landType: e.target.value }))}
-                      className="w-full h-10 px-3 rounded-md border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2E8B57] focus:border-transparent"
-                    >
-                      <option value="택지">택지</option>
-                      <option value="농지">농지</option>
-                      <option value="산지">산지</option>
-                      <option value="기타">그 밖의 토지</option>
-                    </select>
+                  
+                  {/* 활용 지목 + 공부상 지목 */}
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <Label className="text-sm text-gray-600 mb-1.5 block">활용 지목 <span className="text-red-500">*</span></Label>
+                      <select
+                        value={answers.landType || "택지"}
+                        onChange={(e) => setAnswers(prev => ({ ...prev, landType: e.target.value }))}
+                        className="w-full h-10 px-3 rounded-md border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2E8B57] focus:border-transparent"
+                      >
+                        <option value="택지">대(택지)</option>
+                        <option value="농지">답(논)</option>
+                        <option value="산지">임(산지)</option>
+                        <option value="기타">그 밖의 토지</option>
+                      </select>
+                      <p className="text-xs text-gray-500 mt-1">AI 판단: {selectedParcel?.landCategory}({answers.landType || "택지"})</p>
+                    </div>
+                    <div className="w-32">
+                      <Label className="text-sm text-gray-600 mb-1.5 block">공부상 지목</Label>
+                      <Input
+                        value={`${selectedParcel?.landCategory}(택지)`}
+                        disabled
+                        className="bg-gray-100 text-gray-500"
+                      />
+                    </div>
                   </div>
+                  
+                  {/* 확인 항목 - 체크박스 가로 배치 */}
                   <div>
-                    <Label className="text-sm text-gray-600 mb-1.5 block">확인 항목</Label>
-                    <div className="space-y-2 p-3 bg-gray-50 rounded-lg">
-                      {answers.landType === "택지" && (
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600">접면도로 상태 변경</span>
-                          <span className={answers.roadStatusChange === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
-                            {answers.roadStatusChange === "yes" ? "해당" : "해당 없음"}
-                      </span>
+                    <Label className="text-sm text-gray-900 font-semibold mb-1 block">확인 항목</Label>
+                    <p className="text-xs text-gray-500 mb-3">AI가 자동 판독할 수 없는 사항입니다. 해당되는 경우 체크해 주세요.</p>
+                    <div className="flex flex-wrap gap-6">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={answers.roadLoss === "yes"}
+                          onChange={(e) => setAnswers(prev => ({ ...prev, roadLoss: e.target.checked ? "yes" : "no" }))}
+                          className="w-5 h-5 rounded border-gray-300 text-[#2E8B57] focus:ring-[#2E8B57]"
+                        />
+                        <span className="text-sm text-gray-700">접면도로 상실</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={answers.waterChannelLost === "yes"}
+                          onChange={(e) => setAnswers(prev => ({ ...prev, waterChannelLost: e.target.checked ? "yes" : "no" }))}
+                          className="w-5 h-5 rounded border-gray-300 text-[#2E8B57] focus:ring-[#2E8B57]"
+                        />
+                        <span className="text-sm text-gray-700">관개수로 상실</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={answers.farmMachineDifficulty === "yes"}
+                          onChange={(e) => setAnswers(prev => ({ ...prev, farmMachineDifficulty: e.target.checked ? "yes" : "no" }))}
+                          className="w-5 h-5 rounded border-gray-300 text-[#2E8B57] focus:ring-[#2E8B57]"
+                        />
+                        <span className="text-sm text-gray-700">농기계 회전 곤란</span>
+                      </label>
                     </div>
-                  )}
-                  {answers.landType === "농지" && (
-                    <>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">접면도로/관개수로 상실</span>
-                        <span className={answers.roadOrCanalLoss !== "no" ? "text-red-600 font-medium" : "text-gray-500"}>
-                          {answers.roadOrCanalLoss === "road" ? "도로 상실" : 
-                           answers.roadOrCanalLoss === "canal" ? "수로 상실" : 
-                           answers.roadOrCanalLoss === "both" ? "도로/수로 상실" : "해당 없음"}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">농기계 회전 곤란</span>
-                        <span className={answers.farmMachineDifficulty === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
-                          {answers.farmMachineDifficulty === "yes" ? "해당" : "해당 없음"}
-                        </span>
-                      </div>
-                    </>
-                  )}
-                  {answers.landType === "산지" && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">접면도로 상실</span>
-                      <span className={answers.forestRoadLoss === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
-                        {answers.forestRoadLoss === "yes" ? "해당" : "해당 없음"}
-                      </span>
-                    </div>
-                  )}
-                  {answers.landType === "기타" && (
-                    <>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">접면도로 상실</span>
-                        <span className={answers.otherRoadLoss === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
-                          {answers.otherRoadLoss === "yes" ? "해당" : "해당 없음"}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">종래 목적 사용 곤란</span>
-                        <span className={answers.otherLandUseDifficult === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
-                          {answers.otherLandUseDifficult === "yes" ? "해당" : "해당 없음"}
-                        </span>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
+                  </div>
+                  
+                  {/* 신청 사유 */}
                   <div>
-                    <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유 *</Label>
+                    <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유 <span className="text-red-500">*</span></Label>
                     <Textarea
                       placeholder="잔여지 매수를 신청하시는 사유를 상세히 작성해 주세요."
                       value={applicationForm.reason}
