@@ -821,47 +821,52 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 </p>
               </div>
 
-              {/* 분석 결과 카드 */}
-              <Card className={`p-6 border ${
-                aiResult.judgment === "매수 가능성 높음" 
-                  ? "border-emerald-200 bg-emerald-50" 
-                  : "border-rose-200 bg-rose-50"
-              }`}>
-                <div className="flex items-center gap-4 mb-4">
-                  <div className={`w-14 h-14 rounded-full flex items-center justify-center ${
-                    aiResult.judgment === "매수 가능성 높음"
-                      ? "bg-emerald-500"
-                      : "bg-rose-500"
-                  }`}>
-                    {aiResult.judgment === "매수 가능성 높음" ? (
-                      <Check className="w-8 h-8 text-white font-bold" />
-                    ) : (
-                      <XCircle className="w-8 h-8 text-white" />
-                    )}
-                  </div>
-                  <div>
-                    <h3 className={`text-xl font-bold ${
-                      aiResult.judgment === "매수 가능성 높음"
-                        ? "text-green-700"
-                        : "text-rose-700"
-                    }`}>
-                      {aiResult.judgment}
-                    </h3>
-                  </div>
-                </div>
-                <p className="text-gray-700 leading-relaxed">
-                  {aiResult.reasoning}
-                </p>
-              </Card>
-
-              {/* 선택한 토지 정보 */}
+              {/* 통합된 분석 결과 카드 */}
               {selectedParcel && (
-                <Card className="p-5 border border-gray-200">
-                  <h3 className="font-semibold text-gray-900 mb-3">분석 대상 토지</h3>
-                  <p className="text-gray-700">{selectedParcel.address}</p>
-                  <p className="text-sm text-gray-500 mt-1">
-                    잔여 면적: {selectedParcel.remainingArea}m² | {selectedParcel.landCategory} | {selectedParcel.roadContact}
-                  </p>
+                <Card className="p-6 border border-gray-200">
+                  {/* 토지 정보 헤더 */}
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-semibold text-gray-900">분석 대상 토지</h3>
+                      <Badge className={`px-3 py-1 text-sm font-medium ${
+                        aiResult.judgment === "매수 가능성 높음"
+                          ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                          : "bg-rose-100 text-rose-700 border border-rose-200"
+                      }`}>
+                        {aiResult.judgment === "매수 가능성 높음" ? (
+                          <Check className="w-4 h-4 mr-1 inline" />
+                        ) : (
+                          <XCircle className="w-4 h-4 mr-1 inline" />
+                        )}
+                        {aiResult.judgment}
+                      </Badge>
+                    </div>
+                    <p className="text-gray-700 font-medium">{selectedParcel.address}</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      잔여 면적: {selectedParcel.remainingArea}m² | {selectedParcel.landCategory} | {selectedParcel.roadContact}
+                    </p>
+                  </div>
+
+                  {/* AI 분석 내용 */}
+                  <div className={`p-4 rounded-lg ${
+                    aiResult.judgment === "매수 가능성 높음"
+                      ? "bg-emerald-50 border border-emerald-100"
+                      : "bg-rose-50 border border-rose-100"
+                  }`}>
+                    <div className="flex items-start gap-3">
+                      <Sparkles className={`w-5 h-5 mt-0.5 flex-shrink-0 ${
+                        aiResult.judgment === "매수 가능성 높음"
+                          ? "text-emerald-600"
+                          : "text-rose-600"
+                      }`} />
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 mb-1">AI 분석 의견</p>
+                        <p className="text-gray-600 text-sm leading-relaxed">
+                          {aiResult.reasoning}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </Card>
               )}
 
