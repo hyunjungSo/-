@@ -695,7 +695,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   </div>
                   <div>
                     <h3 className={`text-xl font-bold ${
-                      isPositive
+                      aiResult.judgment === "매수 가능성 높음"
                         ? "text-green-700"
                         : "text-rose-700"
                     }`}>
