@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Check, ChevronLeft, MapPin, Ruler, Search, FileText, Sparkles, ClipboardCheck, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import type { LandInfo, AIAnalysisResult, Application } from "@/lib/types";
+import { useAuth } from "@/lib/auth-context";
 
 // 더미 잔여지 데이터 (사용자 소유)
 const myParcels = [
@@ -203,6 +204,7 @@ interface NewApplicationFlowProps {
 type FlowStep = "select" | "questions" | "analysis" | "decision" | "application" | "complete";
 
 export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowProps) {
+  const { user } = useAuth();
   const [step, setStep] = useState<FlowStep>("select");
   const [selectedParcel, setSelectedParcel] = useState<typeof myParcels[0] | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -211,8 +213,8 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
   const [searchQuery, setSearchQuery] = useState("");
   const [aiResult, setAiResult] = useState<{ judgment: string; score: number; reasoning: string } | null>(null);
   const [applicationForm, setApplicationForm] = useState({
-    contact: "",
-    email: "",
+    contact: user?.contact || "",
+    email: user?.email || "",
     additionalNotes: "",
   });
 
@@ -318,7 +320,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     setCurrentQuestion(0);
     setAnswers({});
     setAiResult(null);
-    setApplicationForm({ contact: "", email: "", additionalNotes: "" });
+    setApplicationForm({ contact: user?.contact || "", email: user?.email || "", additionalNotes: "" });
   };
 
   // 신청 제출
@@ -374,7 +376,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     setCurrentQuestion(0);
     setAnswers({});
     setAiResult(null);
-    setApplicationForm({ contact: "", email: "", additionalNotes: "" });
+    setApplicationForm({ contact: user?.contact || "", email: user?.email || "", additionalNotes: "" });
   };
 
   // 현재 질문에 대한 답변이 있는지 확인
