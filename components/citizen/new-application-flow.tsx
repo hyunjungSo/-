@@ -7,7 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Check, ChevronLeft, MapPin, Ruler, Search, FileText, Sparkles, ClipboardCheck, CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Check, ChevronLeft, MapPin, Ruler, Search, FileText, Sparkles, ClipboardCheck, CheckCircle, XCircle, Loader2, X, Trash2, ShoppingCart } from "lucide-react";
 import type { LandInfo, AIAnalysisResult, Application } from "@/lib/types";
 import { useAuth } from "@/lib/auth-context";
 
@@ -207,6 +209,15 @@ interface NewApplicationFlowProps {
   onCancel: () => void;
 }
 
+// 장바구니 아이템 타입
+interface CartItem {
+  id: string;
+  parcel: typeof myParcels[0];
+  answers: Record<string, string>;
+  aiResult: { judgment: string; score: number; reasoning: string };
+  addedAt: Date;
+}
+
 type FlowStep = "select" | "questions" | "analysis" | "decision" | "application" | "complete";
 
 export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowProps) {
@@ -224,6 +235,11 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     reason: "",
     attachments: [] as File[],
   });
+  
+  // 장바구니 상태
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [selectedCartItems, setSelectedCartItems] = useState<Set<string>>(new Set());
 
   // 검색 필터링된 잔여지 목록
   const filteredParcels = useMemo(() => {
@@ -332,6 +348,58 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
 
   // 신청 제출
   const handleSubmit = () => {
+    // 장바구니에서 일괄 신청하는 경우
+    if (selectedCartItems.size > 0) {
+      const selectedItems = cartItems.filter(item => selectedCartItems.has(item.id));
+      const firstItem = selectedItems[0];
+      
+      const landInfo: LandInfo = {
+        id: firstItem.parcel.id,
+        address: firstItem.parcel.address,
+        area: firstItem.parcel.area,
+        remainingArea: firstItem.parcel.remainingArea,
+        landCategory: firstItem.parcel.landCategory,
+        landUse: firstItem.parcel.landUse,
+        roadContact: firstItem.parcel.roadContact,
+        ownerName: firstItem.parcel.ownerName,
+        officialPrice: 500000,
+        acquisitionDate: "2020-03-15",
+      };
+
+      const aiResultData: AIAnalysisResult = {
+        provisionalJudgment: firstItem.aiResult.judgment === "매수 가능성 높음" ? "수용가능" : "수용불가",
+        confidenceScore: firstItem.aiResult.score,
+        reasoning: firstItem.aiResult.reasoning,
+        comparisonCases: [],
+        reviewDate: new Date().toISOString(),
+        reviewerId: "AI-SYSTEM",
+      };
+
+      const application: Application = {
+        id: `APP-${Date.now()}`,
+        applicantName: user?.name || firstItem.parcel.ownerName,
+        applicantContact: applicationForm.contact,
+        applicantEmail: "",
+        applicationDate: new Date().toISOString(),
+        status: "검토중",
+        landInfo,
+        aiResult: aiResultData,
+        documents: [],
+        additionalNotes: `[${selectedItems.length}건 일괄 신청]\n${selectedItems.map(item => item.parcel.address).join('\n')}\n\n${applicationForm.reason}`,
+      };
+
+      // 신청한 항목 장바구니에서 제거
+      setCartItems(prev => prev.filter(item => !selectedCartItems.has(item.id)));
+      setSelectedCartItems(new Set());
+      
+      setStep("complete");
+      setTimeout(() => {
+        onComplete(application);
+      }, 2000);
+      return;
+    }
+
+    // 단일 분석에서 신청하는 경우
     if (!selectedParcel || !aiResult) return;
 
     const landInfo: LandInfo = {
@@ -376,7 +444,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     }, 2000);
   };
 
-  // 다른 잔여지 분석을 위해 초기화
+  // 다른 잔여지 분석을 위해 초기화 (장바구니 유지)
   const handleReset = () => {
     setStep("select");
     setSelectedParcel(null);
@@ -384,6 +452,42 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     setAnswers({});
     setAiResult(null);
     setApplicationForm({ contact: user?.contact || "", address: user?.address || "", reason: "", attachments: [] });
+  };
+
+  // 장바구니에 담기
+  const handleAddToCart = () => {
+    if (!selectedParcel || !aiResult) return;
+    
+    const newItem: CartItem = {
+      id: `cart-${Date.now()}`,
+      parcel: selectedParcel,
+      answers: { ...answers },
+      aiResult: { ...aiResult },
+      addedAt: new Date(),
+    };
+    
+    setCartItems(prev => [...prev, newItem]);
+    handleReset(); // 초기화하고 다음 분석 준비
+  };
+
+  // 장바구니에서 삭제
+  const handleRemoveFromCart = (itemId: string) => {
+    setCartItems(prev => prev.filter(item => item.id !== itemId));
+    setSelectedCartItems(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(itemId);
+      return newSet;
+    });
+  };
+
+  // 장바구니 선택 항목 일괄 신청
+  const handleSubmitFromCart = () => {
+    const selectedItems = cartItems.filter(item => selectedCartItems.has(item.id));
+    if (selectedItems.length === 0) return;
+    
+    // 신청서 작성 단계로 이동 (장바구니에서)
+    setStep("application");
+    setIsCartOpen(false);
   };
 
   // 현재 질문에 대한 답변이 있는지 확인
@@ -414,6 +518,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
   const currentStepIndex = getCurrentStepIndex();
 
   return (
+    <>
       <div className="max-w-2xl mx-auto pt-10">
       {/* 스텝 인디케이터 */}
       {step !== "complete" && step !== "decision" && (
@@ -753,10 +858,11 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
 
               <div className="flex flex-col gap-3 pt-4">
                 <Button
-                  onClick={() => setStep("application")}
+                  onClick={handleAddToCart}
                   className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl w-full"
                 >
-                  매수 신청하기
+                  <ShoppingCart className="w-5 h-5 mr-2" />
+                  장바구니에 담기
                 </Button>
                 <Button
                   variant="outline"
@@ -835,11 +941,18 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
       )}
 
       {/* Step 5: 신청서 양식 */}
-      {step === "application" && selectedParcel && (
+      {step === "application" && (selectedParcel || selectedCartItems.size > 0) && (
         <div className="space-y-8">
           {/* 뒤로가기 */}
           <button
-            onClick={handleBack}
+            onClick={() => {
+              if (selectedCartItems.size > 0) {
+                setIsCartOpen(true);
+                setStep("select");
+              } else {
+                handleBack();
+              }
+            }}
             className="flex items-center gap-1 text-gray-500 hover:text-gray-700 transition-colors"
           >
             <ChevronLeft className="w-5 h-5" />
@@ -851,7 +964,10 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               신청서를 작성해 주세요
             </h2>
             <p className="text-gray-500">
-              마지막 단계입니다. 연락처 정보를 입력해 주세요.
+              {selectedCartItems.size > 0 
+                ? `${selectedCartItems.size}건의 잔여지를 일괄 신청합니다.`
+                : "마지막 단계입니다. 연락처 정보를 입력해 주세요."
+              }
             </p>
           </div>
 
@@ -862,7 +978,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               <div>
                 <Label className="text-sm text-gray-600 mb-1.5 block">신청자명</Label>
                 <Input
-                  value={user?.name || selectedParcel.ownerName}
+                  value={user?.name || selectedParcel?.ownerName || cartItems[0]?.parcel.ownerName || ""}
                   disabled
                   className="bg-gray-50"
                 />
@@ -888,40 +1004,72 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
 
           {/* 토지 정보 */}
           <Card className="p-5 border border-gray-200">
-            <h3 className="font-semibold text-gray-900 mb-4">토지 정보</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">
+              토지 정보 
+              {selectedCartItems.size > 0 && (
+                <span className="ml-2 text-[#2E8B57] font-normal">({selectedCartItems.size}건)</span>
+              )}
+            </h3>
             <div className="space-y-4">
-              <div>
-                <Label className="text-sm text-gray-600 mb-1.5 block">대상 토지</Label>
-                <Input
-                  value={selectedParcel.address}
-                  disabled
-                  className="bg-gray-50"
-                />
-                <p className="text-sm text-gray-500 mt-1">
-                  잔여 면적: {selectedParcel.remainingArea}m² | {selectedParcel.landCategory} | {selectedParcel.roadContact}
-                </p>
-              </div>
-              <div>
-                <Label className="text-sm text-gray-600 mb-1.5 block">활용 지목</Label>
-                <select
-                  value={answers.landType || ""}
-                  onChange={(e) => setAnswers(prev => ({ ...prev, landType: e.target.value }))}
-                  className="w-full h-10 px-3 rounded-md border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2E8B57] focus:border-transparent"
-                >
-                  <option value="택지">택지</option>
-                  <option value="농지">농지</option>
-                  <option value="산지">산지</option>
-                  <option value="기타">그 밖의 토지</option>
-                </select>
-              </div>
-              <div>
-                <Label className="text-sm text-gray-600 mb-1.5 block">확인 항목</Label>
-                <div className="space-y-2 p-3 bg-gray-50 rounded-lg">
-                  {answers.landType === "택지" && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">접면도로 상태 변경</span>
-                      <span className={answers.roadStatusChange === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
-                        {answers.roadStatusChange === "yes" ? "해당" : "해당 없음"}
+              {/* 장바구니에서 신청하는 경우 */}
+              {selectedCartItems.size > 0 ? (
+                <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                  {cartItems
+                    .filter(item => selectedCartItems.has(item.id))
+                    .map((item) => {
+                      const isPositive = item.aiResult.judgment === "매수 가능성 높음";
+                      return (
+                        <div key={item.id} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                          <p className="text-sm font-medium text-gray-900">{item.parcel.address}</p>
+                          <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-gray-500">
+                            <span>잔여: {item.parcel.remainingArea}m²</span>
+                            <span>|</span>
+                            <span>{item.parcel.landCategory}</span>
+                            <span>|</span>
+                            <span>{item.parcel.roadContact}</span>
+                            <Badge className={`text-xs text-white ${isPositive ? "bg-emerald-500" : "bg-rose-500"}`}>
+                              {isPositive ? "매수 가능성 높음" : "매수 가능성 낮음"}
+                            </Badge>
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              ) : (
+                /* 단일 분석에서 신청하는 경우 */
+                <>
+                  <div>
+                    <Label className="text-sm text-gray-600 mb-1.5 block">대상 토지</Label>
+                    <Input
+                      value={selectedParcel?.address || ""}
+                      disabled
+                      className="bg-gray-50"
+                    />
+                    <p className="text-sm text-gray-500 mt-1">
+                      잔여 면적: {selectedParcel?.remainingArea}m² | {selectedParcel?.landCategory} | {selectedParcel?.roadContact}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-sm text-gray-600 mb-1.5 block">활용 지목</Label>
+                    <select
+                      value={answers.landType || ""}
+                      onChange={(e) => setAnswers(prev => ({ ...prev, landType: e.target.value }))}
+                      className="w-full h-10 px-3 rounded-md border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2E8B57] focus:border-transparent"
+                    >
+                      <option value="택지">택지</option>
+                      <option value="농지">농지</option>
+                      <option value="산지">산지</option>
+                      <option value="기타">그 밖의 토지</option>
+                    </select>
+                  </div>
+                  <div>
+                    <Label className="text-sm text-gray-600 mb-1.5 block">확인 항목</Label>
+                    <div className="space-y-2 p-3 bg-gray-50 rounded-lg">
+                      {answers.landType === "택지" && (
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-gray-600">접면도로 상태 변경</span>
+                          <span className={answers.roadStatusChange === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
+                            {answers.roadStatusChange === "yes" ? "해당" : "해당 없음"}
                       </span>
                     </div>
                   )}
@@ -969,6 +1117,8 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   )}
                 </div>
               </div>
+                </>
+              )}
               <div>
                 <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유 *</Label>
                 <Textarea
@@ -1058,5 +1208,139 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
         </div>
       )}
     </div>
+
+    {/* 장바구니 플로팅 버튼 */}
+    {cartItems.length > 0 && !isCartOpen && (
+      <button
+        onClick={() => setIsCartOpen(true)}
+        className="fixed bottom-6 right-6 z-50 flex h-14 items-center gap-2 rounded-full bg-[#2E8B57] px-5 text-white shadow-lg transition-all hover:bg-[#256b45] hover:shadow-xl"
+      >
+        <ShoppingCart className="h-5 w-5" />
+        <span className="font-medium">신청 목록</span>
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-sm font-bold text-[#2E8B57]">
+          {cartItems.length}
+        </span>
+      </button>
+    )}
+
+    {/* 장바구니 슬라이드 패널 */}
+    {isCartOpen && (
+      <div className="fixed inset-0 z-50 flex justify-end">
+        {/* 오버레이 */}
+        <div 
+          className="absolute inset-0 bg-black/50" 
+          onClick={() => setIsCartOpen(false)}
+        />
+        
+        {/* 패널 */}
+        <div className="relative z-10 flex h-full w-full max-w-md flex-col bg-white shadow-2xl">
+          {/* 헤더 */}
+          <div className="flex items-center justify-between border-b px-4 py-4">
+            <div className="flex items-center gap-2">
+              <h2 className="text-lg font-semibold">신청 목록</h2>
+              <Badge className="bg-[#2E8B57]">{cartItems.length}건</Badge>
+            </div>
+            <button
+              onClick={() => setIsCartOpen(false)}
+              className="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-gray-100"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* 목록 */}
+          <div className="flex-1 overflow-y-auto p-4">
+            {cartItems.length === 0 ? (
+              <div className="flex h-full flex-col items-center justify-center text-gray-400">
+                <ShoppingCart className="mb-2 h-12 w-12 opacity-30" />
+                <p>신청 목록이 비어 있습니다</p>
+                <p className="mt-1 text-sm">분석 완료 후 담아주세요</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {cartItems.map((item) => {
+                  const isSelected = selectedCartItems.has(item.id);
+                  const isPositive = item.aiResult.judgment === "매수 가능성 높음";
+                  return (
+                    <div 
+                      key={item.id}
+                      className={`rounded-lg border p-3 transition-colors ${isSelected ? "border-[#2E8B57] bg-green-50" : "border-gray-200"}`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <Checkbox
+                          checked={isSelected}
+                          onCheckedChange={(checked) => {
+                            const newSelected = new Set(selectedCartItems);
+                            if (checked) {
+                              newSelected.add(item.id);
+                            } else {
+                              newSelected.delete(item.id);
+                            }
+                            setSelectedCartItems(newSelected);
+                          }}
+                          className="mt-0.5 h-5 w-5 shrink-0"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 line-clamp-2">{item.parcel.address}</p>
+                          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                            <span>잔여: {item.parcel.remainingArea}m²</span>
+                            <span>|</span>
+                            <span>{item.parcel.landCategory}</span>
+                            <Badge 
+                              className={`text-xs text-white ${isPositive ? "bg-emerald-500" : "bg-rose-500"}`}
+                            >
+                              {isPositive ? "매수 가능성 높음" : "매수 가능성 낮음"}
+                            </Badge>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleRemoveFromCart(item.id)}
+                          className="shrink-0 rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-red-500"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* 하단 버튼 */}
+          {cartItems.length > 0 && (
+            <div className="border-t p-4 space-y-2">
+              <div className="flex items-center justify-between text-sm mb-2">
+                <button
+                  onClick={() => {
+                    if (selectedCartItems.size === cartItems.length) {
+                      setSelectedCartItems(new Set());
+                    } else {
+                      setSelectedCartItems(new Set(cartItems.map(item => item.id)));
+                    }
+                  }}
+                  className="text-[#2E8B57] hover:underline"
+                >
+                  {selectedCartItems.size === cartItems.length ? "전체 해제" : "전체 선택"}
+                </button>
+                <span className="text-gray-500">
+                  {selectedCartItems.size}건 선택됨
+                </span>
+              </div>
+              <Button
+                onClick={handleSubmitFromCart}
+                disabled={selectedCartItems.size === 0}
+                className="w-full bg-[#2E8B57] hover:bg-[#256b45] text-white py-6 text-lg"
+              >
+                {selectedCartItems.size > 0 
+                  ? `선택한 ${selectedCartItems.size}건 신청하기`
+                  : "항목을 선택해 주세요"}
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+    )}
+  </>
   );
 }
