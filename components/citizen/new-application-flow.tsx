@@ -672,6 +672,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                             <Ruler className="w-3 h-3" />
                             잔여 {parcel.remainingArea}m²
                           </span>
+                          <span className="w-px h-4 bg-gray-200"></span>
                           <span className="text-gray-500">
                             {parcel.landCategory}
                           </span>
@@ -796,7 +797,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 AI가 분석 중입니다
               </h2>
               <p className="text-gray-500">
-                입력하������ 정보를 바탕으로 매수 가능성을 분석하고 있어요.<br />
+                입력하������� 정보를 바탕으로 매수 가능성을 분석하고 있어요.<br />
                 잠시만 기다려 주세요.
               </p>
             </div>
