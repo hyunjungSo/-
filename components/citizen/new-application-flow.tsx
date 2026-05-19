@@ -82,85 +82,171 @@ const myParcels = [
 
 // AI 분석을 위한 정보수집 질문들
 const questions = [
+  // 1. 토지 유형 선택
   {
-    id: "currentUse",
-    title: "현재 토지의 활용 지목은 무엇인가요?",
-    subtitle: "현재 토지가 실제로 어떻게 이용되고 있는지 선택해 주세요",
+    id: "landType",
+    title: "토지의 유형을 선택해 주세요",
+    subtitle: "잔여지의 주된 용도에 해당하는 유형을 선택해 주세요",
     type: "radio" as const,
     options: [
-      { value: "대", label: "대 (택지)" },
-      { value: "전", label: "전 (밭으로 사용)" },
-      { value: "답", label: "답 (논으로 사용)" },
-      { value: "과", label: "과 (과수원)" },
-      { value: "임", label: "임 (산림)" },
-      { value: "잡", label: "잡종지 (여러 용도)" },
-      { value: "기타", label: "기타" },
+      { value: "택지", label: "택지 (주거용, 상업용, 공업용 건물 부지)" },
+      { value: "농지", label: "농지 (전, 답, 과수원 등)" },
+      { value: "산지", label: "산지 (임야)" },
+      { value: "기타", label: "그 밖의 토지" },
     ],
   },
+  // 2. 택지 유형 선택 (택지인 경우)
   {
     id: "buildingType",
     title: "택지의 유형은 무엇인가요?",
     subtitle: "건축물의 용도를 선택해 주세요",
     type: "radio" as const,
-    showWhen: { questionId: "currentUse", value: "대" },
+    showWhen: { questionId: "landType", value: "택지" },
     options: [
-      { value: "주거용", label: "주거용 (주택, 아파트 등)" },
-      { value: "상업용", label: "상업용 (상가, 사무실 등)" },
-      { value: "공업용", label: "공업용 (공장, 창고 등)" },
-      { value: "기타", label: "기타" },
+      { value: "주거용", label: "주거용" },
+      { value: "상업용", label: "상업용" },
+      { value: "공업용", label: "공업용" },
+    ],
+  },
+  // 3. 주거용 세부 유형 (주거용인 경우)
+  {
+    id: "residentialType",
+    title: "주거용 건물의 유형은 무엇인가요?",
+    subtitle: "해당하는 주거 유형을 선택해 주세요",
+    type: "radio" as const,
+    showWhen: { questionId: "buildingType", value: "주거용" },
+    options: [
+      { value: "단독다세대", label: "단독주택 / 다세대주택" },
+      { value: "연립", label: "연립주택" },
+      { value: "아파트", label: "아파트" },
+    ],
+  },
+  // ===== 택지 확인 항목 =====
+  {
+    id: "roadStatusChange",
+    title: "사업으로 인해 접면도로 상태가 변경되었나요?",
+    subtitle: "접면도로 상태 변경으로 건축허가가 불가능해졌는지 확인해 주세요",
+    type: "radio" as const,
+    showWhen: { questionId: "landType", value: "택지" },
+    options: [
+      { value: "yes", label: "네, 접면도로 상태 변경으로 건축허가 불가" },
+      { value: "no", label: "아니오, 건축허가 가능" },
     ],
   },
   {
-    id: "buildingExists",
-    title: "잔여지에 건축물이 있나요?",
-    subtitle: "건물, 창고, 축사 등 건축물 유무를 확인해 주세요",
+    id: "shapeIrregular",
+    title: "토지 형상이 부정형으로 변경되었나요?",
+    subtitle: "사각형 폭 5m 이하, 삼각형 한 변 11m 이하 등 형상 변경 여부",
     type: "radio" as const,
+    showWhen: { questionId: "landType", value: "택지" },
     options: [
-      { value: "yes", label: "네, 건축물이 있습니다" },
-      { value: "no", label: "아니오, 건축물이 없습니다" },
+      { value: "yes", label: "네, 형상이 부정형으로 변경되었습니다" },
+      { value: "no", label: "아니오, 형상 변경 없음" },
     ],
   },
   {
-    id: "roadAccess",
-    title: "잔여지가 도로에 접해 있나요?",
-    subtitle: "차량 진출입이 가능한 도로 접촉 여부를 확인해 주세요",
+    id: "accessDifficult",
+    title: "진입이 곤란해졌나요?",
+    subtitle: "절토, 성토, 옹벽 설치 등으로 진입이 어려워졌는지 확인해 주세요",
     type: "radio" as const,
+    showWhen: { questionId: "landType", value: "택지" },
     options: [
-      { value: "wide", label: "네, 넓은 도로에 접해 있습니다 (8m 이상)" },
-      { value: "narrow", label: "네, 좁은 도로에 접해 있습니다 (8m 미만)" },
-      { value: "no", label: "아니오, 도로에 접하지 않습니다 (맹지)" },
+      { value: "yes", label: "네, 진입이 곤란해졌습니다" },
+      { value: "no", label: "아니오, 진입에 문제 없음" },
     ],
   },
   {
-    id: "roadLoss",
-    title: "사업으로 인해 접면도로가 상실되었나요?",
-    subtitle: "기존에 접해 있던 도로가 사업으로 인해 없어졌는지 확인해 주세요",
+    id: "landDivided",
+    title: "일단의 토지가 양분되었나요?",
+    subtitle: "사업으로 인해 하나의 토지가 둘로 나뉘었는지 확인해 주세요",
     type: "radio" as const,
+    showWhen: { questionId: "landType", value: "택지" },
     options: [
-      { value: "yes", label: "네, 접면도로가 상실되었습니다" },
-      { value: "no", label: "아니오, 접면도로는 유지되고 있습니다" },
+      { value: "yes", label: "네, 토지가 양분되었습니다" },
+      { value: "no", label: "아니오, 양분되지 않음" },
+    ],
+  },
+  // ===== 농지 확인 항목 =====
+  {
+    id: "roadOrCanalLoss",
+    title: "접면도로 또는 관개수로가 상실되었나요?",
+    subtitle: "사업으로 인해 도로나 수로가 없어져 농지로서 사용이 불가한지 확인해 주세요",
+    type: "radio" as const,
+    showWhen: { questionId: "landType", value: "농지" },
+    options: [
+      { value: "road", label: "접면도로가 상실되었습니다" },
+      { value: "canal", label: "관개수로가 상실되었습니다" },
+      { value: "both", label: "도로와 수로 모두 상실되었습니다" },
+      { value: "no", label: "아니오, 도로/수로 상실 없음" },
     ],
   },
   {
-    id: "irrigationLoss",
-    title: "사업으로 인해 관개수로가 상실되었나요?",
-    subtitle: "농업용수 공급을 위한 수로가 사업으로 인해 없어졌는지 확인해 주세요",
+    id: "farmShapeIrregular",
+    title: "농지 형상이 부정형으로 변경되었나요?",
+    subtitle: "사각형 폭 5m 이하, 삼각형 한 변 11m 이하 등 형상 변경 여부",
     type: "radio" as const,
+    showWhen: { questionId: "landType", value: "농지" },
     options: [
-      { value: "yes", label: "네, 관개수로가 상실되었습니다" },
-      { value: "no", label: "아니오, 관개수로는 유지되고 있습니다" },
-      { value: "none", label: "해당 없음 (관개수로가 없었습니다)" },
+      { value: "yes", label: "네, 형상이 부정형으로 변경되었습니다" },
+      { value: "no", label: "아니오, 형상 변경 없음" },
     ],
   },
   {
     id: "farmMachineDifficulty",
     title: "농기계 회전이 곤란한가요?",
-    subtitle: "잔여지 형태나 면적으로 인해 농기계 운용에 어려움이 있는지 확인해 주세요",
+    subtitle: "잔여지 형태나 면적으로 인해 농기계 진입 및 회전이 어려운지 확인해 주세요",
     type: "radio" as const,
+    showWhen: { questionId: "landType", value: "농지" },
     options: [
       { value: "yes", label: "네, 농기계 회전이 곤란합니다" },
-      { value: "no", label: "아니오, 농기계 회전에 문제가 없습니다" },
-      { value: "none", label: "해당 없음 (농업용 토지가 아닙니다)" },
+      { value: "no", label: "아니오, 농기계 운용에 문제 없음" },
+    ],
+  },
+  // ===== 산지 확인 항목 =====
+  {
+    id: "forestRoadLoss",
+    title: "사업으로 인해 접면도로가 상실되었나요?",
+    subtitle: "산지가 도로와 접하였다가 사업으로 인해 접한 도로가 없어졌는지 확인해 주세요",
+    type: "radio" as const,
+    showWhen: { questionId: "landType", value: "산지" },
+    options: [
+      { value: "yes", label: "네, 접면도로가 상실되었습니다" },
+      { value: "no", label: "아니오, 접면도로 유지" },
+    ],
+  },
+  {
+    id: "originalUseDifficult",
+    title: "종래의 목적대로 사용이 곤란한가요?",
+    subtitle: "잔여지의 위치, 형상, 접근 상태를 고려하여 기존 용도 사용이 어려운지 확인해 주세요",
+    type: "radio" as const,
+    showWhen: { questionId: "landType", value: "산지" },
+    options: [
+      { value: "yes", label: "네, 종래 목적 사용이 곤란합니다" },
+      { value: "no", label: "아니오, 기존 용도 사용 가능" },
+    ],
+  },
+  // ===== 그 밖의 토지 확인 항목 =====
+  {
+    id: "otherLandSimilar",
+    title: "가장 유사한 토지 용도는 무엇인가요?",
+    subtitle: "택지/농지/산지 중 가장 유사한 용도를 선택해 주세요 (해당 기준으로 참작됩니다)",
+    type: "radio" as const,
+    showWhen: { questionId: "landType", value: "기타" },
+    options: [
+      { value: "택지유사", label: "택지와 유사 (건물 부지 등)" },
+      { value: "농지유사", label: "농지와 유사 (경작지 등)" },
+      { value: "산지유사", label: "산지와 유사 (임야 등)" },
+    ],
+  },
+  {
+    id: "otherLandUseDifficult",
+    title: "종래의 목적대로 사용이 곤란한가요?",
+    subtitle: "잔여지의 위치, 형상, 접근 상태를 고려하여 기존 용도 사용이 어려운지 확인해 주세요",
+    type: "radio" as const,
+    showWhen: { questionId: "landType", value: "기타" },
+    options: [
+      { value: "yes", label: "네, 종래 목적 사용이 곤란합니다" },
+      { value: "no", label: "아니오, 기존 용도 사용 가능" },
     ],
   },
 ];
@@ -195,6 +281,14 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     );
   }, [searchQuery]);
 
+  // 조건부 질문 필터링 (showWhen 조건에 맞는 질문만 표시)
+  const activeQuestions = useMemo(() => {
+    return questions.filter(q => {
+      if (!q.showWhen) return true;
+      return answers[q.showWhen.questionId] === q.showWhen.value;
+    });
+  }, [answers]);
+
   // 잔여지 선택
   const handleSelectParcel = (parcel: typeof myParcels[0]) => {
     setSelectedParcel(parcel);
@@ -205,7 +299,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     if (step === "select" && selectedParcel) {
       setStep("questions");
     } else if (step === "questions") {
-      if (currentQuestion < questions.length - 1) {
+      if (currentQuestion < activeQuestions.length - 1) {
         setCurrentQuestion(prev => prev + 1);
       } else {
         // 모든 질문 완료 -> AI 분석 시작
@@ -242,7 +336,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
         setStep("select");
       }
     } else if (step === "analysis" && !isAnalyzing) {
-      setCurrentQuestion(questions.length - 1);
+        setCurrentQuestion(activeQuestions.length - 1);
       setStep("questions");
     } else if (step === "decision") {
       setStep("analysis");
@@ -312,9 +406,11 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     }, 2000);
   };
 
-  // 현재 질문에 대한 답변이 있는지 확인
-  const currentQuestionData = questions[currentQuestion];
-  const hasAnswer = currentQuestionData ? !!answers[currentQuestionData.id] : false;
+  // 현재 질문에 대한 답변이 있는지 확인 (optional 질문은 답변 없어도 통과)
+  const currentQuestionData = activeQuestions[currentQuestion] as typeof questions[0] & { optional?: boolean; showWhen?: { questionId: string; value: string } };
+  const hasAnswer = currentQuestionData 
+    ? (currentQuestionData.optional || !!answers[currentQuestionData.id]) 
+    : false;
 
   // 스텝 정보 정의
   const steps = [
@@ -387,13 +483,13 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           {step === "questions" && (
             <div className="mt-6 bg-gray-50 rounded-lg p-4">
               <div className="flex items-center justify-between text-sm mb-2">
-                <span className="text-gray-600 font-medium">질문 {currentQuestion + 1} / {questions.length}</span>
-                <span className="text-[#2E8B57] font-medium">{Math.round(((currentQuestion + 1) / questions.length) * 100)}%</span>
+                <span className="text-gray-600 font-medium">질문 {currentQuestion + 1} / {activeQuestions.length}</span>
+                <span className="text-[#2E8B57] font-medium">{Math.round(((currentQuestion + 1) / activeQuestions.length) * 100)}%</span>
               </div>
               <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#2E8B57] transition-all duration-300 ease-out"
-                  style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
+                  style={{ width: `${((currentQuestion + 1) / activeQuestions.length) * 100}%` }}
                 />
               </div>
             </div>
@@ -576,7 +672,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               disabled={!hasAnswer}
               className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl"
             >
-              {currentQuestion === questions.length - 1 ? "AI 분석 시작" : "다음"}
+                {currentQuestion === activeQuestions.length - 1 ? "AI 분석 시작" : "다음"}
             </Button>
           </div>
         </div>
