@@ -9,7 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Check, ChevronLeft, MapPin, Ruler, Search, FileText, Sparkles, ClipboardCheck, CheckCircle, XCircle, Loader2, X, Trash2, ClipboardList } from "lucide-react";
+import { Check, ChevronLeft, ChevronDown, MapPin, Ruler, Search, FileText, Sparkles, ClipboardCheck, CheckCircle, XCircle, Loader2, X, Trash2, ClipboardList } from "lucide-react";
 import type { LandInfo, AIAnalysisResult, Application } from "@/lib/types";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/hooks/use-toast";
@@ -328,6 +328,7 @@ interface CartItem {
   answers: Record<string, string>;
   aiResult: { judgment: string; score: number; reasoning: string };
   addedAt: Date;
+  reason?: string; // 필지별 신청사유
 }
 
 type FlowStep = "select" | "questions" | "analysis" | "decision" | "application" | "complete";
@@ -353,6 +354,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedCartItems, setSelectedCartItems] = useState<Set<string>>(new Set());
+  const [expandedCartItem, setExpandedCartItem] = useState<string | null>(null); // 펼쳐진 필지 ID
 
   // 검색 필터링된 잔여지 목록
   const filteredParcels = useMemo(() => {
@@ -1251,26 +1253,153 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               )}
             </h3>
             <div className="space-y-4">
-              {/* 장바구니에서 신청하는 경우 */}
+              {/* 장바구니에서 신청하는 경우 - 각 필지별로 토지정보 작성 */}
               {selectedCartItems.size > 0 ? (
-                <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                <div className="space-y-3 max-h-[500px] overflow-y-auto">
                   {cartItems
                     .filter(item => selectedCartItems.has(item.id))
-                    .map((item) => {
+                    .map((item, index) => {
                       const isPositive = item.aiResult.judgment === "매수 가능성 높음";
+                      const isExpanded = expandedCartItem === item.id;
+                      const landType = item.answers.landType || "택지";
+                      
                       return (
-                        <div key={item.id} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
-                          <p className="text-sm font-medium text-gray-900">{item.parcel.address}</p>
-                          <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-gray-500">
-                            <span>잔여: {item.parcel.remainingArea}m<sup>2</sup></span>
-                            <span>|</span>
-                            <span>{item.parcel.landCategory}</span>
-                            <span>|</span>
-                            <span>{item.parcel.roadContact}</span>
-                            <Badge className={`text-xs text-white ${isPositive ? "bg-emerald-500" : "bg-rose-500"}`}>
-                              {isPositive ? "매수 가능성 높음" : "매수 가능성 낮음"}
-                            </Badge>
+                        <div key={item.id} className="border border-gray-200 rounded-lg overflow-hidden">
+                          {/* 필지 헤더 - 클릭하면 펼침/접힘 */}
+                          <div 
+                            className="p-3 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
+                            onClick={() => setExpandedCartItem(isExpanded ? null : item.id)}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-medium text-gray-500 bg-white px-2 py-0.5 rounded">
+                                  필지 {index + 1}
+                                </span>
+                                <p className="text-sm font-medium text-gray-900 truncate max-w-[300px]">
+                                  {item.parcel.address}
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Badge className={`text-xs text-white ${isPositive ? "bg-emerald-500" : "bg-rose-500"}`}>
+                                  {isPositive ? "매수 가능" : "매수 불가"}
+                                </Badge>
+                                <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
+                              <span>잔여: {item.parcel.remainingArea}m<sup>2</sup></span>
+                              <span className="w-px h-2 bg-gray-300"></span>
+                              <span>{item.parcel.landCategory}</span>
+                              <span className="w-px h-2 bg-gray-300"></span>
+                              <span>{item.parcel.roadContact}</span>
+                            </div>
                           </div>
+                          
+                          {/* 필지 상세 정보 - 펼쳐진 경우에만 표시 */}
+                          {isExpanded && (
+                            <div className="p-4 space-y-4 border-t border-gray-200">
+                              {/* 활용 지목 */}
+                              <div>
+                                <Label className="text-sm text-gray-600 mb-1.5 block">활용 지목</Label>
+                                <select
+                                  value={landType}
+                                  onChange={(e) => {
+                                    setCartItems(prev => prev.map(ci => 
+                                      ci.id === item.id 
+                                        ? { ...ci, answers: { ...ci.answers, landType: e.target.value } }
+                                        : ci
+                                    ));
+                                  }}
+                                  className="w-full h-10 px-3 rounded-md border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2E8B57] focus:border-transparent"
+                                >
+                                  <option value="택지">택지</option>
+                                  <option value="농지">농지</option>
+                                  <option value="산지">산지</option>
+                                  <option value="기타">그 밖의 토지</option>
+                                </select>
+                              </div>
+                              
+                              {/* 확인 항목 */}
+                              <div>
+                                <Label className="text-sm text-gray-600 mb-1.5 block">확인 항목</Label>
+                                <div className="space-y-2 p-3 bg-gray-50 rounded-lg text-sm">
+                                  {landType === "택지" && (
+                                    <>
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-gray-600">접면도로 상태 변경</span>
+                                        <span className={item.answers.roadStatusChange === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
+                                          {item.answers.roadStatusChange === "yes" ? "해당" : "해당 없음"}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-gray-600">형상 부정형 변경</span>
+                                        <span className={item.answers.shapeChange === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
+                                          {item.answers.shapeChange === "yes" ? "해당" : "해당 없음"}
+                                        </span>
+                                      </div>
+                                    </>
+                                  )}
+                                  {landType === "농지" && (
+                                    <>
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-gray-600">관개수로 상실</span>
+                                        <span className={item.answers.waterChannelLost === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
+                                          {item.answers.waterChannelLost === "yes" ? "해당" : "해당 없음"}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-gray-600">농기계 회전 곤란</span>
+                                        <span className={item.answers.farmMachineDifficulty === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
+                                          {item.answers.farmMachineDifficulty === "yes" ? "해당" : "해당 없음"}
+                                        </span>
+                                      </div>
+                                    </>
+                                  )}
+                                  {landType === "산지" && (
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-gray-600">접면도로 상실</span>
+                                      <span className={item.answers.forestRoadLoss === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
+                                        {item.answers.forestRoadLoss === "yes" ? "해당" : "해당 없음"}
+                                      </span>
+                                    </div>
+                                  )}
+                                  {landType === "기타" && (
+                                    <>
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-gray-600">접면도로 상실</span>
+                                        <span className={item.answers.otherRoadLoss === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
+                                          {item.answers.otherRoadLoss === "yes" ? "해당" : "해당 없음"}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-gray-600">종래 목적 사용 곤란</span>
+                                        <span className={item.answers.otherLandUseDifficult === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
+                                          {item.answers.otherLandUseDifficult === "yes" ? "해당" : "해당 없음"}
+                                        </span>
+                                      </div>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                              
+                              {/* 필지별 신청 사유 */}
+                              <div>
+                                <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유 *</Label>
+                                <Textarea
+                                  placeholder="이 필지의 매수 신청 사유를 작성해 주세요."
+                                  value={item.reason || ""}
+                                  onChange={(e) => {
+                                    setCartItems(prev => prev.map(ci => 
+                                      ci.id === item.id 
+                                        ? { ...ci, reason: e.target.value }
+                                        : ci
+                                    ));
+                                  }}
+                                  className="min-h-[80px]"
+                                />
+                              </div>
+                            </div>
+                          )}
                         </div>
                       );
                     })}
@@ -1357,17 +1486,17 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   )}
                 </div>
               </div>
+                  <div>
+                    <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유 *</Label>
+                    <Textarea
+                      placeholder="잔여지 매수를 신청하시는 사유를 상세히 작성해 주세요."
+                      value={applicationForm.reason}
+                      onChange={(e) => setApplicationForm(prev => ({ ...prev, reason: e.target.value }))}
+                      className="min-h-[120px]"
+                    />
+                  </div>
                 </>
               )}
-              <div>
-                <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유 *</Label>
-                <Textarea
-                  placeholder="잔여지 매수를 신청하시는 사유를 상세히 작성해 주세요."
-                  value={applicationForm.reason}
-                  onChange={(e) => setApplicationForm(prev => ({ ...prev, reason: e.target.value }))}
-                  className="min-h-[120px]"
-                />
-              </div>
               <div>
                 <Label className="text-sm text-gray-600 mb-1.5 block">첨부 서류</Label>
                 <div className="border border-dashed border-gray-300 rounded-lg p-4 text-center">
