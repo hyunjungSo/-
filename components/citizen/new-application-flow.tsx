@@ -796,7 +796,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 AI가 분석 중입니다
               </h2>
               <p className="text-gray-500">
-                입력하신 정보를 바탕으로 매수 가능성을 분석하고 있어요.<br />
+                입력하�� 정보를 바탕으로 매수 가능성을 분석하고 있어요.<br />
                 잠시만 기다려 주세요.
               </p>
             </div>
@@ -827,7 +827,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="font-semibold text-gray-900">분석 대상 토지</h3>
-                      <Badge className={`px-3 py-1 text-sm font-medium ${
+                      <Badge className={`px-1.5 py-1 text-sm font-medium ${
                         aiResult.judgment === "매수 가능성 높음"
                           ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
                           : "bg-rose-100 text-rose-700 border border-rose-200"
@@ -1442,7 +1442,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               >
                 {selectedCartItems.size > 0 
                   ? `선택�� ${selectedCartItems.size}건 신청하기`
-                  : "항목을 선택해 주세요"}
+                  : "항���을 선택해 주세요"}
               </Button>
             </div>
           )}
