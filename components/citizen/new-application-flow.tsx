@@ -357,6 +357,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedCartItems, setSelectedCartItems] = useState<Set<string>>(new Set());
   const [expandedCartItem, setExpandedCartItem] = useState<string | null>(null); // 펼쳐진 필지 ID
+  const [isTransitioning, setIsTransitioning] = useState(false); // 페이드 트랜지션 상태
 
   // 검색 필터링된 잔여지 목록
   const filteredParcels = useMemo(() => {
@@ -591,7 +592,14 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
       duration: 3500,
     });
     
-    handleReset(); // 초기화하고 다음 분석 준비
+    // 페이드아웃 -> 초기화 -> 페이드인 트랜지션
+    setIsTransitioning(true);
+    setTimeout(() => {
+      handleReset();
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 50);
+    }, 300);
   };
 
   // 장바구니에서 삭제
@@ -706,7 +714,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
 
       {/* Step 1: 잔여지 선택 */}
       {step === "select" && (
-        <div className="space-y-6">
+        <div className={`space-y-6 transition-opacity duration-300 ${isTransitioning ? "opacity-0" : "opacity-100"}`}>
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
               매수 신청할 잔여지를 선택해 주세요
@@ -720,7 +728,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <Input
-              placeholder="��소로 검색"
+              placeholder="주소로 검색"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 h-12 text-base"
@@ -919,7 +927,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               </p>
             </div>
           ) : aiResult && (
-            <div className="space-y-6">
+            <div className={`space-y-6 transition-opacity duration-300 ${isTransitioning ? "opacity-0" : "opacity-100"}`}>
               {/* 뒤로가기 */}
               <button
                 onClick={handleBack}
