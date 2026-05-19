@@ -1302,32 +1302,41 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   return Object.entries(groupedByProject).map(([projectName, items]) => {
                     const isProjectDisabled = selectedProject !== null && selectedProject !== projectName;
                     const projectSelectedCount = items.filter(item => selectedCartItems.has(item.id)).length;
+                    const allProjectSelected = projectSelectedCount === items.length;
                     
                     return (
                       <div key={projectName} className={`rounded-xl border ${isProjectDisabled ? "border-gray-200 opacity-50" : "border-gray-300"}`}>
                         {/* 사업단 헤더 */}
                         <div className={`flex items-center justify-between px-4 py-3 rounded-t-xl ${isProjectDisabled ? "bg-gray-50" : "bg-gray-100"}`}>
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium text-gray-900">{projectName}</span>
-                            <Badge variant="outline" className="text-xs">{items.length}건</Badge>
+                          <div className="flex items-center gap-3">
+                            {!isProjectDisabled && (
+                              <Checkbox
+                                checked={allProjectSelected}
+                                onCheckedChange={(checked) => {
+                                  const projectItemIds = items.map(item => item.id);
+                                  const newSelected = new Set(selectedCartItems);
+                                  if (checked) {
+                                    projectItemIds.forEach(id => newSelected.add(id));
+                                  } else {
+                                    projectItemIds.forEach(id => newSelected.delete(id));
+                                  }
+                                  setSelectedCartItems(newSelected);
+                                }}
+                                className="h-5 w-5 border-gray-400 data-[state=checked]:bg-[#2E8B57] data-[state=checked]:border-[#2E8B57]"
+                              />
+                            )}
+                            <div className="flex items-center gap-2">
+                              <span className={`font-medium ${isProjectDisabled ? "text-gray-400" : "text-gray-900"}`}>{projectName}</span>
+                              <Badge variant="outline" className={`text-xs ${isProjectDisabled ? "border-gray-200 text-gray-400" : ""}`}>{items.length}건</Badge>
+                              {projectSelectedCount > 0 && !isProjectDisabled && (
+                                <Badge className="bg-[#2E8B57] text-white text-xs">{projectSelectedCount}건 선택</Badge>
+                              )}
+                            </div>
                           </div>
                           {!isProjectDisabled && items.length > 1 && (
-                            <button
-                              onClick={() => {
-                                const projectItemIds = items.map(item => item.id);
-                                const allSelected = projectItemIds.every(id => selectedCartItems.has(id));
-                                const newSelected = new Set(selectedCartItems);
-                                if (allSelected) {
-                                  projectItemIds.forEach(id => newSelected.delete(id));
-                                } else {
-                                  projectItemIds.forEach(id => newSelected.add(id));
-                                }
-                                setSelectedCartItems(newSelected);
-                              }}
-                              className="text-xs text-[#2E8B57] hover:underline"
-                            >
-                              {projectSelectedCount === items.length ? "전체 해제" : "전체 선택"}
-                            </button>
+                            <span className="text-xs text-gray-500">
+                              {allProjectSelected ? "전체 선택됨" : "일괄 선택 가능"}
+                            </span>
                           )}
                         </div>
                         
