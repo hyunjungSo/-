@@ -88,6 +88,117 @@ const myParcels = [
     projectName: "송도국제도시 2단계",
     applicationStatus: null as string | null,
   },
+  // 복수필지 케이스 1: 안성-천안 국도확장 (농지 3필지)
+  {
+    id: "parcel-multi-1-1",
+    address: "경기도 안성시 미양면 계륵리 501-1",
+    area: 800,
+    remainingArea: 250,
+    landCategory: "전" as const,
+    landUse: "농림지역",
+    roadContact: "비접도" as const,
+    ownerName: "홍길동",
+    projectName: "안성-천안 국도확장",
+    applicationStatus: null as string | null,
+  },
+  {
+    id: "parcel-multi-1-2",
+    address: "경기도 안성시 미양면 계륵리 501-2",
+    area: 650,
+    remainingArea: 170,
+    landCategory: "답" as const,
+    landUse: "농림지역",
+    roadContact: "4m 도로" as const,
+    ownerName: "홍길동",
+    projectName: "안성-천안 국도확장",
+    applicationStatus: null as string | null,
+  },
+  {
+    id: "parcel-multi-1-3",
+    address: "경기도 안성시 미양면 계륵리 501-3",
+    area: 550,
+    remainingArea: 150,
+    landCategory: "전" as const,
+    landUse: "농림지역",
+    roadContact: "비접도" as const,
+    ownerName: "홍길동",
+    projectName: "안성-천안 국도확장",
+    applicationStatus: null as string | null,
+  },
+  // 복수필지 케이스 2: 천안 도시개발 (혼합 4필지: 대지+농지+잡종지)
+  {
+    id: "parcel-multi-2-1",
+    address: "충청남도 천안시 서북구 성정동 777-1",
+    area: 200,
+    remainingArea: 65,
+    landCategory: "대" as const,
+    landUse: "제2종일반주거지역",
+    roadContact: "6m 도로" as const,
+    ownerName: "홍길동",
+    projectName: "천안 도시개발사업",
+    applicationStatus: null as string | null,
+  },
+  {
+    id: "parcel-multi-2-2",
+    address: "충청남도 천안시 서북구 성정동 777-2",
+    area: 350,
+    remainingArea: 120,
+    landCategory: "전" as const,
+    landUse: "계획관리지역",
+    roadContact: "비접도" as const,
+    ownerName: "홍길동",
+    projectName: "천안 도시개발사업",
+    applicationStatus: null as string | null,
+  },
+  {
+    id: "parcel-multi-2-3",
+    address: "충청남도 천안시 서북구 성정동 777-3",
+    area: 280,
+    remainingArea: 95,
+    landCategory: "답" as const,
+    landUse: "계획관리지역",
+    roadContact: "4m 도로" as const,
+    ownerName: "홍길동",
+    projectName: "천안 도시개발사업",
+    applicationStatus: null as string | null,
+  },
+  {
+    id: "parcel-multi-2-4",
+    address: "충청남도 천안시 서북구 성정동 777-4",
+    area: 180,
+    remainingArea: 70,
+    landCategory: "잡종지" as const,
+    landUse: "계획관리지역",
+    roadContact: "6m 도로" as const,
+    ownerName: "홍길동",
+    projectName: "천안 도시개발사업",
+    applicationStatus: null as string | null,
+  },
+  // 복수필지 케이스 3: 원주-제천 고속도로 (산지 2필지)
+  {
+    id: "parcel-multi-3-1",
+    address: "강원도 원주시 지정면 신평리 산 104",
+    area: 3500,
+    remainingArea: 980,
+    landCategory: "임" as const,
+    landUse: "보전산지",
+    roadContact: "비접도" as const,
+    ownerName: "홍길동",
+    projectName: "원주-제천 고속도로",
+    applicationStatus: null as string | null,
+  },
+  {
+    id: "parcel-multi-3-2",
+    address: "강원도 원주시 지정면 신평리 산 105",
+    area: 2800,
+    remainingArea: 750,
+    landCategory: "임" as const,
+    landUse: "보전산지",
+    roadContact: "비접도" as const,
+    ownerName: "홍길동",
+    projectName: "원주-제천 고속도로",
+    applicationStatus: null as string | null,
+  },
 ];
 
 // AI 분석을 위한 정보수집 질문들 (판독 일부 지원 항목만)
@@ -794,7 +905,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 AI가 분석 중입니다
               </h2>
               <p className="text-gray-500">
-                입력하������� 정보를 바탕으로 매수 가능성을 분석��고 있���요.<br />
+                입력하������� 정보를 바탕으로 매수 가능성을 분석���고 있���요.<br />
                 잠시만 기다려 주세요.
               </p>
             </div>
