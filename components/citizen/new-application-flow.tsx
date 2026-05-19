@@ -329,6 +329,7 @@ interface CartItem {
   aiResult: { judgment: string; score: number; reasoning: string };
   addedAt: Date;
   reason?: string; // 필지별 신청사유
+  attachments?: File[]; // 필지별 첨부서류
 }
 
 type FlowStep = "select" | "questions" | "analysis" | "decision" | "application" | "complete";
@@ -396,7 +397,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
         // AI 분석 시뮬레이션
         await new Promise(resolve => setTimeout(resolve, 2500));
         
-        // ���덤하게 결과 생성 (데모용)
+        // �����덤하게 결과 생성 (데모용)
         const isPositive = Math.random() > 0.3;
         setAiResult({
           judgment: isPositive ? "매수 가능성 높음" : "매수 가능성 낮음",
@@ -1442,6 +1443,55 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                                   className="min-h-[80px]"
                                 />
                               </div>
+                              
+                              {/* 필지별 첨부서류 */}
+                              <div>
+                                <Label className="text-sm text-gray-600 mb-1.5 block">첨부서류</Label>
+                                <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center hover:border-gray-300 transition-colors">
+                                  <input
+                                    type="file"
+                                    multiple
+                                    className="hidden"
+                                    id={`file-upload-${item.id}`}
+                                    onChange={(e) => {
+                                      const files = Array.from(e.target.files || []);
+                                      setCartItems(prev => prev.map(ci => 
+                                        ci.id === item.id 
+                                          ? { ...ci, attachments: [...(ci.attachments || []), ...files] }
+                                          : ci
+                                      ));
+                                    }}
+                                  />
+                                  <label htmlFor={`file-upload-${item.id}`} className="cursor-pointer">
+                                    <FileText className="w-8 h-8 mx-auto text-gray-400 mb-2" />
+                                    <p className="text-sm text-gray-600">클릭하여 파일 업로드</p>
+                                    <p className="text-xs text-gray-400 mt-1">토지대장, 등기부등본 등</p>
+                                  </label>
+                                </div>
+                                {/* 업로드된 파일 목록 */}
+                                {item.attachments && item.attachments.length > 0 && (
+                                  <div className="mt-2 space-y-1">
+                                    {item.attachments.map((file, fileIndex) => (
+                                      <div key={fileIndex} className="flex items-center justify-between bg-gray-50 p-2 rounded text-sm">
+                                        <span className="truncate flex-1">{file.name}</span>
+                                        <button
+                                          type="button"
+                                          onClick={() => {
+                                            setCartItems(prev => prev.map(ci => 
+                                              ci.id === item.id 
+                                                ? { ...ci, attachments: ci.attachments?.filter((_, i) => i !== fileIndex) }
+                                                : ci
+                                            ));
+                                          }}
+                                          className="text-gray-400 hover:text-red-500 ml-2"
+                                        >
+                                          <X className="w-4 h-4" />
+                                        </button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           )}
                         </div>
@@ -1541,51 +1591,49 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       className="min-h-[120px]"
                     />
                   </div>
+                  
+                  {/* 단일 필지 첨부서류 */}
+                  <div>
+                    <Label className="text-sm text-gray-600 mb-1.5 block">첨부서류</Label>
+                    <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center hover:border-gray-300 transition-colors">
+                      <input
+                        type="file"
+                        multiple
+                        className="hidden"
+                        id="file-upload-single"
+                        onChange={(e) => {
+                          const files = Array.from(e.target.files || []);
+                          setApplicationForm(prev => ({ ...prev, attachments: [...prev.attachments, ...files] }));
+                        }}
+                      />
+                      <label htmlFor="file-upload-single" className="cursor-pointer">
+                        <FileText className="w-8 h-8 mx-auto text-gray-400 mb-2" />
+                        <p className="text-sm text-gray-600">클릭하여 파일 업로드</p>
+                        <p className="text-xs text-gray-400 mt-1">토지대장, 등기부등본 등</p>
+                      </label>
+                    </div>
+                    {applicationForm.attachments.length > 0 && (
+                      <div className="mt-2 space-y-1">
+                        {applicationForm.attachments.map((file, fileIndex) => (
+                          <div key={fileIndex} className="flex items-center justify-between bg-gray-50 p-2 rounded text-sm">
+                            <span className="truncate flex-1">{file.name}</span>
+                            <button
+                              type="button"
+                              onClick={() => setApplicationForm(prev => ({
+                                ...prev,
+                                attachments: prev.attachments.filter((_, i) => i !== fileIndex)
+                              }))}
+                              className="text-gray-400 hover:text-red-500 ml-2"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </>
               )}
-              <div>
-                <Label className="text-sm text-gray-600 mb-1.5 block">첨부 서류</Label>
-                <div className="border border-dashed border-gray-300 rounded-lg p-4 text-center">
-                  <input
-                    type="file"
-                    multiple
-                    onChange={(e) => {
-                      const files = Array.from(e.target.files || []);
-                      setApplicationForm(prev => ({ ...prev, attachments: [...prev.attachments, ...files] }));
-                    }}
-                    className="hidden"
-                    id="file-upload"
-                  />
-                  <label
-                    htmlFor="file-upload"
-                    className="cursor-pointer text-sm text-gray-500 hover:text-[#2E8B57]"
-                  >
-                    <div className="flex flex-col items-center gap-2">
-                      <FileText className="w-8 h-8 text-gray-400" />
-                      <span>클릭하여 파일을 선택하세요</span>
-                      <span className="text-xs text-gray-400">PDF, JPG, PNG (최대 10MB)</span>
-                    </div>
-                  </label>
-                </div>
-                {applicationForm.attachments.length > 0 && (
-                  <div className="mt-3 space-y-2">
-                    {applicationForm.attachments.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                        <span className="text-sm text-gray-700 truncate">{file.name}</span>
-                        <button
-                          onClick={() => setApplicationForm(prev => ({
-                            ...prev,
-                            attachments: prev.attachments.filter((_, i) => i !== index)
-                          }))}
-                          className="text-gray-400 hover:text-red-500"
-                        >
-                          <XCircle className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
             </div>
           </Card>
 
@@ -1746,7 +1794,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                           )}
                         </div>
                         
-                        {/* 사업단 내 필지 목록 */}
+                        {/* ��업단 내 필지 목록 */}
                         <div className="p-2 space-y-2">
                           {items.map((item) => {
                             const isSelected = selectedCartItems.has(item.id);
