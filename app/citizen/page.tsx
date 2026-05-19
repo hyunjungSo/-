@@ -48,23 +48,23 @@ function CitizenPageContent() {
       
       {/* 우측 콘텐츠 영역 */}
       <div className="flex-1 min-w-0">
-        {/* 브레드크럼 */}
-        <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-          <Link href="/" className="hover:text-gray-700 flex items-center gap-1">
-            <Home className="h-4 w-4" />
-          </Link>
-          <ChevronRight className="h-4 w-4" />
-          <span>마이페이지</span>
-          <ChevronRight className="h-4 w-4" />
-          <span>잔여지 매수</span>
-          <ChevronRight className="h-4 w-4" />
-          <span className="text-gray-900 font-medium">{currentConfig.breadcrumb}</span>
-        </nav>
-        
-        {/* 페이지 제목 */}
-        <h1 className="text-2xl font-bold text-gray-900 mb-6 pb-4 border-b">
-          {currentConfig.title}
-        </h1>
+        {/* 타이틀 + 브레드크럼 한 줄 배치 */}
+        <div className="flex items-center justify-between mb-6 pb-4 border-b">
+          <h1 className="text-2xl font-bold text-gray-900">
+            {currentConfig.title}
+          </h1>
+          <nav className="flex items-center gap-2 text-sm text-gray-500">
+            <Link href="/" className="hover:text-gray-700 flex items-center gap-1">
+              <Home className="h-4 w-4" />
+            </Link>
+            <ChevronRight className="h-4 w-4" />
+            <span>마이페이지</span>
+            <ChevronRight className="h-4 w-4" />
+            <span>잔여지 매수</span>
+            <ChevronRight className="h-4 w-4" />
+            <span className="text-gray-900 font-medium">{currentConfig.breadcrumb}</span>
+          </nav>
+        </div>
 
         {/* 콘텐츠 */}
         <div className="space-y-6">
