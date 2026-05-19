@@ -651,28 +651,28 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
 
                       {/* 토지 정보 */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded truncate max-w-[150px]">
-                            {parcel.projectName}
-                          </span>
-                          <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-600 rounded">
-                            {parcel.landCategory}
-                          </span>
-                          {isApplied && (
-                            <span className="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded font-medium">
-                              신청 완료
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded truncate max-w-[150px]">
+                              {parcel.projectName}
                             </span>
-                          )}
-                        </div>
-                        <h3 className={`font-medium text-sm mb-2 line-clamp-2 ${isApplied ? "text-gray-500" : "text-gray-900"}`}>
-                          {parcel.address}
-                        </h3>
-                        <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500">
-                          <span className="flex items-center gap-1">
+                            <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-600 rounded">
+                              {parcel.landCategory}
+                            </span>
+                            {isApplied && (
+                              <span className="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded font-medium">
+                                신청 완료
+                              </span>
+                            )}
+                          </div>
+                          <span className="flex items-center gap-1 text-xs text-gray-500 flex-shrink-0">
                             <Ruler className="w-3 h-3" />
                             잔여 {parcel.remainingArea}m²
                           </span>
                         </div>
+                        <h3 className={`font-medium text-sm mb-2 line-clamp-2 ${isApplied ? "text-gray-500" : "text-gray-900"}`}>
+                          {parcel.address}
+                        </h3>
                       </div>
                     </div>
                   </Card>
