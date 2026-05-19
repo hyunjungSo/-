@@ -131,14 +131,6 @@ const questions = [
       { value: "no", label: "아니오, 도로에 접하지 않습니다 (맹지)" },
     ],
   },
-  {
-    id: "additionalInfo",
-    title: "추가로 알려주실 내용이 있으신가요?",
-    subtitle: "AI 분석에 참고할 수 있는 추가 정보를 자유롭게 입력해 주세요 (선택)",
-    type: "textarea" as const,
-    placeholder: "예: 도로 공사 후 진출입이 어려워졌습니다, 잔여지 면적이 너무 작아 활용이 불가합니다 등",
-    optional: true,
-  },
 ];
 
 interface NewApplicationFlowProps {
@@ -171,14 +163,6 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     );
   }, [searchQuery]);
 
-  // 조건부 질문 필터링 (showWhen 조건에 맞는 질문만 표시)
-  const activeQuestions = useMemo(() => {
-    return questions.filter(q => {
-      if (!q.showWhen) return true;
-      return answers[q.showWhen.questionId] === q.showWhen.value;
-    });
-  }, [answers]);
-
   // 잔여지 선택
   const handleSelectParcel = (parcel: typeof myParcels[0]) => {
     setSelectedParcel(parcel);
@@ -189,7 +173,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     if (step === "select" && selectedParcel) {
       setStep("questions");
     } else if (step === "questions") {
-      if (currentQuestion < activeQuestions.length - 1) {
+      if (currentQuestion < questions.length - 1) {
         setCurrentQuestion(prev => prev + 1);
       } else {
         // 모든 질문 완료 -> AI 분석 시작
@@ -226,7 +210,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
         setStep("select");
       }
     } else if (step === "analysis" && !isAnalyzing) {
-        setCurrentQuestion(activeQuestions.length - 1);
+      setCurrentQuestion(questions.length - 1);
       setStep("questions");
     } else if (step === "decision") {
       setStep("analysis");
@@ -296,11 +280,9 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     }, 2000);
   };
 
-  // 현재 질문에 대한 답변이 있는지 확인 (optional 질문은 답변 없어도 통과)
-  const currentQuestionData = activeQuestions[currentQuestion] as typeof questions[0] & { optional?: boolean; showWhen?: { questionId: string; value: string } };
-  const hasAnswer = currentQuestionData 
-    ? (currentQuestionData.optional || !!answers[currentQuestionData.id]) 
-    : false;
+  // 현재 질문에 대한 답변이 있는지 확인
+  const currentQuestionData = questions[currentQuestion];
+  const hasAnswer = currentQuestionData ? !!answers[currentQuestionData.id] : false;
 
   // 스텝 정보 정의
   const steps = [
@@ -373,13 +355,13 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           {step === "questions" && (
             <div className="mt-6 bg-gray-50 rounded-lg p-4">
               <div className="flex items-center justify-between text-sm mb-2">
-                <span className="text-gray-600 font-medium">질문 {currentQuestion + 1} / {activeQuestions.length}</span>
-                <span className="text-[#2E8B57] font-medium">{Math.round(((currentQuestion + 1) / activeQuestions.length) * 100)}%</span>
+                <span className="text-gray-600 font-medium">질문 {currentQuestion + 1} / {questions.length}</span>
+                <span className="text-[#2E8B57] font-medium">{Math.round(((currentQuestion + 1) / questions.length) * 100)}%</span>
               </div>
               <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#2E8B57] transition-all duration-300 ease-out"
-                  style={{ width: `${((currentQuestion + 1) / activeQuestions.length) * 100}%` }}
+                  style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
                 />
               </div>
             </div>
@@ -562,7 +544,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               disabled={!hasAnswer}
               className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl"
             >
-                {currentQuestion === activeQuestions.length - 1 ? "AI 분석 시작" : "다음"}
+              {currentQuestion === questions.length - 1 ? "AI 분석 시작" : "다음"}
             </Button>
           </div>
         </div>
