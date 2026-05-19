@@ -367,6 +367,16 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     }, 2000);
   };
 
+  // 다른 잔여지 분석을 위해 초기화
+  const handleReset = () => {
+    setStep("select");
+    setSelectedParcel(null);
+    setCurrentQuestion(0);
+    setAnswers({});
+    setAiResult(null);
+    setApplicationForm({ contact: "", email: "", additionalNotes: "" });
+  };
+
   // 현재 질문에 대한 답변이 있는지 확인
   const currentQuestionData = activeQuestions[currentQuestion];
   const hasAnswer = currentQuestionData ? !!answers[currentQuestionData.id] : false;
@@ -719,12 +729,19 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 </Card>
               )}
 
-              <div className="flex justify-end pt-4">
+              <div className="flex flex-col gap-3 pt-4">
                 <Button
-                  onClick={() => setStep("decision")}
-                  className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl"
+                  onClick={() => setStep("application")}
+                  className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl w-full"
                 >
-                  다음
+                  매수 신청하기
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleReset}
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-6 text-lg rounded-xl w-full"
+                >
+                  다른 잔여지 분석하기
                 </Button>
               </div>
             </div>
