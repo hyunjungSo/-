@@ -668,7 +668,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                         </h3>
                         {/* 하단: 잔여 면적 + 지목 배지 */}
                         <div className="flex items-center gap-3 text-xs text-gray-500">
-                          <span>잔여 {parcel.remainingArea}m²</span>
+                          <span>잔여 {parcel.remainingArea}m<sup>2</sup></span>
                           <span className="w-px h-2 bg-gray-200"></span>
                           <span className="text-gray-500">
                             {parcel.landCategory}
@@ -794,7 +794,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 AI가 분석 중입니다
               </h2>
               <p className="text-gray-500">
-                입력하������� 정보를 바탕으로 매수 가능성을 분석하고 있��요.<br />
+                입력하������� 정보를 바탕으로 매수 가능성을 분석하고 있���요.<br />
                 잠시만 기다려 주세요.
               </p>
             </div>
@@ -840,7 +840,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                     </div>
                     <p className="text-gray-700 font-medium">{selectedParcel.address}</p>
                     <p className="text-sm text-gray-500 mt-1">
-                      잔여 면적: {selectedParcel.remainingArea}m² | {selectedParcel.landCategory} | {selectedParcel.roadContact}
+                      잔여 면적: {selectedParcel.remainingArea}m<sup>2</sup> | {selectedParcel.landCategory} | {selectedParcel.roadContact}
                     </p>
                   </div>
 
@@ -856,7 +856,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       </div>
                       <div className="bg-gray-50 rounded-lg p-3">
                         <p className="text-xs text-gray-500 mb-1">잔여 면적</p>
-                        <p className="text-sm font-medium text-gray-900">{selectedParcel.remainingArea}m²</p>
+                        <p className="text-sm font-medium text-gray-900">{selectedParcel.remainingArea}m<sup>2</sup></p>
                       </div>
                     </div>
 
@@ -1146,7 +1146,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                         <div key={item.id} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
                           <p className="text-sm font-medium text-gray-900">{item.parcel.address}</p>
                           <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-gray-500">
-                            <span>잔여: {item.parcel.remainingArea}m²</span>
+                            <span>잔여: {item.parcel.remainingArea}m<sup>2</sup></span>
                             <span>|</span>
                             <span>{item.parcel.landCategory}</span>
                             <span>|</span>
@@ -1170,7 +1170,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       className="bg-gray-50"
                     />
                     <p className="text-sm text-gray-500 mt-1">
-                      잔여 면적: {selectedParcel?.remainingArea}m² | {selectedParcel?.landCategory} | {selectedParcel?.roadContact}
+                      잔여 면적: {selectedParcel?.remainingArea}m<sup>2</sup> | {selectedParcel?.landCategory} | {selectedParcel?.roadContact}
                     </p>
                   </div>
                   <div>
@@ -1492,7 +1492,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                                       {item.parcel.address}
                                     </p>
                                     <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
-                                      <span>잔여: {item.parcel.remainingArea}m²</span>
+                                      <span>잔여: {item.parcel.remainingArea}m<sup>2</sup></span>
                                       <span>|</span>
                                       <span>{item.parcel.landCategory}</span>
                                       <Badge 
