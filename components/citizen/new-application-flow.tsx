@@ -23,6 +23,7 @@ const myParcels = [
     roadContact: "8m 도로" as const,
     ownerName: "홍길동",
     projectName: "분당-수서 고속도로",
+    applicationStatus: null as string | null, // 미신청
   },
   {
     id: "parcel-2", 
@@ -34,6 +35,7 @@ const myParcels = [
     roadContact: "비접도" as const,
     ownerName: "홍길동",
     projectName: "용인-서울 고속도로",
+    applicationStatus: "신청완료" as string | null, // 신청 완료
   },
   {
     id: "parcel-3",
@@ -45,6 +47,7 @@ const myParcels = [
     roadContact: "12m 도로" as const,
     ownerName: "홍길동",
     projectName: "강남순환도로",
+    applicationStatus: null as string | null,
   },
   {
     id: "parcel-4",
@@ -56,6 +59,7 @@ const myParcels = [
     roadContact: "4m 도로" as const,
     ownerName: "홍길동",
     projectName: "동탄-오산 연결도로",
+    applicationStatus: "신청완료" as string | null, // 신청 완료
   },
   {
     id: "parcel-5",
@@ -67,6 +71,7 @@ const myParcels = [
     roadContact: "6m 도로" as const,
     ownerName: "홍길동",
     projectName: "수원-용인 고속도로",
+    applicationStatus: null as string | null,
   },
   {
     id: "parcel-6",
@@ -78,6 +83,7 @@ const myParcels = [
     roadContact: "20m 도로" as const,
     ownerName: "홍길동",
     projectName: "송도국제도시 2단계",
+    applicationStatus: null as string | null,
   },
 ];
 
@@ -500,55 +506,67 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           {/* 잔여지 카드 그리드 */}
           <div className="max-h-[400px] overflow-y-auto pr-1">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {filteredParcels.map((parcel) => (
-                <Card
-                  key={parcel.id}
-                  className={`p-4 cursor-pointer transition-all border ${
-                    selectedParcel?.id === parcel.id
-                      ? "border-[#2E8B57] bg-green-50 shadow-md"
-                      : "border-gray-200 hover:border-gray-300 hover:shadow-sm"
-                  }`}
-                  onClick={() => handleSelectParcel(parcel)}
-                >
-                  <div className="flex items-start gap-3">
-                    {/* 선택 인디케이터 */}
-                    <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                      selectedParcel?.id === parcel.id
-                        ? "border-[#2E8B57] bg-[#2E8B57]"
-                        : "border-gray-300"
-                    }`}>
-                      {selectedParcel?.id === parcel.id && (
-                        <Check className="w-3 h-3 text-white" />
-                      )}
-                    </div>
+              {filteredParcels.map((parcel) => {
+                const isApplied = parcel.applicationStatus === "신청완료";
+                return (
+                  <Card
+                    key={parcel.id}
+                    className={`p-4 transition-all border ${
+                      isApplied
+                        ? "border-gray-200 bg-gray-50 cursor-not-allowed opacity-70"
+                        : selectedParcel?.id === parcel.id
+                          ? "border-[#2E8B57] bg-green-50 shadow-md cursor-pointer"
+                          : "border-gray-200 hover:border-gray-300 hover:shadow-sm cursor-pointer"
+                    }`}
+                    onClick={() => !isApplied && handleSelectParcel(parcel)}
+                  >
+                    <div className="flex items-start gap-3">
+                      {/* 선택 인디케이터 */}
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                        isApplied
+                          ? "border-gray-300 bg-gray-200"
+                          : selectedParcel?.id === parcel.id
+                            ? "border-[#2E8B57] bg-[#2E8B57]"
+                            : "border-gray-300"
+                      }`}>
+                        {!isApplied && selectedParcel?.id === parcel.id && (
+                          <Check className="w-3 h-3 text-white" />
+                        )}
+                      </div>
 
-                    {/* 토지 정보 */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded truncate max-w-[150px]">
-                          {parcel.projectName}
-                        </span>
-                        <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-600 rounded">
-                          {parcel.landCategory}
-                        </span>
-                      </div>
-                      <h3 className="font-medium text-gray-900 text-sm mb-2 line-clamp-2">
-                        {parcel.address}
-                      </h3>
-                      <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500">
-                        <span className="flex items-center gap-1">
-                          <Ruler className="w-3 h-3" />
-                          잔여 {parcel.remainingArea}m²
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3" />
-                          {parcel.roadContact}
-                        </span>
+                      {/* 토지 정보 */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded truncate max-w-[150px]">
+                            {parcel.projectName}
+                          </span>
+                          <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-600 rounded">
+                            {parcel.landCategory}
+                          </span>
+                          {isApplied && (
+                            <span className="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded font-medium">
+                              신청 완료
+                            </span>
+                          )}
+                        </div>
+                        <h3 className={`font-medium text-sm mb-2 line-clamp-2 ${isApplied ? "text-gray-500" : "text-gray-900"}`}>
+                          {parcel.address}
+                        </h3>
+                        <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500">
+                          <span className="flex items-center gap-1">
+                            <Ruler className="w-3 h-3" />
+                            잔여 {parcel.remainingArea}m²
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3" />
+                            {parcel.roadContact}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Card>
-              ))}
+                  </Card>
+                );
+              })}
             </div>
           </div>
 
