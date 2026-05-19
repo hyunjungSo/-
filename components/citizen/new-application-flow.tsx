@@ -653,7 +653,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       index < currentStepIndex
                         ? "bg-[#2E8B57] text-white"
                         : index === currentStepIndex
-                        ? "bg-[#2E8B57] text-white ring-4 ring-green-100"
+                        ? "bg-[#2E8B57] text-white"
                         : "bg-gray-200 text-gray-500"
                     }`}
                   >
@@ -741,8 +741,8 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       isApplied
                         ? "border-gray-200 bg-gray-50 cursor-not-allowed opacity-70"
                         : isSelected
-                          ? "border-[#2E8B57] bg-green-50 shadow-md cursor-pointer"
-                          : "border-gray-200 hover:border-gray-300 hover:shadow-sm cursor-pointer"
+                    ? "border-[#2E8B57] bg-green-50 cursor-pointer"
+                    : "border-gray-200 hover:border-gray-300 cursor-pointer"
                     }`}
                     onClick={() => !isApplied && handleSelectParcel(parcel)}
                   >
