@@ -214,8 +214,9 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
   const [aiResult, setAiResult] = useState<{ judgment: string; score: number; reasoning: string } | null>(null);
   const [applicationForm, setApplicationForm] = useState({
     contact: user?.contact || "",
-    email: user?.email || "",
-    additionalNotes: "",
+    address: user?.address || "",
+    reason: "",
+    attachments: [] as File[],
   });
 
   // 검색 필터링된 잔여지 목록
@@ -320,7 +321,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     setCurrentQuestion(0);
     setAnswers({});
     setAiResult(null);
-    setApplicationForm({ contact: user?.contact || "", email: user?.email || "", additionalNotes: "" });
+    setApplicationForm({ contact: user?.contact || "", address: user?.address || "", reason: "", attachments: [] });
   };
 
   // 신청 제출
@@ -376,7 +377,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     setCurrentQuestion(0);
     setAnswers({});
     setAiResult(null);
-    setApplicationForm({ contact: user?.contact || "", email: user?.email || "", additionalNotes: "" });
+    setApplicationForm({ contact: user?.contact || "", address: user?.address || "", reason: "", attachments: [] });
   };
 
   // 현재 질문에 대한 답변이 있는지 확인
@@ -785,7 +786,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 </div>
                 <div>
                   <p className={`font-semibold ${
-                    aiResult.judgment === "매수 가능성 높음"
+                    aiResult.judgment === "��수 가능성 높음"
                       ? "text-emerald-700"
                       : "text-rose-700"
                   }`}>
@@ -842,7 +843,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               <div>
                 <Label className="text-sm text-gray-600 mb-1.5 block">신청자명</Label>
                 <Input
-                  value={selectedParcel.ownerName}
+                  value={user?.name || selectedParcel.ownerName}
                   disabled
                   className="bg-gray-50"
                 />
@@ -856,41 +857,158 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 />
               </div>
               <div>
-                <Label className="text-sm text-gray-600 mb-1.5 block">이메일 *</Label>
+                <Label className="text-sm text-gray-600 mb-1.5 block">주소 *</Label>
                 <Input
-                  type="email"
-                  placeholder="email@example.com"
-                  value={applicationForm.email}
-                  onChange={(e) => setApplicationForm(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder="주소를 입력해 주세요"
+                  value={applicationForm.address}
+                  onChange={(e) => setApplicationForm(prev => ({ ...prev, address: e.target.value }))}
                 />
               </div>
             </div>
           </Card>
 
-          {/* 대상 토지 */}
+          {/* 토지 정보 */}
           <Card className="p-5 border border-gray-200">
-            <h3 className="font-semibold text-gray-900 mb-3">대상 토지</h3>
-            <p className="text-gray-700">{selectedParcel.address}</p>
-            <p className="text-sm text-gray-500 mt-1">
-              잔여 면적: {selectedParcel.remainingArea}m² | {selectedParcel.landCategory} | {selectedParcel.roadContact}
-            </p>
+            <h3 className="font-semibold text-gray-900 mb-4">토지 정보</h3>
+            <div className="space-y-4">
+              <div>
+                <Label className="text-sm text-gray-600 mb-1.5 block">대상 토지</Label>
+                <Input
+                  value={selectedParcel.address}
+                  disabled
+                  className="bg-gray-50"
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  잔여 면적: {selectedParcel.remainingArea}m² | {selectedParcel.landCategory} | {selectedParcel.roadContact}
+                </p>
+              </div>
+              <div>
+                <Label className="text-sm text-gray-600 mb-1.5 block">활용 지목</Label>
+                <select
+                  value={answers.landType || ""}
+                  onChange={(e) => setAnswers(prev => ({ ...prev, landType: e.target.value }))}
+                  className="w-full h-10 px-3 rounded-md border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2E8B57] focus:border-transparent"
+                >
+                  <option value="택지">택지</option>
+                  <option value="농지">농지</option>
+                  <option value="산지">산지</option>
+                  <option value="기타">그 밖의 토지</option>
+                </select>
+              </div>
+              <div>
+                <Label className="text-sm text-gray-600 mb-1.5 block">확인 항목</Label>
+                <div className="space-y-2 p-3 bg-gray-50 rounded-lg">
+                  {answers.landType === "택지" && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">접면도로 상태 변경</span>
+                      <span className={answers.roadStatusChange === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
+                        {answers.roadStatusChange === "yes" ? "해당" : "해당 없음"}
+                      </span>
+                    </div>
+                  )}
+                  {answers.landType === "농지" && (
+                    <>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600">접면도로/관개수로 상실</span>
+                        <span className={answers.roadOrCanalLoss !== "no" ? "text-red-600 font-medium" : "text-gray-500"}>
+                          {answers.roadOrCanalLoss === "road" ? "도로 상실" : 
+                           answers.roadOrCanalLoss === "canal" ? "수로 상실" : 
+                           answers.roadOrCanalLoss === "both" ? "도로/수로 상실" : "해당 없음"}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600">농기계 회전 곤란</span>
+                        <span className={answers.farmMachineDifficulty === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
+                          {answers.farmMachineDifficulty === "yes" ? "해당" : "해당 없음"}
+                        </span>
+                      </div>
+                    </>
+                  )}
+                  {answers.landType === "산지" && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">접면도로 상실</span>
+                      <span className={answers.forestRoadLoss === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
+                        {answers.forestRoadLoss === "yes" ? "해당" : "해당 없음"}
+                      </span>
+                    </div>
+                  )}
+                  {answers.landType === "기타" && (
+                    <>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600">접면도로 상실</span>
+                        <span className={answers.otherRoadLoss === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
+                          {answers.otherRoadLoss === "yes" ? "해당" : "해당 없음"}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600">종래 목적 사용 곤란</span>
+                        <span className={answers.otherLandUseDifficult === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
+                          {answers.otherLandUseDifficult === "yes" ? "해당" : "해당 없음"}
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div>
+                <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유 *</Label>
+                <Textarea
+                  placeholder="잔여지 매수를 신청하시는 사유를 상세히 작성해 주세요."
+                  value={applicationForm.reason}
+                  onChange={(e) => setApplicationForm(prev => ({ ...prev, reason: e.target.value }))}
+                  className="min-h-[120px]"
+                />
+              </div>
+              <div>
+                <Label className="text-sm text-gray-600 mb-1.5 block">첨부 서류</Label>
+                <div className="border border-dashed border-gray-300 rounded-lg p-4 text-center">
+                  <input
+                    type="file"
+                    multiple
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files || []);
+                      setApplicationForm(prev => ({ ...prev, attachments: [...prev.attachments, ...files] }));
+                    }}
+                    className="hidden"
+                    id="file-upload"
+                  />
+                  <label
+                    htmlFor="file-upload"
+                    className="cursor-pointer text-sm text-gray-500 hover:text-[#2E8B57]"
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <FileText className="w-8 h-8 text-gray-400" />
+                      <span>클릭하여 파일을 선택하세요</span>
+                      <span className="text-xs text-gray-400">PDF, JPG, PNG (최대 10MB)</span>
+                    </div>
+                  </label>
+                </div>
+                {applicationForm.attachments.length > 0 && (
+                  <div className="mt-3 space-y-2">
+                    {applicationForm.attachments.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                        <span className="text-sm text-gray-700 truncate">{file.name}</span>
+                        <button
+                          onClick={() => setApplicationForm(prev => ({
+                            ...prev,
+                            attachments: prev.attachments.filter((_, i) => i !== index)
+                          }))}
+                          className="text-gray-400 hover:text-red-500"
+                        >
+                          <XCircle className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           </Card>
-
-          {/* 추가 메모 */}
-          <div>
-            <Label className="text-sm text-gray-600 mb-1.5 block">추가 요청사항 (선택)</Label>
-            <Textarea
-              placeholder="담당자에게 전달할 추가 요청사항이 있으시면 작성해 주세요."
-              value={applicationForm.additionalNotes}
-              onChange={(e) => setApplicationForm(prev => ({ ...prev, additionalNotes: e.target.value }))}
-              className="min-h-[100px]"
-            />
-          </div>
 
           <div className="flex justify-end pt-4">
             <Button
               onClick={handleNext}
-              disabled={!applicationForm.contact || !applicationForm.email}
+              disabled={!applicationForm.contact || !applicationForm.address || !applicationForm.reason}
               className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl"
             >
               신청 완료
