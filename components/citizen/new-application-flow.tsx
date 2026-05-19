@@ -402,7 +402,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           score: isPositive ? Math.floor(Math.random() * 20) + 75 : Math.floor(Math.random() * 30) + 30,
           reasoning: isPositive 
             ? "잔여지 면적이 최소 기준을 충족하며, 도로 접근성 저하로 인한 활용도 감소가 인정됩니다. 주변 유사 사례와 비교 시 매수 가능성이 높은 것으로 분석됩니다."
-            : "잔여지 면적이 독립 활용 가능한 수준으로 판단되며, 현재 용도로 계속 활용 가능한 것으로 보입니다. 다만, 추가 서류 제출 시 재검토가 가능합니다.",
+            : "잔여지 면적이 독립 활용 가��한 수준으로 판단되며, 현재 용도로 계속 활용 가능한 것으로 보입니다. 다만, 추가 서류 제출 시 재검토가 가능합니다.",
         });
         setIsAnalyzing(false);
       }
@@ -1414,67 +1414,6 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                               {/* 필지별 신청 사유 */}
                               <div>
                                 <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유 <span className="text-red-500">*</span></Label>
-                                <Textarea
-                                  placeholder="이 필지의 매수 신청 사유를 작성해 주세요."
-                                  value={item.reason || ""}
-                                  onChange={(e) => {
-                                    setCartItems(prev => prev.map(ci => 
-                                      ci.id === item.id 
-                                        ? { ...ci, reason: e.target.value }
-                                        : ci
-                                    ));
-                                  }}
-                                  className="min-h-[80px]"
-                                />
-                              </div>
-                            </div>
-                          )}
-                                  {landType === "농지" && (
-                                    <>
-                                      <div className="flex items-center justify-between">
-                                        <span className="text-gray-600">관개수로 상실</span>
-                                        <span className={item.answers.waterChannelLost === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
-                                          {item.answers.waterChannelLost === "yes" ? "해당" : "해당 없음"}
-                                        </span>
-                                      </div>
-                                      <div className="flex items-center justify-between">
-                                        <span className="text-gray-600">농기계 회전 곤란</span>
-                                        <span className={item.answers.farmMachineDifficulty === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
-                                          {item.answers.farmMachineDifficulty === "yes" ? "해당" : "해당 없음"}
-                                        </span>
-                                      </div>
-                                    </>
-                                  )}
-                                  {landType === "산지" && (
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-gray-600">접면도로 상실</span>
-                                      <span className={item.answers.forestRoadLoss === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
-                                        {item.answers.forestRoadLoss === "yes" ? "해당" : "해당 없음"}
-                                      </span>
-                                    </div>
-                                  )}
-                                  {landType === "기타" && (
-                                    <>
-                                      <div className="flex items-center justify-between">
-                                        <span className="text-gray-600">접면도로 상실</span>
-                                        <span className={item.answers.otherRoadLoss === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
-                                          {item.answers.otherRoadLoss === "yes" ? "해당" : "해당 없음"}
-                                        </span>
-                                      </div>
-                                      <div className="flex items-center justify-between">
-                                        <span className="text-gray-600">종래 목적 사용 곤란</span>
-                                        <span className={item.answers.otherLandUseDifficult === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
-                                          {item.answers.otherLandUseDifficult === "yes" ? "해당" : "해당 없음"}
-                                        </span>
-                                      </div>
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                              
-                              {/* 필지별 신청 사유 */}
-                              <div>
-                                <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유 *</Label>
                                 <Textarea
                                   placeholder="이 필지의 매수 신청 사유를 작성해 주세요."
                                   value={item.reason || ""}
