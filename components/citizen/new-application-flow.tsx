@@ -668,10 +668,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                         </h3>
                         {/* 하단: 잔여 면적 + 지목 배지 */}
                         <div className="flex items-center gap-3 text-xs text-gray-500">
-                          <span className="flex items-center gap-1">
-                            <Ruler className="w-3 h-3" />
-                            잔여 {parcel.remainingArea}m²
-                          </span>
+                          <span>잔여 {parcel.remainingArea}m²</span>
                           <span className="w-px h-4 bg-gray-200"></span>
                           <span className="text-gray-500">
                             {parcel.landCategory}
@@ -931,7 +928,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                                 ) : (
                                   <XCircle className="w-3 h-3" />
                                 )}
-                                <span>관개수로 상실</span>
+                                <span>관개���로 상실</span>
                               </div>
                             </div>
                             <div className={`rounded-lg p-2 border text-xs ${
