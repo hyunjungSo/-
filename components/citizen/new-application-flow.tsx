@@ -794,7 +794,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 AI가 분석 중입니다
               </h2>
               <p className="text-gray-500">
-                입력하������� 정보를 바탕으로 매수 가능성을 분석하고 있���요.<br />
+                입력하������� 정보를 바탕으로 매수 가능성을 분석��고 있���요.<br />
                 잠시만 기다려 주세요.
               </p>
             </div>
@@ -980,20 +980,20 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 </Card>
               )}
 
-              <div className="flex flex-col gap-3 pt-4">
-                <Button
-                  onClick={handleAddToCart}
-                  className="bg-[#2E8B57] hover:bg-[#256b45] text-white h-12 text-lg rounded-xl w-full"
-                >
-                  <ClipboardList className="w-5 h-5 mr-2" />
-                  매수신청 목록에 추가
-                </Button>
+              <div className="flex gap-3 pt-4">
                 <Button
                   variant="outline"
                   onClick={handleReset}
-                  className="border-gray-300 text-gray-700 hover:bg-gray-50 h-12 text-lg rounded-xl w-full"
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50 h-12 text-base rounded-xl flex-1"
                 >
                   다른 잔여지 분석하기
+                </Button>
+                <Button
+                  onClick={handleAddToCart}
+                  className="bg-[#2E8B57] hover:bg-[#256b45] text-white h-12 text-base rounded-xl flex-1"
+                >
+                  <ClipboardList className="w-5 h-5 mr-2" />
+                  매수신청 목록에 추가
                 </Button>
               </div>
             </div>
