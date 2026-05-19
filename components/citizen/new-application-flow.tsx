@@ -796,7 +796,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 AI가 분석 중입니다
               </h2>
               <p className="text-gray-500">
-                입력하�� 정보를 바탕으로 매수 가능성을 분석하고 있어요.<br />
+                입력하��� 정보를 바탕으로 매수 가능성을 분석하고 있어요.<br />
                 잠시만 기다려 주세요.
               </p>
             </div>
@@ -824,10 +824,10 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               {selectedParcel && (
                 <Card className="p-6 border border-gray-200">
                   {/* 토지 정보 헤더 */}
-                  <div className="mb-4">
+                  <div className="mb-4 pb-4 border-b border-gray-100">
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="font-semibold text-gray-900">분석 대상 토지</h3>
-                      <Badge className={`px-1.5 py-1 text-sm font-medium ${
+                      <Badge className={`px-2 py-1 text-sm font-medium ${
                         aiResult.judgment === "매수 가능성 높음"
                           ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
                           : "bg-rose-100 text-rose-700 border border-rose-200"
@@ -846,7 +846,114 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                     </p>
                   </div>
 
-                  {/* AI 분석 내용 */}
+                  {/* 상세 분석 정보 */}
+                  <div className="mb-4 space-y-3">
+                    <h4 className="text-sm font-semibold text-gray-700 mb-2">분석 세부 내용</h4>
+                    
+                    {/* 토지 유형 및 면적 기준 */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <p className="text-xs text-gray-500 mb-1">토지 유형</p>
+                        <p className="text-sm font-medium text-gray-900">{selectedParcel.landCategory}</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <p className="text-xs text-gray-500 mb-1">잔여 면적</p>
+                        <p className="text-sm font-medium text-gray-900">{selectedParcel.remainingArea}m²</p>
+                      </div>
+                    </div>
+
+                    {/* 면적 기준 충족 여부 */}
+                    <div className={`rounded-lg p-3 border ${
+                      aiResult.judgment === "매수 가능성 높음" 
+                        ? "bg-emerald-50 border-emerald-200" 
+                        : "bg-gray-50 border-gray-200"
+                    }`}>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-xs text-gray-500 mb-1">면적 기준 충족 여부</p>
+                          <p className="text-sm text-gray-700">
+                            {selectedParcel.landCategory === "대" ? "택지 기준: 90m² 이하" : 
+                             selectedParcel.landCategory === "전" || selectedParcel.landCategory === "답" ? "농지 기준: 330m² 이하" :
+                             selectedParcel.landCategory === "임" ? "산지 기준: 330m² 이하" : "기준: 330m² 이하"}
+                          </p>
+                        </div>
+                        {aiResult.judgment === "매수 가능성 높음" ? (
+                          <Badge className="bg-emerald-100 text-emerald-700 text-xs">충족</Badge>
+                        ) : (
+                          <Badge className="bg-gray-100 text-gray-600 text-xs">미충족</Badge>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* 물리적 조건 검토 */}
+                    <div className="space-y-2">
+                      <p className="text-xs text-gray-500">물리적 조건 검토</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className={`rounded-lg p-2 border text-xs ${
+                          answers.roadStatusChange === "yes" 
+                            ? "bg-emerald-50 border-emerald-200 text-emerald-700" 
+                            : "bg-gray-50 border-gray-200 text-gray-600"
+                        }`}>
+                          <div className="flex items-center gap-1">
+                            {answers.roadStatusChange === "yes" ? (
+                              <Check className="w-3 h-3" />
+                            ) : (
+                              <XCircle className="w-3 h-3" />
+                            )}
+                            <span>접면도로 상태 변경</span>
+                          </div>
+                        </div>
+                        <div className={`rounded-lg p-2 border text-xs ${
+                          answers.shapeChange === "yes" 
+                            ? "bg-emerald-50 border-emerald-200 text-emerald-700" 
+                            : "bg-gray-50 border-gray-200 text-gray-600"
+                        }`}>
+                          <div className="flex items-center gap-1">
+                            {answers.shapeChange === "yes" ? (
+                              <Check className="w-3 h-3" />
+                            ) : (
+                              <XCircle className="w-3 h-3" />
+                            )}
+                            <span>형상 부정형 변경</span>
+                          </div>
+                        </div>
+                        {(selectedParcel.landCategory === "전" || selectedParcel.landCategory === "답") && (
+                          <>
+                            <div className={`rounded-lg p-2 border text-xs ${
+                              answers.waterChannelLost === "yes" 
+                                ? "bg-emerald-50 border-emerald-200 text-emerald-700" 
+                                : "bg-gray-50 border-gray-200 text-gray-600"
+                            }`}>
+                              <div className="flex items-center gap-1">
+                                {answers.waterChannelLost === "yes" ? (
+                                  <Check className="w-3 h-3" />
+                                ) : (
+                                  <XCircle className="w-3 h-3" />
+                                )}
+                                <span>관개수로 상실</span>
+                              </div>
+                            </div>
+                            <div className={`rounded-lg p-2 border text-xs ${
+                              answers.farmMachineDifficulty === "yes" 
+                                ? "bg-emerald-50 border-emerald-200 text-emerald-700" 
+                                : "bg-gray-50 border-gray-200 text-gray-600"
+                            }`}>
+                              <div className="flex items-center gap-1">
+                                {answers.farmMachineDifficulty === "yes" ? (
+                                  <Check className="w-3 h-3" />
+                                ) : (
+                                  <XCircle className="w-3 h-3" />
+                                )}
+                                <span>농기계 회전 곤란</span>
+                              </div>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* AI 분석 의견 */}
                   <div className={`p-4 rounded-lg ${
                     aiResult.judgment === "매수 가능성 높음"
                       ? "bg-emerald-50 border border-emerald-100"
@@ -859,7 +966,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                           : "text-rose-600"
                       }`} />
                       <div>
-                        <p className="text-sm font-medium text-gray-700 mb-1">AI 분석 의견</p>
+                        <p className="text-sm font-medium text-gray-700 mb-1">AI 종합 의견</p>
                         <p className="text-gray-600 text-sm leading-relaxed">
                           {aiResult.reasoning}
                         </p>
