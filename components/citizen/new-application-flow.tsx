@@ -132,25 +132,35 @@ const questions = [
     ],
   },
   {
-    id: "independentUse",
-    title: "잔여지를 단독으로 이용할 수 있나요?",
-    subtitle: "잔여지만으로 독립적인 활용이 가능한지 확인해 주세요",
+    id: "roadLoss",
+    title: "사업으로 인해 접면도로가 상실되었나요?",
+    subtitle: "기존에 접해 있던 도로가 사업으로 인해 없어졌는지 확인해 주세요",
     type: "radio" as const,
     options: [
-      { value: "yes", label: "네, 단독 이용이 가능합니다" },
-      { value: "no", label: "아니오, 단독 이용이 어렵습니다" },
-      { value: "unknown", label: "잘 모르겠습니다" },
+      { value: "yes", label: "네, 접면도로가 상실되었습니다" },
+      { value: "no", label: "아니오, 접면도로는 유지되고 있습니다" },
     ],
   },
   {
-    id: "mergerPossible",
-    title: "인접 토지와 합필이 가능한가요?",
-    subtitle: "주변 토지와 합쳐서 사용할 수 있는지 확인해 주세요",
+    id: "irrigationLoss",
+    title: "사업으로 인해 관개수로가 상실되었나요?",
+    subtitle: "농업용수 공급을 위한 수로가 사업으로 인해 없어졌는지 확인해 주세요",
     type: "radio" as const,
     options: [
-      { value: "yes", label: "네, 합필이 가능합니다" },
-      { value: "no", label: "아니오, 합필이 어렵습니다" },
-      { value: "unknown", label: "잘 모르겠습니다" },
+      { value: "yes", label: "네, 관개수로가 상실되었습니다" },
+      { value: "no", label: "아니오, 관개수로는 유지되고 있습니다" },
+      { value: "none", label: "해당 없음 (관개수로가 없었습니다)" },
+    ],
+  },
+  {
+    id: "farmMachineDifficulty",
+    title: "농기계 회전이 곤란한가요?",
+    subtitle: "잔여지 형태나 면적으로 인해 농기계 운용에 어려움이 있는지 확인해 주세요",
+    type: "radio" as const,
+    options: [
+      { value: "yes", label: "네, 농기계 회전이 곤란합니다" },
+      { value: "no", label: "아니오, 농기계 회전에 문제가 없습니다" },
+      { value: "none", label: "해당 없음 (농업용 토지가 아닙니다)" },
     ],
   },
 ];
@@ -185,14 +195,6 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     );
   }, [searchQuery]);
 
-  // 조건부 질문 필터링 (showWhen 조건에 맞는 질문만 표시)
-  const activeQuestions = useMemo(() => {
-    return questions.filter(q => {
-      if (!q.showWhen) return true;
-      return answers[q.showWhen.questionId] === q.showWhen.value;
-    });
-  }, [answers]);
-
   // 잔여지 선택
   const handleSelectParcel = (parcel: typeof myParcels[0]) => {
     setSelectedParcel(parcel);
@@ -203,7 +205,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     if (step === "select" && selectedParcel) {
       setStep("questions");
     } else if (step === "questions") {
-      if (currentQuestion < activeQuestions.length - 1) {
+      if (currentQuestion < questions.length - 1) {
         setCurrentQuestion(prev => prev + 1);
       } else {
         // 모든 질문 완료 -> AI 분석 시작
@@ -240,7 +242,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
         setStep("select");
       }
     } else if (step === "analysis" && !isAnalyzing) {
-        setCurrentQuestion(activeQuestions.length - 1);
+      setCurrentQuestion(questions.length - 1);
       setStep("questions");
     } else if (step === "decision") {
       setStep("analysis");
@@ -310,11 +312,9 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     }, 2000);
   };
 
-  // 현재 질문에 대한 답변이 있는지 확인 (optional 질문은 답변 없어도 통과)
-  const currentQuestionData = activeQuestions[currentQuestion] as typeof questions[0] & { optional?: boolean; showWhen?: { questionId: string; value: string } };
-  const hasAnswer = currentQuestionData 
-    ? (currentQuestionData.optional || !!answers[currentQuestionData.id]) 
-    : false;
+  // 현재 질문에 대한 답변이 있는지 확인
+  const currentQuestionData = questions[currentQuestion];
+  const hasAnswer = currentQuestionData ? !!answers[currentQuestionData.id] : false;
 
   // 스텝 정보 정의
   const steps = [
@@ -387,13 +387,13 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           {step === "questions" && (
             <div className="mt-6 bg-gray-50 rounded-lg p-4">
               <div className="flex items-center justify-between text-sm mb-2">
-                <span className="text-gray-600 font-medium">질문 {currentQuestion + 1} / {activeQuestions.length}</span>
-                <span className="text-[#2E8B57] font-medium">{Math.round(((currentQuestion + 1) / activeQuestions.length) * 100)}%</span>
+                <span className="text-gray-600 font-medium">질문 {currentQuestion + 1} / {questions.length}</span>
+                <span className="text-[#2E8B57] font-medium">{Math.round(((currentQuestion + 1) / questions.length) * 100)}%</span>
               </div>
               <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#2E8B57] transition-all duration-300 ease-out"
-                  style={{ width: `${((currentQuestion + 1) / activeQuestions.length) * 100}%` }}
+                  style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
                 />
               </div>
             </div>
@@ -576,7 +576,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               disabled={!hasAnswer}
               className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl"
             >
-                {currentQuestion === activeQuestions.length - 1 ? "AI 분석 시작" : "다음"}
+              {currentQuestion === questions.length - 1 ? "AI 분석 시작" : "다음"}
             </Button>
           </div>
         </div>
