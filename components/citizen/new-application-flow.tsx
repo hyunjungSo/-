@@ -80,7 +80,7 @@ const myParcels = [
   },
 ];
 
-// AI 분석을 위한 정보수집 질문들
+// AI 분석을 위한 정보수집 질문들 (판독 일부 지원 항목만)
 const questions = [
   // 1. 토지 유형 선택
   {
@@ -92,6 +92,7 @@ const questions = [
       { value: "택지", label: "택지 (주거용, 상업용, 공업용 건물 부지)" },
       { value: "농지", label: "농지 (전, 답, 과수원 등)" },
       { value: "산지", label: "산지 (임야)" },
+      { value: "소규모토지", label: "소규모토지" },
       { value: "기타", label: "그 밖의 토지" },
     ],
   },
@@ -121,7 +122,7 @@ const questions = [
       { value: "아파트", label: "아파트" },
     ],
   },
-  // ===== 택지 확인 항목 =====
+  // ===== 택지 확인 항목 (판독 일부 지원) =====
   {
     id: "roadStatusChange",
     title: "사업으로 인해 접면도로 상태가 변경되었나요?",
@@ -133,29 +134,7 @@ const questions = [
       { value: "no", label: "아니오, 건축허가 가능" },
     ],
   },
-  {
-    id: "accessDifficult",
-    title: "진입이 곤란해졌나요?",
-    subtitle: "절토, 성토, 옹벽 설치 등으로 진입이 어려워졌는지 확인해 주세요",
-    type: "radio" as const,
-    showWhen: { questionId: "landType", value: "택지" },
-    options: [
-      { value: "yes", label: "네, 진입이 곤란해졌습니다" },
-      { value: "no", label: "아니오, 진입에 문제 없음" },
-    ],
-  },
-  {
-    id: "landDivided",
-    title: "일단의 토지가 양분되었나요?",
-    subtitle: "사업으로 인해 하나의 토지가 둘로 나뉘었는지 확인해 주세요",
-    type: "radio" as const,
-    showWhen: { questionId: "landType", value: "택지" },
-    options: [
-      { value: "yes", label: "네, 토지가 양분되었습니다" },
-      { value: "no", label: "아니오, 양분되지 않음" },
-    ],
-  },
-  // ===== 농지 확인 항목 =====
+  // ===== 농지 확인 항목 (판독 일부 지원) =====
   {
     id: "roadOrCanalLoss",
     title: "접면도로 또는 관개수로가 상실되었나요?",
@@ -182,38 +161,38 @@ const questions = [
   },
   // ===== 산지 확인 항목 (판독 일부 지원) =====
   {
-    id: "originalUseDifficult",
-    title: "종래의 목적대로 사용이 곤란한가요?",
-    subtitle: "잔여지의 위치, 형상, 접근 상태를 고려하여 기존 용도 사용이 어려운지 확인해 주세요",
+    id: "forestRoadLoss",
+    title: "사업으로 인해 접면도로가 상실되었나요?",
+    subtitle: "산지가 도로와 접하였다가 사업으로 인해 접한 도로가 없어졌는지 확인해 주세요",
     type: "radio" as const,
     showWhen: { questionId: "landType", value: "산지" },
     options: [
-      { value: "yes", label: "네, 종래 목적 사용이 곤란합니다" },
-      { value: "no", label: "아니오, 기존 용도 사용 가능" },
+      { value: "yes", label: "네, 접면도로가 상실되었습니다" },
+      { value: "no", label: "아니오, 접면도로 유지" },
     ],
   },
+  // ===== 소규모토지 확인 항목 (판독 일부 지원) =====
   {
-    id: "originalUseDifficult",
-    title: "종래의 목적대로 사용이 곤란한가요?",
-    subtitle: "잔��지의 위치, 형상, 접근 상태를 고려하여 기존 용도 사용이 어려운지 확인해 주세요",
+    id: "accessDifficult",
+    title: "진입이 곤란해졌나요?",
+    subtitle: "절토, 성토, 옹벽 설치 등으로 진입이 어려워졌는지 확인해 주세요",
     type: "radio" as const,
-    showWhen: { questionId: "landType", value: "산지" },
+    showWhen: { questionId: "landType", value: "소규모토지" },
     options: [
-      { value: "yes", label: "네, 종래 목적 사용이 곤란합니다" },
-      { value: "no", label: "아니오, 기존 용도 사용 가능" },
+      { value: "yes", label: "네, 진입이 곤란해졌습니다" },
+      { value: "no", label: "아니오, 진입에 문제 없음" },
     ],
   },
-  // ===== 그 밖의 토지 확인 항목 =====
+  // ===== 그 밖의 토지 확인 항목 (판독 일부 지원) =====
   {
-    id: "otherLandSimilar",
-    title: "가장 유사한 토지 용도는 무엇인가요?",
-    subtitle: "택지/농지/산지 중 가장 유사한 용도를 선택해 주세요 (해당 기준으로 참작됩니다)",
+    id: "otherRoadLoss",
+    title: "사업으로 인해 접면도로가 상실되었나요?",
+    subtitle: "기존에 접해 있던 도로가 사업으로 인해 없어졌는지 확인해 주세요",
     type: "radio" as const,
     showWhen: { questionId: "landType", value: "기타" },
     options: [
-      { value: "택지유사", label: "택지와 유사 (건물 부지 등)" },
-      { value: "농지유사", label: "농지와 유사 (경작지 등)" },
-      { value: "산지유사", label: "산지와 유사 (임야 등)" },
+      { value: "yes", label: "네, 접면도로가 상실되었습니다" },
+      { value: "no", label: "아니오, 접면도로 유지" },
     ],
   },
   {
