@@ -80,50 +80,67 @@ const myParcels = [
   },
 ];
 
-// AI 분석 질문들
+// AI 분석을 위한 정보수집 질문들
 const questions = [
   {
-    id: "usage",
-    title: "현재 토지를 어떻게 사용하고 계신가요?",
-    subtitle: "토지의 현재 활용 상태를 알려주세요",
+    id: "landShape",
+    title: "잔여지의 토지형상은 어떻게 되나요?",
+    subtitle: "토지의 실제 모양을 선택해 주세요",
     type: "radio" as const,
     options: [
-      { value: "residence", label: "주거용으로 사용 중" },
-      { value: "farming", label: "농업용으로 사용 중" },
-      { value: "commercial", label: "상업/영업용으로 사용 중" },
-      { value: "unused", label: "현재 사용하지 않음" },
-      { value: "other", label: "기타" },
+      { value: "정방형", label: "정방형 (정사각형에 가까운 모양)" },
+      { value: "가로장방형", label: "가로장방형 (가로로 긴 직사각형)" },
+      { value: "세로장방형", label: "세로장방형 (세로로 긴 직사각형)" },
+      { value: "사다리형", label: "사다리형" },
+      { value: "삼각형", label: "삼각형" },
+      { value: "역삼각형", label: "역삼각형" },
+      { value: "부정형", label: "부정형 (불규칙한 모양)" },
+      { value: "자루형", label: "자루형 (맹지)" },
     ],
   },
   {
-    id: "plan",
-    title: "잔여지에 대해 어떤 계획이 있으신가요?",
-    subtitle: "향후 활용 계획을 알려주시면 분석에 도움이 됩니다",
+    id: "currentUse",
+    title: "현재 토지의 활용 지목은 무엇인가요?",
+    subtitle: "현재 토지가 실제로 어떻게 이용되고 있는지 선택해 주세요",
     type: "radio" as const,
     options: [
-      { value: "keep", label: "계속 보유하며 활용할 예정" },
-      { value: "sell", label: "매도를 희망함" },
-      { value: "develop", label: "개발/건축 예정" },
-      { value: "undecided", label: "아직 결정하지 못함" },
+      { value: "대", label: "대 (건물이 있는 토지)" },
+      { value: "전", label: "전 (밭으로 사용)" },
+      { value: "답", label: "답 (논으로 사용)" },
+      { value: "과", label: "과 (과수원)" },
+      { value: "임", label: "임 (산림)" },
+      { value: "잡", label: "잡종지 (여러 용도)" },
+      { value: "기타", label: "기타" },
     ],
   },
   {
-    id: "urgent",
-    title: "매수 신청의 긴급성은 어느 정도인가요?",
-    subtitle: "처리 우선순위 판단에 참고됩니다",
+    id: "buildingExists",
+    title: "잔여지에 건축물이 있나요?",
+    subtitle: "건물, 창고, 축사 등 건축물 유무를 확인해 주세요",
     type: "radio" as const,
     options: [
-      { value: "urgent", label: "매우 급함 (1개월 이내 처리 희망)" },
-      { value: "normal", label: "보통 (3개월 이내)" },
-      { value: "flexible", label: "여유 있음 (6개월 이내)" },
+      { value: "yes", label: "네, 건축물이 있습니다" },
+      { value: "no", label: "아니오, 건축물이 없습니다" },
     ],
   },
   {
-    id: "reason",
-    title: "매수를 신청하시는 주된 이유가 무엇인가요?",
-    subtitle: "자세히 작성해 주시면 심사에 도움이 됩니다",
+    id: "roadAccess",
+    title: "잔여지가 도로에 접해 있나요?",
+    subtitle: "차량 진출입이 가능한 도로 접촉 여부를 확인해 주세요",
+    type: "radio" as const,
+    options: [
+      { value: "wide", label: "네, 넓은 도로에 접해 있습니다 (8m 이상)" },
+      { value: "narrow", label: "네, 좁은 도로에 접해 있습니다 (8m 미만)" },
+      { value: "no", label: "아니오, 도로에 접하지 않습니다 (맹지)" },
+    ],
+  },
+  {
+    id: "additionalInfo",
+    title: "추가로 알려주실 내용이 있으신가요?",
+    subtitle: "AI 분석에 참고할 수 있는 추가 정보를 자유롭게 입력해 주세요 (선택)",
     type: "textarea" as const,
-    placeholder: "예: 잔여지가 너무 좁아 활용이 어렵습니다. 도로 공사로 인해 진출입이 불편해졌습니다.",
+    placeholder: "예: 도로 공사 후 진출입이 어려워졌습니다, 잔여지 면적이 너무 작아 활용이 불가합니다 등",
+    optional: true,
   },
 ];
 
@@ -274,9 +291,11 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     }, 2000);
   };
 
-  // 현재 질문에 대한 답변이 있는지 확인
-  const currentQuestionData = questions[currentQuestion];
-  const hasAnswer = currentQuestionData ? !!answers[currentQuestionData.id] : false;
+  // 현재 질문에 대한 답변이 있는지 확인 (optional 질문은 답변 없어도 통과)
+  const currentQuestionData = questions[currentQuestion] as typeof questions[0] & { optional?: boolean };
+  const hasAnswer = currentQuestionData 
+    ? (currentQuestionData.optional || !!answers[currentQuestionData.id]) 
+    : false;
 
   // 스텝 정보 정의
   const steps = [
