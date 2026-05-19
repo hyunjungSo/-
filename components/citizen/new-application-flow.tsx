@@ -212,7 +212,7 @@ type FlowStep = "select" | "questions" | "analysis" | "decision" | "application"
 export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowProps) {
   const { user } = useAuth();
   const [step, setStep] = useState<FlowStep>("select");
-  const [selectedParcels, setSelectedParcels] = useState<typeof myParcels>([]);
+  const [selectedParcel, setSelectedParcel] = useState<typeof myParcels[0] | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -242,26 +242,14 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     });
   }, [answers]);
 
-  // 잔여지 선택/해제 (장바구니 토글)
-  const handleToggleParcel = (parcel: typeof myParcels[0]) => {
-    setSelectedParcels(prev => {
-      const isSelected = prev.some(p => p.id === parcel.id);
-      if (isSelected) {
-        return prev.filter(p => p.id !== parcel.id);
-      } else {
-        return [...prev, parcel];
-      }
-    });
-  };
-
-  // 장바구니에서 개별 필지 제거
-  const handleRemoveParcel = (parcelId: string) => {
-    setSelectedParcels(prev => prev.filter(p => p.id !== parcelId));
+  // 잔여지 선택
+  const handleSelectParcel = (parcel: typeof myParcels[0]) => {
+    setSelectedParcel(parcel);
   };
 
   // 다음 단계로
   const handleNext = async () => {
-    if (step === "select" && selectedParcels.length > 0) {
+    if (step === "select" && selectedParcel) {
       setStep("questions");
     } else if (step === "questions") {
       if (currentQuestion < activeQuestions.length - 1) {
@@ -335,7 +323,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
   // 초기 화면으로 이동 (No 선택 시)
   const handleDeclineAndReset = () => {
     setStep("select");
-    setSelectedParcels([]);
+    setSelectedParcel(null);
     setCurrentQuestion(0);
     setAnswers({});
     setAiResult(null);
@@ -344,18 +332,17 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
 
   // 신청 제출
   const handleSubmit = () => {
-    if (selectedParcels.length === 0 || !aiResult) return;
+    if (!selectedParcel || !aiResult) return;
 
-    const firstParcel = selectedParcels[0];
     const landInfo: LandInfo = {
-      id: firstParcel.id,
-      address: firstParcel.address,
-      area: firstParcel.area,
-      remainingArea: firstParcel.remainingArea,
-      landCategory: firstParcel.landCategory,
-      landUse: firstParcel.landUse,
-      roadContact: firstParcel.roadContact,
-      ownerName: firstParcel.ownerName,
+      id: selectedParcel.id,
+      address: selectedParcel.address,
+      area: selectedParcel.area,
+      remainingArea: selectedParcel.remainingArea,
+      landCategory: selectedParcel.landCategory,
+      landUse: selectedParcel.landUse,
+      roadContact: selectedParcel.roadContact,
+      ownerName: selectedParcel.ownerName,
       officialPrice: 500000,
       acquisitionDate: "2020-03-15",
     };
@@ -371,7 +358,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
 
     const application: Application = {
       id: `APP-${Date.now()}`,
-      applicantName: user?.name || firstParcel.ownerName,
+      applicantName: user?.name || selectedParcel.ownerName,
       applicantContact: applicationForm.contact,
       applicantEmail: "",
       applicationDate: new Date().toISOString(),
@@ -379,7 +366,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
       landInfo,
       aiResult: aiResultData,
       documents: [],
-      additionalNotes: `[${selectedParcels.length}건 일괄 신청]\n${selectedParcels.map(p => p.address).join('\n')}\n\n${applicationForm.reason}`,
+      additionalNotes: applicationForm.reason,
     };
 
     setStep("complete");
@@ -521,7 +508,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {filteredParcels.map((parcel) => {
                 const isApplied = parcel.applicationStatus === "신청완료";
-                const isSelected = selectedParcels.some(p => p.id === parcel.id);
+                const isSelected = selectedParcel?.id === parcel.id;
                 return (
                   <Card
                     key={parcel.id}
@@ -532,11 +519,11 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                           ? "border-[#2E8B57] bg-green-50 shadow-md cursor-pointer"
                           : "border-gray-200 hover:border-gray-300 hover:shadow-sm cursor-pointer"
                     }`}
-                    onClick={() => !isApplied && handleToggleParcel(parcel)}
+                    onClick={() => !isApplied && handleSelectParcel(parcel)}
                   >
                     <div className="flex items-start gap-3">
-                      {/* 선택 인디케이터 (체크박스 스타일) */}
-                      <div className={`w-5 h-5 rounded border flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                      {/* 선택 인디케이터 (라디오 스타일) */}
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 mt-0.5 ${
                         isApplied
                           ? "border-gray-300 bg-gray-200"
                           : isSelected
@@ -592,49 +579,13 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
             </div>
           )}
 
-          {/* 선택된 필지 장바구니 */}
-          {selectedParcels.length > 0 && (
-            <Card className="p-4 border border-[#2E8B57] bg-green-50">
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="font-semibold text-gray-900">
-                  선택된 필지 <span className="text-[#2E8B57]">{selectedParcels.length}건</span>
-                </h4>
-                <button
-                  onClick={() => setSelectedParcels([])}
-                  className="text-sm text-gray-500 hover:text-gray-700"
-                >
-                  전체 해제
-                </button>
-              </div>
-              <div className="space-y-2 max-h-[150px] overflow-y-auto">
-                {selectedParcels.map((parcel) => (
-                  <div key={parcel.id} className="flex items-center justify-between p-2 bg-white rounded-lg border border-gray-200">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">{parcel.address}</p>
-                      <p className="text-xs text-gray-500">잔여 {parcel.remainingArea}m² | {parcel.landCategory}</p>
-                    </div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveParcel(parcel.id);
-                      }}
-                      className="ml-2 p-1 text-gray-400 hover:text-red-500"
-                    >
-                      <XCircle className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
-
           <div className="flex justify-end pt-6">
             <Button
               onClick={handleNext}
-              disabled={selectedParcels.length === 0}
+              disabled={!selectedParcel}
               className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl"
             >
-              {selectedParcels.length > 0 ? `${selectedParcels.length}건 분석하기` : "다음"}
+              다음
             </Button>
           </div>
         </div>
@@ -768,7 +719,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       ? "bg-emerald-500"
                       : "bg-rose-500"
                   }`}>
-                    {aiResult.judgment === "매수 가능성 높음" ? (
+                    {aiResult.judgment === "매�� 가능성 높음" ? (
                       <CheckCircle className="w-8 h-8 text-white" />
                     ) : (
                       <XCircle className="w-8 h-8 text-white" />
@@ -790,21 +741,13 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               </Card>
 
               {/* 선택한 토지 정보 */}
-              {selectedParcels.length > 0 && (
+              {selectedParcel && (
                 <Card className="p-5 border border-gray-200">
-                  <h3 className="font-semibold text-gray-900 mb-3">
-                    분석 대상 토지 <span className="text-[#2E8B57]">{selectedParcels.length}건</span>
-                  </h3>
-                  <div className="space-y-2">
-                    {selectedParcels.map((parcel) => (
-                      <div key={parcel.id} className="p-2 bg-gray-50 rounded-lg">
-                        <p className="text-gray-700 text-sm">{parcel.address}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">
-                          잔여 {parcel.remainingArea}m² | {parcel.landCategory} | {parcel.roadContact}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-3">분석 대상 토지</h3>
+                  <p className="text-gray-700">{selectedParcel.address}</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    잔여 면적: {selectedParcel.remainingArea}m² | {selectedParcel.landCategory} | {selectedParcel.roadContact}
+                  </p>
                 </Card>
               )}
 
@@ -892,7 +835,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
       )}
 
       {/* Step 5: 신청서 양식 */}
-      {step === "application" && selectedParcels.length > 0 && (
+      {step === "application" && selectedParcel && (
         <div className="space-y-8">
           {/* 뒤로가기 */}
           <button
@@ -919,7 +862,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               <div>
                 <Label className="text-sm text-gray-600 mb-1.5 block">신청자명</Label>
                 <Input
-                  value={user?.name || selectedParcels[0]?.ownerName || ""}
+                  value={user?.name || selectedParcel.ownerName}
                   disabled
                   className="bg-gray-50"
                 />
@@ -948,19 +891,15 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
             <h3 className="font-semibold text-gray-900 mb-4">토지 정보</h3>
             <div className="space-y-4">
               <div>
-                <Label className="text-sm text-gray-600 mb-1.5 block">
-                  대상 토지 <span className="text-[#2E8B57]">{selectedParcels.length}건</span>
-                </Label>
-                <div className="space-y-2 max-h-[150px] overflow-y-auto p-2 bg-gray-50 rounded-lg border border-gray-200">
-                  {selectedParcels.map((parcel) => (
-                    <div key={parcel.id} className="p-2 bg-white rounded border border-gray-100">
-                      <p className="text-sm text-gray-700">{parcel.address}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">
-                        잔여 {parcel.remainingArea}m² | {parcel.landCategory} | {parcel.roadContact}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+                <Label className="text-sm text-gray-600 mb-1.5 block">대상 토지</Label>
+                <Input
+                  value={selectedParcel.address}
+                  disabled
+                  className="bg-gray-50"
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  잔여 면적: {selectedParcel.remainingArea}m² | {selectedParcel.landCategory} | {selectedParcel.roadContact}
+                </p>
               </div>
               <div>
                 <Label className="text-sm text-gray-600 mb-1.5 block">활용 지목</Label>
