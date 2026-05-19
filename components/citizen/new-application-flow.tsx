@@ -833,8 +833,8 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       ? "bg-emerald-500"
                       : "bg-rose-500"
                   }`}>
-                    {aiResult.judgment === "매�� 가능성 높음" ? (
-                      <CheckCircle className="w-8 h-8 text-white" />
+                    {aiResult.judgment === "매수 가능성 높음" ? (
+                      <Check className="w-8 h-8 text-white font-bold" />
                     ) : (
                       <XCircle className="w-8 h-8 text-white" />
                     )}
@@ -913,7 +913,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                     : "bg-rose-500"
                 }`}>
                   {aiResult.judgment === "매수 가능성 높음" ? (
-                    <CheckCircle className="w-5 h-5 text-white" />
+                    <Check className="w-5 h-5 text-white font-bold" />
                   ) : (
                     <XCircle className="w-5 h-5 text-white" />
                   )}
