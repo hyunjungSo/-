@@ -302,9 +302,26 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     }
   };
 
-  // 답변 저장
+  // 답변 저장 (해당 질문에 종속된 하위 질문 답변 초기화)
   const handleAnswer = (questionId: string, value: string) => {
-    setAnswers(prev => ({ ...prev, [questionId]: value }));
+    setAnswers(prev => {
+      const newAnswers = { ...prev, [questionId]: value };
+      
+      // 해당 질문에 종속된 질문들의 답변 초기화
+      questions.forEach(q => {
+        if (q.showWhen?.questionId === questionId) {
+          delete newAnswers[q.id];
+          // 2단계 종속 질문도 초기화 (예: residentialType은 buildingType에 종속)
+          questions.forEach(subQ => {
+            if (subQ.showWhen?.questionId === q.id) {
+              delete newAnswers[subQ.id];
+            }
+          });
+        }
+      });
+      
+      return newAnswers;
+    });
   };
 
   // 초기 화면으로 이동 (No 선택 시)
