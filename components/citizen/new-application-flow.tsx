@@ -180,16 +180,16 @@ const questions = [
       { value: "no", label: "아니오, 농기계 운용에 문제 없음" },
     ],
   },
-  // ===== 산지 확인 항목 =====
+  // ===== 산지 확인 항목 (판독 일부 지원) =====
   {
-    id: "forestRoadLoss",
-    title: "사업으로 인해 접면도로가 상실되었나요?",
-    subtitle: "산지가 도로와 접하였다가 사업으로 인해 접한 도로가 없어졌는지 확인해 주세요",
+    id: "originalUseDifficult",
+    title: "종래의 목적대로 사용이 곤란한가요?",
+    subtitle: "잔여지의 위치, 형상, 접근 상태를 고려하여 기존 용도 사용이 어려운지 확인해 주세요",
     type: "radio" as const,
     showWhen: { questionId: "landType", value: "산지" },
     options: [
-      { value: "yes", label: "네, 접면도로가 상실되었습니다" },
-      { value: "no", label: "아니오, 접면도로 유지" },
+      { value: "yes", label: "네, 종래 목적 사용이 곤란합니다" },
+      { value: "no", label: "아니오, 기존 용도 사용 가능" },
     ],
   },
   {
