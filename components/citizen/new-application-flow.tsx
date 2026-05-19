@@ -396,7 +396,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
         // AI 분석 시뮬레이션
         await new Promise(resolve => setTimeout(resolve, 2500));
         
-        // 랜덤하게 결과 생성 (데모용)
+        // ���덤하게 결과 생성 (데모용)
         const isPositive = Math.random() > 0.3;
         setAiResult({
           judgment: isPositive ? "매수 가능성 높음" : "매수 가능성 낮음",
@@ -1334,6 +1334,13 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                           {/* 필지 상세 정보 - 펼쳐진 경우에만 표시 */}
                           {isExpanded && (
                             <div className="p-4 space-y-4 border-t border-gray-200">
+                              {/* AI 자동 입력 안내 */}
+                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-2.5">
+                                <p className="text-xs text-blue-700">
+                                  💡 해당 항목들은 AI 분석 결과로 자동 입력되어 있으며, 필요시 수정 가능합니다.
+                                </p>
+                              </div>
+                              
                               {/* 활용 지목 + 공부상 지목 */}
                               <div className="flex gap-4">
                                 <div className="flex-1">
@@ -1453,6 +1460,13 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                     />
                     <p className="text-sm text-gray-500 mt-1">
                       잔여 면적: {selectedParcel?.remainingArea}m<sup>2</sup> | {selectedParcel?.landCategory} | {selectedParcel?.roadContact}
+                    </p>
+                  </div>
+                  
+                  {/* AI 자동 입력 안내 */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-2.5">
+                    <p className="text-xs text-blue-700">
+                      💡 해당 항목들은 AI 분석 결과로 자동 입력되어 있으며, 필요시 수정 가능합니다.
                     </p>
                   </div>
                   
