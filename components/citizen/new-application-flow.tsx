@@ -83,22 +83,6 @@ const myParcels = [
 // AI 분석을 위한 정보수집 질문들
 const questions = [
   {
-    id: "landShape",
-    title: "잔여지의 토지형상은 어떻게 되나요?",
-    subtitle: "토지의 실제 모양을 선택해 주세요",
-    type: "radio" as const,
-    options: [
-      { value: "정방형", label: "정방형 (정사각형에 가까운 모양)" },
-      { value: "가로장방형", label: "가로장방형 (가로로 긴 직사각형)" },
-      { value: "세로장방형", label: "세로장방형 (세로로 긴 직사각형)" },
-      { value: "사다리형", label: "사다리형" },
-      { value: "삼각형", label: "삼각형" },
-      { value: "역삼각형", label: "역삼각형" },
-      { value: "부정형", label: "부정형 (불규칙한 모양)" },
-      { value: "자루형", label: "자루형 (맹지)" },
-    ],
-  },
-  {
     id: "currentUse",
     title: "현재 토지의 활용 지목은 무엇인가요?",
     subtitle: "현재 토지가 실제로 어떻게 이용되고 있는지 선택해 주세요",
@@ -291,11 +275,9 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     }, 2000);
   };
 
-  // 현재 질문에 대한 답변이 있는지 확인 (optional 질문은 답변 없어도 통과)
-  const currentQuestionData = questions[currentQuestion] as typeof questions[0] & { optional?: boolean };
-  const hasAnswer = currentQuestionData 
-    ? (currentQuestionData.optional || !!answers[currentQuestionData.id]) 
-    : false;
+  // 현재 질문에 대한 답변이 있는지 확인
+  const currentQuestionData = questions[currentQuestion];
+  const hasAnswer = currentQuestionData ? !!answers[currentQuestionData.id] : false;
 
   // 스텝 정보 정의
   const steps = [
