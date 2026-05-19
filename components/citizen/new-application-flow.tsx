@@ -216,7 +216,7 @@ const questions = [
       { value: "기타", label: "그 밖의 토지" },
     ],
   },
-  // 2. 택지 유형 선�� (택지인 경우)
+  // 2. 택지 유형 선��� (택지인 경우)
   {
     id: "buildingType",
     title: "택지의 유형은 무엇인가요?",
@@ -739,24 +739,24 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   <Card
                     key={parcel.id}
                     className={`p-4 transition-all border ${
-                      isApplied || isInCart
+                      isApplied
                         ? "border-gray-200 bg-gray-50 cursor-not-allowed opacity-70"
                         : isSelected
                     ? "border-[#2E8B57] bg-green-50 cursor-pointer"
                     : "border-gray-200 hover:border-gray-300 cursor-pointer"
                     }`}
-                    onClick={() => !isApplied && !isInCart && handleSelectParcel(parcel)}
+                    onClick={() => !isApplied && handleSelectParcel(parcel)}
                   >
                     <div className="flex items-start gap-3">
                       {/* 선택 인디케이터 (라디오 스타일) */}
                       <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                        isApplied || isInCart
+                        isApplied
                           ? "border-gray-300 bg-gray-200"
                           : isSelected
                             ? "border-[#2E8B57] bg-[#2E8B57]"
                             : "border-gray-300"
                       }`}>
-                        {!isApplied && !isInCart && isSelected && (
+                        {!isApplied && isSelected && (
                           <Check className="w-3 h-3 text-white" />
                         )}
                       </div>
@@ -779,7 +779,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                           ) : null}
                         </div>
                         {/* 중단: 주소 */}
-                        <h3 className={`font-medium text-sm mb-2 line-clamp-2 ${isApplied || isInCart ? "text-gray-500" : "text-gray-900"}`}>
+                        <h3 className={`font-medium text-sm mb-2 line-clamp-2 ${isApplied ? "text-gray-500" : "text-gray-900"}`}>
                           {parcel.address}
                         </h3>
                         {/* 하단: 잔여 면적 + 지목 배지 */}
