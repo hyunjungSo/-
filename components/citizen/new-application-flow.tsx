@@ -980,7 +980,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       </div>
                     </div>
 
-                    {/* 면적 기준 충족 여부 */}
+                    {/* 면적 기준 충족 ���부 */}
                     <div className={`rounded-lg p-3 border ${
                       aiResult.judgment === "매수 가능성 높음" 
                         ? "bg-emerald-50 border-emerald-200" 
@@ -1462,7 +1462,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                                         </span>
                                       </div>
                                       <div className="flex items-center justify-between">
-                                        <span className="text-gray-600">종래 목적 사�� 곤란</span>
+                                        <span className="text-gray-600">종래 목적 사용 곤란</span>
                                         <span className={item.answers.otherLandUseDifficult === "yes" ? "text-red-600 font-medium" : "text-gray-500"}>
                                           {item.answers.otherLandUseDifficult === "yes" ? "해당" : "해당 없음"}
                                         </span>
