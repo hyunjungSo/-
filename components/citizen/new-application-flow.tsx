@@ -503,7 +503,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               {filteredParcels.map((parcel) => (
                 <Card
                   key={parcel.id}
-                  className={`p-4 cursor-pointer transition-all border-2 ${
+                  className={`p-4 cursor-pointer transition-all border ${
                     selectedParcel?.id === parcel.id
                       ? "border-[#2E8B57] bg-green-50 shadow-md"
                       : "border-gray-200 hover:border-gray-300 hover:shadow-sm"
@@ -512,7 +512,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 >
                   <div className="flex items-start gap-3">
                     {/* 선택 인디케이터 */}
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                    <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 mt-0.5 ${
                       selectedParcel?.id === parcel.id
                         ? "border-[#2E8B57] bg-[#2E8B57]"
                         : "border-gray-300"
