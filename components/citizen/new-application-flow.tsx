@@ -695,13 +695,12 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   </div>
                   <div>
                     <h3 className={`text-xl font-bold ${
-                      aiResult.judgment === "매수 가능성 높음"
-                        ? "text-emerald-700"
+                      isPositive
+                        ? "text-green-700"
                         : "text-rose-700"
                     }`}>
                       {aiResult.judgment}
                     </h3>
-                    <p className="text-gray-600">신뢰도 {aiResult.score}%</p>
                   </div>
                 </div>
                 <p className="text-gray-700 leading-relaxed">
@@ -773,7 +772,6 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   }`}>
                     {aiResult.judgment}
                   </p>
-                  <p className="text-sm text-gray-600">신뢰도 {aiResult.score}%</p>
                 </div>
               </div>
             </Card>
