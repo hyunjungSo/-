@@ -1257,52 +1257,125 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 <p className="mt-1 text-sm">분석 완료 후 담아주세요</p>
               </div>
             ) : (
-              <div className="space-y-3">
-                {cartItems.map((item) => {
-                  const isSelected = selectedCartItems.has(item.id);
-                  const isPositive = item.aiResult.judgment === "매수 가능성 높음";
-                  return (
-                    <div 
-                      key={item.id}
-                      className={`rounded-lg border p-3 transition-colors ${isSelected ? "border-[#2E8B57] bg-green-50" : "border-gray-200"}`}
-                    >
-                      <div className="flex items-start gap-3">
-                        <Checkbox
-                          checked={isSelected}
-                          onCheckedChange={(checked) => {
-                            const newSelected = new Set(selectedCartItems);
-                            if (checked) {
-                              newSelected.add(item.id);
-                            } else {
-                              newSelected.delete(item.id);
-                            }
-                            setSelectedCartItems(newSelected);
-                          }}
-                          className="mt-0.5 h-5 w-5 shrink-0"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900 line-clamp-2">{item.parcel.address}</p>
-                          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
-                            <span>잔여: {item.parcel.remainingArea}m²</span>
-                            <span>|</span>
-                            <span>{item.parcel.landCategory}</span>
-                            <Badge 
-                              className={`text-xs text-white ${isPositive ? "bg-emerald-500" : "bg-rose-500"}`}
-                            >
-                              {isPositive ? "매수 가능성 높음" : "매수 가능성 낮음"}
-                            </Badge>
+              <div className="space-y-4">
+                {/* 사업단별로 그룹화 */}
+                {(() => {
+                  // 사업단별로 그룹화
+                  const groupedByProject = cartItems.reduce((acc, item) => {
+                    const projectName = item.parcel.projectName;
+                    if (!acc[projectName]) {
+                      acc[projectName] = [];
+                    }
+                    acc[projectName].push(item);
+                    return acc;
+                  }, {} as Record<string, CartItem[]>);
+
+                  // 현재 선택된 사업단 (선택된 항목이 있으면 해당 사업단)
+                  const selectedProject = selectedCartItems.size > 0
+                    ? cartItems.find(item => selectedCartItems.has(item.id))?.parcel.projectName
+                    : null;
+
+                  return Object.entries(groupedByProject).map(([projectName, items]) => {
+                    const isProjectDisabled = selectedProject !== null && selectedProject !== projectName;
+                    const projectSelectedCount = items.filter(item => selectedCartItems.has(item.id)).length;
+                    
+                    return (
+                      <div key={projectName} className={`rounded-xl border ${isProjectDisabled ? "border-gray-200 opacity-50" : "border-gray-300"}`}>
+                        {/* 사업단 헤더 */}
+                        <div className={`flex items-center justify-between px-4 py-3 rounded-t-xl ${isProjectDisabled ? "bg-gray-50" : "bg-gray-100"}`}>
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-gray-900">{projectName}</span>
+                            <Badge variant="outline" className="text-xs">{items.length}건</Badge>
                           </div>
+                          {!isProjectDisabled && items.length > 1 && (
+                            <button
+                              onClick={() => {
+                                const projectItemIds = items.map(item => item.id);
+                                const allSelected = projectItemIds.every(id => selectedCartItems.has(id));
+                                const newSelected = new Set(selectedCartItems);
+                                if (allSelected) {
+                                  projectItemIds.forEach(id => newSelected.delete(id));
+                                } else {
+                                  projectItemIds.forEach(id => newSelected.add(id));
+                                }
+                                setSelectedCartItems(newSelected);
+                              }}
+                              className="text-xs text-[#2E8B57] hover:underline"
+                            >
+                              {projectSelectedCount === items.length ? "전체 해제" : "전체 선택"}
+                            </button>
+                          )}
                         </div>
-                        <button
-                          onClick={() => handleRemoveFromCart(item.id)}
-                          className="shrink-0 rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-red-500"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        
+                        {/* 사업단 내 필지 목록 */}
+                        <div className="p-2 space-y-2">
+                          {items.map((item) => {
+                            const isSelected = selectedCartItems.has(item.id);
+                            const isPositive = item.aiResult.judgment === "매수 가능성 높음";
+                            return (
+                              <div 
+                                key={item.id}
+                                className={`rounded-lg border p-3 transition-colors ${
+                                  isProjectDisabled 
+                                    ? "border-gray-100 bg-gray-50 cursor-not-allowed" 
+                                    : isSelected 
+                                      ? "border-[#2E8B57] bg-green-50" 
+                                      : "border-gray-200 hover:border-gray-300"
+                                }`}
+                              >
+                                <div className="flex items-start gap-3">
+                                  <Checkbox
+                                    checked={isSelected}
+                                    disabled={isProjectDisabled}
+                                    onCheckedChange={(checked) => {
+                                      if (isProjectDisabled) return;
+                                      const newSelected = new Set(selectedCartItems);
+                                      if (checked) {
+                                        newSelected.add(item.id);
+                                      } else {
+                                        newSelected.delete(item.id);
+                                      }
+                                      setSelectedCartItems(newSelected);
+                                    }}
+                                    className="mt-0.5 h-5 w-5 shrink-0"
+                                  />
+                                  <div className="flex-1 min-w-0">
+                                    <p className={`text-sm font-medium line-clamp-2 ${isProjectDisabled ? "text-gray-400" : "text-gray-900"}`}>
+                                      {item.parcel.address}
+                                    </p>
+                                    <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                                      <span>잔여: {item.parcel.remainingArea}m²</span>
+                                      <span>|</span>
+                                      <span>{item.parcel.landCategory}</span>
+                                      <Badge 
+                                        className={`text-xs text-white ${isPositive ? "bg-emerald-500" : "bg-rose-500"}`}
+                                      >
+                                        {isPositive ? "매수 가능성 높음" : "매수 가능성 낮음"}
+                                      </Badge>
+                                    </div>
+                                  </div>
+                                  <button
+                                    onClick={() => handleRemoveFromCart(item.id)}
+                                    className="shrink-0 rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-red-500"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </button>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  });
+                })()}
+                
+                {/* 안내 메시지 */}
+                {selectedCartItems.size > 0 && (
+                  <p className="text-xs text-amber-600 bg-amber-50 p-2 rounded-lg">
+                    복수 필지 신청은 같은 사업단 내에서만 가능합니다.
+                  </p>
+                )}
               </div>
             )}
           </div>
@@ -1311,18 +1384,16 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           {cartItems.length > 0 && (
             <div className="border-t p-4 space-y-2">
               <div className="flex items-center justify-between text-sm mb-2">
-                <button
-                  onClick={() => {
-                    if (selectedCartItems.size === cartItems.length) {
-                      setSelectedCartItems(new Set());
-                    } else {
-                      setSelectedCartItems(new Set(cartItems.map(item => item.id)));
-                    }
-                  }}
-                  className="text-[#2E8B57] hover:underline"
-                >
-                  {selectedCartItems.size === cartItems.length ? "전체 해제" : "전체 선택"}
-                </button>
+                {selectedCartItems.size > 0 ? (
+                  <button
+                    onClick={() => setSelectedCartItems(new Set())}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    선택 해제
+                  </button>
+                ) : (
+                  <span className="text-gray-400 text-xs">사업단 내 필지를 선택해 주세요</span>
+                )}
                 <span className="text-gray-500">
                   {selectedCartItems.size}건 선택됨
                 </span>
