@@ -796,7 +796,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 AI가 분석 중입니다
               </h2>
               <p className="text-gray-500">
-                입력하���� 정보를 바탕으로 매수 가능성을 분석하고 있어요.<br />
+                입력하����� 정보를 바탕으로 매수 가능성을 분석하고 있어요.<br />
                 잠시만 기다려 주세요.
               </p>
             </div>
@@ -953,26 +953,32 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                     </div>
                   </div>
 
-                  {/* AI 분석 의견 */}
-                  <div className={`p-4 rounded-lg ${
-                    aiResult.judgment === "매수 가능성 높음"
-                      ? "bg-emerald-50 border border-emerald-100"
-                      : "bg-rose-50 border border-rose-100"
-                  }`}>
-                    <div className="flex items-start gap-3">
-                      <Sparkles className={`w-5 h-5 mt-0.5 flex-shrink-0 ${
-                        aiResult.judgment === "매수 가능성 높음"
-                          ? "text-emerald-600"
-                          : "text-rose-600"
-                      }`} />
-                      <div>
-                        <p className="text-sm font-medium text-gray-700 mb-1">AI 종합 의견</p>
-                        <p className="text-gray-600 text-sm leading-relaxed">
-                          {aiResult.reasoning}
-                        </p>
+                  {/* AI 종합 의견 */}
+                  {aiResult.judgment === "매수 가능성 높음" ? (
+                    <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-100">
+                      <div className="flex items-start gap-3">
+                        <Sparkles className="w-5 h-5 mt-0.5 flex-shrink-0 text-emerald-600" />
+                        <div>
+                          <p className="text-sm font-medium text-gray-700 mb-1">AI 종합 의견</p>
+                          <p className="text-gray-600 text-sm leading-relaxed">
+                            {aiResult.reasoning}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="p-4 rounded-lg bg-rose-50 border border-rose-100">
+                      <div className="flex items-start gap-3">
+                        <Sparkles className="w-5 h-5 mt-0.5 flex-shrink-0 text-rose-600" />
+                        <div>
+                          <p className="text-sm font-medium text-gray-700 mb-1">AI 종합 의견</p>
+                          <p className="text-gray-600 text-sm leading-relaxed">
+                            {aiResult.reasoning}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </Card>
               )}
 
@@ -1395,7 +1401,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               <div className="space-y-4">
                 {/* 사업단별로 그룹화 */}
                 {(() => {
-                  // 사업단별로 그���화
+                  // 사업단별로 그�����화
                   const groupedByProject = cartItems.reduce((acc, item) => {
                     const projectName = item.parcel.projectName;
                     if (!acc[projectName]) {
