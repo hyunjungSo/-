@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Check, ChevronLeft, MapPin, Ruler, Search, FileText, Brain, ClipboardCheck, CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { Check, ChevronLeft, MapPin, Ruler, Search, FileText, Sparkles, ClipboardCheck, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import type { LandInfo, AIAnalysisResult, Application } from "@/lib/types";
 
 // 더미 잔여지 데이터 (사용자 소유)
@@ -388,7 +388,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
   const steps = [
     { id: "select", label: "잔여지 선택", icon: MapPin },
     { id: "questions", label: "정보 입력", icon: FileText },
-    { id: "analysis", label: "AI 분석", icon: Brain },
+    { id: "analysis", label: "AI 분석", icon: Sparkles },
     { id: "application", label: "신청서 작성", icon: ClipboardCheck },
   ];
 
@@ -658,7 +658,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               <div className="w-20 h-20 mx-auto mb-6 relative">
                 <div className="absolute inset-0 border-4 border-gray-200 rounded-full" />
                 <div className="absolute inset-0 border-4 border-[#2E8B57] rounded-full border-t-transparent animate-spin" />
-                <Brain className="w-8 h-8 text-[#2E8B57] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                <Sparkles className="w-8 h-8 text-[#2E8B57] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 AI가 분석 중입니다
