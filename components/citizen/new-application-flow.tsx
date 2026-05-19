@@ -408,7 +408,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
   const currentStepIndex = getCurrentStepIndex();
 
   return (
-    <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto pt-10">
       {/* 스텝 인디케이터 */}
       {step !== "complete" && step !== "decision" && (
         <div className="mb-10">
