@@ -216,7 +216,7 @@ const questions = [
       { value: "기타", label: "그 밖의 토지" },
     ],
   },
-  // 2. 택지 유형 선택 (택지인 경우)
+  // 2. 택지 유형 선�� (택지인 경우)
   {
     id: "buildingType",
     title: "택지의 유형은 무엇인가요?",
@@ -733,48 +733,53 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {filteredParcels.map((parcel) => {
                 const isApplied = parcel.applicationStatus === "신청완료";
+                const isInCart = cartItems.some(item => item.parcel.id === parcel.id);
                 const isSelected = selectedParcel?.id === parcel.id;
                 return (
                   <Card
                     key={parcel.id}
                     className={`p-4 transition-all border ${
-                      isApplied
+                      isApplied || isInCart
                         ? "border-gray-200 bg-gray-50 cursor-not-allowed opacity-70"
                         : isSelected
                     ? "border-[#2E8B57] bg-green-50 cursor-pointer"
                     : "border-gray-200 hover:border-gray-300 cursor-pointer"
                     }`}
-                    onClick={() => !isApplied && handleSelectParcel(parcel)}
+                    onClick={() => !isApplied && !isInCart && handleSelectParcel(parcel)}
                   >
                     <div className="flex items-start gap-3">
                       {/* 선택 인디케이터 (라디오 스타일) */}
                       <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                        isApplied
+                        isApplied || isInCart
                           ? "border-gray-300 bg-gray-200"
                           : isSelected
                             ? "border-[#2E8B57] bg-[#2E8B57]"
                             : "border-gray-300"
                       }`}>
-                        {!isApplied && isSelected && (
+                        {!isApplied && !isInCart && isSelected && (
                           <Check className="w-3 h-3 text-white" />
                         )}
                       </div>
 
                       {/* 토지 정보 */}
                       <div className="flex-1 min-w-0">
-                        {/* 상단: 프로젝트명(좌), 신청완료(우) */}
+                        {/* 상단: 프로젝트명(좌), 신청완료/목록담김(우) */}
                         <div className="flex items-center justify-between gap-2 mb-2">
                           <span className="text-xs text-gray-600 truncate max-w-[180px]">
                             {parcel.projectName}
                           </span>
-                          {isApplied && (
+                          {isApplied ? (
                             <span className="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded font-medium flex-shrink-0">
                               신청완료
                             </span>
-                          )}
+                          ) : isInCart ? (
+                            <span className="text-xs px-2 py-0.5 bg-blue-100 text-blue-700 rounded font-medium flex-shrink-0">
+                              목록담김
+                            </span>
+                          ) : null}
                         </div>
                         {/* 중단: 주소 */}
-                        <h3 className={`font-medium text-sm mb-2 line-clamp-2 ${isApplied ? "text-gray-500" : "text-gray-900"}`}>
+                        <h3 className={`font-medium text-sm mb-2 line-clamp-2 ${isApplied || isInCart ? "text-gray-500" : "text-gray-900"}`}>
                           {parcel.address}
                         </h3>
                         {/* 하단: 잔여 면적 + 지목 배지 */}
