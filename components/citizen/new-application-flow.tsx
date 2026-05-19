@@ -619,7 +619,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                         : "border-gray-300"
                     }`}>
                       {answers[currentQuestionData.id] === option.value && (
-                        <div className="w-2 h-2 bg-white rounded-full" />
+                        <Check className="w-3 h-3 text-white" />
                       )}
                     </div>
                     <span className="text-gray-900">{option.label}</span>
