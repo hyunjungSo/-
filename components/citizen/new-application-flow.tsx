@@ -609,7 +609,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                     className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
                       answers[currentQuestionData.id] === option.value
                         ? "border-[#2E8B57] bg-green-50"
-                        : "border-gray-200 hover:border-gray-300"
+                        : "border-gray-200 hover:border-gray-300 bg-white"
                     }`}
                   >
                     <RadioGroupItem value={option.value} id={option.value} className="sr-only" />
