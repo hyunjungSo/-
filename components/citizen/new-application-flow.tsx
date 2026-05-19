@@ -9,9 +9,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Check, ChevronLeft, MapPin, Ruler, Search, FileText, Sparkles, ClipboardCheck, CheckCircle, XCircle, Loader2, X, Trash2, ShoppingCart } from "lucide-react";
+import { Check, ChevronLeft, MapPin, Ruler, Search, FileText, Sparkles, ClipboardCheck, CheckCircle, XCircle, Loader2, X, Trash2, ClipboardList } from "lucide-react";
 import type { LandInfo, AIAnalysisResult, Application } from "@/lib/types";
 import { useAuth } from "@/lib/auth-context";
+import { useToast } from "@/hooks/use-toast";
 
 // 더미 잔여지 데이터 (사용자 소유)
 const myParcels = [
@@ -222,6 +223,7 @@ type FlowStep = "select" | "questions" | "analysis" | "decision" | "application"
 
 export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowProps) {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [step, setStep] = useState<FlowStep>("select");
   const [selectedParcel, setSelectedParcel] = useState<typeof myParcels[0] | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -454,7 +456,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     setApplicationForm({ contact: user?.contact || "", address: user?.address || "", reason: "", attachments: [] });
   };
 
-  // 장바구니에 담기
+  // 매수신청 목록에 추가
   const handleAddToCart = () => {
     if (!selectedParcel || !aiResult) return;
     
@@ -467,6 +469,12 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     };
     
     setCartItems(prev => [...prev, newItem]);
+    
+    toast({
+      title: "매수신청 목록에 추가되었습니다",
+      description: `${selectedParcel.address.split(' ').slice(0, 3).join(' ')} 외 잔여지가 신청 목록에 담겼습니다.`,
+    });
+    
     handleReset(); // 초기화하고 다음 분석 준비
   };
 
@@ -861,8 +869,8 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   onClick={handleAddToCart}
                   className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl w-full"
                 >
-                  <ShoppingCart className="w-5 h-5 mr-2" />
-                  장바구니에 담기
+                  <ClipboardList className="w-5 h-5 mr-2" />
+                  매수신청 목록에 추가
                 </Button>
                 <Button
                   variant="outline"
@@ -1209,21 +1217,36 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
       )}
     </div>
 
-    {/* 장바구니 플로팅 버튼 */}
+    {/* 매수신청 목록 플로팅 버튼 */}
     {cartItems.length > 0 && !isCartOpen && (
       <button
         onClick={() => setIsCartOpen(true)}
-        className="fixed bottom-6 right-6 z-50 flex h-14 items-center gap-2 rounded-full bg-[#2E8B57] px-5 text-white shadow-lg transition-all hover:bg-[#256b45] hover:shadow-xl"
+        className="fixed bottom-6 right-6 z-50 flex h-14 items-center gap-2 rounded-full bg-[#2E8B57] px-5 text-white shadow-lg transition-all hover:bg-[#256b45] hover:shadow-xl animate-float"
       >
-        <ShoppingCart className="h-5 w-5" />
-        <span className="font-medium">신청 목록</span>
+        <ClipboardList className="h-5 w-5" />
+        <span className="font-medium">매수신청 목록</span>
         <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-sm font-bold text-[#2E8B57]">
           {cartItems.length}
         </span>
       </button>
     )}
 
-    {/* 장바구니 슬라이드 패널 */}
+    {/* 플로팅 버튼 애니메이션 */}
+    <style jsx>{`
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+      .animate-float {
+        animation: float 3s ease-in-out infinite;
+      }
+    `}</style>
+
+    {/* 매수신청 목록 슬라이드 패널 */}
     {isCartOpen && (
       <div className="fixed inset-0 z-50 flex justify-end">
         {/* 오버레이 */}
@@ -1237,7 +1260,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           {/* 헤더 */}
           <div className="flex items-center justify-between border-b px-4 py-4">
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-semibold">신청 목록</h2>
+              <h2 className="text-lg font-semibold">매수신청 목록</h2>
               <Badge className="bg-[#2E8B57]">{cartItems.length}건</Badge>
             </div>
             <button
