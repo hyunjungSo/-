@@ -473,6 +473,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     toast({
       title: "매수신청 목록에 추가되었습니다",
       description: `${selectedParcel.address.split(' ').slice(0, 3).join(' ')} 외 잔여지가 신청 목록에 담겼습니다.`,
+      duration: 3500,
     });
     
     handleReset(); // 초기화하고 다음 분석 준비
