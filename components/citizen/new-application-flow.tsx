@@ -7,10 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Check, ChevronLeft, MapPin, Ruler, Home, Calendar, Search } from "lucide-react";
+import { Check, ChevronLeft, MapPin, Ruler, Search, FileText, Brain, ClipboardCheck, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import type { LandInfo, AIAnalysisResult, Application } from "@/lib/types";
 
-// 더미 잔여지 데이터 (사용자 소유) - 많은 항목 시뮬레이션
+// 더미 잔여지 데이터 (사용자 소유)
 const myParcels = [
   {
     id: "parcel-1",
@@ -125,17 +125,6 @@ const questions = [
     type: "textarea" as const,
     placeholder: "예: 잔여지가 너무 좁아 활용이 어렵습니다. 도로 공사로 인해 진출입이 불편해졌습니다.",
   },
-  {
-    id: "price",
-    title: "희망하시는 매수 가격대가 있으신가요?",
-    subtitle: "선택사항입니다. 공시지가 기준으로 산정됩니다",
-    type: "radio" as const,
-    options: [
-      { value: "official", label: "공시지가 기준으로 산정" },
-      { value: "market", label: "시세 반영을 희망" },
-      { value: "negotiate", label: "협의를 통해 결정" },
-    ],
-  },
 ];
 
 interface NewApplicationFlowProps {
@@ -143,14 +132,21 @@ interface NewApplicationFlowProps {
   onCancel: () => void;
 }
 
+type FlowStep = "select" | "questions" | "analysis" | "decision" | "application" | "complete";
+
 export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowProps) {
-  // 플로우 단계: select(잔여지 선택) -> questions(질문) -> confirm(확인) -> complete(완료)
-  const [step, setStep] = useState<"select" | "questions" | "confirm" | "complete">("select");
+  const [step, setStep] = useState<FlowStep>("select");
   const [selectedParcel, setSelectedParcel] = useState<typeof myParcels[0] | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [aiResult, setAiResult] = useState<{ judgment: string; score: number; reasoning: string } | null>(null);
+  const [applicationForm, setApplicationForm] = useState({
+    contact: "",
+    email: "",
+    additionalNotes: "",
+  });
 
   // 검색 필터링된 잔여지 목록
   const filteredParcels = useMemo(() => {
@@ -167,15 +163,35 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
   };
 
   // 다음 단계로
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step === "select" && selectedParcel) {
       setStep("questions");
     } else if (step === "questions") {
       if (currentQuestion < questions.length - 1) {
         setCurrentQuestion(prev => prev + 1);
       } else {
-        setStep("confirm");
+        // 모든 질문 완료 -> AI 분석 시작
+        setStep("analysis");
+        setIsAnalyzing(true);
+        
+        // AI 분석 시뮬레이션
+        await new Promise(resolve => setTimeout(resolve, 2500));
+        
+        // 랜덤하게 결과 생성 (데모용)
+        const isPositive = Math.random() > 0.3;
+        setAiResult({
+          judgment: isPositive ? "매수 가능성 높음" : "매수 가능성 낮음",
+          score: isPositive ? Math.floor(Math.random() * 20) + 75 : Math.floor(Math.random() * 30) + 30,
+          reasoning: isPositive 
+            ? "잔여지 면적이 최소 기준을 충족하며, 도로 접근성 저하로 인한 활용도 감소가 인정됩니다. 주변 유사 사례와 비교 시 매수 가능성이 높은 것으로 분석됩니다."
+            : "잔여지 면적이 독립 활용 가능한 수준으로 판단되며, 현재 용도로 계속 활용 가능한 것으로 보입니다. 다만, 추가 서류 제출 시 재검토가 가능합니다.",
+        });
+        setIsAnalyzing(false);
       }
+    } else if (step === "decision") {
+      setStep("application");
+    } else if (step === "application") {
+      handleSubmit();
     }
   };
 
@@ -187,9 +203,13 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
       } else {
         setStep("select");
       }
-    } else if (step === "confirm") {
+    } else if (step === "analysis" && !isAnalyzing) {
       setCurrentQuestion(questions.length - 1);
       setStep("questions");
+    } else if (step === "decision") {
+      setStep("analysis");
+    } else if (step === "application") {
+      setStep("decision");
     }
   };
 
@@ -198,14 +218,19 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     setAnswers(prev => ({ ...prev, [questionId]: value }));
   };
 
+  // 초기 화면으로 이동 (No 선택 시)
+  const handleDeclineAndReset = () => {
+    setStep("select");
+    setSelectedParcel(null);
+    setCurrentQuestion(0);
+    setAnswers({});
+    setAiResult(null);
+    setApplicationForm({ contact: "", email: "", additionalNotes: "" });
+  };
+
   // 신청 제출
-  const handleSubmit = async () => {
-    setIsAnalyzing(true);
-    
-    // AI 분석 시뮬레이션
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    if (!selectedParcel) return;
+  const handleSubmit = () => {
+    if (!selectedParcel || !aiResult) return;
 
     const landInfo: LandInfo = {
       id: selectedParcel.id,
@@ -220,10 +245,10 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
       acquisitionDate: "2020-03-15",
     };
 
-    const aiResult: AIAnalysisResult = {
-      provisionalJudgment: "수용가능",
-      confidenceScore: 85,
-      reasoning: "잔여지 면적이 최소 기준을 충족하며, 도로 접근성 저하로 인한 활용도 감소가 인정됩니다.",
+    const aiResultData: AIAnalysisResult = {
+      provisionalJudgment: aiResult.judgment === "매수 가능성 높음" ? "수용가능" : "수용불가",
+      confidenceScore: aiResult.score,
+      reasoning: aiResult.reasoning,
       comparisonCases: [],
       reviewDate: new Date().toISOString(),
       reviewerId: "AI-SYSTEM",
@@ -232,17 +257,16 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     const application: Application = {
       id: `APP-${Date.now()}`,
       applicantName: selectedParcel.ownerName,
-      applicantContact: "010-1234-5678",
-      applicantEmail: "hong@email.com",
+      applicantContact: applicationForm.contact,
+      applicantEmail: applicationForm.email,
       applicationDate: new Date().toISOString(),
       status: "검토중",
       landInfo,
-      aiResult,
+      aiResult: aiResultData,
       documents: [],
-      additionalNotes: answers.reason || "",
+      additionalNotes: applicationForm.additionalNotes,
     };
 
-    setIsAnalyzing(false);
     setStep("complete");
     
     setTimeout(() => {
@@ -256,9 +280,10 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
 
   // 스텝 정보 정의
   const steps = [
-    { id: "select", label: "잔여지 선택" },
-    { id: "questions", label: "정보 입력" },
-    { id: "confirm", label: "신청 확인" },
+    { id: "select", label: "잔여지 선택", icon: MapPin },
+    { id: "questions", label: "정보 입력", icon: FileText },
+    { id: "analysis", label: "AI 분석", icon: Brain },
+    { id: "application", label: "신청서 작성", icon: ClipboardCheck },
   ];
 
   // 현재 스텝 인덱스 계산
@@ -266,8 +291,10 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     switch (step) {
       case "select": return 0;
       case "questions": return 1;
-      case "confirm": return 2;
-      case "complete": return 3;
+      case "analysis": 
+      case "decision": return 2;
+      case "application": return 3;
+      case "complete": return 4;
       default: return 0;
     }
   };
@@ -277,7 +304,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
   return (
     <div className="max-w-2xl mx-auto">
       {/* 스텝 인디케이터 */}
-      {step !== "complete" && (
+      {step !== "complete" && step !== "decision" && (
         <div className="mb-10">
           <div className="flex items-center justify-between">
             {steps.map((s, index) => (
@@ -296,7 +323,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                     {index < currentStepIndex ? (
                       <Check className="w-5 h-5" />
                     ) : (
-                      index + 1
+                      <s.icon className="w-5 h-5" />
                     )}
                   </div>
                   <span className={`mt-2 text-xs font-medium whitespace-nowrap ${
@@ -308,7 +335,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 
                 {/* 연결선 (마지막 아이템 제외) */}
                 {index < steps.length - 1 && (
-                  <div className="flex-1 mx-4 mt-[-20px]">
+                  <div className="flex-1 mx-3 mt-[-20px]">
                     <div className={`h-1 rounded-full transition-all ${
                       index < currentStepIndex ? "bg-[#2E8B57]" : "bg-gray-200"
                     }`} />
@@ -427,13 +454,6 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
             </div>
           )}
 
-          {myParcels.length === 0 && (
-            <div className="text-center py-12 text-gray-500">
-              <MapPin className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-              <p>등록된 잔여지가 없습니다.</p>
-            </div>
-          )}
-
           <div className="flex justify-end pt-6">
             <Button
               onClick={handleNext}
@@ -518,14 +538,174 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               disabled={!hasAnswer}
               className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl"
             >
-              {currentQuestion === questions.length - 1 ? "확인하기" : "다음"}
+              {currentQuestion === questions.length - 1 ? "AI 분석 시작" : "다음"}
             </Button>
           </div>
         </div>
       )}
 
-      {/* Step 3: 확인 */}
-      {step === "confirm" && selectedParcel && (
+      {/* Step 3: AI 분석 결과 */}
+      {step === "analysis" && (
+        <div className="space-y-8">
+          {isAnalyzing ? (
+            <div className="text-center py-16">
+              <div className="w-20 h-20 mx-auto mb-6 relative">
+                <div className="absolute inset-0 border-4 border-gray-200 rounded-full" />
+                <div className="absolute inset-0 border-4 border-[#2E8B57] rounded-full border-t-transparent animate-spin" />
+                <Brain className="w-8 h-8 text-[#2E8B57] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                AI가 분석 중입니다
+              </h2>
+              <p className="text-gray-500">
+                입력하신 정보를 바탕으로 매수 가능성을 분석하고 있어요.<br />
+                잠시만 기다려 주세요.
+              </p>
+            </div>
+          ) : aiResult && (
+            <div className="space-y-6">
+              {/* 뒤로가기 */}
+              <button
+                onClick={handleBack}
+                className="flex items-center gap-1 text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <ChevronLeft className="w-5 h-5" />
+                <span>이전</span>
+              </button>
+
+              <div className="text-center mb-4">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  AI 분석 결과
+                </h2>
+                <p className="text-gray-500">
+                  입력하신 정보를 바탕으로 분석한 결과입니다
+                </p>
+              </div>
+
+              {/* 분석 결과 카드 */}
+              <Card className={`p-6 border-2 ${
+                aiResult.judgment === "매수 가능성 높음" 
+                  ? "border-emerald-200 bg-emerald-50" 
+                  : "border-rose-200 bg-rose-50"
+              }`}>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className={`w-14 h-14 rounded-full flex items-center justify-center ${
+                    aiResult.judgment === "매수 가능성 높음"
+                      ? "bg-emerald-500"
+                      : "bg-rose-500"
+                  }`}>
+                    {aiResult.judgment === "매수 가능성 높음" ? (
+                      <CheckCircle className="w-8 h-8 text-white" />
+                    ) : (
+                      <XCircle className="w-8 h-8 text-white" />
+                    )}
+                  </div>
+                  <div>
+                    <h3 className={`text-xl font-bold ${
+                      aiResult.judgment === "매수 가능성 높음"
+                        ? "text-emerald-700"
+                        : "text-rose-700"
+                    }`}>
+                      {aiResult.judgment}
+                    </h3>
+                    <p className="text-gray-600">신뢰도 {aiResult.score}%</p>
+                  </div>
+                </div>
+                <p className="text-gray-700 leading-relaxed">
+                  {aiResult.reasoning}
+                </p>
+              </Card>
+
+              {/* 선택한 토지 정보 */}
+              {selectedParcel && (
+                <Card className="p-5 border-2 border-gray-200">
+                  <h3 className="font-semibold text-gray-900 mb-3">분석 대상 토지</h3>
+                  <p className="text-gray-700">{selectedParcel.address}</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    잔여 면적: {selectedParcel.remainingArea}m² | {selectedParcel.landCategory} | {selectedParcel.roadContact}
+                  </p>
+                </Card>
+              )}
+
+              <div className="flex justify-end pt-4">
+                <Button
+                  onClick={() => setStep("decision")}
+                  className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl"
+                >
+                  다음
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Step 4: 진행 여부 확인 */}
+      {step === "decision" && (
+        <div className="space-y-8">
+          <div className="text-center py-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              매수 신청을 진행하시겠습니까?
+            </h2>
+            <p className="text-gray-500">
+              AI 분석 결과를 확인하셨습니다.<br />
+              매수 신청서를 작성하시겠습니까?
+            </p>
+          </div>
+
+          {/* AI 결과 요약 */}
+          {aiResult && (
+            <Card className={`p-4 border-2 ${
+              aiResult.judgment === "매수 가능성 높음" 
+                ? "border-emerald-200 bg-emerald-50" 
+                : "border-rose-200 bg-rose-50"
+            }`}>
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  aiResult.judgment === "매수 가능성 높음"
+                    ? "bg-emerald-500"
+                    : "bg-rose-500"
+                }`}>
+                  {aiResult.judgment === "매수 가능성 높음" ? (
+                    <CheckCircle className="w-5 h-5 text-white" />
+                  ) : (
+                    <XCircle className="w-5 h-5 text-white" />
+                  )}
+                </div>
+                <div>
+                  <p className={`font-semibold ${
+                    aiResult.judgment === "매수 가능성 높음"
+                      ? "text-emerald-700"
+                      : "text-rose-700"
+                  }`}>
+                    {aiResult.judgment}
+                  </p>
+                  <p className="text-sm text-gray-600">신뢰도 {aiResult.score}%</p>
+                </div>
+              </div>
+            </Card>
+          )}
+
+          <div className="flex gap-4 pt-4">
+            <Button
+              onClick={handleDeclineAndReset}
+              variant="outline"
+              className="flex-1 py-6 text-lg rounded-xl border-2"
+            >
+              아니오, 다시 선택할게요
+            </Button>
+            <Button
+              onClick={handleNext}
+              className="flex-1 bg-[#2E8B57] hover:bg-[#256b45] text-white py-6 text-lg rounded-xl"
+            >
+              네, 신청할게요
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Step 5: 신청서 양식 */}
+      {step === "application" && selectedParcel && (
         <div className="space-y-8">
           {/* 뒤로가기 */}
           <button
@@ -536,63 +716,80 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
             <span>이전</span>
           </button>
 
-          <div className="text-center mb-8">
+          <div className="text-center mb-4">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              입력하신 내용을 확인해 주세요
+              신청서를 작성해 주세요
             </h2>
             <p className="text-gray-500">
-              아래 내용으로 매수 신청을 진행합니다
+              마지막 단계입니다. 연락처 정보를 입력해 주세요.
             </p>
           </div>
 
-          {/* 선택된 토지 정보 */}
+          {/* 신청자 정보 */}
           <Card className="p-5 border-2 border-gray-200">
-            <h3 className="font-semibold text-gray-900 mb-3">선택한 잔여지</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">신청자 정보</h3>
+            <div className="space-y-4">
+              <div>
+                <Label className="text-sm text-gray-600 mb-1.5 block">신청자명</Label>
+                <Input
+                  value={selectedParcel.ownerName}
+                  disabled
+                  className="bg-gray-50"
+                />
+              </div>
+              <div>
+                <Label className="text-sm text-gray-600 mb-1.5 block">연락처 *</Label>
+                <Input
+                  placeholder="010-0000-0000"
+                  value={applicationForm.contact}
+                  onChange={(e) => setApplicationForm(prev => ({ ...prev, contact: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label className="text-sm text-gray-600 mb-1.5 block">이메일 *</Label>
+                <Input
+                  type="email"
+                  placeholder="email@example.com"
+                  value={applicationForm.email}
+                  onChange={(e) => setApplicationForm(prev => ({ ...prev, email: e.target.value }))}
+                />
+              </div>
+            </div>
+          </Card>
+
+          {/* 대상 토지 */}
+          <Card className="p-5 border-2 border-gray-200">
+            <h3 className="font-semibold text-gray-900 mb-3">대상 토지</h3>
             <p className="text-gray-700">{selectedParcel.address}</p>
             <p className="text-sm text-gray-500 mt-1">
               잔여 면적: {selectedParcel.remainingArea}m² | {selectedParcel.landCategory} | {selectedParcel.roadContact}
             </p>
           </Card>
 
-          {/* 답변 요약 */}
-          <Card className="p-5 border-2 border-gray-200">
-            <h3 className="font-semibold text-gray-900 mb-3">입력 정보</h3>
-            <div className="space-y-3 text-sm">
-              {questions.map((q) => {
-                const answer = answers[q.id];
-                const displayAnswer = q.options 
-                  ? q.options.find(o => o.value === answer)?.label 
-                  : answer;
-                return (
-                  <div key={q.id} className="flex justify-between items-start">
-                    <span className="text-gray-500">{q.title.replace("?", "")}</span>
-                    <span className="text-gray-900 text-right ml-4">{displayAnswer || "-"}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
+          {/* 추가 메모 */}
+          <div>
+            <Label className="text-sm text-gray-600 mb-1.5 block">추가 요청사항 (선택)</Label>
+            <Textarea
+              placeholder="담당자에게 전달할 추가 요청사항이 있으시면 작성해 주세요."
+              value={applicationForm.additionalNotes}
+              onChange={(e) => setApplicationForm(prev => ({ ...prev, additionalNotes: e.target.value }))}
+              className="min-h-[100px]"
+            />
+          </div>
 
-          <div className="flex justify-end pt-6">
+          <div className="flex justify-end pt-4">
             <Button
-              onClick={handleSubmit}
-              disabled={isAnalyzing}
+              onClick={handleNext}
+              disabled={!applicationForm.contact || !applicationForm.email}
               className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl"
             >
-              {isAnalyzing ? (
-                <span className="flex items-center gap-2">
-                  <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  AI 분석 중...
-                </span>
-              ) : (
-                "신청하기"
-              )}
+              신청 완료
             </Button>
           </div>
         </div>
       )}
 
-      {/* Step 4: 완료 */}
+      {/* Step 6: 완료 */}
       {step === "complete" && (
         <div className="text-center py-12">
           <div className="w-20 h-20 bg-[#2E8B57] rounded-full flex items-center justify-center mx-auto mb-6">
@@ -602,8 +799,15 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
             신청이 완료되었습니다
           </h2>
           <p className="text-gray-500 mb-8">
-            신청 내역�� &apos;신청현황 조회&apos;에서 확인하실 수 있습니다
+            담당자 검토 후 결과를 안내드리겠습니다.<br />
+            신청 현황에서 진행 상태를 확인하실 수 있습니다.
           </p>
+          <Button
+            onClick={onCancel}
+            className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-3 rounded-xl"
+          >
+            확인
+          </Button>
         </div>
       )}
     </div>
