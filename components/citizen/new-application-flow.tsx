@@ -88,12 +88,25 @@ const questions = [
     subtitle: "현재 토지가 실제로 어떻게 이용되고 있는지 선택해 주세요",
     type: "radio" as const,
     options: [
-      { value: "대", label: "대 (건물이 있는 토지)" },
+      { value: "대", label: "대 (택지)" },
       { value: "전", label: "전 (밭으로 사용)" },
       { value: "답", label: "답 (논으로 사용)" },
       { value: "과", label: "과 (과수원)" },
       { value: "임", label: "임 (산림)" },
       { value: "잡", label: "잡종지 (여러 용도)" },
+      { value: "기타", label: "기타" },
+    ],
+  },
+  {
+    id: "buildingType",
+    title: "택지의 유형은 무엇인가요?",
+    subtitle: "건축물의 용도를 선택해 주세요",
+    type: "radio" as const,
+    showWhen: { questionId: "currentUse", value: "대" },
+    options: [
+      { value: "주거용", label: "주거용 (주택, 아파트 등)" },
+      { value: "상업용", label: "상업용 (상가, 사무실 등)" },
+      { value: "공업용", label: "공업용 (공장, 창고 등)" },
       { value: "기타", label: "기타" },
     ],
   },
@@ -158,6 +171,14 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     );
   }, [searchQuery]);
 
+  // 조건부 질문 필터링 (showWhen 조건에 맞는 질문만 표시)
+  const activeQuestions = useMemo(() => {
+    return questions.filter(q => {
+      if (!q.showWhen) return true;
+      return answers[q.showWhen.questionId] === q.showWhen.value;
+    });
+  }, [answers]);
+
   // 잔여지 선택
   const handleSelectParcel = (parcel: typeof myParcels[0]) => {
     setSelectedParcel(parcel);
@@ -168,7 +189,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     if (step === "select" && selectedParcel) {
       setStep("questions");
     } else if (step === "questions") {
-      if (currentQuestion < questions.length - 1) {
+      if (currentQuestion < activeQuestions.length - 1) {
         setCurrentQuestion(prev => prev + 1);
       } else {
         // 모든 질문 완료 -> AI 분석 시작
@@ -205,7 +226,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
         setStep("select");
       }
     } else if (step === "analysis" && !isAnalyzing) {
-      setCurrentQuestion(questions.length - 1);
+        setCurrentQuestion(activeQuestions.length - 1);
       setStep("questions");
     } else if (step === "decision") {
       setStep("analysis");
@@ -275,9 +296,11 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     }, 2000);
   };
 
-  // 현재 질문에 대한 답변이 있는지 확인
-  const currentQuestionData = questions[currentQuestion];
-  const hasAnswer = currentQuestionData ? !!answers[currentQuestionData.id] : false;
+  // 현재 질문에 대한 답변이 있는지 확인 (optional 질문은 답변 없어도 통과)
+  const currentQuestionData = activeQuestions[currentQuestion] as typeof questions[0] & { optional?: boolean; showWhen?: { questionId: string; value: string } };
+  const hasAnswer = currentQuestionData 
+    ? (currentQuestionData.optional || !!answers[currentQuestionData.id]) 
+    : false;
 
   // 스텝 정보 정의
   const steps = [
@@ -350,13 +373,13 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           {step === "questions" && (
             <div className="mt-6 bg-gray-50 rounded-lg p-4">
               <div className="flex items-center justify-between text-sm mb-2">
-                <span className="text-gray-600 font-medium">질문 {currentQuestion + 1} / {questions.length}</span>
-                <span className="text-[#2E8B57] font-medium">{Math.round(((currentQuestion + 1) / questions.length) * 100)}%</span>
+                <span className="text-gray-600 font-medium">질문 {currentQuestion + 1} / {activeQuestions.length}</span>
+                <span className="text-[#2E8B57] font-medium">{Math.round(((currentQuestion + 1) / activeQuestions.length) * 100)}%</span>
               </div>
               <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#2E8B57] transition-all duration-300 ease-out"
-                  style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
+                  style={{ width: `${((currentQuestion + 1) / activeQuestions.length) * 100}%` }}
                 />
               </div>
             </div>
@@ -539,7 +562,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               disabled={!hasAnswer}
               className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl"
             >
-              {currentQuestion === questions.length - 1 ? "AI 분석 시작" : "다음"}
+                {currentQuestion === activeQuestions.length - 1 ? "AI 분석 시작" : "다음"}
             </Button>
           </div>
         </div>
