@@ -337,7 +337,7 @@ export function BatchAnalysis({
       </div>
 
       {/* 검색 및 필터 */}
-      <Card>
+      <Card className="border-0">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
@@ -418,7 +418,7 @@ export function BatchAnalysis({
       </Card>
 
       {/* 필지 목록 테이블 */}
-      <Card>
+      <Card className="border-0">
         <CardHeader>
           <CardTitle>잔여지 필지 목록</CardTitle>
           <CardDescription>
