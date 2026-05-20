@@ -539,9 +539,6 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
       setSelectedCartItems(new Set());
       
       setStep("complete");
-      setTimeout(() => {
-        onComplete(application);
-      }, 2000);
       return;
     }
 
@@ -584,10 +581,6 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     };
 
     setStep("complete");
-    
-    setTimeout(() => {
-      onComplete(application);
-    }, 2000);
   };
 
   // 다른 잔여지 분석을 위해 초기화 (장바구니 유지)
