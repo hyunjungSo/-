@@ -31,19 +31,18 @@ export function RadioFilterGroup({
       <Label className="text-sm font-medium whitespace-nowrap">{label}:</Label>
       <div className="flex items-center gap-2">
         {options.map((option) => (
-          <Button
+          <button
             key={option.value}
             onClick={() => onChange(option.value)}
-            size="sm"
-            className={`flex items-center gap-1.5 ${
+            className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all ${
               value === option.value
                 ? "bg-black text-white hover:bg-black/90"
-                : "border-black text-black hover:bg-black/5"
+                : "border border-black text-black hover:bg-black/5"
             } ${option.className || ""}`}
           >
             {option.icon}
             {option.label}
-          </Button>
+          </button>
         ))}
       </div>
     </div>
