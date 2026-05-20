@@ -335,6 +335,13 @@ function LandInfoSection({
         const landAIResult = application.landAIResults?.[selectedLand.id] || application.aiResult;
         if (!landAIResult?.provisionalJudgment) return null;
         
+        // 시민용 AI 판정 레이블 변환 (수용가능 -> 매수 가능성 높음, 수용불가 -> 매수 가능성 낮음)
+        const getCitizenJudgmentLabel = (judgment: string) => {
+          if (judgment === "수용가능") return "매수 가능성 높음";
+          if (judgment === "수용불가") return "매수 가능성 낮음";
+          return judgment;
+        };
+        
         return (
           <Collapsible defaultOpen={false} className="border-b border-border">
             <CollapsibleTrigger asChild>
@@ -345,7 +352,7 @@ function LandInfoSection({
                 <div className="flex flex-1 items-center justify-between px-4 py-3">
                   <div className="flex items-center gap-2">
                     <JudgmentStatus 
-                      judgment={landAIResult.provisionalJudgment} 
+                      judgment={getCitizenJudgmentLabel(landAIResult.provisionalJudgment)} 
                       variant="badge" 
                       size="sm"
                     />
@@ -362,7 +369,7 @@ function LandInfoSection({
                 <div className="border-t border-border bg-muted/20 px-4 py-3">
                   <RationaleCard 
                     rationale={landAIResult.judgmentRationale} 
-                    provisionalJudgment={landAIResult.provisionalJudgment}
+                    provisionalJudgment={getCitizenJudgmentLabel(landAIResult.provisionalJudgment)}
                     variant="expanded"
                   />
                 </div>
