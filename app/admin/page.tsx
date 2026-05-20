@@ -67,7 +67,7 @@ export default function AdminPage() {
   return (
     <div className="flex min-h-[calc(100vh-64px)]">
       {/* 왼쪽 SNB (Side Navigation Bar) */}
-      <aside className="w-56 shrink-0 border-r border-gray-200 bg-gray-50">
+      <aside className="w-56 shrink-0 border-r border-gray-200 bg-white">
         <div className="sticky top-0 p-4">
           <h2 className="mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
             메뉴
