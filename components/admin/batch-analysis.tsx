@@ -362,8 +362,8 @@ export function BatchAnalysis({
               onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low")}
               options={[
                 { value: "all", label: "전체" },
-                { value: "high", label: "매수 가능성 높음", className: "text-emerald-600" },
-                { value: "low", label: "매수 가능성 낮음", className: "text-rose-600" }
+                { value: "high", label: "매수 가능성 높음" },
+                { value: "low", label: "매수 가능성 낮음" }
               ]}
             />
             
