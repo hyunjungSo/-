@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,7 @@ import { Check, ChevronLeft, ChevronDown, MapPin, Ruler, Search, FileText, Spark
 import type { LandInfo, AIAnalysisResult, Application } from "@/lib/types";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/hooks/use-toast";
+import Script from "next/script";
 
 // 더미 잔여지 데이터 (사용자 소유)
 const myParcels = [
@@ -369,6 +370,32 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     );
   }, [searchQuery]);
 
+  // 다음 주소 검색 API 호출
+  const openAddressSearch = () => {
+    if (typeof window !== "undefined" && (window as any).daum?.Postcode) {
+      new (window as any).daum.Postcode({
+        oncomplete: function(data: any) {
+          // 도로명 주소 또는 지번 주소 사용
+          const fullAddress = data.roadAddress || data.jibunAddress;
+          const zonecode = data.zonecode;
+          
+          setApplicationForm(prev => ({
+            ...prev,
+            zipCode: zonecode,
+            address: fullAddress,
+            addressDetail: ""
+          }));
+        }
+      }).open();
+    } else {
+      toast({
+        title: "주소 검색 서비스 로딩 중",
+        description: "잠시 후 다시 시도해 주세요.",
+        variant: "destructive"
+      });
+    }
+  };
+
   // 조건부 질문 필터링 (showWhen 조건에 맞는 질문만 표시)
   const activeQuestions = useMemo(() => {
     return questions.filter(q => {
@@ -652,6 +679,11 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
 
   return (
     <>
+      {/* 다음 주소 검색 API 스크립트 */}
+      <Script 
+        src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" 
+        strategy="lazyOnload"
+      />
       <div className="max-w-2xl mx-auto pt-10">
       {/* 스텝 인디케이터 */}
       {step !== "complete" && step !== "decision" && (
@@ -1256,10 +1288,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                     />
                     <Button
                       type="button"
-                      onClick={() => {
-                        // 주소 검색 (실제로는 다음 주소 API 등 연동)
-                        alert("주소 검색 기능은 추후 구현 예정입니다.");
-                      }}
+                      onClick={openAddressSearch}
                       className="bg-gray-900 hover:bg-gray-800 text-white px-4"
                     >
                       주소 검색
