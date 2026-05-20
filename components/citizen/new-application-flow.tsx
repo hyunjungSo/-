@@ -1292,7 +1292,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
             <div className="space-y-4">
               {/* 장바구니에서 신청하는 경우 - 각 필지별로 토지정보 작성 */}
               {selectedCartItems.size > 0 ? (
-                <div className="space-y-3 max-h-[500px] overflow-y-auto">
+                <div className="space-y-3">
                   {cartItems
                     .filter(item => selectedCartItems.has(item.id))
                     .map((item, index) => {
