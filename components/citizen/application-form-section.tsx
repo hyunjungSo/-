@@ -288,7 +288,7 @@ export function ApplicationFormSection({
       landDataList: isMultipleLands ? landDataList : undefined,
     };
 
-    // 시뮬레이션을 위한 딜레이
+    // 시뮬레�����을 위한 딜레이
     setTimeout(() => {
       setIsSubmitting(false);
       onSubmit(application);
@@ -349,194 +349,9 @@ export function ApplicationFormSection({
         토지 조회로 돌아가기
       </Button>
 
-      <div className="grid items-start gap-6 lg:grid-cols-3">
-        {/* 토지 정보 요약 */}
-        <Card className="lg:col-span-1 h-fit bg-white">
-          <CardHeader>
-            <CardTitle className="text-lg">
-              신청 대상 토지
-              {isMultipleLands && (
-                <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-sm font-medium text-white">
-                  {allLands.length}필지
-                </span>
-              )}
-            </CardTitle>
-            {isMultipleLands && (
-              <CardDescription>
-                {(() => {
-                  // 시군구 단위로 그룹핑 (예: "경기도 이천시", "경기도 양평군")
-                  const regionGroups = allLands.reduce((acc, land) => {
-                    const region = land.address.split(" ").slice(0, 2).join(" ");
-                    acc[region] = (acc[region] || 0) + 1;
-                    return acc;
-                  }, {} as Record<string, number>);
-                  const regionList = Object.entries(regionGroups);
-                  
-                  if (regionList.length === 1) {
-                    // 동일 지역인 경우
-                    return `${regionList[0][0]} 토지 ${regionList[0][1]}건`;
-                  } else if (regionList.length <= 2) {
-                    // 2개 지역인 경우 모두 표시
-                    return regionList.map(([region, count]) => `${region} ${count}건`).join(", ");
-                  } else {
-                    // 3개 이상 지역인 경우
-                    return `${regionList.length}개 지역 토지 ${allLands.length}건`;
-                  }
-                })()}
-              </CardDescription>
-            )}
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* 복수 필지일 경우 목록 표시 */}
-            {isMultipleLands ? (
-              <div className="space-y-3">
-                <div className="max-h-[300px] space-y-2 overflow-y-auto">
-                  {allLands.map((land, index) => {
-                    const result = allAiResults[index];
-                    return (
-                      <div 
-                        key={land.id} 
-                        className={`rounded-lg border p-3 ${
-                          result?.provisionalJudgment === "수용가능" 
-                            ? "border-success/30 bg-success/5" 
-                            : "border-destructive/30 bg-destructive/5"
-                        }`}
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <p className="text-sm font-medium">{land.address}</p>
-                            <div className="mt-1 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                              <span>잔여: {land.remainingArea.toLocaleString()}㎡</span>
-                              <span>|</span>
-                              <span>{land.landType}</span>
-                              <span>|</span>
-                              <span>{land.ownerName}</span>
-                            </div>
-                          </div>
-                          <JudgmentStatus 
-                            judgment={result?.provisionalJudgment || "분석중"} 
-                            variant="badge" 
-                            size="sm"
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                
-                {/* 합계 */}
-                <div className="rounded-lg bg-muted/50 p-3 space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">총 필지 수</span>
-                    <span className="font-medium">{allLands.length}필지</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">총 잔여 면적</span>
-                    <span className="font-medium text-primary">
-                      {allLands.reduce((sum, land) => sum + land.remainingArea, 0).toLocaleString()}㎡
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">수용가능 필지</span>
-                    <span className="font-medium text-primary">
-                      {allAiResults.filter(r => r?.provisionalJudgment === "수용가능").length}건
-                    </span>
-                  </div>
-                </div>
-                
-                {/* AI 판독 결과 요약 (복수 필지) */}
-                {allLands.length > 0 && (
-                  <div className={`mt-4 rounded-lg border-2 p-4 ${
-                    allAiResults.every(r => r?.provisionalJudgment === "수용가능")
-                      ? "border-primary bg-primary/5" 
-                      : allAiResults.some(r => r?.provisionalJudgment === "수용가능")
-                        ? "border-amber-500 bg-amber-50"
-                        : "border-destructive bg-destructive/5"
-                  }`}>
-                    <div className="mb-2">
-                      <span className="text-base font-semibold text-foreground">AI 판독 결과</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {allAiResults.every(r => r?.provisionalJudgment === "수용가능") ? (
-                        <>
-                          <CheckCircle2 className="h-5 w-5 text-primary" />
-                          <span className="text-base font-bold text-primary">전체 수용가능</span>
-                        </>
-                      ) : allAiResults.some(r => r?.provisionalJudgment === "수용가능") ? (
-                        <>
-                          <AlertTriangle className="h-5 w-5 text-amber-500" />
-                          <span className="text-base font-bold text-amber-500">일부 수용가능</span>
-                        </>
-                      ) : (
-                        <>
-<XCircle className="h-5 w-5 text-destructive" />
-                <span className="text-base font-bold text-destructive">전체 수용불가</span>
-                        </>
-                      )}
-                    </div>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      총 {allLands.length}필지 중 {allAiResults.filter(r => r?.provisionalJudgment === "수용가능").length}필지 수용가능
-                    </p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {/* 단일 필지 목록 (복수 필지와 동일한 형태) */}
-                <div className="max-h-[300px] space-y-2 overflow-y-auto">
-                  <div 
-                    className={`rounded-lg border p-3 ${
-                      aiResult?.provisionalJudgment === "수용가능" 
-                        ? "border-success/30 bg-success/5" 
-                        : "border-destructive/30 bg-destructive/5"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">{landInfo.address}</p>
-                        <div className="mt-1 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                          <span>잔여: {landInfo.remainingArea.toLocaleString()}㎡</span>
-                          <span>|</span>
-                          <span>{landInfo.landType}</span>
-                          <span>|</span>
-                          <span>{landInfo.ownerName}</span>
-                        </div>
-                      </div>
-                      <JudgmentStatus 
-                        judgment={aiResult?.provisionalJudgment || "분석중"} 
-                        variant="badge" 
-                        size="sm"
-                      />
-                    </div>
-                  </div>
-                </div>
-                
-                {/* 총계 */}
-                <div className="rounded-lg bg-muted/50 p-3 space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">총 필지 수</span>
-                    <span className="font-medium">1필지</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">총 잔여 면적</span>
-                    <span className="font-medium text-primary">
-                      {landInfo.remainingArea.toLocaleString()}㎡
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">수용가능 필지</span>
-                    <span className="font-medium text-primary">
-                      {aiResult?.provisionalJudgment === "수용가능" ? "1건" : "0건"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
+      <div className="space-y-6">
         {/* 신청서 양식 */}
-        <Card className="lg:col-span-2 border-0 shadow-none">
+        <Card className="border-0 shadow-none">
           <CardHeader>
             <CardTitle className="text-xl">매수 신청서 작성</CardTitle>
             <CardDescription>
@@ -550,7 +365,7 @@ export function ApplicationFormSection({
                 <h4 className="border-b border-border pb-2 text-base font-medium text-foreground">신청인 정보</h4>
                 
                 {/* 신청 구분 */}
-                <div className="space-y-2">
+                <div className="space-y-2 max-w-[500px]">
                   <label className="text-sm font-medium">신청 구분 <span className="text-destructive">*</span></label>
                   <div className="flex items-center gap-6">
                     <label className="flex cursor-pointer items-center gap-2">
@@ -579,13 +394,13 @@ export function ApplicationFormSection({
                   {formData.applicantRelation === "agent" && (
                     <p className="flex items-center gap-1.5 rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-500">
                       <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-                      대리인 신청 시 위임장 및 대리인 신분증 사본을 첨부 서류에 추가해 주세요.
+                      대리인 신청 시 위임장 및 대리인 신분증 사본을 첨부 서류에 ��가해 주세요.
                     </p>
                   )}
                 </div>
 
                 {/* 소유자 정보 */}
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2 max-w-[500px]">
                   <div className="space-y-1.5">
                     <label className="text-sm font-medium">소유자 성명 <span className="text-destructive">*</span></label>
                     <Input
@@ -618,7 +433,7 @@ export function ApplicationFormSection({
 
                 {/* 대리인 정보 (대리인 신청 시만 표시) */}
                 {formData.applicantRelation === "agent" && (
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-4 sm:grid-cols-2 max-w-[500px]">
                     <div className="space-y-1.5">
                       <label className="text-sm font-medium">대리인 성명 <span className="text-destructive">*</span></label>
                       <Input
@@ -651,7 +466,7 @@ export function ApplicationFormSection({
                 )}
 
                 {/* 주소 */}
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 max-w-[500px]">
                   <label className="text-sm font-medium">주소 <span className="text-destructive">*</span></label>
                   <div className="flex gap-2">
                     <Input
@@ -659,13 +474,12 @@ export function ApplicationFormSection({
                       placeholder="우편번호"
                       value={formData.postalCode}
                       readOnly
-                      className="h-9 w-24 bg-muted text-sm"
+                      className="w-28 bg-muted"
                     />
                     <Button
                       type="button"
                       variant="secondary"
-                      size="sm"
-                      className="h-9 shrink-0"
+                      className="shrink-0"
                       onClick={() => setIsAddressSearchOpen(true)}
                     >
                       주소 검색
@@ -676,7 +490,7 @@ export function ApplicationFormSection({
                     placeholder="기본주소"
                     value={formData.baseAddress}
                     readOnly
-                    className="bg-muted text-sm"
+                    className="bg-muted"
                   />
                   <Input
                     id="detailAddress"
@@ -685,7 +499,6 @@ export function ApplicationFormSection({
                     onChange={(e) =>
                       setFormData((prev) => ({ ...prev, detailAddress: e.target.value }))
                     }
-                    className="text-sm"
                   />
                 </div>
               </div>
@@ -745,14 +558,8 @@ export function ApplicationFormSection({
                         </div>
                         <div className="space-y-1.5">
                           <label className="text-sm font-medium text-muted-foreground">공부상 지목</label>
-                          <div className="flex w-fit items-center whitespace-nowrap rounded-md border border-input bg-muted px-3 py-2 h-10 text-sm text-muted-foreground cursor-not-allowed opacity-70">
+                          <div className="flex w-fit items-center whitespace-nowrap rounded-md border border-input bg-muted px-4 py-3 h-12 text-base text-muted-foreground cursor-not-allowed opacity-70">
                             {getLandUsageLabel(land.landCategory)}
-                          </div>
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="text-sm font-medium text-muted-foreground">공부상 지목</label>
-                          <div className="flex w-fit items-center whitespace-nowrap rounded-md border border-input bg-muted px-3 py-2 h-10 text-sm text-muted-foreground cursor-not-allowed opacity-70">
-                            {landCategories.find(c => c.value === land.landCategory)?.label || land.landCategory}
                           </div>
                         </div>
                       </div>
@@ -981,21 +788,13 @@ export function ApplicationFormSection({
           <AlertDialogHeader>
             <AlertDialogTitle>잔여지 매수 신청서를 제출하시겠습니까?</AlertDialogTitle>
             <AlertDialogDescription asChild>
-              <div className="space-y-4 text-muted-foreground">
-                <p className="flex items-center gap-2 text-sm">
-                  <AdminStatusBadge status="접수완료" />
-                  <span>단계에서 신청 내용 수정이 가능합니다.</span>
+              <div className="space-y-3 text-muted-foreground">
+                <p className="text-sm">
+                  제출 후 신청 내용 수정이 필요한 경우, 기존 신청을 취소하고 새로 신청서를 작성해야 합니다.
                 </p>
-                <div className="rounded-md border bg-muted/30 p-3 space-y-2 text-sm">
-                  <p className="flex gap-2">
-                    <span className="text-success font-medium shrink-0">수정 가능:</span>
-                    <span>신청인 정보, 토지 정보, 신청 사유, 첨부 서류</span>
-                  </p>
-                  <p className="flex gap-2">
-                    <span className="text-destructive font-medium shrink-0">수정 불가:</span>
-                    <span>대상 필지 선택</span>
-                  </p>
-                </div>
+                <p className="text-xs text-muted-foreground/70">
+                  제출 전 신청 내용을 다시 한번 확인해 주세요.
+                </p>
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>

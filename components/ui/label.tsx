@@ -13,8 +13,8 @@ function Label({
     <LabelPrimitive.Root
       data-slot="label"
       className={cn(
-        // KRDS 레이블 스타일: 14px, 중간 굵기
-        'text-sm font-medium leading-normal text-gray-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+        // 중장년층 접근성: 16px (text-base)
+        'text-base font-medium leading-normal text-gray-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
         className,
       )}
       {...props}

@@ -34,9 +34,9 @@ export default function CitizenLayout({
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-gray-50">
       <Header />
-      <main className="mx-auto w-full max-w-[100rem] flex-1 px-4 pb-[100px] pt-8 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full max-w-[1550px] flex-1 px-4 py-8 sm:px-6 lg:px-8">
         {children}
       </main>
       <Footer />

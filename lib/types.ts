@@ -44,8 +44,9 @@ export type ProcessStatus = "접수완료" | "AI분석완료" | "검토중" | "�
 // 담당자 진행상황
 export type AdminStatus = "접수완료" | "진행중" | "심사완료";
 
-// AI 1차 판독 결과 (수용가능/수용불가)
-export type AIJudgmentResult = "수용가능" | "수용불가";
+// AI 1차 판독 결과
+// 관리자: 수용가능/수용불가, 시민: 매수 가능성 높음/매수 가능성 낮음
+export type AIJudgmentResult = "수용가능" | "수용불가" | "매수 가능성 높음" | "매수 가능성 낮음";
 
 // 최종 판정 결과 (매수/기각/심의위원회 이관)
 export type FinalJudgmentResult = "매수" | "기각" | "심의위원회 이관";
@@ -253,6 +254,28 @@ export interface BusinessUnitGroupedCart {
   items: ApplicationCartItem[];
 }
 
+// 담당자 확인항목 (사전등록용)
+export interface AdminCheckItems {
+  farmMachineDifficulty: boolean;
+  accessRoadLost: boolean;
+  waterChannelLost: boolean;
+}
+
+// 사전등록 필지 (민원인 화면용)
+export interface PreRegisteredParcel {
+  id: string;
+  businessUnit: BusinessUnit;
+  projectName: string;
+  landInfo: LandInfo;
+  adminCheckItems: AdminCheckItems;
+  currentUsage: LandCategory;
+  landShape: LandShape;
+  aiResult: AIAnalysisResult;
+  preRegistrationStatus: "등록완료" | "대기중";
+  registeredAt: string;
+  registeredBy: string;
+}
+
 // 심의서 데이터
 export interface ReviewDocument {
   applicationId: string;
@@ -266,4 +289,76 @@ export interface ReviewDocument {
   reviewerComment: string; // 검토 의견
   signatureArea?: string; // 서명란
   generatedAt: string;
+}
+
+// ===== 프로세스 구조 변경 관련 신규 타입 =====
+
+// 분석 단계
+export type AnalysisStage = "1차분석" | "2차분석";
+
+// 필지 공개 상태 (민원인 조회 가능 여부)
+export type ParcelPublishStatus = "대기중" | "1차분석완료" | "2차분석중" | "담당자확인완료" | "공개";
+
+// 분석 히스토리
+export interface AnalysisHistory {
+  id: string;
+  parcelId: string;                           // 필지 ID
+  stage: AnalysisStage;                       // 분석 단계 (1차/2차)
+  analyzedAt: string;                         // 분석일시
+  analyzedBy: string;                         // 분석 담당자
+  previousResult?: AIJudgmentResult;          // 이전 판정 결과
+  newResult: AIJudgmentResult;                // 새 판정 결과
+  previousShapeIndex?: number;                // 이전 형상지수
+  newShapeIndex?: number;                     // 새 형상지수
+  changedOptions?: {                          // 변경된 옵션값
+    currentUsage?: LandCategory;              // 활용지목
+    landShape?: LandShape;                    // 토지형상
+    farmMachineDifficulty?: boolean;          // 농기계 진입불가
+    accessRoadLost?: boolean;                 // 접면도로 상실
+    waterChannelLost?: boolean;               // 관개수로 상실
+  };
+  changeReason?: string;                      // 변경 사유
+  memo?: string;                              // 메모
+  aiResult: AIAnalysisResult;                 // 전체 AI 분석 결과
+}
+
+// 확장된 사전등록 필지 (분석 프로세스용)
+export interface ProcessedParcel extends PreRegisteredParcel {
+  publishStatus: ParcelPublishStatus;         // 공개 상태
+  analysisHistory: AnalysisHistory[];         // 분석 히스토리
+  firstAnalyzedAt?: string;                   // 1차 분석 완료일
+  lastAnalyzedAt?: string;                    // 최종 분석일
+  confirmedAt?: string;                       // 담당자 확인 완료일
+  confirmedBy?: string;                       // 확인 담당자
+  ownerIdentifier?: string;                   // 소유자 식별자 (주민번호 뒷자리 등)
+}
+
+// 일괄 분석 요청
+export interface BatchAnalysisRequest {
+  parcelIds: string[];                        // 분석 대상 필지 IDs
+  analysisOptions: {                          // 분석 옵션
+    useCurrentUsage: boolean;                 // 현재 활용지목 사용
+    useLandShape: boolean;                    // 토지형상 사용
+  };
+  stage: AnalysisStage;                       // 분석 단계
+  analyzedBy: string;                         // 분석 담당자
+}
+
+// 일괄 분석 결과
+export interface BatchAnalysisResult {
+  totalCount: number;                         // 전체 건수
+  successCount: number;                       // 성공 건수
+  failedCount: number;                        // 실패 건수
+  highPossibilityCount: number;               // 매수 가능성 높음 건수
+  lowPossibilityCount: number;                // 매수 가능성 낮음 건수
+  processedParcels: ProcessedParcel[];        // 처리된 필지 목록
+}
+
+// 소유자 인증 정보
+export interface OwnerVerification {
+  verificationType: "주민번호" | "소재지" | "로그인";
+  ownerName: string;                          // 소유자명
+  identifier: string;                         // 식별값 (주민번호 뒷자리 또는 소재지)
+  verifiedAt: string;                         // 인증일시
+  isVerified: boolean;                        // 인증 성공 여부
 }

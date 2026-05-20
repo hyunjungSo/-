@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Application } from "@/lib/types";
+import { formatDateTime } from "@/lib/format";
 import { CheckCircle2, FileText, FilePlus, Printer } from "lucide-react";
 
 interface ApplicationResultSectionProps {
@@ -64,7 +65,7 @@ export function ApplicationResultSection({ application, onNewApplication }: Appl
             
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">신청일</dt>
-              <dd className="font-medium text-foreground">{application.appliedAt}</dd>
+              <dd className="font-medium text-foreground">{formatDateTime(application.appliedAt)}</dd>
             </div>
             
             <div className="flex items-center justify-between">

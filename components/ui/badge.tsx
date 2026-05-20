@@ -45,8 +45,8 @@ const badgeVariants = cva(
         'outline-indigo': 'border border-indigo-400 bg-indigo-50 text-indigo-500',
         // 진행중: #0091fd (활동 상태 강조)
         'outline-blue': 'border bg-[#e6f4ff] text-[#0091fd] border-[#0091fd]/40',
-        // 심사완료: Green (완료 상태 강조) - rgb(20, 113, 97)
-        'outline-green': 'border bg-[rgb(20,113,97)]/10 text-[rgb(20,113,97)] border-[rgb(20,113,97)]',
+        // 심사완료: Green (완료 상태 강조)
+        'outline-green': 'border border-green-400 bg-green-50 text-green-600',
         
         // === 진행상황 Outline 스타일 (레거시 - 호환성 유지) ===
         // 접수완료: Slate Gray (#64748b)
@@ -83,7 +83,6 @@ function Badge({
   variant,
   size,
   asChild = false,
-  style,
   ...props
 }: React.ComponentProps<'span'> &
   VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
@@ -93,7 +92,6 @@ function Badge({
     <Comp
       data-slot="badge"
       className={cn(badgeVariants({ variant, size }), className)}
-      style={style}
       {...props}
     />
   )

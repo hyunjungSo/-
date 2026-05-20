@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { dummyApplications, landCategories } from "@/lib/dummy-data";
+import { formatDateTime } from "@/lib/format";
 import type { Application, AdminStatus } from "@/lib/types";
 import { PARCEL_COUNT_COLORS } from "@/components/ui/judgment-badge";
 import { 
@@ -334,6 +335,13 @@ function LandInfoSection({
         const landAIResult = application.landAIResults?.[selectedLand.id] || application.aiResult;
         if (!landAIResult?.provisionalJudgment) return null;
         
+        // 시민용 AI 판정 레이블 변환 (수용가능 -> 매수 가능성 높음, 수용불가 -> 매수 가능성 낮음)
+        const getCitizenJudgmentLabel = (judgment: string) => {
+          if (judgment === "수용가능") return "매수 가능성 높음";
+          if (judgment === "수용불가") return "매수 가능성 낮음";
+          return judgment;
+        };
+        
         return (
           <Collapsible defaultOpen={false} className="border-b border-border">
             <CollapsibleTrigger asChild>
@@ -344,7 +352,7 @@ function LandInfoSection({
                 <div className="flex flex-1 items-center justify-between px-4 py-3">
                   <div className="flex items-center gap-2">
                     <JudgmentStatus 
-                      judgment={landAIResult.provisionalJudgment} 
+                      judgment={getCitizenJudgmentLabel(landAIResult.provisionalJudgment)} 
                       variant="badge" 
                       size="sm"
                     />
@@ -361,7 +369,7 @@ function LandInfoSection({
                 <div className="border-t border-border bg-muted/20 px-4 py-3">
                   <RationaleCard 
                     rationale={landAIResult.judgmentRationale} 
-                    provisionalJudgment={landAIResult.provisionalJudgment}
+                    provisionalJudgment={getCitizenJudgmentLabel(landAIResult.provisionalJudgment)}
                     variant="expanded"
                   />
                 </div>
@@ -649,12 +657,14 @@ function ApplicationDetailPanel({
   application,
   isEditMode,
   onEditModeChange,
-  onSave
+  onSave,
+  onReapplyClick
 }: { 
   application: Application;
   isEditMode: boolean;
   onEditModeChange: (value: boolean) => void;
   onSave: (updatedApp: Application) => void;
+  onReapplyClick?: () => void;
 }) {
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -874,10 +884,15 @@ function ApplicationDetailPanel({
               variant="outline"
               size="sm"
               disabled={!canEdit}
-              onClick={() => onEditModeChange(true)}
-              className={`h-8 gap-1.5 text-xs ${!canEdit ? "opacity-50 cursor-not-allowed" : ""}`}
+              onClick={() => {
+                if (onReapplyClick) {
+                  onReapplyClick();
+                } else {
+                  onEditModeChange(true);
+                }
+              }}
+              className={`h-8 text-xs ${!canEdit ? "opacity-50 cursor-not-allowed" : ""}`}
             >
-              <Pencil className="size-[18px]" />
               수정
             </Button>
           </div>
@@ -896,7 +911,7 @@ function ApplicationDetailPanel({
             <span className="text-sm font-medium">신청일</span>
           </div>
           <div className="flex flex-1 items-center px-4 py-3">
-            <span className="text-sm">{application.appliedAt}</span>
+            <span className="text-sm">{formatDateTime(application.appliedAt)}</span>
           </div>
         </div>
 
@@ -1187,12 +1202,18 @@ function ApplicationDetailPanel({
   );
 }
 
-export function ApplicationStatusSection() {
+interface ApplicationStatusSectionProps {
+  onReapply?: (application: Application) => void;
+}
+
+export function ApplicationStatusSection({ onReapply }: ApplicationStatusSectionProps) {
   const [applications, setApplications] = useState<Application[]>(dummyApplications);
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [showLeaveWarning, setShowLeaveWarning] = useState(false);
   const [pendingApplication, setPendingApplication] = useState<Application | null>(null);
+  const [showReapplyAlert, setShowReapplyAlert] = useState(false);
+  const [reapplyTarget, setReapplyTarget] = useState<Application | null>(null);
 
   // 현재 로그인한 사용자의 신청 목록
   const myApplications = applications;
@@ -1287,7 +1308,7 @@ export function ApplicationStatusSection() {
 
                       {/* 하단: 날짜 + 결과 */}
                       <div className="mt-2 flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">{app.appliedAt}</span>
+                        <span className="text-xs text-muted-foreground">{formatDateTime(app.appliedAt)}</span>
                         {app.adminStatus === "심사완료" && app.finalJudgment && (
                           <span className={`text-xs font-medium ${
                             app.finalJudgment === "매수" 
@@ -1315,6 +1336,10 @@ export function ApplicationStatusSection() {
             isEditMode={isEditMode}
             onEditModeChange={setIsEditMode}
             onSave={handleApplicationUpdate}
+            onReapplyClick={() => {
+              setReapplyTarget(displayedApplication);
+              setShowReapplyAlert(true);
+            }}
           />
         ) : (
           <div className="overflow-hidden rounded-lg border border-border">
@@ -1345,6 +1370,43 @@ export function ApplicationStatusSection() {
               </Button>
               <Button variant="destructive" onClick={handleConfirmLeave}>
                 저장하지 않고 이동
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 재신청 알림 모달 */}
+      {showReapplyAlert && reapplyTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="mx-4 w-full max-w-md rounded-lg bg-background p-6 shadow-xl">
+            <h3 className="font-semibold text-lg mb-3">신청 내용 수정 안내</h3>
+            
+            <div className="text-sm text-muted-foreground space-y-2 mb-6">
+              <p>신청 내용 수정 시 기존 신청은 자동 취소되며, 해당 필지로 새 신청서를 작성해야합니다.</p>
+              <p className="text-xs">* 새로운 신청번호가 부여됩니다.</p>
+            </div>
+            
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowReapplyAlert(false);
+                  setReapplyTarget(null);
+                }}
+              >
+                취소
+              </Button>
+              <Button 
+                onClick={() => {
+                  setShowReapplyAlert(false);
+                  if (onReapply && reapplyTarget) {
+                    onReapply(reapplyTarget);
+                  }
+                  setReapplyTarget(null);
+                }}
+              >
+                새 신청서 작성하기
               </Button>
             </div>
           </div>

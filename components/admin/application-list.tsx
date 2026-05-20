@@ -280,7 +280,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   }, [periodFilteredApplications]);
 
   return (
-    <div className="space-y-6" style={{ marginBottom: '8px' }}>
+    <div className="space-y-6">
       {/* 글로벌 필터 바 */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* 좌측: 타이틀 및 업데이트 정보 */}
@@ -421,16 +421,15 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
             {/* 진행률 바 - Teal 계열로 심사완료와 동기화 */}
             <div className="space-y-2">
-  <div className="flex items-center justify-between text-sm">
-  <span className="text-muted-foreground" style={{ fontWeight: '500' }}>전체 처리 완료율</span>
-                <span style={{ fontSize: '24px', fontWeight: '800', color: 'rgb(20, 113, 97)' }}>{stats.completionRate}%</span>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">전체 처리 완료율</span>
+                <span style={{ fontSize: '30px', fontWeight: '800', color: 'rgb(20, 113, 97)' }}>{stats.completionRate}%</span>
               </div>
               <Progress 
                 value={stats.completionRate} 
                 className="h-[18px]" 
                 indicatorClassName="bg-teal-600"
                 style={{ backgroundColor: '#e8f2f0' }}
-                indicatorStyle={{ backgroundColor: 'rgb(20, 113, 97)' }}
               />
             </div>
             
@@ -499,15 +498,15 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium flex items-center justify-between">
               <span style={{ fontSize: '18px', fontWeight: '600' }}>AI 판독 신뢰도</span>
-              <span className="text-2xl font-bold text-primary" style={{ fontSize: '30px' }}>{stats.aiReliability}%</span>
+              <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
             
             {/* 스택 바 비교 */}
-            <div className="space-y-3">
-              {/* AI 초기 판정 막대 (매수가능/매수불가 2가지만) */}
-              <div className="space-y-1.5" style={{ marginBottom: '4px' }}>
+            <div className="space-y-3" style={{ marginTop: '4px' }}>
+              {/* AI 초기 판정 막대 (매��가능/매수불가 2가지만) */}
+              <div className="space-y-1.5">
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 초기 판정</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
                   {stats.aiAnalyzed > 0 ? (
@@ -538,7 +537,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
               
               {/* 담당자 최종 심사 막대 */}
-              <div className="space-y-1.5" style={{ marginBottom: '4px' }}>
+              <div className="space-y-1.5">
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>담당자 최종 심사</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
                   {stats.심사완료 > 0 ? (
@@ -655,7 +654,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <SelectItem value="all">전체 상황</SelectItem>
                 <SelectItem value="접수완료">접수완료</SelectItem>
                 <SelectItem value="진행중">진행중</SelectItem>
-                <SelectItem value="심사완료">심사완료</SelectItem>
+                <SelectItem value="심사완료">심사���료</SelectItem>
               </SelectContent>
             </Select>
             
@@ -753,7 +752,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             </Table>
           </div>
 
-          {/* 카드 목록 (모바��) */}
+          {/* 카드 목록 (모바일) */}
           <div className="space-y-3 md:hidden">
             {filteredApplications.map((app) => (
               <button
