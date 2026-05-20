@@ -106,7 +106,7 @@ export default function AdminPage() {
       </aside>
 
       {/* 오른쪽 콘텐츠 영역 */}
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-6 bg-slate-50">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">
             {activeTab === "applications" && "신청관리"}
