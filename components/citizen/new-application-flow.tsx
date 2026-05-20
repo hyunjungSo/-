@@ -216,7 +216,7 @@ const questions = [
       { value: "기타", label: "그 밖의 토지" },
     ],
   },
-  // 2. 택지 유형 선��� (택지인 경우)
+  // 2. 택지 유형 선택 (택지인 경우)
   {
     id: "buildingType",
     title: "택지의 유형은 무엇인가요?",
@@ -397,14 +397,14 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
         // AI 분석 시뮬레이션
         await new Promise(resolve => setTimeout(resolve, 2500));
         
-        // �����덤하게 결과 생성 (데모용)
+        // 랜덤하게 결과 생성 (데모용)
         const isPositive = Math.random() > 0.3;
         setAiResult({
           judgment: isPositive ? "매수 가능성 높음" : "매수 가능성 낮음",
           score: isPositive ? Math.floor(Math.random() * 20) + 75 : Math.floor(Math.random() * 30) + 30,
           reasoning: isPositive 
             ? "잔여지 면적이 최소 기준을 충족하며, 도로 접근성 저하로 인한 활용도 감소가 인정됩니다. 주변 유사 사례와 비교 시 매수 가능성이 높은 것으로 분석됩니다."
-            : "잔여지 면적이 독립 활용 가��한 수준으로 판단되며, 현재 용도로 계속 활용 가능한 것으로 보입니다. 다만, 추가 서류 제출 시 재검토가 가능합니다.",
+            : "잔여지 면적이 독립 활용 가능한 수준으로 판단되며, 현재 용도로 계속 활용 가능한 것으로 보입니다. 다만, 추가 서류 제출 시 재검토가 가능합니다.",
         });
         setIsAnalyzing(false);
       }
@@ -923,7 +923,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 AI가 분석 중입니다
               </h2>
               <p className="text-gray-500">
-                입력하������� 정보를 바탕으로 매수 가능성을 분석���고 있���요.<br />
+                입력하신 정보를 바탕으로 매수 가능성을 분석하고 있어요.<br />
                 잠시만 기다려 주세요.
               </p>
             </div>
@@ -989,7 +989,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       </div>
                     </div>
 
-                    {/* 면적 기준 충족 ���부 */}
+                    {/* 면적 기준 충족 여부 */}
                     <div className={`rounded-lg p-3 border ${
                       aiResult.judgment === "매수 가능성 높음" 
                         ? "bg-emerald-50 border-emerald-200" 
@@ -1057,7 +1057,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                                 ) : (
                                   <XCircle className="w-3 h-3" />
                                 )}
-                                <span>관개���로 상실</span>
+                                <span>관개수로 상실</span>
                               </div>
                             </div>
                             <div className={`rounded-lg p-2 border text-xs ${
@@ -1164,7 +1164,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 </div>
                 <div>
                   <p className={`font-semibold ${
-                    aiResult.judgment === "��수 가능성 높음"
+                    aiResult.judgment === "매수 가능성 높음"
                       ? "text-emerald-700"
                       : "text-rose-700"
                   }`}>
@@ -1181,7 +1181,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               variant="outline"
               className="flex-1 py-6 text-lg rounded-xl border"
             >
-              아니오, 다시 선택할게��
+              아니오, 다시 선택할게요
             </Button>
             <Button
               onClick={handleNext}
@@ -1738,7 +1738,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               <div className="space-y-4">
                 {/* 사업단별로 그룹화 */}
                 {(() => {
-                  // 사업단별로 그�����화
+                  // 사업단별로 그룹화
                   const groupedByProject = cartItems.reduce((acc, item) => {
                     const projectName = item.parcel.projectName;
                     if (!acc[projectName]) {
@@ -1794,7 +1794,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                           )}
                         </div>
                         
-                        {/* ��업단 내 필지 목록 */}
+                        {/* 사업단 내 필지 목록 */}
                         <div className="p-2 space-y-2">
                           {items.map((item) => {
                             const isSelected = selectedCartItems.has(item.id);
@@ -1891,8 +1891,8 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 className="w-full bg-[#2E8B57] hover:bg-[#256b45] text-white py-6 text-lg"
               >
                 {selectedCartItems.size > 0 
-                  ? `선택�� ${selectedCartItems.size}건 신청하기`
-                  : "항���을 선택해 주세요"}
+                    ? `선택한 ${selectedCartItems.size}건 신청하기`
+                    : "항목을 선택해 주세요"}
               </Button>
             </div>
           )}
