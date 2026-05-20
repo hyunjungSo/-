@@ -1669,7 +1669,17 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           <div className="flex justify-end pt-4">
             <Button
               onClick={handleNext}
-              disabled={!applicationForm.contact || !applicationForm.address || !applicationForm.reason}
+              disabled={
+                !applicationForm.contact || 
+                !applicationForm.address || 
+                (selectedCartItems.size > 0 
+                  ? !Array.from(selectedCartItems).every(id => {
+                      const item = cartItems.find(ci => ci.id === id);
+                      return item?.reason && item.reason.trim() !== "";
+                    })
+                  : !applicationForm.reason
+                )
+              }
               className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl"
             >
               신청 완료
