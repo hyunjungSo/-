@@ -1355,7 +1355,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                                           : ci
                                       ));
                                     }}
-                                    className="w-full h-10 px-3 rounded-md border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2E8B57] focus:border-transparent"
+                                    className="w-full h-10 px-3 py-2 rounded-md border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2E8B57] focus:border-transparent appearance-none"
                                   >
                                     <option value="택지">대(택지)</option>
                                     <option value="농지">답(논)</option>
@@ -1527,7 +1527,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       <select
                         value={answers.landType || "택지"}
                         onChange={(e) => setAnswers(prev => ({ ...prev, landType: e.target.value }))}
-                        className="w-full h-10 px-3 rounded-md border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2E8B57] focus:border-transparent"
+                        className="w-full h-10 px-3 py-2 rounded-md border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2E8B57] focus:border-transparent appearance-none"
                       >
                         <option value="택지">대(택지)</option>
                         <option value="농지">답(논)</option>
