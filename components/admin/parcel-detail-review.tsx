@@ -144,22 +144,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
     setMemo("");
   };
 
-  // 담당자 확인 완료 처리
-  const handleConfirm = async () => {
-    setIsSaving(true);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    const updatedParcel: ProcessedParcel = {
-      ...parcel,
-      publishStatus: "담당자확인완료",
-      confirmedAt: new Date().toISOString(),
-      confirmedBy: "현재 담당자",
-    };
-    
-    onUpdate(updatedParcel);
-    setIsSaving(false);
-  };
-
   return (
     <div className="space-y-6">
       {/* 필지 기본 정보 */}
@@ -534,22 +518,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
         <Button variant="outline" onClick={onBack}>
           목록
         </Button>
-        <div className="flex items-center gap-2">
-          {parcel.publishStatus !== "담당자확인완료" && parcel.publishStatus !== "공개" && (
-            <Button 
-              variant="default"
-              onClick={handleConfirm}
-              disabled={isSaving}
-            >
-              {isSaving ? (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              ) : (
-                <CheckCircle2 className="h-4 w-4 mr-2" />
-              )}
-              담당자 확인 완료
-            </Button>
-          )}
-        </div>
       </div>
     </div>
   );
