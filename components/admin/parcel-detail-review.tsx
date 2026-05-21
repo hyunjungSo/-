@@ -236,238 +236,247 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
       </Card>
 
       {/* AI 분석 영역 - 2컬럼 레이아웃 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 왼쪽: AI 분석 */}
-        <div className="space-y-6">
-          <h2 className="text-xl font-bold">AI 분석</h2>
-          
-          {/* 지적도 */}
-          <div className="space-y-2">
-            <Label className="font-medium">지적도</Label>
-            <div className="h-[200px] rounded-lg overflow-hidden border bg-muted">
-              <LandMap landInfo={parcel.landInfo} showOverlay={true} interactive={false} />
+        <Card>
+          <CardHeader>
+            <CardTitle>AI 분석</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* 지적도 */}
+            <div className="space-y-2">
+              <Label className="font-medium">지적도</Label>
+              <div className="h-[200px] rounded-lg overflow-hidden border bg-muted">
+                <LandMap landInfo={parcel.landInfo} showOverlay={true} interactive={false} />
+              </div>
             </div>
-          </div>
 
-          {/* 현재 활용지목 및 토지 형상 */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label className="text-sm">현재 활용지목</Label>
-              <Select value={currentUsage} onValueChange={(v) => setCurrentUsage(v as LandCategory)}>
-                <SelectTrigger className="h-[40px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {landCategories.map((cat) => (
-                    <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            {/* 현재 활용지목 및 토지 형상 */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-sm">현재 활용지목</Label>
+                <Select value={currentUsage} onValueChange={(v) => setCurrentUsage(v as LandCategory)}>
+                  <SelectTrigger className="h-[40px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {landCategories.map((cat) => (
+                      <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm">토지 형상</Label>
+                <Select value={landShape} onValueChange={(v) => setLandShape(v as LandShape)}>
+                  <SelectTrigger className="h-[40px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <div className="px-2 py-1 text-xs text-muted-foreground">정형</div>
+                    {landShapes.regular.map((shape) => (
+                      <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
+                    ))}
+                    <div className="px-2 py-1 text-xs text-muted-foreground border-t mt-1 pt-1">부정형</div>
+                    {landShapes.irregular.map((shape) => (
+                      <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-sm">토지 형상</Label>
-              <Select value={landShape} onValueChange={(v) => setLandShape(v as LandShape)}>
-                <SelectTrigger className="h-[40px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <div className="px-2 py-1 text-xs text-muted-foreground">정형</div>
-                  {landShapes.regular.map((shape) => (
-                    <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
-                  ))}
-                  <div className="px-2 py-1 text-xs text-muted-foreground border-t mt-1 pt-1">부정형</div>
-                  {landShapes.irregular.map((shape) => (
-                    <SelectItem key={shape.value} value={shape.value}>{shape.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
 
-          {/* 담당자 확인항목 */}
-          <div className="space-y-2">
-            <Label className="text-sm">담당자 확인항목</Label>
+            {/* 담당자 확인항목 */}
             <div className="space-y-2">
-              {adminCheckItemOptions.map((option) => (
-                <div 
-                  key={option.value}
-                  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                    checkItems[option.value as keyof AdminCheckItems] 
-                      ? "bg-primary/10 border-primary" 
-                      : "hover:bg-muted/50"
-                  }`}
-                  onClick={() => setCheckItems(prev => ({
-                    ...prev,
-                    [option.value]: !prev[option.value as keyof AdminCheckItems]
-                  }))}
-                >
-                  <Checkbox 
-                    checked={checkItems[option.value as keyof AdminCheckItems]}
-                    onCheckedChange={(checked) => setCheckItems(prev => ({
+              <Label className="text-sm">담당자 확인항목</Label>
+              <div className="space-y-2">
+                {adminCheckItemOptions.map((option) => (
+                  <div 
+                    key={option.value}
+                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                      checkItems[option.value as keyof AdminCheckItems] 
+                        ? "bg-primary/10 border-primary" 
+                        : "hover:bg-muted/50"
+                    }`}
+                    onClick={() => setCheckItems(prev => ({
                       ...prev,
-                      [option.value]: !!checked
+                      [option.value]: !prev[option.value as keyof AdminCheckItems]
                     }))}
-                  />
-                  <span className="text-sm">{option.label}</span>
-                </div>
-              ))}
+                  >
+                    <Checkbox 
+                      checked={checkItems[option.value as keyof AdminCheckItems]}
+                      onCheckedChange={(checked) => setCheckItems(prev => ({
+                        ...prev,
+                        [option.value]: !!checked
+                      }))}
+                    />
+                    <span className="text-sm">{option.label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* 변경 사유 */}
-          <div className="space-y-2">
-            <Label className="text-sm">변경 사유</Label>
-            <Textarea 
-              placeholder="재분석 사유를 입력하세요 (선택)"
-              value={changeReason}
-              onChange={(e) => setChangeReason(e.target.value)}
-              rows={3}
-            />
-          </div>
+            {/* 변경 사유 */}
+            <div className="space-y-2">
+              <Label className="text-sm">변경 사유</Label>
+              <Textarea 
+                placeholder="재분석 사유를 입력하세요 (선택)"
+                value={changeReason}
+                onChange={(e) => setChangeReason(e.target.value)}
+                rows={3}
+              />
+            </div>
 
-          {/* 메모 */}
-          <div className="space-y-2">
-            <Label className="text-sm">메모</Label>
-            <Textarea 
-              placeholder="추가 메모 (선택)"
-              value={memo}
-              onChange={(e) => setMemo(e.target.value)}
-              rows={3}
-            />
-          </div>
+            {/* 메모 */}
+            <div className="space-y-2">
+              <Label className="text-sm">메모</Label>
+              <Textarea 
+                placeholder="추가 메모 (선택)"
+                value={memo}
+                onChange={(e) => setMemo(e.target.value)}
+                rows={3}
+              />
+            </div>
 
-          {/* AI 분석 실행 버튼 */}
-          <Button 
-            onClick={handleReanalyze}
-            disabled={isAnalyzing}
-            className="w-full h-12 bg-black hover:bg-black/90 text-white"
-          >
-            {isAnalyzing ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                분석 중...
-              </>
-            ) : (
-              "AI 분석 실행"
-            )}
-          </Button>
-        </div>
+            {/* AI 분석 실행 버튼 */}
+            <Button 
+              onClick={handleReanalyze}
+              disabled={isAnalyzing}
+              className="w-full h-12 bg-black hover:bg-black/90 text-white"
+            >
+              {isAnalyzing ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  분석 중...
+                </>
+              ) : (
+                "AI 분석 실행"
+              )}
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* 오른쪽: AI 분석결과 */}
-        <div className="space-y-6 lg:border-l lg:pl-8">
-          <h2 className="text-xl font-bold">AI 분석결과</h2>
-          
-          {analysisResult ? (
-            <div className={`p-6 rounded-lg border-2 ${
-              analysisResult === "매수 가능성 높음" 
-                ? "border-emerald-500 bg-emerald-50" 
-                : "border-rose-500 bg-rose-50"
-            }`}>
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-3">
-                  {analysisResult === "매수 가능성 높음" ? (
-                    <CheckCircle2 className="h-8 w-8 text-emerald-600" />
-                  ) : (
-                    <AlertTriangle className="h-8 w-8 text-rose-600" />
-                  )}
-                  <div>
-                    <p className="text-sm text-muted-foreground">분석 결과</p>
-                    <p className={`text-xl font-bold ${
-                      analysisResult === "매수 가능성 높음" ? "text-emerald-600" : "text-rose-600"
-                    }`}>
-                      {analysisResult}
-                    </p>
-                  </div>
-                </div>
-                <Button onClick={handleSaveAnalysis} disabled={isSaving} className="w-full">
-                  {isSaving ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Save className="h-4 w-4 mr-2" />
-                  )}
-                  결과 저장
-                </Button>
-              </div>
-            </div>
-          ) : parcel.aiResult ? (
-            <div className="space-y-4">
-              <div className={`p-4 rounded-lg border ${
-                parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
-                parcel.aiResult.provisionalJudgment === "수용가능"
-                  ? "border-emerald-200 bg-emerald-50/50" 
-                  : "border-rose-200 bg-rose-50/50"
+        <Card>
+          <CardHeader>
+            <CardTitle>AI 분석결과</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {analysisResult ? (
+              <div className={`p-6 rounded-lg border-2 ${
+                analysisResult === "매수 가능성 높음" 
+                  ? "border-emerald-500 bg-emerald-50" 
+                  : "border-rose-500 bg-rose-50"
               }`}>
-                <div className="flex items-center gap-3">
-                  {parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
-                   parcel.aiResult.provisionalJudgment === "수용가능" ? (
-                    <CheckCircle2 className="h-6 w-6 text-emerald-600" />
-                  ) : (
-                    <AlertTriangle className="h-6 w-6 text-rose-600" />
-                  )}
-                  <div>
-                    <p className="text-sm text-muted-foreground">최근 분석 결과</p>
-                    <p className={`text-lg font-bold ${
-                      parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
-                      parcel.aiResult.provisionalJudgment === "수용가능"
-                        ? "text-emerald-600" : "text-rose-600"
-                    }`}>
-                      {parcel.aiResult.provisionalJudgment === "수용가능" ? "매수 가능성 높음" : 
-                       parcel.aiResult.provisionalJudgment === "수용불가" ? "매수 가능성 낮음" :
-                       parcel.aiResult.provisionalJudgment}
-                    </p>
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    {analysisResult === "매수 가능성 높음" ? (
+                      <CheckCircle2 className="h-8 w-8 text-emerald-600" />
+                    ) : (
+                      <AlertTriangle className="h-8 w-8 text-rose-600" />
+                    )}
+                    <div>
+                      <p className="text-sm text-muted-foreground">분석 결과</p>
+                      <p className={`text-xl font-bold ${
+                        analysisResult === "매수 가능성 높음" ? "text-emerald-600" : "text-rose-600"
+                      }`}>
+                        {analysisResult}
+                      </p>
+                    </div>
                   </div>
+                  <Button onClick={handleSaveAnalysis} disabled={isSaving} className="w-full">
+                    {isSaving ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Save className="h-4 w-4 mr-2" />
+                    )}
+                    결과 저장
+                  </Button>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                AI분석 결과 상세 내용이 여기에 표시됩니다.
-              </p>
-            </div>
-          ) : (
-            <div className="py-12 text-center text-muted-foreground">
-              <p>AI분석 결과 상세 내용</p>
-              <p className="text-sm mt-2">분석을 실행하면 결과가 표시됩니다.</p>
-            </div>
-          )}
-        </div>
+            ) : parcel.aiResult ? (
+              <div className="space-y-4">
+                <div className={`p-4 rounded-lg border ${
+                  parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
+                  parcel.aiResult.provisionalJudgment === "수용가능"
+                    ? "border-emerald-200 bg-emerald-50/50" 
+                    : "border-rose-200 bg-rose-50/50"
+                }`}>
+                  <div className="flex items-center gap-3">
+                    {parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
+                     parcel.aiResult.provisionalJudgment === "수용가능" ? (
+                      <CheckCircle2 className="h-6 w-6 text-emerald-600" />
+                    ) : (
+                      <AlertTriangle className="h-6 w-6 text-rose-600" />
+                    )}
+                    <div>
+                      <p className="text-sm text-muted-foreground">최근 분석 결과</p>
+                      <p className={`text-lg font-bold ${
+                        parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
+                        parcel.aiResult.provisionalJudgment === "수용가능"
+                          ? "text-emerald-600" : "text-rose-600"
+                      }`}>
+                        {parcel.aiResult.provisionalJudgment === "수용가능" ? "매수 가능성 높음" : 
+                         parcel.aiResult.provisionalJudgment === "수용불가" ? "매수 가능성 낮음" :
+                         parcel.aiResult.provisionalJudgment}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  AI분석 결과 상세 내용이 여기에 표시됩니다.
+                </p>
+              </div>
+            ) : (
+              <div className="py-12 text-center text-muted-foreground">
+                <p>AI분석 결과 상세 내용</p>
+                <p className="text-sm mt-2">분석을 실행하면 결과가 표시됩니다.</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       {/* 검정 구분선 */}
       <div className="w-full h-3 bg-black rounded-sm" />
 
       {/* AI 분석 히스토리 */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-bold">AI 분석 히스토리</h2>
-        
-        <div className="space-y-4">
-          {(parcel.analysisHistory?.length || 0) > 0 ? (
-            parcel.analysisHistory.map((history, index) => (
-              <div 
-                key={history.id} 
-                className="p-4 rounded-lg border-2 border-black cursor-pointer hover:bg-muted/50 transition-colors"
-                onClick={() => {
-                  if (history.aiResult) {
-                    setSelectedHistory(history);
-                    setShowHistoryDetail(true);
-                  }
-                }}
-              >
-                <div className="space-y-2">
-                  <p className="font-medium">
-                    {index + 1}차분석/ {formatDateTime(history.analyzedAt)}/ {
-                      history.newResult === "수용가능" ? "매수 가능성 높음" : 
-                      history.newResult === "수용불가" ? "매수 가능성 낮음" :
-                      history.newResult
+      <Card>
+        <CardHeader>
+          <CardTitle>AI 분석 히스토리</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {(parcel.analysisHistory?.length || 0) > 0 ? (
+              parcel.analysisHistory.map((history, index) => (
+                <div 
+                  key={history.id} 
+                  className="p-4 rounded-lg border-2 border-black cursor-pointer hover:bg-muted/50 transition-colors"
+                  onClick={() => {
+                    if (history.aiResult) {
+                      setSelectedHistory(history);
+                      setShowHistoryDetail(true);
                     }
-                  </p>
-                  <p className="text-sm text-muted-foreground underline">분석결과 상세보기</p>
+                  }}
+                >
+                  <div className="space-y-2">
+                    <p className="font-medium">
+                      {index + 1}차분석/ {formatDateTime(history.analyzedAt)}/ {
+                        history.newResult === "수용가능" ? "매수 가능성 높음" : 
+                        history.newResult === "수용불가" ? "매수 가능성 낮음" :
+                        history.newResult
+                      }
+                    </p>
+                    <p className="text-sm text-muted-foreground underline">분석결과 상세보기</p>
+                  </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-center py-8 text-muted-foreground">분석 히스토리가 없습니다.</p>
-          )}
-        </div>
-      </div>
+              ))
+            ) : (
+              <p className="text-center py-8 text-muted-foreground">분석 히스토리가 없습니다.</p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* 하단 액션 버튼 */}
       <div className="flex items-center justify-between pt-4 border-t">
