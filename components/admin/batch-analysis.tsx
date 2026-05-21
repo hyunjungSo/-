@@ -577,7 +577,7 @@ export function BatchAnalysis({
           
           {/* 페이지네이션 */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-1 pt-4 border-t mt-4">
+            <div className="flex items-center justify-center gap-1 pt-4 mt-4">
               <button
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
