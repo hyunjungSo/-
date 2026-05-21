@@ -150,9 +150,9 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
 
   return (
     <div className="space-y-6">
-      {/* 필지관리 타이틀 */}
+      {/* 필지상세 타이틀 */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">필지관리</h1>
+        <h1 className="text-3xl font-bold">필지상세</h1>
         <div className="flex items-center gap-2">
           <Switch 
             checked={parcel.isVisible !== false}
