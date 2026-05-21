@@ -35,7 +35,9 @@ import {
   ChevronRight,
   Loader2,
   Save,
-  Eye
+  Eye,
+  Sparkles,
+  RefreshCw
 } from "lucide-react";
 import type { 
   ProcessedParcel, 
@@ -240,10 +242,23 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
         {/* 왼쪽: AI 분석 */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <RotateCcw className="h-5 w-5" />
-              AI 분석
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle>AI 분석</CardTitle>
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => {
+                  setCurrentUsage(parcel.currentUsage as LandCategory);
+                  setLandShape(parcel.landShape as LandShape);
+                  setCheckItems(parcel.adminCheckItems);
+                  setChangeReason("");
+                  setMemo("");
+                  setAnalysisResult(null);
+                }}
+              >
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+            </div>
             <CardDescription>
               분석 옵션을 설정하고 AI 분석을 실행합니다.
             </CardDescription>
@@ -295,11 +310,11 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
             {/* 담당자 확인항목 */}
             <div className="space-y-2">
               <Label className="text-sm">담당자 확인항목</Label>
-              <div className="space-y-2">
+              <div className="grid grid-cols-3 gap-2">
                 {adminCheckItemOptions.map((option) => (
                   <div 
                     key={option.value}
-                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                    className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer transition-colors ${
                       checkItems[option.value as keyof AdminCheckItems] 
                         ? "bg-primary/10 border-primary" 
                         : "hover:bg-muted/50"
@@ -316,7 +331,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                         [option.value]: !!checked
                       }))}
                     />
-                    <span className="text-sm">{option.label}</span>
+                    <span className="text-xs">{option.label}</span>
                   </div>
                 ))}
               </div>
@@ -356,7 +371,10 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                   분석 중...
                 </>
               ) : (
-                "AI 분석 실행"
+                <>
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  AI 분석 실행
+                </>
               )}
             </Button>
           </CardContent>
