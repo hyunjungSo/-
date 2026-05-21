@@ -141,9 +141,11 @@ export function BatchAnalysis({
     
     const total = relevantParcels.length;
     const highPossibility = relevantParcels.filter(p => 
-      isHighPossibility(p.aiResult.provisionalJudgment)
+      p.aiResult && isHighPossibility(p.aiResult.provisionalJudgment)
     ).length;
-    const lowPossibility = total - highPossibility;
+    const lowPossibility = relevantParcels.filter(p => 
+      p.aiResult && !isHighPossibility(p.aiResult.provisionalJudgment)
+    ).length;
     const confirmed = relevantParcels.filter(p => 
       p.publishStatus === "담당자확인완료" || p.publishStatus === "공개"
     ).length;
