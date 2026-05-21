@@ -561,73 +561,73 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
 
                 {/* 판정 기준 - 잔여지 형상지수 및 관련 지표 */}
                 <div className="p-4 border rounded-lg space-y-4">
-                  <div className="flex items-start gap-2">
-                    <Shapes className="h-4 w-4 mt-0.5 text-muted-foreground" />
-                    <div className="flex-1">
-                      <h5 className="text-sm font-semibold">잔여지 형상지수 기반 판정</h5>
-                      <div className="mt-2 grid grid-cols-3 gap-3">
-                        <div className="p-2 bg-muted/30 rounded">
-                          <p className="text-xs text-muted-foreground">잔여지 형상지수</p>
-                          <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingShapeIndex?.toFixed(3) || "-"}</p>
-                        </div>
-                        <div className="p-2 bg-muted/30 rounded">
-                          <p className="text-xs text-muted-foreground">최소 폭</p>
-                          <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingMinWidth || "-"}m</p>
-                        </div>
-                        <div className="p-2 bg-muted/30 rounded">
-                          <p className="text-xs text-muted-foreground">잔여 면적</p>
-                          <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingArea?.toLocaleString() || "-"}㎡</p>
-                        </div>
+                  <div className="space-y-3">
+                    <h5 className="text-sm font-semibold flex items-center gap-2">
+                      <Shapes className="h-4 w-4 text-muted-foreground" />
+                      잔여지 형상지수 기반 판정
+                    </h5>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="p-2 bg-muted/30 rounded">
+                        <p className="text-xs text-muted-foreground">잔여지 형상지수</p>
+                        <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingShapeIndex?.toFixed(3) || "-"}</p>
+                      </div>
+                      <div className="p-2 bg-muted/30 rounded">
+                        <p className="text-xs text-muted-foreground">최소 폭</p>
+                        <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingMinWidth || "-"}m</p>
+                      </div>
+                      <div className="p-2 bg-muted/30 rounded">
+                        <p className="text-xs text-muted-foreground">잔여 면적</p>
+                        <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingArea?.toLocaleString() || "-"}㎡</p>
                       </div>
                     </div>
                   </div>
 
                   {/* 수동 확인 항목 */}
-                  <div className="flex items-start gap-2">
-                    <AlertTriangle className="h-4 w-4 mt-0.5 text-amber-500" />
-                    <div className="flex-1">
-                      <h5 className="text-sm font-semibold">수동 확인 항목</h5>
-                      <div className="mt-2 grid grid-cols-2 gap-2">
-                        <div className="p-2 border rounded flex items-center justify-between">
-                          <span className="text-sm">농기계 진입 불가</span>
-                          <Badge variant={selectedHistory.aiResult.farmMachineDifficulty ? "destructive" : "outline"}>
-                            {selectedHistory.aiResult.farmMachineDifficulty ? "해당" : "미해당"}
-                          </Badge>
-                        </div>
-                        <div className="p-2 border rounded flex items-center justify-between">
-                          <span className="text-sm">접면도로 상실</span>
-                          <Badge variant={selectedHistory.aiResult.accessRoadLost ? "destructive" : "outline"}>
-                            {selectedHistory.aiResult.accessRoadLost ? "해당" : "미해당"}
-                          </Badge>
-                        </div>
-                        <div className="p-2 border rounded flex items-center justify-between">
-                          <span className="text-sm">관개수로 상실</span>
-                          <Badge variant={selectedHistory.aiResult.waterChannelLost ? "destructive" : "outline"}>
-                            {selectedHistory.aiResult.waterChannelLost ? "해당" : "미해당"}
-                          </Badge>
-                        </div>
-                        <div className="p-2 border rounded flex items-center justify-between">
-                          <span className="text-sm">고저차 발생</span>
-                          <Badge variant={selectedHistory.aiResult.elevationDifference ? "destructive" : "outline"}>
-                            {selectedHistory.aiResult.elevationDifference ? "해당" : "미해당"}
-                          </Badge>
-                        </div>
+                  <div className="space-y-3">
+                    <h5 className="text-sm font-semibold flex items-center gap-2">
+                      <AlertTriangle className="h-4 w-4 text-amber-500" />
+                      수동 확인 항목
+                    </h5>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="p-2 border rounded flex items-center justify-between">
+                        <span className="text-sm">농기계 진입 불가</span>
+                        <Badge variant={selectedHistory.aiResult.farmMachineDifficulty ? "destructive" : "outline"}>
+                          {selectedHistory.aiResult.farmMachineDifficulty ? "해당" : "미해당"}
+                        </Badge>
+                      </div>
+                      <div className="p-2 border rounded flex items-center justify-between">
+                        <span className="text-sm">접면도로 상실</span>
+                        <Badge variant={selectedHistory.aiResult.accessRoadLost ? "destructive" : "outline"}>
+                          {selectedHistory.aiResult.accessRoadLost ? "해당" : "미해당"}
+                        </Badge>
+                      </div>
+                      <div className="p-2 border rounded flex items-center justify-between">
+                        <span className="text-sm">관개수로 상실</span>
+                        <Badge variant={selectedHistory.aiResult.waterChannelLost ? "destructive" : "outline"}>
+                          {selectedHistory.aiResult.waterChannelLost ? "해당" : "미해당"}
+                        </Badge>
+                      </div>
+                      <div className="p-2 border rounded flex items-center justify-between">
+                        <span className="text-sm">고저차 발생</span>
+                        <Badge variant={selectedHistory.aiResult.elevationDifference ? "destructive" : "outline"}>
+                          {selectedHistory.aiResult.elevationDifference ? "해당" : "미해당"}
+                        </Badge>
                       </div>
                     </div>
                   </div>
 
                   {/* 상세 판독 결과 */}
                   {selectedHistory.aiResult.analysisDetails && (
-                    <div className="flex items-start gap-2">
-                      <FileText className="h-4 w-4 mt-0.5 text-muted-foreground" />
-                      <div className="flex-1">
-                        <h5 className="text-sm font-semibold">상세 판독 결과</h5>
-                        <pre className="mt-2 p-3 bg-muted/30 rounded-lg text-sm whitespace-pre-wrap leading-relaxed">
-                          {selectedHistory.aiResult.analysisDetails}
-                        </pre>
-                      </div>
+                    <div className="space-y-3">
+                      <h5 className="text-sm font-semibold flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-muted-foreground" />
+                        상세 판독 결과
+                      </h5>
+                      <pre className="p-3 bg-muted/30 rounded-lg text-sm whitespace-pre-wrap leading-relaxed">
+                        {selectedHistory.aiResult.analysisDetails}
+                      </pre>
                     </div>
-                  )}
+                  )}}
 
                   {/* 판정 기준 충족 여부 */}
                   {selectedHistory.aiResult.criteriaChecks && selectedHistory.aiResult.criteriaChecks.length > 0 && (
