@@ -627,7 +627,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                         {selectedHistory.aiResult.analysisDetails}
                       </pre>
                     </div>
-                  )}}
+                  )}
 
                   {/* 판정 기준 충족 여부 */}
                   {selectedHistory.aiResult.criteriaChecks && selectedHistory.aiResult.criteriaChecks.length > 0 && (
