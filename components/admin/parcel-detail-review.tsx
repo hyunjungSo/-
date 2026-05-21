@@ -532,7 +532,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                   </div>
                 </div>
                 {/* 지도 - 해당 필지만 표시 */}
-                <div className="h-[280px] rounded-lg overflow-hidden border">
+                <div className="h-[380px] rounded-lg overflow-hidden border">
                   <LandMap landInfo={parcel.landInfo} showOverlay={true} interactive={false} />
                 </div>
               </div>
