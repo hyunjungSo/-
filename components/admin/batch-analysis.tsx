@@ -456,9 +456,7 @@ export function BatchAnalysis({
                       className="w-4 h-4 cursor-pointer"
                       title="모두 선택"
                     />
-                    <span className="text-xs font-normal">
-                      ({selectedParcelIds.size}/{filteredParcels.length})
-                    </span>
+
                   </label>
                 </TableHead>
                 <TableHead className="w-[60px]">No.</TableHead>
