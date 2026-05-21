@@ -197,12 +197,12 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
             <div className="col-span-2 md:col-span-1 flex flex-col gap-2">
               <Label className="text-muted-foreground">현재 상태</Label>
               <Badge 
-                className={
+                className={`w-fit ${
                   parcel.publishStatus === "공개" ? "bg-emerald-500" :
                   parcel.publishStatus === "담당자확인완료" ? "bg-purple-500" :
                   parcel.publishStatus === "2차분석중" ? "bg-amber-500" :
                   parcel.publishStatus === "1차분석완료" ? "bg-blue-500" : ""
-                }
+                }`}
               >
                 {parcel.publishStatus}
               </Badge>
