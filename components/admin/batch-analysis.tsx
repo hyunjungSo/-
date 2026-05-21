@@ -79,6 +79,11 @@ export function BatchAnalysis({
   // 필터 (라디오 버튼)
   const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low">("all");
   const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("all");
+  const [visibilityFilter, setVisibilityFilter] = useState<"all" | "visible" | "hidden">("all");
+  
+  // 페이지네이션
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
   
   // 사업단 목록 추출
   const businessUnits = useMemo(() => {

@@ -63,6 +63,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  
+  // 페이지네이션
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   // 클라이언트 마운트 후 날짜 설정 (hydration mismatch 방지)
   useEffect(() => {
