@@ -1428,7 +1428,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
       provisionalJudgment = "수용불가";
     }
   } else if (landInfo.landType === "택지" || landInfo.landType === "농지") {
-    // 택����/농지: 면적 기준 + 형상 조건 적용
+    // 택�����/농지: 면적 기준 + 형상 조건 적용
     if (coreCriteriaMet || isIrregularShape || shapeIndexMet) {
       provisionalJudgment = "수용가능";
     } else {
@@ -2139,7 +2139,7 @@ export const dummyApplications: Application[] = [
     aiResult: generateAIResult(dummyLandInfoList[6]),
     adminName: "홍길동",
     statusUpdatedAt: TWO_DAYS_AGO,
-    businessUnit: "강진광주건설 사업단",
+    businessUnit: "강진광주건��� 사업단",
   },
   // AI 판정 ���계 사례 (심의위원회 이관 필요)
   {
@@ -2207,7 +2207,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "면적 기준", criteriaDescription: "택지(주거) 기준 90㎡ 이하 (완화: 135㎡)", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (자루형)", isMet: true, autoDetected: true },
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
-        { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 ��가", isMet: false, autoDetected: false },
+        { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 ��축허가 ��가", isMet: false, autoDetected: false },
       ],
       provisionalJudgment: "적용가능",
       originalShapeIndex: 4.0,
@@ -2824,7 +2824,7 @@ export const dummyApplications: Application[] = [
     aiResult: {
       landTypePath: "산지",
       criteriaChecks: [
-        { criteriaName: "면적 기준", criteriaDescription: "잔여���적 4,100㎡로 조림지 ��단", isMet: true, autoDetected: true },
+        { criteriaName: "면적 ���준", criteriaDescription: "잔여���적 4,100㎡로 조림지 ��단", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },
       ],
@@ -2878,7 +2878,7 @@ export const dummyApplications: Application[] = [
       {
         currentUsage: "답" as const,
         landSubType: "" as const,
-        actualUsage: "답" as const,
+        actualUsage: "���" as const,
         reportedShape: "삼각형" as const,
         farmMachineDifficulty: true,
         accessRoadLost: false,
@@ -3250,7 +3250,7 @@ export const dummyApplications: Application[] = [
     applicationType: "single",
     applicantName: "정현우",
     applicantContact: "010-1111-2222",
-    applicantAddress: "경기도 수원시 영통구 망포동 123",
+    applicantAddress: "경기도 수원시 영통��� 망포동 123",
     landInfo: dummyLandInfoList[0],
     actualUsage: "대",
     reportedShape: "삼각형",
@@ -3378,7 +3378,7 @@ export const dummyApplications: Application[] = [
     aiResult: generateAIResult(dummyLandInfoList[5]),
     finalJudgment: "기각",
     reviewerComment: "면적 기준 충족으로 기각",
-    adminName: "이��은",
+    adminName: "����은",
     statusUpdatedAt: TWO_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
@@ -3589,7 +3589,7 @@ export const landShapes = {
     { value: "역사다리형", label: "역사다리형" },
     { value: "사다리형", label: "사다리형" },
     { value: "삼각형", label: "삼각형" },
-    { value: "역삼각형", label: "역삼각형" },
+    { value: "역��각형", label: "역삼각형" },
     { value: "부정형", label: "부정형" },
     { value: "자루형", label: "자루형" },
   ],
@@ -3715,7 +3715,7 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
       cartAddedAt: ONE_WEEK_AGO,
     },
   },
-  // 2. 2차 분석 중인 필지 (재분석 1회)
+  // 2. 2차 분석 중인 필지 (재분석 1회) - 민원인이 장바구니에 담음
   {
     id: "processed-002",
     businessUnit: "수도권건설사업단",
@@ -3740,8 +3740,12 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     firstAnalyzedAt: TWO_WEEKS_AGO,
     lastAnalyzedAt: ONE_WEEK_AGO,
     ownerIdentifier: "5678",
+    citizenActivity: {
+      inCart: true,
+      cartAddedAt: THREE_DAYS_AGO,
+    },
   },
-  // 3. 담당자 확인 완료 (공개 대기)
+  // 3. 담당자 확인 완료 (공개 대기) - 민원인 활동 없음
   {
     id: "processed-003",
     businessUnit: "천안안성건설사업단",
@@ -3768,6 +3772,7 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     confirmedAt: THREE_DAYS_AGO,
     confirmedBy: "이검토",
     ownerIdentifier: "9012",
+    // 민원인 활동 없음
   },
   // 4. 공개된 필지 (민원인 조회 가능) - 민원인이 신청 완료
   {
@@ -3813,7 +3818,7 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
       applicationSubmittedAt: THREE_WEEKS_AGO,
     },
   },
-  // 5. 매수 가능성 낮음으로 공개된 필지
+  // 5. 매수 가능성 낮음으로 공개된 필지 - 신청 완료
   {
     id: "processed-005",
     businessUnit: "강진광주건설사업단",
@@ -3851,8 +3856,13 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     confirmedAt: SIX_WEEKS_AGO,
     confirmedBy: "최승인",
     ownerIdentifier: "7890",
+    citizenActivity: {
+      applicationSubmitted: true,
+      applicationId: "app-002",
+      applicationSubmittedAt: ONE_WEEK_AGO,
+    },
   },
-  // 6. 분석 전 필지 (등록만 완료, 분석 횟수 0)
+  // 6. 분석 전 필지 (등록만 완료, 분석 횟수 0) - 장바구니에 담김
   {
     id: "processed-006",
     businessUnit: "수도권건설사업단",
@@ -3895,5 +3905,9 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     publishStatus: "분석전",
     analysisHistory: [],
     ownerIdentifier: "1111",
+    citizenActivity: {
+      inCart: true,
+      cartAddedAt: YESTERDAY,
+    },
   },
 ];
