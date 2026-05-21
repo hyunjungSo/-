@@ -1068,7 +1068,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       <td className="px-4 py-3">사다리꼴</td>
                     </tr>
                     <tr>
-                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">활용�����목</td>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">활용�������목</td>
                       <td className="px-4 py-3">전</td>
                       <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">공부상 지목</td>
                       <td className="px-4 py-3">{landCategories.find(c => c.value === applicationLands[selectedLandIndex].landCategory)?.label || applicationLands[selectedLandIndex].landCategory}</td>
@@ -2483,91 +2483,91 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </div>
       )}
 
-      {/* 하단 저장 버튼 - 심사완료 시 숨김 */}
-      {!isViewOnly && (
-        <div className="fixed bottom-0 left-0 right-0 w-screen bg-background border-t py-4 px-6 mt-6 z-[9999]">
-          <div className="flex justify-end gap-3">
-            <Button variant="outline" className="w-[80px] text-foreground border-foreground hover:bg-foreground/5" onClick={onBack}>
-              취소
-            </Button>
-            <Button className="w-[80px]" onClick={handleSave}>
-              저장
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* 파일 미리보기 Dialog - 풀페이지 */}
-      <Dialog open={showPdfPreview} onOpenChange={setShowPdfPreview}>
-        <DialogContent className="fixed inset-0 w-[100vw] h-[100vh] !max-w-none rounded-none border-none overflow-hidden flex flex-col p-0 translate-x-0 translate-y-0 top-0 left-0">
-          <DialogHeader className="shrink-0 px-6 py-4 border-b bg-background pr-16">
-            <div className="flex items-center justify-between">
-              <DialogTitle className="text-base">
-                첨부파일 미리보기
-              </DialogTitle>
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-muted-foreground">{selectedAttachment?.name}</span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-1.5"
-                  onClick={() => {
-                    if (selectedAttachment) {
-                      const link = document.createElement('a');
-                      link.href = selectedAttachment.url;
-                      link.download = selectedAttachment.name;
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
-                    }
-                  }}
-                >
-                  <Download className="size-4" />
-                  다운로드
-                </Button>
-              </div>
-            </div>
-          </DialogHeader>
-          <div className="flex-1 overflow-auto bg-muted/30 w-full">
-            {selectedAttachment && (
-              <div className="w-full h-full flex items-center justify-center">
-                {selectedAttachment.name.toLowerCase().endsWith('.jpg') || 
-                 selectedAttachment.name.toLowerCase().endsWith('.jpeg') || 
-                 selectedAttachment.name.toLowerCase().endsWith('.png') || 
-                 selectedAttachment.name.toLowerCase().endsWith('.gif') ? (
-                  <div className="relative w-full h-full flex items-center justify-center p-8">
-                    <img 
-                      src={`https://picsum.photos/seed/${encodeURIComponent(selectedAttachment.name)}/800/600`}
-                      alt={selectedAttachment.name}
-                      className="max-w-full max-h-full object-contain rounded-lg"
-                    />
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full">
-                      데모용 샘플 이미지입니다
-                    </div>
-                  </div>
-                ) : selectedAttachment.name.toLowerCase().endsWith('.pdf') ? (
-                  <div className="relative w-full h-full flex flex-col">
-                    <iframe 
-                      src="https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table-word.pdf"
-                      className="w-full h-full border-0"
-                      title={selectedAttachment.name}
-                    />
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full">
-                      데모용 샘플 PDF입니다
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center gap-4 text-muted-foreground w-full h-full">
-                    <FileText className="size-24 text-muted-foreground/50" />
-                    <p className="text-base">미리보기를 지원하지 않는 파일 형식입니다.</p>
-                    <p className="text-sm">파일을 다운로드하여 확인해 주세요.</p>
-                  </div>
-                )}
+            {/* 하단 저장 버튼 - 심사완료 시 숨김 */}
+            {!isViewOnly && (
+              <div className="fixed bottom-0 left-0 right-0 w-screen bg-background border-t py-4 px-6 mt-6 z-[9999]">
+                <div className="flex justify-end gap-3">
+                  <Button variant="outline" className="w-[80px] text-foreground border-foreground hover:bg-foreground/5" onClick={onBack}>
+                    취소
+                  </Button>
+                  <Button className="w-[80px]" onClick={handleSave}>
+                    저장
+                  </Button>
+                </div>
               </div>
             )}
+
+            {/* 파일 미리보기 Dialog - 풀페이지 */}
+            <Dialog open={showPdfPreview} onOpenChange={setShowPdfPreview}>
+              <DialogContent className="fixed inset-0 w-[100vw] h-[100vh] !max-w-none rounded-none border-none overflow-hidden flex flex-col p-0 translate-x-0 translate-y-0 top-0 left-0">
+                <DialogHeader className="shrink-0 px-6 py-4 border-b bg-background pr-16">
+                  <div className="flex items-center justify-between">
+                    <DialogTitle className="text-base">
+                      첨부파일 미리보기
+                    </DialogTitle>
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm text-muted-foreground">{selectedAttachment?.name}</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5"
+                        onClick={() => {
+                          if (selectedAttachment) {
+                            const link = document.createElement('a');
+                            link.href = selectedAttachment.url;
+                            link.download = selectedAttachment.name;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                          }
+                        }}
+                      >
+                        <Download className="size-4" />
+                        다운로드
+                      </Button>
+                    </div>
+                  </div>
+                </DialogHeader>
+                <div className="flex-1 overflow-auto bg-muted/30 w-full">
+                  {selectedAttachment && (
+                    <div className="w-full h-full flex items-center justify-center">
+                      {selectedAttachment.name.toLowerCase().endsWith('.jpg') || 
+                       selectedAttachment.name.toLowerCase().endsWith('.jpeg') || 
+                       selectedAttachment.name.toLowerCase().endsWith('.png') || 
+                       selectedAttachment.name.toLowerCase().endsWith('.gif') ? (
+                        <div className="relative w-full h-full flex items-center justify-center p-8">
+                          <img 
+                            src={`https://picsum.photos/seed/${encodeURIComponent(selectedAttachment.name)}/800/600`}
+                            alt={selectedAttachment.name}
+                            className="max-w-full max-h-full object-contain rounded-lg"
+                          />
+                          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full">
+                            데모용 샘플 이미지입니다
+                          </div>
+                        </div>
+                      ) : selectedAttachment.name.toLowerCase().endsWith('.pdf') ? (
+                        <div className="relative w-full h-full flex flex-col">
+                          <iframe 
+                            src="https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table-word.pdf"
+                            className="w-full h-full border-0"
+                            title={selectedAttachment.name}
+                          />
+                          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full">
+                            데모용 샘플 PDF입니다
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center gap-4 text-muted-foreground w-full h-full">
+                          <FileText className="size-24 text-muted-foreground/50" />
+                          <p className="text-base">미리보기를 지원하지 않는 파일 형식입니다.</p>
+                          <p className="text-sm">파일을 다운로드하여 확인해 주세요.</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-}
+        );
+      }
