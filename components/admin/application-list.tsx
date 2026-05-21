@@ -667,41 +667,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               <span>{sortOrder === "desc" ? "최신순" : "오래된순"}</span>
             </Button>
           </div>
-            
-            {/* 사업단 필터 */}
-            <Select value={projectUnitFilter} onValueChange={(value) => setProjectUnitFilter(value as "all" | "gangjin-gwangju")}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="사업단 선택" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">전체 사업단</SelectItem>
-                <SelectItem value="gangjin-gwangju">강진광주건설 사업단</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            {/* 처리상태 필터 */}
-            <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as AdminStatus | "all")}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="처리상태" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">전체 상황</SelectItem>
-                <SelectItem value="접수완료">접수완료</SelectItem>
-                <SelectItem value="진행중">진행중</SelectItem>
-                <SelectItem value="심사완료">심사���료</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            {/* 정렬 버튼 */}
-            <Button
-              variant="outline"
-              className="gap-1.5 border-foreground bg-foreground px-4 text-background hover:bg-foreground/90 hover:text-background"
-              onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
-            >
-              <span>{sortOrder === "desc" ? "↓" : "↑"}</span>
-              <span>{sortOrder === "desc" ? "최신순" : "오래된순"}</span>
-            </Button>
-          </div>
 
           {/* 테이블 (데스크톱) */}
           <div className="hidden rounded-lg border border-border md:block">
