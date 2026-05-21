@@ -716,7 +716,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     // 분석 실행 (최대 5초 이내 완료 보장)
     const runAnalysis = async () => {
       const totalLands = adminCheckedLandIds.length;
-      const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수����� 따라 동적 조절
+      const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수������� 따라 동적 조절
       
       // 모든 필지를 병렬로 분석
       const analysisPromises = adminCheckedLandIds.map(async (landId) => {
@@ -2085,8 +2085,6 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       })()}
                     </>
                   )}
-                    </div>
-                  </div>
                 </div>
               </div>
             </TabsContent>
