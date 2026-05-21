@@ -194,7 +194,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
               <Label className="text-muted-foreground">소유자</Label>
               <p className="font-medium">{parcel.landInfo.ownerName}</p>
             </div>
-            <div className="col-span-2 md:col-span-1">
+            <div className="col-span-2 md:col-span-1 flex flex-col gap-2">
               <Label className="text-muted-foreground">현재 상태</Label>
               <Badge 
                 className={
