@@ -926,19 +926,17 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
 
   return (
     <div className="space-y-10">
-      <div className="flex items-center justify-between">
-        <Button variant="ghost" onClick={onBack} className="h-auto px-0 text-muted-foreground hover:bg-transparent hover:text-foreground">
+      <div className="flex items-center justify-end gap-2">
+        <Button variant="ghost" onClick={onBack} className="h-auto px-0 text-muted-foreground hover:bg-transparent hover:text-foreground mr-auto">
           <ArrowLeft className="mr-1.5 h-4 w-4" />
           목록으로 돌아가기
         </Button>
-        <div className="flex gap-2">
-          <Button variant="secondary" asChild>
-            <Link href={`/admin/review/${application.id}`}>
-              <FileText className="mr-2 h-4 w-4" />
-              심의서 작성
-            </Link>
-          </Button>
-        </div>
+        <Button variant="secondary" asChild>
+          <Link href={`/admin/review/${application.id}`}>
+            <FileText className="mr-2 h-4 w-4" />
+            심의서 작성
+          </Link>
+        </Button>
       </div>
 
       {/* Section 01. 신청인 정보 */}
@@ -1068,7 +1066,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       <td className="px-4 py-3">사다리꼴</td>
                     </tr>
                     <tr>
-                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">�������용���������목</td>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">���������용���������목</td>
                       <td className="px-4 py-3">전</td>
                       <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">공부상 지목</td>
                       <td className="px-4 py-3">{landCategories.find(c => c.value === applicationLands[selectedLandIndex].landCategory)?.label || applicationLands[selectedLandIndex].landCategory}</td>
