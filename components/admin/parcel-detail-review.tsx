@@ -512,7 +512,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
 
       {/* 분석 상세 보기 다이얼로그 */}
       <Dialog open={showHistoryDetail} onOpenChange={setShowHistoryDetail}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <History className="h-5 w-5" />
@@ -524,82 +524,145 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
           </DialogHeader>
           
           {selectedHistory?.aiResult && (
-            <div className="space-y-4">
-              {/* 지도 */}
-              <div className="h-[200px] rounded-lg overflow-hidden border">
-                <LandMap landInfo={parcel.landInfo} showOverlay={true} />
-              </div>
-
-              {/* 분석 단계 및 결과 */}
-              <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                <Badge variant={selectedHistory.stage === "1차분석" ? "default" : "secondary"}>
-                  {selectedHistory.stage}
-                </Badge>
-                <Badge 
-                  className={
-                    selectedHistory.newResult.includes("높음") || selectedHistory.newResult === "수용가능"
-                      ? "bg-emerald-500 text-white"
-                      : "bg-rose-500 text-white"
-                  }
-                >
-                  {selectedHistory.newResult === "수용가능" ? "매수 가능성 높음" : 
-                   selectedHistory.newResult === "수용불가" ? "매수 가능성 낮음" :
-                   selectedHistory.newResult}
-                </Badge>
-              </div>
-
-              {/* 잔여지 형상지수 */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 border rounded-lg">
-                  <Label className="text-muted-foreground text-xs">잔여지 형상지수</Label>
-                  <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingShapeIndex?.toFixed(3) || "-"}</p>
-                </div>
-                <div className="p-3 border rounded-lg">
-                  <Label className="text-muted-foreground text-xs">최소 폭</Label>
-                  <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingMinWidth || "-"}m</p>
-                </div>
-              </div>
-
-              {/* 주요 분석 항목 */}
-              <div className="space-y-2">
-                <Label className="font-medium">주요 분석 항목</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="p-2 border rounded flex items-center justify-between">
-                    <span className="text-sm">농기계 진입 불가</span>
-                    <Badge variant={selectedHistory.aiResult.farmMachineDifficulty ? "destructive" : "outline"}>
-                      {selectedHistory.aiResult.farmMachineDifficulty ? "해당" : "미해당"}
-                    </Badge>
+            <div className="space-y-6">
+              {/* 섹션 1: 지적도 */}
+              <div className="space-y-3">
+                <h4 className="font-semibold text-base">지적도</h4>
+                <div className="flex gap-4">
+                  {/* 필지 정보 */}
+                  <div className="w-[200px] shrink-0 space-y-2">
+                    <div className="p-3 border rounded-lg bg-muted/30">
+                      <p className="text-xs text-muted-foreground mb-1">소재지</p>
+                      <p className="text-sm font-medium">{parcel.landInfo.address}</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="p-2 border rounded-lg bg-muted/30">
+                        <p className="text-xs text-muted-foreground">지목</p>
+                        <p className="text-sm font-medium">{parcel.landInfo.landType}</p>
+                      </div>
+                      <div className="p-2 border rounded-lg bg-muted/30">
+                        <p className="text-xs text-muted-foreground">면적</p>
+                        <p className="text-sm font-medium">{parcel.landInfo.area?.toLocaleString()}㎡</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="p-2 border rounded flex items-center justify-between">
-                    <span className="text-sm">접면도로 상실</span>
-                    <Badge variant={selectedHistory.aiResult.accessRoadLost ? "destructive" : "outline"}>
-                      {selectedHistory.aiResult.accessRoadLost ? "해당" : "미해당"}
-                    </Badge>
-                  </div>
-                  <div className="p-2 border rounded flex items-center justify-between">
-                    <span className="text-sm">관개수로 상실</span>
-                    <Badge variant={selectedHistory.aiResult.waterChannelLost ? "destructive" : "outline"}>
-                      {selectedHistory.aiResult.waterChannelLost ? "해당" : "미해당"}
-                    </Badge>
-                  </div>
-                  <div className="p-2 border rounded flex items-center justify-between">
-                    <span className="text-sm">고저차 발생</span>
-                    <Badge variant={selectedHistory.aiResult.elevationDifference ? "destructive" : "outline"}>
-                      {selectedHistory.aiResult.elevationDifference ? "해당" : "미해당"}
-                    </Badge>
+                  {/* 지도 */}
+                  <div className="flex-1 h-[280px] rounded-lg overflow-hidden border">
+                    <LandMap landInfo={parcel.landInfo} showOverlay={true} />
                   </div>
                 </div>
               </div>
 
-              {/* AI 분석 세부 내용 */}
-              {selectedHistory.aiResult.analysisDetails && (
-                <div className="space-y-2">
-                  <Label className="font-medium">AI 분석 세부 내용</Label>
-                  <div className="p-3 bg-muted/30 rounded-lg text-sm whitespace-pre-wrap">
-                    {selectedHistory.aiResult.analysisDetails}
-                  </div>
+              {/* 섹션 2: AI 분석 결과 */}
+              <div className="space-y-3">
+                <h4 className="font-semibold text-base">AI 분석 결과</h4>
+                
+                {/* 분석 단계 및 판정 결과 */}
+                <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                  <Badge variant={selectedHistory.stage === "1차분석" ? "default" : "secondary"}>
+                    {selectedHistory.stage}
+                  </Badge>
+                  <Badge 
+                    className={
+                      selectedHistory.newResult.includes("높음") || selectedHistory.newResult === "수용가능"
+                        ? "bg-emerald-500 text-white"
+                        : "bg-rose-500 text-white"
+                    }
+                  >
+                    {selectedHistory.newResult === "수용가능" ? "매수 가능성 높음" : 
+                     selectedHistory.newResult === "수용불가" ? "매수 가능성 낮음" :
+                     selectedHistory.newResult}
+                  </Badge>
                 </div>
-              )}
+
+                {/* 판정 기준 - 잔여지 형상지수 및 관련 지표 */}
+                <div className="p-4 border rounded-lg space-y-4">
+                  <div className="flex items-start gap-2">
+                    <Shapes className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                    <div className="flex-1">
+                      <h5 className="text-sm font-semibold">잔여지 형상지수 기반 판정</h5>
+                      <div className="mt-2 grid grid-cols-3 gap-3">
+                        <div className="p-2 bg-muted/30 rounded">
+                          <p className="text-xs text-muted-foreground">잔여지 형상지수</p>
+                          <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingShapeIndex?.toFixed(3) || "-"}</p>
+                        </div>
+                        <div className="p-2 bg-muted/30 rounded">
+                          <p className="text-xs text-muted-foreground">최소 폭</p>
+                          <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingMinWidth || "-"}m</p>
+                        </div>
+                        <div className="p-2 bg-muted/30 rounded">
+                          <p className="text-xs text-muted-foreground">잔여 면적</p>
+                          <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingArea?.toLocaleString() || "-"}㎡</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 수동 확인 항목 */}
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-4 w-4 mt-0.5 text-amber-500" />
+                    <div className="flex-1">
+                      <h5 className="text-sm font-semibold">수동 확인 항목</h5>
+                      <div className="mt-2 grid grid-cols-2 gap-2">
+                        <div className="p-2 border rounded flex items-center justify-between">
+                          <span className="text-sm">농기계 진입 불가</span>
+                          <Badge variant={selectedHistory.aiResult.farmMachineDifficulty ? "destructive" : "outline"}>
+                            {selectedHistory.aiResult.farmMachineDifficulty ? "해당" : "미해당"}
+                          </Badge>
+                        </div>
+                        <div className="p-2 border rounded flex items-center justify-between">
+                          <span className="text-sm">접면도로 상실</span>
+                          <Badge variant={selectedHistory.aiResult.accessRoadLost ? "destructive" : "outline"}>
+                            {selectedHistory.aiResult.accessRoadLost ? "해당" : "미해당"}
+                          </Badge>
+                        </div>
+                        <div className="p-2 border rounded flex items-center justify-between">
+                          <span className="text-sm">관개수로 상실</span>
+                          <Badge variant={selectedHistory.aiResult.waterChannelLost ? "destructive" : "outline"}>
+                            {selectedHistory.aiResult.waterChannelLost ? "해당" : "미해당"}
+                          </Badge>
+                        </div>
+                        <div className="p-2 border rounded flex items-center justify-between">
+                          <span className="text-sm">고저차 발생</span>
+                          <Badge variant={selectedHistory.aiResult.elevationDifference ? "destructive" : "outline"}>
+                            {selectedHistory.aiResult.elevationDifference ? "해당" : "미해당"}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 상세 판독 결과 */}
+                  {selectedHistory.aiResult.analysisDetails && (
+                    <div className="flex items-start gap-2">
+                      <FileText className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                      <div className="flex-1">
+                        <h5 className="text-sm font-semibold">상세 판독 결과</h5>
+                        <pre className="mt-2 p-3 bg-muted/30 rounded-lg text-sm whitespace-pre-wrap leading-relaxed">
+                          {selectedHistory.aiResult.analysisDetails}
+                        </pre>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 판정 기준 충족 여부 */}
+                  {selectedHistory.aiResult.criteriaChecks && selectedHistory.aiResult.criteriaChecks.length > 0 && (
+                    <div className="p-3 bg-white/60 border rounded-lg">
+                      <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
+                      <div className="space-y-2">
+                        {selectedHistory.aiResult.criteriaChecks.map((check: { criteriaName: string; isMet: boolean }, idx: number) => (
+                          <div key={idx} className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">{check.criteriaName}</span>
+                            <Badge variant={check.isMet ? "default" : "destructive"} className="text-xs">
+                              {check.isMet ? "충족" : "미충족"}
+                            </Badge>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
 
               {/* 메모 */}
               {selectedHistory.memo && (
