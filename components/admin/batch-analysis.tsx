@@ -138,20 +138,26 @@ export function BatchAnalysis({
     });
   }, [parcels, businessUnit, searchQuery, aiJudgmentFilter, publishFilter]);
 
-  // 통계
+  // 통계 (검색값에 영향 받지 않음 - 전체 데이터 기준)
   const stats = useMemo(() => {
-    const total = filteredParcels.length;
-    const highPossibility = filteredParcels.filter(p => 
+    // businessUnit 필터만 적용, 검색어/AI판정/관리 필터는 제외
+    const relevantParcels = parcels.filter(parcel => {
+      if (businessUnit && parcel.businessUnit !== businessUnit) return false;
+      return true;
+    });
+    
+    const total = relevantParcels.length;
+    const highPossibility = relevantParcels.filter(p => 
       isHighPossibility(p.aiResult.provisionalJudgment)
     ).length;
     const lowPossibility = total - highPossibility;
-    const confirmed = filteredParcels.filter(p => 
+    const confirmed = relevantParcels.filter(p => 
       p.publishStatus === "담당자확인완료" || p.publishStatus === "공개"
     ).length;
     const pending = total - confirmed;
     
     return { total, highPossibility, lowPossibility, confirmed, pending };
-  }, [filteredParcels]);
+  }, [parcels, businessUnit]);
 
   // 전체 선택/해제
   const handleSelectAll = (checked: boolean) => {
