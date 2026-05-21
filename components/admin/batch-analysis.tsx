@@ -441,7 +441,7 @@ export function BatchAnalysis({
               onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low")}
               options={[
                 { value: "all", label: "전체" },
-                { value: "high", label: "매수 가능성 높음" },
+                { value: "high", label: "매수 가��성 높음" },
                 { value: "low", label: "매수 가능성 낮음" }
               ]}
             />
@@ -503,7 +503,6 @@ export function BatchAnalysis({
                 <TableHead>소재지</TableHead>
                 <TableHead>면적(㎡)</TableHead>
                 <TableHead>AI 판정</TableHead>
-                <TableHead>민원인 활동</TableHead>
                 <TableHead>관리</TableHead>
                 <TableHead>분석 횟수</TableHead>
                 <TableHead>최종 분석일</TableHead>
@@ -552,23 +551,6 @@ export function BatchAnalysis({
                       </Button>
                     )}
                   </TableCell>
-                  <TableCell>
-                    <div className="flex gap-1">
-                      {parcel.citizenActivity?.applicationSubmitted && (
-                        <Badge variant="default" className="bg-blue-500 text-white text-xs">
-                          신청완료
-                        </Badge>
-                      )}
-                      {parcel.citizenActivity?.inCart && !parcel.citizenActivity?.applicationSubmitted && (
-                        <Badge variant="outline" className="border-amber-500 text-amber-600 text-xs">
-                          장바구니
-                        </Badge>
-                      )}
-                      {!parcel.citizenActivity?.applicationSubmitted && !parcel.citizenActivity?.inCart && (
-                        <span className="text-muted-foreground text-xs">-</span>
-                      )}
-                    </div>
-                  </TableCell>
                   <TableCell className="text-center p-2">
                     <div className="flex items-center justify-center gap-1">
                       <span className="text-sm">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
@@ -587,7 +569,7 @@ export function BatchAnalysis({
               ))}
               {filteredParcels.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                     조건에 맞는 필지가 없습니다.
                   </TableCell>
                 </TableRow>
