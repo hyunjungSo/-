@@ -947,16 +947,10 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
           <CardTitle className="text-lg" style={{ fontSize: '20px' }}>신청인 정보</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div>
               <span className="text-sm text-muted-foreground">접수번호</span>
               <p className="font-medium">2026-05-001</p>
-            </div>
-            <div>
-              <span className="text-sm text-muted-foreground">신청 구분</span>
-              <p className="font-medium">
-                <Badge variant="primary-subtle">본인 신청</Badge>
-              </p>
             </div>
             <div>
               <span className="text-sm text-muted-foreground">신청인</span>
