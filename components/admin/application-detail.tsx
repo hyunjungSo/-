@@ -1068,7 +1068,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       <td className="px-4 py-3">사다리꼴</td>
                     </tr>
                     <tr>
-                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">활용지목</td>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">활용���목</td>
                       <td className="px-4 py-3">전</td>
                       <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">공부상 지목</td>
                       <td className="px-4 py-3">{landCategories.find(c => c.value === applicationLands[selectedLandIndex].landCategory)?.label || applicationLands[selectedLandIndex].landCategory}</td>
@@ -1542,7 +1542,6 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       focusedParcelId={focusedLandId}
                       zoom={18}
                     />
-                    </div>
                     </div>
                   </div>
                   
