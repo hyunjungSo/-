@@ -20,7 +20,7 @@ export function PublishRadioCell({
         onClick={() => onPublishChange(true)}
         variant={isPublished ? "default" : "outline"}
         size="sm"
-        className="flex items-center gap-1"
+        className="flex items-center gap-1 h-[34px]"
       >
         <Eye className="h-3.5 w-3.5" />
         노출
@@ -29,7 +29,7 @@ export function PublishRadioCell({
         onClick={() => onPublishChange(false)}
         variant={!isPublished ? "default" : "outline"}
         size="sm"
-        className="flex items-center gap-1"
+        className="flex items-center gap-1 h-[34px]"
       >
         <EyeOff className="h-3.5 w-3.5" />
         미노출
