@@ -258,7 +258,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                         {index === 0 && <Badge variant="outline" className="text-xs">최신</Badge>}
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {formatDateTime(history.analyzedAt)} | {history.analyzedBy}
+                        {formatDateTime(history.analyzedAt)}
                       </p>
                     </div>
                     <div className="text-right">
