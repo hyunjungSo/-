@@ -502,12 +502,22 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
 
                             {/* 변경 사유 및 메모 */}
                             {(history.changeReason || history.memo) && (
-                              <div className="p-3 border rounded-lg bg-muted/20">
+                              <div className="space-y-2">
                                 {history.changeReason && (
-                                  <p className="text-sm"><strong>변경 사유:</strong> {history.changeReason}</p>
+                                  <div className="space-y-1">
+                                    <label className="text-xs font-medium text-muted-foreground">변경 사유</label>
+                                    <div className="p-3 border rounded-lg bg-background min-h-[80px] overflow-y-auto text-sm whitespace-pre-wrap break-words">
+                                      {history.changeReason}
+                                    </div>
+                                  </div>
                                 )}
                                 {history.memo && (
-                                  <p className="text-sm text-muted-foreground"><strong>메모:</strong> {history.memo}</p>
+                                  <div className="space-y-1">
+                                    <label className="text-xs font-medium text-muted-foreground">메모</label>
+                                    <div className="p-3 border rounded-lg bg-background min-h-[80px] overflow-y-auto text-sm whitespace-pre-wrap break-words">
+                                      {history.memo}
+                                    </div>
+                                  </div>
                                 )}
                               </div>
                             )}
