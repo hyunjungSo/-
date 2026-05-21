@@ -527,29 +527,17 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
             <div className="space-y-6">
               {/* 섹션 1: 지적도 */}
               <div className="space-y-3">
-                <h4 className="font-semibold text-base">지적도</h4>
-                <div className="flex gap-4">
-                  {/* 필지 정보 */}
-                  <div className="w-[200px] shrink-0 space-y-2">
-                    <div className="p-3 border rounded-lg bg-muted/30">
-                      <p className="text-xs text-muted-foreground mb-1">소재지</p>
-                      <p className="text-sm font-medium">{parcel.landInfo.address}</p>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="p-2 border rounded-lg bg-muted/30">
-                        <p className="text-xs text-muted-foreground">지목</p>
-                        <p className="text-sm font-medium">{parcel.landInfo.landType}</p>
-                      </div>
-                      <div className="p-2 border rounded-lg bg-muted/30">
-                        <p className="text-xs text-muted-foreground">면적</p>
-                        <p className="text-sm font-medium">{parcel.landInfo.area?.toLocaleString()}㎡</p>
-                      </div>
-                    </div>
+                <div className="flex items-center justify-between">
+                  <h4 className="font-semibold text-base">지적도</h4>
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <span><strong>소재지:</strong> {parcel.landInfo.address}</span>
+                    <span><strong>지목:</strong> {parcel.landInfo.landType}</span>
+                    <span><strong>면적:</strong> {parcel.landInfo.area?.toLocaleString()}㎡</span>
                   </div>
-                  {/* 지도 */}
-                  <div className="flex-1 h-[280px] rounded-lg overflow-hidden border">
-                    <LandMap landInfo={parcel.landInfo} showOverlay={true} />
-                  </div>
+                </div>
+                {/* 지도 - 해당 필지만 표시 */}
+                <div className="h-[280px] rounded-lg overflow-hidden border">
+                  <LandMap landInfo={parcel.landInfo} showOverlay={true} interactive={false} />
                 </div>
               </div>
 
