@@ -415,7 +415,7 @@ export function BatchAnalysis({
             placeholder="소재지, 소유자명을 입력하세요"
           />
           
-          {/* 필터 ��역 */}
+          {/* 필터 영역 */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-6">
             {/* 사업단 선택 필터 */}
             <div className="flex items-center gap-3">
@@ -441,7 +441,7 @@ export function BatchAnalysis({
               onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low")}
               options={[
                 { value: "all", label: "전체" },
-                { value: "high", label: "���수 가능성 높음" },
+                { value: "high", label: "매수 가능성 높음" },
                 { value: "low", label: "매수 가능성 낮음" }
               ]}
             />

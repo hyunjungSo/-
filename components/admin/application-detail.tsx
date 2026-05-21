@@ -1334,7 +1334,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                           <div className="flex items-start gap-2">
                             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                             <div>
-                              <h4 className="text-sm font-semibold text-foreground">적�� 기준</h4>
+                              <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
                               <ul className="mt-1 space-y-1">
                                 {aiResult?.judgmentRationale?.appliedCriteria ? (
                                   aiResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
