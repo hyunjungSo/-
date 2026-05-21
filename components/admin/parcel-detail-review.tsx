@@ -508,7 +508,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
 
       {/* 분석 상세 보기 다이얼로그 */}
       <Dialog open={showHistoryDetail} onOpenChange={setShowHistoryDetail}>
-        <DialogContent className="w-[50vw] max-w-[50vw] max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-[800px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <History className="h-5 w-5" />
