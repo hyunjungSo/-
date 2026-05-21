@@ -449,7 +449,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                 <p>아직 분석 결과가 없습니다.</p>
                 <p className="text-sm mt-1">왼쪽에서 분석을 실행하세요.</p>
               </div>
-            )}}
+            )}
           </CardContent>
         </Card>
       </div>
