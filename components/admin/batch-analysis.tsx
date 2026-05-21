@@ -97,6 +97,7 @@ export function BatchAnalysis({
   // 배치 분석을 위한 필지 선택
   const [selectedParcelIds, setSelectedParcelIds] = useState<Set<string>>(new Set());
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analyzingParcelId, setAnalyzingParcelId] = useState<string | null>(null);
 
   // 필지 선택/해제 토글
   const handleToggleParcelSelection = (parcelId: string) => {
@@ -117,6 +118,46 @@ export function BatchAnalysis({
       setSelectedParcelIds(new Set());
     } else {
       setSelectedParcelIds(new Set(filteredParcels.map(p => p.id)));
+    }
+  };
+
+  // 단일 필지 분석 실행
+  const handleAnalyzeSingleParcel = async (parcelId: string) => {
+    setAnalyzingParcelId(parcelId);
+    try {
+      const parcel = parcels.find(p => p.id === parcelId);
+      if (!parcel) return;
+
+      const newAnalysisResult: AIJudgmentResult = {
+        provisionalJudgment: Math.random() > 0.5 ? "매수 가능성 높음" : "매수 가능성 낮음",
+        reason: "AI 자동 분석 결과"
+      };
+
+      const newHistory: AnalysisHistory = {
+        id: `analysis_${Date.now()}_${Math.random()}`,
+        stage: parcel.analysisHistory?.length ? "2차분석" : "1차분석",
+        analyzedAt: new Date().toISOString(),
+        analyzedBy: "AI 자동 분석",
+        newResult: newAnalysisResult.provisionalJudgment,
+        previousResult: parcel.aiResult?.provisionalJudgment || undefined,
+        changedOptions: {},
+      };
+
+      const updatedParcel: ProcessedParcel = {
+        ...parcel,
+        aiResult: newAnalysisResult,
+        analysisHistory: [...(parcel.analysisHistory || []), newHistory],
+        lastAnalyzedAt: new Date().toISOString(),
+        isVisible: true,
+      };
+
+      setParcels(prev =>
+        prev.map(p => p.id === parcelId ? updatedParcel : p)
+      );
+
+      onAnalysisComplete?.();
+    } finally {
+      setAnalyzingParcelId(null);
     }
   };
 
@@ -456,7 +497,17 @@ export function BatchAnalysis({
                     {parcel.aiResult ? (
                       <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
                     ) : (
-                      <Badge variant="outline">분석 대기</Badge>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAnalyzeSingleParcel(parcel.id);
+                        }}
+                        disabled={analyzingParcelId === parcel.id}
+                      >
+                        {analyzingParcelId === parcel.id ? "분석 중..." : "실행"}
+                      </Button>
                     )}
                   </TableCell>
                   <TableCell>
