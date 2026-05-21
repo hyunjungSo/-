@@ -329,7 +329,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                 <span><strong>면적:</strong> {parcel.landInfo.area?.toLocaleString()}㎡</span>
               </div>
             </div>
-            <div className="h-[300px] rounded-lg overflow-hidden border">
+            <div className="h-[480px] rounded-lg overflow-hidden border">
               <LandMap landInfo={parcel.landInfo} showOverlay={true} interactive={false} />
             </div>
           </div>
