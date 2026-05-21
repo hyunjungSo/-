@@ -80,7 +80,6 @@ export function BatchAnalysis({
   
   // 필터 (라디오 버튼)
   const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low">("all");
-  const [publishFilter, setPublishFilter] = useState<"all" | "published" | "unpublished">("all");
   const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("all");
   
   // 사업단 목록 추출
@@ -120,16 +119,9 @@ export function BatchAnalysis({
         if (aiJudgmentFilter === "low" && isHigh) return false;
       }
       
-      // 관리(노출) 필터 (라디오)
-      if (publishFilter !== "all") {
-        const isPublished = parcel.publishStatus === "공개";
-        if (publishFilter === "published" && !isPublished) return false;
-        if (publishFilter === "unpublished" && isPublished) return false;
-      }
-      
       return true;
     });
-  }, [parcels, businessUnit, businessUnitFilter, searchQuery, aiJudgmentFilter, publishFilter]);
+  }, [parcels, businessUnit, businessUnitFilter, searchQuery, aiJudgmentFilter]);
 
   // 통계 (검색값에 영향 받지 않음 - 전체 데이터 기준)
   const stats = useMemo(() => {
@@ -330,20 +322,6 @@ export function BatchAnalysis({
               <CardDescription>
                 분석할 필지를 선택하고 일괄 분석을 실행하세요. 2차 분석은 여러 번 실행할 수 있습니다.
               </CardDescription>
-            </div>
-            <div className="flex items-center gap-3 ml-4">
-              <span className="text-sm font-medium whitespace-nowrap">관리</span>
-              <RadioFilterGroup
-                label=""
-                name="publish"
-                value={publishFilter}
-                onChange={(v) => setPublishFilter(v as "all" | "published" | "unpublished")}
-                options={[
-                  { value: "all", label: "전체" },
-                  { value: "published", label: "노출", icon: <Eye className="h-3.5 w-3.5" /> },
-                  { value: "unpublished", label: "미노출", icon: <EyeOff className="h-3.5 w-3.5" /> }
-                ]}
-              />
             </div>
           </div>
         </CardHeader>
