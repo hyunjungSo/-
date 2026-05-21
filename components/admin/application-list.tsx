@@ -625,7 +625,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             {/* 검색 입력 */}
             <div className="relative flex-1">
               <Input
-                placeholder="접수번호, 신청인명, 지번으로 검색"
+                placeholder="접수번호, 신청인명 또는 지번을 입력하세요"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pr-10"
