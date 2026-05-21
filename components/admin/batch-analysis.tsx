@@ -465,6 +465,7 @@ export function BatchAnalysis({
                 <TableHead>소재지</TableHead>
                 <TableHead>면적(㎡)</TableHead>
                 <TableHead>AI 판정</TableHead>
+                <TableHead>민원인 활동</TableHead>
                 <TableHead>분석 횟수</TableHead>
                 <TableHead>최종 분석일</TableHead>
               </TableRow>
@@ -513,6 +514,23 @@ export function BatchAnalysis({
                     )}
                   </TableCell>
                   <TableCell>
+                    <div className="flex gap-1">
+                      {parcel.citizenActivity?.applicationSubmitted && (
+                        <Badge variant="default" className="bg-blue-500 text-white text-xs">
+                          신청완료
+                        </Badge>
+                      )}
+                      {parcel.citizenActivity?.inCart && !parcel.citizenActivity?.applicationSubmitted && (
+                        <Badge variant="outline" className="border-amber-500 text-amber-600 text-xs">
+                          장바구니
+                        </Badge>
+                      )}
+                      {!parcel.citizenActivity?.applicationSubmitted && !parcel.citizenActivity?.inCart && (
+                        <span className="text-muted-foreground text-xs">-</span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
                     <span className="text-sm">{parcel.analysisHistory?.length || 0}회</span>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
@@ -522,7 +540,7 @@ export function BatchAnalysis({
               ))}
               {filteredParcels.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                     조건에 맞는 필지가 없습니다.
                   </TableCell>
                 </TableRow>

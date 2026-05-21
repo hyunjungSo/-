@@ -1428,7 +1428,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
       provisionalJudgment = "수용불가";
     }
   } else if (landInfo.landType === "택지" || landInfo.landType === "농지") {
-    // 택���/농지: 면적 기준 + 형상 조건 적용
+    // 택����/농지: 면적 기준 + 형상 조건 적용
     if (coreCriteriaMet || isIrregularShape || shapeIndexMet) {
       provisionalJudgment = "수용가능";
     } else {
@@ -1713,7 +1713,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       waterChannelLost: false,
       farmMachineDifficulty: false,
       judgmentRationale: {
-        summary: "택지 잔여지 - 접면도로 상실로 ������화되어 「매수 가능성 높음」 판정",
+        summary: "택지 잔여지 - 접면도로 상실�� ������화되어 「매수 가능성 높음」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: ["토지유형: 택지", "형상지수 변화: 1.5 (기준 충족)", "접면도로 상실: 해당 (맹지화)"],
         detailedExplanation: "도로확장사업으로 접면도로가 상실되어 맹지가 되었으며, 건축허가가 불가능한 상태입니다.",
@@ -1776,7 +1776,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
         detailedExplanation: "도로확장사업으로 잔여지가 사다리형으로 변형되어 농기계 회전이 곤란합니다.",
       },
     },
-    preRegistrationStatus: "등록완료",
+    preRegistrationStatus: "등���완료",
     registeredAt: FOUR_DAYS_AGO,
     registeredBy: "김담당",
   },
@@ -1856,7 +1856,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       ownerContact: "010-1111-2222",
       hasIncludedLand: true,
       businessUnit: "수도권",
-      projectName: "용인-양지 도로���장사���",
+      projectName: "용인-양�� 도로���장사���",
     },
     checkItems: {
       farmMachineDifficulty: false,
@@ -2207,7 +2207,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "면적 기준", criteriaDescription: "택지(주거) 기준 90㎡ 이하 (완화: 135㎡)", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (자루형)", isMet: true, autoDetected: true },
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
-        { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 불가", isMet: false, autoDetected: false },
+        { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 ��가", isMet: false, autoDetected: false },
       ],
       provisionalJudgment: "적용가능",
       originalShapeIndex: 4.0,
@@ -2507,7 +2507,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 ���아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -2724,7 +2724,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "맹지 판정", criteriaDescription: "접면도로 상실로 양 필지 모두 맹지화", isMet: true, autoDetected: true },
       ],
-      provisionalJudgment: "수용가능",
+      provisionalJudgment: "���용가능",
       originalShapeIndex: 4.1,
       remainingShapeIndex: 5.95,
       shapeIndexChange: 1.85,
@@ -2955,7 +2955,7 @@ export const dummyApplications: Application[] = [
         conditions: {
           sameOwner: true,
           continuous: false, // 전체는 인접 아님
-          sameUsage: false, // 전체는 용도 불일치 (답/전)
+          sameUsage: false, // 전체는 ��도 불일치 (답/전)
         },
         combinedArea: 1480,
         explanation: "4필지 개별 분석 결과: 내기리 200-1, 200-2는 면적 기준 충족 및 형상 불량으로 매수 판정. 만호리 55-1, 55-2는 면적 기준 미충족, 형상 양호로 미해당 판정.",
@@ -3688,7 +3688,7 @@ export const dummyAnalysisHistory: AnalysisHistory[] = [
 
 // ===== 프로세스 적용된 필지 데이터 (ProcessedParcel) =====
 export const dummyProcessedParcels: ProcessedParcel[] = [
-  // 1. 1차 분석만 완료된 필지 (담당자 확인 대기)
+  // 1. 1차 분석만 완료된 필지 (담당자 확인 대기) - 민원인이 장바구니에 담음
   {
     id: "processed-001",
     businessUnit: "수도권건설사업단",
@@ -3710,6 +3710,10 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     firstAnalyzedAt: TWO_WEEKS_AGO,
     lastAnalyzedAt: TWO_WEEKS_AGO,
     ownerIdentifier: "1234",
+    citizenActivity: {
+      inCart: true,
+      cartAddedAt: ONE_WEEK_AGO,
+    },
   },
   // 2. 2차 분석 중인 필지 (재분석 1회)
   {
@@ -3765,7 +3769,7 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     confirmedBy: "이검토",
     ownerIdentifier: "9012",
   },
-  // 4. 공개된 필지 (민원인 조회 가능)
+  // 4. 공개된 필지 (민원인 조회 가능) - 민원인이 신청 완료
   {
     id: "processed-004",
     businessUnit: "천안안성건설사업단",
@@ -3803,6 +3807,11 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     confirmedAt: ONE_MONTH_AGO,
     confirmedBy: "박확인",
     ownerIdentifier: "3456",
+    citizenActivity: {
+      applicationSubmitted: true,
+      applicationId: "app-001",
+      applicationSubmittedAt: THREE_WEEKS_AGO,
+    },
   },
   // 5. 매수 가능성 낮음으로 공개된 필지
   {

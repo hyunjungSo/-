@@ -230,6 +230,18 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
               <Label className="text-muted-foreground">분석 횟수</Label>
               <p className="font-medium">{parcel.analysisHistory?.length || 0}회</p>
             </div>
+            <div className="flex flex-col gap-2">
+              <Label className="text-muted-foreground">민원인 활동</Label>
+              <div className="flex gap-1">
+                {parcel.citizenActivity?.applicationSubmitted ? (
+                  <Badge className="bg-blue-500 text-white w-fit">신청완료</Badge>
+                ) : parcel.citizenActivity?.inCart ? (
+                  <Badge variant="outline" className="border-amber-500 text-amber-600 w-fit">장바구니</Badge>
+                ) : (
+                  <span className="text-muted-foreground">-</span>
+                )}
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>

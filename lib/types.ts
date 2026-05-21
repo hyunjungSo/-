@@ -332,6 +332,14 @@ export interface ProcessedParcel extends PreRegisteredParcel {
   confirmedBy?: string;                       // 확인 담당자
   ownerIdentifier?: string;                   // 소유자 식별자 (주민번호 뒷자리 등)
   isVisible?: boolean;                        // 노출 여부 (true: 노출, false: 미노출)
+  // 민원인 활동 상태
+  citizenActivity?: {
+    inCart?: boolean;                         // 장바구니에 담김
+    cartAddedAt?: string;                     // 장바구니 담긴 일시
+    applicationSubmitted?: boolean;           // 신청 완료됨
+    applicationId?: string;                   // 신청 ID
+    applicationSubmittedAt?: string;          // 신청 완료 일시
+  };
 }
 
 // 일괄 분석 요청
