@@ -915,43 +915,6 @@ function ApplicationDetailPanel({
           </div>
         </div>
 
-        {/* 신청 구분 행 */}
-        <div className="flex border-b border-border">
-          <div className="flex w-28 shrink-0 items-center bg-muted/30 px-4 py-3">
-            <span className="text-sm font-medium">신청 구분</span>
-          </div>
-          <div className="flex flex-1 items-center px-4 py-3">
-            {isEditMode ? (
-              <div className="flex gap-6">
-                <label className="flex cursor-pointer items-center gap-2">
-                  <input
-                    type="radio"
-                    name="applicantRelation"
-                    checked={editData.applicantRelation === "owner"}
-                    onChange={() => setEditData({ ...editData, applicantRelation: "owner" })}
-                    className="h-4 w-4 accent-primary"
-                  />
-                  <span className="text-sm">본인 신청</span>
-                </label>
-                <label className="flex cursor-pointer items-center gap-2">
-                  <input
-                    type="radio"
-                    name="applicantRelation"
-                    checked={editData.applicantRelation === "agent"}
-                    onChange={() => setEditData({ ...editData, applicantRelation: "agent" })}
-                    className="h-4 w-4 accent-primary"
-                  />
-                  <span className="text-sm">대리인 신청</span>
-                </label>
-              </div>
-            ) : (
-              <span className="text-sm">
-                {application.applicantRelation === "agent" ? "대리인 신청" : "본인 신청"}
-              </span>
-            )}
-          </div>
-        </div>
-
         {/* 대리인 정보 (대리인 신청 시만 표시) */}
         {((isEditMode && editData.applicantRelation === "agent") || (!isEditMode && application.applicantRelation === "agent")) && (
           <>
