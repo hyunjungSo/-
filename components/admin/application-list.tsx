@@ -672,7 +672,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>접수번호</TableHead>
+                  <TableHead className="text-center">접수번호</TableHead>
                   <TableHead>신청인</TableHead>
                   <TableHead>신청일시</TableHead>
                   <TableHead>대상 지번</TableHead>
@@ -690,8 +690,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     className="cursor-pointer hover:bg-muted/50"
                     onClick={() => onSelect(app)}
                   >
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
+                    <TableCell className="font-medium text-center">
+                      <div className="flex items-center justify-center gap-2">
                         {app.applicationNumber}
                         {aiMismatchFilter && app.adminStatus === "심사완료" && (
                           // 시뮬레이션: 접수번호 끝자리로 불일치 유형 구분
