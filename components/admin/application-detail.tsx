@@ -830,6 +830,10 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [selectedAttachment, setSelectedAttachment] = useState<{ name: string; url: string } | null>(null);
   const [showPdfPreview, setShowPdfPreview] = useState(false);
   
+  // 페이지네이션
+  const [recordsPage, setRecordsPage] = useState(1);
+  const recordsItemsPerPage = 12;
+  
   // 첨부파일 클릭 핸들러
   const handleAttachmentClick = (fileName: string) => {
     // 실제 환경에서는 서버에서 파일 URL을 받아옴
@@ -1066,7 +1070,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       <td className="px-4 py-3">사다리꼴</td>
                     </tr>
                     <tr>
-                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">���������용���������목</td>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">���������용�����������</td>
                       <td className="px-4 py-3">전</td>
                       <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">공부상 지목</td>
                       <td className="px-4 py-3">{landCategories.find(c => c.value === applicationLands[selectedLandIndex].landCategory)?.label || applicationLands[selectedLandIndex].landCategory}</td>
