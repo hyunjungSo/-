@@ -506,7 +506,7 @@ export function BatchAnalysis({
                         }}
                         disabled={analyzingParcelId === parcel.id}
                       >
-                        {analyzingParcelId === parcel.id ? "분석 중..." : "실행"}
+                        {analyzingParcelId === parcel.id ? "분석 중..." : "분석"}
                       </Button>
                     )}
                   </TableCell>
