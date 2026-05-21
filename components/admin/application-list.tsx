@@ -299,7 +299,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     <div className="space-y-6">
       {/* 글로벌 필터 바 */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          {/* 좌측: 업데이트 정��� */}
+          {/* 좌측: 업데이��� 정��� */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>업데이트: {isMounted && lastUpdated ? lastUpdated.toLocaleString('ko-KR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '--'}</span>
@@ -830,14 +830,14 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               <button
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
-                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm border border-gray-300 text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 처음
               </button>
               <button
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm border border-gray-300 text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 이전
               </button>
@@ -862,7 +862,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       className={`w-9 h-9 flex items-center justify-center text-sm rounded ${
                         currentPage === pageNum 
                           ? "bg-teal-600 text-white" 
-                          : "border border-teal-600 text-teal-600 hover:bg-teal-50"
+                          : "border border-gray-300 text-gray-600 hover:bg-gray-50"
                       }`}
                     >
                       {pageNum}
@@ -874,14 +874,14 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               <button
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm border border-gray-300 text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 다음
               </button>
               <button
                 onClick={() => setCurrentPage(totalPages)}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm border border-gray-300 text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 마지막
               </button>

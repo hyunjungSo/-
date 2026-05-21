@@ -415,7 +415,7 @@ export function BatchAnalysis({
             placeholder="소재지, 소유자명을 입력하세요"
           />
           
-          {/* 필터 영역 */}
+          {/* 필터 ��역 */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-6">
             {/* 사업단 선택 필터 */}
             <div className="flex items-center gap-3">
@@ -441,7 +441,7 @@ export function BatchAnalysis({
               onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low")}
               options={[
                 { value: "all", label: "전체" },
-                { value: "high", label: "매수 가능성 높음" },
+                { value: "high", label: "���수 가능성 높음" },
                 { value: "low", label: "매수 가능성 낮음" }
               ]}
             />
@@ -583,14 +583,14 @@ export function BatchAnalysis({
               <button
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
-                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm border border-gray-300 text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 처음
               </button>
               <button
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm border border-gray-300 text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 이전
               </button>
@@ -615,7 +615,7 @@ export function BatchAnalysis({
                       className={`w-9 h-9 flex items-center justify-center text-sm rounded ${
                         currentPage === pageNum 
                           ? "bg-teal-600 text-white" 
-                          : "border border-teal-600 text-teal-600 hover:bg-teal-50"
+                          : "border border-gray-300 text-gray-600 hover:bg-gray-50"
                       }`}
                     >
                       {pageNum}
@@ -627,14 +627,14 @@ export function BatchAnalysis({
               <button
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm border border-gray-300 text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 다음
               </button>
               <button
                 onClick={() => setCurrentPage(totalPages)}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm border border-gray-300 text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 마지막
               </button>
