@@ -283,9 +283,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     <div className="space-y-6">
       {/* 글로벌 필터 바 */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          {/* 좌측: 타이틀 및 업데이트 정보 */}
+          {/* 좌측: 업데이트 정보 */}
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-foreground sm:text-3xl">담당자 서비스</h1>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>업데이트: {isMounted && lastUpdated ? lastUpdated.toLocaleString('ko-KR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '--'}</span>
               <Button
