@@ -505,7 +505,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                               <div className="space-y-2">
                                 {history.changeReason && (
                                   <div className="space-y-1">
-                                    <label className="text-xs font-medium text-muted-foreground">변경 사유</label>
+                                    <label className="text-xs font-semibold" style={{ color: "rgb(26, 26, 26)" }}>변경 사유</label>
                                     <div className="p-3 rounded-lg min-h-[80px] overflow-y-auto text-sm whitespace-pre-wrap break-words" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
                                       {history.changeReason}
                                     </div>
@@ -513,7 +513,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                                 )}
                                 {history.memo && (
                                   <div className="space-y-1">
-                                    <label className="text-xs font-medium text-muted-foreground">메모</label>
+                                    <label className="text-xs font-semibold" style={{ color: "rgb(26, 26, 26)" }}>메모</label>
                                     <div className="p-3 rounded-lg min-h-[80px] overflow-y-auto text-sm whitespace-pre-wrap break-words" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
                                       {history.memo}
                                     </div>
