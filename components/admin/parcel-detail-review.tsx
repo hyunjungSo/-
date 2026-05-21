@@ -148,6 +148,9 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
     setMemo("");
   };
 
+  // 민원인이 신청완료했거나 장바구니에 담은 경우 수정 불가
+  const isLockedByCitizen = parcel.citizenActivity?.applicationSubmitted || parcel.citizenActivity?.inCart;
+
   return (
     <div className="space-y-6">
       {/* 필지상세 타이틀 */}
@@ -156,6 +159,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
         <div className="flex items-center gap-2">
           <Switch 
             checked={parcel.isVisible !== false}
+            disabled={isLockedByCitizen}
             onCheckedChange={(checked) => {
               onUpdate({
                 ...parcel,
@@ -166,6 +170,11 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
           <span className={`text-sm font-medium ${parcel.isVisible !== false ? "text-emerald-600" : "text-muted-foreground"}`}>
             {parcel.isVisible !== false ? "노출" : "미노출"}
           </span>
+          {isLockedByCitizen && (
+            <span className="text-xs text-orange-500 ml-2">
+              (민원인 활동으로 수정 불가)
+            </span>
+          )}
         </div>
       </div>
 

@@ -31,7 +31,10 @@ import {
 import { 
   CheckCircle2, 
   XCircle, 
-  Filter
+  Filter,
+  Lock,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { 
   SearchInput, 
@@ -555,7 +558,12 @@ export function BatchAnalysis({
                     </div>
                   </TableCell>
                   <TableCell className="text-center p-2">
-                    <span className="text-sm">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
+                    <div className="flex items-center justify-center gap-1">
+                      <span className="text-sm">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
+                      {(parcel.citizenActivity?.applicationSubmitted || parcel.citizenActivity?.inCart) && (
+                        <Lock className="h-3 w-3 text-orange-500" />
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell>
                     <span className="text-sm">{parcel.analysisHistory?.length || 0}회</span>
