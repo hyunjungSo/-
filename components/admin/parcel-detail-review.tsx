@@ -310,10 +310,10 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <RotateCcw className="h-5 w-5" />
-            {parcel.publishStatus === "분석전" ? "1차 분석" : "2차 분석 (재분석)"}
+            {(parcel.analysisHistory?.length || 0) + 1}차 분석 {(parcel.analysisHistory?.length || 0) > 0 && "(재분석)"}
           </CardTitle>
           <CardDescription>
-            {parcel.publishStatus === "분석전" 
+            {(parcel.analysisHistory?.length || 0) === 0 
               ? "등록된 필지의 잔여지 분석을 실행합니다."
               : "현장 확인 결과나 공사 진행 상황 변경에 따라 옵션을 수정하고 재분석하세요."}
           </CardDescription>
@@ -435,7 +435,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                 </>
               ) : (
                 <>
-                  {parcel.publishStatus === "분석전" ? "1차 분석 실행" : "2차 분석 실행"}
+                  {(parcel.analysisHistory?.length || 0) + 1}차 분석 실행
                 </>
               )}
             </Button>
