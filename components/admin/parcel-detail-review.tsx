@@ -150,10 +150,26 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
       {/* 필지 기본 정보 */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MapPin className="h-5 w-5" />
-            필지 정보
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <MapPin className="h-5 w-5" />
+              필지 정보
+            </CardTitle>
+            <div className="flex items-center gap-2">
+              <Switch 
+                checked={parcel.isVisible !== false}
+                onCheckedChange={(checked) => {
+                  onUpdate({
+                    ...parcel,
+                    isVisible: checked,
+                  });
+                }}
+              />
+              <span className={`text-sm font-medium ${parcel.isVisible !== false ? "text-emerald-600" : "text-muted-foreground"}`}>
+                {parcel.isVisible !== false ? "노출" : "미노출"}
+              </span>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -207,23 +223,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
             <div>
               <Label className="text-muted-foreground">분석 횟수</Label>
               <p className="font-medium">{parcel.analysisHistory?.length || 0}회</p>
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label className="text-muted-foreground">관리</Label>
-              <div className="flex items-center gap-2">
-                <Switch 
-                  checked={parcel.isVisible !== false}
-                  onCheckedChange={(checked) => {
-                    onUpdate({
-                      ...parcel,
-                      isVisible: checked,
-                    });
-                  }}
-                />
-                <span className={`text-sm font-medium ${parcel.isVisible !== false ? "text-emerald-600" : "text-muted-foreground"}`}>
-                  {parcel.isVisible !== false ? "노출" : "미노출"}
-                </span>
-              </div>
             </div>
           </div>
         </CardContent>
