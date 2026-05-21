@@ -165,7 +165,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
               <p className="font-medium">{parcel.landInfo.address}</p>
             </div>
             <div>
-              <Label className="text-muted-foreground">사업명</Label>
+              <Label className="text-muted-foreground">��업명</Label>
               <p className="font-medium">{parcel.projectName}</p>
             </div>
             <div>
@@ -397,7 +397,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                           {isLatest && <Badge variant="secondary" className="text-xs">최신</Badge>}
                           <Badge 
                             className={
-                              history.newResult === "매수 가능성 높음" || 
+                              history.newResult === "���수 가능성 높음" || 
                               history.newResult === "수용가능"
                                 ? "bg-emerald-500 text-white"
                                 : "bg-rose-500 text-white"
@@ -415,21 +415,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                       <AccordionContent className="pb-4">
                         {aiResult ? (
                             <div className="space-y-4 pt-2">
-                            {/* AI 분석 상세 보기 버튼 */}
-                            <div className="flex justify-end">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                  setSelectedAnalysisResult(aiResult);
-                                  setShowAIAnalysisDialog(true);
-                                }}
-                              >
-                                <Sparkles className="h-4 w-4 mr-2" />
-                                AI 분석 상세보기
-                              </Button>
-                            </div>
-                            
                             {/* 판정 기준 - 잔여지 형상지수 기반 판정 */}
                             <div className="space-y-4">
                               <div className="space-y-3">
