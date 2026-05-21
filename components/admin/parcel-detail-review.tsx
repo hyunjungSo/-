@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { LandMap } from "@/components/land-map";
 import {
   Select,
   SelectContent,
@@ -524,6 +525,11 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
           
           {selectedHistory?.aiResult && (
             <div className="space-y-4">
+              {/* 지도 */}
+              <div className="h-[200px] rounded-lg overflow-hidden border">
+                <LandMap landInfo={parcel.landInfo} showOverlay={true} />
+              </div>
+
               {/* 분석 단계 및 결과 */}
               <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
                 <Badge variant={selectedHistory.stage === "1차분석" ? "default" : "secondary"}>
