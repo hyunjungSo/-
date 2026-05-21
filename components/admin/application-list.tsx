@@ -827,22 +827,22 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           {/* 페이지네이션 */}
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 pt-4 mt-4">
-              <Button
-                variant="outline"
-                size="sm"
+              <button
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
+                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 처음
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
+              </button>
+              <button
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
+                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 이전
-              </Button>
+              </button>
+              
+              {/* 페이지 번호 */}
               <div className="flex items-center gap-1">
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                   let pageNum;
@@ -856,34 +856,36 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     pageNum = currentPage - 2 + i;
                   }
                   return (
-                    <Button
+                    <button
                       key={pageNum}
-                      variant={currentPage === pageNum ? "default" : "outline"}
-                      size="sm"
                       onClick={() => setCurrentPage(pageNum)}
-                      className="w-8 h-8 p-0"
+                      className={`w-9 h-9 flex items-center justify-center text-sm rounded ${
+                        currentPage === pageNum 
+                          ? "bg-teal-600 text-white" 
+                          : "border border-teal-600 text-teal-600 hover:bg-teal-50"
+                      }`}
                     >
                       {pageNum}
-                    </Button>
+                    </button>
                   );
                 })}
               </div>
-              <Button
-                variant="outline"
-                size="sm"
+              
+              <button
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
+                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 다음
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
+              </button>
+              <button
                 onClick={() => setCurrentPage(totalPages)}
                 disabled={currentPage === totalPages}
+                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 마지막
-              </Button>
+              </button>
+              
               <span className="text-sm text-muted-foreground ml-2">
                 ({filteredApplications.length}건 중 {(currentPage - 1) * itemsPerPage + 1}-{Math.min(currentPage * itemsPerPage, filteredApplications.length)}건)
               </span>

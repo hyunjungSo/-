@@ -579,62 +579,69 @@ export function BatchAnalysis({
           
           {/* 페이지네이션 */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-1 pt-4 mt-4">
+            <div className="flex items-center justify-center gap-2 pt-4 mt-4">
+              <button
+                onClick={() => setCurrentPage(1)}
+                disabled={currentPage === 1}
+                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                처음
+              </button>
               <button
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="w-10 h-10 flex items-center justify-center text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                <ChevronLeft className="h-5 w-5" />
+                이전
               </button>
               
               {/* 페이지 번호 */}
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                let pageNum;
-                if (totalPages <= 5) {
-                  pageNum = i + 1;
-                } else if (currentPage <= 3) {
-                  pageNum = i + 1;
-                } else if (currentPage >= totalPages - 2) {
-                  pageNum = totalPages - 4 + i;
-                } else {
-                  pageNum = currentPage - 2 + i;
-                }
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => setCurrentPage(pageNum)}
-                    className={`w-10 h-10 flex items-center justify-center text-sm rounded ${
-                      currentPage === pageNum 
-                        ? "font-semibold text-foreground" 
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              })}
-              
-              {/* 생략 부호 및 마지막 페이지 */}
-              {totalPages > 5 && currentPage < totalPages - 2 && (
-                <>
-                  <span className="w-10 h-10 flex items-center justify-center text-muted-foreground">...</span>
-                  <button
-                    onClick={() => setCurrentPage(totalPages)}
-                    className="w-10 h-10 flex items-center justify-center text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    {totalPages}
-                  </button>
-                </>
-              )}
+              <div className="flex items-center gap-1">
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`w-9 h-9 flex items-center justify-center text-sm rounded ${
+                        currentPage === pageNum 
+                          ? "bg-teal-600 text-white" 
+                          : "border border-teal-600 text-teal-600 hover:bg-teal-50"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+              </div>
               
               <button
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
-                className="w-10 h-10 flex items-center justify-center text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                <ChevronRight className="h-5 w-5" />
+                다음
               </button>
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                마지막
+              </button>
+              
+              <span className="text-sm text-muted-foreground ml-2">
+                ({filteredParcels.length}건 중 {(currentPage - 1) * itemsPerPage + 1}-{Math.min(currentPage * itemsPerPage, filteredParcels.length)}건)
+              </span>
             </div>
           )}
         </CardContent>
