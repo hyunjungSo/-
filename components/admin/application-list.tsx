@@ -213,6 +213,18 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       });
     }, [periodFilteredApplications, searchQuery, statusFilter, projectUnitFilter, sortOrder, aiMismatchFilter]);
 
+  // 페이지네이션 계산
+  const totalPages = Math.ceil(filteredApplications.length / itemsPerPage);
+  const paginatedApplications = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredApplications.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredApplications, currentPage, itemsPerPage]);
+
+  // 필터 변경 시 페이지 리셋
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter, projectUnitFilter, aiMismatchFilter, periodFilter, selectedYear]);
+
   // 상태별 통계 (기간 필터 적용)
   const stats = useMemo(() => {
     const total = periodFilteredApplications.length;
@@ -688,7 +700,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredApplications.map((app) => (
+                {paginatedApplications.map((app) => (
                   <TableRow
                     key={app.id}
                     className="cursor-pointer hover:bg-muted/50"
@@ -760,7 +772,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
 
           {/* 카드 목록 (모바일) */}
           <div className="space-y-3 md:hidden">
-            {filteredApplications.map((app) => (
+            {paginatedApplications.map((app) => (
               <button
                 key={app.id}
                 onClick={() => onSelect(app)}
