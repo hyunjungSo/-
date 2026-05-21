@@ -526,7 +526,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
       </div>
 
       {/* 하단 액션 버튼 */}
-      <div className="flex items-center justify-between pt-4 border-t">
+      <div className="flex items-center justify-end pt-4 border-t">
         <Button variant="outline" onClick={onBack}>
           목록
         </Button>
