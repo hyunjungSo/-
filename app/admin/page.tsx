@@ -7,8 +7,8 @@ import { BatchAnalysis } from "@/components/admin/batch-analysis";
 import { ParcelDetailReview } from "@/components/admin/parcel-detail-review";
 import type { Application, ProcessedParcel } from "@/lib/types";
 import { dummyApplications, dummyProcessedParcels } from "@/lib/dummy-data";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileText, MapPin } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function AdminPage() {
   const [applications, setApplications] = useState<Application[]>(dummyApplications);
@@ -59,57 +59,97 @@ export default function AdminPage() {
     setSelectedParcel(null);
   };
 
+  const menuItems = [
+    { id: "applications", label: "신청관리", icon: FileText },
+    { id: "parcel-management", label: "필지관리", icon: MapPin },
+  ];
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">관리자 페이지</h1>
-      </div>
+    <div className="flex min-h-[calc(100vh-64px)]">
+      {/* 왼쪽 SNB (Side Navigation Bar) */}
+      <aside className="w-56 shrink-0 border-r border-gray-200 bg-white">
+        <div className="sticky top-0 p-4">
+          <h2 className="mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+            메뉴
+          </h2>
+          <nav className="space-y-1">
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id || 
+                (item.id === "parcel-management" && activeTab === "parcel-review");
+              
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    if (item.id === "applications") {
+                      setSelectedApplication(null);
+                    } else if (item.id === "parcel-management") {
+                      setSelectedParcel(null);
+                    }
+                  }}
+                  className={cn(
+                    "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                    isActive
+                      ? "bg-[#2E8B57] text-white"
+                      : "text-gray-700 hover:bg-gray-100"
+                  )}
+                >
+                  <Icon className="h-5 w-5" />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+      </aside>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 lg:w-auto lg:inline-grid">
-          <TabsTrigger value="applications" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            <span>신청관리</span>
-          </TabsTrigger>
-          <TabsTrigger value="parcel-management" className="flex items-center gap-2">
-            <MapPin className="h-4 w-4" />
-            <span>필지관리</span>
-          </TabsTrigger>
-        </TabsList>
+      {/* 오른쪽 콘텐츠 영역 */}
+      <main className="flex-1 p-6" style={{ backgroundColor: '#f3f6f9' }}>
+        {/* 신청관리 콘텐츠 */}
+        {activeTab === "applications" && (
+          <>
+            <div className="mb-6">
+              <h1 className="text-2xl font-bold text-foreground sm:text-3xl">신청관리</h1>
+            </div>
+            {selectedApplication ? (
+              <ApplicationDetail
+                application={selectedApplication}
+                onBack={handleBack}
+                onSave={handleSave}
+              />
+            ) : (
+              <ApplicationList
+                applications={applications}
+                onSelect={handleApplicationSelect}
+              />
+            )}
+          </>
+        )}
 
-        {/* 신청관리 탭 */}
-        <TabsContent value="applications" className="mt-6">
-          {selectedApplication ? (
-            <ApplicationDetail
-              application={selectedApplication}
-              onBack={handleBack}
-              onSave={handleSave}
-            />
-          ) : (
-            <ApplicationList
-              applications={applications}
-              onSelect={handleApplicationSelect}
-            />
-          )}
-        </TabsContent>
-
-        {/* 필지관리 탭 */}
-        <TabsContent value="parcel-management" className="mt-6">
-          {selectedParcel ? (
-            <ParcelDetailReview
-              parcel={selectedParcel}
-              onBack={handleParcelBack}
-              onUpdate={handleParcelUpdate}
-            />
-          ) : (
-            <BatchAnalysis 
-              parcels={processedParcels}
-              onParcelsUpdate={setProcessedParcels}
-              onParcelSelect={handleParcelSelect}
-            />
-          )}
-        </TabsContent>
-      </Tabs>
+        {/* 필지관리 콘텐츠 */}
+        {(activeTab === "parcel-management" || activeTab === "parcel-review") && (
+          <>
+            <div className="mb-6">
+              <h1 className="text-2xl font-bold text-foreground sm:text-3xl">필지관리</h1>
+            </div>
+            {selectedParcel ? (
+              <ParcelDetailReview
+                parcel={selectedParcel}
+                onBack={handleParcelBack}
+                onUpdate={handleParcelUpdate}
+              />
+            ) : (
+              <BatchAnalysis 
+                parcels={processedParcels}
+                onParcelsUpdate={setProcessedParcels}
+                onParcelSelect={handleParcelSelect}
+              />
+            )}
+          </>
+        )}
+      </main>
     </div>
   );
 }

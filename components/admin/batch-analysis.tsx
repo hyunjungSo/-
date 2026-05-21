@@ -88,6 +88,13 @@ export function BatchAnalysis({
   // 필터 (라디오 버튼)
   const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low">("all");
   const [publishFilter, setPublishFilter] = useState<"all" | "published" | "unpublished">("all");
+  const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("all");
+  
+  // 사업단 목록 추출
+  const businessUnits = useMemo(() => {
+    const units = new Set(parcels.map(p => p.businessUnit));
+    return Array.from(units).sort();
+  }, [parcels]);
   
   // 일괄 분석 진행 상태
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -108,8 +115,9 @@ export function BatchAnalysis({
   // 필터링된 필지 목록
   const filteredParcels = useMemo(() => {
     return parcels.filter(parcel => {
-      // 사업단 필터
+      // 사업단 필터 (props로 전달된 것 또는 Select로 선택된 것)
       if (businessUnit && parcel.businessUnit !== businessUnit) return false;
+      if (businessUnitFilter !== "all" && parcel.businessUnit !== businessUnitFilter) return false;
       
       // 검색어 필터
       if (searchQuery) {
@@ -136,22 +144,29 @@ export function BatchAnalysis({
       
       return true;
     });
-  }, [parcels, businessUnit, searchQuery, aiJudgmentFilter, publishFilter]);
+  }, [parcels, businessUnit, businessUnitFilter, searchQuery, aiJudgmentFilter, publishFilter]);
 
-  // 통계
+  // 통계 (검색값에 영향 받지 않음 - 전체 데이터 기준)
   const stats = useMemo(() => {
-    const total = filteredParcels.length;
-    const highPossibility = filteredParcels.filter(p => 
+    // businessUnit 필터만 적용, 검색어/AI판정/관리 필터는 제외
+    const relevantParcels = parcels.filter(parcel => {
+      if (businessUnit && parcel.businessUnit !== businessUnit) return false;
+      if (businessUnitFilter !== "all" && parcel.businessUnit !== businessUnitFilter) return false;
+      return true;
+    });
+    
+    const total = relevantParcels.length;
+    const highPossibility = relevantParcels.filter(p => 
       isHighPossibility(p.aiResult.provisionalJudgment)
     ).length;
     const lowPossibility = total - highPossibility;
-    const confirmed = filteredParcels.filter(p => 
+    const confirmed = relevantParcels.filter(p => 
       p.publishStatus === "담당자확인완료" || p.publishStatus === "공개"
     ).length;
     const pending = total - confirmed;
     
     return { total, highPossibility, lowPossibility, confirmed, pending };
-  }, [filteredParcels]);
+  }, [parcels, businessUnit]);
 
   // 전체 선택/해제
   const handleSelectAll = (checked: boolean) => {
@@ -337,7 +352,7 @@ export function BatchAnalysis({
       </div>
 
       {/* 검색 및 필터 */}
-      <Card>
+      <Card className="border-0">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
@@ -354,6 +369,22 @@ export function BatchAnalysis({
           
           {/* 필터 영역 */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+            {/* 사업단 선택 필터 */}
+            <div className="flex items-center gap-3">
+              <Label className="text-sm font-medium whitespace-nowrap">사업단:</Label>
+              <Select value={businessUnitFilter} onValueChange={setBusinessUnitFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="사업단 선택" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">전체 사업단</SelectItem>
+                  {businessUnits.map((unit) => (
+                    <SelectItem key={unit} value={unit}>{unit}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
             {/* AI 판정 필터 */}
             <RadioFilterGroup
               label="AI 판정"
@@ -362,8 +393,8 @@ export function BatchAnalysis({
               onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low")}
               options={[
                 { value: "all", label: "전체" },
-                { value: "high", label: "매수 가능성 높음", className: "text-emerald-600" },
-                { value: "low", label: "매수 가능성 낮음", className: "text-rose-600" }
+                { value: "high", label: "매수 가능성 높음" },
+                { value: "low", label: "매수 가능성 낮음" }
               ]}
             />
             
@@ -418,7 +449,7 @@ export function BatchAnalysis({
       </Card>
 
       {/* 필지 목록 테이블 */}
-      <Card>
+      <Card className="border-0">
         <CardHeader>
           <CardTitle>잔여지 필지 목록</CardTitle>
           <CardDescription>
@@ -440,7 +471,7 @@ export function BatchAnalysis({
                 <TableHead>AI 판정</TableHead>
                 <TableHead>분석 횟수</TableHead>
                 <TableHead>최종 분석일</TableHead>
-                <TableHead className="text-right">관리</TableHead>
+                <TableHead className="w-[100px]">관리</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
