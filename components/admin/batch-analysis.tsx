@@ -79,9 +79,6 @@ export function BatchAnalysis({
   // 필지 목록
   const [parcels, setParcels] = useState<ProcessedParcel[]>(externalParcels || dummyProcessedParcels);
   
-  // 선택된 필지들
-  const [selectedParcelIds, setSelectedParcelIds] = useState<Set<string>>(new Set());
-  
   // 검색어
   const [searchQuery, setSearchQuery] = useState("");
   
@@ -96,17 +93,9 @@ export function BatchAnalysis({
     return Array.from(units).sort();
   }, [parcels]);
   
-  // 일괄 분석 진행 상태
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisProgress, setAnalysisProgress] = useState(0);
-  const [analyzedCount, setAnalyzedCount] = useState(0);
-  
   // 히스토리 다이얼로그
   const [showHistoryDialog, setShowHistoryDialog] = useState(false);
   const [selectedHistoryParcel, setSelectedHistoryParcel] = useState<ProcessedParcel | null>(null);
-  
-  // 분석 옵션 다이얼로그
-  const [showAnalysisOptionsDialog, setShowAnalysisOptionsDialog] = useState(false);
   const [analysisOptions, setAnalysisOptions] = useState({
     useCurrentUsage: true,
     useLandShape: true,
@@ -167,86 +156,6 @@ export function BatchAnalysis({
     
     return { total, highPossibility, lowPossibility, confirmed, pending };
   }, [parcels, businessUnit]);
-
-  // 전체 선택/해제
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedParcelIds(new Set(filteredParcels.map(p => p.id)));
-    } else {
-      setSelectedParcelIds(new Set());
-    }
-  };
-
-  // 개별 선택
-  const handleSelectParcel = (parcelId: string, checked: boolean) => {
-    const newSelected = new Set(selectedParcelIds);
-    if (checked) {
-      newSelected.add(parcelId);
-    } else {
-      newSelected.delete(parcelId);
-    }
-    setSelectedParcelIds(newSelected);
-  };
-
-  // 일괄 1차 분석 실행
-  const handleBatchAnalysis = async (stage: "1차분석" | "2차분석") => {
-    if (selectedParcelIds.size === 0) return;
-    
-    setShowAnalysisOptionsDialog(false);
-    setIsAnalyzing(true);
-    setAnalysisProgress(0);
-    setAnalyzedCount(0);
-    
-    const selectedParcels = filteredParcels.filter(p => selectedParcelIds.has(p.id));
-    const total = selectedParcels.length;
-    
-    // 시뮬레이션: 각 필지를 순차적으로 분석
-    for (let i = 0; i < total; i++) {
-      await new Promise(resolve => setTimeout(resolve, 300)); // 분석 시간 시뮬레이션
-      
-      const parcel = selectedParcels[i];
-      const newResult: AIJudgmentResult = Math.random() > 0.3 ? "매수 가능성 높음" : "매수 가능성 낮음";
-      
-      // 히스토리 추가
-      const newHistory: AnalysisHistory = {
-        id: `history-${Date.now()}-${i}`,
-        parcelId: parcel.id,
-        stage,
-        analyzedAt: new Date().toISOString(),
-        analyzedBy: stage === "1차분석" ? "시스템" : "담당자",
-        previousResult: parcel.aiResult.provisionalJudgment as AIJudgmentResult,
-        newResult,
-        previousShapeIndex: parcel.aiResult.remainingShapeIndex,
-        newShapeIndex: Math.random() * 0.5 + 0.2,
-        aiResult: parcel.aiResult,
-      };
-      
-      // 필지 업데이트
-      setParcels(prev => prev.map(p => {
-        if (p.id === parcel.id) {
-          return {
-            ...p,
-            aiResult: {
-              ...p.aiResult,
-              provisionalJudgment: newResult,
-            },
-            publishStatus: stage === "1차분석" ? "1차분석완료" : "2차분석중",
-            analysisHistory: [...p.analysisHistory, newHistory],
-            firstAnalyzedAt: stage === "1차분석" ? new Date().toISOString() : p.firstAnalyzedAt,
-            lastAnalyzedAt: new Date().toISOString(),
-          } as ProcessedParcel;
-        }
-        return p;
-      }));
-      
-      setAnalyzedCount(i + 1);
-      setAnalysisProgress(((i + 1) / total) * 100);
-    }
-    
-    setIsAnalyzing(false);
-    setSelectedParcelIds(new Set());
-    onAnalysisComplete?.();
-  };
 
   // 히스토리 보기
   const handleViewHistory = (parcel: ProcessedParcel) => {
@@ -411,40 +320,6 @@ export function BatchAnalysis({
               ]}
             />
           </div>
-          
-          {/* 액션 버튼 */}
-          <div className="flex items-center justify-between pt-2 border-t">
-            <span className="text-sm text-muted-foreground">
-              {selectedParcelIds.size}건 선택됨
-            </span>
-            <Button 
-              onClick={() => setShowAnalysisOptionsDialog(true)}
-              disabled={selectedParcelIds.size === 0 || isAnalyzing}
-            >
-              {isAnalyzing ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  분��� 중...
-                </>
-              ) : (
-                <>
-                  <Play className="h-4 w-4 mr-2" />
-                  일괄 분석 실행
-                </>
-              )}
-            </Button>
-          </div>
-
-          {/* 분석 진행률 */}
-          {isAnalyzing && (
-            <div className="mt-4 space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span>분석 진행 중...</span>
-                <span>{analyzedCount} / {selectedParcelIds.size} 완료</span>
-              </div>
-              <Progress value={analysisProgress} className="h-2" />
-            </div>
-          )}
         </CardContent>
       </Card>
 
@@ -460,12 +335,6 @@ export function BatchAnalysis({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[50px]">
-                  <Checkbox 
-                    checked={selectedParcelIds.size === filteredParcels.length && filteredParcels.length > 0}
-                    onCheckedChange={handleSelectAll}
-                  />
-                </TableHead>
                 <TableHead>소재지</TableHead>
                 <TableHead>면적(㎡)</TableHead>
                 <TableHead>AI 판정</TableHead>
@@ -481,12 +350,6 @@ export function BatchAnalysis({
                   className="cursor-pointer hover:bg-muted/50"
                   onClick={() => handleParcelClick(parcel)}
                 >
-                  <TableCell onClick={(e) => e.stopPropagation()}>
-                    <Checkbox 
-                      checked={selectedParcelIds.has(parcel.id)}
-                      onCheckedChange={(checked) => handleSelectParcel(parcel.id, !!checked)}
-                    />
-                  </TableCell>
                   <TableCell className="font-medium">{parcel.landInfo.address}</TableCell>
                   <TableCell>{parcel.landInfo.remainingArea.toLocaleString()}</TableCell>
                   <TableCell>

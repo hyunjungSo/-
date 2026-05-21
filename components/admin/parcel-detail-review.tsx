@@ -422,7 +422,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                 </>
               ) : (
                 <>
-                  <RotateCcw className="h-4 w-4 mr-2" />
                   2차 분석 실행
                 </>
               )}
