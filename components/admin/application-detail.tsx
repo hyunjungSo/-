@@ -1068,7 +1068,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       <td className="px-4 py-3">사다리꼴</td>
                     </tr>
                     <tr>
-                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">활용���목</td>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">활용�����목</td>
                       <td className="px-4 py-3">전</td>
                       <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">공부상 지목</td>
                       <td className="px-4 py-3">{landCategories.find(c => c.value === applicationLands[selectedLandIndex].landCategory)?.label || applicationLands[selectedLandIndex].landCategory}</td>
@@ -1328,7 +1328,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             </div>
                           </div>
 
-                          {/* 적용 기준 */}
+                          {/* 적용 기��� */}
                           <div className="flex items-start gap-2">
                             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                             <div>
@@ -1854,7 +1854,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         
                         return (
                           <div className={`rounded-lg border p-4 ${
-                            judgment === "수용가능"
+                            judgment === "수���가능"
                               ? "border-success/20 bg-success/5"
                               : judgment === "수용불가"
                                 ? "border-destructive/20 bg-destructive/5"
@@ -2052,43 +2052,29 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                       </div>
                                       
                                       {/* 판정 기준 충족 여부 */}
-                                      {aiResult?.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
-                                        <div className="rounded-lg bg-white/60 p-3 border">
-                                          <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
-                                          <div className="space-y-2">
-                                            {aiResult.criteriaChecks.map((check, cIdx) => (
-                                              <div key={cIdx} className="flex items-center justify-between text-sm">
-                                                <span className="text-muted-foreground">{check.criteriaName}</span>
-                                                <Badge 
-                                                  variant="default" 
-                                                  className={`text-xs text-white ${check.isMet ? JUDGMENT_COLORS.충족.bg : JUDGMENT_COLORS.미충족.bg}`}
-                                                >
-                                                  {check.isMet ? "충족" : "미충족"}
-                                                </Badge>
-                                              </div>
-                                            ))}
-                                          </div>
-                                        </div>
-                                      )}
+                                      <CriteriaChecksList 
+                                        checks={aiResult?.criteriaChecks || []} 
+                                        variant="badge"
+                                      />
 
-                              {/* 안내 문구 */}
-                              <div className="flex items-start gap-2 pt-2 border-t">
-                                <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
-                                <p className="text-xs text-muted-foreground">
-                                  AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })()}
-                    </>
-                  )}
+                                      {/* 안내 문구 */}
+                                      <div className="flex items-start gap-2 pt-2 border-t">
+                                        <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
+                                        <p className="text-xs text-muted-foreground">
+                                          AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })()}
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
                 </div>
-              </div>
-            </TabsContent>
-            </Tabs>
-          </div>
 
           {/* 2-3. 담당자 검토 */}
           <div className="space-y-4">
