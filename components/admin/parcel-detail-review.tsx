@@ -102,8 +102,62 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
       newResult = "매수 가능성 높음";
     }
     
-    setAnalysisResult(newResult);
+    // 새 AI 분석 결과 생성
+    const newAiResult: AIAnalysisResult = {
+      landTypePath: parcel.landInfo.landType as LandType,
+      criteriaChecks: [
+        { criteria: "잔여지 면적 기준", isMet: true, description: "잔여지 면적이 기준 이하" },
+        { criteria: "형상지수 변화", isMet: true, description: "형상지수 악화 확인" },
+      ],
+      provisionalJudgment: newResult,
+      originalShapeIndex: parcel.landInfo.originalShapeIndex || 3.5,
+      remainingShapeIndex: Math.random() * 0.5 + 0.2,
+      remainingMinWidth: Math.round(Math.random() * 5 + 2),
+      remainingArea: parcel.landInfo.remainingArea,
+      shapeIndexChange: -0.3,
+      isBlindLand: false,
+      accessRoadLost: checkItems.accessRoadLost,
+      waterChannelLost: checkItems.waterChannelLost,
+      farmMachineDifficulty: checkItems.farmMachineDifficulty,
+      elevationDifference: false,
+    };
+
+    // 히스토리에 바로 추가
+    const newHistory: AnalysisHistory = {
+      id: `history-${Date.now()}`,
+      parcelId: parcel.id,
+      stage: `${(parcel.analysisHistory?.length || 0) + 1}차분석`,
+      analyzedAt: new Date().toISOString(),
+      analyzedBy: "현재 담당자",
+      previousResult: parcel.aiResult?.provisionalJudgment as AIJudgmentResult || "매수 가능성 낮음",
+      newResult: newResult,
+      previousShapeIndex: parcel.aiResult?.remainingShapeIndex || 0,
+      newShapeIndex: newAiResult.remainingShapeIndex,
+      changedOptions: {
+        currentUsage,
+        landShape,
+        ...checkItems,
+      },
+      changeReason: changeReason || undefined,
+      memo: memo || undefined,
+      aiResult: newAiResult,
+    };
+    
+    const updatedParcel: ProcessedParcel = {
+      ...parcel,
+      currentUsage,
+      landShape,
+      adminCheckItems: checkItems,
+      aiResult: newAiResult,
+      publishStatus: (parcel.analysisHistory?.length || 0) === 0 ? "1차분석완료" : "재분석완료",
+      analysisHistory: [...(parcel.analysisHistory || []), newHistory],
+      lastAnalyzedAt: new Date().toISOString(),
+    };
+    
+    onUpdate(updatedParcel);
     setIsAnalyzing(false);
+    setChangeReason("");
+    setMemo("");
   };
 
   // 담당자 확인 완료 처리
@@ -459,7 +513,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                 <p>아직 분석 결과가 없습니다.</p>
                 <p className="text-sm mt-1">왼쪽에서 분석을 실행하세요.</p>
               </div>
-            )}}
+            )}
           </CardContent>
         </Card>
       </div>
