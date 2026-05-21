@@ -88,6 +88,13 @@ export function BatchAnalysis({
   // 필터 (라디오 버튼)
   const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low">("all");
   const [publishFilter, setPublishFilter] = useState<"all" | "published" | "unpublished">("all");
+  const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("all");
+  
+  // 사업단 목록 추출
+  const businessUnits = useMemo(() => {
+    const units = new Set(parcels.map(p => p.businessUnit));
+    return Array.from(units).sort();
+  }, [parcels]);
   
   // 일괄 분석 진행 상태
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -108,8 +115,9 @@ export function BatchAnalysis({
   // 필터링된 필지 목록
   const filteredParcels = useMemo(() => {
     return parcels.filter(parcel => {
-      // 사업단 필터
+      // 사업단 필터 (props로 전달된 것 또는 Select로 선택된 것)
       if (businessUnit && parcel.businessUnit !== businessUnit) return false;
+      if (businessUnitFilter !== "all" && parcel.businessUnit !== businessUnitFilter) return false;
       
       // 검색어 필터
       if (searchQuery) {
@@ -136,13 +144,14 @@ export function BatchAnalysis({
       
       return true;
     });
-  }, [parcels, businessUnit, searchQuery, aiJudgmentFilter, publishFilter]);
+  }, [parcels, businessUnit, businessUnitFilter, searchQuery, aiJudgmentFilter, publishFilter]);
 
   // 통계 (검색값에 영향 받지 않음 - 전체 데이터 기준)
   const stats = useMemo(() => {
     // businessUnit 필터만 적용, 검색어/AI판정/관리 필터는 제외
     const relevantParcels = parcels.filter(parcel => {
       if (businessUnit && parcel.businessUnit !== businessUnit) return false;
+      if (businessUnitFilter !== "all" && parcel.businessUnit !== businessUnitFilter) return false;
       return true;
     });
     
@@ -360,6 +369,22 @@ export function BatchAnalysis({
           
           {/* 필터 영역 */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+            {/* 사업단 선택 필터 */}
+            <div className="flex items-center gap-3">
+              <Label className="text-sm font-medium whitespace-nowrap">사업단:</Label>
+              <Select value={businessUnitFilter} onValueChange={setBusinessUnitFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="사업단 선택" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">전체 사업단</SelectItem>
+                  {businessUnits.map((unit) => (
+                    <SelectItem key={unit} value={unit}>{unit}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
             {/* AI 판정 필터 */}
             <RadioFilterGroup
               label="AI 판정"
@@ -444,7 +469,7 @@ export function BatchAnalysis({
                 <TableHead>소재지</TableHead>
                 <TableHead>면적(㎡)</TableHead>
                 <TableHead>AI 판정</TableHead>
-                <TableHead>분석 횟수</TableHead>
+                <TableHead>���석 횟수</TableHead>
                 <TableHead>최종 분석일</TableHead>
                 <TableHead className="text-right">관리</TableHead>
               </TableRow>
