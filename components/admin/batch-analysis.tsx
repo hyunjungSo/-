@@ -280,7 +280,7 @@ export function BatchAnalysis({
             <div className="flex items-center gap-3">
               <Label className="text-sm font-medium whitespace-nowrap">사업단:</Label>
               <Select value={businessUnitFilter} onValueChange={setBusinessUnitFilter}>
-                <SelectTrigger className="w-[180px] h-[34px]">
+                <SelectTrigger className="w-[180px] h-[40px]">
                   <SelectValue placeholder="사업단 선택" />
                 </SelectTrigger>
                 <SelectContent>
