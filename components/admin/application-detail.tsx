@@ -1068,7 +1068,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       <td className="px-4 py-3">사다리꼴</td>
                     </tr>
                     <tr>
-                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">활용���������목</td>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">���용���������목</td>
                       <td className="px-4 py-3">전</td>
                       <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">공부상 지목</td>
                       <td className="px-4 py-3">{landCategories.find(c => c.value === applicationLands[selectedLandIndex].landCategory)?.label || applicationLands[selectedLandIndex].landCategory}</td>
@@ -1432,17 +1432,17 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             </div>
                           )}
 
-                        {/* 안내 문구 */}
-                        <div className="flex items-start gap-2 pt-2 border-t">
-                          <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
-                          <p className="text-xs text-muted-foreground">
-                            AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
-                          </p>
+                          {/* 안내 문구 */}
+                          <div className="flex items-start gap-2 pt-2 border-t">
+                            <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
+                            <p className="text-xs text-muted-foreground">
+                              AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })()}
+                    );
+                  })()}
                 </div>
               </div>
             </TabsContent>
