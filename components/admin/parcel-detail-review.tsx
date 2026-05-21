@@ -208,22 +208,28 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
             </div>
             <div className="flex flex-col gap-2">
               <Label className="text-muted-foreground">현재 AI 판정</Label>
-              <Badge 
-                className={`w-fit ${
-                  parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
-                  parcel.aiResult.provisionalJudgment === "수용가능" 
-                    ? "bg-emerald-500 text-white" 
-                    : "bg-rose-500 text-white"
-                }`}
-              >
-                {parcel.aiResult.provisionalJudgment === "수용가능" ? "매수 가능성 높음" : 
-                 parcel.aiResult.provisionalJudgment === "수용불가" ? "매수 가능성 낮음" :
-                 parcel.aiResult.provisionalJudgment}
-              </Badge>
+              {parcel.aiResult ? (
+                <Badge 
+                  className={`w-fit ${
+                    parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
+                    parcel.aiResult.provisionalJudgment === "수용가능" 
+                      ? "bg-emerald-500 text-white" 
+                      : "bg-rose-500 text-white"
+                  }`}
+                >
+                  {parcel.aiResult.provisionalJudgment === "수용가능" ? "매수 가능성 높음" : 
+                   parcel.aiResult.provisionalJudgment === "수용불가" ? "매수 가능성 낮음" :
+                   parcel.aiResult.provisionalJudgment}
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="w-fit">
+                  분석 대기
+                </Badge>
+              )}
             </div>
             <div>
               <Label className="text-muted-foreground">분석 횟수</Label>
-              <p className="font-medium">{parcel.analysisHistory.length}회</p>
+              <p className="font-medium">{parcel.analysisHistory?.length || 0}회</p>
             </div>
           </div>
         </CardContent>
