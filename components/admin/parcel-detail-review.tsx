@@ -659,12 +659,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
               )}
             </div>
           )}
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowHistoryDetail(false)}>
-              닫기
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
