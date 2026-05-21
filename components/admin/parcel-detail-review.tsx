@@ -339,6 +339,21 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* 지적도 */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label className="font-semibold">지적도</Label>
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <span><strong>소재지:</strong> {parcel.landInfo.address}</span>
+                <span><strong>지목:</strong> {parcel.landInfo.landType}</span>
+                <span><strong>면적:</strong> {parcel.landInfo.area?.toLocaleString()}㎡</span>
+              </div>
+            </div>
+            <div className="h-[300px] rounded-lg overflow-hidden border">
+              <LandMap landInfo={parcel.landInfo} showOverlay={true} interactive={false} />
+            </div>
+          </div>
+
           {/* 활용지목 및 토지형상 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
