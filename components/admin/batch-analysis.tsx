@@ -469,9 +469,9 @@ export function BatchAnalysis({
                 <TableHead>소재지</TableHead>
                 <TableHead>면적(㎡)</TableHead>
                 <TableHead>AI 판정</TableHead>
-                <TableHead>���석 횟수</TableHead>
+                <TableHead>분석 횟수</TableHead>
                 <TableHead>최종 분석일</TableHead>
-                <TableHead className="text-right">관리</TableHead>
+                <TableHead className="w-[100px]">관리</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
