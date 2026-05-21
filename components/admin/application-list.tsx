@@ -663,7 +663,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               className="gap-1.5 border-foreground bg-foreground px-4 text-background hover:bg-foreground/90 hover:text-background h-[40px]"
               onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
             >
-              <span>{sortOrder === "desc" ? "최신" : "오래된"}</span>
+              <span>{sortOrder === "desc" ? "↓" : "↑"}</span>
+              <span>{sortOrder === "desc" ? "최신순" : "오래된순"}</span>
             </Button>
           </div>
 
