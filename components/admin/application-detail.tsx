@@ -716,7 +716,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     // 분석 실행 (최대 5초 이내 완료 보장)
     const runAnalysis = async () => {
       const totalLands = adminCheckedLandIds.length;
-      const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수��� 따라 동적 조절
+      const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수����� 따라 동적 조절
       
       // 모든 필지를 병렬로 분석
       const analysisPromises = adminCheckedLandIds.map(async (landId) => {
@@ -2208,14 +2208,15 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       const config = judgmentConfig[judgment];
                       const Icon = config.icon;
                       const isSelected = landReview.landJudgment === judgment;
+                      const isDisabled = isViewOnly || reviewData.adminStatus === "접수완료";
                       return (
                         <Button
                           key={judgment}
                           type="button"
                           variant="outline"
-                          disabled={isViewOnly}
+                          disabled={isDisabled}
                           onClick={() => updateLandReviewData(selectedLandIndex, 'landJudgment', landReview.landJudgment === judgment ? undefined : judgment)}
-                          className={`cursor-pointer border-2 ${isSelected ? `${config.borderColor} ${config.textColor}` : "border-[#E1E4E7] text-foreground"} ${isViewOnly ? "opacity-60 cursor-not-allowed" : ""}`}
+                          className={`cursor-pointer border-2 ${isSelected ? `${config.borderColor} ${config.textColor}` : "border-[#E1E4E7] text-foreground"} ${isDisabled ? "opacity-60 cursor-not-allowed" : ""}`}
                         >
                           <Icon className="mr-2 h-4 w-4" />
                           {config.label}
@@ -2223,6 +2224,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       );
                     })}
                   </div>
+                  {reviewData.adminStatus === "접수완료" && (
+                    <p className="text-xs text-muted-foreground">진행상황을 &apos;진행중&apos;으로 변경하면 심사결과를 선택할 수 있습니다.</p>
+                  )}
                 </div>
                 
                 {/* AI 판정(수용가능/수용불가)과 담당자 판정(매수/기각/심의위원회 이관) 불일치 안내 */}

@@ -738,9 +738,13 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       <AdminStatusBadge status={app.adminStatus} />
                     </TableCell>
                     <TableCell>
-                      <JudgmentSummaryBadge 
-                        lands={[app.landInfo, ...(app.additionalLands || [])]} 
-                      />
+                      {app.adminStatus !== "접수완료" ? (
+                        <JudgmentSummaryBadge 
+                          lands={[app.landInfo, ...(app.additionalLands || [])]} 
+                        />
+                      ) : (
+                        <span className="text-muted-foreground">-</span>
+                      )}
                     </TableCell>
                     <TableCell>
                       <ChevronRight className="h-4 w-4 text-muted-foreground" />
