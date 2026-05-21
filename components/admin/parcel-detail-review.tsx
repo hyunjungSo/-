@@ -253,7 +253,13 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
               parcel.analysisHistory.slice().reverse().map((history, index) => (
                 <div 
                   key={history.id} 
-                  className={`p-3 rounded-lg border ${index === 0 ? "border-primary bg-primary/5" : "bg-muted/50"}`}
+                  className={`p-3 rounded-lg border cursor-pointer transition-colors hover:bg-muted/80 ${index === 0 ? "border-primary bg-primary/5" : "bg-muted/50"}`}
+                  onClick={() => {
+                    if (history.aiResult) {
+                      setSelectedHistory(history);
+                      setShowHistoryDetail(true);
+                    }
+                  }}
                 >
                   <div className="flex items-start justify-between">
                     <div className="space-y-1">
@@ -307,19 +313,9 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                     </div>
                   )}
                   {history.aiResult && (
-                    <div className="mt-2 pt-2 border-t">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 text-xs"
-                        onClick={() => {
-                          setSelectedHistory(history);
-                          setShowHistoryDetail(true);
-                        }}
-                      >
-                        <Eye className="h-3.5 w-3.5 mr-1" />
-                        분석 상세 보기
-                      </Button>
+                    <div className="mt-2 pt-2 border-t flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">클릭하여 상세 보기</span>
+                      <Eye className="h-4 w-4 text-muted-foreground" />
                     </div>
                   )}
                 </div>
@@ -512,7 +508,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
 
       {/* 분석 상세 보기 다이얼로그 */}
       <Dialog open={showHistoryDetail} onOpenChange={setShowHistoryDetail}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-[50vw] max-w-[50vw] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <History className="h-5 w-5" />
