@@ -431,8 +431,8 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                                   잔여지 형상지수 기반 판정
                                 </h5>
                                 <div className="grid grid-cols-3 gap-3">
-                                  <div className="p-2 rounded" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
-                                    <p className="text-xs text-muted-foreground">잔여지 형상지수</p>
+                                  <div className="p-2 rounded" style={{ backgroundColor: "rgb(243, 246, 249)", color: "rgb(251, 251, 251)" }}>
+                                    <p className="text-xs">잔여지 형상지수</p>
                                     <p className="text-lg font-semibold">{aiResult.remainingShapeIndex?.toFixed(3) || "-"}</p>
                                   </div>
                                   <div className="p-2 rounded" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
