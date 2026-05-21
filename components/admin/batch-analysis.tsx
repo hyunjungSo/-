@@ -324,10 +324,28 @@ export function BatchAnalysis({
       {/* 필지 목록 테이블 */}
       <Card className="border-0">
         <CardHeader>
-          <CardTitle>잔여지 필지 목록</CardTitle>
-          <CardDescription>
-            분석할 필지를 선택하고 일괄 분석을 실행하세요. 2차 분석은 여러 번 실행할 수 있습니다.
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>잔여지 필지 목록</CardTitle>
+              <CardDescription>
+                분석할 필지를 선택하고 일괄 분석을 실행하세요. 2차 분석은 여러 번 실행할 수 있습니다.
+              </CardDescription>
+            </div>
+            <div className="flex items-center gap-3 ml-4">
+              <span className="text-sm font-medium whitespace-nowrap">관리</span>
+              <RadioFilterGroup
+                label=""
+                name="publish"
+                value={publishFilter}
+                onChange={(v) => setPublishFilter(v as "all" | "published" | "unpublished")}
+                options={[
+                  { value: "all", label: "전체" },
+                  { value: "published", label: "노출", icon: <Eye className="h-3.5 w-3.5" /> },
+                  { value: "unpublished", label: "미노출", icon: <EyeOff className="h-3.5 w-3.5" /> }
+                ]}
+              />
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <Table>
@@ -339,7 +357,6 @@ export function BatchAnalysis({
                 <TableHead>AI 판정</TableHead>
                 <TableHead>분석 횟수</TableHead>
                 <TableHead>최종 분석일</TableHead>
-                <TableHead className="w-[100px]">관리</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -365,24 +382,11 @@ export function BatchAnalysis({
                   <TableCell className="text-sm text-muted-foreground">
                     {parcel.lastAnalyzedAt ? formatDateTime(parcel.lastAnalyzedAt) : "-"}
                   </TableCell>
-                  <TableCell onClick={(e) => e.stopPropagation()}>
-                    <PublishRadioCell
-                      id={parcel.id}
-                      isPublished={parcel.publishStatus === "공개"}
-                      onPublishChange={(published) => {
-                        if (published) {
-                          handlePublish(parcel.id);
-                        } else {
-                          handleUnpublish(parcel.id);
-                        }
-                      }}
-                    />
-                  </TableCell>
                 </TableRow>
               ))}
               {filteredParcels.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                     조건에 맞는 필지가 없습니다.
                   </TableCell>
                 </TableRow>
