@@ -528,7 +528,7 @@ export function ParcelPreRegistration({ businessUnit, onRegisterComplete }: Parc
                   현재 활용지목
                 </Label>
                 <Select value={currentUsage} onValueChange={(v) => setCurrentUsage(v as LandCategory)}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-[40px]">
                     <SelectValue placeholder="활용지목을 선택하세요" />
                   </SelectTrigger>
                   <SelectContent>
@@ -548,7 +548,7 @@ export function ParcelPreRegistration({ businessUnit, onRegisterComplete }: Parc
                   토지모양
                 </Label>
                 <Select value={landShape} onValueChange={(v) => setLandShape(v as LandShape)}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-[40px]">
                     <SelectValue placeholder="토지모양을 선택하세요" />
                   </SelectTrigger>
                   <SelectContent>
