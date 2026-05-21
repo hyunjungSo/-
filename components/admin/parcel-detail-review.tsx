@@ -153,7 +153,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
       {/* 필지관리 타이틀 */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">필지관리</h1>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Switch 
             checked={parcel.isVisible !== false}
             onCheckedChange={(checked) => {
@@ -162,6 +162,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                 isVisible: checked,
               });
             }}
+            className="h-8 w-14 scale-125"
           />
           <span className={`text-sm font-medium ${parcel.isVisible !== false ? "text-emerald-600" : "text-muted-foreground"}`}>
             {parcel.isVisible !== false ? "노출" : "미노출"}
