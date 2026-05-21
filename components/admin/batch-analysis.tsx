@@ -246,9 +246,16 @@ export function BatchAnalysis({
         if (aiJudgmentFilter === "low" && isHigh) return false;
       }
       
+      // 관리(노출/미노출) 필터
+      if (visibilityFilter !== "all") {
+        const isVisible = parcel.isVisible !== false;
+        if (visibilityFilter === "visible" && !isVisible) return false;
+        if (visibilityFilter === "hidden" && isVisible) return false;
+      }
+      
       return true;
     });
-  }, [parcels, businessUnit, businessUnitFilter, searchQuery, aiJudgmentFilter]);
+  }, [parcels, businessUnit, businessUnitFilter, searchQuery, aiJudgmentFilter, visibilityFilter]);
 
   // 통계 (검색값에 영향 받지 않음 - 전체 데이터 기준)
   const stats = useMemo(() => {
@@ -421,6 +428,19 @@ export function BatchAnalysis({
                 { value: "all", label: "전체" },
                 { value: "high", label: "매수 가능성 높음" },
                 { value: "low", label: "매수 가능성 낮음" }
+              ]}
+            />
+            
+            {/* 관리(노출/미노출) 필터 */}
+            <RadioFilterGroup
+              label="관리"
+              name="visibility"
+              value={visibilityFilter}
+              onChange={(v) => setVisibilityFilter(v as "all" | "visible" | "hidden")}
+              options={[
+                { value: "all", label: "전체" },
+                { value: "visible", label: "노출" },
+                { value: "hidden", label: "미노출" }
               ]}
             />
           </div>

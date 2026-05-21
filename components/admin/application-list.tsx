@@ -213,18 +213,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       });
     }, [periodFilteredApplications, searchQuery, statusFilter, projectUnitFilter, sortOrder, aiMismatchFilter]);
 
-  // 페이지네이션 계산
-  const totalPages = Math.ceil(filteredApplications.length / itemsPerPage);
-  const paginatedApplications = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return filteredApplications.slice(startIndex, startIndex + itemsPerPage);
-  }, [filteredApplications, currentPage, itemsPerPage]);
-
-  // 필터 변경 시 페이지 리셋
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, statusFilter, projectUnitFilter, aiMismatchFilter, periodFilter, selectedYear]);
-
   // 상태별 통계 (기간 필터 적용)
   const stats = useMemo(() => {
     const total = periodFilteredApplications.length;
@@ -700,7 +688,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paginatedApplications.map((app) => (
+                {filteredApplications.map((app) => (
                   <TableRow
                     key={app.id}
                     className="cursor-pointer hover:bg-muted/50"
@@ -772,7 +760,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
 
           {/* 카드 목록 (모바일) */}
           <div className="space-y-3 md:hidden">
-            {paginatedApplications.map((app) => (
+            {filteredApplications.map((app) => (
               <button
                 key={app.id}
                 onClick={() => onSelect(app)}
@@ -821,6 +809,72 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           {filteredApplications.length === 0 && (
             <div className="py-12 text-center text-muted-foreground">
               검색 결과가 없습니다.
+            </div>
+          )}
+          
+          {/* 페이지네이션 */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 pt-4 border-t mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(1)}
+                disabled={currentPage === 1}
+              >
+                처음
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+              >
+                이전
+              </Button>
+              <div className="flex items-center gap-1">
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+                  return (
+                    <Button
+                      key={pageNum}
+                      variant={currentPage === pageNum ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(pageNum)}
+                      className="w-8 h-8 p-0"
+                    >
+                      {pageNum}
+                    </Button>
+                  );
+                })}
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+              >
+                다음
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={currentPage === totalPages}
+              >
+                마지막
+              </Button>
+              <span className="text-sm text-muted-foreground ml-2">
+                ({filteredApplications.length}건 중 {(currentPage - 1) * itemsPerPage + 1}-{Math.min(currentPage * itemsPerPage, filteredApplications.length)}건)
+              </span>
             </div>
           )}
         </CardContent>
