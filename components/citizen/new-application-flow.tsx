@@ -213,7 +213,7 @@ const questions = [
     options: [
       { value: "택지", label: "집이나 상가, 공장 등이 있는 땅 (택지)" },
       { value: "농지", label: "밭, 논, 과수원 등 농사를 짓는 땅 (농지)" },
-      { value: "산지", label: "산이나 숲 (임야/산지)" },
+      { value: "산지", label: "산이나 숲 (임야/�����지)" },
       { value: "기타", label: "그 외 다른 용도의 땅" },
     ],
   },
@@ -613,7 +613,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
       duration: 3500,
     });
     
-    // 페이드아웃 -> 초기화 -> 페이드인 트랜지션
+    // 페이드아웃 -> 초기화 -> 페이드인 ��랜지션
     setIsTransitioning(true);
     setTimeout(() => {
       handleReset();

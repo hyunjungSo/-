@@ -623,19 +623,19 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           {/* 필터 및 검색 */}
           <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
             {/* 검색 입력 */}
-            <div className="relative flex-1">
+            <div className="relative flex-1 h-[40px]">
               <Input
-                placeholder="접수번호, 신청인명, 지번으로 검색"
+                placeholder="접수번호, 신청인명 또는 지번을 입력하세요"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pr-10"
+                className="pr-10 h-[40px]"
               />
               <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             </div>
             
             {/* 사업단 필터 */}
             <Select value={projectUnitFilter} onValueChange={(value) => setProjectUnitFilter(value as "all" | "gangjin-gwangju")}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] h-[40px]">
                 <SelectValue placeholder="사업단 선택" />
               </SelectTrigger>
               <SelectContent>
@@ -646,25 +646,24 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             
             {/* 처리상태 필터 */}
             <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as AdminStatus | "all")}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-[150px] h-[40px]">
                 <SelectValue placeholder="처리상태" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">전체 상황</SelectItem>
                 <SelectItem value="접수완료">접수완료</SelectItem>
                 <SelectItem value="진행중">진행중</SelectItem>
-                <SelectItem value="심사완료">심사���료</SelectItem>
+                <SelectItem value="심사완료">심사완료</SelectItem>
               </SelectContent>
             </Select>
             
             {/* 정렬 버튼 */}
             <Button
               variant="outline"
-              className="gap-1.5 border-foreground bg-foreground px-4 text-background hover:bg-foreground/90 hover:text-background"
+              className="border-foreground bg-foreground px-4 text-background hover:bg-foreground/90 hover:text-background h-[40px]"
               onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
             >
-              <span>{sortOrder === "desc" ? "↓" : "↑"}</span>
-              <span>{sortOrder === "desc" ? "최신순" : "오래된순"}</span>
+              {sortOrder === "desc" ? "최신순" : "오래된순"}
             </Button>
           </div>
 
@@ -738,9 +737,13 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       <AdminStatusBadge status={app.adminStatus} />
                     </TableCell>
                     <TableCell>
-                      <JudgmentSummaryBadge 
-                        lands={[app.landInfo, ...(app.additionalLands || [])]} 
-                      />
+                      {app.adminStatus !== "접수완료" ? (
+                        <JudgmentSummaryBadge 
+                          lands={[app.landInfo, ...(app.additionalLands || [])]} 
+                        />
+                      ) : (
+                        <span className="text-muted-foreground">-</span>
+                      )}
                     </TableCell>
                     <TableCell>
                       <ChevronRight className="h-4 w-4 text-muted-foreground" />

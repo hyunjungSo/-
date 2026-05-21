@@ -34,7 +34,7 @@ export function RadioFilterGroup({
           <button
             key={option.value}
             onClick={() => onChange(option.value)}
-            className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all ${
+            className={`flex items-center justify-center gap-1.5 rounded-md px-3 h-[40px] text-sm font-medium transition-all ${
               value === option.value
                 ? "bg-black text-white hover:bg-black/90"
                 : "border border-black text-black hover:bg-black/5"

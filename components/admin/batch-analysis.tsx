@@ -11,9 +11,8 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -30,13 +29,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { 
-  Play, 
   CheckCircle2, 
   XCircle, 
-  Loader2,
-  RotateCcw,
-  Eye,
-  EyeOff,
   Filter
 } from "lucide-react";
 import { 
@@ -79,15 +73,11 @@ export function BatchAnalysis({
   // 필지 목록
   const [parcels, setParcels] = useState<ProcessedParcel[]>(externalParcels || dummyProcessedParcels);
   
-  // 선택된 필지들
-  const [selectedParcelIds, setSelectedParcelIds] = useState<Set<string>>(new Set());
-  
   // 검색어
   const [searchQuery, setSearchQuery] = useState("");
   
   // 필터 (라디오 버튼)
   const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low">("all");
-  const [publishFilter, setPublishFilter] = useState<"all" | "published" | "unpublished">("all");
   const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("all");
   
   // 사업단 목록 추출
@@ -96,25 +86,141 @@ export function BatchAnalysis({
     return Array.from(units).sort();
   }, [parcels]);
   
-  // 일괄 분석 진행 상태
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisProgress, setAnalysisProgress] = useState(0);
-  const [analyzedCount, setAnalyzedCount] = useState(0);
-  
   // 히스토리 다이얼로그
   const [showHistoryDialog, setShowHistoryDialog] = useState(false);
   const [selectedHistoryParcel, setSelectedHistoryParcel] = useState<ProcessedParcel | null>(null);
-  
-  // 분석 옵션 다이얼로그
-  const [showAnalysisOptionsDialog, setShowAnalysisOptionsDialog] = useState(false);
   const [analysisOptions, setAnalysisOptions] = useState({
     useCurrentUsage: true,
     useLandShape: true,
   });
 
+  // 배치 분석을 위한 필지 선택
+  const [selectedParcelIds, setSelectedParcelIds] = useState<Set<string>>(new Set());
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analyzingParcelId, setAnalyzingParcelId] = useState<string | null>(null);
+
+  // 필지 선택/해제 토글
+  const handleToggleParcelSelection = (parcelId: string) => {
+    setSelectedParcelIds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(parcelId)) {
+        newSet.delete(parcelId);
+      } else {
+        newSet.add(parcelId);
+      }
+      return newSet;
+    });
+  };
+
+  // 전체 선택/해제
+  const handleToggleSelectAll = () => {
+    if (selectedParcelIds.size === filteredParcels.length) {
+      setSelectedParcelIds(new Set());
+    } else {
+      setSelectedParcelIds(new Set(filteredParcels.map(p => p.id)));
+    }
+  };
+
+  // 단일 필지 분석 실행
+  const handleAnalyzeSingleParcel = async (parcelId: string) => {
+    setAnalyzingParcelId(parcelId);
+    try {
+      const parcel = parcels.find(p => p.id === parcelId);
+      if (!parcel) return;
+
+      const newAnalysisResult: AIJudgmentResult = {
+        provisionalJudgment: Math.random() > 0.5 ? "매수 가능성 높음" : "매수 가능성 낮음",
+        reason: "AI 자동 분석 결과"
+      };
+
+      const newHistory: AnalysisHistory = {
+        id: `analysis_${Date.now()}_${Math.random()}`,
+        stage: parcel.analysisHistory?.length ? "2차분석" : "1차분석",
+        analyzedAt: new Date().toISOString(),
+        analyzedBy: "AI 자동 분석",
+        newResult: newAnalysisResult.provisionalJudgment,
+        previousResult: parcel.aiResult?.provisionalJudgment || undefined,
+        changedOptions: {},
+      };
+
+      const updatedParcel: ProcessedParcel = {
+        ...parcel,
+        aiResult: newAnalysisResult,
+        analysisHistory: [...(parcel.analysisHistory || []), newHistory],
+        lastAnalyzedAt: new Date().toISOString(),
+        isVisible: true,
+      };
+
+      setParcels(prev =>
+        prev.map(p => p.id === parcelId ? updatedParcel : p)
+      );
+
+      onAnalysisComplete?.();
+    } finally {
+      setAnalyzingParcelId(null);
+    }
+  };
+
+  // 배치 분석 실행
+  const handleBatchAnalysis = async () => {
+    if (selectedParcelIds.size === 0) return;
+
+    setIsAnalyzing(true);
+    try {
+      // 선택된 필지들에 대해 분석 수행
+      const parcelsToAnalyze = parcels.filter(p => selectedParcelIds.has(p.id));
+      
+      const updatedParcels = parcelsToAnalyze.map(parcel => {
+        const newAnalysisResult: AIJudgmentResult = {
+          provisionalJudgment: Math.random() > 0.5 ? "매수 가능성 높음" : "매수 가능성 낮음",
+          reason: "AI 자동 분석 결과"
+        };
+
+        const newHistory: AnalysisHistory = {
+          id: `analysis_${Date.now()}_${Math.random()}`,
+          stage: parcel.analysisHistory?.length ? "2차분석" : "1차분석",
+          analyzedAt: new Date().toISOString(),
+          analyzedBy: "AI 자동 분석",
+          newResult: newAnalysisResult.provisionalJudgment,
+          previousResult: parcel.aiResult?.provisionalJudgment || undefined,
+          changedOptions: {},
+        };
+
+        return {
+          ...parcel,
+          aiResult: newAnalysisResult,
+          analysisHistory: [...(parcel.analysisHistory || []), newHistory],
+          lastAnalyzedAt: new Date().toISOString(),
+          isVisible: true,
+        } as ProcessedParcel;
+      });
+
+      // 기존 필지들과 분석된 필지들 병합
+      setParcels(prev => {
+        const updated = [...prev];
+        parcelsToAnalyze.forEach(analyzedParcel => {
+          const idx = updated.findIndex(p => p.id === analyzedParcel.id);
+          if (idx !== -1) {
+            updated[idx] = updatedParcels.find(p => p.id === analyzedParcel.id)!;
+          }
+        });
+        return updated;
+      });
+
+      // 선택 초기화
+      setSelectedParcelIds(new Set());
+      onAnalysisComplete?.();
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
   // 필터링된 필지 목록
   const filteredParcels = useMemo(() => {
     return parcels.filter(parcel => {
+      // 면적이 0인 필지 제외
+      if (parcel.landInfo.remainingArea === 0) return false;
+      
       // 사업단 필터 (props로 전달된 것 또는 Select로 선택된 것)
       if (businessUnit && parcel.businessUnit !== businessUnit) return false;
       if (businessUnitFilter !== "all" && parcel.businessUnit !== businessUnitFilter) return false;
@@ -135,16 +241,9 @@ export function BatchAnalysis({
         if (aiJudgmentFilter === "low" && isHigh) return false;
       }
       
-      // 관리(노출) 필터 (라디오)
-      if (publishFilter !== "all") {
-        const isPublished = parcel.publishStatus === "공개";
-        if (publishFilter === "published" && !isPublished) return false;
-        if (publishFilter === "unpublished" && isPublished) return false;
-      }
-      
       return true;
     });
-  }, [parcels, businessUnit, businessUnitFilter, searchQuery, aiJudgmentFilter, publishFilter]);
+  }, [parcels, businessUnit, businessUnitFilter, searchQuery, aiJudgmentFilter]);
 
   // 통계 (검색값에 영향 받지 않음 - 전체 데이터 기준)
   const stats = useMemo(() => {
@@ -157,9 +256,11 @@ export function BatchAnalysis({
     
     const total = relevantParcels.length;
     const highPossibility = relevantParcels.filter(p => 
-      isHighPossibility(p.aiResult.provisionalJudgment)
+      p.aiResult && isHighPossibility(p.aiResult.provisionalJudgment)
     ).length;
-    const lowPossibility = total - highPossibility;
+    const lowPossibility = relevantParcels.filter(p => 
+      p.aiResult && !isHighPossibility(p.aiResult.provisionalJudgment)
+    ).length;
     const confirmed = relevantParcels.filter(p => 
       p.publishStatus === "담당자확인완료" || p.publishStatus === "공개"
     ).length;
@@ -167,86 +268,6 @@ export function BatchAnalysis({
     
     return { total, highPossibility, lowPossibility, confirmed, pending };
   }, [parcels, businessUnit]);
-
-  // 전체 선택/해제
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedParcelIds(new Set(filteredParcels.map(p => p.id)));
-    } else {
-      setSelectedParcelIds(new Set());
-    }
-  };
-
-  // 개별 선택
-  const handleSelectParcel = (parcelId: string, checked: boolean) => {
-    const newSelected = new Set(selectedParcelIds);
-    if (checked) {
-      newSelected.add(parcelId);
-    } else {
-      newSelected.delete(parcelId);
-    }
-    setSelectedParcelIds(newSelected);
-  };
-
-  // 일괄 1차 분석 실행
-  const handleBatchAnalysis = async (stage: "1차분석" | "2차분석") => {
-    if (selectedParcelIds.size === 0) return;
-    
-    setShowAnalysisOptionsDialog(false);
-    setIsAnalyzing(true);
-    setAnalysisProgress(0);
-    setAnalyzedCount(0);
-    
-    const selectedParcels = filteredParcels.filter(p => selectedParcelIds.has(p.id));
-    const total = selectedParcels.length;
-    
-    // 시뮬레이션: 각 필지를 순차적으로 분석
-    for (let i = 0; i < total; i++) {
-      await new Promise(resolve => setTimeout(resolve, 300)); // 분석 시간 시뮬레이션
-      
-      const parcel = selectedParcels[i];
-      const newResult: AIJudgmentResult = Math.random() > 0.3 ? "매수 가능성 높음" : "매수 가능성 낮음";
-      
-      // 히스토리 추가
-      const newHistory: AnalysisHistory = {
-        id: `history-${Date.now()}-${i}`,
-        parcelId: parcel.id,
-        stage,
-        analyzedAt: new Date().toISOString(),
-        analyzedBy: stage === "1차분석" ? "시스템" : "담당자",
-        previousResult: parcel.aiResult.provisionalJudgment as AIJudgmentResult,
-        newResult,
-        previousShapeIndex: parcel.aiResult.remainingShapeIndex,
-        newShapeIndex: Math.random() * 0.5 + 0.2,
-        aiResult: parcel.aiResult,
-      };
-      
-      // 필지 업데이트
-      setParcels(prev => prev.map(p => {
-        if (p.id === parcel.id) {
-          return {
-            ...p,
-            aiResult: {
-              ...p.aiResult,
-              provisionalJudgment: newResult,
-            },
-            publishStatus: stage === "1차분석" ? "1차분석완료" : "2차분석중",
-            analysisHistory: [...p.analysisHistory, newHistory],
-            firstAnalyzedAt: stage === "1차분석" ? new Date().toISOString() : p.firstAnalyzedAt,
-            lastAnalyzedAt: new Date().toISOString(),
-          } as ProcessedParcel;
-        }
-        return p;
-      }));
-      
-      setAnalyzedCount(i + 1);
-      setAnalysisProgress(((i + 1) / total) * 100);
-    }
-    
-    setIsAnalyzing(false);
-    setSelectedParcelIds(new Set());
-    onAnalysisComplete?.();
-  };
 
   // 히스토리 보기
   const handleViewHistory = (parcel: ProcessedParcel) => {
@@ -364,7 +385,7 @@ export function BatchAnalysis({
           <SearchInput
             value={searchQuery}
             onChange={setSearchQuery}
-            placeholder="소재지, 소유자명, 사업단으로 검색"
+            placeholder="소재지, 소유자명을 입력하세요"
           />
           
           {/* 필터 영역 */}
@@ -373,7 +394,7 @@ export function BatchAnalysis({
             <div className="flex items-center gap-3">
               <Label className="text-sm font-medium whitespace-nowrap">사업단:</Label>
               <Select value={businessUnitFilter} onValueChange={setBusinessUnitFilter}>
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[180px] h-[40px]">
                   <SelectValue placeholder="사업단 선택" />
                 </SelectTrigger>
                 <SelectContent>
@@ -397,119 +418,105 @@ export function BatchAnalysis({
                 { value: "low", label: "매수 가능성 낮음" }
               ]}
             />
-            
-            {/* 관리(노출) 필터 */}
-            <RadioFilterGroup
-              label="관리"
-              name="publish"
-              value={publishFilter}
-              onChange={(v) => setPublishFilter(v as "all" | "published" | "unpublished")}
-              options={[
-                { value: "all", label: "전체" },
-                { value: "published", label: "노출", icon: <Eye className="h-3.5 w-3.5" /> },
-                { value: "unpublished", label: "미노출", icon: <EyeOff className="h-3.5 w-3.5" /> }
-              ]}
-            />
           </div>
-          
-          {/* 액션 버튼 */}
-          <div className="flex items-center justify-between pt-2 border-t">
-            <span className="text-sm text-muted-foreground">
-              {selectedParcelIds.size}건 선택됨
-            </span>
-            <Button 
-              onClick={() => setShowAnalysisOptionsDialog(true)}
-              disabled={selectedParcelIds.size === 0 || isAnalyzing}
-            >
-              {isAnalyzing ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  분��� 중...
-                </>
-              ) : (
-                <>
-                  <Play className="h-4 w-4 mr-2" />
-                  일괄 분석 실행
-                </>
-              )}
-            </Button>
-          </div>
-
-          {/* 분석 진행률 */}
-          {isAnalyzing && (
-            <div className="mt-4 space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span>분석 진행 중...</span>
-                <span>{analyzedCount} / {selectedParcelIds.size} 완료</span>
-              </div>
-              <Progress value={analysisProgress} className="h-2" />
-            </div>
-          )}
         </CardContent>
       </Card>
 
       {/* 필지 목록 테이블 */}
       <Card className="border-0">
         <CardHeader>
-          <CardTitle>잔여지 필지 목록</CardTitle>
-          <CardDescription>
-            분석할 필지를 선택하고 일괄 분석을 실행하세요. 2차 분석은 여러 번 실행할 수 있습니다.
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>잔여지 필지 목록</CardTitle>
+              <CardDescription>
+                분석할 필지를 선택하고 일괄 분석을 실행하세요. 2차 분석은 여러 번 실행할 수 있습니다.
+              </CardDescription>
+            </div>
+            {selectedParcelIds.size > 0 && (
+              <Button 
+                onClick={handleBatchAnalysis}
+                disabled={isAnalyzing}
+                className="ml-auto"
+              >
+                {isAnalyzing ? "분석 중..." : `선택된 필지 분석 (${selectedParcelIds.size})`}
+              </Button>
+            )}
+          </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[50px]">
-                  <Checkbox 
-                    checked={selectedParcelIds.size === filteredParcels.length && filteredParcels.length > 0}
-                    onCheckedChange={handleSelectAll}
-                  />
+                <TableHead className="w-[80px]">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selectedParcelIds.size === filteredParcels.length && filteredParcels.length > 0}
+                      onChange={handleToggleSelectAll}
+                      className="w-4 h-4 cursor-pointer"
+                      title="모두 선택"
+                    />
+                    <span className="text-xs font-normal">
+                      ({selectedParcelIds.size}/{filteredParcels.length})
+                    </span>
+                  </label>
                 </TableHead>
+                <TableHead className="w-[60px]">No.</TableHead>
                 <TableHead>소재지</TableHead>
                 <TableHead>면적(㎡)</TableHead>
                 <TableHead>AI 판정</TableHead>
                 <TableHead>분석 횟수</TableHead>
                 <TableHead>최종 분석일</TableHead>
-                <TableHead className="w-[100px]">관리</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredParcels.map((parcel) => (
+              {filteredParcels.map((parcel, index) => (
                 <TableRow 
                   key={parcel.id} 
-                  className="cursor-pointer hover:bg-muted/50"
-                  onClick={() => handleParcelClick(parcel)}
+                  className="hover:bg-muted/50"
                 >
-                  <TableCell onClick={(e) => e.stopPropagation()}>
-                    <Checkbox 
+                  <TableCell className="text-center">
+                    <input
+                      type="checkbox"
                       checked={selectedParcelIds.has(parcel.id)}
-                      onCheckedChange={(checked) => handleSelectParcel(parcel.id, !!checked)}
+                      onChange={() => handleToggleParcelSelection(parcel.id)}
+                      className="w-4 h-4 cursor-pointer"
+                      onClick={(e) => e.stopPropagation()}
                     />
                   </TableCell>
-                  <TableCell className="font-medium">{parcel.landInfo.address}</TableCell>
-                  <TableCell>{parcel.landInfo.remainingArea.toLocaleString()}</TableCell>
-                  <TableCell>
-                    <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
+                  <TableCell className="text-center text-muted-foreground">{index + 1}</TableCell>
+                  <TableCell 
+                    className="font-medium cursor-pointer"
+                    onClick={() => handleParcelClick(parcel)}
+                  >
+                    {parcel.landInfo.address}
+                  </TableCell>
+                  <TableCell className="cursor-pointer" onClick={() => handleParcelClick(parcel)}>
+                    {parcel.landInfo.remainingArea.toLocaleString()}
                   </TableCell>
                   <TableCell>
-                    <span className="text-sm">{parcel.analysisHistory.length}회</span>
+                    {parcel.aiResult ? (
+                      <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-foreground text-foreground hover:bg-foreground hover:text-background"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAnalyzeSingleParcel(parcel.id);
+                        }}
+                        disabled={analyzingParcelId === parcel.id}
+                      >
+                        {analyzingParcelId === parcel.id ? "분석 중..." : "분석"}
+                      </Button>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-sm">{parcel.analysisHistory?.length || 0}회</span>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {parcel.lastAnalyzedAt ? formatDateTime(parcel.lastAnalyzedAt) : "-"}
-                  </TableCell>
-                  <TableCell onClick={(e) => e.stopPropagation()}>
-                    <PublishRadioCell
-                      id={parcel.id}
-                      isPublished={parcel.publishStatus === "공개"}
-                      onPublishChange={(published) => {
-                        if (published) {
-                          handlePublish(parcel.id);
-                        } else {
-                          handleUnpublish(parcel.id);
-                        }
-                      }}
-                    />
                   </TableCell>
                 </TableRow>
               ))}
@@ -524,55 +531,6 @@ export function BatchAnalysis({
           </Table>
         </CardContent>
       </Card>
-
-      {/* 분석 옵션 다이얼로그 */}
-      <Dialog open={showAnalysisOptionsDialog} onOpenChange={setShowAnalysisOptionsDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>일괄 분석 옵션</DialogTitle>
-            <DialogDescription>
-              {selectedParcelIds.size}건의 필지를 분석합니다. 분석 옵션을 선택하세요.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4 py-4">
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="useCurrentUsage"
-                checked={analysisOptions.useCurrentUsage}
-                onCheckedChange={(checked) => 
-                  setAnalysisOptions(prev => ({ ...prev, useCurrentUsage: !!checked }))
-                }
-              />
-              <Label htmlFor="useCurrentUsage">현재 활용지목 적용</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="useLandShape"
-                checked={analysisOptions.useLandShape}
-                onCheckedChange={(checked) => 
-                  setAnalysisOptions(prev => ({ ...prev, useLandShape: !!checked }))
-                }
-              />
-              <Label htmlFor="useLandShape">토지형상 적용</Label>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowAnalysisOptionsDialog(false)}>
-              취소
-            </Button>
-            <Button onClick={() => handleBatchAnalysis("1차분석")}>
-              <Play className="h-4 w-4 mr-2" />
-              1차 분석 실행
-            </Button>
-            <Button variant="secondary" onClick={() => handleBatchAnalysis("2차분석")}>
-              <RotateCcw className="h-4 w-4 mr-2" />
-              2차 분석 (재분석)
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       {/* 히스토리 다이얼로그 */}
       <Dialog open={showHistoryDialog} onOpenChange={setShowHistoryDialog}>

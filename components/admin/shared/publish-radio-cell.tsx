@@ -1,7 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Eye, EyeOff } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 interface PublishRadioCellProps {
   id: string;
@@ -16,24 +15,13 @@ export function PublishRadioCell({
 }: PublishRadioCellProps) {
   return (
     <div className="flex items-center gap-2">
-      <Button
-        onClick={() => onPublishChange(true)}
-        variant={isPublished ? "default" : "outline"}
-        size="sm"
-        className="flex items-center gap-1 h-[34px]"
-      >
-        <Eye className="h-3.5 w-3.5" />
-        노출
-      </Button>
-      <Button
-        onClick={() => onPublishChange(false)}
-        variant={!isPublished ? "default" : "outline"}
-        size="sm"
-        className="flex items-center gap-1 h-[34px]"
-      >
-        <EyeOff className="h-3.5 w-3.5" />
-        미노출
-      </Button>
+      <Switch 
+        checked={isPublished}
+        onCheckedChange={onPublishChange}
+      />
+      <span className={`text-sm font-medium ${isPublished ? "text-emerald-600" : "text-muted-foreground"}`}>
+        {isPublished ? "노출" : "미노출"}
+      </span>
     </div>
   );
 }
