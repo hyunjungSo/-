@@ -482,9 +482,9 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
 
                               {/* 판정 기준 충족 여부 */}
                               {aiResult.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
-                                <div className="p-3 rounded-lg" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
+                                <div className="rounded-lg">
                                   <h5 className="text-sm font-semibold mb-2">판정 기준 충족 여부</h5>
-                                  <div className="space-y-1">
+                                  <div className="space-y-1" style={{ backgroundColor: "rgb(251, 251, 251)", padding: "8px" }}>
                                     {aiResult.criteriaChecks.map((check, idx) => (
                                       <div key={idx} className="flex items-center gap-2 text-sm">
                                         {check.isMet ? (
