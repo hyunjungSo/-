@@ -1068,7 +1068,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       <td className="px-4 py-3">사다리꼴</td>
                     </tr>
                     <tr>
-                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">�����용���������목</td>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">�������용���������목</td>
                       <td className="px-4 py-3">전</td>
                       <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">공부상 지목</td>
                       <td className="px-4 py-3">{landCategories.find(c => c.value === applicationLands[selectedLandIndex].landCategory)?.label || applicationLands[selectedLandIndex].landCategory}</td>
@@ -1826,9 +1826,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       })()}
                     </div>
                   </div>
-                
-                  {/* 우측: 분석결과 확인 */}
-                  <div className="w-1/2 space-y-3">
+
+                    {/* 우측: 분석결과 확인 */}
+                    <div className="w-1/2 space-y-3">
                     {Object.keys(adminLandAIResults).length === 0 ? (
                       <div className="flex flex-col items-center justify-center py-12 text-center rounded-lg border bg-muted/20">
                         <div className="rounded-full bg-muted/50 p-4 mb-4">
@@ -2072,7 +2072,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     )}
                   </div>
                 </div>
-              </TabsContent>
+              </div>
+            </div>
+          </TabsContent>
             </Tabs>
           </div>
 
