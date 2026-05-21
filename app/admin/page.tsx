@@ -107,6 +107,10 @@ export default function AdminPage() {
 
       {/* 오른쪽 콘텐츠 영역 */}
       <main className="flex-1 p-6" style={{ backgroundColor: '#f3f6f9' }}>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-foreground sm:text-3xl">신청관리</h1>
+        </div>
+
         {/* 신청관리 콘텐츠 */}
         {activeTab === "applications" && (
           <>
