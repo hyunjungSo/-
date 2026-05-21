@@ -422,24 +422,24 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                       </AccordionTrigger>
                       <AccordionContent className="pb-4">
                         {aiResult ? (
-                          <div className="space-y-4 pt-2">
+                            <div className="space-y-4 pt-2">
                             {/* 판정 기준 - 잔여지 형상지수 기반 판정 */}
-                            <div className="p-4 border rounded-lg space-y-4 bg-muted/20">
+                            <div className="space-y-4">
                               <div className="space-y-3">
                                 <h5 className="text-sm font-semibold flex items-center gap-2">
                                   <Shapes className="h-4 w-4 text-muted-foreground" />
                                   잔여지 형상지수 기반 판정
                                 </h5>
                                 <div className="grid grid-cols-3 gap-3">
-                                  <div className="p-2 bg-background rounded">
+                                  <div className="p-2 rounded" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
                                     <p className="text-xs text-muted-foreground">잔여지 형상지수</p>
                                     <p className="text-lg font-semibold">{aiResult.remainingShapeIndex?.toFixed(3) || "-"}</p>
                                   </div>
-                                  <div className="p-2 bg-background rounded">
+                                  <div className="p-2 rounded" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
                                     <p className="text-xs text-muted-foreground">최소 폭</p>
                                     <p className="text-lg font-semibold">{aiResult.remainingMinWidth || "-"}m</p>
                                   </div>
-                                  <div className="p-2 bg-background rounded">
+                                  <div className="p-2 rounded" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
                                     <p className="text-xs text-muted-foreground">잔여 면적</p>
                                     <p className="text-lg font-semibold">{aiResult.remainingArea?.toLocaleString() || "-"}㎡</p>
                                   </div>
@@ -453,25 +453,25 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                                   수동 확인 항목
                                 </h5>
                                 <div className="grid grid-cols-2 gap-2">
-                                  <div className="p-2 border rounded flex items-center justify-between bg-background">
+                                  <div className="p-2 rounded flex items-center justify-between" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
                                     <span className="text-sm">농기계 진입 불가</span>
                                     <Badge variant={aiResult.farmMachineDifficulty ? "destructive" : "outline"}>
                                       {aiResult.farmMachineDifficulty ? "해당" : "미해당"}
                                     </Badge>
                                   </div>
-                                  <div className="p-2 border rounded flex items-center justify-between bg-background">
+                                  <div className="p-2 rounded flex items-center justify-between" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
                                     <span className="text-sm">접면도로 상실</span>
                                     <Badge variant={aiResult.accessRoadLost ? "destructive" : "outline"}>
                                       {aiResult.accessRoadLost ? "해당" : "미해당"}
                                     </Badge>
                                   </div>
-                                  <div className="p-2 border rounded flex items-center justify-between bg-background">
+                                  <div className="p-2 rounded flex items-center justify-between" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
                                     <span className="text-sm">관개수로 상실</span>
                                     <Badge variant={aiResult.waterChannelLost ? "destructive" : "outline"}>
                                       {aiResult.waterChannelLost ? "해당" : "미해당"}
                                     </Badge>
                                   </div>
-                                  <div className="p-2 border rounded flex items-center justify-between bg-background">
+                                  <div className="p-2 rounded flex items-center justify-between" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
                                     <span className="text-sm">고저차 발생</span>
                                     <Badge variant={aiResult.elevationDifference ? "destructive" : "outline"}>
                                       {aiResult.elevationDifference ? "해당" : "미해당"}
@@ -482,7 +482,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
 
                               {/* 판정 기준 충족 여부 */}
                               {aiResult.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
-                                <div className="p-3 bg-background border rounded-lg">
+                                <div className="p-3 rounded-lg" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
                                   <h5 className="text-sm font-semibold mb-2">판정 기준 충족 여부</h5>
                                   <div className="space-y-1">
                                     {aiResult.criteriaChecks.map((check, idx) => (
@@ -506,7 +506,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                                 {history.changeReason && (
                                   <div className="space-y-1">
                                     <label className="text-xs font-medium text-muted-foreground">변경 사유</label>
-                                    <div className="p-3 border rounded-lg bg-background min-h-[80px] overflow-y-auto text-sm whitespace-pre-wrap break-words">
+                                    <div className="p-3 rounded-lg min-h-[80px] overflow-y-auto text-sm whitespace-pre-wrap break-words" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
                                       {history.changeReason}
                                     </div>
                                   </div>
@@ -514,7 +514,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                                 {history.memo && (
                                   <div className="space-y-1">
                                     <label className="text-xs font-medium text-muted-foreground">메모</label>
-                                    <div className="p-3 border rounded-lg bg-background min-h-[80px] overflow-y-auto text-sm whitespace-pre-wrap break-words">
+                                    <div className="p-3 rounded-lg min-h-[80px] overflow-y-auto text-sm whitespace-pre-wrap break-words" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
                                       {history.memo}
                                     </div>
                                   </div>
