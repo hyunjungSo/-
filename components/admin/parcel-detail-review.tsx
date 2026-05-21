@@ -59,8 +59,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
   const [landShape, setLandShape] = useState<LandShape>(parcel.landShape);
   const [checkItems, setCheckItems] = useState<AdminCheckItems>(parcel.adminCheckItems);
   
-  // 변경 사유 및 메모
-  const [changeReason, setChangeReason] = useState("");
+  // 메모
   const [memo, setMemo] = useState("");
   
   // 분석 상태
@@ -123,7 +122,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
         landShape,
         ...checkItems,
       },
-      changeReason: changeReason || undefined,
       memo: memo || undefined,
       aiResult: newAiResult,
     };
@@ -326,17 +324,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                   </div>
                 ))}
               </div>
-            </div>
-
-            {/* 변경 사유 */}
-            <div className="space-y-2">
-              <Label className="text-sm">변경 사유</Label>
-              <Textarea 
-                placeholder="재분석 사유를 입력하세요 (선택)"
-                value={changeReason}
-                onChange={(e) => setChangeReason(e.target.value)}
-                rows={3}
-              />
             </div>
 
             {/* 메모 */}
