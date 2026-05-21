@@ -240,7 +240,13 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
         {/* 왼쪽: AI 분석 */}
         <Card>
           <CardHeader>
-            <CardTitle>AI 분석</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <RotateCcw className="h-5 w-5" />
+              AI 분석
+            </CardTitle>
+            <CardDescription>
+              분석 옵션을 설정하고 AI 분석을 실행합니다.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* 지적도 */}
@@ -342,7 +348,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
             <Button 
               onClick={handleReanalyze}
               disabled={isAnalyzing}
-              className="w-full h-12 bg-black hover:bg-black/90 text-white"
+              className="w-full"
             >
               {isAnalyzing ? (
                 <>
@@ -359,7 +365,13 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
         {/* 오른쪽: AI 분석결과 */}
         <Card>
           <CardHeader>
-            <CardTitle>AI 분석결과</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              AI 분석결과
+            </CardTitle>
+            <CardDescription>
+              AI 분석 결과와 매수 가능성 판정을 확인합니다.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {analysisResult ? (
@@ -428,30 +440,34 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                 </p>
               </div>
             ) : (
-              <div className="py-12 text-center text-muted-foreground">
-                <p>AI분석 결과 상세 내용</p>
-                <p className="text-sm mt-2">분석을 실행하면 결과가 표시됩니다.</p>
+              <div className="p-8 text-center text-muted-foreground border rounded-lg bg-muted/30">
+                <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                <p>아직 분석 결과가 없습니다.</p>
+                <p className="text-sm mt-1">왼쪽에서 분석을 실행하세요.</p>
               </div>
             )}
           </CardContent>
         </Card>
       </div>
 
-      {/* 검정 구분선 */}
-      <div className="w-full h-3 bg-black rounded-sm" />
-
       {/* AI 분석 히스토리 */}
       <Card>
         <CardHeader>
-          <CardTitle>AI 분석 히스토리</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <History className="h-5 w-5" />
+            AI 분석 히스토리
+          </CardTitle>
+          <CardDescription>
+            공사 진행 상황에 따라 여러 번 재분석할 수 있습니다.
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="space-y-3 max-h-[400px] overflow-y-auto">
             {(parcel.analysisHistory?.length || 0) > 0 ? (
-              parcel.analysisHistory.map((history, index) => (
+              parcel.analysisHistory.slice().reverse().map((history, index) => (
                 <div 
                   key={history.id} 
-                  className="p-4 rounded-lg border-2 border-black cursor-pointer hover:bg-muted/50 transition-colors"
+                  className={`p-3 rounded-lg border cursor-pointer transition-colors hover:bg-muted/80 ${index === 0 ? "border-primary bg-primary/5" : "bg-muted/50"}`}
                   onClick={() => {
                     if (history.aiResult) {
                       setSelectedHistory(history);
@@ -459,16 +475,41 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                     }
                   }}
                 >
-                  <div className="space-y-2">
-                    <p className="font-medium">
-                      {index + 1}차분석/ {formatDateTime(history.analyzedAt)}/ {
-                        history.newResult === "수용가능" ? "매수 가능성 높음" : 
-                        history.newResult === "수용불가" ? "매수 가능성 낮음" :
-                        history.newResult
-                      }
-                    </p>
-                    <p className="text-sm text-muted-foreground underline">분석결과 상세보기</p>
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline">
+                          {history.stage}
+                        </Badge>
+                        {index === 0 && <Badge variant="outline" className="text-xs">최신</Badge>}
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {formatDateTime(history.analyzedAt)}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <span className={
+                        history.newResult.includes("높음") || history.newResult === "수용가능" 
+                          ? "text-emerald-600 font-medium" : "text-rose-600 font-medium"
+                      }>
+                        {history.newResult === "수용가능" ? "매수 가능성 높음" : 
+                         history.newResult === "수용불가" ? "매수 가능성 낮음" :
+                         history.newResult}
+                      </span>
+                    </div>
                   </div>
+                  {(history.changeReason || history.memo) && (
+                    <div className="mt-2 pt-2 border-t text-sm">
+                      {history.changeReason && <p><strong>변경 사유:</strong> {history.changeReason}</p>}
+                      {history.memo && <p className="text-muted-foreground"><strong>메모:</strong> {history.memo}</p>}
+                    </div>
+                  )}
+                  {history.aiResult && (
+                    <div className="mt-2 pt-2 border-t flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">클릭하여 상세 보기</span>
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                  )}
                 </div>
               ))
             ) : (
