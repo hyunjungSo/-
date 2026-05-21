@@ -388,12 +388,37 @@ export function BatchAnalysis({
                 분석할 필지를 선택하고 일괄 분석을 실행하세요. 2차 분석은 여러 번 실행할 수 있습니다.
               </CardDescription>
             </div>
+            {selectedParcelIds.size > 0 && (
+              <Button 
+                onClick={handleBatchAnalysis}
+                disabled={isAnalyzing}
+                className="ml-auto"
+              >
+                {isAnalyzing ? "분석 중..." : `선택된 필지 분석 (${selectedParcelIds.size})`}
+              </Button>
+            )}
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          {filteredParcels.length > 0 && (
+            <div className="flex items-center gap-2 pb-2 border-b">
+              <input
+                type="checkbox"
+                checked={selectedParcelIds.size === filteredParcels.length && filteredParcels.length > 0}
+                onChange={handleToggleSelectAll}
+                className="w-4 h-4 cursor-pointer"
+                title="모두 선택"
+              />
+              <label className="text-sm font-medium cursor-pointer">
+                전체 선택 ({selectedParcelIds.size}/{filteredParcels.length})
+              </label>
+            </div>
+          )}
+          
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-[60px]">선택</TableHead>
                 <TableHead className="w-[60px]">No.</TableHead>
                 <TableHead>소재지</TableHead>
                 <TableHead>면적(㎡)</TableHead>
@@ -406,12 +431,27 @@ export function BatchAnalysis({
               {filteredParcels.map((parcel, index) => (
                 <TableRow 
                   key={parcel.id} 
-                  className="cursor-pointer hover:bg-muted/50"
-                  onClick={() => handleParcelClick(parcel)}
+                  className="hover:bg-muted/50"
                 >
+                  <TableCell className="text-center">
+                    <input
+                      type="checkbox"
+                      checked={selectedParcelIds.has(parcel.id)}
+                      onChange={() => handleToggleParcelSelection(parcel.id)}
+                      className="w-4 h-4 cursor-pointer"
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </TableCell>
                   <TableCell className="text-center text-muted-foreground">{index + 1}</TableCell>
-                  <TableCell className="font-medium">{parcel.landInfo.address}</TableCell>
-                  <TableCell>{parcel.landInfo.remainingArea.toLocaleString()}</TableCell>
+                  <TableCell 
+                    className="font-medium cursor-pointer"
+                    onClick={() => handleParcelClick(parcel)}
+                  >
+                    {parcel.landInfo.address}
+                  </TableCell>
+                  <TableCell className="cursor-pointer" onClick={() => handleParcelClick(parcel)}>
+                    {parcel.landInfo.remainingArea.toLocaleString()}
+                  </TableCell>
                   <TableCell>
                     {parcel.aiResult ? (
                       <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
@@ -429,7 +469,7 @@ export function BatchAnalysis({
               ))}
               {filteredParcels.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                     조건에 맞는 필지가 없습니다.
                   </TableCell>
                 </TableRow>
