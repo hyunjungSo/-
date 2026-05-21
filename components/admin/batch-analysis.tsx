@@ -12,7 +12,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -24,16 +23,12 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { 
-  Play, 
   CheckCircle2, 
   XCircle, 
-  Loader2,
-  RotateCcw,
   Eye,
   EyeOff,
   Filter
@@ -386,55 +381,6 @@ export function BatchAnalysis({
           </Table>
         </CardContent>
       </Card>
-
-      {/* 분석 옵션 다이얼로그 */}
-      <Dialog open={showAnalysisOptionsDialog} onOpenChange={setShowAnalysisOptionsDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>일괄 분석 옵션</DialogTitle>
-            <DialogDescription>
-              {selectedParcelIds.size}건의 필지를 분석합니다. 분석 옵션을 선택하세요.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4 py-4">
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="useCurrentUsage"
-                checked={analysisOptions.useCurrentUsage}
-                onCheckedChange={(checked) => 
-                  setAnalysisOptions(prev => ({ ...prev, useCurrentUsage: !!checked }))
-                }
-              />
-              <Label htmlFor="useCurrentUsage">현재 활용지목 적용</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="useLandShape"
-                checked={analysisOptions.useLandShape}
-                onCheckedChange={(checked) => 
-                  setAnalysisOptions(prev => ({ ...prev, useLandShape: !!checked }))
-                }
-              />
-              <Label htmlFor="useLandShape">토지형상 적용</Label>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowAnalysisOptionsDialog(false)}>
-              취소
-            </Button>
-            <Button onClick={() => handleBatchAnalysis("1차분석")}>
-              <Play className="h-4 w-4 mr-2" />
-              1차 분석 실행
-            </Button>
-            <Button variant="secondary" onClick={() => handleBatchAnalysis("2차분석")}>
-              <RotateCcw className="h-4 w-4 mr-2" />
-              2차 분석 (재분석)
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       {/* 히스토리 다이얼로그 */}
       <Dialog open={showHistoryDialog} onOpenChange={setShowHistoryDialog}>
