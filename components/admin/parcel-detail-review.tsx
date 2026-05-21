@@ -391,7 +391,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
 
           {/* 담당자 확인항목 */}
           <div className="space-y-3">
-            <Label>담당자 확인항목</Label>
+            <Label>담��자 확인항목</Label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {adminCheckItemOptions.map((option) => (
                 <div 
@@ -501,7 +501,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
       {/* 하단 액션 버튼 */}
       <div className="flex items-center justify-between pt-4 border-t">
         <Button variant="outline" onClick={onBack}>
-          닫기
+          목록
         </Button>
         <div className="flex items-center gap-2">
           {parcel.publishStatus !== "담당자확인완료" && parcel.publishStatus !== "공개" && (
