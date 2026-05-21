@@ -327,15 +327,17 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
         </CardContent>
       </Card>
 
-      {/* 2차 분석 (재분석) 옵션 */}
+      {/* 분석 (재분석) 옵션 */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <RotateCcw className="h-5 w-5" />
-            2차 분석 (재분석)
+            {parcel.publishStatus === "분석전" ? "1차 분석" : "2차 분석 (재분석)"}
           </CardTitle>
           <CardDescription>
-            현장 확인 결과나 공사 진행 상황 변경에 따라 옵션을 수정하고 재분석하세요.
+            {parcel.publishStatus === "분석전" 
+              ? "등록된 필지의 잔여지 분석을 실행합니다."
+              : "현장 확인 결과나 공사 진행 상황 변경에 따라 옵션을 수정하고 재분석하세요."}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -391,7 +393,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
 
           {/* 담당자 확인항목 */}
           <div className="space-y-3">
-            <Label>담��자 확인항목</Label>
+            <Label>담���자 확인항목</Label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {adminCheckItemOptions.map((option) => (
                 <div 
@@ -455,7 +457,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                 </>
               ) : (
                 <>
-                  2차 분석 실행
+                  {parcel.publishStatus === "분석전" ? "1차 분석 실행" : "2차 분석 실행"}
                 </>
               )}
             </Button>
