@@ -207,7 +207,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                 {parcel.publishStatus}
               </Badge>
             </div>
-            <div>
+            <div className="flex flex-col gap-2">
               <Label className="text-muted-foreground">현재 AI 판정</Label>
               <Badge 
                 className={
