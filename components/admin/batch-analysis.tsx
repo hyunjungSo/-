@@ -499,7 +499,7 @@ export function BatchAnalysis({
                     ) : (
                       <Button
                         size="sm"
-                        variant="outline"
+                        className="bg-foreground text-background hover:bg-foreground/90"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleAnalyzeSingleParcel(parcel.id);
