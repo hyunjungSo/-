@@ -442,7 +442,7 @@ export function BatchAnalysis({
         </CardHeader>
         <CardContent className="space-y-4">
           {filteredParcels.length > 0 && (
-            <div className="flex items-center gap-2 pb-2 border-b">
+            <label className="flex items-center gap-2 pb-2 border-b cursor-pointer">
               <input
                 type="checkbox"
                 checked={selectedParcelIds.size === filteredParcels.length && filteredParcels.length > 0}
@@ -450,10 +450,10 @@ export function BatchAnalysis({
                 className="w-4 h-4 cursor-pointer"
                 title="모두 선택"
               />
-              <label className="text-sm font-medium cursor-pointer">
+              <span className="text-sm font-medium">
                 전체 선택 ({selectedParcelIds.size}/{filteredParcels.length})
-              </label>
-            </div>
+              </span>
+            </label>
           )}
           
           <Table>
