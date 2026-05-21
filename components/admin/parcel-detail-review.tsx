@@ -625,23 +625,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
           
           {selectedHistory?.aiResult && (
             <div className="space-y-6">
-              {/* 섹션 1: 지적도 */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-semibold text-base">지적도</h4>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span><strong>소재지:</strong> {parcel.landInfo.address}</span>
-                    <span><strong>지목:</strong> {parcel.landInfo.landType}</span>
-                    <span><strong>면적:</strong> {parcel.landInfo.originalArea?.toLocaleString()}㎡</span>
-                  </div>
-                </div>
-                {/* 지도 - 해당 필지만 표시 */}
-                <div className="h-[380px] rounded-lg overflow-hidden border">
-                  <LandMap landInfo={parcel.landInfo} showOverlay={true} interactive={false} />
-                </div>
-              </div>
-
-              {/* 섹션 2: AI 분석 결과 */}
+              {/* AI 분석 결과 */}
               <div className="space-y-3">
                 <h4 className="font-semibold text-base">AI 분석 결과</h4>
                 
