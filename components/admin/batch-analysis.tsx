@@ -218,6 +218,9 @@ export function BatchAnalysis({
   // 필터링된 필지 목록
   const filteredParcels = useMemo(() => {
     return parcels.filter(parcel => {
+      // 면적이 0인 필지 제외
+      if (parcel.landInfo.remainingArea === 0) return false;
+      
       // 사업단 필터 (props로 전달된 것 또는 Select로 선택된 것)
       if (businessUnit && parcel.businessUnit !== businessUnit) return false;
       if (businessUnitFilter !== "all" && parcel.businessUnit !== businessUnitFilter) return false;
