@@ -31,8 +31,6 @@ import {
 import { 
   CheckCircle2, 
   XCircle, 
-  Eye,
-  EyeOff,
   Filter
 } from "lucide-react";
 import { 
@@ -294,19 +292,6 @@ export function BatchAnalysis({
                 { value: "all", label: "전체" },
                 { value: "high", label: "매수 가능성 높음" },
                 { value: "low", label: "매수 가능성 낮음" }
-              ]}
-            />
-            
-            {/* 관리(노출) 필터 */}
-            <RadioFilterGroup
-              label="관리"
-              name="publish"
-              value={publishFilter}
-              onChange={(v) => setPublishFilter(v as "all" | "published" | "unpublished")}
-              options={[
-                { value: "all", label: "전체" },
-                { value: "published", label: "노출" },
-                { value: "unpublished", label: "미노출" }
               ]}
             />
           </div>
