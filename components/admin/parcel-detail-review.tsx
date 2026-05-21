@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Label } from "@/components/ui/label";
@@ -199,13 +200,30 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                 </Badge>
               ) : (
                 <Badge variant="outline" className="w-fit">
-                  분석 대기
+                  ���석 대기
                 </Badge>
               )}
             </div>
             <div>
               <Label className="text-muted-foreground">분석 횟수</Label>
               <p className="font-medium">{parcel.analysisHistory?.length || 0}회</p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label className="text-muted-foreground">관리</Label>
+              <div className="flex items-center gap-2">
+                <Switch 
+                  checked={parcel.isVisible !== false}
+                  onCheckedChange={(checked) => {
+                    onUpdate({
+                      ...parcel,
+                      isVisible: checked,
+                    });
+                  }}
+                />
+                <span className={`text-sm font-medium ${parcel.isVisible !== false ? "text-emerald-600" : "text-muted-foreground"}`}>
+                  {parcel.isVisible !== false ? "노출" : "미노출"}
+                </span>
+              </div>
             </div>
           </div>
         </CardContent>

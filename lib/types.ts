@@ -331,6 +331,7 @@ export interface ProcessedParcel extends PreRegisteredParcel {
   confirmedAt?: string;                       // 담당자 확인 완료일
   confirmedBy?: string;                       // 확인 담당자
   ownerIdentifier?: string;                   // 소유자 식별자 (주민번호 뒷자리 등)
+  isVisible?: boolean;                        // 노출 여부 (true: 노출, false: 미노출)
 }
 
 // 일괄 분석 요청
