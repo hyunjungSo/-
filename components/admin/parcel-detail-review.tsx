@@ -33,7 +33,8 @@ import {
   AlertTriangle,
   ChevronRight,
   Loader2,
-  Save
+  Save,
+  Eye
 } from "lucide-react";
 import type { 
   ProcessedParcel, 
@@ -72,6 +73,10 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
   
   // 저장/확인 상태
   const [isSaving, setIsSaving] = useState(false);
+  
+  // 분석 상세 보기 다이얼로그
+  const [showHistoryDetail, setShowHistoryDetail] = useState(false);
+  const [selectedHistory, setSelectedHistory] = useState<AnalysisHistory | null>(null);
 
   // 2차 분석 (재분석) 실행
   const handleReanalyze = async () => {
@@ -300,6 +305,22 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                       {history.memo && <p className="text-muted-foreground"><strong>메모:</strong> {history.memo}</p>}
                     </div>
                   )}
+                  {history.aiResult && (
+                    <div className="mt-2 pt-2 border-t">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 text-xs"
+                        onClick={() => {
+                          setSelectedHistory(history);
+                          setShowHistoryDetail(true);
+                        }}
+                      >
+                        <Eye className="h-3.5 w-3.5 mr-1" />
+                        분석 상세 보기
+                      </Button>
+                    </div>
+                  )}
                 </div>
               ))
             ) : (
@@ -487,6 +508,112 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
           )}
         </div>
       </div>
+
+      {/* 분석 상세 보기 다이얼로그 */}
+      <Dialog open={showHistoryDetail} onOpenChange={setShowHistoryDetail}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <History className="h-5 w-5" />
+              분석 상세 정보
+            </DialogTitle>
+            <DialogDescription>
+              {selectedHistory && formatDateTime(selectedHistory.analyzedAt)} 분석 결과
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedHistory?.aiResult && (
+            <div className="space-y-4">
+              {/* 분석 단계 및 결과 */}
+              <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                <Badge variant={selectedHistory.stage === "1차분석" ? "default" : "secondary"}>
+                  {selectedHistory.stage}
+                </Badge>
+                <Badge 
+                  className={
+                    selectedHistory.newResult.includes("높음") || selectedHistory.newResult === "수용가능"
+                      ? "bg-emerald-500 text-white"
+                      : "bg-rose-500 text-white"
+                  }
+                >
+                  {selectedHistory.newResult === "수용가능" ? "매수 가능성 높음" : 
+                   selectedHistory.newResult === "수용불가" ? "매수 가능성 낮음" :
+                   selectedHistory.newResult}
+                </Badge>
+              </div>
+
+              {/* 잔여지 형상지수 */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-3 border rounded-lg">
+                  <Label className="text-muted-foreground text-xs">잔여지 형상지수</Label>
+                  <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingShapeIndex?.toFixed(3) || "-"}</p>
+                </div>
+                <div className="p-3 border rounded-lg">
+                  <Label className="text-muted-foreground text-xs">최소 폭</Label>
+                  <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingMinWidth || "-"}m</p>
+                </div>
+              </div>
+
+              {/* 주요 분석 항목 */}
+              <div className="space-y-2">
+                <Label className="font-medium">주요 분석 항목</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="p-2 border rounded flex items-center justify-between">
+                    <span className="text-sm">농기계 진입 불가</span>
+                    <Badge variant={selectedHistory.aiResult.farmMachineDifficulty ? "destructive" : "outline"}>
+                      {selectedHistory.aiResult.farmMachineDifficulty ? "해당" : "미해당"}
+                    </Badge>
+                  </div>
+                  <div className="p-2 border rounded flex items-center justify-between">
+                    <span className="text-sm">접면도로 상실</span>
+                    <Badge variant={selectedHistory.aiResult.accessRoadLost ? "destructive" : "outline"}>
+                      {selectedHistory.aiResult.accessRoadLost ? "해당" : "미해당"}
+                    </Badge>
+                  </div>
+                  <div className="p-2 border rounded flex items-center justify-between">
+                    <span className="text-sm">관개수로 상실</span>
+                    <Badge variant={selectedHistory.aiResult.waterChannelLost ? "destructive" : "outline"}>
+                      {selectedHistory.aiResult.waterChannelLost ? "해당" : "미해당"}
+                    </Badge>
+                  </div>
+                  <div className="p-2 border rounded flex items-center justify-between">
+                    <span className="text-sm">고저차 발생</span>
+                    <Badge variant={selectedHistory.aiResult.elevationDifference ? "destructive" : "outline"}>
+                      {selectedHistory.aiResult.elevationDifference ? "해당" : "미해당"}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+
+              {/* AI 분석 세부 내용 */}
+              {selectedHistory.aiResult.analysisDetails && (
+                <div className="space-y-2">
+                  <Label className="font-medium">AI 분석 세부 내용</Label>
+                  <div className="p-3 bg-muted/30 rounded-lg text-sm whitespace-pre-wrap">
+                    {selectedHistory.aiResult.analysisDetails}
+                  </div>
+                </div>
+              )}
+
+              {/* 메모 */}
+              {selectedHistory.memo && (
+                <div className="space-y-2">
+                  <Label className="font-medium">메모</Label>
+                  <p className="text-sm text-muted-foreground p-3 bg-muted/30 rounded-lg">
+                    {selectedHistory.memo}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowHistoryDetail(false)}>
+              닫기
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
