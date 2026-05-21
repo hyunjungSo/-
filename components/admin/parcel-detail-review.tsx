@@ -34,7 +34,6 @@ import {
   AlertTriangle,
   ChevronRight,
   Loader2,
-  Eye,
   Sparkles,
   RefreshCw
 } from "lucide-react";
@@ -573,9 +572,8 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                     </div>
                   )}
                   {history.aiResult && (
-                    <div className="mt-2 pt-2 border-t flex items-center justify-between">
+                    <div className="mt-2 pt-2 border-t">
                       <span className="text-xs text-muted-foreground">클릭하여 상세 보기</span>
-                      <Eye className="h-4 w-4 text-muted-foreground" />
                     </div>
                   )}
                 </div>
