@@ -274,36 +274,14 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                       </p>
                     </div>
                     <div className="text-right">
-                      {history.previousResult ? (
-                        <div className="flex items-center gap-2 text-sm">
-                          <span className={
-                            history.previousResult.includes("높음") || history.previousResult === "수용가능" 
-                              ? "text-emerald-600" : "text-rose-600"
-                          }>
-                            {history.previousResult === "수용가능" ? "매수 가능성 높음" : 
-                             history.previousResult === "수용불가" ? "매수 가능성 낮음" :
-                             history.previousResult}
-                          </span>
-                          <ChevronRight className="h-4 w-4" />
-                          <span className={
-                            history.newResult.includes("높음") || history.newResult === "수용가능" 
-                              ? "text-emerald-600 font-medium" : "text-rose-600 font-medium"
-                          }>
-                            {history.newResult === "수용가능" ? "매수 가능성 높음" : 
-                             history.newResult === "수용불가" ? "매수 가능성 낮음" :
-                             history.newResult}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className={
-                          history.newResult.includes("높음") || history.newResult === "수용가능" 
-                            ? "text-emerald-600 font-medium" : "text-rose-600 font-medium"
-                        }>
-                          {history.newResult === "수용가능" ? "매수 가능성 높음" : 
-                           history.newResult === "수용불가" ? "매수 가능성 낮음" :
-                           history.newResult}
-                        </span>
-                      )}
+                      <span className={
+                        history.newResult.includes("높음") || history.newResult === "수용가능" 
+                          ? "text-emerald-600 font-medium" : "text-rose-600 font-medium"
+                      }>
+                        {history.newResult === "수용가능" ? "매수 가능성 높음" : 
+                         history.newResult === "수용불가" ? "매수 가능성 낮음" :
+                         history.newResult}
+                      </span>
                     </div>
                   </div>
                   {(history.changeReason || history.memo) && (
