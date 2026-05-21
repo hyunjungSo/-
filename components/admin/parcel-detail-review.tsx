@@ -264,7 +264,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                   <div className="flex items-start justify-between">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <Badge variant={history.stage === "1차분석" ? "default" : "secondary"}>
+                        <Badge variant="outline">
                           {history.stage}
                         </Badge>
                         {index === 0 && <Badge variant="outline" className="text-xs">최신</Badge>}
@@ -560,7 +560,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                 
                 {/* 분석 단계 및 판정 결과 */}
                 <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                  <Badge variant={selectedHistory.stage === "1차분석" ? "default" : "secondary"}>
+                  <Badge variant="outline">
                     {selectedHistory.stage}
                   </Badge>
                   <Badge 
