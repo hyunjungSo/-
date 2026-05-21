@@ -716,7 +716,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     // 분석 실행 (최대 5초 이내 완료 보장)
     const runAnalysis = async () => {
       const totalLands = adminCheckedLandIds.length;
-      const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수��������� 따라 동적 조절
+      const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수에 따라 동적 조절
       
       // 모든 필지를 병렬로 분석
       const analysisPromises = adminCheckedLandIds.map(async (landId) => {
@@ -1070,7 +1070,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                       <td className="px-4 py-3">사다리꼴</td>
                     </tr>
                     <tr>
-                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">���������용�����������</td>
+                      <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">실제용도</td>
                       <td className="px-4 py-3">전</td>
                       <td className="bg-muted/50 px-4 py-3 font-medium text-muted-foreground">공부상 지목</td>
                       <td className="px-4 py-3">{landCategories.find(c => c.value === applicationLands[selectedLandIndex].landCategory)?.label || applicationLands[selectedLandIndex].landCategory}</td>
@@ -1330,11 +1330,11 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             </div>
                           </div>
 
-                          {/* 적용 기��� */}
+                          {/* 적용 기준 */}
                           <div className="flex items-start gap-2">
                             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                             <div>
-                              <h4 className="text-sm font-semibold text-foreground">적용 기준</h4>
+                              <h4 className="text-sm font-semibold text-foreground">적�� 기준</h4>
                               <ul className="mt-1 space-y-1">
                                 {aiResult?.judgmentRationale?.appliedCriteria ? (
                                   aiResult.judgmentRationale.appliedCriteria.map((criteria, cIdx) => (
@@ -1734,7 +1734,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             
                             {/* 현장확인 옵션 */}
                             <div className="space-y-3 pt-2 border-t">
-                              <label className="text-sm font-medium text-foreground">���장 확인 항목</label>
+                              <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
                               {isViewOnly ? (
                                 <div className="space-y-2 text-sm">
                                   <div className="flex items-center gap-3 p-2">

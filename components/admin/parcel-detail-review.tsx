@@ -244,7 +244,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                 </Badge>
               ) : (
                 <Badge variant="outline" className="w-fit">
-                  ���석 대기
+                  분석 대기
                 </Badge>
               )}
             </div>
@@ -421,7 +421,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                           {isLatest && <Badge variant="secondary" className="text-xs">최신</Badge>}
                           <Badge 
                             className={
-                              history.newResult === "���수 가능성 높음" || 
+                              history.newResult === "매수 가능성 높음" || 
                               history.newResult === "수용가능"
                                 ? "bg-emerald-500 text-white"
                                 : "bg-rose-500 text-white"

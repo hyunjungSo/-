@@ -222,7 +222,7 @@ export interface UnifiedParcelAnalysis {
   explanation: string; // 일단지 판정 설명
 }
 
-// ��단 근거 설명
+// 판단 근거 설명
 export interface JudgmentRationale {
   summary: string; // 판단 요약
   legalBasis: string; // 법적 근거

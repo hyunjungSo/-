@@ -192,7 +192,7 @@ export function ParcelPreRegistration({ businessUnit, onRegisterComplete }: Parc
     if (checks.farmMachineDifficulty) {
       criteriaChecks.push({ 
         criteriaName: "농기계 회전 곤란", 
-        criteriaDescription: "농기계 회전 곤란으��� 경작 불가", 
+        criteriaDescription: "농기계 회전 곤란으로 경작 불가", 
         isMet: true, 
         autoDetected: false 
       });

@@ -299,7 +299,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     <div className="space-y-6">
       {/* 글로벌 필터 바 */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          {/* 좌측: 업데이트 정보 */}
+          {/* 좌측: 업데이트 정��� */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>업데이트: {isMounted && lastUpdated ? lastUpdated.toLocaleString('ko-KR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '--'}</span>
@@ -520,7 +520,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             
             {/* 스택 바 비교 */}
             <div className="space-y-3" style={{ marginTop: '4px' }}>
-              {/* AI 초기 판정 막대 (매��가능/매수불가 2가지만) */}
+              {/* AI 초기 판정 막대 (매수가능/매수불가 2가지만) */}
               <div className="space-y-1.5">
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 초기 판정</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
