@@ -20,9 +20,9 @@ export function MetricCard({
   size = "md"
 }: MetricCardProps) {
   const sizeClasses = {
-    sm: { label: "text-xs", value: "text-base font-semibold" },
-    md: { label: "text-xs", value: "text-lg font-semibold" },
-    lg: { label: "text-sm", value: "text-xl font-bold" }
+    sm: { label: "text-xs", value: "text-base font-semibold text-[rgb(26,26,26)]" },
+    md: { label: "text-xs", value: "text-lg font-semibold text-[rgb(26,26,26)]" },
+    lg: { label: "text-sm", value: "text-xl font-bold text-[rgb(26,26,26)]" }
   };
 
   return (
