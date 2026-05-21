@@ -1428,7 +1428,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
       provisionalJudgment = "수용불가";
     }
   } else if (landInfo.landType === "택지" || landInfo.landType === "농지") {
-    // 택지/농지: 면적 기준 + 형상 조건 적용
+    // 택��/농지: 면적 기준 + 형상 조건 적용
     if (coreCriteriaMet || isIrregularShape || shapeIndexMet) {
       provisionalJudgment = "수용가능";
     } else {
@@ -1713,7 +1713,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       waterChannelLost: false,
       farmMachineDifficulty: false,
       judgmentRationale: {
-        summary: "택지 잔여지 - 접면도로 상실로 맹지화되어 「매수 가능성 높음」 판정",
+        summary: "택지 잔여지 - 접면도로 상실로 맹���화되어 「매수 가능성 높음」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: ["토지유형: 택지", "형상지수 변화: 1.5 (기준 충족)", "접면도로 상실: 해당 (맹지화)"],
         detailedExplanation: "도로확장사업으로 접면도로가 상실되어 맹지가 되었으며, 건축허가가 불가능한 상태입니다.",
@@ -1856,7 +1856,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       ownerContact: "010-1111-2222",
       hasIncludedLand: true,
       businessUnit: "수도권",
-      projectName: "용인-양지 도로확장사업",
+      projectName: "용인-양지 도로확장사���",
     },
     checkItems: {
       farmMachineDifficulty: false,
@@ -2141,7 +2141,7 @@ export const dummyApplications: Application[] = [
     statusUpdatedAt: TWO_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
-  // AI 판정 경계 사례 (심의위원회 이관 필요)
+  // AI 판정 ���계 사례 (심의위원회 이관 필요)
   {
     id: "app-006",
     applicationNumber: "2026-0406-001",
@@ -2507,7 +2507,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -2571,7 +2571,7 @@ export const dummyApplications: Application[] = [
         manualCheckItems: [],
       },
     },
-    finalJudgment: "매수",
+    finalJudgment: "매��",
     reviewerComment: "3필지 농지로 확인됨. 관개수로 단절 및 형상 변경으로 농업 활동 불가. 매수 기준 충족으로 매수 결정.",
     finalReviewOpinion: "안성-천안 국도확장사업으로 편입된 3필지 농지입니다. 현장 확인 결과, 도로 편입 후 관개수로가 단절되고, 각 필지가 삼각형, 역삼각형, 부정형으로 변경되어 농기계 회전 및 회전이 불가능한 상태입니다. 매수 기준 충족하여 매수가 적정합니다.",
     adminName: "홍길동",
@@ -2824,7 +2824,7 @@ export const dummyApplications: Application[] = [
     aiResult: {
       landTypePath: "산지",
       criteriaChecks: [
-        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100㎡로 조림지 분단", isMet: true, autoDetected: true },
+        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100㎡로 조림지 ��단", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },
       ],
@@ -3842,5 +3842,25 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     confirmedAt: SIX_WEEKS_AGO,
     confirmedBy: "최승인",
     ownerIdentifier: "7890",
+  },
+  // 6. 분석 전 필지 (등록만 완료, 분석 횟수 0)
+  {
+    id: "processed-006",
+    businessUnit: "수도권건설사업단",
+    projectName: "평택-오송 고속도로 2공구",
+    landInfo: dummyLandInfoList[0],
+    adminCheckItems: {
+      farmMachineDifficulty: false,
+      accessRoadLost: false,
+      waterChannelLost: false,
+    },
+    currentUsage: "전",
+    landShape: "가로장방형",
+    preRegistrationStatus: "등록완료",
+    registeredAt: YESTERDAY,
+    registeredBy: "관리자",
+    publishStatus: "분석전",
+    analysisHistory: [],
+    ownerIdentifier: "1111",
   },
 ];
