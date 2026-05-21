@@ -207,34 +207,34 @@ const questions = [
   // 1. 토지 유형 선택
   {
     id: "landType",
-    title: "토지의 유형을 선택해 주세요",
-    subtitle: "잔여지의 주된 용도에 해당하는 유형을 선택해 주세요",
+    title: "남은 땅을 주로 어떤 용도로 쓰고 계시나요?",
+    subtitle: "남은 땅의 주된 용도에 해당하는 유형을 선택해 주세요.",
     type: "radio" as const,
     options: [
-      { value: "택지", label: "택지 (주거용, 상업용, 공업용 건물 부지)" },
-      { value: "농지", label: "농지 (전, 답, 과수원 등)" },
-      { value: "산지", label: "산지 (임야)" },
-      { value: "기타", label: "그 밖의 토지" },
+      { value: "택지", label: "집이나 상가, 공장 등이 있는 땅 (택지)" },
+      { value: "농지", label: "밭, 논, 과수원 등 농사를 짓는 땅 (농지)" },
+      { value: "산지", label: "산이나 숲 (임야/산지)" },
+      { value: "기타", label: "그 외 다른 용도의 땅" },
     ],
   },
   // 2. 택지 유형 선택 (택지인 경우)
   {
     id: "buildingType",
-    title: "택지의 유형은 무엇인가요?",
-    subtitle: "건축물의 용도를 선택해 주세요",
+    title: "지어져 있는 건물의 종류는 무엇인가요?",
+    subtitle: "건축물의 용도를 선택해 주세요.",
     type: "radio" as const,
     showWhen: { questionId: "landType", value: "택지" },
     options: [
-      { value: "주거용", label: "주거용" },
-      { value: "상업용", label: "상업용" },
-      { value: "공업용", label: "공업용" },
+      { value: "주거용", label: "살림집 (주거용)" },
+      { value: "상업용", label: "상가나 사무실 (상업용)" },
+      { value: "공업용", label: "공장이나 창고 (공업용)" },
     ],
   },
   // 3. 주거용 세부 유형 (주거용인 경우)
   {
     id: "residentialType",
     title: "주거용 건물의 유형은 무엇인가요?",
-    subtitle: "해당하는 주거 유형을 선택해 주세요",
+    subtitle: "해당하는 주거 유형을 선택해 주세요.",
     type: "radio" as const,
     showWhen: { questionId: "buildingType", value: "주거용" },
     options: [
@@ -246,73 +246,73 @@ const questions = [
   // ===== 택지 확인 항목 (판독 일부 지원) =====
   {
     id: "roadStatusChange",
-    title: "사업으로 인해 접면도로 상태가 변경되었나요?",
-    subtitle: "접면도로 상태 변경으로 건축허가가 불가능해졌는지 확인해 주세요",
+    title: "공사(사업) 때문에 도로 상황이 바뀌어, 앞으로 건물을 새로 짓거나 고치는 일(건축허가)이 불가능해졌나요?",
+    subtitle: "도로 상태 변경으로 인해 향후 건축이 불가능해졌는지 확인해 주세요.",
     type: "radio" as const,
     showWhen: { questionId: "landType", value: "택지" },
     options: [
-      { value: "yes", label: "네, 접면도로 상태 변경으로 건축허가 불가" },
-      { value: "no", label: "아니오, 건축허가 가능" },
+      { value: "yes", label: "네, 도로가 바뀌어서 건물 허가를 받을 수 없게 되었습니다." },
+      { value: "no", label: "아니요, 여전히 건물 허가를 받을 수 있습니다." },
     ],
   },
   // ===== 농지 확인 항목 (판독 일부 지원) =====
   {
     id: "roadOrCanalLoss",
-    title: "접면도로 또는 관개수로가 상실되었나요?",
-    subtitle: "사업으로 인해 도로나 수로가 없어져 농지로서 사용이 불가한지 확인해 주세요",
+    title: "공사(사업) 때문에 밭이나 논으로 드나들던 '진입로'나 농사지을 때 쓰던 '물길(수로)'이 없어졌나요?",
+    subtitle: "사업으로 인해 도로나 수로가 없어져 농지로서 사용이 불가한지 확인해 주세요.",
     type: "radio" as const,
     showWhen: { questionId: "landType", value: "농지" },
     options: [
-      { value: "road", label: "접면도로가 상실되었습니다" },
-      { value: "canal", label: "관개수로가 상실되었습니다" },
-      { value: "both", label: "도로와 수로 모두 상실되었습니다" },
-      { value: "no", label: "아니오, 도로/수로 상실 없음" },
+      { value: "road", label: "사람이나 농기계가 다니던 길이 없어졌습니다." },
+      { value: "canal", label: "농사지을 물을 대던 물길(수로)이 없어졌습니다." },
+      { value: "both", label: "길과 물길이 모두 없어졌습니다." },
+      { value: "no", label: "아니요, 길과 물길 모두 잘 남아있습니다." },
     ],
   },
   {
     id: "farmMachineDifficulty",
-    title: "농기계 회전이 곤란한가요?",
-    subtitle: "잔여지 형태나 면적으로 인해 농기계 진입 및 회전이 어려운지 확인해 주세요",
+    title: "남은 땅의 모양이 비뚤어지거나 너무 작아져서, 트랙터나 경운기 같은 농기계가 들어가고 돌리기 어려워졌나요?",
+    subtitle: "잔여지 형태나 면적으로 인해 농기계 진입 및 회전이 어려운지 확인해 주세요.",
     type: "radio" as const,
     showWhen: { questionId: "landType", value: "농지" },
     options: [
-      { value: "yes", label: "네, 농기계 회전이 곤란합니다" },
-      { value: "no", label: "아니오, 농기계 운용에 문제 없음" },
+      { value: "yes", label: "네, 땅이 좁거나 꺾여서 농기계를 움직이기 어렵습니다." },
+      { value: "no", label: "아니요, 농기계를 사용하는 데 문제없습니다." },
     ],
   },
   // ===== 산지 확인 항목 (판독 일부 지원) =====
   {
     id: "forestRoadLoss",
-    title: "사업으로 인해 접면도로가 상실되었나요?",
-    subtitle: "산지가 도로와 접하였다가 사업으로 인해 접한 도로가 없어졌는지 확인해 주세요",
+    title: "원래는 도로와 바로 연결되어 있던 산(임야)이었는데, 공사(사업) 이후 산으로 들어가는 길이 끊어지거나 없어졌나요?",
+    subtitle: "산지가 도로와 접하였다가 사업으로 인해 접한 도로가 없어졌는지 확인해 주세요.",
     type: "radio" as const,
     showWhen: { questionId: "landType", value: "산지" },
     options: [
-      { value: "yes", label: "네, 접면도로가 상실되었습니다" },
-      { value: "no", label: "아니오, 접면도로 유지" },
+      { value: "yes", label: "네, 산으로 연결되던 길이 없어졌습니다." },
+      { value: "no", label: "아니요, 산으로 들어가는 길이 그대로 있습니다." },
     ],
   },
   // ===== 그 밖의 토지 확인 항목 (판독 일부 지원) =====
   {
     id: "otherRoadLoss",
     title: "사업으로 인해 접면도로가 상실되었나요?",
-    subtitle: "기존에 접해 있던 도로가 사업으로 인해 없어졌는지 확인해 주세요",
+    subtitle: "기존에 접해 있던 도로가 사업으로 인해 없어졌는지 확인해 주세요.",
     type: "radio" as const,
     showWhen: { questionId: "landType", value: "기타" },
     options: [
-      { value: "yes", label: "네, 접면도로가 상실되었습니다" },
-      { value: "no", label: "아니오, 접면도로 유지" },
+      { value: "yes", label: "네, 접면도로가 상실되었습니다." },
+      { value: "no", label: "아니요, 접면도로 유지" },
     ],
   },
   {
     id: "otherLandUseDifficult",
     title: "종래의 목적대로 사용이 곤란한가요?",
-    subtitle: "잔여지의 위치, 형상, 접근 상태를 고려하여 기존 용도 사용이 어려운지 확인해 주세요",
+    subtitle: "잔여지의 위치, 형상, 접근 상태를 고려하여 기존 용도 사용이 어려운지 확인해 주세요.",
     type: "radio" as const,
     showWhen: { questionId: "landType", value: "기타" },
     options: [
-      { value: "yes", label: "네, 종래 목적 사용이 곤란합니다" },
-      { value: "no", label: "아니오, 기존 용도 사용 가능" },
+      { value: "yes", label: "네, 종래 목적 사용이 곤란합니다." },
+      { value: "no", label: "아니요, 기존 용도 사용 가능" },
     ],
   },
 ];
@@ -638,7 +638,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
     const selectedItems = cartItems.filter(item => selectedCartItems.has(item.id));
     if (selectedItems.length === 0) return;
     
-    // 신청서 작성 단계로 이동 (장바구니에서)
+    // 신청서 작성 단계로 이��� (장바구니에서)
     setStep("application");
     setIsCartOpen(false);
   };
@@ -1052,7 +1052,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                             ) : (
                               <XCircle className="w-3 h-3" />
                             )}
-                            <span>접면도로 상태 변경</span>
+                            <span>도로 변경으로 건축 불가</span>
                           </div>
                         </div>
                         <div className={`rounded-lg p-2 border text-xs ${
@@ -1082,7 +1082,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                                 ) : (
                                   <XCircle className="w-3 h-3" />
                                 )}
-                                <span>관개수로 상실</span>
+                                <span>물길(수로) 상실</span>
                               </div>
                             </div>
                             <div className={`rounded-lg p-2 border text-xs ${
@@ -1096,7 +1096,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                                 ) : (
                                   <XCircle className="w-3 h-3" />
                                 )}
-                                <span>농기계 회전 곤란</span>
+                                <span>농기계 사용 어려움</span>
                               </div>
                             </div>
                           </>
@@ -1444,7 +1444,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                                       }}
                                       className="w-5 h-5 rounded border-gray-300 text-[#2E8B57] focus:ring-[#2E8B57]"
                                     />
-                                    <span className="text-sm text-gray-700">농기계 회전 곤란</span>
+                                    <span className="text-sm text-gray-700">농기계 사용 어려움</span>
                                   </label>
                                 </div>
                               </div>
@@ -1598,7 +1598,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                           onChange={(e) => setAnswers(prev => ({ ...prev, farmMachineDifficulty: e.target.checked ? "yes" : "no" }))}
                           className="w-5 h-5 rounded border-gray-300 text-[#2E8B57] focus:ring-[#2E8B57]"
                         />
-                        <span className="text-sm text-gray-700">농기계 회전 곤란</span>
+                        <span className="text-sm text-gray-700">농기계 사용 어려움</span>
                       </label>
                     </div>
                   </div>
