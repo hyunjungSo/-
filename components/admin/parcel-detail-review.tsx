@@ -46,6 +46,7 @@ import {
   adminCheckItemOptions,
 } from "@/lib/dummy-data";
 import { formatDateTime } from "@/lib/format";
+import { AIAnalysisFlowDialog } from "@/components/admin/ai-analysis-flow-dialog";
 
 interface ParcelDetailReviewProps {
   parcel: ProcessedParcel;
@@ -64,6 +65,10 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
   
   // 분석 상태
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  
+  // AI 분석 상세 다이얼로그
+  const [showAIAnalysisDialog, setShowAIAnalysisDialog] = useState(false);
+  const [selectedAnalysisResult, setSelectedAnalysisResult] = useState<AIAnalysisResult | null>(null);
 
   // 2차 분석 (재분석) 실행
   const handleReanalyze = async () => {
@@ -410,6 +415,21 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                       <AccordionContent className="pb-4">
                         {aiResult ? (
                             <div className="space-y-4 pt-2">
+                            {/* AI 분석 상세 보기 버튼 */}
+                            <div className="flex justify-end">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedAnalysisResult(aiResult);
+                                  setShowAIAnalysisDialog(true);
+                                }}
+                              >
+                                <Sparkles className="h-4 w-4 mr-2" />
+                                AI 분석 상세보기
+                              </Button>
+                            </div>
+                            
                             {/* 판정 기준 - 잔여지 형상지수 기반 판정 */}
                             <div className="space-y-4">
                               <div className="space-y-3">
@@ -524,6 +544,14 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
           목록
         </Button>
       </div>
+
+      {/* AI 분석 상세 다이얼로그 */}
+      <AIAnalysisFlowDialog
+        open={showAIAnalysisDialog}
+        onOpenChange={setShowAIAnalysisDialog}
+        aiResult={selectedAnalysisResult}
+        landInfo={parcel.landInfo}
+      />
     </div>
   );
 }
