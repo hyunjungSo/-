@@ -487,25 +487,15 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                               )}
                             </div>
 
-                            {/* 변경 사유 및 메모 */}
-                            {(history.changeReason || history.memo) && (
+                            {/* 메모 */}
+                            {history.memo && (
                               <div className="space-y-2">
-                                {history.changeReason && (
-                                  <div className="space-y-1">
-                                    <label className="text-xs font-semibold" style={{ color: "rgb(26, 26, 26)" }}>변경 사유</label>
-                                    <div className="p-3 rounded-lg min-h-[80px] overflow-y-auto text-sm whitespace-pre-wrap break-words" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
-                                      {history.changeReason}
-                                    </div>
+                                <div className="space-y-1">
+                                  <label className="text-xs font-semibold" style={{ color: "rgb(26, 26, 26)" }}>메모</label>
+                                  <div className="rounded-lg min-h-[80px] overflow-y-auto text-sm whitespace-pre-wrap break-words" style={{ backgroundColor: "rgb(251, 251, 251)", padding: "8px" }}>
+                                    {history.memo}
                                   </div>
-                                )}
-                                {history.memo && (
-                                  <div className="space-y-1">
-                                    <label className="text-xs font-semibold" style={{ color: "rgb(26, 26, 26)" }}>메모</label>
-                                    <div className="rounded-lg min-h-[80px] overflow-y-auto text-sm whitespace-pre-wrap break-words" style={{ backgroundColor: "rgb(251, 251, 251)", padding: "8px" }}>
-                                      {history.memo}
-                                    </div>
-                                  </div>
-                                )}
+                                </div>
                               </div>
                             )}
                           </div>
