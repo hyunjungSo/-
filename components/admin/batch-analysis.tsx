@@ -79,7 +79,6 @@ export function BatchAnalysis({
   // 필터 (라디오 버튼)
   const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low">("all");
   const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("all");
-  const [visibilityFilter, setVisibilityFilter] = useState<"all" | "visible" | "hidden">("all");
   
   // 사업단 목록 추출
   const businessUnits = useMemo(() => {
@@ -242,16 +241,9 @@ export function BatchAnalysis({
         if (aiJudgmentFilter === "low" && isHigh) return false;
       }
       
-      // 관리(노출/미노출) 필터
-      if (visibilityFilter !== "all") {
-        const isVisible = parcel.isVisible !== false;
-        if (visibilityFilter === "visible" && !isVisible) return false;
-        if (visibilityFilter === "hidden" && isVisible) return false;
-      }
-      
       return true;
     });
-  }, [parcels, businessUnit, businessUnitFilter, searchQuery, aiJudgmentFilter, visibilityFilter]);
+  }, [parcels, businessUnit, businessUnitFilter, searchQuery, aiJudgmentFilter]);
 
   // 통계 (검색값에 영향 받지 않음 - 전체 데이터 기준)
   const stats = useMemo(() => {
@@ -426,19 +418,6 @@ export function BatchAnalysis({
                 { value: "low", label: "매수 가능성 낮음" }
               ]}
             />
-            
-            {/* 관리(노출/미노출) 필터 */}
-            <RadioFilterGroup
-              label="관리"
-              name="visibility"
-              value={visibilityFilter}
-              onChange={(v) => setVisibilityFilter(v as "all" | "visible" | "hidden")}
-              options={[
-                { value: "all", label: "전체" },
-                { value: "visible", label: "노출" },
-                { value: "hidden", label: "미노출" }
-              ]}
-            />
           </div>
         </CardContent>
       </Card>
@@ -487,7 +466,6 @@ export function BatchAnalysis({
                 <TableHead>면적(㎡)</TableHead>
                 <TableHead>AI 판정</TableHead>
                 <TableHead>민원인 활동</TableHead>
-                <TableHead>관리</TableHead>
                 <TableHead>분석 횟수</TableHead>
                 <TableHead>최종 분석일</TableHead>
               </TableRow>
@@ -552,13 +530,8 @@ export function BatchAnalysis({
                       )}
                     </div>
                   </TableCell>
-                  <TableCell>
-                    <Badge 
-                      variant={parcel.isVisible !== false ? "default" : "secondary"}
-                      className={parcel.isVisible !== false ? "bg-emerald-500 text-white text-xs" : "text-xs"}
-                    >
-                      {parcel.isVisible !== false ? "노출" : "미노출"}
-                    </Badge>
+                  <TableCell className="text-center p-2">
+                    <span className="text-sm">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
                   </TableCell>
                   <TableCell>
                     <span className="text-sm">{parcel.analysisHistory?.length || 0}회</span>
