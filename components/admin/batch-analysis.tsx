@@ -260,6 +260,18 @@ export function BatchAnalysis({
     });
   }, [parcels, businessUnit, businessUnitFilter, searchQuery, aiJudgmentFilter, visibilityFilter]);
 
+  // 페이지네이션 계산
+  const totalPages = Math.ceil(filteredParcels.length / itemsPerPage);
+  const paginatedParcels = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredParcels.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredParcels, currentPage, itemsPerPage]);
+
+  // 필터 변경 시 페이지 리셋
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, aiJudgmentFilter, businessUnitFilter, visibilityFilter]);
+
   // 통계 (검색값에 영향 받지 않음 - 전체 데이터 기준)
   const stats = useMemo(() => {
     // businessUnit 필터만 적용, 검색어/AI판정/관리 필터는 제외
@@ -498,7 +510,7 @@ export function BatchAnalysis({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredParcels.map((parcel, index) => (
+              {paginatedParcels.map((parcel, index) => (
                 <TableRow 
                   key={parcel.id} 
                   className="hover:bg-muted/50"
@@ -512,7 +524,7 @@ export function BatchAnalysis({
                       onClick={(e) => e.stopPropagation()}
                     />
                   </TableCell>
-                  <TableCell className="text-center text-muted-foreground">{index + 1}</TableCell>
+                  <TableCell className="text-center text-muted-foreground">{(currentPage - 1) * itemsPerPage + index + 1}</TableCell>
                   <TableCell 
                     className="font-medium cursor-pointer"
                     onClick={() => handleParcelClick(parcel)}
