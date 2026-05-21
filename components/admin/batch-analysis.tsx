@@ -305,8 +305,8 @@ export function BatchAnalysis({
               onChange={(v) => setPublishFilter(v as "all" | "published" | "unpublished")}
               options={[
                 { value: "all", label: "전체" },
-                { value: "published", label: "노출", icon: <Eye className="h-3.5 w-3.5" /> },
-                { value: "unpublished", label: "미노출", icon: <EyeOff className="h-3.5 w-3.5" /> }
+                { value: "published", label: "노출" },
+                { value: "unpublished", label: "미노출" }
               ]}
             />
           </div>
