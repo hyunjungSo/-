@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { 
   Table, 
   TableBody, 
@@ -412,7 +412,7 @@ export function BatchAnalysis({
           <SearchInput
             value={searchQuery}
             onChange={setSearchQuery}
-            placeholder="소재지, 소유자명을 입력하세요"
+            placeholder="소재지, 소��자명을 입력하세요"
           />
           
           {/* 필터 영역 */}
@@ -441,7 +441,7 @@ export function BatchAnalysis({
               onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low")}
               options={[
                 { value: "all", label: "전체" },
-                { value: "high", label: "매수 가��성 높음" },
+                { value: "high", label: "매수 가���성 높음" },
                 { value: "low", label: "매수 가능성 낮음" }
               ]}
             />
