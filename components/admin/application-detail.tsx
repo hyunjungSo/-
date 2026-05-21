@@ -1456,83 +1456,8 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     <h4 className="font-semibold" style={{ fontSize: '16px' }}>지적도</h4>
                   </div>
                   
-                  {/* 필지 선택 + 지적도 한 행 배치 */}
-                  <div className="relative flex gap-3">
-                    {/* 필지 선택 목록 (30%) */}
-                    <div className="w-[340px] shrink-0 rounded-lg bg-white p-2.5 space-y-1.5 max-h-[420px] overflow-y-auto">
-                      {/* 신청 필지 - 상단 필지 선택에서 선택된 1개만 표시 */}
-                      {applicationLands[selectedLandIndex] && (
-                        <div 
-                          className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${
-                            !selectedAdjacentParcel 
-                              ? "border-2 border-[#2563eb] bg-[#2563eb]/15" 
-                              : "border border-[#2563eb]"
-                          }`}
-                          onClick={() => setSelectedAdjacentParcel(null)}
-                          onMouseEnter={() => setHoveredLandId(applicationLands[selectedLandIndex].id)}
-                          onMouseLeave={() => setHoveredLandId(null)}
-                        >
-                          <span className="flex shrink-0 items-center justify-center rounded bg-[#2563eb] px-1.5 py-0.5 text-xs font-bold text-white">
-                            필지{String.fromCharCode(65 + selectedLandIndex)}
-                          </span>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-blue-700 truncate">
-                              {applicationLands[selectedLandIndex].address.split(" ").slice(-2).join(" ")}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {applicationLands[selectedLandIndex].landType} | {applicationLands[selectedLandIndex].originalArea.toLocaleString()}㎡
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {/* 인접 필지 */}
-                      {[
-                        { id: "adjacent-001", address: "경기도 용인시 처인구 포곡읍 마성리 101", landType: "전", landCategory: "농지", area: 1250 },
-                        { id: "adjacent-002", address: "경기도 용인시 처인구 포곡읍 마성리 102", landType: "답", landCategory: "농지", area: 980 },
-                      ].map((adjacent, index) => {
-                        const isSelected = selectedAdjacentParcel?.id === adjacent.id;
-                        const adjacentNumber = index + 1; // 인접 필지는 1부터 별도 카운팅
-                        return (
-                          <div 
-                            key={adjacent.id}
-                            className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${
-                              isSelected 
-                                ? "border-2 border-[#d97706] bg-[#d97706]/15" 
-                                : "border border-[#d97706]"
-                            }`}
-                            onClick={() => {
-                              setSelectedAdjacentParcel({
-                                id: adjacent.id,
-                                address: adjacent.address,
-                                landCategory: adjacent.landCategory,
-                                landType: adjacent.landType,
-                                area: adjacent.area,
-                                parcelNumber: adjacentNumber,
-                              });
-                              setFocusedLandId(adjacent.id);
-                            }}
-                            onMouseEnter={() => setHoveredLandId(adjacent.id)}
-                            onMouseLeave={() => setHoveredLandId(null)}
-                          >
-                            <span className="flex shrink-0 items-center justify-center rounded bg-[#d97706] px-1.5 py-0.5 text-xs font-bold text-white">
-                              필지{adjacentNumber}
-                            </span>
-                            <div className="min-w-0 flex-1">
-                              <p className="text-sm font-medium text-amber-700 truncate">
-                                {adjacent.address.split(" ").slice(-2).join(" ")}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {adjacent.landType} | {adjacent.area.toLocaleString()}㎡
-                              </p>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    
-                    {/* 지적도 맵 */}
-                    <div className="flex-1 relative h-[520px] rounded-lg overflow-hidden border">
+                  {/* 지적도 */}
+                  <div className="relative h-[520px] rounded-lg overflow-hidden border">
                     <div className="absolute inset-0">
                     <LeafletMap
                       parcels={(() => {
@@ -1619,14 +1544,6 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     />
                     </div>
                     </div>
-                    
-                    {/* 기본정보 패널 collapse 버튼 */}
-                    <button 
-                      className="absolute top-1/2 -translate-y-1/2 right-0 z-20 flex h-12 w-6 cursor-pointer items-center justify-center rounded-l-md bg-background shadow-md hover:bg-muted transition-colors"
-                      title="패널 접기/펼치기"
-                    >
-                      <ChevronLeft className="h-4 w-4 text-muted-foreground" />
-                    </button>
                   </div>
                   
                   {/* 지도 범례 */}
@@ -1816,7 +1733,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             
                             {/* 현장확인 옵션 */}
                             <div className="space-y-3 pt-2 border-t">
-                              <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
+                              <label className="text-sm font-medium text-foreground">���장 확인 항목</label>
                               {isViewOnly ? (
                                 <div className="space-y-2 text-sm">
                                   <div className="flex items-center gap-3 p-2">
