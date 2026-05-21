@@ -149,7 +149,25 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
   };
 
   // 민원인이 신청완료했거나 장바구니에 담은 경우 수정 불가
-  const isLockedByCitizen = parcel.citizenActivity?.applicationSubmitted || parcel.citizenActivity?.inCart;
+  const isApplicationSubmitted = parcel.citizenActivity?.applicationSubmitted;
+  const isInCart = parcel.citizenActivity?.inCart;
+  const isLockedByCitizen = isApplicationSubmitted || isInCart;
+
+  // 관리(노출/미노출) 변경 핸들러
+  const handleVisibilityChange = (checked: boolean) => {
+    if (isApplicationSubmitted) {
+      alert("이미 신청이 완료된 건이라 수정이 불가합니다.");
+      return;
+    }
+    if (isInCart) {
+      alert("이미 민원인이 신청을 진행중인 건이라 수정이 불가합니다.");
+      return;
+    }
+    onUpdate({
+      ...parcel,
+      isVisible: checked,
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -160,12 +178,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
           <Switch 
             checked={parcel.isVisible !== false}
             disabled={isLockedByCitizen}
-            onCheckedChange={(checked) => {
-              onUpdate({
-                ...parcel,
-                isVisible: checked,
-              });
-            }}
+            onCheckedChange={handleVisibilityChange}
           />
           <span className={`text-sm font-medium ${parcel.isVisible !== false ? "text-emerald-600" : "text-muted-foreground"}`}>
             {parcel.isVisible !== false ? "노출" : "미노출"}
