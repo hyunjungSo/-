@@ -352,10 +352,14 @@ export function BatchAnalysis({
                   <TableCell className="font-medium">{parcel.landInfo.address}</TableCell>
                   <TableCell>{parcel.landInfo.remainingArea.toLocaleString()}</TableCell>
                   <TableCell>
-                    <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
+                    {parcel.aiResult ? (
+                      <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
+                    ) : (
+                      <Badge variant="outline">분석 대기</Badge>
+                    )}
                   </TableCell>
                   <TableCell>
-                    <span className="text-sm">{parcel.analysisHistory.length}회</span>
+                    <span className="text-sm">{parcel.analysisHistory?.length || 0}회</span>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {parcel.lastAnalyzedAt ? formatDateTime(parcel.lastAnalyzedAt) : "-"}
