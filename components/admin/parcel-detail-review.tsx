@@ -342,105 +342,115 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
           <CardContent>
             {parcel.aiResult ? (
               <div className="space-y-4">
-                {/* 판정 결과 */}
-                <div className={`p-4 rounded-lg border ${
-                  parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
-                  parcel.aiResult.provisionalJudgment === "수용가능"
-                    ? "border-emerald-200 bg-emerald-50/50" 
-                    : "border-rose-200 bg-rose-50/50"
-                }`}>
-                  <div className="flex items-center gap-3">
-                    {parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
-                     parcel.aiResult.provisionalJudgment === "수용가능" ? (
-                      <CheckCircle2 className="h-6 w-6 text-emerald-600" />
-                    ) : (
-                      <AlertTriangle className="h-6 w-6 text-rose-600" />
-                    )}
-                    <div>
-                      <p className="text-sm text-muted-foreground">판정 결과</p>
-                      <p className={`text-lg font-bold ${
-                        parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
-                        parcel.aiResult.provisionalJudgment === "수용가능"
-                          ? "text-emerald-600" : "text-rose-600"
-                      }`}>
-                        {parcel.aiResult.provisionalJudgment === "수용가능" ? "매수 가능성 높음" : 
-                         parcel.aiResult.provisionalJudgment === "수용불가" ? "매수 가능성 낮음" :
-                         parcel.aiResult.provisionalJudgment}
-                      </p>
-                    </div>
-                  </div>
+                {/* 분석 단계 및 판정 결과 */}
+                <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                  <Badge variant="outline">
+                    {parcel.analysisHistory?.length > 0 
+                      ? parcel.analysisHistory[parcel.analysisHistory.length - 1].stage 
+                      : "1차분석"}
+                  </Badge>
+                  <Badge 
+                    className={
+                      parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
+                      parcel.aiResult.provisionalJudgment === "수용가능"
+                        ? "bg-emerald-500 text-white"
+                        : "bg-rose-500 text-white"
+                    }
+                  >
+                    {parcel.aiResult.provisionalJudgment === "수용가능" ? "매수 가능성 높음" : 
+                     parcel.aiResult.provisionalJudgment === "수용불가" ? "매수 가능성 낮음" :
+                     parcel.aiResult.provisionalJudgment}
+                  </Badge>
                 </div>
 
-                {/* 판단 요약 */}
-                {parcel.aiResult.judgmentRationale && (
+                {/* 판정 기준 - 잔여지 형상지수 기반 판정 */}
+                <div className="p-4 border rounded-lg space-y-4">
                   <div className="space-y-3">
-                    <div className="p-3 bg-muted/50 rounded-lg">
-                      <p className="text-sm font-medium mb-1">판단 요약</p>
-                      <p className="text-sm text-muted-foreground">
-                        {parcel.aiResult.judgmentRationale.summary}
-                      </p>
-                    </div>
-                    
-                    {/* 적용된 기준 */}
-                    {parcel.aiResult.judgmentRationale.appliedCriteria && 
-                     parcel.aiResult.judgmentRationale.appliedCriteria.length > 0 && (
-                      <div className="p-3 bg-muted/50 rounded-lg">
-                        <p className="text-sm font-medium mb-2">적용된 기준</p>
-                        <div className="flex flex-wrap gap-1">
-                          {parcel.aiResult.judgmentRationale.appliedCriteria.map((criteria, idx) => (
-                            <Badge key={idx} variant="outline" className="text-xs">
-                              {criteria}
-                            </Badge>
-                          ))}
-                        </div>
+                    <h5 className="text-sm font-semibold flex items-center gap-2">
+                      <Shapes className="h-4 w-4 text-muted-foreground" />
+                      잔여지 형상지수 기반 판정
+                    </h5>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="p-2 bg-muted/30 rounded">
+                        <p className="text-xs text-muted-foreground">잔여지 형상지수</p>
+                        <p className="text-lg font-semibold">{parcel.aiResult.remainingShapeIndex?.toFixed(3) || "-"}</p>
                       </div>
-                    )}
-                    
-                    {/* 법적 근거 */}
-                    <div className="p-3 bg-muted/50 rounded-lg">
-                      <p className="text-sm font-medium mb-1">법적 근거</p>
-                      <p className="text-xs text-muted-foreground">
-                        {parcel.aiResult.judgmentRationale.legalBasis}
-                      </p>
+                      <div className="p-2 bg-muted/30 rounded">
+                        <p className="text-xs text-muted-foreground">최소 폭</p>
+                        <p className="text-lg font-semibold">{parcel.aiResult.remainingMinWidth || "-"}m</p>
+                      </div>
+                      <div className="p-2 bg-muted/30 rounded">
+                        <p className="text-xs text-muted-foreground">잔여 면적</p>
+                        <p className="text-lg font-semibold">{parcel.aiResult.remainingArea?.toLocaleString() || "-"}㎡</p>
+                      </div>
                     </div>
                   </div>
-                )}
 
-                {/* 형상지수 변화 */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3 bg-muted/50 rounded-lg text-center">
-                    <p className="text-xs text-muted-foreground">원래 형상지수</p>
-                    <p className="text-lg font-bold">{parcel.aiResult.originalShapeIndex?.toFixed(2) || "-"}</p>
+                  {/* 수동 확인 항목 */}
+                  <div className="space-y-3">
+                    <h5 className="text-sm font-semibold flex items-center gap-2">
+                      <AlertTriangle className="h-4 w-4 text-amber-500" />
+                      수동 확인 항목
+                    </h5>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="p-2 border rounded flex items-center justify-between">
+                        <span className="text-sm">농기계 진입 불가</span>
+                        <Badge variant={parcel.aiResult.farmMachineDifficulty ? "destructive" : "outline"}>
+                          {parcel.aiResult.farmMachineDifficulty ? "해당" : "미해당"}
+                        </Badge>
+                      </div>
+                      <div className="p-2 border rounded flex items-center justify-between">
+                        <span className="text-sm">접면도로 상실</span>
+                        <Badge variant={parcel.aiResult.accessRoadLost ? "destructive" : "outline"}>
+                          {parcel.aiResult.accessRoadLost ? "해당" : "미해당"}
+                        </Badge>
+                      </div>
+                      <div className="p-2 border rounded flex items-center justify-between">
+                        <span className="text-sm">관개수로 상실</span>
+                        <Badge variant={parcel.aiResult.waterChannelLost ? "destructive" : "outline"}>
+                          {parcel.aiResult.waterChannelLost ? "해당" : "미해당"}
+                        </Badge>
+                      </div>
+                      <div className="p-2 border rounded flex items-center justify-between">
+                        <span className="text-sm">고저차 발생</span>
+                        <Badge variant={parcel.aiResult.elevationDifference ? "destructive" : "outline"}>
+                          {parcel.aiResult.elevationDifference ? "해당" : "미해당"}
+                        </Badge>
+                      </div>
+                    </div>
                   </div>
-                  <div className="p-3 bg-muted/50 rounded-lg text-center">
-                    <p className="text-xs text-muted-foreground">잔여지 형상지수</p>
-                    <p className="text-lg font-bold">{parcel.aiResult.remainingShapeIndex?.toFixed(2) || "-"}</p>
-                  </div>
-                </div>
 
-                {/* 확인 항목 */}
-                <div className="p-3 bg-muted/50 rounded-lg">
-                  <p className="text-sm font-medium mb-2">확인 항목</p>
-                  <div className="space-y-1 text-sm">
-                    <div className="flex items-center gap-2">
-                      <span className={parcel.aiResult.farmMachineDifficulty ? "text-rose-600" : "text-muted-foreground"}>
-                        {parcel.aiResult.farmMachineDifficulty ? "●" : "○"}
-                      </span>
-                      <span>농기계 진입 곤란</span>
+                  {/* 상세 판독 결과 */}
+                  {parcel.aiResult.analysisDetails && (
+                    <div className="space-y-3">
+                      <h5 className="text-sm font-semibold flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-muted-foreground" />
+                        상세 판독 결과
+                      </h5>
+                      <pre className="p-3 bg-muted/30 rounded-lg text-sm whitespace-pre-wrap leading-relaxed">
+                        {parcel.aiResult.analysisDetails}
+                      </pre>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className={parcel.aiResult.accessRoadLost ? "text-rose-600" : "text-muted-foreground"}>
-                        {parcel.aiResult.accessRoadLost ? "●" : "○"}
-                      </span>
-                      <span>접면도로 상실</span>
+                  )}
+
+                  {/* 판정 기준 충족 여부 */}
+                  {parcel.aiResult.criteriaChecks && parcel.aiResult.criteriaChecks.length > 0 && (
+                    <div className="p-3 bg-white/60 border rounded-lg">
+                      <h5 className="text-sm font-semibold mb-2">판정 기준 충족 여부</h5>
+                      <div className="space-y-1">
+                        {parcel.aiResult.criteriaChecks.map((check, idx) => (
+                          <div key={idx} className="flex items-center gap-2 text-sm">
+                            {check.isMet ? (
+                              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                            ) : (
+                              <AlertTriangle className="h-4 w-4 text-rose-500" />
+                            )}
+                            <span>{check.criteria || check.criteriaName}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className={parcel.aiResult.waterChannelLost ? "text-rose-600" : "text-muted-foreground"}>
-                        {parcel.aiResult.waterChannelLost ? "●" : "○"}
-                      </span>
-                      <span>관개수로 상실</span>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             ) : (
@@ -449,7 +459,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                 <p>아직 분석 결과가 없습니다.</p>
                 <p className="text-sm mt-1">왼쪽에서 분석을 실행하세요.</p>
               </div>
-            )}
+            )}}
           </CardContent>
         </Card>
       </div>
