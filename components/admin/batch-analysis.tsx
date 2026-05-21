@@ -94,6 +94,86 @@ export function BatchAnalysis({
     useLandShape: true,
   });
 
+  // 배치 분석을 위한 필지 선택
+  const [selectedParcelIds, setSelectedParcelIds] = useState<Set<string>>(new Set());
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+  // 필지 선택/해제 토글
+  const handleToggleParcelSelection = (parcelId: string) => {
+    setSelectedParcelIds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(parcelId)) {
+        newSet.delete(parcelId);
+      } else {
+        newSet.add(parcelId);
+      }
+      return newSet;
+    });
+  };
+
+  // 전체 선택/해제
+  const handleToggleSelectAll = () => {
+    if (selectedParcelIds.size === filteredParcels.length) {
+      setSelectedParcelIds(new Set());
+    } else {
+      setSelectedParcelIds(new Set(filteredParcels.map(p => p.id)));
+    }
+  };
+
+  // 배치 분석 실행
+  const handleBatchAnalysis = async () => {
+    if (selectedParcelIds.size === 0) return;
+
+    setIsAnalyzing(true);
+    try {
+      // 선택된 필지들에 대해 분석 수행
+      const parcelsToAnalyze = parcels.filter(p => selectedParcelIds.has(p.id));
+      
+      const updatedParcels = parcelsToAnalyze.map(parcel => {
+        const newAnalysisResult: AIJudgmentResult = {
+          provisionalJudgment: Math.random() > 0.5 ? "매수 가능성 높음" : "매수 가능성 낮음",
+          reason: "AI 자동 분석 결과"
+        };
+
+        const newHistory: AnalysisHistory = {
+          id: `analysis_${Date.now()}_${Math.random()}`,
+          stage: parcel.analysisHistory?.length ? "2차분석" : "1차분석",
+          analyzedAt: new Date().toISOString(),
+          analyzedBy: "AI 자동 분석",
+          newResult: newAnalysisResult.provisionalJudgment,
+          previousResult: parcel.aiResult?.provisionalJudgment || undefined,
+          changedOptions: {},
+        };
+
+        return {
+          ...parcel,
+          aiResult: newAnalysisResult,
+          analysisHistory: [...(parcel.analysisHistory || []), newHistory],
+          lastAnalyzedAt: new Date().toISOString(),
+          isVisible: true,
+        } as ProcessedParcel;
+      });
+
+      // 기존 필지들과 분석된 필지들 병합
+      setParcels(prev => {
+        const updated = [...prev];
+        parcelsToAnalyze.forEach(analyzedParcel => {
+          const idx = updated.findIndex(p => p.id === analyzedParcel.id);
+          if (idx !== -1) {
+            updated[idx] = updatedParcels.find(p => p.id === analyzedParcel.id)!;
+          }
+        });
+        return updated;
+      });
+
+      // 선택 초기화
+      setSelectedParcelIds(new Set());
+      onAnalysisComplete?.();
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
   // 필터링된 필지 목록
   const filteredParcels = useMemo(() => {
     return parcels.filter(parcel => {
@@ -270,7 +350,7 @@ export function BatchAnalysis({
             <div className="flex items-center gap-3">
               <Label className="text-sm font-medium whitespace-nowrap">사업단:</Label>
               <Select value={businessUnitFilter} onValueChange={setBusinessUnitFilter}>
-                <SelectTrigger className="w-[180px] h-10">
+                <SelectTrigger className="w-[180px] h-[40px]">
                   <SelectValue placeholder="사업단 선택" />
                 </SelectTrigger>
                 <SelectContent>
