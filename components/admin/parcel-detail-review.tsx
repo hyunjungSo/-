@@ -319,7 +319,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <span><strong>소재지:</strong> {parcel.landInfo.address}</span>
                 <span><strong>지목:</strong> {parcel.landInfo.landType}</span>
-                <span><strong>면적:</strong> {parcel.landInfo.area?.toLocaleString()}㎡</span>
+                <span><strong>면적:</strong> {parcel.landInfo.originalArea?.toLocaleString()}㎡</span>
               </div>
             </div>
             <div className="h-[480px] rounded-lg overflow-hidden border">
@@ -516,7 +516,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <span><strong>소재지:</strong> {parcel.landInfo.address}</span>
                     <span><strong>지목:</strong> {parcel.landInfo.landType}</span>
-                    <span><strong>면적:</strong> {parcel.landInfo.area?.toLocaleString()}㎡</span>
+                    <span><strong>면적:</strong> {parcel.landInfo.originalArea?.toLocaleString()}㎡</span>
                   </div>
                 </div>
                 {/* 지도 - 해당 필지만 표시 */}
