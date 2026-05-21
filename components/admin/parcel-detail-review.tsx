@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { LandMap } from "@/components/land-map";
@@ -15,17 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { 
   RotateCcw,
-  History,
   CheckCircle2,
   MapPin,
   Ruler,
@@ -72,13 +64,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
   
   // 분석 상태
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  
-  // 저장/확인 상태
-  const [isSaving, setIsSaving] = useState(false);
-  
-  // 분석 상세 보기 다이얼로그
-  const [showHistoryDetail, setShowHistoryDetail] = useState(false);
-  const [selectedHistory, setSelectedHistory] = useState<AnalysisHistory | null>(null);
 
   // 2차 분석 (재분석) 실행
   const handleReanalyze = async () => {
@@ -393,119 +378,146 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {parcel.aiResult ? (
-              <div className="space-y-4">
-                {/* 분석 단계 및 판정 결과 */}
-                <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                  <Badge variant="outline">
-                    {parcel.analysisHistory?.length > 0 
-                      ? parcel.analysisHistory[parcel.analysisHistory.length - 1].stage 
-                      : "1차분석"}
-                  </Badge>
-                  <Badge 
-                    className={
-                      parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
-                      parcel.aiResult.provisionalJudgment === "수용가능"
-                        ? "bg-emerald-500 text-white"
-                        : "bg-rose-500 text-white"
-                    }
-                  >
-                    {parcel.aiResult.provisionalJudgment === "수용가능" ? "매수 가능성 높음" : 
-                     parcel.aiResult.provisionalJudgment === "수용불가" ? "매수 가능성 낮음" :
-                     parcel.aiResult.provisionalJudgment}
-                  </Badge>
-                </div>
+            {(parcel.analysisHistory?.length || 0) > 0 ? (
+              <Accordion 
+                type="single" 
+                collapsible 
+                defaultValue={`history-${parcel.analysisHistory[parcel.analysisHistory.length - 1]?.id}`}
+                className="space-y-2"
+              >
+                {parcel.analysisHistory.slice().reverse().map((history, index) => {
+                  const aiResult = history.aiResult;
+                  const isLatest = index === 0;
+                  
+                  return (
+                    <AccordionItem 
+                      key={history.id} 
+                      value={`history-${history.id}`}
+                      className="border rounded-lg px-4"
+                    >
+                      <AccordionTrigger className="hover:no-underline py-3">
+                        <div className="flex items-center gap-3 w-full">
+                          <Badge variant="outline">
+                            {history.stage}
+                          </Badge>
+                          {isLatest && <Badge variant="secondary" className="text-xs">최신</Badge>}
+                          <Badge 
+                            className={
+                              history.newResult === "매수 가능성 높음" || 
+                              history.newResult === "수용가능"
+                                ? "bg-emerald-500 text-white"
+                                : "bg-rose-500 text-white"
+                            }
+                          >
+                            {history.newResult === "수용가능" ? "매수 가능성 높음" : 
+                             history.newResult === "수용불가" ? "매수 가능성 낮음" :
+                             history.newResult}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground ml-auto mr-2">
+                            {formatDateTime(history.analyzedAt)}
+                          </span>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="pb-4">
+                        {aiResult ? (
+                          <div className="space-y-4 pt-2">
+                            {/* 판정 기준 - 잔여지 형상지수 기반 판정 */}
+                            <div className="p-4 border rounded-lg space-y-4 bg-muted/20">
+                              <div className="space-y-3">
+                                <h5 className="text-sm font-semibold flex items-center gap-2">
+                                  <Shapes className="h-4 w-4 text-muted-foreground" />
+                                  잔여지 형상지수 기반 판정
+                                </h5>
+                                <div className="grid grid-cols-3 gap-3">
+                                  <div className="p-2 bg-background rounded">
+                                    <p className="text-xs text-muted-foreground">잔여지 형상지수</p>
+                                    <p className="text-lg font-semibold">{aiResult.remainingShapeIndex?.toFixed(3) || "-"}</p>
+                                  </div>
+                                  <div className="p-2 bg-background rounded">
+                                    <p className="text-xs text-muted-foreground">최소 폭</p>
+                                    <p className="text-lg font-semibold">{aiResult.remainingMinWidth || "-"}m</p>
+                                  </div>
+                                  <div className="p-2 bg-background rounded">
+                                    <p className="text-xs text-muted-foreground">잔여 면적</p>
+                                    <p className="text-lg font-semibold">{aiResult.remainingArea?.toLocaleString() || "-"}㎡</p>
+                                  </div>
+                                </div>
+                              </div>
 
-                {/* 판정 기준 - 잔여지 형상지수 기반 판정 */}
-                <div className="p-4 border rounded-lg space-y-4">
-                  <div className="space-y-3">
-                    <h5 className="text-sm font-semibold flex items-center gap-2">
-                      <Shapes className="h-4 w-4 text-muted-foreground" />
-                      잔여지 형상지수 기반 판정
-                    </h5>
-                    <div className="grid grid-cols-3 gap-3">
-                      <div className="p-2 bg-muted/30 rounded">
-                        <p className="text-xs text-muted-foreground">잔여지 형상지수</p>
-                        <p className="text-lg font-semibold">{parcel.aiResult.remainingShapeIndex?.toFixed(3) || "-"}</p>
-                      </div>
-                      <div className="p-2 bg-muted/30 rounded">
-                        <p className="text-xs text-muted-foreground">최소 폭</p>
-                        <p className="text-lg font-semibold">{parcel.aiResult.remainingMinWidth || "-"}m</p>
-                      </div>
-                      <div className="p-2 bg-muted/30 rounded">
-                        <p className="text-xs text-muted-foreground">잔여 면적</p>
-                        <p className="text-lg font-semibold">{parcel.aiResult.remainingArea?.toLocaleString() || "-"}㎡</p>
-                      </div>
-                    </div>
-                  </div>
+                              {/* 수동 확인 항목 */}
+                              <div className="space-y-3">
+                                <h5 className="text-sm font-semibold flex items-center gap-2">
+                                  <AlertTriangle className="h-4 w-4 text-amber-500" />
+                                  수동 확인 항목
+                                </h5>
+                                <div className="grid grid-cols-2 gap-2">
+                                  <div className="p-2 border rounded flex items-center justify-between bg-background">
+                                    <span className="text-sm">농기계 진입 불가</span>
+                                    <Badge variant={aiResult.farmMachineDifficulty ? "destructive" : "outline"}>
+                                      {aiResult.farmMachineDifficulty ? "해당" : "미해당"}
+                                    </Badge>
+                                  </div>
+                                  <div className="p-2 border rounded flex items-center justify-between bg-background">
+                                    <span className="text-sm">접면도로 상실</span>
+                                    <Badge variant={aiResult.accessRoadLost ? "destructive" : "outline"}>
+                                      {aiResult.accessRoadLost ? "해당" : "미해당"}
+                                    </Badge>
+                                  </div>
+                                  <div className="p-2 border rounded flex items-center justify-between bg-background">
+                                    <span className="text-sm">관개수로 상실</span>
+                                    <Badge variant={aiResult.waterChannelLost ? "destructive" : "outline"}>
+                                      {aiResult.waterChannelLost ? "해당" : "미해당"}
+                                    </Badge>
+                                  </div>
+                                  <div className="p-2 border rounded flex items-center justify-between bg-background">
+                                    <span className="text-sm">고저차 발생</span>
+                                    <Badge variant={aiResult.elevationDifference ? "destructive" : "outline"}>
+                                      {aiResult.elevationDifference ? "해당" : "미해당"}
+                                    </Badge>
+                                  </div>
+                                </div>
+                              </div>
 
-                  {/* 수동 확인 항목 */}
-                  <div className="space-y-3">
-                    <h5 className="text-sm font-semibold flex items-center gap-2">
-                      <AlertTriangle className="h-4 w-4 text-amber-500" />
-                      수동 확인 항목
-                    </h5>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="p-2 border rounded flex items-center justify-between">
-                        <span className="text-sm">농기계 진입 불가</span>
-                        <Badge variant={parcel.aiResult.farmMachineDifficulty ? "destructive" : "outline"}>
-                          {parcel.aiResult.farmMachineDifficulty ? "해당" : "미해당"}
-                        </Badge>
-                      </div>
-                      <div className="p-2 border rounded flex items-center justify-between">
-                        <span className="text-sm">접면도로 상실</span>
-                        <Badge variant={parcel.aiResult.accessRoadLost ? "destructive" : "outline"}>
-                          {parcel.aiResult.accessRoadLost ? "해당" : "미해당"}
-                        </Badge>
-                      </div>
-                      <div className="p-2 border rounded flex items-center justify-between">
-                        <span className="text-sm">관개수로 상실</span>
-                        <Badge variant={parcel.aiResult.waterChannelLost ? "destructive" : "outline"}>
-                          {parcel.aiResult.waterChannelLost ? "해당" : "미해당"}
-                        </Badge>
-                      </div>
-                      <div className="p-2 border rounded flex items-center justify-between">
-                        <span className="text-sm">고저차 발생</span>
-                        <Badge variant={parcel.aiResult.elevationDifference ? "destructive" : "outline"}>
-                          {parcel.aiResult.elevationDifference ? "해당" : "미해당"}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
+                              {/* 판정 기준 충족 여부 */}
+                              {aiResult.criteriaChecks && aiResult.criteriaChecks.length > 0 && (
+                                <div className="p-3 bg-background border rounded-lg">
+                                  <h5 className="text-sm font-semibold mb-2">판정 기준 충족 여부</h5>
+                                  <div className="space-y-1">
+                                    {aiResult.criteriaChecks.map((check, idx) => (
+                                      <div key={idx} className="flex items-center gap-2 text-sm">
+                                        {check.isMet ? (
+                                          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                                        ) : (
+                                          <AlertTriangle className="h-4 w-4 text-rose-500" />
+                                        )}
+                                        <span>{check.criteria || check.criteriaName}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
 
-                  {/* 상세 판독 결과 */}
-                  {parcel.aiResult.analysisDetails && (
-                    <div className="space-y-3">
-                      <h5 className="text-sm font-semibold flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-muted-foreground" />
-                        상세 판독 결과
-                      </h5>
-                      <pre className="p-3 bg-muted/30 rounded-lg text-sm whitespace-pre-wrap leading-relaxed">
-                        {parcel.aiResult.analysisDetails}
-                      </pre>
-                    </div>
-                  )}
-
-                  {/* 판정 기준 충족 여부 */}
-                  {parcel.aiResult.criteriaChecks && parcel.aiResult.criteriaChecks.length > 0 && (
-                    <div className="p-3 bg-white/60 border rounded-lg">
-                      <h5 className="text-sm font-semibold mb-2">판정 기준 충족 여부</h5>
-                      <div className="space-y-1">
-                        {parcel.aiResult.criteriaChecks.map((check, idx) => (
-                          <div key={idx} className="flex items-center gap-2 text-sm">
-                            {check.isMet ? (
-                              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                            ) : (
-                              <AlertTriangle className="h-4 w-4 text-rose-500" />
+                            {/* 변경 사유 및 메모 */}
+                            {(history.changeReason || history.memo) && (
+                              <div className="p-3 border rounded-lg bg-muted/20">
+                                {history.changeReason && (
+                                  <p className="text-sm"><strong>변경 사유:</strong> {history.changeReason}</p>
+                                )}
+                                {history.memo && (
+                                  <p className="text-sm text-muted-foreground"><strong>메모:</strong> {history.memo}</p>
+                                )}
+                              </div>
                             )}
-                            <span>{check.criteria || check.criteriaName}</span>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
+                        ) : (
+                          <p className="text-sm text-muted-foreground py-2">상세 분석 결과가 없습니다.</p>
+                        )}
+                      </AccordionContent>
+                    </AccordionItem>
+                  );
+                })}
+              </Accordion>
             ) : (
               <div className="p-8 text-center text-muted-foreground border rounded-lg bg-muted/30">
                 <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
@@ -516,74 +528,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
           </CardContent>
         </Card>
       </div>
-
-      {/* AI 분석 히스토리 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <History className="h-5 w-5" />
-            AI 분석 히스토리
-          </CardTitle>
-          <CardDescription>
-            공사 진행 상황에 따라 여러 번 재분석할 수 있습니다.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3 max-h-[400px] overflow-y-auto">
-            {(parcel.analysisHistory?.length || 0) > 0 ? (
-              parcel.analysisHistory.slice().reverse().map((history, index) => (
-                <div 
-                  key={history.id} 
-                  className={`p-3 rounded-lg border cursor-pointer transition-colors hover:bg-muted/80 ${index === 0 ? "border-primary bg-primary/5" : "bg-muted/50"}`}
-                  onClick={() => {
-                    if (history.aiResult) {
-                      setSelectedHistory(history);
-                      setShowHistoryDetail(true);
-                    }
-                  }}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline">
-                          {history.stage}
-                        </Badge>
-                        {index === 0 && <Badge variant="outline" className="text-xs">최신</Badge>}
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {formatDateTime(history.analyzedAt)}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <span className={
-                        history.newResult.includes("높음") || history.newResult === "수용가능" 
-                          ? "text-emerald-600 font-medium" : "text-rose-600 font-medium"
-                      }>
-                        {history.newResult === "수용가능" ? "매수 가능성 높음" : 
-                         history.newResult === "수용불가" ? "매수 가능성 낮음" :
-                         history.newResult}
-                      </span>
-                    </div>
-                  </div>
-                  {(history.changeReason || history.memo) && (
-                    <div className="mt-2 pt-2 border-t text-sm">
-                      {history.changeReason && <p><strong>변경 사유:</strong> {history.changeReason}</p>}
-                      {history.memo && <p className="text-muted-foreground"><strong>메모:</strong> {history.memo}</p>}
-                    </div>
-                  )}
-                  {history.aiResult && (
-                    <div className="mt-2 pt-2 border-t">
-                      <span className="text-xs text-muted-foreground">클릭하여 상세 보기</span>
-                    </div>
-                  )}
-                </div>
-              ))
-            ) : (
-              <p className="text-center py-8 text-muted-foreground">분석 히스토리가 없습니다.</p>
-            )}
-          </div>
-        </CardContent>
-      </Card>
 
       {/* 하단 액션 버튼 */}
       <div className="flex items-center justify-between pt-4 border-t">
@@ -607,146 +551,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
           )}
         </div>
       </div>
-
-      {/* 분석 상세 보기 다이얼로그 */}
-      <Dialog open={showHistoryDetail} onOpenChange={setShowHistoryDetail}>
-        <DialogContent className="w-full max-w-[800px] max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <History className="h-5 w-5" />
-              분석 상세 정보
-            </DialogTitle>
-            <DialogDescription>
-              {selectedHistory && formatDateTime(selectedHistory.analyzedAt)} 분석 결과
-            </DialogDescription>
-          </DialogHeader>
-          
-          {selectedHistory?.aiResult && (
-            <div className="space-y-6">
-              {/* AI 분석 결과 */}
-              <div className="space-y-3">
-                <h4 className="font-semibold text-base">AI 분석 결과</h4>
-                
-                {/* 분석 단계 및 판정 결과 */}
-                <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                  <Badge variant="outline">
-                    {selectedHistory.stage}
-                  </Badge>
-                  <Badge 
-                    className={
-                      selectedHistory.newResult.includes("높음") || selectedHistory.newResult === "수용가능"
-                        ? "bg-emerald-500 text-white"
-                        : "bg-rose-500 text-white"
-                    }
-                  >
-                    {selectedHistory.newResult === "수용가능" ? "매수 가능성 높음" : 
-                     selectedHistory.newResult === "수용불가" ? "매수 가능성 낮음" :
-                     selectedHistory.newResult}
-                  </Badge>
-                </div>
-
-                {/* 판정 기준 - 잔여지 형상지수 및 관련 지표 */}
-                <div className="p-4 border rounded-lg space-y-4">
-                  <div className="space-y-3">
-                    <h5 className="text-sm font-semibold flex items-center gap-2">
-                      <Shapes className="h-4 w-4 text-muted-foreground" />
-                      잔여지 형상지수 기반 판정
-                    </h5>
-                    <div className="grid grid-cols-3 gap-3">
-                      <div className="p-2 bg-muted/30 rounded">
-                        <p className="text-xs text-muted-foreground">잔여지 형상지수</p>
-                        <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingShapeIndex?.toFixed(3) || "-"}</p>
-                      </div>
-                      <div className="p-2 bg-muted/30 rounded">
-                        <p className="text-xs text-muted-foreground">최소 폭</p>
-                        <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingMinWidth || "-"}m</p>
-                      </div>
-                      <div className="p-2 bg-muted/30 rounded">
-                        <p className="text-xs text-muted-foreground">잔여 면적</p>
-                        <p className="text-lg font-semibold">{selectedHistory.aiResult.remainingArea?.toLocaleString() || "-"}㎡</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 수동 확인 항목 */}
-                  <div className="space-y-3">
-                    <h5 className="text-sm font-semibold flex items-center gap-2">
-                      <AlertTriangle className="h-4 w-4 text-amber-500" />
-                      수동 확인 항목
-                    </h5>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="p-2 border rounded flex items-center justify-between">
-                        <span className="text-sm">농기계 진입 불가</span>
-                        <Badge variant={selectedHistory.aiResult.farmMachineDifficulty ? "destructive" : "outline"}>
-                          {selectedHistory.aiResult.farmMachineDifficulty ? "해당" : "미해당"}
-                        </Badge>
-                      </div>
-                      <div className="p-2 border rounded flex items-center justify-between">
-                        <span className="text-sm">접면도로 상실</span>
-                        <Badge variant={selectedHistory.aiResult.accessRoadLost ? "destructive" : "outline"}>
-                          {selectedHistory.aiResult.accessRoadLost ? "해당" : "미해당"}
-                        </Badge>
-                      </div>
-                      <div className="p-2 border rounded flex items-center justify-between">
-                        <span className="text-sm">관개수로 상실</span>
-                        <Badge variant={selectedHistory.aiResult.waterChannelLost ? "destructive" : "outline"}>
-                          {selectedHistory.aiResult.waterChannelLost ? "해당" : "미해당"}
-                        </Badge>
-                      </div>
-                      <div className="p-2 border rounded flex items-center justify-between">
-                        <span className="text-sm">고저차 발생</span>
-                        <Badge variant={selectedHistory.aiResult.elevationDifference ? "destructive" : "outline"}>
-                          {selectedHistory.aiResult.elevationDifference ? "해당" : "미해당"}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 상세 판독 결과 */}
-                  {selectedHistory.aiResult.analysisDetails && (
-                    <div className="space-y-3">
-                      <h5 className="text-sm font-semibold flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-muted-foreground" />
-                        상세 판독 결과
-                      </h5>
-                      <pre className="p-3 bg-muted/30 rounded-lg text-sm whitespace-pre-wrap leading-relaxed">
-                        {selectedHistory.aiResult.analysisDetails}
-                      </pre>
-                    </div>
-                  )}
-
-                  {/* 판정 기준 충족 여부 */}
-                  {selectedHistory.aiResult.criteriaChecks && selectedHistory.aiResult.criteriaChecks.length > 0 && (
-                    <div className="p-3 bg-white/60 border rounded-lg">
-                      <p className="text-xs font-medium text-muted-foreground mb-2">판정 기준 충족 여부</p>
-                      <div className="space-y-2">
-                        {selectedHistory.aiResult.criteriaChecks.map((check: { criteriaName: string; isMet: boolean }, idx: number) => (
-                          <div key={idx} className="flex items-center justify-between text-sm">
-                            <span className="text-muted-foreground">{check.criteriaName}</span>
-                            <Badge variant={check.isMet ? "default" : "destructive"} className="text-xs">
-                              {check.isMet ? "충족" : "미충족"}
-                            </Badge>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* 메모 */}
-              {selectedHistory.memo && (
-                <div className="space-y-2">
-                  <Label className="font-medium">메모</Label>
-                  <p className="text-sm text-muted-foreground p-3 bg-muted/30 rounded-lg">
-                    {selectedHistory.memo}
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
