@@ -1428,7 +1428,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
       provisionalJudgment = "수용불가";
     }
   } else if (landInfo.landType === "택지" || landInfo.landType === "농지") {
-    // 택��/농지: 면적 기준 + 형상 조건 적용
+    // 택���/농지: 면적 기준 + 형상 조건 적용
     if (coreCriteriaMet || isIrregularShape || shapeIndexMet) {
       provisionalJudgment = "수용가능";
     } else {
@@ -1713,7 +1713,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       waterChannelLost: false,
       farmMachineDifficulty: false,
       judgmentRationale: {
-        summary: "택지 잔여지 - 접면도로 상실로 맹���화되어 「매수 가능성 높음」 판정",
+        summary: "택지 잔여지 - 접면도로 상실로 ������화되어 「매수 가능성 높음」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: ["토지유형: 택지", "형상지수 변화: 1.5 (기준 충족)", "접면도로 상실: 해당 (맹지화)"],
         detailedExplanation: "도로확장사업으로 접면도로가 상실되어 맹지가 되었으며, 건축허가가 불가능한 상태입니다.",
@@ -1856,7 +1856,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       ownerContact: "010-1111-2222",
       hasIncludedLand: true,
       businessUnit: "수도권",
-      projectName: "용인-양지 도로확장사���",
+      projectName: "용인-양지 도로���장사���",
     },
     checkItems: {
       farmMachineDifficulty: false,
@@ -2824,7 +2824,7 @@ export const dummyApplications: Application[] = [
     aiResult: {
       landTypePath: "산지",
       criteriaChecks: [
-        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100㎡로 조림지 ��단", isMet: true, autoDetected: true },
+        { criteriaName: "면적 기준", criteriaDescription: "잔여���적 4,100㎡로 조림지 ��단", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },
       ],
@@ -3503,7 +3503,7 @@ export const dummyApplications: Application[] = [
     applicationType: "single",
     applicantName: "배준서",
     applicantContact: "010-3344-0000",
-    applicantAddress: "경기도 가평군 가평읍 읍내리 900",
+    applicantAddress: "경기도 가평군 가평�� 읍내리 900",
     landInfo: dummyLandInfoList[11],
     actualUsage: "임",
     reportedShape: "사다리형",
@@ -3848,7 +3848,31 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     id: "processed-006",
     businessUnit: "수도권건설사업단",
     projectName: "평택-오송 고속도로 2공구",
-    landInfo: dummyLandInfoList[0],
+    landInfo: {
+      id: "land-006",
+      address: "경기도 평택시 서탄면 금암리 234-5",
+      originalArea: 980,
+      includedArea: 380,
+      remainingArea: 600,
+      remainingRatio: 61.2,
+      landType: "농지",
+      landCategory: "전",
+      originalShape: "가로장방형",
+      remainingShape: "사다리형",
+      originalShapeIndex: 3.8,
+      remainingShapeIndex: 4.5,
+      ownerName: "정민수",
+      ownerContact: "010-9999-8888",
+      hasIncludedLand: true,
+      businessUnit: "수도권건설사업단",
+      projectName: "평택-오송 고속도로 2공구",
+      coordinates: [
+        { lat: 37.0520, lng: 127.0380 },
+        { lat: 37.0528, lng: 127.0395 },
+        { lat: 37.0518, lng: 127.0402 },
+        { lat: 37.0510, lng: 127.0387 },
+      ],
+    },
     adminCheckItems: {
       farmMachineDifficulty: false,
       accessRoadLost: false,
