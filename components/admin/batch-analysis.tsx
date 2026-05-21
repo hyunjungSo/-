@@ -271,7 +271,7 @@ export function BatchAnalysis({
           <SearchInput
             value={searchQuery}
             onChange={setSearchQuery}
-            placeholder="소재지, 소유자명, 사업단으로 검색"
+            placeholder="소재지, 소유자명을 입력하세요"
           />
           
           {/* 필터 영역 */}
