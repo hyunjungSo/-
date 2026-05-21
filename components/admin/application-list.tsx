@@ -660,11 +660,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             {/* 정렬 버튼 */}
             <Button
               variant="outline"
-              className="gap-1.5 border-foreground bg-foreground px-4 text-background hover:bg-foreground/90 hover:text-background h-[40px]"
+              className="border-foreground bg-foreground px-4 text-background hover:bg-foreground/90 hover:text-background h-[40px]"
               onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
             >
-              <span>{sortOrder === "desc" ? "↓" : "↑"}</span>
-              <span>{sortOrder === "desc" ? "최신순" : "오래된순"}</span>
+              {sortOrder === "desc" ? "최신순" : "오래된순"}
             </Button>
           </div>
 
