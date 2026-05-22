@@ -31,7 +31,6 @@ import {
 import { 
   CheckCircle2, 
   XCircle, 
-  Filter,
   Lock,
   ChevronLeft,
   ChevronRight
@@ -234,7 +233,7 @@ export function BatchAnalysis({
       if (businessUnit && parcel.businessUnit !== businessUnit) return false;
       if (businessUnitFilter !== "all" && parcel.businessUnit !== businessUnitFilter) return false;
       
-      // 검색어 ��터
+      // 검색어 ���터
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         const matchesAddress = parcel.landInfo.address.toLowerCase().includes(query);
@@ -406,13 +405,26 @@ export function BatchAnalysis({
         </div>
       </div>
 
-      {/* 검색 및 필터 */}
+      {/* 필지 목록 테이블 */}
       <Card className="border-0">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Filter className="h-5 w-5" />
-            검색 및 필터
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>AI 매수 판단 목록</CardTitle>
+              <CardDescription>
+                1차 확정된 필지를 확인하고 AI 분석을 실행하세요. 행을 클릭하면 필지상세 화면으로 이동합니다.
+              </CardDescription>
+            </div>
+            {selectedParcelIds.size > 0 && (
+              <Button 
+                onClick={handleBatchAnalysis}
+                disabled={isAnalyzing}
+                className="ml-auto"
+              >
+                {isAnalyzing ? "분석 중..." : `선택된 필지 분석 (${selectedParcelIds.size})`}
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* 검색바 */}
@@ -466,31 +478,6 @@ export function BatchAnalysis({
               ]}
             />
           </div>
-        </CardContent>
-      </Card>
-
-      {/* 필지 목록 테이블 */}
-      <Card className="border-0">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>AI 매수 판단 목록</CardTitle>
-              <CardDescription>
-                1차 확정된 필지를 확인하고 AI 분석을 실행하세요. 행을 클릭하면 필지상세 화면으로 이동합니다.
-              </CardDescription>
-            </div>
-            {selectedParcelIds.size > 0 && (
-              <Button 
-                onClick={handleBatchAnalysis}
-                disabled={isAnalyzing}
-                className="ml-auto"
-              >
-                {isAnalyzing ? "분석 중..." : `선택된 필지 분석 (${selectedParcelIds.size})`}
-              </Button>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
           <div className="overflow-x-auto border rounded-lg">
             <Table>
               <TableHeader className="bg-muted/50">
