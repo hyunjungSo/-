@@ -646,7 +646,7 @@ export function BatchAnalysis({
                     분석 중...
                   </>
                 ) : (
-                  `매수 판정 (${selectedParcelIds.size}건)`
+                  `AI 매수 판독 실행 (${selectedParcelIds.size}건)`
                 )}
               </Button>
             </div>
