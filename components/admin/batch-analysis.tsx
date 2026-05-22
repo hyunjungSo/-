@@ -464,7 +464,7 @@ export function BatchAnalysis({
 
   return (
     <div className="space-y-6">
-      {/* 타이����������� */}
+      {/* 타이������������� */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground sm:text-3xl">필지관리</h1>
         <p className="text-muted-foreground mt-1">잔여지 판정 및 매수 가능성 분석을 관리합니다.</p>
@@ -596,14 +596,14 @@ export function BatchAnalysis({
               
               {/* 관리 필터 */}
               <RadioFilterGroup
-                label="잔여지 판정"
-                name="residual-status"
-                value={residualStatusFilter}
-                onChange={(v) => setResidualStatusFilter(v as "all" | "approved" | "rejected")}
+                label="관리"
+                name="visibility"
+                value={visibilityFilter}
+                onChange={(v) => setVisibilityFilter(v as "all" | "visible" | "hidden")}
                 options={[
                   { value: "all", label: "전체" },
-                  { value: "approved", label: "인정" },
-                  { value: "rejected", label: "미인정" }
+                  { value: "visible", label: "노출" },
+                  { value: "hidden", label: "미노출" }
                 ]}
               />
               
