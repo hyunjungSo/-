@@ -464,7 +464,7 @@ export function BatchAnalysis({
 
   return (
     <div className="space-y-6">
-      {/* 타이틀 */}
+      {/* 타이��� */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground sm:text-3xl">필지관리</h1>
         <p className="text-muted-foreground mt-1">잔여지 판정 및 매수 가능성 분석을 관리합니다.</p>
@@ -554,7 +554,7 @@ export function BatchAnalysis({
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium whitespace-nowrap text-gray-700">사업단</span>
                 <Select value={businessUnitFilter} onValueChange={setBusinessUnitFilter}>
-                  <SelectTrigger className="w-[160px] h-[40px]">
+                  <SelectTrigger className="w-[240px] h-[40px]">
                     <SelectValue placeholder="사업단 선택" />
                   </SelectTrigger>
                   <SelectContent>
