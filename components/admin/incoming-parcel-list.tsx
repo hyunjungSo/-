@@ -236,7 +236,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
   // 선택 필지 잔여지 대상으로 확정
   const handleConfirmSelected = () => {
     if (selectedIds.size === 0) {
-      alert("확정할 필지를 선택해주세요.");
+      alert("확정할 필지를 선택해주���요.");
       return;
     }
 
@@ -404,8 +404,13 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
               <CardDescription>총 {filteredParcels.length}건 | 선택됨 {selectedIds.size}건</CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
-                <RefreshCw className="h-4 w-4 mr-2" />
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => window.location.reload()}
+                className="border-[#2E8B57] text-[#2E8B57] hover:bg-[#2E8B57] hover:text-white gap-2"
+              >
+                <RefreshCw className="h-4 w-4" />
                 새로고침
               </Button>
             </div>
