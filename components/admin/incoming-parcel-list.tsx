@@ -345,7 +345,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
       {/* 타이틀 */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground sm:text-3xl">발생 잔여지 판독</h1>
-        <p className="text-muted-foreground mt-1">외부 시스템에서 자동 적재된 신규 필지를 검토하고 잔여지 대상을 확정합니다.</p>
+        <p className="text-muted-foreground mt-1">신규 필지를 검토하여 잔여지 대상 여부를 확정해주세요.</p>
       </div>
 
       {/* 실시간 자동 적재 현황 요약 카드 */}
