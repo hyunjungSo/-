@@ -29,6 +29,7 @@ import {
   Loader2
 } from "lucide-react";
 import { SearchInput } from "@/components/admin/shared";
+import { PaginationButton, PaginationNavButton } from "@/components/ui/pagination-button";
 import { formatNumber } from "@/lib/format";
 
 // 외부 시스템에서 적재되는 신규 필지 타입
@@ -466,7 +467,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
               <Button
                 onClick={handleBatchAIAnalysis}
                 disabled={selectedIds.size === 0 || analyzingIds.size > 0}
-                className="bg-[#2E8B57] hover:bg-[#25704a] text-white"
+                variant="cta"
               >
                 <Brain className="h-4 w-4 mr-2" />
                 선택 필지 AI 분석 ({selectedIds.size}건)
@@ -474,8 +475,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
               <Button
                 onClick={handleConfirmSelected}
                 disabled={selectedIds.size === 0}
-                variant="outline"
-                className="border-[#2E8B57] text-[#2E8B57] hover:bg-[#2E8B57] hover:text-white"
+                variant="cta-outline"
               >
                 <CheckCircle2 className="h-4 w-4 mr-2" />
                 선택 필지 잔여지 대상으로 확정 ({selectedIds.size}건)
@@ -564,8 +564,8 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                       ) : (
                         <Button
                           size="sm"
-                          variant="outline"
-                          className="border-[#2E8B57] text-[#2E8B57] hover:bg-[#2E8B57] hover:text-white h-7 px-2 text-xs"
+                          variant="cta-outline"
+                          className="h-7 px-2 text-xs"
                           onClick={() => handleAIAnalysis(parcel.id)}
                         >
                           <Brain className="h-3 w-3 mr-1" />
@@ -590,22 +590,20 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
           </div>
 
           {/* 페이지네이션 */}
-          {totalPages > 1 && (
+            {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 pt-4 mt-4">
-              <button
+              <PaginationNavButton
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
-                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 처음
-              </button>
-              <button
+              </PaginationNavButton>
+              <PaginationNavButton
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 이전
-              </button>
+              </PaginationNavButton>
               
               <div className="flex items-center gap-1">
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -620,35 +618,29 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                     pageNum = currentPage - 2 + i;
                   }
                   return (
-                    <button
+                    <PaginationButton
                       key={pageNum}
                       onClick={() => setCurrentPage(pageNum)}
-                      className={`w-9 h-9 flex items-center justify-center text-sm rounded ${
-                        currentPage === pageNum 
-                          ? "bg-[#2E8B57] text-white" 
-                          : "text-gray-600 hover:bg-gray-50"
-                      }`}
+                      isActive={currentPage === pageNum}
                     >
                       {pageNum}
-                    </button>
+                    </PaginationButton>
                   );
                 })}
               </div>
               
-              <button
+              <PaginationNavButton
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 다음
-              </button>
-              <button
+              </PaginationNavButton>
+              <PaginationNavButton
                 onClick={() => setCurrentPage(totalPages)}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 마지막
-              </button>
+              </PaginationNavButton>
               
               <span className="text-sm text-muted-foreground ml-2">
                 ({filteredParcels.length}건 중 {(currentPage - 1) * itemsPerPage + 1}-{Math.min(currentPage * itemsPerPage, filteredParcels.length)}건)

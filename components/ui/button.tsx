@@ -24,6 +24,10 @@ const buttonVariants = cva(
         destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive/80',
         // 링크 스타일
         link: 'text-primary underline-offset-4 hover:underline',
+        // CTA Primary: 주요 액션 버튼 (녹색 채움)
+        cta: 'bg-[#2E8B57] text-white hover:bg-[#25704a] active:bg-[#1e5c3d]',
+        // CTA Outline: 보조 액션 버튼 (녹색 윤곽선)
+        'cta-outline': 'border border-[#2E8B57] bg-transparent text-[#2E8B57] hover:bg-[#2E8B57] hover:text-white active:bg-[#25704a]',
       },
       size: {
         // 중장년층 접근성: 최소 터치 타겟 48px, 폰트 사이즈 증가

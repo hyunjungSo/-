@@ -32,6 +32,7 @@ import { Progress } from "@/components/ui/progress";
 import { JudgmentSummaryBadge, PARCEL_COUNT_COLORS } from "@/components/ui/judgment-badge";
 import { PeriodFilter, type PeriodFilterType, type DateRange } from "@/components/ui/period-filter";
 import { StatCard, StatCardGroup } from "@/components/ui/stat-card";
+import { PaginationButton, PaginationNavButton } from "@/components/ui/pagination-button";
 import { formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -827,20 +828,18 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           {/* 페이지네이션 */}
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 pt-4 mt-4">
-              <button
+              <PaginationNavButton
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
-                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 처음
-              </button>
-              <button
+              </PaginationNavButton>
+              <PaginationNavButton
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 이전
-              </button>
+              </PaginationNavButton>
               
               {/* 페이지 번호 */}
               <div className="flex items-center gap-1">
@@ -856,35 +855,29 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     pageNum = currentPage - 2 + i;
                   }
                   return (
-                    <button
+                    <PaginationButton
                       key={pageNum}
                       onClick={() => setCurrentPage(pageNum)}
-                      className={`w-9 h-9 flex items-center justify-center text-sm rounded ${
-                        currentPage === pageNum 
-                          ? "bg-[#2E8B57] text-white" 
-                          : "text-gray-600 hover:bg-gray-50"
-                      }`}
+                      isActive={currentPage === pageNum}
                     >
                       {pageNum}
-                    </button>
+                    </PaginationButton>
                   );
                 })}
               </div>
               
-              <button
+              <PaginationNavButton
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 다음
-              </button>
-              <button
+              </PaginationNavButton>
+              <PaginationNavButton
                 onClick={() => setCurrentPage(totalPages)}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 마지막
-              </button>
+              </PaginationNavButton>
               
               <span className="text-sm text-muted-foreground ml-2">
                 ({filteredApplications.length}건 중 {(currentPage - 1) * itemsPerPage + 1}-{Math.min(currentPage * itemsPerPage, filteredApplications.length)}건)
