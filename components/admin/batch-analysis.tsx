@@ -922,18 +922,20 @@ export function BatchAnalysis({
             <DialogTitle className="text-xl">
               {pendingVisibilityChange?.isVisible ? "필지 정보 공개 확인" : "필지 정보 비공개 확인"}
             </DialogTitle>
-            <DialogDescription className="pt-4 space-y-4 leading-7 text-base">
-              {pendingVisibilityChange?.isVisible ? (
-                <>
-                  <p>해당 필지의 상세 정보와 AI 분석 결과를 민원인에게 공개하시겠습니까?</p>
-                  <p>공개 시 민원인이 직접 정보를 조회하고 매수 신청을 진행할 수 있습니다.</p>
-                </>
-              ) : (
-                <>
-                  <p>해당 필지의 상세 정보와 AI 분석 결과를 민원인에게 비공개 처리하시겠습니까?</p>
-                  <p>비공개 시 민원인이 해당 필지 정보를 조회할 수 없습니다.</p>
-                </>
-              )}
+            <DialogDescription className="pt-4 space-y-4 leading-7 text-base" asChild>
+              <div>
+                {pendingVisibilityChange?.isVisible ? (
+                  <>
+                    <span className="block">해당 필지의 상세 정보와 AI 분석 결과를 민원인에게 공개하시겠습니까?</span>
+                    <span className="block">공개 시 민원인이 직접 정보를 조회하고 매수 신청을 진행할 수 있습니다.</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="block">해당 필지의 상세 정보와 AI 분석 결과를 민원인에게 비공개 처리하시겠습니까?</span>
+                    <span className="block">비공개 시 민원인이 해당 필지 정보를 조회할 수 없습니다.</span>
+                  </>
+                )}
+              </div>
             </DialogDescription>
           </DialogHeader>
           
