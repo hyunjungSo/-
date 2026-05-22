@@ -24,8 +24,9 @@ import {
   CheckCircle2, 
   AlertCircle,
   Clock,
-  ArrowRight,
-  RefreshCw
+  RefreshCw,
+  Brain,
+  Loader2
 } from "lucide-react";
 import { SearchInput } from "@/components/admin/shared";
 import { formatNumber } from "@/lib/format";
@@ -43,6 +44,8 @@ interface IncomingParcel {
   loadedAt: string;
   areaAnalysisResult: "초과" | "이하" | "미분석";
   status: "신규" | "검토중" | "확정" | "제외";
+  aiAnalysisStatus?: "대기" | "분석중" | "완료";
+  aiResult?: "매수가능" | "매수불가" | "추가검토";
 }
 
 // 더미 데이터: 외부 시스템에서 적재된 신규 필지
@@ -151,6 +154,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
   const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("all");
   const [analysisResultFilter, setAnalysisResultFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [analyzingIds, setAnalyzingIds] = useState<Set<string>>(new Set());
   const itemsPerPage = 10;
 
   // 사업단 목록 추출
@@ -256,6 +260,71 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
     alert(`${selectedParcels.length}건의 필지가 잔여지 대상으로 확정되었습니다.`);
   };
 
+  // AI 분석 실행 (단건)
+  const handleAIAnalysis = async (parcelId: string) => {
+    setAnalyzingIds(prev => new Set(prev).add(parcelId));
+    
+    // AI 분석 시뮬레이션
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // 분석 결과 업데이트
+    setParcels(prev => prev.map(p => {
+      if (p.id === parcelId) {
+        const results: Array<"매수가능" | "매수불가" | "추가검토"> = ["매수가능", "매수불가", "추가검토"];
+        const randomResult = results[Math.floor(Math.random() * results.length)];
+        return { 
+          ...p, 
+          aiAnalysisStatus: "완료" as const,
+          aiResult: randomResult
+        };
+      }
+      return p;
+    }));
+    
+    setAnalyzingIds(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(parcelId);
+      return newSet;
+    });
+  };
+
+  // AI 분석 실행 (선택된 필지 일괄)
+  const handleBatchAIAnalysis = async () => {
+    if (selectedIds.size === 0) {
+      alert("분석할 필지를 선택해주세요.");
+      return;
+    }
+    
+    const idsArray = Array.from(selectedIds);
+    setAnalyzingIds(new Set(idsArray));
+    
+    // 순차적으로 분석 시뮬레이션
+    for (const id of idsArray) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setParcels(prev => prev.map(p => {
+        if (p.id === id) {
+          const results: Array<"매수가능" | "매수불가" | "추가검토"> = ["매수가능", "매수불가", "추가검토"];
+          const randomResult = results[Math.floor(Math.random() * results.length)];
+          return { 
+            ...p, 
+            aiAnalysisStatus: "완료" as const,
+            aiResult: randomResult
+          };
+        }
+        return p;
+      }));
+      
+      setAnalyzingIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(id);
+        return newSet;
+      });
+    }
+    
+    alert(`${idsArray.length}건의 AI 분석이 완료되었습니다.`);
+  };
+
   // 시간 포맷
   const formatLoadedTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -353,14 +422,6 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                 <RefreshCw className="h-4 w-4 mr-2" />
                 새로고침
               </Button>
-              <Button 
-                onClick={handleConfirmSelected}
-                disabled={selectedIds.size === 0}
-                className="bg-[#2E8B57] hover:bg-[#256F46]"
-              >
-                <ArrowRight className="h-4 w-4 mr-2" />
-                선택 필지 잔여지 대상으로 확정 ({selectedIds.size})
-              </Button>
             </div>
           </div>
         </CardHeader>
@@ -399,6 +460,31 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
             </Select>
           </div>
 
+          {/* 액션 버튼 영역 */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={handleBatchAIAnalysis}
+                disabled={selectedIds.size === 0 || analyzingIds.size > 0}
+                className="bg-purple-600 hover:bg-purple-700 text-white"
+              >
+                <Brain className="h-4 w-4 mr-2" />
+                선택 필지 AI 분석 ({selectedIds.size}건)
+              </Button>
+              <Button
+                onClick={handleConfirmSelected}
+                disabled={selectedIds.size === 0}
+                className="bg-[#2E8B57] hover:bg-[#25704a] text-white"
+              >
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+                선택 필지 잔여지 대상으로 확정 ({selectedIds.size}건)
+              </Button>
+            </div>
+            <span className="text-sm text-muted-foreground">
+              총 {filteredParcels.length}건
+            </span>
+          </div>
+
           {/* 테이블 */}
           <div className="rounded-lg border overflow-hidden">
             <Table>
@@ -418,6 +504,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                   <TableHead className="text-right">잔여면적</TableHead>
                   <TableHead className="text-right">잔여비율</TableHead>
                   <TableHead className="text-center">1차 가분석</TableHead>
+                  <TableHead className="text-center">AI 분석</TableHead>
                   <TableHead className="text-center">적재시간</TableHead>
                 </TableRow>
               </TableHeader>
@@ -455,6 +542,36 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                         {parcel.areaAnalysisResult === "초과" ? "면적 초과" : "면적 이하"}
                       </Badge>
                     </TableCell>
+                    <TableCell className="text-center">
+                      {analyzingIds.has(parcel.id) ? (
+                        <div className="flex items-center justify-center gap-1">
+                          <Loader2 className="h-4 w-4 animate-spin text-purple-600" />
+                          <span className="text-xs text-purple-600">분석중</span>
+                        </div>
+                      ) : parcel.aiResult ? (
+                        <Badge 
+                          className={
+                            parcel.aiResult === "매수가능" 
+                              ? "bg-green-100 text-green-700 hover:bg-green-100"
+                              : parcel.aiResult === "매수불가"
+                              ? "bg-red-100 text-red-700 hover:bg-red-100"
+                              : "bg-yellow-100 text-yellow-700 hover:bg-yellow-100"
+                          }
+                        >
+                          {parcel.aiResult}
+                        </Badge>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-purple-400 text-purple-600 hover:bg-purple-50 h-7 px-2 text-xs"
+                          onClick={() => handleAIAnalysis(parcel.id)}
+                        >
+                          <Brain className="h-3 w-3 mr-1" />
+                          분석
+                        </Button>
+                      )}
+                    </TableCell>
                     <TableCell className="text-center text-sm text-muted-foreground">
                       {formatLoadedTime(parcel.loadedAt)}
                     </TableCell>
@@ -462,7 +579,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                 ))}
                 {paginatedParcels.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                       조건에 맞는 필지가 없습니다.
                     </TableCell>
                   </TableRow>
