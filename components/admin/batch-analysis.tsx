@@ -559,70 +559,76 @@ export function BatchAnalysis({
           <CardTitle>검색 및 필터</CardTitle>
         </CardHeader>
         <CardContent>
-          {/* 단일 행 필터 레이아웃 */}
-          <div className="flex flex-wrap items-center gap-6">
-            {/* 검색바 */}
-            <SearchInput
-              value={searchQuery}
-              onChange={setSearchQuery}
-              placeholder="소재지, 소유자명을 입력하세요"
-              className="w-[400px]"
-            />
-            
-            {/* 사업단 선택 필터 */}
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium whitespace-nowrap text-gray-700">사업단</span>
-              <Select value={businessUnitFilter} onValueChange={setBusinessUnitFilter}>
-                <SelectTrigger className="w-[160px] h-[40px]">
-                  <SelectValue placeholder="사업단 선택" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">전체 사업단</SelectItem>
-                  {businessUnits.map((unit) => (
-                    <SelectItem key={unit} value={unit}>{unit}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          {/* 필터 레이아웃 - 2행 구조 */}
+          <div className="space-y-4">
+            {/* 1행: 검색바 + 사업단 */}
+            <div className="flex flex-wrap items-center gap-6">
+              {/* 검색바 */}
+              <SearchInput
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="소재지, 소유자명을 입력하세요"
+                className="w-[400px]"
+              />
+              
+              {/* 사업단 선택 필터 */}
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium whitespace-nowrap text-gray-700">사업단</span>
+                <Select value={businessUnitFilter} onValueChange={setBusinessUnitFilter}>
+                  <SelectTrigger className="w-[160px] h-[40px]">
+                    <SelectValue placeholder="사업단 선택" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">전체 사업단</SelectItem>
+                    {businessUnits.map((unit) => (
+                      <SelectItem key={unit} value={unit}>{unit}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             
-            {/* 잔여지 판정 필터 */}
-            <RadioFilterGroup
-              label="잔여지 여부"
-              name="residual-status"
-              value={residualStatusFilter}
-              onChange={(v) => setResidualStatusFilter(v as "all" | "approved" | "rejected")}
-              options={[
-                { value: "all", label: "전체" },
-                { value: "approved", label: "잔여지 인정" },
-                { value: "rejected", label: "기준 미달" }
-              ]}
-            />
-            
-            {/* 매수 가능성 필터 */}
-            <RadioFilterGroup
-              label="매수 가능성"
-              name="ai-judgment"
-              value={aiJudgmentFilter}
-              onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low")}
-              options={[
-                { value: "all", label: "전체" },
-                { value: "high", label: "매수 가능성 높음" },
-                { value: "low", label: "매수 가능성 낮음" }
-              ]}
-            />
-            
-            {/* 관리(노출/미노출) 필터 */}
-            <RadioFilterGroup
-              label="관리"
-              name="visibility"
-              value={visibilityFilter}
-              onChange={(v) => setVisibilityFilter(v as "all" | "visible" | "hidden")}
+            {/* 2행: 잔여지 여부 + 매수 가능성 + 관리 필터 */}
+            <div className="flex flex-wrap items-center gap-6">
+              {/* 잔여지 판정 필터 */}
+              <RadioFilterGroup
+                label="잔여지 여부"
+                name="residual-status"
+                value={residualStatusFilter}
+                onChange={(v) => setResidualStatusFilter(v as "all" | "approved" | "rejected")}
+                options={[
+                  { value: "all", label: "전체" },
+                  { value: "approved", label: "잔여지 인정" },
+                  { value: "rejected", label: "기준 미달" }
+                ]}
+              />
+              
+              {/* 매수 가능성 필터 */}
+              <RadioFilterGroup
+                label="매수 가능성"
+                name="ai-judgment"
+                value={aiJudgmentFilter}
+                onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low")}
+                options={[
+                  { value: "all", label: "전체" },
+                  { value: "high", label: "매수 가능성 높음" },
+                  { value: "low", label: "매수 가능성 낮음" }
+                ]}
+              />
+              
+              {/* 관리(노출/미노출) 필터 */}
+              <RadioFilterGroup
+                label="관리"
+                name="visibility"
+                value={visibilityFilter}
+                onChange={(v) => setVisibilityFilter(v as "all" | "visible" | "hidden")}
               options={[
                 { value: "all", label: "전체" },
                 { value: "visible", label: "노출" },
                 { value: "hidden", label: "미노출" }
               ]}
             />
+            </div>
           </div>
         </CardContent>
       </Card>
