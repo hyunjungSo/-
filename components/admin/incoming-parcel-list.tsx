@@ -23,8 +23,7 @@ import {
   RefreshCw,
   Brain,
   Loader2,
-  CheckCircle2,
-  Filter
+  CheckCircle2
 } from "lucide-react";
 import { SearchInput, RadioFilterGroup } from "@/components/admin/shared";
 import { Label } from "@/components/ui/label";
@@ -400,10 +399,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
       {/* 검색 및 필터 */}
       <Card className="border-0">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Filter className="h-5 w-5" />
-            검색 및 필터
-          </CardTitle>
+          <CardTitle>검색 및 필터</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* 검색바 */}
@@ -452,7 +448,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>신규 적재 필지 목록</CardTitle>
+              <CardTitle>신규 적�� 필지 목록</CardTitle>
               <CardDescription>
                 신규 적재된 필지를 확인하고 잔여지 대상 여부를 확정하세요. 총 {filteredParcels.length}건 | 선택됨 {selectedIds.size}건
               </CardDescription>
