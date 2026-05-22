@@ -221,6 +221,9 @@ export function BatchAnalysis({
 
     setIsPurchaseAnalyzing(true);
     try {
+      // 분석 시뮬레이션 (1초 딜레이)
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       // 선택된 필지들에 대해 분석 수행
       const parcelsToAnalyze = parcels.filter(p => selectedParcelIds.has(p.id));
       
@@ -452,7 +455,7 @@ export function BatchAnalysis({
     }));
   };
 
-  // 미노���� 처리
+  // 미노����� 처리
   const handleUnpublish = (parcelId: string) => {
     setParcels(prev => prev.map(p => {
       if (p.id === parcelId) {
