@@ -25,8 +25,7 @@ import {
   Loader2,
   CheckCircle2
 } from "lucide-react";
-import { SearchInput, RadioFilterGroup } from "@/components/admin/shared";
-import { Label } from "@/components/ui/label";
+import { SearchInput } from "@/components/admin/shared";
 import { PaginationButton, PaginationNavButton } from "@/components/ui/pagination-button";
 import { formatNumber } from "@/lib/format";
 
@@ -151,7 +150,6 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
   const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("all");
-  const [analysisResultFilter, setAnalysisResultFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [analyzingIds, setAnalyzingIds] = useState<Set<string>>(new Set());
   const itemsPerPage = 10;
@@ -180,14 +178,9 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
         return false;
       }
       
-      // 가분석 결과 필터
-      if (analysisResultFilter !== "all" && parcel.areaAnalysisResult !== analysisResultFilter) {
-        return false;
-      }
-      
       return true;
     });
-  }, [parcels, searchQuery, businessUnitFilter, analysisResultFilter]);
+  }, [parcels, searchQuery, businessUnitFilter]);
 
   // 페이지네이션
   const totalPages = Math.ceil(filteredParcels.length / itemsPerPage);
@@ -201,14 +194,10 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
     const today = new Date().toISOString().split('T')[0];
     const newParcels = parcels.filter(p => p.status === "신규");
     const todayLoaded = parcels.filter(p => p.loadedAt.startsWith(today));
-    const overArea = parcels.filter(p => p.areaAnalysisResult === "초과" && (p.status === "신규" || p.status === "검토중"));
-    const underArea = parcels.filter(p => p.areaAnalysisResult === "이하" && (p.status === "신규" || p.status === "검토중"));
     
     return {
       totalNew: newParcels.length,
-      todayLoaded: todayLoaded.length,
-      overArea: overArea.length,
-      underArea: underArea.length
+      todayLoaded: todayLoaded.length
     };
   }, [parcels]);
 
@@ -350,7 +339,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
       </div>
 
       {/* 실시간 자동 적재 현황 요약 카드 */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         {/* 신규 적재: Blue */}
         <div 
           className="flex cursor-pointer flex-col items-center rounded-lg bg-blue-50 p-4 transition-all hover:bg-blue-100"
@@ -369,28 +358,6 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
           <span className="text-sm font-medium text-emerald-600">오늘 적재</span>
           <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
             <span className="font-bold text-emerald-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.todayLoaded}</span>
-            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
-          </div>
-        </div>
-        
-        {/* 면적 기준 초과: Amber */}
-        <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-amber-50 p-4 transition-all hover:bg-amber-100"
-        >
-          <span className="text-sm font-medium text-amber-600">면적 기준 초과</span>
-          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-amber-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.overArea}</span>
-            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
-          </div>
-        </div>
-        
-        {/* 면적 기준 이하: Gray */}
-        <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-50 p-4 transition-all hover:bg-gray-100"
-        >
-          <span className="text-sm font-medium text-gray-600">면적 기준 이하</span>
-          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-gray-700" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.underArea}</span>
             <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
           </div>
         </div>
@@ -426,19 +393,6 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                 </SelectContent>
               </Select>
             </div>
-            
-            {/* 가분석 결과 필터 */}
-            <RadioFilterGroup
-              label="1차 가분석"
-              name="area-analysis"
-              value={analysisResultFilter}
-              onChange={(v) => setAnalysisResultFilter(v)}
-              options={[
-                { value: "all", label: "전체" },
-                { value: "초과", label: "면적 초과" },
-                { value: "이하", label: "면적 이하" }
-              ]}
-            />
           </div>
         </CardContent>
       </Card>
@@ -510,7 +464,6 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                   <TableHead>사업단</TableHead>
                   <TableHead className="text-right">잔여면적</TableHead>
                   <TableHead className="text-right">잔여비율</TableHead>
-                  <TableHead className="text-center">1차 가분석</TableHead>
                   <TableHead className="text-center">AI 분석</TableHead>
                   <TableHead className="text-center">적재시간</TableHead>
                 </TableRow>
@@ -538,17 +491,6 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                     <TableCell>{parcel.businessUnit}</TableCell>
                     <TableCell className="text-right">{formatNumber(parcel.remainingArea)}㎡</TableCell>
                     <TableCell className="text-right">{parcel.remainingRatio.toFixed(1)}%</TableCell>
-                    <TableCell className="text-center">
-                      <Badge 
-                        variant={parcel.areaAnalysisResult === "초과" ? "default" : "secondary"}
-                        className={parcel.areaAnalysisResult === "초과" 
-                          ? "bg-amber-100 text-amber-700 hover:bg-amber-100" 
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-100"
-                        }
-                      >
-                        {parcel.areaAnalysisResult === "초과" ? "면적 초과" : "면적 이하"}
-                      </Badge>
-                    </TableCell>
                     <TableCell className="text-center">
                       {analyzingIds.has(parcel.id) ? (
                         <div className="flex items-center justify-center gap-1">
@@ -584,7 +526,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                 ))}
                 {paginatedParcels.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                       조건에 맞는 필지가 없습니다.
                     </TableCell>
                   </TableRow>
