@@ -34,8 +34,7 @@ import {
   XCircle, 
   ChevronLeft,
   ChevronRight,
-  Loader2,
-  MapPin
+  Loader2
 } from "lucide-react";
 import { 
   SearchInput, 
@@ -284,6 +283,7 @@ export function BatchAnalysis({
       toast({
         title: "AI 매수 가능성 분석 완료",
         description: `${selectedParcelIds.size}건의 AI 매수 가능성 분석이 완료되었습니다.`,
+        duration: 3500,
       });
 
       // 선택 초기화
@@ -323,6 +323,7 @@ export function BatchAnalysis({
       toast({
         title: "공개 설정 완료",
         description: "해당 필지가 민원인에게 공개되었습니다.",
+        duration: 3500,
       });
     }
     setShowVisibilityModal(false);
@@ -354,8 +355,9 @@ export function BatchAnalysis({
       onParcelsUpdate?.(updatedParcels);
       
       toast({
-        title: "편입 유형 분석 완료",
-        description: `${selectedParcelIds.size}건의 편입 유형 분석이 완료되었습니다.`,
+        title: "편입 유형 판독 완료",
+        description: `${selectedParcelIds.size}건의 편입 유형 판독이 완료되었습니다.`,
+        duration: 3500,
       });
       
       setSelectedParcelIds(new Set());
@@ -441,20 +443,22 @@ export function BatchAnalysis({
     });
     
     const total = relevantParcels.length;
+    // 판독 대기 = 편입 유형 분석을 아직 실행하지 않은 필지
+    const pendingInclusion = relevantParcels.filter(p => !p.residualStatus).length;
     // 전체 편입 = 기준 미달 (잔여지 미발생)
     const fullInclusion = relevantParcels.filter(p => p.residualStatus === "기준 미달").length;
     // 부분 편입 = 잔여지 인정 (잔여지 발생)
     const partialInclusion = relevantParcels.filter(p => p.residualStatus === "잔여지 인정").length;
+    // 심사 대기 = 편입 유형은 나왔으나, 매수 가능성 분석을 아직 실행하지 않은 필지
+    const pendingReview = relevantParcels.filter(p => p.residualStatus && !p.aiResult).length;
     const highPossibility = relevantParcels.filter(p => 
       p.aiResult && isHighPossibility(p.aiResult.provisionalJudgment)
     ).length;
     const lowPossibility = relevantParcels.filter(p => 
       p.aiResult && !isHighPossibility(p.aiResult.provisionalJudgment)
     ).length;
-    // 분석 대기 = 편입 유형 또는 매수 가능성이 아직 분석되지 않은 건
-    const analysisPending = relevantParcels.filter(p => !p.residualStatus || !p.aiResult).length;
     
-    return { total, fullInclusion, partialInclusion, highPossibility, lowPossibility, analysisPending };
+    return { total, pendingInclusion, fullInclusion, partialInclusion, pendingReview, highPossibility, lowPossibility };
   }, [parcels, businessUnit, businessUnitFilter]);
 
   // 히스토리 보기
@@ -538,19 +542,31 @@ export function BatchAnalysis({
       
       <p className="text-muted-foreground -mt-4">편입 유형 분석 및 매수 가능성 심사를 관리합니다.</p>
 
-      {/* 통계 카드 - 6개 */}
-      <div className="grid grid-cols-6 gap-3">
+      {/* 통계 카드 - 7개 */}
+      <div className="grid grid-cols-7 gap-3">
         {/* 전체 필지 */}
         <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-4 transition-all hover:bg-slate-100 border border-slate-200"
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-700 p-4 transition-all hover:bg-slate-800 border border-slate-600"
           onClick={() => {
             setInclusionTypeFilter("all");
             setAiJudgmentFilter("all");
           }}
         >
-          <span className="text-sm font-medium text-slate-600">전체 필지</span>
+          <span className="text-sm font-medium text-slate-200">전체 필지</span>
           <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-slate-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.total}</span>
+            <span className="font-bold text-white" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.total}</span>
+            <span className="text-xs font-medium ml-0.5 text-slate-400">건</span>
+          </div>
+        </div>
+
+        {/* 판독 대기 (1차 편입 유형 분석 전) */}
+        <div 
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-100 p-4 transition-all hover:bg-gray-200 border border-gray-300"
+          onClick={() => setInclusionTypeFilter("pending")}
+        >
+          <span className="text-sm font-medium text-gray-600">판독 대기</span>
+          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
+            <span className="font-bold text-gray-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.pendingInclusion}</span>
             <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
           </div>
         </div>
@@ -579,41 +595,38 @@ export function BatchAnalysis({
           </div>
         </div>
         
+        {/* 심사 대기 (편입 유형 나왔으나 매수 가능성 분석 전) */}
+        <div 
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-amber-50 p-4 transition-all hover:bg-amber-100 border border-amber-200"
+          onClick={() => setAiJudgmentFilter("pending")}
+        >
+          <span className="text-sm font-medium text-amber-600">심사 대기</span>
+          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
+            <span className="font-bold text-amber-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.pendingReview}</span>
+            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+          </div>
+        </div>
+
         {/* 매수 가능성 높음 */}
         <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-teal-50 p-4 transition-all hover:bg-teal-100 border border-teal-200"
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-green-100 p-4 transition-all hover:bg-green-200 border border-green-300"
           onClick={() => setAiJudgmentFilter("high")}
         >
-          <span className="text-sm font-medium text-teal-600">매수 가능성 높음</span>
+          <span className="text-sm font-medium text-green-700">매수 가능성 높음</span>
           <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-teal-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.highPossibility}</span>
+            <span className="font-bold text-green-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.highPossibility}</span>
             <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
           </div>
         </div>
         
         {/* 매수 가능성 낮음 */}
         <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-orange-50 p-4 transition-all hover:bg-orange-100 border border-orange-200"
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-red-50 p-4 transition-all hover:bg-red-100 border border-red-200"
           onClick={() => setAiJudgmentFilter("low")}
         >
-          <span className="text-sm font-medium text-orange-600">매수 가능성 낮음</span>
+          <span className="text-sm font-medium text-red-500">매수 가능성 낮음</span>
           <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-orange-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.lowPossibility}</span>
-            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
-          </div>
-        </div>
-        
-        {/* 분석 대기 */}
-        <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-50 p-4 transition-all hover:bg-gray-100 border border-gray-200"
-          onClick={() => {
-            setInclusionTypeFilter("pending");
-            setAiJudgmentFilter("pending");
-          }}
-        >
-          <span className="text-sm font-medium text-gray-600">분석 대기</span>
-          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-gray-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.analysisPending}</span>
+            <span className="font-bold text-red-800" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.lowPossibility}</span>
             <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
           </div>
         </div>
@@ -647,7 +660,7 @@ export function BatchAnalysis({
                 onChange={(v) => setInclusionTypeFilter(v as "all" | "full" | "partial" | "pending")}
                 options={[
                   { value: "all", label: "전체" },
-                  { value: "pending", label: "분석 대기" },
+                  { value: "pending", label: "판독 대기" },
                   { value: "full", label: "전체 편입" },
                   { value: "partial", label: "부분 편입" }
                 ]}
@@ -661,15 +674,15 @@ export function BatchAnalysis({
                 onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low" | "pending")}
                 options={[
                   { value: "all", label: "전체" },
-                  { value: "pending", label: "분석 대기" },
+                  { value: "pending", label: "심사 대기" },
                   { value: "high", label: "높음" },
                   { value: "low", label: "낮음" }
                 ]}
               />
               
-              {/* 관리 필터 */}
+              {/* 공개 여부 필터 */}
               <RadioFilterGroup
-                label="관리"
+                label="공개 여부"
                 name="visibility"
                 value={visibilityFilter}
                 onChange={(v) => setVisibilityFilter(v as "all" | "visible" | "hidden")}
@@ -691,7 +704,7 @@ export function BatchAnalysis({
             <div>
               <CardTitle className="text-lg">필지 관리 목록</CardTitle>
               <CardDescription>
-                편입 유형 및 매수 가능성 분석 결과를 확인하세요. 소재지를 클릭하면 필지 상세 화면으로 이동합니다.
+                편입 유형 판독 및 매수 가능성 심사 결과를 확인하세요. 소재지를 클릭하면 필지 상세 화면으로 이동합니다.
               </CardDescription>
             </div>
             {/* 분석 버튼 */}
@@ -705,10 +718,10 @@ export function BatchAnalysis({
                 {isInclusionAnalyzing ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    분석 중...
+                    판독 중...
                   </>
                 ) : (
-                  `잔여지 판독 실행 (${selectedParcelIds.size}건)`
+                  `편입 유형 판독 실행 (${selectedParcelIds.size}건)`
                 )}
               </Button>
               <Button
@@ -748,7 +761,7 @@ export function BatchAnalysis({
                   <TableHead className="text-center">면적(㎡)</TableHead>
                   <TableHead className="text-center">편입 유형</TableHead>
                   <TableHead className="text-center">매수 가능성</TableHead>
-                  <TableHead className="text-center">관리</TableHead>
+                  <TableHead className="text-center">공개 여부</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -799,7 +812,7 @@ export function BatchAnalysis({
                         </Badge>
                       ) : (
                         <Badge className="bg-gray-100 text-gray-500 hover:bg-gray-100 border-0">
-                          분석 대기
+                          판독 대기
                         </Badge>
                       )}
                     </TableCell>
@@ -814,32 +827,20 @@ export function BatchAnalysis({
                         <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
                       ) : (
                         <Badge className="bg-gray-100 text-gray-500 hover:bg-gray-100 border-0">
-                          분석 대기
+                          심사 대기
                         </Badge>
                       )}
                     </TableCell>
-                    {/* 관리 컬럼 - 토글 스위치 */}
+                    {/* 공개 여부 컬럼 - 토글 스위치 (항상 활성화) */}
                     <TableCell className="text-center">
-                      {(parcel.citizenActivity?.applicationSubmitted || parcel.citizenActivity?.inCart) ? (
-                        <div className="flex items-center justify-center gap-1.5">
-                          <Switch
-                            checked={parcel.isVisible !== false}
-                            disabled={true}
-                            className="data-[state=checked]:bg-[#2E8B57] opacity-50"
-                          />
-                          <span className="text-sm text-muted-foreground w-[42px] text-left">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
-                          <span className="text-xs">🔒</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-center gap-1.5">
-                          <Switch
-                            checked={parcel.isVisible !== false}
-                            onCheckedChange={(checked) => handleToggleVisibilityRequest(parcel.id, checked)}
-                            className="data-[state=checked]:bg-[#2E8B57]"
-                          />
-                          <span className="text-sm text-muted-foreground w-[42px] text-left">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
-                        </div>
-                      )}
+                      <div className="flex items-center justify-center gap-1.5">
+                        <Switch
+                          checked={parcel.isVisible !== false}
+                          onCheckedChange={(checked) => handleToggleVisibilityRequest(parcel.id, checked)}
+                          className="data-[state=checked]:bg-[#2E8B57]"
+                        />
+                        <span className="text-sm text-muted-foreground w-[42px] text-left">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
