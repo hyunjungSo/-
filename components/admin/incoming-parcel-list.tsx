@@ -510,7 +510,6 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                           className="h-7 px-2 text-xs"
                           onClick={() => handleAIAnalysis(parcel.id)}
                         >
-                          <Brain className="h-3 w-3 mr-1" />
                           분석
                         </Button>
                       )}
