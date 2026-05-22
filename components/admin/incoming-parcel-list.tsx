@@ -23,9 +23,11 @@ import {
   RefreshCw,
   Brain,
   Loader2,
-  CheckCircle2
+  CheckCircle2,
+  Filter
 } from "lucide-react";
-import { SearchInput } from "@/components/admin/shared";
+import { SearchInput, RadioFilterGroup } from "@/components/admin/shared";
+import { Label } from "@/components/ui/label";
 import { PaginationButton, PaginationNavButton } from "@/components/ui/pagination-button";
 import { formatNumber } from "@/lib/format";
 
@@ -395,13 +397,65 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
         </div>
       </div>
 
-      {/* 필터 및 액션 영역 */}
-      <Card className="bg-white">
-        <CardHeader className="pb-4">
+      {/* 검색 및 필터 */}
+      <Card className="border-0">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="h-5 w-5" />
+            검색 및 필터
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* 검색바 */}
+          <SearchInput
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="소재지를 입력하세요"
+          />
+          
+          {/* 필터 영역 */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+            {/* 사업단 선택 필터 */}
+            <div className="flex items-center gap-3">
+              <Label className="text-sm font-medium whitespace-nowrap">사업단:</Label>
+              <Select value={businessUnitFilter} onValueChange={setBusinessUnitFilter}>
+                <SelectTrigger className="w-[180px] h-[40px]">
+                  <SelectValue placeholder="사업단 선택" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">전체 사업단</SelectItem>
+                  {businessUnits.map(unit => (
+                    <SelectItem key={unit} value={unit}>{unit}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            {/* 가분석 결과 필터 */}
+            <RadioFilterGroup
+              label="1차 가분석"
+              name="area-analysis"
+              value={analysisResultFilter}
+              onChange={(v) => setAnalysisResultFilter(v)}
+              options={[
+                { value: "all", label: "전체" },
+                { value: "초과", label: "면적 초과" },
+                { value: "이하", label: "면적 이하" }
+              ]}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 필지 목록 테이블 */}
+      <Card className="border-0">
+        <CardHeader>
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>신규 적재 필지 목록</CardTitle>
-              <CardDescription>총 {filteredParcels.length}건 | 선택됨 {selectedIds.size}건</CardDescription>
+              <CardDescription>
+                신규 적재된 필지를 확인하고 잔여지 대상 여부를 확정하세요. 총 {filteredParcels.length}건 | 선택됨 {selectedIds.size}건
+              </CardDescription>
             </div>
             <div className="flex items-center gap-2">
               <Button 
@@ -417,47 +471,6 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* 검색바 */}
-          <SearchInput
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="소재지를 입력하세요"
-          />
-          
-          {/* 필터 영역 */}
-          <div className="mb-6 flex flex-col sm:flex-row sm:items-center gap-6">
-            {/* 사업단 선택 필터 */}
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-medium whitespace-nowrap text-gray-700">사업단:</span>
-              <Select value={businessUnitFilter} onValueChange={setBusinessUnitFilter}>
-                <SelectTrigger className="w-[180px] h-[40px]">
-                  <SelectValue placeholder="전체 사업단" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">전체 사업단</SelectItem>
-                  {businessUnits.map(unit => (
-                    <SelectItem key={unit} value={unit}>{unit}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            
-            {/* 가분석 결과 필터 */}
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-medium whitespace-nowrap text-gray-700">가분석 결과:</span>
-              <Select value={analysisResultFilter} onValueChange={setAnalysisResultFilter}>
-                <SelectTrigger className="w-[180px] h-[40px]">
-                  <SelectValue placeholder="전체 결과" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">전체 결과</SelectItem>
-                  <SelectItem value="초과">면적 기준 초과</SelectItem>
-                  <SelectItem value="이하">면적 기준 이하</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
           {/* 액션 버튼 영역 */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
