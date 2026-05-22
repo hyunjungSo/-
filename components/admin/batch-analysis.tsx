@@ -416,6 +416,7 @@ export function BatchAnalysis({
             value={searchQuery}
             onChange={setSearchQuery}
             placeholder="소재지, 소유자명을 입력하세요"
+            className="max-w-[600px]"
           />
           
           {/* 필터 영역 */}
