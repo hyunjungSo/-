@@ -303,33 +303,12 @@ export function BatchAnalysis({
       const updatedParcels = parcels.map(p => {
         if (!selectedParcelIds.has(p.id)) return p;
         
-        // 잔여지 판정 결과 생성 (실제로는 규칙 기반 또는 AI 판정)
+        // 잔여지 판정 결과만 생성 (매수 가능성에 영향 없음)
         const residualStatus = Math.random() > 0.3 ? "잔여지 인정" : "기준 미달" as const;
-        
-        // 매수 가능성 결과 생성
-        const aiResult = {
-          provisionalJudgment: residualStatus === "잔여지 인정" 
-            ? (Math.random() > 0.4 ? "매수 가능성 높음" : "매수 가능성 낮음")
-            : "매수 가능성 낮음",
-          reason: "AI 자동 분석 결과"
-        };
-        
-        const newHistory: AnalysisHistory = {
-          id: `analysis_${Date.now()}_${p.id}`,
-          stage: p.analysisHistory?.length ? "2차분석" : "1차분석",
-          analyzedAt: new Date().toISOString(),
-          analyzedBy: "AI 자동 분석",
-          newResult: aiResult.provisionalJudgment,
-          previousResult: p.aiResult?.provisionalJudgment || undefined,
-          changedOptions: {},
-        };
         
         return {
           ...p,
           residualStatus,
-          aiResult,
-          analysisHistory: [...(p.analysisHistory || []), newHistory],
-          lastAnalyzedAt: new Date().toISOString(),
         } as ProcessedParcel;
       });
       
@@ -616,7 +595,7 @@ export function BatchAnalysis({
                 ]}
               />
               
-              {/* 관리 필터 */}
+              {/* ��리 필터 */}
               <RadioFilterGroup
                 label="관리"
                 name="visibility"
