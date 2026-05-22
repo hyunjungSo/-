@@ -464,7 +464,7 @@ export function BatchAnalysis({
 
   return (
     <div className="space-y-6">
-      {/* 타이������������� */}
+      {/* 타이��������������� */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground sm:text-3xl">필지관리</h1>
         <p className="text-muted-foreground mt-1">잔여지 판정 및 매수 가능성 분석을 관리합니다.</p>
@@ -546,7 +546,7 @@ export function BatchAnalysis({
                 value={searchQuery}
                 onChange={setSearchQuery}
                 placeholder="소재지, 소유자명을 입력하세요"
-                className="w-full"
+                className="w-[700px]"
               />
             </div>
             
@@ -606,32 +606,6 @@ export function BatchAnalysis({
                   { value: "hidden", label: "미노출" }
                 ]}
               />
-              
-              {/* 매수 가능성 필터 */}
-              <RadioFilterGroup
-                label="매수 가능성"
-                name="ai-judgment"
-                value={aiJudgmentFilter}
-                onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low")}
-                options={[
-                  { value: "all", label: "전체" },
-                  { value: "high", label: "높음" },
-                  { value: "low", label: "낮음" }
-                ]}
-              />
-              
-              {/* ��리 필터 */}
-              <RadioFilterGroup
-                label="관리"
-                name="visibility"
-                value={visibilityFilter}
-                onChange={(v) => setVisibilityFilter(v as "all" | "visible" | "hidden")}
-              options={[
-                { value: "all", label: "전체" },
-                { value: "visible", label: "노출" },
-                { value: "hidden", label: "미노출" }
-              ]}
-            />
             </div>
           </div>
         </CardContent>
