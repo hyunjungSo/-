@@ -32,7 +32,6 @@ import {
 import { 
   CheckCircle2, 
   XCircle, 
-  Lock,
   ChevronLeft,
   ChevronRight,
   Loader2
@@ -747,7 +746,6 @@ export function BatchAnalysis({
                             className="data-[state=checked]:bg-[#2E8B57] opacity-50"
                           />
                           <span className="text-sm text-muted-foreground">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
-                          <Lock className="h-3.5 w-3.5 text-orange-500" />
                         </div>
                       ) : (
                         <div className="flex items-center justify-center gap-1.5">
