@@ -12,6 +12,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -236,7 +237,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
   // 선택 필지 잔여지 대상으로 확정
   const handleConfirmSelected = () => {
     if (selectedIds.size === 0) {
-      alert("확정할 필지를 선택해주���요.");
+      alert("확정할 필지를 선택해주�����요.");
       return;
     }
 
@@ -416,39 +417,46 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          {/* 검색바 */}
+          <SearchInput
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="소재지를 입력하세요"
+          />
+          
           {/* 필터 영역 */}
-          <div className="mb-6 flex flex-wrap items-center gap-4">
-            <div className="flex-1 min-w-[200px] max-w-md">
-              <SearchInput
-                value={searchQuery}
-                onChange={setSearchQuery}
-                placeholder="소재지를 입력하세요"
-              />
+          <div className="mb-6 flex flex-col sm:flex-row sm:items-center gap-6">
+            {/* 사업단 선택 필터 */}
+            <div className="flex items-center gap-3">
+              <Label className="text-sm font-medium whitespace-nowrap">사업단:</Label>
+              <Select value={businessUnitFilter} onValueChange={setBusinessUnitFilter}>
+                <SelectTrigger className="w-[180px] h-[40px]">
+                  <SelectValue placeholder="전체 사업단" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">전체 사업단</SelectItem>
+                  {businessUnits.map(unit => (
+                    <SelectItem key={unit} value={unit}>{unit}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             
-            <Select value={businessUnitFilter} onValueChange={setBusinessUnitFilter}>
-              <SelectTrigger className="w-[160px] h-10">
-                <SelectValue placeholder="전체 사업단" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">전체 사업단</SelectItem>
-                {businessUnits.map(unit => (
-                  <SelectItem key={unit} value={unit}>{unit}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            
-            <Select value={analysisResultFilter} onValueChange={setAnalysisResultFilter}>
-              <SelectTrigger className="w-[160px] h-10">
-                <SelectValue placeholder="가분석 결과" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">전체 결과</SelectItem>
-                <SelectItem value="초과">면적 기준 초과</SelectItem>
-                <SelectItem value="이하">면적 기준 이하</SelectItem>
-              </SelectContent>
-            </Select>
+            {/* 가분석 결과 필터 */}
+            <div className="flex items-center gap-3">
+              <Label className="text-sm font-medium whitespace-nowrap">가분석 결과:</Label>
+              <Select value={analysisResultFilter} onValueChange={setAnalysisResultFilter}>
+                <SelectTrigger className="w-[180px] h-[40px]">
+                  <SelectValue placeholder="전체 결과" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">전체 결과</SelectItem>
+                  <SelectItem value="초과">면적 기준 초과</SelectItem>
+                  <SelectItem value="이하">면적 기준 이하</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* 액션 버튼 영역 */}
