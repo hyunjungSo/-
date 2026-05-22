@@ -464,7 +464,7 @@ export function BatchAnalysis({
 
   return (
     <div className="space-y-6">
-      {/* 타이��������� */}
+      {/* 타이����������� */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground sm:text-3xl">필지관리</h1>
         <p className="text-muted-foreground mt-1">잔여지 판정 및 매수 가능성 분석을 관리합니다.</p>
@@ -540,16 +540,18 @@ export function BatchAnalysis({
         <CardContent>
           {/* 필터 레이아웃 - 2행 구조 */}
           <div className="space-y-4">
-            {/* 1행: 검색바 + 사업단 */}
-            <div className="flex items-center gap-6">
-              {/* 검색바 */}
+            {/* 1행: 검색바 */}
+            <div className="flex items-center">
               <SearchInput
                 value={searchQuery}
                 onChange={setSearchQuery}
                 placeholder="소재지, 소유자명을 입력하세요"
-                className="flex-1"
+                className="w-full"
               />
-              
+            </div>
+            
+            {/* 2행: 사업단 + 잔여지 판정 + 매수 가능성 + 관리 필터 */}
+            <div className="flex flex-wrap items-center gap-6">
               {/* 사업단 선택 필터 */}
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium whitespace-nowrap text-gray-700">사업단</span>
@@ -565,11 +567,34 @@ export function BatchAnalysis({
                   </SelectContent>
                 </Select>
               </div>
-            </div>
-            
-            {/* 2행: 잔여지 판정 + 매수 가능성 + 관리 필터 */}
-            <div className="flex flex-wrap items-center gap-6">
+              
               {/* 잔여지 판정 필터 */}
+              <RadioFilterGroup
+                label="잔여지 판정"
+                name="residual-status"
+                value={residualStatusFilter}
+                onChange={(v) => setResidualStatusFilter(v as "all" | "approved" | "rejected")}
+                options={[
+                  { value: "all", label: "전체" },
+                  { value: "approved", label: "인정" },
+                  { value: "rejected", label: "미인정" }
+                ]}
+              />
+              
+              {/* 매수 가능성 필터 */}
+              <RadioFilterGroup
+                label="매수 가능성"
+                name="ai-judgment"
+                value={aiJudgmentFilter}
+                onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low")}
+                options={[
+                  { value: "all", label: "전체" },
+                  { value: "high", label: "높음" },
+                  { value: "low", label: "낮음" }
+                ]}
+              />
+              
+              {/* 관리 필터 */}
               <RadioFilterGroup
                 label="잔여지 판정"
                 name="residual-status"
