@@ -44,7 +44,7 @@ interface IncomingParcel {
   areaAnalysisResult: "초과" | "이하" | "미분석";
   status: "신규" | "검토중" | "확정" | "제외";
   aiAnalysisStatus?: "대기" | "분석중" | "완료";
-  aiResult?: "잔여지 인정" | "잔여지 미인정" | "추가검토";
+  aiResult?: "해당" | "미해당";
 }
 
 // 더미 데이터: 외부 시스템에서 적재된 신규 필지
@@ -269,7 +269,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
     // 분석 결과 업데이트
     setParcels(prev => prev.map(p => {
       if (p.id === parcelId) {
-        const results: Array<"잔여지 인정" | "잔여지 미인정" | "추가검토"> = ["잔여지 인정", "잔여지 미인정", "추가검토"];
+        const results: Array<"해당" | "미해당"> = ["해당", "미해당"];
         const randomResult = results[Math.floor(Math.random() * results.length)];
         return { 
           ...p, 
@@ -303,7 +303,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
       
       setParcels(prev => prev.map(p => {
         if (p.id === id) {
-          const results: Array<"잔여지 인정" | "잔여지 미인정" | "추가검토"> = ["잔여지 인정", "잔여지 미인정", "추가검토"];
+          const results: Array<"해당" | "미해당"> = ["해당", "미해당"];
           const randomResult = results[Math.floor(Math.random() * results.length)];
           return { 
             ...p, 
@@ -558,11 +558,9 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                       ) : parcel.aiResult ? (
                         <Badge 
                           className={
-                          parcel.aiResult === "잔여지 인정" 
+                            parcel.aiResult === "해당" 
                               ? "bg-green-100 text-green-700 hover:bg-green-100"
-                              : parcel.aiResult === "잔여지 미인정"
-                              ? "bg-red-100 text-red-700 hover:bg-red-100"
-                              : "bg-yellow-100 text-yellow-700 hover:bg-yellow-100"
+                              : "bg-red-100 text-red-700 hover:bg-red-100"
                           }
                         >
                           {parcel.aiResult}
