@@ -929,7 +929,7 @@ export function BatchAnalysis({
             </DialogDescription>
           </DialogHeader>
           
-          <DialogFooter className="gap-2 sm:gap-0">
+          <DialogFooter className="gap-3 sm:gap-3">
             <Button 
               variant="outline" 
               onClick={() => {
