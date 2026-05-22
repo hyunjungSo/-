@@ -930,11 +930,19 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
 
   return (
     <div className="space-y-10">
-      <div className="flex items-center justify-end gap-2">
-        <Button variant="ghost" onClick={onBack} className="h-auto px-0 text-muted-foreground hover:bg-transparent hover:text-foreground mr-auto">
-          <ArrowLeft className="mr-1.5 h-4 w-4" />
-          목록으로 돌아가기
-        </Button>
+      {/* 신청관리 타이틀 */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={onBack}
+            className="h-9 w-9"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-3xl font-bold">신청관리</h1>
+        </div>
         <Button variant="secondary" asChild>
           <Link href={`/admin/review/${application.id}`}>
             <FileText className="mr-2 h-4 w-4" />
@@ -2165,7 +2173,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
+            {(["접수완료", "진행중", "���사완료"] as AdminStatus[]).map((status) => {
               const config = adminStatusConfig[status];
               const Icon = config.icon;
               const isSelected = reviewData.adminStatus === status;
