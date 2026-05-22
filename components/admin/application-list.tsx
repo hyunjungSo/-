@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import type { Application, AdminStatus } from "@/lib/types";
-import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers, RefreshCw, CalendarIcon, Loader2, XCircle } from "lucide-react";
+import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers, RefreshCw, CalendarIcon, Loader2, XCircle, ArrowUpDown } from "lucide-react";
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { Progress } from "@/components/ui/progress";
 import { JudgmentSummaryBadge, PARCEL_COUNT_COLORS } from "@/components/ui/judgment-badge";
@@ -677,9 +677,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             {/* 정렬 버튼 */}
             <Button
               variant="outline"
-              className="border-foreground bg-foreground px-4 text-background hover:bg-foreground/90 hover:text-background h-[40px]"
+              className="border-foreground bg-foreground px-4 text-background hover:bg-foreground/90 hover:text-background h-[40px] gap-2"
               onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
             >
+              <ArrowUpDown className="h-4 w-4" />
               {sortOrder === "desc" ? "최신순" : "오래된순"}
             </Button>
           </div>
