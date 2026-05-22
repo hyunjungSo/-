@@ -20,13 +20,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { 
-  Upload, 
-  CheckCircle2, 
-  AlertCircle,
-  Clock,
   RefreshCw,
   Brain,
-  Loader2
+  Loader2,
+  CheckCircle2
 } from "lucide-react";
 import { SearchInput } from "@/components/admin/shared";
 import { PaginationButton, PaginationNavButton } from "@/components/ui/pagination-button";
@@ -352,62 +349,50 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
       </div>
 
       {/* 실시간 자동 적재 현황 요약 카드 */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-white">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">신규 적재</p>
-                <p className="text-2xl font-bold text-blue-600">{stats.totalNew}건</p>
-              </div>
-              <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
-                <Upload className="h-6 w-6 text-blue-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-4 gap-3">
+        {/* 신규 적재: Blue */}
+        <div 
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-blue-50 p-4 transition-all hover:bg-blue-100"
+        >
+          <span className="text-sm font-medium text-blue-600">신규 적재</span>
+          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
+            <span className="font-bold text-blue-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.totalNew}</span>
+            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+          </div>
+        </div>
         
-        <Card className="bg-white">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">오늘 적재</p>
-                <p className="text-2xl font-bold text-emerald-600">{stats.todayLoaded}건</p>
-              </div>
-              <div className="h-12 w-12 rounded-full bg-emerald-100 flex items-center justify-center">
-                <Clock className="h-6 w-6 text-emerald-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* 오늘 적재: Emerald */}
+        <div 
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-emerald-50 p-4 transition-all hover:bg-emerald-100"
+        >
+          <span className="text-sm font-medium text-emerald-600">오늘 적재</span>
+          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
+            <span className="font-bold text-emerald-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.todayLoaded}</span>
+            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+          </div>
+        </div>
         
-        <Card className="bg-white">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">면적 기준 초과</p>
-                <p className="text-2xl font-bold text-amber-600">{stats.overArea}건</p>
-              </div>
-              <div className="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center">
-                <CheckCircle2 className="h-6 w-6 text-amber-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* 면적 기준 초과: Amber */}
+        <div 
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-amber-50 p-4 transition-all hover:bg-amber-100"
+        >
+          <span className="text-sm font-medium text-amber-600">면적 기준 초과</span>
+          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
+            <span className="font-bold text-amber-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.overArea}</span>
+            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+          </div>
+        </div>
         
-        <Card className="bg-white">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">면적 기준 이하</p>
-                <p className="text-2xl font-bold text-gray-500">{stats.underArea}건</p>
-              </div>
-              <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center">
-                <AlertCircle className="h-6 w-6 text-gray-500" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* 면적 기준 이하: Gray */}
+        <div 
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-50 p-4 transition-all hover:bg-gray-100"
+        >
+          <span className="text-sm font-medium text-gray-600">면적 기준 이하</span>
+          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
+            <span className="font-bold text-gray-700" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.underArea}</span>
+            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+          </div>
+        </div>
       </div>
 
       {/* 필터 및 액션 영역 */}
