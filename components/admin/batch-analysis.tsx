@@ -628,10 +628,10 @@ export function BatchAnalysis({
                 {isAnalyzing ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    판정 중...
+                    판독 중...
                   </>
                 ) : (
-                  `잔여지 판정 (${selectedParcelIds.size}건)`
+                  `잔여지 판독 실행 (${selectedParcelIds.size}건)`
                 )}
               </Button>
               <Button
