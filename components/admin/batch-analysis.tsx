@@ -605,9 +605,22 @@ export function BatchAnalysis({
                 { value: "hidden", label: "미노출" }
               ]}
             />
-            
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 필지 목록 테이블 */}
+      <Card className="border-0">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>필지 관리 목록</CardTitle>
+              <CardDescription>
+                잔여지 판정 및 매수 가능성 분석 결과를 확인하세요. 소재지 또는 분석 버튼을 클릭하면 필지 상세 화면으로 이동합니다.
+              </CardDescription>
+            </div>
             {/* 잔여지 판정 & 매수 판정 버튼 */}
-            <div className="ml-auto flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <Button
                 onClick={handleResidualJudgment}
                 disabled={selectedParcelIds.size === 0 || isAnalyzing}
@@ -639,18 +652,6 @@ export function BatchAnalysis({
                 )}
               </Button>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* 필지 목록 테이블 */}
-      <Card className="border-0">
-        <CardHeader>
-          <div>
-            <CardTitle>필지 관리 목록</CardTitle>
-            <CardDescription>
-              잔여지 판정 및 매수 가능성 분석 결과를 확인하세요. 소재지 또는 분석 버튼을 클릭하면 필지 상세 화면으로 이동합니다.
-            </CardDescription>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
