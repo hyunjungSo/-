@@ -704,7 +704,7 @@ export function BatchAnalysis({
                       {parcel.landInfo.address}
                     </TableCell>
                     <TableCell>{parcel.businessUnit || "-"}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-center">
                       {parcel.landInfo.remainingArea.toLocaleString()}
                     </TableCell>
                     {/* 잔여지 판정 컬럼 */}
