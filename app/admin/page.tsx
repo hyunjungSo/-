@@ -13,8 +13,8 @@ import { cn } from "@/lib/utils";
 
 type ActiveTab = 
   | "applications" 
-  | "incoming-parcels"    // 발생 잔여지 판독
-  | "ai-judgment"         // AI 매수 판단
+  | "incoming-parcels"    // 발생 잔여지 판정
+  | "ai-judgment"         // AI 매수 판정
   | "parcel-review";      // 필지상세
 
 export default function AdminPage() {
@@ -68,7 +68,7 @@ export default function AdminPage() {
     setActiveTab("ai-judgment");
   };
 
-  // 발생 잔여지 판독에서 확정된 필지를 AI 매수 판단 목록으로 이동
+  // 발생 잔여지 판정에서 확정된 필지를 AI 매수 판정 목록으로 이동
   const handleConfirmParcels = (confirmedParcels: any[]) => {
     // 실제로는 API 호출 후 processedParcels에 추가
     // 여기서는 데모용으로 간단히 처리
@@ -124,7 +124,7 @@ export default function AdminPage() {
               {/* 서브메뉴 */}
               {isParcelMenuExpanded && (
                 <div className="ml-4 mt-1 space-y-1 border-l-2 border-gray-200 pl-3">
-                  {/* 서브메뉴 1: 발생 잔여지 판독 */}
+                  {/* 서브메뉴 1: 발생 잔여지 판정 */}
                   <button
                     onClick={() => {
                       setActiveTab("incoming-parcels");
@@ -137,10 +137,10 @@ export default function AdminPage() {
                         : "text-gray-600 hover:bg-gray-100"
                     )}
                   >
-                    <span>발생 잔여지 판독</span>
+                    <span>발생 잔여지 판정</span>
                   </button>
 
-                  {/* 서브메뉴 2: AI 매수 판단 */}
+                  {/* 서브메뉴 2: AI 매수 판정 */}
                   <button
                     onClick={() => {
                       setActiveTab("ai-judgment");
@@ -153,7 +153,7 @@ export default function AdminPage() {
                         : "text-gray-600 hover:bg-gray-100"
                     )}
                   >
-                    <span>AI 매수 판단</span>
+                    <span>AI 매수 판정</span>
                   </button>
                 </div>
               )}
@@ -185,12 +185,12 @@ export default function AdminPage() {
           </>
         )}
 
-        {/* 발생 잔여지 판독 콘텐츠 */}
+        {/* 발생 잔여지 판정 콘텐츠 */}
         {activeTab === "incoming-parcels" && (
           <IncomingParcelList onConfirmParcels={handleConfirmParcels} />
         )}
 
-        {/* AI 매수 판단 콘텐츠 */}
+        {/* AI 매수 판정 콘텐츠 */}
         {activeTab === "ai-judgment" && (
           <BatchAnalysis 
             parcels={processedParcels}

@@ -310,7 +310,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
       });
     }
     
-    alert(`${idsArray.length}건의 AI 분석이 완료되었습니다.`);
+    alert(`${idsArray.length}건의 AI 판정이 완료되었습니다.`);
   };
 
   // 시간 포맷
@@ -334,7 +334,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
     <div className="space-y-6">
       {/* 타이틀 */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">발생 잔여지 판독</h1>
+        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">발생 잔여지 판정</h1>
         <p className="text-muted-foreground mt-1">신규 필지를 검토하여 잔여지 대상 여부를 확정해주세요.</p>
       </div>
 
@@ -430,7 +430,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                 variant="cta"
               >
                 <Brain className="h-4 w-4 mr-2" />
-                선택 필지 AI 분석 ({selectedIds.size}건)
+                선택 필지 AI 판정 ({selectedIds.size}건)
               </Button>
               <Button
                 onClick={handleConfirmSelected}
@@ -461,7 +461,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                   <TableHead>사업단</TableHead>
                   <TableHead className="text-right">잔여면적</TableHead>
                   <TableHead className="text-right">잔여비율</TableHead>
-                  <TableHead className="text-center">AI 판독</TableHead>
+                  <TableHead className="text-center">AI 판정</TableHead>
                   <TableHead className="text-center">적재시간</TableHead>
                 </TableRow>
               </TableHeader>

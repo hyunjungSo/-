@@ -509,11 +509,11 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           </CardContent>
         </Card>
 
-        {/* AI 판독 신뢰도 카드 */}
+        {/* AI 판정 신뢰도 카드 */}
         <Card className="lg:col-span-5">
           <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium flex items-center justify-between">
-              <span style={{ fontSize: '18px', fontWeight: '600' }}>AI 판독 신뢰도</span>
+              <span style={{ fontSize: '18px', fontWeight: '600' }}>AI 판정 신뢰도</span>
               <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
             </CardTitle>
           </CardHeader>
@@ -656,7 +656,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 <SelectValue placeholder="사업단 선택" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">전체 사업단</SelectItem>
+                <SelectItem value="all">전체 사업���</SelectItem>
                 <SelectItem value="gangjin-gwangju">강진광주건설 사업단</SelectItem>
               </SelectContent>
             </Select>
