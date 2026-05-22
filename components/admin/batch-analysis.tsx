@@ -234,7 +234,7 @@ export function BatchAnalysis({
       if (businessUnit && parcel.businessUnit !== businessUnit) return false;
       if (businessUnitFilter !== "all" && parcel.businessUnit !== businessUnitFilter) return false;
       
-      // 검색어 필터
+      // 검색어 ��터
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         const matchesAddress = parcel.landInfo.address.toLowerCase().includes(query);
@@ -545,8 +545,8 @@ export function BatchAnalysis({
                         <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
                       ) : (
                         <Button
-                          size="sm"
                           variant="cta-outline"
+                          className="h-7 px-2 text-xs"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleParcelClick(parcel);
