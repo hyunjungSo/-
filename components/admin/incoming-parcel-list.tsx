@@ -380,7 +380,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
           <div className="flex flex-col sm:flex-row sm:items-center gap-6">
             {/* 사업단 선택 필터 */}
             <div className="flex items-center gap-3">
-              <Label className="text-sm font-medium whitespace-nowrap">사업단:</Label>
+              <span className="text-sm font-medium whitespace-nowrap text-gray-700">사업단:</span>
               <Select value={businessUnitFilter} onValueChange={setBusinessUnitFilter}>
                 <SelectTrigger className="w-[180px] h-[40px]">
                   <SelectValue placeholder="사업단 선택" />
