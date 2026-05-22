@@ -403,9 +403,6 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>필지 목록</CardTitle>
-              <CardDescription>
-                신규 적재된 필지를 확인하고 잔여지 대상 여부를 확정하세요. 총 {filteredParcels.length}건 | 선택됨 {selectedIds.size}건
-              </CardDescription>
             </div>
             <div className="flex items-center gap-2">
               <Button 
