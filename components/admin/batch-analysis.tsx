@@ -507,6 +507,7 @@ export function BatchAnalysis({
                 </TableHead>
                 <TableHead className="w-[60px]">No.</TableHead>
                 <TableHead>소재지</TableHead>
+                <TableHead>사업단</TableHead>
                 <TableHead>면적(㎡)</TableHead>
                 <TableHead>AI 판정</TableHead>
                 <TableHead>관리</TableHead>
@@ -533,6 +534,9 @@ export function BatchAnalysis({
                   <TableCell className="text-center text-muted-foreground">{(currentPage - 1) * itemsPerPage + index + 1}</TableCell>
                   <TableCell className="font-medium">
                     {parcel.landInfo.address}
+                  </TableCell>
+                  <TableCell>
+                    {parcel.businessUnit || "-"}
                   </TableCell>
                   <TableCell>
                     {parcel.landInfo.remainingArea.toLocaleString()}
