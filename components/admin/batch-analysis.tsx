@@ -588,7 +588,7 @@ export function BatchAnalysis({
               </div>
             </div>
             
-            {/* 2행: 잔여지 여부 + 매수 가능성 + 관리 필터 */}
+            {/* 2행: 잔여지 판정 + 매수 가능성 + 관리 필터 */}
             <div className="flex flex-wrap items-center gap-6">
               {/* 잔여지 판정 필터 */}
               <RadioFilterGroup
@@ -598,8 +598,8 @@ export function BatchAnalysis({
                 onChange={(v) => setResidualStatusFilter(v as "all" | "approved" | "rejected")}
                 options={[
                   { value: "all", label: "전체" },
-                  { value: "approved", label: "잔여지 인정" },
-                  { value: "rejected", label: "기준 미달" }
+                  { value: "approved", label: "인정" },
+                  { value: "rejected", label: "미인정" }
                 ]}
               />
               
@@ -611,12 +611,12 @@ export function BatchAnalysis({
                 onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low")}
                 options={[
                   { value: "all", label: "전체" },
-                  { value: "high", label: "매수 가능성 높음" },
-                  { value: "low", label: "매수 가능성 낮음" }
+                  { value: "high", label: "높음" },
+                  { value: "low", label: "낮음" }
                 ]}
               />
               
-              {/* 관리(노출/미노출) 필터 */}
+              {/* 관리 필터 */}
               <RadioFilterGroup
                 label="관리"
                 name="visibility"
