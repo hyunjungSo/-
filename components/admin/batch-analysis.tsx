@@ -382,13 +382,13 @@ export function BatchAnalysis({
           </div>
         </div>
         
-        {/* 분석완료: Purple */}
+        {/* 분석완료: Teal/Green */}
         <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-purple-50 p-4 transition-all hover:bg-purple-100"
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-emerald-50 p-4 transition-all hover:bg-emerald-100"
         >
-          <span className="text-sm font-medium text-purple-600">분석완료</span>
+          <span className="text-sm font-medium text-emerald-600">분석완료</span>
           <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-purple-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.confirmed}</span>
+            <span className="font-bold text-emerald-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.confirmed}</span>
             <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
           </div>
         </div>
@@ -620,7 +620,7 @@ export function BatchAnalysis({
                       onClick={() => setCurrentPage(pageNum)}
                       className={`w-9 h-9 flex items-center justify-center text-sm rounded ${
                         currentPage === pageNum 
-                          ? "bg-teal-600 text-white" 
+                          ? "bg-[#2E8B57] text-white" 
                           : "text-gray-600 hover:bg-gray-50"
                       }`}
                     >

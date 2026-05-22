@@ -443,7 +443,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               <Progress 
                 value={stats.completionRate} 
                 className="h-[18px]" 
-                indicatorClassName="bg-teal-600"
+                indicatorClassName="bg-[#2E8B57]"
                 style={{ backgroundColor: '#e8f2f0' }}
               />
             </div>
@@ -861,7 +861,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                       onClick={() => setCurrentPage(pageNum)}
                       className={`w-9 h-9 flex items-center justify-center text-sm rounded ${
                         currentPage === pageNum 
-                          ? "bg-teal-600 text-white" 
+                          ? "bg-[#2E8B57] text-white" 
                           : "text-gray-600 hover:bg-gray-50"
                       }`}
                     >

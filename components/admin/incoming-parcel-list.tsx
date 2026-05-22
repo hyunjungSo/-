@@ -466,7 +466,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
               <Button
                 onClick={handleBatchAIAnalysis}
                 disabled={selectedIds.size === 0 || analyzingIds.size > 0}
-                className="bg-purple-600 hover:bg-purple-700 text-white"
+                className="bg-[#2E8B57] hover:bg-[#25704a] text-white"
               >
                 <Brain className="h-4 w-4 mr-2" />
                 선택 필지 AI 분석 ({selectedIds.size}건)
@@ -474,7 +474,8 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
               <Button
                 onClick={handleConfirmSelected}
                 disabled={selectedIds.size === 0}
-                className="bg-[#2E8B57] hover:bg-[#25704a] text-white"
+                variant="outline"
+                className="border-[#2E8B57] text-[#2E8B57] hover:bg-[#2E8B57] hover:text-white"
               >
                 <CheckCircle2 className="h-4 w-4 mr-2" />
                 선택 필지 잔여지 대상으로 확정 ({selectedIds.size}건)
@@ -545,8 +546,8 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                     <TableCell className="text-center">
                       {analyzingIds.has(parcel.id) ? (
                         <div className="flex items-center justify-center gap-1">
-                          <Loader2 className="h-4 w-4 animate-spin text-purple-600" />
-                          <span className="text-xs text-purple-600">분석중</span>
+                          <Loader2 className="h-4 w-4 animate-spin text-[#2E8B57]" />
+                          <span className="text-xs text-[#2E8B57]">분석중</span>
                         </div>
                       ) : parcel.aiResult ? (
                         <Badge 
@@ -564,7 +565,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                         <Button
                           size="sm"
                           variant="outline"
-                          className="border-purple-400 text-purple-600 hover:bg-purple-50 h-7 px-2 text-xs"
+                          className="border-[#2E8B57] text-[#2E8B57] hover:bg-[#2E8B57] hover:text-white h-7 px-2 text-xs"
                           onClick={() => handleAIAnalysis(parcel.id)}
                         >
                           <Brain className="h-3 w-3 mr-1" />
@@ -624,7 +625,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                       onClick={() => setCurrentPage(pageNum)}
                       className={`w-9 h-9 flex items-center justify-center text-sm rounded ${
                         currentPage === pageNum 
-                          ? "bg-teal-600 text-white" 
+                          ? "bg-[#2E8B57] text-white" 
                           : "text-gray-600 hover:bg-gray-50"
                       }`}
                     >
