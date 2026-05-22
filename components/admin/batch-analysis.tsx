@@ -81,22 +81,24 @@ export function BatchAnalysis({
   
   // 검색어
   const [searchQuery, setSearchQuery] = useState("");
-  
-  // 필터 (라디오 버튼)
-  const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low" | "pending">("all");
-  const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("all");
-  const [visibilityFilter, setVisibilityFilter] = useState<"all" | "visible" | "hidden">("all");
-  const [residualStatusFilter, setResidualStatusFilter] = useState<"all" | "approved" | "rejected" | "pending">("all");
-  
-  // 페이지네이션
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
-  
   // 사업단 목록 추출
   const businessUnits = useMemo(() => {
     const units = new Set(parcels.map(p => p.businessUnit));
     return Array.from(units).sort();
   }, [parcels]);
+  
+  // 필터 (라디오 버튼)
+  const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low" | "pending">("all");
+  const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("");
+  const [visibilityFilter, setVisibilityFilter] = useState<"all" | "visible" | "hidden">("all");
+  const [residualStatusFilter, setResidualStatusFilter] = useState<"all" | "approved" | "rejected" | "pending">("all");
+  
+  // 사업단 필터 기본값 설정 (첫 번째 사업단)
+  useEffect(() => {
+    if (businessUnits.length > 0 && !businessUnitFilter) {
+      setBusinessUnitFilter(businessUnits[0]);
+    }
+  }, [businessUnits, businessUnitFilter]);
   
   // 토스트
   const { toast } = useToast();
@@ -334,7 +336,7 @@ export function BatchAnalysis({
       
       // 사업단 필터 (props로 전달된 것 또는 Select로 선택된 것)
       if (businessUnit && parcel.businessUnit !== businessUnit) return false;
-      if (businessUnitFilter !== "all" && parcel.businessUnit !== businessUnitFilter) return false;
+      if (businessUnitFilter && parcel.businessUnit !== businessUnitFilter) return false;
       
       // 검색어 ���터
       if (searchQuery) {
@@ -395,7 +397,7 @@ export function BatchAnalysis({
     // businessUnit 필터만 적용, 검색어/AI판정/관리 필터는 제외
     const relevantParcels = parcels.filter(parcel => {
       if (businessUnit && parcel.businessUnit !== businessUnit) return false;
-      if (businessUnitFilter !== "all" && parcel.businessUnit !== businessUnitFilter) return false;
+      if (businessUnitFilter && parcel.businessUnit !== businessUnitFilter) return false;
       return true;
     });
     
@@ -569,7 +571,6 @@ export function BatchAnalysis({
                     <SelectValue placeholder="사업단 선택" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">전체 사업단</SelectItem>
                     {businessUnits.map((unit) => (
                       <SelectItem key={unit} value={unit}>{unit}</SelectItem>
                     ))}
