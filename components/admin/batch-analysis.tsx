@@ -464,7 +464,7 @@ export function BatchAnalysis({
 
   return (
     <div className="space-y-6">
-      {/* 타이������� */}
+      {/* 타이��������� */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground sm:text-3xl">필지관리</h1>
         <p className="text-muted-foreground mt-1">잔여지 판정 및 매수 가능성 분석을 관리합니다.</p>
@@ -541,13 +541,13 @@ export function BatchAnalysis({
           {/* 필터 레이아웃 - 2행 구조 */}
           <div className="space-y-4">
             {/* 1행: 검색바 + 사업단 */}
-            <div className="flex flex-wrap items-center gap-6">
+            <div className="flex items-center gap-6">
               {/* 검색바 */}
               <SearchInput
                 value={searchQuery}
                 onChange={setSearchQuery}
                 placeholder="소재지, 소유자명을 입력하세요"
-                className="w-full"
+                className="flex-1"
               />
               
               {/* 사업단 선택 필터 */}
