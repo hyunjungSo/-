@@ -517,7 +517,6 @@ export function BatchAnalysis({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <MapPin className="h-7 w-7 text-[#2E8B57]" />
             <h1 className="text-2xl font-bold text-foreground sm:text-3xl">필지 관리</h1>
           </div>
         </div>
