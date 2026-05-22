@@ -148,6 +148,27 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
     setMemo("");
   };
 
+  // 민원인이 신청완료했거나 장바구니에 담은 경우 수정 불가
+  const isApplicationSubmitted = parcel.citizenActivity?.applicationSubmitted;
+  const isInCart = parcel.citizenActivity?.inCart;
+  const isLockedByCitizen = isApplicationSubmitted || isInCart;
+
+  // 관리(노출/미노출) 변경 핸들러
+  const handleVisibilityChange = (checked: boolean) => {
+    if (isApplicationSubmitted) {
+      alert("이미 신청이 완료된 건이라 수정이 불가합니다.");
+      return;
+    }
+    if (isInCart) {
+      alert("이미 민원인이 신청을 진행중인 건이라 수정이 불가합니다.");
+      return;
+    }
+    onUpdate({
+      ...parcel,
+      isVisible: checked,
+    });
+  };
+
   return (
     <div className="space-y-6">
       {/* 필지상세 타이틀 */}
@@ -156,16 +177,17 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
         <div className="flex items-center gap-2">
           <Switch 
             checked={parcel.isVisible !== false}
-            onCheckedChange={(checked) => {
-              onUpdate({
-                ...parcel,
-                isVisible: checked,
-              });
-            }}
+            disabled={isLockedByCitizen}
+            onCheckedChange={handleVisibilityChange}
           />
           <span className={`text-sm font-medium ${parcel.isVisible !== false ? "text-emerald-600" : "text-muted-foreground"}`}>
             {parcel.isVisible !== false ? "노출" : "미노출"}
           </span>
+          {isLockedByCitizen && (
+            <span className="text-xs text-orange-500 ml-2">
+              (민원인 활동으로 수정 불가)
+            </span>
+          )}
         </div>
       </div>
 
@@ -222,7 +244,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                 </Badge>
               ) : (
                 <Badge variant="outline" className="w-fit">
-                  ���석 대기
+                  분석 대기
                 </Badge>
               )}
             </div>
@@ -399,7 +421,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                           {isLatest && <Badge variant="secondary" className="text-xs">최신</Badge>}
                           <Badge 
                             className={
-                              history.newResult === "���수 가능성 높음" || 
+                              history.newResult === "매수 가능성 높음" || 
                               history.newResult === "수용가능"
                                 ? "bg-emerald-500 text-white"
                                 : "bg-rose-500 text-white"
@@ -526,7 +548,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
       </div>
 
       {/* 하단 액션 버튼 */}
-      <div className="flex items-center justify-end pt-4 border-t">
+      <div className="flex items-center justify-end pt-4">
         <Button variant="outline" onClick={onBack}>
           목록
         </Button>

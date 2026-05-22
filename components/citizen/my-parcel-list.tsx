@@ -309,13 +309,13 @@ export function MyParcelList({
               </p>
               <p className="text-xs text-gray-500 leading-relaxed">
                 사업지구 내 소유 토지가 잔여지로<br />
-                결정되면 이곳에 표������니다.
+                결정되면 이곳에 표시됩니다.
               </p>
             </div>
           )}
         </div>
 
-        {/* ���청 목록 요약 */}
+        {/* 신청 목록 요약 */}
         {cartItems.length > 0 && (
           <div className="p-3 border-t border-gray-200 bg-gray-50 shrink-0">
             <div className="flex items-center justify-between mb-2">

@@ -131,9 +131,6 @@ export default function AdminPage() {
         {/* 필지관리 콘텐츠 */}
         {(activeTab === "parcel-management" || activeTab === "parcel-review") && (
           <>
-            <div className="mb-6">
-              <h1 className="text-2xl font-bold text-foreground sm:text-3xl">필지관리</h1>
-            </div>
             {selectedParcel ? (
               <ParcelDetailReview
                 parcel={selectedParcel}

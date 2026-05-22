@@ -63,6 +63,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  
+  // 페이지네이션
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   // 클라이언트 마운트 후 날짜 설정 (hydration mismatch 방지)
   useEffect(() => {
@@ -208,6 +212,18 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
       });
     }, [periodFilteredApplications, searchQuery, statusFilter, projectUnitFilter, sortOrder, aiMismatchFilter]);
+
+  // 페이지네이션 계산
+  const totalPages = Math.ceil(filteredApplications.length / itemsPerPage);
+  const paginatedApplications = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredApplications.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredApplications, currentPage, itemsPerPage]);
+
+  // 필터 변경 시 페이지 리셋
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter, projectUnitFilter, aiMismatchFilter, periodFilter, selectedYear]);
 
   // 상태별 통계 (기간 필터 적용)
   const stats = useMemo(() => {
@@ -504,7 +520,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             
             {/* 스택 바 비교 */}
             <div className="space-y-3" style={{ marginTop: '4px' }}>
-              {/* AI 초기 판정 막대 (매��가능/매수불가 2가지만) */}
+              {/* AI 초기 판정 막대 (매수가능/매수불가 2가지만) */}
               <div className="space-y-1.5">
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 초기 판정</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
@@ -672,7 +688,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>접수번호</TableHead>
+                  <TableHead className="text-center">접수번호</TableHead>
                   <TableHead>신청인</TableHead>
                   <TableHead>신청일시</TableHead>
                   <TableHead>대상 지번</TableHead>
@@ -684,14 +700,14 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredApplications.map((app) => (
+                {paginatedApplications.map((app) => (
                   <TableRow
                     key={app.id}
                     className="cursor-pointer hover:bg-muted/50"
                     onClick={() => onSelect(app)}
                   >
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
+                    <TableCell className="font-medium text-center">
+                      <div className="flex items-center justify-center gap-2">
                         {app.applicationNumber}
                         {aiMismatchFilter && app.adminStatus === "심사완료" && (
                           // 시뮬레이션: 접수번호 끝자리로 불일치 유형 구분
@@ -756,7 +772,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
 
           {/* 카드 목록 (모바일) */}
           <div className="space-y-3 md:hidden">
-            {filteredApplications.map((app) => (
+            {paginatedApplications.map((app) => (
               <button
                 key={app.id}
                 onClick={() => onSelect(app)}
@@ -805,6 +821,74 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           {filteredApplications.length === 0 && (
             <div className="py-12 text-center text-muted-foreground">
               검색 결과가 없습니다.
+            </div>
+          )}
+          
+          {/* 페이지네이션 */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 pt-4 mt-4">
+              <button
+                onClick={() => setCurrentPage(1)}
+                disabled={currentPage === 1}
+                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                처음
+              </button>
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                이전
+              </button>
+              
+              {/* 페이지 번호 */}
+              <div className="flex items-center gap-1">
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`w-9 h-9 flex items-center justify-center text-sm rounded ${
+                        currentPage === pageNum 
+                          ? "bg-teal-600 text-white" 
+                          : "text-gray-600 hover:bg-gray-50"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+              </div>
+              
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                다음
+              </button>
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                마지막
+              </button>
+              
+              <span className="text-sm text-muted-foreground ml-2">
+                ({filteredApplications.length}건 중 {(currentPage - 1) * itemsPerPage + 1}-{Math.min(currentPage * itemsPerPage, filteredApplications.length)}건)
+              </span>
             </div>
           )}
         </CardContent>

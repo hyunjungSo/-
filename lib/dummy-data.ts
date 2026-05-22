@@ -1428,7 +1428,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
       provisionalJudgment = "수용불가";
     }
   } else if (landInfo.landType === "택지" || landInfo.landType === "농지") {
-    // 택���/농지: 면적 기준 + 형상 조건 적용
+    // 택지/농지: 면적 기준 + 형상 조건 적용
     if (coreCriteriaMet || isIrregularShape || shapeIndexMet) {
       provisionalJudgment = "수용가능";
     } else {
@@ -1713,7 +1713,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       waterChannelLost: false,
       farmMachineDifficulty: false,
       judgmentRationale: {
-        summary: "택지 잔여지 - 접면도로 상실로 ������화되어 「매수 가능성 높음」 판정",
+        summary: "택지 잔여지 - 접면도로 상실로 맹지화되어 「매수 가능성 높음」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: ["토지유형: 택지", "형상지수 변화: 1.5 (기준 충족)", "접면도로 상실: 해당 (맹지화)"],
         detailedExplanation: "도로확장사업으로 접면도로가 상실되어 맹지가 되었으며, 건축허가가 불가능한 상태입니다.",
@@ -1856,7 +1856,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       ownerContact: "010-1111-2222",
       hasIncludedLand: true,
       businessUnit: "수도권",
-      projectName: "용인-양지 도로���장사���",
+      projectName: "용인-양지 도로확장사업",
     },
     checkItems: {
       farmMachineDifficulty: false,
@@ -2141,7 +2141,7 @@ export const dummyApplications: Application[] = [
     statusUpdatedAt: TWO_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
-  // AI 판정 ���계 사례 (심의위원회 이관 필요)
+  // AI 판정 경계 사례 (심의위원회 이관 필요)
   {
     id: "app-006",
     applicationNumber: "2026-0406-001",
@@ -2507,7 +2507,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -2571,7 +2571,7 @@ export const dummyApplications: Application[] = [
         manualCheckItems: [],
       },
     },
-    finalJudgment: "매��",
+    finalJudgment: "매수",
     reviewerComment: "3필지 농지로 확인됨. 관개수로 단절 및 형상 변경으로 농업 활동 불가. 매수 기준 충족으로 매수 결정.",
     finalReviewOpinion: "안성-천안 국도확장사업으로 편입된 3필지 농지입니다. 현장 확인 결과, 도로 편입 후 관개수로가 단절되고, 각 필지가 삼각형, 역삼각형, 부정형으로 변경되어 농기계 회전 및 회전이 불가능한 상태입니다. 매수 기준 충족하여 매수가 적정합니다.",
     adminName: "홍길동",
@@ -2824,7 +2824,7 @@ export const dummyApplications: Application[] = [
     aiResult: {
       landTypePath: "산지",
       criteriaChecks: [
-        { criteriaName: "면적 기준", criteriaDescription: "잔여���적 4,100㎡로 조림지 ��단", isMet: true, autoDetected: true },
+        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100㎡로 조림지 분단", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },
       ],
@@ -3378,7 +3378,7 @@ export const dummyApplications: Application[] = [
     aiResult: generateAIResult(dummyLandInfoList[5]),
     finalJudgment: "기각",
     reviewerComment: "면적 기준 충족으로 기각",
-    adminName: "이��은",
+    adminName: "김서은",
     statusUpdatedAt: TWO_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
@@ -3493,7 +3493,7 @@ export const dummyApplications: Application[] = [
     aiResult: generateAIResult(dummyLandInfoList[10]),
     finalJudgment: "기각",
     reviewerComment: "잔여면적 충분하여 기각",
-    adminName: "홍��동",
+    adminName: "홍길동",
     statusUpdatedAt: ONE_WEEK_AGO,
     businessUnit: "강진광주건설 사업단",
   },
@@ -3503,7 +3503,7 @@ export const dummyApplications: Application[] = [
     applicationType: "single",
     applicantName: "배준서",
     applicantContact: "010-3344-0000",
-    applicantAddress: "경기도 가평군 가평�� 읍내리 900",
+    applicantAddress: "경기도 가평군 가평읍 읍내리 900",
     landInfo: dummyLandInfoList[11],
     actualUsage: "임",
     reportedShape: "사다리형",
@@ -3580,12 +3580,12 @@ export const landCategories = [
 // 토지 형상 목록
 export const landShapes = {
   regular: [
-    { value: "정방���", label: "정방형" },
+    { value: "정방형", label: "정방형" },
     { value: "가로장방형", label: "가로장방형" },
     { value: "세로장방형", label: "세로장방형" },
   ],
   irregular: [
-    { value: "변형사다리형", label: "변형사다��형" },
+    { value: "변형사다리형", label: "변형사다리형" },
     { value: "역사다리형", label: "역사다리형" },
     { value: "사다리형", label: "사다리형" },
     { value: "삼각형", label: "삼각형" },
@@ -3688,7 +3688,7 @@ export const dummyAnalysisHistory: AnalysisHistory[] = [
 
 // ===== 프로세스 적용된 필지 데이터 (ProcessedParcel) =====
 export const dummyProcessedParcels: ProcessedParcel[] = [
-  // 1. 1차 분석만 완료된 필지 (담당자 확인 대기)
+  // 1. 1차 분석만 완료된 필지 (담당자 확인 대기) - 민원인이 장바구니에 담음
   {
     id: "processed-001",
     businessUnit: "수도권건설사업단",
@@ -3710,8 +3710,12 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     firstAnalyzedAt: TWO_WEEKS_AGO,
     lastAnalyzedAt: TWO_WEEKS_AGO,
     ownerIdentifier: "1234",
+    citizenActivity: {
+      inCart: true,
+      cartAddedAt: ONE_WEEK_AGO,
+    },
   },
-  // 2. 2차 분석 중인 필지 (재분석 1회)
+  // 2. 2차 분석 중인 필지 (재분석 1회) - 민원인이 장바구니에 담음
   {
     id: "processed-002",
     businessUnit: "수도권건설사업단",
@@ -3736,8 +3740,12 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     firstAnalyzedAt: TWO_WEEKS_AGO,
     lastAnalyzedAt: ONE_WEEK_AGO,
     ownerIdentifier: "5678",
+    citizenActivity: {
+      inCart: true,
+      cartAddedAt: THREE_DAYS_AGO,
+    },
   },
-  // 3. 담당자 확인 완료 (공개 대기)
+  // 3. 담당자 확인 완료 (공개 대기) - 민원인 활동 없음
   {
     id: "processed-003",
     businessUnit: "천안안성건설사업단",
@@ -3764,8 +3772,9 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     confirmedAt: THREE_DAYS_AGO,
     confirmedBy: "이검토",
     ownerIdentifier: "9012",
+    // 민원인 활동 없음
   },
-  // 4. 공개된 필지 (민원인 조회 가능)
+  // 4. 공개된 필지 (민원인 조회 가능) - 민원인이 신청 완료
   {
     id: "processed-004",
     businessUnit: "천안안성건설사업단",
@@ -3803,8 +3812,13 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     confirmedAt: ONE_MONTH_AGO,
     confirmedBy: "박확인",
     ownerIdentifier: "3456",
+    citizenActivity: {
+      applicationSubmitted: true,
+      applicationId: "app-001",
+      applicationSubmittedAt: THREE_WEEKS_AGO,
+    },
   },
-  // 5. 매수 가능성 낮음으로 공개된 필지
+  // 5. 매수 가능성 낮음으로 공개된 필지 - 신청 완료
   {
     id: "processed-005",
     businessUnit: "강진광주건설사업단",
@@ -3842,8 +3856,13 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     confirmedAt: SIX_WEEKS_AGO,
     confirmedBy: "최승인",
     ownerIdentifier: "7890",
+    citizenActivity: {
+      applicationSubmitted: true,
+      applicationId: "app-002",
+      applicationSubmittedAt: ONE_WEEK_AGO,
+    },
   },
-  // 6. 분석 전 필지 (등록만 완료, 분석 횟수 0)
+  // 6. 분석 전 필지 (등록만 완료, 분석 횟수 0) - 장바구니에 담김
   {
     id: "processed-006",
     businessUnit: "수도권건설사업단",
@@ -3886,5 +3905,9 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     publishStatus: "분석전",
     analysisHistory: [],
     ownerIdentifier: "1111",
+    citizenActivity: {
+      inCart: true,
+      cartAddedAt: YESTERDAY,
+    },
   },
 ];

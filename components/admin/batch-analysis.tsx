@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { 
   Table, 
   TableBody, 
@@ -31,7 +31,10 @@ import {
 import { 
   CheckCircle2, 
   XCircle, 
-  Filter
+  Filter,
+  Lock,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { 
   SearchInput, 
@@ -79,6 +82,11 @@ export function BatchAnalysis({
   // 필터 (라디오 버튼)
   const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low">("all");
   const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("all");
+  const [visibilityFilter, setVisibilityFilter] = useState<"all" | "visible" | "hidden">("all");
+  
+  // 페이지네이션
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
   
   // 사업단 목록 추출
   const businessUnits = useMemo(() => {
@@ -241,9 +249,28 @@ export function BatchAnalysis({
         if (aiJudgmentFilter === "low" && isHigh) return false;
       }
       
+      // 관리(노출/미노출) 필터
+      if (visibilityFilter !== "all") {
+        const isVisible = parcel.isVisible !== false;
+        if (visibilityFilter === "visible" && !isVisible) return false;
+        if (visibilityFilter === "hidden" && isVisible) return false;
+      }
+      
       return true;
     });
-  }, [parcels, businessUnit, businessUnitFilter, searchQuery, aiJudgmentFilter]);
+  }, [parcels, businessUnit, businessUnitFilter, searchQuery, aiJudgmentFilter, visibilityFilter]);
+
+  // 페이지네이션 계산
+  const totalPages = Math.ceil(filteredParcels.length / itemsPerPage);
+  const paginatedParcels = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredParcels.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredParcels, currentPage, itemsPerPage]);
+
+  // 필터 변경 시 페이지 리셋
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, aiJudgmentFilter, businessUnitFilter, visibilityFilter]);
 
   // 통계 (검색값에 영향 받지 않음 - 전체 데이터 기준)
   const stats = useMemo(() => {
@@ -418,6 +445,19 @@ export function BatchAnalysis({
                 { value: "low", label: "매수 가능성 낮음" }
               ]}
             />
+            
+            {/* 관리(노출/미노출) 필터 */}
+            <RadioFilterGroup
+              label="관리"
+              name="visibility"
+              value={visibilityFilter}
+              onChange={(v) => setVisibilityFilter(v as "all" | "visible" | "hidden")}
+              options={[
+                { value: "all", label: "전체" },
+                { value: "visible", label: "노출" },
+                { value: "hidden", label: "미노출" }
+              ]}
+            />
           </div>
         </CardContent>
       </Card>
@@ -456,21 +496,20 @@ export function BatchAnalysis({
                       className="w-4 h-4 cursor-pointer"
                       title="모두 선택"
                     />
-                    <span className="text-xs font-normal">
-                      ({selectedParcelIds.size}/{filteredParcels.length})
-                    </span>
+
                   </label>
                 </TableHead>
                 <TableHead className="w-[60px]">No.</TableHead>
                 <TableHead>소재지</TableHead>
                 <TableHead>면적(㎡)</TableHead>
                 <TableHead>AI 판정</TableHead>
+                <TableHead>관리</TableHead>
                 <TableHead>분석 횟수</TableHead>
                 <TableHead>최종 분석일</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredParcels.map((parcel, index) => (
+              {paginatedParcels.map((parcel, index) => (
                 <TableRow 
                   key={parcel.id} 
                   className="hover:bg-muted/50"
@@ -484,7 +523,7 @@ export function BatchAnalysis({
                       onClick={(e) => e.stopPropagation()}
                     />
                   </TableCell>
-                  <TableCell className="text-center text-muted-foreground">{index + 1}</TableCell>
+                  <TableCell className="text-center text-muted-foreground">{(currentPage - 1) * itemsPerPage + index + 1}</TableCell>
                   <TableCell 
                     className="font-medium cursor-pointer"
                     onClick={() => handleParcelClick(parcel)}
@@ -512,6 +551,14 @@ export function BatchAnalysis({
                       </Button>
                     )}
                   </TableCell>
+                  <TableCell className="text-center p-2">
+                    <div className="flex items-center justify-center gap-1">
+                      <span className="text-sm">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
+                      {(parcel.citizenActivity?.applicationSubmitted || parcel.citizenActivity?.inCart) && (
+                        <Lock className="h-3 w-3 text-orange-500" />
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell>
                     <span className="text-sm">{parcel.analysisHistory?.length || 0}회</span>
                   </TableCell>
@@ -522,13 +569,81 @@ export function BatchAnalysis({
               ))}
               {filteredParcels.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                     조건에 맞는 필지가 없습니다.
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
+          
+          {/* 페이지네이션 */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 pt-4 mt-4">
+              <button
+                onClick={() => setCurrentPage(1)}
+                disabled={currentPage === 1}
+                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                처음
+              </button>
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                이전
+              </button>
+              
+              {/* 페이지 번호 */}
+              <div className="flex items-center gap-1">
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`w-9 h-9 flex items-center justify-center text-sm rounded ${
+                        currentPage === pageNum 
+                          ? "bg-teal-600 text-white" 
+                          : "text-gray-600 hover:bg-gray-50"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+              </div>
+              
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                다음
+              </button>
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                마지막
+              </button>
+              
+              <span className="text-sm text-muted-foreground ml-2">
+                ({filteredParcels.length}건 중 {(currentPage - 1) * itemsPerPage + 1}-{Math.min(currentPage * itemsPerPage, filteredParcels.length)}건)
+              </span>
+            </div>
+          )}
         </CardContent>
       </Card>
 
