@@ -35,8 +35,7 @@ import {
   Lock,
   ChevronLeft,
   ChevronRight,
-  Loader2,
-  FileText
+  Loader2
 } from "lucide-react";
 import { 
   SearchInput, 
@@ -734,12 +733,7 @@ export function BatchAnalysis({
                           <span className="text-xs text-[#2E8B57]">분석중</span>
                         </div>
                       ) : parcel.aiResult ? (
-                        <div className="flex items-center justify-center gap-1">
-                          <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
-                          {parcel.reportCompleted && (
-                            <FileText className="h-4 w-4 text-blue-500" title="보고서 완료" />
-                          )}
-                        </div>
+                        <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
                       ) : (
                         <span className="text-sm text-muted-foreground">-</span>
                       )}
