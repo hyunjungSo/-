@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -268,6 +269,66 @@ export function BatchAnalysis({
     }
   };
 
+  // 관리(노출/미노출) 토글 핸들러
+  const handleToggleVisibility = (parcelId: string, isVisible: boolean) => {
+    setParcels(prev => prev.map(p => 
+      p.id === parcelId ? { ...p, isVisible } : p
+    ));
+    onParcelsUpdate?.(parcels.map(p => 
+      p.id === parcelId ? { ...p, isVisible } : p
+    ));
+  };
+
+  // 선택 필지 잔여지 판정 실행 핸들러
+  const handleResidualJudgment = async () => {
+    if (selectedParcelIds.size === 0) return;
+    
+    setIsAnalyzing(true);
+    try {
+      // 분석 시뮬레이션 (1초 딜레이)
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const updatedParcels = parcels.map(p => {
+        if (!selectedParcelIds.has(p.id)) return p;
+        
+        // 잔여지 판정 결과 생성 (실제로는 규칙 기반 또는 AI 판정)
+        const residualStatus = Math.random() > 0.3 ? "잔여지 인정" : "기준 미달" as const;
+        
+        // 매수 가능성 결과 생성
+        const aiResult = {
+          provisionalJudgment: residualStatus === "잔여지 인정" 
+            ? (Math.random() > 0.4 ? "매수 가능성 높음" : "매수 가능성 낮음")
+            : "매수 가능성 낮음",
+          reason: "AI 자동 분석 결과"
+        };
+        
+        const newHistory: AnalysisHistory = {
+          id: `analysis_${Date.now()}_${p.id}`,
+          stage: p.analysisHistory?.length ? "2차분석" : "1차분석",
+          analyzedAt: new Date().toISOString(),
+          analyzedBy: "AI 자동 분석",
+          newResult: aiResult.provisionalJudgment,
+          previousResult: p.aiResult?.provisionalJudgment || undefined,
+          changedOptions: {},
+        };
+        
+        return {
+          ...p,
+          residualStatus,
+          aiResult,
+          analysisHistory: [...(p.analysisHistory || []), newHistory],
+          lastAnalyzedAt: new Date().toISOString(),
+        } as ProcessedParcel;
+      });
+      
+      setParcels(updatedParcels);
+      onParcelsUpdate?.(updatedParcels);
+      setSelectedParcelIds(new Set());
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
   // 필터링된 필지 목록
   const filteredParcels = useMemo(() => {
     return parcels.filter(parcel => {
@@ -408,8 +469,8 @@ export function BatchAnalysis({
     <div className="space-y-6">
       {/* 타이틀 */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">AI 매수 판정</h1>
-        <p className="text-muted-foreground mt-1">1차 확정된 잔여지 필지를 AI가 분석하여 매수 가능성을 판정합니다.</p>
+        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">필지관리</h1>
+        <p className="text-muted-foreground mt-1">잔여지 판정 및 매수 가능성 분석을 관리합니다.</p>
       </div>
 
       {/* 통계 카드 */}
@@ -544,6 +605,25 @@ export function BatchAnalysis({
                 { value: "hidden", label: "미노출" }
               ]}
             />
+            
+            {/* 선택 필지 잔여지 판정 실행 버튼 */}
+            <div className="ml-auto">
+              <Button
+                onClick={handleResidualJudgment}
+                disabled={selectedParcelIds.size === 0 || isAnalyzing}
+                variant="cta"
+                className="whitespace-nowrap"
+              >
+                {isAnalyzing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    판정 실행 중...
+                  </>
+                ) : (
+                  `선택 필지 잔여지 판정 실행 (${selectedParcelIds.size}건)`
+                )}
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -551,22 +631,11 @@ export function BatchAnalysis({
       {/* 필지 목록 테이블 */}
       <Card className="border-0">
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>필지 관리 목록</CardTitle>
-              <CardDescription>
-                잔여지 판정 및 매수 가능성 분석 결과를 확인하세요. 소재지를 클릭하면 필지 상세 화면으로 이동합니다.
-              </CardDescription>
-            </div>
-            {selectedParcelIds.size > 0 && (
-              <Button 
-                onClick={handleBatchAnalysis}
-                disabled={isAnalyzing}
-                className="ml-auto"
-              >
-                {isAnalyzing ? "분석 중..." : `선택된 필지 분석 (${selectedParcelIds.size})`}
-              </Button>
-            )}
+          <div>
+            <CardTitle>필지 관리 목록</CardTitle>
+            <CardDescription>
+              잔여지 판정 및 매수 가능성 분석 결과를 확인하세요. 소재지 또는 분석 버튼을 클릭하면 필지 상세 화면으로 이동합니다.
+            </CardDescription>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -590,7 +659,7 @@ export function BatchAnalysis({
                   <TableHead className="text-center">잔여지 판정</TableHead>
                   <TableHead className="text-center">매수 가능성</TableHead>
                   <TableHead className="text-center">관리</TableHead>
-                  <TableHead className="text-center">최종 분석일</TableHead>
+                  <TableHead className="text-center w-20">분석</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -659,16 +728,39 @@ export function BatchAnalysis({
                         <span className="text-sm text-muted-foreground">-</span>
                       )}
                     </TableCell>
+                    {/* 관리 컬럼 - 토글 스위치 */}
                     <TableCell className="text-center">
-                      <div className="flex items-center justify-center gap-1">
-                        <span className="text-sm">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
-                        {(parcel.citizenActivity?.applicationSubmitted || parcel.citizenActivity?.inCart) && (
-                          <Lock className="h-3 w-3 text-orange-500" />
-                        )}
-                      </div>
+                      {(parcel.citizenActivity?.applicationSubmitted || parcel.citizenActivity?.inCart) ? (
+                        <div className="flex items-center justify-center gap-1.5">
+                          <Switch
+                            checked={parcel.isVisible !== false}
+                            disabled={true}
+                            className="data-[state=checked]:bg-[#2E8B57] opacity-50"
+                          />
+                          <Lock className="h-3.5 w-3.5 text-orange-500" />
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center">
+                          <Switch
+                            checked={parcel.isVisible !== false}
+                            onCheckedChange={(checked) => handleToggleVisibility(parcel.id, checked)}
+                            className="data-[state=checked]:bg-[#2E8B57]"
+                          />
+                        </div>
+                      )}
                     </TableCell>
-                    <TableCell className="text-center text-sm text-muted-foreground">
-                      {parcel.lastAnalyzedAt ? formatDateTime(parcel.lastAnalyzedAt) : "-"}
+                    {/* 분석 버튼 컬럼 */}
+                    <TableCell className="text-center">
+                      <Button
+                        variant="cta-outline"
+                        className="h-7 px-3 text-xs"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleParcelClick(parcel);
+                        }}
+                      >
+                        분석
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -5,16 +5,14 @@ import { ApplicationList } from "@/components/admin/application-list";
 import { ApplicationDetail } from "@/components/admin/application-detail";
 import { BatchAnalysis } from "@/components/admin/batch-analysis";
 import { ParcelDetailReview } from "@/components/admin/parcel-detail-review";
-import { IncomingParcelList } from "@/components/admin/incoming-parcel-list";
 import type { Application, ProcessedParcel } from "@/lib/types";
 import { dummyApplications, dummyProcessedParcels } from "@/lib/dummy-data";
-import { FileText, MapPin, ChevronDown, ChevronRight } from "lucide-react";
+import { FileText, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type ActiveTab = 
   | "applications" 
-  | "incoming-parcels"    // 발생 잔여지 판정
-  | "ai-judgment"         // AI 매수 판정
+  | "parcel-management"   // 필지 관리 (통합)
   | "parcel-review";      // 필지상세
 
 export default function AdminPage() {
@@ -23,7 +21,6 @@ export default function AdminPage() {
   const [processedParcels, setProcessedParcels] = useState<ProcessedParcel[]>(dummyProcessedParcels);
   const [selectedParcel, setSelectedParcel] = useState<ProcessedParcel | null>(null);
   const [activeTab, setActiveTab] = useState<ActiveTab>("applications");
-  const [isParcelMenuExpanded, setIsParcelMenuExpanded] = useState(true);
 
   const handleApplicationSelect = (application: Application) => {
     setSelectedApplication(application);
@@ -65,14 +62,7 @@ export default function AdminPage() {
 
   const handleParcelBack = () => {
     setSelectedParcel(null);
-    setActiveTab("ai-judgment");
-  };
-
-  // 발생 잔여지 판정에서 확정된 필지를 AI 매수 판정 목록으로 이동
-  const handleConfirmParcels = (confirmedParcels: any[]) => {
-    // 실제로는 API 호출 후 processedParcels에 추가
-    // 여기서는 데모용으로 간단히 처리
-    console.log("확정된 필지:", confirmedParcels);
+    setActiveTab("parcel-management");
   };
 
   return (
@@ -101,63 +91,22 @@ export default function AdminPage() {
               <span>신청관리</span>
             </button>
 
-            {/* 필지관리 메뉴 (확장 가능) */}
-            <div>
-              <button
-                onClick={() => setIsParcelMenuExpanded(!isParcelMenuExpanded)}
-                className={cn(
-                  "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                  (activeTab === "incoming-parcels" || activeTab === "ai-judgment" || activeTab === "parcel-review")
-                    ? "bg-[#2E8B57]/10 text-[#2E8B57]"
-                    : "text-gray-700 hover:bg-gray-100"
-                )}
-              >
-                <MapPin className="h-5 w-5" />
-                <span className="flex-1 text-left">필지관리</span>
-                {isParcelMenuExpanded ? (
-                  <ChevronDown className="h-4 w-4" />
-                ) : (
-                  <ChevronRight className="h-4 w-4" />
-                )}
-              </button>
-
-              {/* 서브메뉴 */}
-              {isParcelMenuExpanded && (
-                <div className="ml-4 mt-1 space-y-1 border-l-2 border-gray-200 pl-3">
-                  {/* 서브메뉴 1: 발생 잔여지 판정 */}
-                  <button
-                    onClick={() => {
-                      setActiveTab("incoming-parcels");
-                      setSelectedParcel(null);
-                    }}
-                    className={cn(
-                      "flex w-full rounded-lg px-3 py-2 text-sm transition-colors",
-                      activeTab === "incoming-parcels"
-                        ? "bg-[#2E8B57] text-white"
-                        : "text-gray-600 hover:bg-gray-100"
-                    )}
-                  >
-                    <span>발생 잔여지 판정</span>
-                  </button>
-
-                  {/* 서브메뉴 2: AI 매수 판정 */}
-                  <button
-                    onClick={() => {
-                      setActiveTab("ai-judgment");
-                      setSelectedParcel(null);
-                    }}
-                    className={cn(
-                      "flex w-full rounded-lg px-3 py-2 text-sm transition-colors",
-                      (activeTab === "ai-judgment" || activeTab === "parcel-review")
-                        ? "bg-[#2E8B57] text-white"
-                        : "text-gray-600 hover:bg-gray-100"
-                    )}
-                  >
-                    <span>AI 매수 판정</span>
-                  </button>
-                </div>
+            {/* 필지관리 메뉴 (단일 1depth) */}
+            <button
+              onClick={() => {
+                setActiveTab("parcel-management");
+                setSelectedParcel(null);
+              }}
+              className={cn(
+                "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                (activeTab === "parcel-management" || activeTab === "parcel-review")
+                  ? "bg-[#2E8B57] text-white"
+                  : "text-gray-700 hover:bg-gray-100"
               )}
-            </div>
+            >
+              <MapPin className="h-5 w-5" />
+              <span>필지관리</span>
+            </button>
           </nav>
         </div>
       </aside>
@@ -185,13 +134,8 @@ export default function AdminPage() {
           </>
         )}
 
-        {/* 발생 잔여지 판정 콘텐츠 */}
-        {activeTab === "incoming-parcels" && (
-          <IncomingParcelList onConfirmParcels={handleConfirmParcels} />
-        )}
-
-        {/* AI 매수 판정 콘텐츠 */}
-        {activeTab === "ai-judgment" && (
+        {/* 필지관리 콘텐츠 */}
+        {activeTab === "parcel-management" && (
           <BatchAnalysis 
             parcels={processedParcels}
             onParcelsUpdate={setProcessedParcels}
