@@ -25,7 +25,7 @@ import {
   Loader2,
   CheckCircle2
 } from "lucide-react";
-import { SearchInput } from "@/components/admin/shared";
+import { SearchInput, RadioFilterGroup } from "@/components/admin/shared";
 import { PaginationButton, PaginationNavButton } from "@/components/ui/pagination-button";
 import { formatNumber } from "@/lib/format";
 
@@ -150,6 +150,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
   const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("all");
+  const [aiJudgmentFilter, setAiJudgmentFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [analyzingIds, setAnalyzingIds] = useState<Set<string>>(new Set());
   const itemsPerPage = 10;
@@ -178,9 +179,15 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
         return false;
       }
       
+      // AI 판정 필터
+      if (aiJudgmentFilter !== "all") {
+        if (aiJudgmentFilter === "인정" && parcel.aiResult !== "해당") return false;
+        if (aiJudgmentFilter === "미인정" && parcel.aiResult !== "미해당") return false;
+      }
+      
       return true;
     });
-  }, [parcels, searchQuery, businessUnitFilter]);
+  }, [parcels, searchQuery, businessUnitFilter, aiJudgmentFilter]);
 
   // 페이지네이션
   const totalPages = Math.ceil(filteredParcels.length / itemsPerPage);
@@ -393,6 +400,19 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                 </SelectContent>
               </Select>
             </div>
+            
+            {/* AI 판정 필터 */}
+            <RadioFilterGroup
+              label="AI 판정"
+              name="ai-judgment"
+              value={aiJudgmentFilter}
+              onChange={(v) => setAiJudgmentFilter(v)}
+              options={[
+                { value: "all", label: "전체" },
+                { value: "인정", label: "인정" },
+                { value: "미인정", label: "미인정" }
+              ]}
+            />
           </div>
         </CardContent>
       </Card>
