@@ -43,7 +43,7 @@ interface IncomingParcel {
   areaAnalysisResult: "초과" | "이하" | "미분석";
   status: "신규" | "검토중" | "확정" | "제외";
   aiAnalysisStatus?: "대기" | "분석중" | "완료";
-  aiResult?: "매수가능" | "매수불가" | "추가검토";
+  aiResult?: "잔여지 인정" | "잔여지 미인정" | "추가검토";
 }
 
 // 더미 데이터: 외부 시스템에서 적재된 신규 필지
@@ -236,7 +236,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
   // 선택 필지 잔여지 대상으로 확정
   const handleConfirmSelected = () => {
     if (selectedIds.size === 0) {
-      alert("확정할 필지를 선택해주�����요.");
+      alert("확정할 필지를 선택해주�������요.");
       return;
     }
 
@@ -268,7 +268,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
     // 분석 결과 업데이트
     setParcels(prev => prev.map(p => {
       if (p.id === parcelId) {
-        const results: Array<"매수가능" | "매수불가" | "추가검토"> = ["매수가능", "매수불가", "추가검토"];
+        const results: Array<"잔여지 인정" | "잔여지 미인정" | "추가검토"> = ["잔여지 인정", "잔여지 미인정", "추가검토"];
         const randomResult = results[Math.floor(Math.random() * results.length)];
         return { 
           ...p, 
@@ -302,7 +302,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
       
       setParcels(prev => prev.map(p => {
         if (p.id === id) {
-          const results: Array<"매수가능" | "매수불가" | "추가검토"> = ["매수가능", "매수불가", "추가검토"];
+          const results: Array<"잔여지 인정" | "잔여지 미인정" | "추가검토"> = ["잔여지 인정", "잔여지 미인정", "추가검토"];
           const randomResult = results[Math.floor(Math.random() * results.length)];
           return { 
             ...p, 
@@ -549,9 +549,9 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                       ) : parcel.aiResult ? (
                         <Badge 
                           className={
-                            parcel.aiResult === "매수가능" 
+                          parcel.aiResult === "잔여지 인정" 
                               ? "bg-green-100 text-green-700 hover:bg-green-100"
-                              : parcel.aiResult === "매수불가"
+                              : parcel.aiResult === "잔여지 미인정"
                               ? "bg-red-100 text-red-700 hover:bg-red-100"
                               : "bg-yellow-100 text-yellow-700 hover:bg-yellow-100"
                           }
