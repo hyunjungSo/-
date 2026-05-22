@@ -401,8 +401,11 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
       <Card className="border-0">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <div>
+            <div className="flex items-center gap-2">
               <CardTitle>필지 목록</CardTitle>
+              <span className="text-sm text-muted-foreground">
+                총 {filteredParcels.length}건
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <Button 
@@ -438,9 +441,6 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                 선택 필지 잔여지 대상으로 확정 ({selectedIds.size}건)
               </Button>
             </div>
-            <span className="text-sm text-muted-foreground">
-              총 {filteredParcels.length}건
-            </span>
           </div>
 
           {/* 테이블 */}
