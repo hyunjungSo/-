@@ -712,11 +712,11 @@ export function BatchAnalysis({
                     <TableCell className="text-center">
                       {parcel.residualStatus === "잔여지 인정" ? (
                         <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-0">
-                          잔여지 인정
+                          인정
                         </Badge>
                       ) : parcel.residualStatus === "기준 미달" ? (
                         <Badge className="bg-rose-100 text-rose-700 hover:bg-rose-100 border-0">
-                          기준 미달
+                          미인정
                         </Badge>
                       ) : (
                         <Badge className="bg-gray-100 text-gray-500 hover:bg-gray-100 border-0">
