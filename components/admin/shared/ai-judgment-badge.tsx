@@ -18,8 +18,10 @@ export function AIJudgmentBadge({ judgment, size = "md" }: AIJudgmentBadgeProps)
     lg: "text-sm px-3 py-1.5"
   };
   
-  const displayText = judgment === "수용가능" ? "매수 가능성 높음" 
-    : judgment === "수용불가" ? "매수 가능성 낮음" 
+  const displayText = judgment === "수용가능" ? "높음" 
+    : judgment === "수용불가" ? "낮음"
+    : judgment === "매수 가능성 높음" ? "높음"
+    : judgment === "매수 가능성 낮음" ? "낮음"
     : judgment;
   
   return (
