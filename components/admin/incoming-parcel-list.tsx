@@ -461,7 +461,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                   <TableHead>사업단</TableHead>
                   <TableHead className="text-right">잔여면적</TableHead>
                   <TableHead className="text-right">잔여비율</TableHead>
-                  <TableHead className="text-center">AI 분석</TableHead>
+                  <TableHead className="text-center">AI 판독</TableHead>
                   <TableHead className="text-center">적재시간</TableHead>
                 </TableRow>
               </TableHeader>
