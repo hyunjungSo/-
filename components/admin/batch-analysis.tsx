@@ -451,22 +451,22 @@ export function BatchAnalysis({
         <CardHeader>
           <CardTitle>검색 및 필터</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {/* 검색바 */}
-          <SearchInput
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="소재지, 소유자명을 입력하세요"
-            className="max-w-[600px]"
-          />
-          
-          {/* 필터 영역 */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+        <CardContent>
+          {/* 단일 행 필터 레이아웃 */}
+          <div className="flex flex-wrap items-center gap-6">
+            {/* 검색바 */}
+            <SearchInput
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="소재지, 소유자명을 입력하세요"
+              className="w-[400px]"
+            />
+            
             {/* 사업단 선택 필터 */}
-            <div className="flex items-center gap-3">
-              <Label className="text-sm font-medium whitespace-nowrap">사업단:</Label>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium whitespace-nowrap text-gray-700">사업단</span>
               <Select value={businessUnitFilter} onValueChange={setBusinessUnitFilter}>
-                <SelectTrigger className="w-[180px] h-[40px]">
+                <SelectTrigger className="w-[160px] h-[40px]">
                   <SelectValue placeholder="사업단 선택" />
                 </SelectTrigger>
                 <SelectContent>
