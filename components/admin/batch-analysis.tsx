@@ -674,7 +674,6 @@ export function BatchAnalysis({
                   <TableHead className="text-center">잔여지 판정</TableHead>
                   <TableHead className="text-center">매수 가능성</TableHead>
                   <TableHead className="text-center">관리</TableHead>
-                  <TableHead className="text-center w-20">분석</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -759,24 +758,11 @@ export function BatchAnalysis({
                         </div>
                       )}
                     </TableCell>
-                    {/* 분석 버튼 컬럼 */}
-                    <TableCell className="text-center">
-                      <Button
-                        variant="cta-outline"
-                        className="h-7 px-3 text-xs"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleParcelClick(parcel);
-                        }}
-                      >
-                        분석
-                      </Button>
-                    </TableCell>
                   </TableRow>
                 ))}
                 {filteredParcels.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                       조건에 맞는 필지가 없습니다.
                     </TableCell>
                   </TableRow>
