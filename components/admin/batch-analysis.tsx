@@ -44,6 +44,7 @@ import {
   isHighPossibility 
 } from "@/components/admin/shared";
 import { PaginationButton, PaginationNavButton } from "@/components/ui/pagination-button";
+import { useToast } from "@/hooks/use-toast";
 import type { 
   ProcessedParcel, 
   AnalysisHistory,
@@ -97,6 +98,9 @@ export function BatchAnalysis({
     return Array.from(units).sort();
   }, [parcels]);
   
+  // 토스트
+  const { toast } = useToast();
+
   // 히스토리 다이얼로그
   const [showHistoryDialog, setShowHistoryDialog] = useState(false);
   const [selectedHistoryParcel, setSelectedHistoryParcel] = useState<ProcessedParcel | null>(null);
@@ -264,6 +268,11 @@ export function BatchAnalysis({
         return updated;
       });
 
+      toast({
+        title: "AI 매수 판독 완료",
+        description: `${selectedParcelIds.size}건의 AI 매수 판독이 완료되었습니다.`,
+      });
+
       // 선택 초기화
       setSelectedParcelIds(new Set());
       onAnalysisComplete?.();
@@ -326,6 +335,12 @@ export function BatchAnalysis({
       
       setParcels(updatedParcels);
       onParcelsUpdate?.(updatedParcels);
+      
+      toast({
+        title: "잔여지 판독 완료",
+        description: `${selectedParcelIds.size}건의 잔여지 판독이 완료되었습니다.`,
+      });
+      
       setSelectedParcelIds(new Set());
     } finally {
       setIsResidualAnalyzing(false);
