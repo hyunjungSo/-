@@ -35,7 +35,6 @@ interface IncomingParcel {
   id: string;
   address: string;
   businessUnit: string;
-  projectName: string;
   originalArea: number;
   includedArea: number;
   remainingArea: number;
@@ -52,7 +51,6 @@ const dummyIncomingParcels: IncomingParcel[] = [
     id: "INC001",
     address: "경기도 화성시 봉담읍 동화리 123",
     businessUnit: "화성평택",
-    projectName: "봉담-우정 도로확장사업",
     originalArea: 1500,
     includedArea: 800,
     remainingArea: 700,
@@ -66,7 +64,6 @@ const dummyIncomingParcels: IncomingParcel[] = [
     id: "INC002",
     address: "경기도 용인시 처인구 백암면 근삼리 456",
     businessUnit: "양평이천",
-    projectName: "용인-양지 도로확장사업",
     originalArea: 2300,
     includedArea: 1200,
     remainingArea: 1100,
@@ -80,7 +77,6 @@ const dummyIncomingParcels: IncomingParcel[] = [
     id: "INC003",
     address: "충청남도 천안시 서북구 성성동 789",
     businessUnit: "천안안성",
-    projectName: "천안-아산 국도확장사업",
     originalArea: 850,
     includedArea: 500,
     remainingArea: 350,
@@ -92,9 +88,8 @@ const dummyIncomingParcels: IncomingParcel[] = [
   },
   {
     id: "INC004",
-    address: "전라남도 순천시 해룡면 신대리 234",
-    businessUnit: "목포순천",
-    projectName: "순천-광양 고속도로",
+    address: "전라남도 순천시 황전면 선도리 321",
+    businessUnit: "강진광주",
     originalArea: 3200,
     includedArea: 2000,
     remainingArea: 1200,
@@ -106,9 +101,8 @@ const dummyIncomingParcels: IncomingParcel[] = [
   },
   {
     id: "INC005",
-    address: "경상북도 포항시 북구 흥해읍 567",
-    businessUnit: "포항영덕",
-    projectName: "포항-영덕 해안도로",
+    address: "경상북도 포항시 북구 흥해읍 대련리 654",
+    businessUnit: "부산울산",
     originalArea: 1800,
     includedArea: 1100,
     remainingArea: 700,
@@ -120,23 +114,8 @@ const dummyIncomingParcels: IncomingParcel[] = [
   },
   {
     id: "INC006",
-    address: "강원도 원주시 문막읍 건등리 890",
-    businessUnit: "춘천원주",
-    projectName: "원주-횡성 도로확장",
-    originalArea: 980,
-    includedArea: 600,
-    remainingArea: 380,
-    remainingRatio: 38.8,
-    landType: "농지",
-    loadedAt: "2026-05-21T17:30:00",
-    areaAnalysisResult: "이하",
-    status: "신규"
-  },
-  {
-    id: "INC007",
-    address: "경기도 파주시 탄현면 법흥리 321",
-    businessUnit: "김포파주",
-    projectName: "파주-문산 도로확장",
+    address: "강원도 원주시 호저면 고산리 987",
+    businessUnit: "강원원주",
     originalArea: 2100,
     includedArea: 1400,
     remainingArea: 700,
@@ -150,7 +129,6 @@ const dummyIncomingParcels: IncomingParcel[] = [
     id: "INC008",
     address: "충청북도 청주시 흥덕구 복대동 654",
     businessUnit: "청주충주",
-    projectName: "청주-오송 도시철도",
     originalArea: 1200,
     includedArea: 850,
     remainingArea: 350,
@@ -191,8 +169,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         const matchesAddress = parcel.address.toLowerCase().includes(query);
-        const matchesProject = parcel.projectName.toLowerCase().includes(query);
-        if (!matchesAddress && !matchesProject) return false;
+        if (!matchesAddress) return false;
       }
       
       // 사업단 필터
@@ -394,7 +371,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
               <SearchInput
                 value={searchQuery}
                 onChange={setSearchQuery}
-                placeholder="소재지, 사업명을 입력하세요"
+                placeholder="소재지를 입력하세요"
               />
             </div>
             
@@ -438,7 +415,6 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                   <TableHead className="w-12 text-center">No.</TableHead>
                   <TableHead>소재지</TableHead>
                   <TableHead>사업단</TableHead>
-                  <TableHead>사업명</TableHead>
                   <TableHead className="text-right">잔여면적</TableHead>
                   <TableHead className="text-right">잔여비율</TableHead>
                   <TableHead className="text-center">1차 가분석</TableHead>
@@ -466,9 +442,6 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                       {parcel.address}
                     </TableCell>
                     <TableCell>{parcel.businessUnit}</TableCell>
-                    <TableCell className="max-w-[150px] truncate" title={parcel.projectName}>
-                      {parcel.projectName}
-                    </TableCell>
                     <TableCell className="text-right">{formatNumber(parcel.remainingArea)}㎡</TableCell>
                     <TableCell className="text-right">{parcel.remainingRatio.toFixed(1)}%</TableCell>
                     <TableCell className="text-center">
@@ -489,7 +462,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                 ))}
                 {paginatedParcels.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                       조건에 맞는 필지가 없습니다.
                     </TableCell>
                   </TableRow>
