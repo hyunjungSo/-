@@ -8,7 +8,7 @@ import { ParcelDetailReview } from "@/components/admin/parcel-detail-review";
 import { IncomingParcelList } from "@/components/admin/incoming-parcel-list";
 import type { Application, ProcessedParcel } from "@/lib/types";
 import { dummyApplications, dummyProcessedParcels } from "@/lib/dummy-data";
-import { FileText, MapPin, ChevronDown, ChevronRight, Scan, Brain } from "lucide-react";
+import { FileText, MapPin, ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type ActiveTab = 
@@ -131,13 +131,12 @@ export default function AdminPage() {
                       setSelectedParcel(null);
                     }}
                     className={cn(
-                      "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors",
+                      "flex w-full rounded-lg px-3 py-2 text-sm transition-colors",
                       activeTab === "incoming-parcels"
                         ? "bg-[#2E8B57] text-white"
                         : "text-gray-600 hover:bg-gray-100"
                     )}
                   >
-                    <Scan className="h-4 w-4" />
                     <span>발생 잔여지 판독</span>
                   </button>
 
@@ -148,13 +147,12 @@ export default function AdminPage() {
                       setSelectedParcel(null);
                     }}
                     className={cn(
-                      "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors",
+                      "flex w-full rounded-lg px-3 py-2 text-sm transition-colors",
                       (activeTab === "ai-judgment" || activeTab === "parcel-review")
                         ? "bg-[#2E8B57] text-white"
                         : "text-gray-600 hover:bg-gray-100"
                     )}
                   >
-                    <Brain className="h-4 w-4" />
                     <span>AI 매수 판단</span>
                   </button>
                 </div>
