@@ -38,7 +38,7 @@ function SelectTrigger({
       data-size={size}
       className={cn(
         // 높이 40px (h-10)
-        "h-10 border-gray-300 data-[placeholder]:text-[#8A949E] [&_svg:not([class*='text-'])]:text-gray-500 focus-visible:border-primary focus-visible:ring-ring/20 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex w-fit items-center justify-between gap-2 rounded-md border bg-background px-4 py-3 text-base whitespace-nowrap transition-colors outline-none hover:border-gray-400 focus-visible:ring-2 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:opacity-50 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-5",
+        "h-10 border-gray-300 data-[placeholder]:text-[#8A949E] [&_svg:not([class*='text-'])]:text-gray-500 focus-visible:border-primary focus-visible:ring-ring/20 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex items-center justify-between gap-2 rounded-md border bg-background px-4 py-3 text-base transition-colors outline-none hover:border-gray-400 focus-visible:ring-2 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:opacity-50 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-5",
         className,
       )}
       {...props}
