@@ -452,7 +452,7 @@ export function BatchAnalysis({
     }));
   };
 
-  // 미노�� 처리
+  // 미노��� 처리
   const handleUnpublish = (parcelId: string) => {
     setParcels(prev => prev.map(p => {
       if (p.id === parcelId) {
@@ -645,7 +645,7 @@ export function BatchAnalysis({
                 {isPurchaseAnalyzing ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    분석 중...
+                    판독 중...
                   </>
                 ) : (
                   `AI 매수 판독 실행 (${selectedParcelIds.size}건)`
