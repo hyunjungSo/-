@@ -169,6 +169,47 @@ export function BatchAnalysis({
     }
   };
 
+  // 단일 필지 분석 실행
+  const handleSingleAnalysis = async (parcelId: string) => {
+    setIsAnalyzing(true);
+    try {
+      const parcel = parcels.find(p => p.id === parcelId);
+      if (!parcel) return;
+
+      // 분석 시뮬레이션 (1초 딜레이)
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      const newAnalysisResult: AIJudgmentResult = {
+        provisionalJudgment: Math.random() > 0.5 ? "매수 가능성 높음" : "매수 가능성 낮음",
+        reason: "AI 자동 분석 결과"
+      };
+
+      const newHistory: AnalysisHistory = {
+        id: `analysis_${Date.now()}_${Math.random()}`,
+        stage: parcel.analysisHistory?.length ? "2차분석" : "1차분석",
+        analyzedAt: new Date().toISOString(),
+        analyzedBy: "AI 자동 분석",
+        newResult: newAnalysisResult.provisionalJudgment,
+        previousResult: parcel.aiResult?.provisionalJudgment || undefined,
+        changedOptions: {},
+      };
+
+      setParcels(prev => prev.map(p => 
+        p.id === parcelId 
+          ? {
+              ...p,
+              aiResult: newAnalysisResult,
+              analysisHistory: [...(p.analysisHistory || []), newHistory],
+              lastAnalyzedAt: new Date().toISOString(),
+              isVisible: true,
+            } as ProcessedParcel
+          : p
+      ));
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
   // 배치 분석 실행
   const handleBatchAnalysis = async () => {
     if (selectedParcelIds.size === 0) return;
@@ -515,8 +556,7 @@ export function BatchAnalysis({
                 {paginatedParcels.map((parcel, index) => (
                   <TableRow 
                     key={parcel.id} 
-                    className={`hover:bg-muted/50 cursor-pointer ${selectedParcelIds.has(parcel.id) ? 'bg-blue-50' : ''}`}
-                    onClick={() => handleParcelClick(parcel)}
+                    className={`hover:bg-muted/50 ${selectedParcelIds.has(parcel.id) ? 'bg-blue-50' : ''}`}
                   >
                     <TableCell className="text-center">
                       <input
@@ -530,7 +570,14 @@ export function BatchAnalysis({
                     <TableCell className="text-center text-muted-foreground">
                       {(currentPage - 1) * itemsPerPage + index + 1}
                     </TableCell>
-                    <TableCell className="font-medium max-w-[200px] truncate" title={parcel.landInfo.address}>
+                    <TableCell 
+                      className="font-medium max-w-[200px] truncate underline cursor-pointer hover:text-primary" 
+                      title={parcel.landInfo.address}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleParcelClick(parcel);
+                      }}
+                    >
                       {parcel.landInfo.address}
                     </TableCell>
                     <TableCell>{parcel.businessUnit || "-"}</TableCell>
@@ -544,12 +591,13 @@ export function BatchAnalysis({
                         <Button
                           variant="cta-outline"
                           className="h-7 px-2 text-xs"
+                          disabled={isAnalyzing}
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleParcelClick(parcel);
+                            handleSingleAnalysis(parcel.id);
                           }}
                         >
-                          분석
+                          {isAnalyzing ? "분석중..." : "분석"}
                         </Button>
                       )}
                     </TableCell>
