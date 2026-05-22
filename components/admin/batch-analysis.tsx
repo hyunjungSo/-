@@ -490,11 +490,11 @@ export function BatchAnalysis({
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[80px]">
-                  <label className="flex items-center gap-2 cursor-pointer">
+          <div className="overflow-x-auto border rounded-lg">
+            <Table>
+              <TableHeader className="bg-muted/50">
+                <TableRow>
+                  <TableHead className="w-12 text-center">
                     <input
                       type="checkbox"
                       checked={selectedParcelIds.size === filteredParcels.length && filteredParcels.length > 0}
@@ -502,87 +502,86 @@ export function BatchAnalysis({
                       className="w-4 h-4 cursor-pointer"
                       title="모두 선택"
                     />
-
-                  </label>
-                </TableHead>
-                <TableHead className="w-[60px]">No.</TableHead>
-                <TableHead>소재지</TableHead>
-                <TableHead>사업단</TableHead>
-                <TableHead>면적(㎡)</TableHead>
-                <TableHead>AI 판정</TableHead>
-                <TableHead>관리</TableHead>
-                <TableHead>분석 횟수</TableHead>
-                <TableHead>최종 분석일</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {paginatedParcels.map((parcel, index) => (
-                <TableRow 
-                  key={parcel.id} 
-                  className="hover:bg-muted/50 cursor-pointer"
-                  onClick={() => handleParcelClick(parcel)}
-                >
-                  <TableCell className="text-center">
-                    <input
-                      type="checkbox"
-                      checked={selectedParcelIds.has(parcel.id)}
-                      onChange={() => handleToggleParcelSelection(parcel.id)}
-                      className="w-4 h-4 cursor-pointer"
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </TableCell>
-                  <TableCell className="text-center text-muted-foreground">{(currentPage - 1) * itemsPerPage + index + 1}</TableCell>
-                  <TableCell className="font-medium">
-                    {parcel.landInfo.address}
-                  </TableCell>
-                  <TableCell>
-                    {parcel.businessUnit || "-"}
-                  </TableCell>
-                  <TableCell>
-                    {parcel.landInfo.remainingArea.toLocaleString()}
-                  </TableCell>
-                  <TableCell>
-                    {parcel.aiResult ? (
-                      <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
-                    ) : (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-[#2E8B57] text-[#2E8B57] hover:bg-[#2E8B57] hover:text-white"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleParcelClick(parcel);
-                        }}
-                      >
-                        분석
-                      </Button>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-center p-2">
-                    <div className="flex items-center justify-center gap-1">
-                      <span className="text-sm">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
-                      {(parcel.citizenActivity?.applicationSubmitted || parcel.citizenActivity?.inCart) && (
-                        <Lock className="h-3 w-3 text-orange-500" />
+                  </TableHead>
+                  <TableHead className="w-12 text-center">No.</TableHead>
+                  <TableHead>소재지</TableHead>
+                  <TableHead>사업단</TableHead>
+                  <TableHead className="text-right">면적(㎡)</TableHead>
+                  <TableHead className="text-center">AI 판정</TableHead>
+                  <TableHead className="text-center">관리</TableHead>
+                  <TableHead className="text-center">분석 횟수</TableHead>
+                  <TableHead className="text-center">최종 분석일</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginatedParcels.map((parcel, index) => (
+                  <TableRow 
+                    key={parcel.id} 
+                    className={`hover:bg-muted/50 cursor-pointer ${selectedParcelIds.has(parcel.id) ? 'bg-blue-50' : ''}`}
+                    onClick={() => handleParcelClick(parcel)}
+                  >
+                    <TableCell className="text-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedParcelIds.has(parcel.id)}
+                        onChange={() => handleToggleParcelSelection(parcel.id)}
+                        className="w-4 h-4 cursor-pointer"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </TableCell>
+                    <TableCell className="text-center text-muted-foreground">
+                      {(currentPage - 1) * itemsPerPage + index + 1}
+                    </TableCell>
+                    <TableCell className="font-medium max-w-[200px] truncate" title={parcel.landInfo.address}>
+                      {parcel.landInfo.address}
+                    </TableCell>
+                    <TableCell>{parcel.businessUnit || "-"}</TableCell>
+                    <TableCell className="text-right">
+                      {parcel.landInfo.remainingArea.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {parcel.aiResult ? (
+                        <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-[#2E8B57] text-[#2E8B57] hover:bg-[#2E8B57] hover:text-white"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleParcelClick(parcel);
+                          }}
+                        >
+                          분석
+                        </Button>
                       )}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-sm">{parcel.analysisHistory?.length || 0}회</span>
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {parcel.lastAnalyzedAt ? formatDateTime(parcel.lastAnalyzedAt) : "-"}
-                  </TableCell>
-                </TableRow>
-              ))}
-              {filteredParcels.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                    조건에 맞는 필지가 없습니다.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <span className="text-sm">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
+                        {(parcel.citizenActivity?.applicationSubmitted || parcel.citizenActivity?.inCart) && (
+                          <Lock className="h-3 w-3 text-orange-500" />
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <span className="text-sm">{parcel.analysisHistory?.length || 0}회</span>
+                    </TableCell>
+                    <TableCell className="text-center text-sm text-muted-foreground">
+                      {parcel.lastAnalyzedAt ? formatDateTime(parcel.lastAnalyzedAt) : "-"}
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {filteredParcels.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                      조건에 맞는 필지가 없습니다.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
           
           {/* 페이지네이션 */}
           {totalPages > 1 && (
