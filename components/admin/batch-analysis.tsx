@@ -33,7 +33,8 @@ import {
   XCircle, 
   Lock,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Loader2
 } from "lucide-react";
 import { 
   SearchInput, 
@@ -171,7 +172,7 @@ export function BatchAnalysis({
 
   // 단일 필지 분석 실행
   const handleSingleAnalysis = async (parcelId: string) => {
-    setIsAnalyzing(true);
+    setAnalyzingParcelId(parcelId);
     try {
       const parcel = parcels.find(p => p.id === parcelId);
       if (!parcel) return;
@@ -206,7 +207,7 @@ export function BatchAnalysis({
           : p
       ));
     } finally {
-      setIsAnalyzing(false);
+      setAnalyzingParcelId(null);
     }
   };
 
@@ -585,19 +586,24 @@ export function BatchAnalysis({
                       {parcel.landInfo.remainingArea.toLocaleString()}
                     </TableCell>
                     <TableCell className="text-center">
-                      {parcel.aiResult ? (
+                      {analyzingParcelId === parcel.id ? (
+                        <div className="flex items-center justify-center gap-1">
+                          <Loader2 className="h-4 w-4 animate-spin text-[#2E8B57]" />
+                          <span className="text-xs text-[#2E8B57]">분석중</span>
+                        </div>
+                      ) : parcel.aiResult ? (
                         <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
                       ) : (
                         <Button
                           variant="cta-outline"
                           className="h-7 px-2 text-xs"
-                          disabled={isAnalyzing}
+                          disabled={analyzingParcelId !== null}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleSingleAnalysis(parcel.id);
                           }}
                         >
-                          {isAnalyzing ? "분석중..." : "분석"}
+                          분석
                         </Button>
                       )}
                     </TableCell>
