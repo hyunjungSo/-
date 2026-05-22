@@ -296,14 +296,9 @@ export function BatchAnalysis({
 
   // 관리(노출/미노출) 토글 핸들러 - 모달 표시
   const handleToggleVisibilityRequest = (parcelId: string, isVisible: boolean) => {
-    if (isVisible) {
-      // 공개로 변경 시 확인 모달 표시
-      setPendingVisibilityChange({ parcelId, isVisible });
-      setShowVisibilityModal(true);
-    } else {
-      // 미노출로 변경 시 바로 적용
-      handleToggleVisibility(parcelId, isVisible);
-    }
+    // 노출/미노출 모두 확인 모달 표시
+    setPendingVisibilityChange({ parcelId, isVisible });
+    setShowVisibilityModal(true);
   };
 
   // 실제 노출 상태 변경
@@ -321,8 +316,10 @@ export function BatchAnalysis({
     if (pendingVisibilityChange) {
       handleToggleVisibility(pendingVisibilityChange.parcelId, pendingVisibilityChange.isVisible);
       toast({
-        title: "공개 설정 완료",
-        description: "해당 필지가 민원인에게 공개되었습니다.",
+        title: pendingVisibilityChange.isVisible ? "공개 설정 완료" : "비공개 설정 완료",
+        description: pendingVisibilityChange.isVisible 
+          ? "해당 필지가 민원인에게 공개되었습니다." 
+          : "해당 필지가 민원인에게 비공개 처리되었습니다.",
         duration: 3500,
       });
     }
@@ -922,10 +919,21 @@ export function BatchAnalysis({
         <DialogContent className="max-w-md p-8 relative">
           {/* 우측 상단 닫기 버튼은 DialogContent 내부에서 자동 렌더링됨 */}
           <DialogHeader className="pr-8">
-            <DialogTitle className="text-xl">필지 정보 공개 확인</DialogTitle>
+            <DialogTitle className="text-xl">
+              {pendingVisibilityChange?.isVisible ? "필지 정보 공개 확인" : "필지 정보 비공개 확인"}
+            </DialogTitle>
             <DialogDescription className="pt-4 space-y-4 leading-7 text-base">
-              <p>해당 필지의 상세 정보와 AI 분석 결과를 민원인에게 공개하시겠습니까?</p>
-              <p>공개 시 민원인이 직접 정보를 조회하고 매수 신청을 진행할 수 있습니다.</p>
+              {pendingVisibilityChange?.isVisible ? (
+                <>
+                  <p>해당 필지의 상세 정보와 AI 분석 결과를 민원인에게 공개하시겠습니까?</p>
+                  <p>공개 시 민원인이 직접 정보를 조회하고 매수 신청을 진행할 수 있습니다.</p>
+                </>
+              ) : (
+                <>
+                  <p>해당 필지의 상세 정보와 AI 분석 결과를 민원인에게 비공개 처리하시겠습니까?</p>
+                  <p>비공개 시 민원인이 해당 필지 정보를 조회할 수 없습니다.</p>
+                </>
+              )}
             </DialogDescription>
           </DialogHeader>
           
@@ -942,9 +950,12 @@ export function BatchAnalysis({
             </Button>
             <Button 
               onClick={handleConfirmVisibilityChange}
-              className="bg-emerald-700 hover:bg-emerald-800 text-white"
+              className={pendingVisibilityChange?.isVisible 
+                ? "bg-emerald-700 hover:bg-emerald-800 text-white"
+                : "bg-gray-700 hover:bg-gray-800 text-white"
+              }
             >
-              공개하기
+              {pendingVisibilityChange?.isVisible ? "공개하기" : "비공개하기"}
             </Button>
           </DialogFooter>
         </DialogContent>
