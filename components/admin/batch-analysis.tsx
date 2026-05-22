@@ -352,6 +352,12 @@ export function BatchAnalysis({
 
   return (
     <div className="space-y-6">
+      {/* 타이틀 */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">AI 잔여지 매수 판단</h1>
+        <p className="text-muted-foreground mt-1">1차 확정된 잔여지 필지를 AI가 분석하여 매수 가능성을 판단합니다.</p>
+      </div>
+
       {/* 통계 카드 */}
       <div className="grid grid-cols-4 gap-3">
         {/* 매수 가능성 높음: Emerald */}
@@ -467,9 +473,9 @@ export function BatchAnalysis({
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>잔여지 필지 목록</CardTitle>
+              <CardTitle>AI 잔여지 매수 판단 목록</CardTitle>
               <CardDescription>
-                분석할 필지를 선택하고 일괄 분석을 실행하세요. 2차 분석은 여러 번 실행할 수 있습니다.
+                1차 확정된 필지를 확인하고 AI 분석을 실행하세요. 행을 클릭하면 필지상세 화면으로 이동합니다.
               </CardDescription>
             </div>
             {selectedParcelIds.size > 0 && (
@@ -512,7 +518,8 @@ export function BatchAnalysis({
               {paginatedParcels.map((parcel, index) => (
                 <TableRow 
                   key={parcel.id} 
-                  className="hover:bg-muted/50"
+                  className="hover:bg-muted/50 cursor-pointer"
+                  onClick={() => handleParcelClick(parcel)}
                 >
                   <TableCell className="text-center">
                     <input
@@ -524,13 +531,10 @@ export function BatchAnalysis({
                     />
                   </TableCell>
                   <TableCell className="text-center text-muted-foreground">{(currentPage - 1) * itemsPerPage + index + 1}</TableCell>
-                  <TableCell 
-                    className="font-medium cursor-pointer"
-                    onClick={() => handleParcelClick(parcel)}
-                  >
+                  <TableCell className="font-medium">
                     {parcel.landInfo.address}
                   </TableCell>
-                  <TableCell className="cursor-pointer" onClick={() => handleParcelClick(parcel)}>
+                  <TableCell>
                     {parcel.landInfo.remainingArea.toLocaleString()}
                   </TableCell>
                   <TableCell>
@@ -540,14 +544,13 @@ export function BatchAnalysis({
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-foreground text-foreground hover:bg-foreground hover:text-background"
+                        className="border-[#2E8B57] text-[#2E8B57] hover:bg-[#2E8B57] hover:text-white"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleAnalyzeSingleParcel(parcel.id);
+                          handleParcelClick(parcel);
                         }}
-                        disabled={analyzingParcelId === parcel.id}
                       >
-                        {analyzingParcelId === parcel.id ? "분석 중..." : "분석"}
+                        분석
                       </Button>
                     )}
                   </TableCell>
