@@ -1,4 +1,4 @@
-import type { LandInfo, Application, AIAnalysisResult, JudgmentRationale, PreRegisteredParcel, ProcessedParcel, AnalysisHistory } from "./types";
+import type { LandInfo, Application, AIAnalysisResult, JudgmentRationale, PreRegisteredParcel, ProcessedParcel, AnalysisHistory, ResidualStatus } from "./types";
 
 // 동적 날짜+시간 생성 헬퍼 함수
 const getDateTimeString = (daysAgo: number, hour?: number, minute?: number): string => {
@@ -1428,7 +1428,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
       provisionalJudgment = "수용불가";
     }
   } else if (landInfo.landType === "택지" || landInfo.landType === "농지") {
-    // 택지/농지: 면적 기준 + 형상 조건 적용
+    // 택��/농지: 면적 기준 + 형상 조건 적용
     if (coreCriteriaMet || isIrregularShape || shapeIndexMet) {
       provisionalJudgment = "수용가능";
     } else {
@@ -1856,7 +1856,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       ownerContact: "010-1111-2222",
       hasIncludedLand: true,
       businessUnit: "수도권",
-      projectName: "용인-양지 도로확장사업",
+      projectName: "용인-양지 도로확장사���",
     },
     checkItems: {
       farmMachineDifficulty: false,
@@ -2141,7 +2141,7 @@ export const dummyApplications: Application[] = [
     statusUpdatedAt: TWO_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
-  // AI 판정 경계 사례 (심의위원회 이관 필요)
+  // AI 판정 ���계 사례 (심의위원회 이관 필요)
   {
     id: "app-006",
     applicationNumber: "2026-0406-001",
@@ -2507,7 +2507,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -2824,7 +2824,7 @@ export const dummyApplications: Application[] = [
     aiResult: {
       landTypePath: "산지",
       criteriaChecks: [
-        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100㎡로 조림지 분단", isMet: true, autoDetected: true },
+        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100㎡로 조림지 ��단", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },
       ],
@@ -3706,10 +3706,12 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     registeredAt: THREE_WEEKS_AGO,
     registeredBy: "관리자",
     publishStatus: "1차분석완료",
+    residualStatus: "잔여지 인정",
     analysisHistory: dummyAnalysisHistory.filter(h => h.parcelId === "processed-001"),
     firstAnalyzedAt: TWO_WEEKS_AGO,
     lastAnalyzedAt: TWO_WEEKS_AGO,
     ownerIdentifier: "1234",
+    reportCompleted: true,
     citizenActivity: {
       inCart: true,
       cartAddedAt: ONE_WEEK_AGO,
@@ -3736,10 +3738,12 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     registeredAt: THREE_WEEKS_AGO,
     registeredBy: "관리자",
     publishStatus: "2차분석중",
+    residualStatus: "잔여지 인정",
     analysisHistory: dummyAnalysisHistory.filter(h => h.parcelId === "processed-002"),
     firstAnalyzedAt: TWO_WEEKS_AGO,
     lastAnalyzedAt: ONE_WEEK_AGO,
     ownerIdentifier: "5678",
+    reportCompleted: true,
     citizenActivity: {
       inCart: true,
       cartAddedAt: THREE_DAYS_AGO,
@@ -3766,6 +3770,7 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     registeredAt: ONE_MONTH_AGO,
     registeredBy: "관리자",
     publishStatus: "담당자확인완료",
+    residualStatus: "기준 미달",
     analysisHistory: dummyAnalysisHistory.filter(h => h.parcelId === "processed-003"),
     firstAnalyzedAt: THREE_WEEKS_AGO,
     lastAnalyzedAt: FIVE_DAYS_AGO,
