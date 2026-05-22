@@ -542,9 +542,9 @@ export function BatchAnalysis({
       
       <p className="text-muted-foreground -mt-4">편입 유형 분석 및 매수 가능성 심사를 관리합니다.</p>
 
-      {/* 통계 카드 - 7개 */}
+      {/* 통계 카드 - 7개 (업무 흐름 순서) */}
       <div className="grid grid-cols-7 gap-3">
-        {/* 전체 필지 */}
+        {/* 카드 1: 전체 필지 (Dark Gray) */}
         <div 
           className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-700 p-4 transition-all hover:bg-slate-800 border border-slate-600"
           onClick={() => {
@@ -559,19 +559,19 @@ export function BatchAnalysis({
           </div>
         </div>
 
-        {/* 판독 대기 (1차 편입 유형 분석 전) */}
+        {/* 카드 2: 편입 판독 대기 (Light Gray) - 1차 편입 유형 판독 전 */}
         <div 
           className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-100 p-4 transition-all hover:bg-gray-200 border border-gray-300"
           onClick={() => setInclusionTypeFilter("pending")}
         >
-          <span className="text-sm font-medium text-gray-600">판독 대기</span>
+          <span className="text-sm font-medium text-gray-600">편입 판독 대기</span>
           <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
             <span className="font-bold text-gray-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.pendingInclusion}</span>
             <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
           </div>
         </div>
 
-        {/* 전체 편입 (잔여지 미발생) */}
+        {/* 카드 3: 전체 편입 (Blue) - 잔여지 미발생 */}
         <div 
           className="flex cursor-pointer flex-col items-center rounded-lg bg-blue-50 p-4 transition-all hover:bg-blue-100 border border-blue-200"
           onClick={() => setInclusionTypeFilter("full")}
@@ -583,31 +583,31 @@ export function BatchAnalysis({
           </div>
         </div>
         
-        {/* 부분 편입 (잔여지 발생) */}
+        {/* 카드 4: 부분 편입 (Teal/Green) - 잔여지 발생, AI 분석 대상 */}
         <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-emerald-50 p-4 transition-all hover:bg-emerald-100 border border-emerald-200"
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-teal-50 p-4 transition-all hover:bg-teal-100 border border-teal-200"
           onClick={() => setInclusionTypeFilter("partial")}
         >
-          <span className="text-sm font-medium text-emerald-600">부분 편입</span>
+          <span className="text-sm font-medium text-teal-600">부분 편입</span>
           <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-emerald-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.partialInclusion}</span>
+            <span className="font-bold text-teal-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.partialInclusion}</span>
             <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
           </div>
         </div>
         
-        {/* 심사 대기 (편입 유형 나왔으나 매수 가능성 분석 전) */}
+        {/* 카드 5: 매수 판독 대기 (Light Yellow/Amber) - 편입 유형 완료, AI 매수 분석 전 */}
         <div 
           className="flex cursor-pointer flex-col items-center rounded-lg bg-amber-50 p-4 transition-all hover:bg-amber-100 border border-amber-200"
           onClick={() => setAiJudgmentFilter("pending")}
         >
-          <span className="text-sm font-medium text-amber-600">심사 대기</span>
+          <span className="text-sm font-medium text-amber-600">매수 판독 대기</span>
           <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
             <span className="font-bold text-amber-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.pendingReview}</span>
             <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
           </div>
         </div>
 
-        {/* 매수 가능성 높음 */}
+        {/* 카드 6: 매수 가능성 높음 (Strong Green) */}
         <div 
           className="flex cursor-pointer flex-col items-center rounded-lg bg-green-100 p-4 transition-all hover:bg-green-200 border border-green-300"
           onClick={() => setAiJudgmentFilter("high")}
@@ -619,7 +619,7 @@ export function BatchAnalysis({
           </div>
         </div>
         
-        {/* 매수 가능성 낮음 */}
+        {/* 카드 7: 매수 가능성 낮음 (Soft Red/Orange) */}
         <div 
           className="flex cursor-pointer flex-col items-center rounded-lg bg-red-50 p-4 transition-all hover:bg-red-100 border border-red-200"
           onClick={() => setAiJudgmentFilter("low")}
@@ -660,7 +660,7 @@ export function BatchAnalysis({
                 onChange={(v) => setInclusionTypeFilter(v as "all" | "full" | "partial" | "pending")}
                 options={[
                   { value: "all", label: "전체" },
-                  { value: "pending", label: "판독 대기" },
+                  { value: "pending", label: "편입 판독 대기" },
                   { value: "full", label: "전체 편입" },
                   { value: "partial", label: "부분 편입" }
                 ]}
@@ -674,7 +674,7 @@ export function BatchAnalysis({
                 onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low" | "pending")}
                 options={[
                   { value: "all", label: "전체" },
-                  { value: "pending", label: "심사 대기" },
+                  { value: "pending", label: "매수 판독 대기" },
                   { value: "high", label: "높음" },
                   { value: "low", label: "낮음" }
                 ]}
@@ -803,7 +803,7 @@ export function BatchAnalysis({
                           <span className="text-xs text-[#2E8B57]">분석중</span>
                         </div>
                       ) : parcel.residualStatus === "잔여지 인정" ? (
-                        <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-0">
+                        <Badge className="bg-teal-100 text-teal-700 hover:bg-teal-100 border-0">
                           부분 편입
                         </Badge>
                       ) : parcel.residualStatus === "기준 미달" ? (
@@ -812,7 +812,7 @@ export function BatchAnalysis({
                         </Badge>
                       ) : (
                         <Badge className="bg-gray-100 text-gray-500 hover:bg-gray-100 border-0">
-                          판독 대기
+                          편입 판독 대기
                         </Badge>
                       )}
                     </TableCell>
@@ -826,8 +826,8 @@ export function BatchAnalysis({
                       ) : parcel.aiResult ? (
                         <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
                       ) : (
-                        <Badge className="bg-gray-100 text-gray-500 hover:bg-gray-100 border-0">
-                          심사 대기
+                        <Badge className="bg-amber-100 text-amber-600 hover:bg-amber-100 border-0">
+                          매수 판독 대기
                         </Badge>
                       )}
                     </TableCell>
@@ -919,29 +919,30 @@ export function BatchAnalysis({
 
       {/* 관리 토글 확인 모달 */}
       <Dialog open={showVisibilityModal} onOpenChange={setShowVisibilityModal}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>필지 정보 공개 확인</DialogTitle>
-            <DialogDescription className="pt-2 leading-relaxed">
-              해당 필지의 상세 정보와 AI 분석 결과를 민원인에게 공개하시겠습니까?
-              <br /><br />
-              공개 시 민원인이 직접 정보를 조회하고 매수 신청을 진행할 수 있습니다.
+        <DialogContent className="max-w-md p-8 relative">
+          {/* 우측 상단 닫기 버튼은 DialogContent 내부에서 자동 렌더링됨 */}
+          <DialogHeader className="pr-8">
+            <DialogTitle className="text-xl">필지 정보 공개 확인</DialogTitle>
+            <DialogDescription className="pt-4 space-y-4 leading-7 text-base">
+              <p>해당 필지의 상세 정보와 AI 분석 결과를 민원인에게 공개하시겠습니까?</p>
+              <p>공개 시 민원인이 직접 정보를 조회하고 매수 신청을 진행할 수 있습니다.</p>
             </DialogDescription>
           </DialogHeader>
           
-          <DialogFooter className="gap-3 sm:gap-3">
+          <DialogFooter className="gap-4 sm:gap-4 mt-6">
             <Button 
               variant="outline" 
               onClick={() => {
                 setShowVisibilityModal(false);
                 setPendingVisibilityChange(null);
               }}
+              className="border-gray-200 text-gray-600 bg-gray-50 hover:bg-gray-100 hover:text-gray-700"
             >
               취소
             </Button>
             <Button 
-              variant="cta"
               onClick={handleConfirmVisibilityChange}
+              className="bg-emerald-700 hover:bg-emerald-800 text-white"
             >
               공개하기
             </Button>
