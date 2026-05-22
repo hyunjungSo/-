@@ -501,11 +501,11 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
                         <Badge 
                           className={
                             parcel.aiResult === "해당" 
-                              ? "bg-green-100 text-green-700 hover:bg-green-100"
-                              : "bg-red-100 text-red-700 hover:bg-red-100"
+                              ? "bg-success/10 text-success hover:bg-success/10"
+                              : "bg-destructive/10 text-destructive hover:bg-destructive/10"
                           }
                         >
-                          {parcel.aiResult}
+                          {parcel.aiResult === "해당" ? "잔여지 인정" : "잔여지 미인정"}
                         </Badge>
                       ) : (
                         <Button
