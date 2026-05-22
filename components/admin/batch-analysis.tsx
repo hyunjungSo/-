@@ -108,6 +108,8 @@ export function BatchAnalysis({
   // 배치 분석을 위한 필지 선택
   const [selectedParcelIds, setSelectedParcelIds] = useState<Set<string>>(new Set());
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isResidualAnalyzing, setIsResidualAnalyzing] = useState(false);
+  const [isPurchaseAnalyzing, setIsPurchaseAnalyzing] = useState(false);
   const [analyzingParcelId, setAnalyzingParcelId] = useState<string | null>(null);
 
   // 필지 선택/해제 토글
@@ -217,7 +219,7 @@ export function BatchAnalysis({
   const handleBatchAnalysis = async () => {
     if (selectedParcelIds.size === 0) return;
 
-    setIsAnalyzing(true);
+    setIsPurchaseAnalyzing(true);
     try {
       // 선택된 필지들에 대해 분석 수행
       const parcelsToAnalyze = parcels.filter(p => selectedParcelIds.has(p.id));
@@ -263,7 +265,7 @@ export function BatchAnalysis({
       setSelectedParcelIds(new Set());
       onAnalysisComplete?.();
     } finally {
-      setIsAnalyzing(false);
+      setIsPurchaseAnalyzing(false);
     }
   };
 
@@ -281,7 +283,7 @@ export function BatchAnalysis({
   const handleResidualJudgment = async () => {
     if (selectedParcelIds.size === 0) return;
     
-    setIsAnalyzing(true);
+    setIsResidualAnalyzing(true);
     try {
       // 분석 시뮬레이션 (1초 딜레이)
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -323,7 +325,7 @@ export function BatchAnalysis({
       onParcelsUpdate?.(updatedParcels);
       setSelectedParcelIds(new Set());
     } finally {
-      setIsAnalyzing(false);
+      setIsResidualAnalyzing(false);
     }
   };
 
@@ -621,11 +623,11 @@ export function BatchAnalysis({
             <div className="flex items-center gap-2">
               <Button
                 onClick={handleResidualJudgment}
-                disabled={selectedParcelIds.size === 0 || isAnalyzing}
+                disabled={selectedParcelIds.size === 0 || isResidualAnalyzing || isPurchaseAnalyzing}
                 variant="cta-outline"
                 className="whitespace-nowrap"
               >
-                {isAnalyzing ? (
+                {isResidualAnalyzing ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                     판독 중...
@@ -636,11 +638,11 @@ export function BatchAnalysis({
               </Button>
               <Button
                 onClick={handleBatchAnalysis}
-                disabled={selectedParcelIds.size === 0 || isAnalyzing}
+                disabled={selectedParcelIds.size === 0 || isResidualAnalyzing || isPurchaseAnalyzing}
                 variant="cta"
                 className="whitespace-nowrap"
               >
-                {isAnalyzing ? (
+                {isPurchaseAnalyzing ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                     분석 중...
