@@ -745,7 +745,7 @@ export function BatchAnalysis({
                             disabled={true}
                             className="data-[state=checked]:bg-[#2E8B57] opacity-50"
                           />
-                          <span className="text-sm text-muted-foreground">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
+                          <span className="text-sm text-muted-foreground w-[42px] text-left">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
                         </div>
                       ) : (
                         <div className="flex items-center justify-center gap-1.5">
@@ -754,7 +754,7 @@ export function BatchAnalysis({
                             onCheckedChange={(checked) => handleToggleVisibility(parcel.id, checked)}
                             className="data-[state=checked]:bg-[#2E8B57]"
                           />
-                          <span className="text-sm text-muted-foreground">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
+                          <span className="text-sm text-muted-foreground w-[42px] text-left">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
                         </div>
                       )}
                     </TableCell>
