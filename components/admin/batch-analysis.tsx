@@ -452,7 +452,7 @@ export function BatchAnalysis({
     }));
   };
 
-  // 미노출 처리
+  // 미노�� 처리
   const handleUnpublish = (parcelId: string) => {
     setParcels(prev => prev.map(p => {
       if (p.id === parcelId) {
@@ -671,7 +671,7 @@ export function BatchAnalysis({
                   <TableHead className="w-12 text-center">No.</TableHead>
                   <TableHead>소재지</TableHead>
                   <TableHead>사업단</TableHead>
-                  <TableHead className="text-right">면적(㎡)</TableHead>
+                  <TableHead className="text-center">면적(㎡)</TableHead>
                   <TableHead className="text-center">잔여지 판정</TableHead>
                   <TableHead className="text-center">매수 가능성</TableHead>
                   <TableHead className="text-center">관리</TableHead>
@@ -789,7 +789,7 @@ export function BatchAnalysis({
                 이전
               </PaginationNavButton>
               
-              {/* 페이지 번호 */}
+              {/* 페이지 번��� */}
               <div className="flex items-center gap-1">
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                   let pageNum;
