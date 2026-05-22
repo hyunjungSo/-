@@ -452,7 +452,7 @@ export function BatchAnalysis({
     }));
   };
 
-  // 미노��� 처리
+  // 미노���� 처리
   const handleUnpublish = (parcelId: string) => {
     setParcels(prev => prev.map(p => {
       if (p.id === parcelId) {
@@ -711,7 +711,12 @@ export function BatchAnalysis({
                     </TableCell>
                     {/* 잔여지 판정 컬럼 */}
                     <TableCell className="text-center">
-                      {parcel.residualStatus === "잔여지 인정" ? (
+                      {isResidualAnalyzing && selectedParcelIds.has(parcel.id) ? (
+                        <div className="flex items-center justify-center gap-1">
+                          <Loader2 className="h-4 w-4 animate-spin text-[#2E8B57]" />
+                          <span className="text-xs text-[#2E8B57]">판독중</span>
+                        </div>
+                      ) : parcel.residualStatus === "잔여지 인정" ? (
                         <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-0">
                           인정
                         </Badge>
@@ -727,10 +732,10 @@ export function BatchAnalysis({
                     </TableCell>
                     {/* 매수 가능성 컬럼 */}
                     <TableCell className="text-center">
-                      {analyzingParcelId === parcel.id ? (
+                      {isPurchaseAnalyzing && selectedParcelIds.has(parcel.id) ? (
                         <div className="flex items-center justify-center gap-1">
                           <Loader2 className="h-4 w-4 animate-spin text-[#2E8B57]" />
-                          <span className="text-xs text-[#2E8B57]">분석중</span>
+                          <span className="text-xs text-[#2E8B57]">판독중</span>
                         </div>
                       ) : parcel.aiResult ? (
                         <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
@@ -789,7 +794,7 @@ export function BatchAnalysis({
                 이전
               </PaginationNavButton>
               
-              {/* 페이지 번��� */}
+              {/* 페이��� 번��� */}
               <div className="flex items-center gap-1">
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                   let pageNum;
