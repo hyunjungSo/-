@@ -592,7 +592,7 @@ export function BatchAnalysis({
             <div className="flex flex-wrap items-center gap-6">
               {/* 잔여지 판정 필터 */}
               <RadioFilterGroup
-                label="잔여지 여부"
+                label="잔여지 판정"
                 name="residual-status"
                 value={residualStatusFilter}
                 onChange={(v) => setResidualStatusFilter(v as "all" | "approved" | "rejected")}
@@ -944,7 +944,7 @@ export function BatchAnalysis({
             ))}
             {selectedHistoryParcel?.analysisHistory.length === 0 && (
               <p className="text-center py-8 text-muted-foreground">
-                분석 히스토리가 없습니다.
+                분석 히스토리가 없��니다.
               </p>
             )}
           </div>
