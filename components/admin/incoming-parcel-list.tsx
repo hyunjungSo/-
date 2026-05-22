@@ -421,13 +421,14 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
           {/* 액션 버튼 영역 */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-                        <Button
-                          variant="cta-outline"
-                          className="h-7 px-2 text-xs"
-                          onClick={() => handleAIAnalysis(parcel.id)}
-                        >
-                          분석
-                        </Button>
+              <Button
+                onClick={handleBatchAIAnalysis}
+                disabled={selectedIds.size === 0 || analyzingIds.size > 0}
+                variant="cta"
+              >
+                <Brain className="h-4 w-4 mr-2" />
+                선택 필지 AI 분석 ({selectedIds.size}건)
+              </Button>
               <Button
                 onClick={handleConfirmSelected}
                 disabled={selectedIds.size === 0}
