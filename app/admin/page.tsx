@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 type ActiveTab = 
   | "applications" 
   | "incoming-parcels"    // 발생 잔여지 판독
-  | "ai-judgment"         // AI 잔여지 매수 판단
+  | "ai-judgment"         // AI 매수 판단
   | "parcel-review";      // 필지상세
 
 export default function AdminPage() {
@@ -68,7 +68,7 @@ export default function AdminPage() {
     setActiveTab("ai-judgment");
   };
 
-  // 발생 잔여지 판독에서 확정된 필지를 AI 잔여지 매수 판단 목록으로 이동
+  // 발생 잔여지 판독에서 확정된 필지를 AI 매수 판단 목록으로 이동
   const handleConfirmParcels = (confirmedParcels: any[]) => {
     // 실제로는 API 호출 후 processedParcels에 추가
     // 여기서는 데모용으로 간단히 처리
@@ -141,7 +141,7 @@ export default function AdminPage() {
                     <span>발생 잔여지 판독</span>
                   </button>
 
-                  {/* 서브메뉴 2: AI 잔여지 매수 판단 */}
+                  {/* 서브메뉴 2: AI 매수 판단 */}
                   <button
                     onClick={() => {
                       setActiveTab("ai-judgment");
@@ -155,7 +155,7 @@ export default function AdminPage() {
                     )}
                   >
                     <Brain className="h-4 w-4" />
-                    <span>AI 잔여지 매수 판단</span>
+                    <span>AI 매수 판단</span>
                   </button>
                 </div>
               )}
@@ -192,7 +192,7 @@ export default function AdminPage() {
           <IncomingParcelList onConfirmParcels={handleConfirmParcels} />
         )}
 
-        {/* AI 잔여지 매수 판단 콘텐츠 */}
+        {/* AI 매수 판단 콘텐츠 */}
         {activeTab === "ai-judgment" && (
           <BatchAnalysis 
             parcels={processedParcels}

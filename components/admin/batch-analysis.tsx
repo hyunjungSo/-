@@ -355,7 +355,7 @@ export function BatchAnalysis({
     <div className="space-y-6">
       {/* 타이틀 */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">AI 잔여지 매수 판단</h1>
+        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">AI 매수 판단</h1>
         <p className="text-muted-foreground mt-1">1차 확정된 잔여지 필지를 AI가 분석하여 매수 가능성을 판단합니다.</p>
       </div>
 
@@ -474,7 +474,7 @@ export function BatchAnalysis({
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>AI 잔여지 매수 판단 목록</CardTitle>
+              <CardTitle>AI 매수 판단 목록</CardTitle>
               <CardDescription>
                 1차 확정된 필지를 확인하고 AI 분석을 실행하세요. 행을 클릭하면 필지상세 화면으로 이동합니다.
               </CardDescription>
