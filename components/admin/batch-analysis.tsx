@@ -606,10 +606,25 @@ export function BatchAnalysis({
               ]}
             />
             
-            {/* 선택 필지 잔여지 판정 실행 버튼 */}
-            <div className="ml-auto">
+            {/* 잔여지 판정 & 매수 판정 버튼 */}
+            <div className="ml-auto flex items-center gap-2">
               <Button
                 onClick={handleResidualJudgment}
+                disabled={selectedParcelIds.size === 0 || isAnalyzing}
+                variant="cta-outline"
+                className="whitespace-nowrap"
+              >
+                {isAnalyzing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    판정 중...
+                  </>
+                ) : (
+                  `잔여지 판정 (${selectedParcelIds.size}건)`
+                )}
+              </Button>
+              <Button
+                onClick={handleBatchAnalysis}
                 disabled={selectedParcelIds.size === 0 || isAnalyzing}
                 variant="cta"
                 className="whitespace-nowrap"
@@ -617,10 +632,10 @@ export function BatchAnalysis({
                 {isAnalyzing ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    판정 실행 중...
+                    분석 중...
                   </>
                 ) : (
-                  `선택 필지 잔여지 판정 실행 (${selectedParcelIds.size}건)`
+                  `매수 판정 (${selectedParcelIds.size}건)`
                 )}
               </Button>
             </div>
