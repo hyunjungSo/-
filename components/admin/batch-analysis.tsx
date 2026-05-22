@@ -100,6 +100,10 @@ export function BatchAnalysis({
     }
   }, [businessUnits, businessUnitFilter]);
   
+  // 페이지네이션
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
+  
   // 토스트
   const { toast } = useToast();
 
