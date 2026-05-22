@@ -83,10 +83,10 @@ export function BatchAnalysis({
   const [searchQuery, setSearchQuery] = useState("");
   
   // 필터 (라디오 버튼)
-  const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low">("all");
+  const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low" | "pending">("all");
   const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("all");
   const [visibilityFilter, setVisibilityFilter] = useState<"all" | "visible" | "hidden">("all");
-  const [residualStatusFilter, setResidualStatusFilter] = useState<"all" | "approved" | "rejected">("all");
+  const [residualStatusFilter, setResidualStatusFilter] = useState<"all" | "approved" | "rejected" | "pending">("all");
   
   // 페이지네이션
   const [currentPage, setCurrentPage] = useState(1);
@@ -347,9 +347,14 @@ export function BatchAnalysis({
       
       // AI 판정 필터 (라디오)
       if (aiJudgmentFilter !== "all") {
-        const isHigh = isHighPossibility(parcel.aiResult.provisionalJudgment);
-        if (aiJudgmentFilter === "high" && !isHigh) return false;
-        if (aiJudgmentFilter === "low" && isHigh) return false;
+        if (aiJudgmentFilter === "pending") {
+          if (parcel.aiResult) return false;
+        } else {
+          if (!parcel.aiResult) return false;
+          const isHigh = isHighPossibility(parcel.aiResult.provisionalJudgment);
+          if (aiJudgmentFilter === "high" && !isHigh) return false;
+          if (aiJudgmentFilter === "low" && isHigh) return false;
+        }
       }
       
       // 관리(노출/미노출) 필터
@@ -361,8 +366,12 @@ export function BatchAnalysis({
       
       // 잔여지 판정 필터
       if (residualStatusFilter !== "all") {
-        if (residualStatusFilter === "approved" && parcel.residualStatus !== "잔여지 인정") return false;
-        if (residualStatusFilter === "rejected" && parcel.residualStatus !== "기준 미달") return false;
+        if (residualStatusFilter === "pending") {
+          if (parcel.residualStatus) return false;
+        } else {
+          if (residualStatusFilter === "approved" && parcel.residualStatus !== "잔여지 인정") return false;
+          if (residualStatusFilter === "rejected" && parcel.residualStatus !== "기준 미달") return false;
+        }
       }
       
       return true;
@@ -464,7 +473,7 @@ export function BatchAnalysis({
 
   return (
     <div className="space-y-6">
-      {/* 타이����������������� */}
+      {/* 타이������������������� */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground sm:text-3xl">필지관리</h1>
         <p className="text-muted-foreground mt-1">잔여지 판정 및 매수 가능성 분석을 관리합니다.</p>
@@ -573,9 +582,10 @@ export function BatchAnalysis({
                 label="잔여지 판정"
                 name="residual-status"
                 value={residualStatusFilter}
-                onChange={(v) => setResidualStatusFilter(v as "all" | "approved" | "rejected")}
+                onChange={(v) => setResidualStatusFilter(v as "all" | "approved" | "rejected" | "pending")}
                 options={[
                   { value: "all", label: "전체" },
+                  { value: "pending", label: "대기중" },
                   { value: "approved", label: "인정" },
                   { value: "rejected", label: "미인정" }
                 ]}
@@ -586,9 +596,10 @@ export function BatchAnalysis({
                 label="매수 가능성"
                 name="ai-judgment"
                 value={aiJudgmentFilter}
-                onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low")}
+                onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low" | "pending")}
                 options={[
                   { value: "all", label: "전체" },
+                  { value: "pending", label: "대기중" },
                   { value: "high", label: "높음" },
                   { value: "low", label: "낮음" }
                 ]}
