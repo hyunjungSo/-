@@ -464,7 +464,7 @@ export function BatchAnalysis({
 
   return (
     <div className="space-y-6">
-      {/* 타이��������������� */}
+      {/* 타이����������������� */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground sm:text-3xl">필지관리</h1>
         <p className="text-muted-foreground mt-1">잔여지 판정 및 매수 가능성 분석을 관리합니다.</p>
@@ -618,7 +618,7 @@ export function BatchAnalysis({
             <div>
               <CardTitle>필지 관리 목록</CardTitle>
               <CardDescription>
-                잔여지 판정 및 매수 가능성 분석 결과를 확인하��요. 소재지를 클릭하면 필지 상세 화면으로 이동합니다.
+                잔여지 판정 및 매수 가능성 분석 결과를 확인하세요. 소재지를 클릭하면 필지 상세 화면으로 이동합니다.
               </CardDescription>
             </div>
             {/* 잔여지 판정 & 매수 판정 버튼 */}
