@@ -61,24 +61,24 @@ interface ApplicationDetailProps {
   onSave: (application: Application) => void;
 }
 
-// 담당자 판정 (매수/기각/심의위원회 이관) - JUDGMENT_COLORS 기반
+// 담당자 판정 (매수 가능성 높음/매수 가능성 낮음/추가 검토 필요) - JUDGMENT_COLORS 기반
 const judgmentConfig = {
   매수: { 
-    label: "매수", 
+    label: "매수 가능성 높음", 
     icon: CheckCircle2, 
     borderColor: JUDGMENT_COLORS.매수.border, 
     textColor: JUDGMENT_COLORS.매수.text, 
     color: JUDGMENT_COLORS.매수.text 
   },
   기각: { 
-    label: "기각", 
+    label: "매수 가능성 낮음", 
     icon: XCircle, 
     borderColor: JUDGMENT_COLORS.기각.border, 
     textColor: JUDGMENT_COLORS.기각.text, 
     color: JUDGMENT_COLORS.기각.text 
   },
   "심의위원회 이관": { 
-    label: "심의위원회 이관", 
+    label: "추가 검토 필요", 
     icon: AlertTriangle, 
     borderColor: JUDGMENT_COLORS.이관.border, 
     textColor: JUDGMENT_COLORS.이관.text, 
@@ -2106,7 +2106,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
               
               return (
                 <div className="space-y-6">
-                  {/* 담당자 판정 (매수/기각/심의위원회 이관) */}
+                  {/* 담당자 판정 (매수 가능성 높음/매수 가능성 낮음/추가 검토 필요) */}
                   <div className="space-y-3">
                     <Label className="text-sm font-medium">담당자 판정</Label>
                     <div className="flex flex-wrap gap-2">
@@ -2215,9 +2215,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 
                 // 판정 결과에 따른 JudgmentBadge 타입 매핑
                 const getJudgmentType = (j: string | null | undefined) => {
-                  if (j === "매수") return "매수";
-                  if (j === "기각") return "기각";
-                  if (j === "심의위원회 이관") return "이관";
+                  if (j === "매수") return "매수 가능성 높음";
+                  if (j === "기각") return "매수 가능성 낮음";
+                  if (j === "심의위원회 이관") return "추가 검토 필요";
                   return null;
                 };
                 
