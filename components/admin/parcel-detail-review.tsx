@@ -572,6 +572,54 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
         aiResult={selectedAnalysisResult}
         landInfo={parcel.landInfo}
       />
+
+      {/* 필지 정보 공개/비공개 확인 모달 */}
+      <Dialog open={showVisibilityConfirmModal} onOpenChange={setShowVisibilityConfirmModal}>
+        <DialogContent className="max-w-md p-8 relative">
+          <DialogHeader className="pr-8">
+            <DialogTitle className="text-xl">
+              {pendingVisibilityChange ? "필지 정보 공개 확인" : "필지 정보 비공개 확인"}
+            </DialogTitle>
+            <DialogDescription className="pt-4 space-y-4 leading-7 text-base" asChild>
+              <div>
+                {pendingVisibilityChange ? (
+                  <>
+                    <span className="block">해당 필지의 상세 정보와 AI 분석 결과를 민원인에게 공개하시겠습니까?</span>
+                    <span className="block">공개 시 민원인이 직접 정보를 조회하고 매수 신청을 진행할 수 있습니다.</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="block">해당 필지의 상세 정보와 AI 분석 결과를 민원인에게 비공개 처리하시겠습니까?</span>
+                    <span className="block">비공개 시 민원인이 해당 필지 정보를 조회할 수 없습니다.</span>
+                  </>
+                )}
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+          
+          <DialogFooter className="gap-4 sm:gap-4 mt-6">
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setShowVisibilityConfirmModal(false);
+                setPendingVisibilityChange(null);
+              }}
+              className="border-gray-200 text-gray-600 bg-gray-50 hover:bg-gray-100 hover:text-gray-700"
+            >
+              취소
+            </Button>
+            <Button 
+              onClick={handleConfirmVisibilityChange}
+              className={pendingVisibilityChange 
+                ? "bg-emerald-700 hover:bg-emerald-800 text-white"
+                : "bg-gray-700 hover:bg-gray-800 text-white"
+              }
+            >
+              {pendingVisibilityChange ? "공개하기" : "비공개하기"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
