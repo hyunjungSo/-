@@ -553,7 +553,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     let judgment: "수용가능" | "수용불가" = "수용불가";
     let reasons: string[] = [];
     
-    // 1. 면적 기준 미달 여부
+    // 1. 면적 기�� 미달 여부
     const effectiveLimit = criteria.relaxed;
     const areaCheckMet = land.remainingArea <= effectiveLimit;
     criteriaChecks.push({
@@ -943,12 +943,26 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
           </Button>
           <h1 className="text-3xl font-bold">신청관리</h1>
         </div>
-        <Button variant="secondary" asChild>
-          <Link href={`/admin/review/${application.id}`}>
-            <FileText className="mr-2 h-4 w-4" />
-            심의서 작성
-          </Link>
-        </Button>
+        <div className="flex items-center gap-3">
+          {/* 사업단(지구) 선택 - 최상위 전역 필터 */}
+          <div className="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-lg border border-slate-200">
+            <span className="text-sm font-medium text-slate-600">현재 사업지구:</span>
+            <Select value={application.businessUnit || ""} disabled>
+              <SelectTrigger className="w-[220px] h-[38px] bg-white border-slate-300 font-medium">
+                <SelectValue placeholder="사업단 선택" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={application.businessUnit}>{application.businessUnit}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <Button variant="secondary" asChild>
+            <Link href={`/admin/review/${application.id}`}>
+              <FileText className="mr-2 h-4 w-4" />
+              심의서 작성
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {/* Section 01. 신청인 정보 */}
@@ -2168,7 +2182,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         <CardHeader>
           <CardTitle className="text-lg" style={{ fontSize: '20px' }}>진행상황 선택</CardTitle>
           <CardDescription>
-            민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다
+            민원인이 신청 현황 조�� 시 이 진행상황이 표시됩니다
           </CardDescription>
         </CardHeader>
         <CardContent>
