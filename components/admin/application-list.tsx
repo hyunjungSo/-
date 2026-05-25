@@ -595,15 +595,15 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               <div className="flex items-center justify-center gap-4 pt-2">
                 <div className="flex items-center gap-1.5">
                   <div className="h-2.5 w-2.5 rounded-sm bg-emerald-500" />
-                  <span className="text-xs text-muted-foreground">매수</span>
+                  <span className="text-xs text-muted-foreground">매수 가능성 높음</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <div className="h-2.5 w-2.5 rounded-sm bg-rose-500" />
-                  <span className="text-xs text-muted-foreground">기각</span>
+                  <span className="text-xs text-muted-foreground">매수 가능성 낮음</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <div className="h-2.5 w-2.5 rounded-sm bg-amber-500" />
-                  <span className="text-xs text-muted-foreground">이관</span>
+                  <span className="text-xs text-muted-foreground">추가 검토 필요</span>
                 </div>
               </div>
             </div>
