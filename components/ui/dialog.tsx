@@ -54,8 +54,16 @@ function DialogContent({
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean
 }) {
+  const [mounted, setMounted] = React.useState(false)
+  
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null
+
   return (
-    <DialogPortal data-slot="dialog-portal">
+    <DialogPrimitive.Portal container={document.body}>
       <DialogOverlay />
       <DialogPrimitive.Content
         data-slot="dialog-content"
@@ -64,9 +72,11 @@ function DialogContent({
           className,
         )}
         style={{
-          top: '50%',
-          left: '50%',
+          top: '50vh',
+          left: '50vw',
           transform: 'translate(-50%, -50%)',
+          maxHeight: '90vh',
+          overflowY: 'auto',
         }}
         {...props}
       >
@@ -81,7 +91,7 @@ function DialogContent({
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Content>
-    </DialogPortal>
+    </DialogPrimitive.Portal>
   )
 }
 
