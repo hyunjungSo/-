@@ -204,8 +204,8 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
       </div>
 
       {/* 필지 기본 정보 - 통합 헤더 레이아웃 */}
-      <Card className="border-2 border-slate-200">
-        <CardContent className="p-5">
+      <Card className="border-2 border-slate-200 px-6">
+        <CardContent className="p-0">
           {/* 상단: 소재지 + 민원 신청 상태 */}
           <div className="flex items-center justify-between pb-4 border-b border-slate-200">
             <span className="text-lg font-semibold text-foreground">{parcel.landInfo.address}</span>
@@ -306,7 +306,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* 지적도 */}
+            {/* 지��도 */}
             <div className="space-y-2">
               <Label className="font-medium">지적도</Label>
               <div className="h-[400px] rounded-lg overflow-hidden border bg-muted">
