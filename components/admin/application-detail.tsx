@@ -1510,7 +1510,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const adjacentParcels = [
                           {
                             id: "adjacent-001",
-                            address: "경기도 용인시 처인구 포곡읍 마성리 101",
+                            address: "경���도 용인시 처인구 포곡읍 마성리 101",
                             isIncluded: false,
                             isOwned: false,
                             isAdjacent: true,
@@ -1766,7 +1766,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                   </div>
                                   <div className="flex items-center gap-3 p-2">
                                     <span className={landOptions.accessRoadLost ? "text-primary font-medium" : "text-muted-foreground"}>
-                                      {landOptions.accessRoadLost ? "✓" : "−"} 접면도로 상실
+                                      {landOptions.accessRoadLost ? "✓" : "−"} 접면��로 상실
                                     </span>
                                   </div>
                                   <div className="flex items-center gap-3 p-2">
@@ -1860,7 +1860,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         </div>
                         <p className="text-lg font-medium text-muted-foreground mb-2">결과없음</p>
                         <p className="text-sm text-muted-foreground max-w-xs">
-                          좌측에서 검토 항목을 설정하고 AI 분석을 실행해 주세요.
+                          좌측에서 검�� 항목을 설정하고 AI 분석을 실행해 주세요.
                         </p>
                       </div>
                     ) : (
@@ -2126,6 +2126,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     <div className="flex flex-wrap gap-2">
                       {(["매수", "기각", "심의위원회 이관"] as FinalJudgmentResult[]).map((judgment) => {
                         const config = judgmentConfig[judgment];
+                        if (!config) return null;
                         const Icon = config.icon;
                         const isSelected = landReview.landJudgment === judgment;
                         return (
@@ -2187,8 +2188,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {(["접수완료", "진행중", "���사완료"] as AdminStatus[]).map((status) => {
+            {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
               const config = adminStatusConfig[status];
+              if (!config) return null;
               const Icon = config.icon;
               const isSelected = reviewData.adminStatus === status;
               return (
