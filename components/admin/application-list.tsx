@@ -600,31 +600,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   )}
                 </div>
               </div>
-                      )}
-                      {stats.finalReject > 0 && (
-                        <div 
-                          className="flex items-center justify-center bg-rose-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.finalReject / stats.심사완료) * 100}%` }}
-                        >
-                          {stats.finalReject}건
-                        </div>
-                      )}
-                      {stats.finalTransfer > 0 && (
-                        <div
-                          className="flex items-center justify-center bg-amber-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.finalTransfer / stats.심사완료) * 100}%` }}
-                        >
-                          {stats.finalTransfer}건
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-muted text-xs text-muted-foreground">
-                      데이터 없음
-                    </div>
-                  )}
-                </div>
-              </div>
               
               {/* 범례 */}
               <div className="flex items-center justify-center gap-4 pt-2">
