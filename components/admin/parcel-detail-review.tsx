@@ -55,15 +55,15 @@ interface ParcelDetailReviewProps {
   parcel: ProcessedParcel;
   onUpdate: (updatedParcel: ProcessedParcel) => void;
   onBack: () => void;
+  onNavigateToApplication?: (applicationId: string) => void;
 }
 
-export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailReviewProps) {
-  const router = useRouter();
+export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToApplication }: ParcelDetailReviewProps) {
   
   // 신청상세 화면으로 이동
   const handleNavigateToApplication = () => {
-    if (parcel.citizenActivity?.applicationId) {
-      router.push(`/admin/${parcel.citizenActivity.applicationId}`);
+    if (parcel.citizenActivity?.applicationId && onNavigateToApplication) {
+      onNavigateToApplication(parcel.citizenActivity.applicationId);
     }
   };
   
