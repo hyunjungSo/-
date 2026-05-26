@@ -219,7 +219,8 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
           {/* 상단: 소재지 + 민원 신청 상태 */}
           <div className="flex items-center justify-between pb-4 border-b border-slate-200">
             <span className="text-lg font-semibold text-foreground">{parcel.landInfo.address}</span>
-            {parcel.citizenActivity?.applicationSubmitted && (
+            {/* 편입 유형이 확정된 경우(부분 편입)에만 신청상세 보기 버튼 노출 */}
+            {parcel.residualStatus === "잔여지 인정" && parcel.citizenActivity?.applicationSubmitted && (
               <Badge 
                 className="bg-transparent text-emerald-700 hover:bg-transparent cursor-pointer"
                 onClick={handleNavigateToApplication}
