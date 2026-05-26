@@ -222,7 +222,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <MapPin className="h-5 w-5" />
             필지 정보
           </CardTitle>
         </CardHeader>
