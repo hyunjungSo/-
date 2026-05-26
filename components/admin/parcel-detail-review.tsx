@@ -211,8 +211,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
             <span className="text-lg font-semibold text-foreground">{parcel.landInfo.address}</span>
             {parcel.citizenActivity?.applicationSubmitted && (
               <Badge className="bg-amber-100 text-amber-800 border border-amber-300 hover:bg-amber-100 cursor-pointer">
-                <Lock className="h-3.5 w-3.5 mr-1.5" />
-                민원 신청 완료건 - 신청상세 보기
+                신청상세 보기
                 <ChevronRight className="h-3.5 w-3.5 ml-1" />
               </Badge>
             )}
