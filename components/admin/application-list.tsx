@@ -237,9 +237,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const finalCompleted = periodFilteredApplications.filter((a) => a.adminStatus === "심사완료");
     const completedCount = finalCompleted.length;
     
-    // AI 초기 판정: 매수가능/매수불가 (2가지만 존재, 이관 없음)
-    const aiPurchasable = Math.round(completedCount * 0.65);    // 매수가능 65%
-    const aiNotPurchasable = completedCount - aiPurchasable;     // 매수불가 35%
+    // AI 초기 판정: 매수가능/매수불가/추가검토필요 (3가지)
+    const aiPurchasable = Math.round(completedCount * 0.60);    // 매수가능 60%
+    const aiAdditionalReview = Math.max(1, Math.floor(completedCount * 0.08)); // 추가 검토 필요 8%
+    const aiNotPurchasable = completedCount - aiPurchasable - aiAdditionalReview; // 매수불가 32%
     const aiAnalyzed = completedCount;
     
     // AI 신뢰도 계산 로직:
@@ -281,9 +282,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       진행중,
       심사완료,
       aiAnalyzed,
-      aiPurchasable,    // AI 초기 판정: 매수가능
-      aiNotPurchasable, // AI 초기 판정: 매수불가
-      finalPurchase,    // 담당자 최종: 매수
+      aiPurchasable,        // AI 초기 판정: 매수가능
+      aiAdditionalReview,   // AI 초기 판정: 추가 검토 필요
+      aiNotPurchasable,     // AI 초기 판정: 매수불가
+      finalPurchase,        // 담당자 최종: 매수
       finalReject,      // 담당자 최종: 기각
       finalTransfer,    // 담당자 최종: 이관
       aiReliability,
@@ -521,7 +523,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             
             {/* 스택 바 비교 */}
             <div className="space-y-3" style={{ marginTop: '4px' }}>
-              {/* AI 초기 판정 막대 (매수가능/매수불가 2가지만) */}
+              {/* AI 초기 판정 막대 (매수가능/추가검토필요/매수불가 3가지) */}
               <div className="space-y-1.5">
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 초기 판정</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
@@ -533,6 +535,14 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                           style={{ width: `${(stats.aiPurchasable / stats.aiAnalyzed) * 100}%` }}
                         >
                           {stats.aiPurchasable}건
+                        </div>
+                      )}
+                      {stats.aiAdditionalReview > 0 && (
+                        <div 
+                          className="flex items-center justify-center bg-amber-500 text-xs font-semibold text-white"
+                          style={{ width: `${(stats.aiAdditionalReview / stats.aiAnalyzed) * 100}%` }}
+                        >
+                          {stats.aiAdditionalReview}건
                         </div>
                       )}
                       {stats.aiNotPurchasable > 0 && (
