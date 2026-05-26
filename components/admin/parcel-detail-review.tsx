@@ -248,7 +248,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                   checked={parcel.isVisible !== false}
                   disabled={isLockedByCitizen}
                   onCheckedChange={handleVisibilityChange}
-                  className="h-[18px] w-[30px] [&>span]:size-[14px] [&>span]:data-[state=checked]:translate-x-[12px]"
+                  className="h-[22px] w-[40px] [&>span]:size-[18px] [&>span]:data-[state=checked]:translate-x-[18px] [&>span]:data-[state=unchecked]:translate-x-[2px]"
                 />
                 <span className={`text-sm font-medium ${parcel.isVisible !== false ? "text-emerald-600" : "text-muted-foreground"}`}>
                   {parcel.isVisible !== false ? "공개" : "비공개"}
