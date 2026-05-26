@@ -170,7 +170,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       let savedComment = "";
       
       if (application.adminStatus === "심사완료") {
-        // 1. landJudgmentsForReview에서 필지별 판정 찾기
+        // 1. landJudgmentsForReview에서 필지별 판정 ��기
         const landJudgmentForReview = application.landJudgmentsForReview?.find(
           lj => lj.landId === land.id
         );
@@ -553,7 +553,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     let judgment: "수용가능" | "수용불가" = "수용불가";
     let reasons: string[] = [];
     
-    // 1. 면적 기��� 미달 여부
+    // 1. ���적 기��� 미달 여부
     const effectiveLimit = criteria.relaxed;
     const areaCheckMet = land.remainingArea <= effectiveLimit;
     criteriaChecks.push({
@@ -973,8 +973,20 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
               <p className="font-medium">{application.applicantAddress || "-"}</p>
             </div>
             <div>
-              <span className="text-sm text-muted-foreground">신청일</span>
-              <p className="font-medium">{application.appliedAt || "2026-05-01"}</p>
+              <span className="text-sm text-muted-foreground">신청일시</span>
+              <p className="font-medium">
+                {application.appliedAt
+                  ? new Date(application.appliedAt).toLocaleString('sv-SE', { 
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: undefined,
+                      hour12: false
+                    })
+                  : "2026-05-01 00:00"}
+              </p>
             </div>
           </div>
         </CardContent>
@@ -2240,7 +2252,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     className="inline-flex items-center gap-1.5 rounded-md border border-dashed border-border px-2 py-1 text-xs text-muted-foreground"
                   >
                     <span className="font-medium">{String.fromCharCode(65 + idx)}</span>
-                    <span>미검토</span>
+                    <span>미���토</span>
                   </span>
                 );
               })}

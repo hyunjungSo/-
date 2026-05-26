@@ -67,16 +67,6 @@ export default function AdminPage() {
     setActiveTab("parcel-management");
   };
 
-  // 필지상세에서 신청상세로 이동
-  const handleNavigateToApplication = (applicationId: string) => {
-    const application = applications.find(app => app.id === applicationId);
-    if (application) {
-      setSelectedApplication(application);
-      setSelectedParcel(null);
-      setActiveTab("applications");
-    }
-  };
-
   return (
     <div className="flex min-h-[calc(100vh-64px)]">
       {/* 왼쪽 SNB (Side Navigation Bar) */}
@@ -177,7 +167,6 @@ export default function AdminPage() {
             parcel={selectedParcel}
             onBack={handleParcelBack}
             onUpdate={handleParcelUpdate}
-            onNavigateToApplication={handleNavigateToApplication}
           />
         )}
       </main>
