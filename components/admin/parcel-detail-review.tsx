@@ -207,7 +207,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
             onCheckedChange={handleVisibilityChange}
           />
           <span className={`text-sm font-medium ${parcel.isVisible !== false ? "text-emerald-600" : "text-muted-foreground"}`}>
-            {parcel.isVisible !== false ? "노출" : "미노출"}
+            {parcel.isVisible !== false ? "공개" : "비공개"}
           </span>
           {isLockedByCitizen && (
             <span className="text-xs text-orange-500 ml-2">
