@@ -685,8 +685,8 @@ export function BatchAnalysis({
                 onChange={(v) => setVisibilityFilter(v as "all" | "visible" | "hidden")}
                 options={[
                   { value: "all", label: "전체" },
-                  { value: "visible", label: "노출" },
-                  { value: "hidden", label: "미노출" }
+                { value: "visible", label: "공개" },
+                { value: "hidden", label: "비공개" }
                 ]}
               />
             </div>
@@ -836,7 +836,7 @@ export function BatchAnalysis({
                           onCheckedChange={(checked) => handleToggleVisibilityRequest(parcel.id, checked)}
                           className="data-[state=checked]:bg-[#2E8B57]"
                         />
-                        <span className="text-sm text-muted-foreground w-[42px] text-left">{parcel.isVisible !== false ? "노출" : "미노출"}</span>
+                        <span className="text-sm text-muted-foreground w-[42px] text-left">{parcel.isVisible !== false ? "공개" : "비공개"}</span>
                       </div>
                     </TableCell>
                   </TableRow>
