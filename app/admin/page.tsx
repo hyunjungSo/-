@@ -155,26 +155,12 @@ export default function AdminPage() {
               </div>
             )}
             {selectedApplication ? (
-              <div>
-                <ApplicationDetail
-                  application={selectedApplication}
-                  onBack={handleBack}
-                  onSave={handleSave}
-                  onNavigateToList={handleNavigateToApplicationList}
-                />
-                {/* 하단 푸터 - 목록으로 돌아가기 버튼 */}
-                <div className="fixed bottom-0 left-0 right-0 flex justify-center bg-white border-t border-gray-200 py-4">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    onClick={handleNavigateToApplicationList}
-                    className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 text-base"
-                  >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    전체 신청 목록보기
-                  </Button>
-                </div>
-              </div>
+              <ApplicationDetail
+                application={selectedApplication}
+                onBack={handleBack}
+                onSave={handleSave}
+                onNavigateToList={handleNavigateToApplicationList}
+              />
             ) : (
               <ApplicationList
                 applications={applications}
