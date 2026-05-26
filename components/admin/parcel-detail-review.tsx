@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -58,6 +59,15 @@ interface ParcelDetailReviewProps {
 }
 
 export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailReviewProps) {
+  const router = useRouter();
+  
+  // 신청상세 화면으로 이동
+  const handleNavigateToApplication = () => {
+    if (parcel.citizenActivity?.applicationId) {
+      router.push(`/admin/${parcel.citizenActivity.applicationId}`);
+    }
+  };
+  
   // 분석 옵션 상태
   const [currentUsage, setCurrentUsage] = useState<LandCategory>(parcel.currentUsage);
   const [landShape, setLandShape] = useState<LandShape>(parcel.landShape);
@@ -210,7 +220,10 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
           <div className="flex items-center justify-between pb-4 border-b border-slate-200">
             <span className="text-lg font-semibold text-foreground">{parcel.landInfo.address}</span>
             {parcel.citizenActivity?.applicationSubmitted && (
-              <Badge className="bg-transparent text-emerald-700 hover:bg-transparent cursor-pointer">
+              <Badge 
+                className="bg-transparent text-emerald-700 hover:bg-transparent cursor-pointer"
+                onClick={handleNavigateToApplication}
+              >
                 신청상세 보기
                 <ChevronRight className="h-3.5 w-3.5 ml-1" />
               </Badge>
@@ -603,7 +616,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                 ) : (
                   <>
                     <span className="block">해당 필지의 상세 정보와 AI 분석 결과를 민원인에게 비공개 처리하시겠습니까?</span>
-                    <span className="block">비공개 시 민원인이 해당 필지 정보를 조회할 수 없습니다.</span>
+                    <span className="block">비공개 시 민원인이 해당 필지 정보를 조회할 수 ���습니다.</span>
                   </>
                 )}
               </div>
