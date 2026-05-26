@@ -591,7 +591,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
               <div>
                 {pendingVisibilityChange ? (
                   <>
-                    <span className="block">해당 필지의 상세 정보와 AI 분석 결과를 민원인에게 공개하시겠습니까?</span>
+                    <span className="block">해당 필지를 민원인에게 공개하시겠습니까?</span>
                     <span className="block">공개 시 민원인이 직접 정보를 조회하고 매수 신청을 진행할 수 있습니다.</span>
                   </>
                 ) : (
