@@ -489,7 +489,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
-              {/* ���사완료: Teal 계열 (완료 상태 강조) */}
+              {/* �����사완료: Teal 계열 (완료 상태 강조) */}
               <div 
                 onClick={() => setStatusFilter("심사완료")}
                 className="flex cursor-pointer flex-col items-center rounded-lg p-4 transition-all"
@@ -686,16 +686,16 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
 
           {/* 테이블 (데스크톱) */}
           <div className="hidden rounded-lg border border-border md:block">
-            <Table>
+            <Table className="table-fixed">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-center">접수번호</TableHead>
-                  <TableHead>신청인</TableHead>
-                  <TableHead>신청일시</TableHead>
-                  <TableHead>대상 지번</TableHead>
-                  <TableHead>담당자</TableHead>
-                  <TableHead>진행상황</TableHead>
-                  <TableHead>심사결과</TableHead>
+                  <TableHead className="text-center w-[100px]">접수번호</TableHead>
+                  <TableHead className="w-[100px]">신청인</TableHead>
+                  <TableHead className="w-[140px]">신청일시</TableHead>
+                  <TableHead className="w-[280px]">대상 지번</TableHead>
+                  <TableHead className="w-[80px]">담당자</TableHead>
+                  <TableHead className="w-[120px]">진행상황</TableHead>
+                  <TableHead className="w-[120px]">심사결과</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
