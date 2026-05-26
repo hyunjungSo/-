@@ -210,7 +210,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
           <div className="flex items-center justify-between pb-4 border-b border-slate-200">
             <span className="text-lg font-semibold text-foreground">{parcel.landInfo.address}</span>
             {parcel.citizenActivity?.applicationSubmitted && (
-              <Badge className="bg-amber-100 text-amber-800 border border-amber-300 hover:bg-amber-100 cursor-pointer">
+              <Badge className="bg-transparent text-emerald-700 hover:bg-transparent cursor-pointer">
                 신청상세 보기
                 <ChevronRight className="h-3.5 w-3.5 ml-1" />
               </Badge>
