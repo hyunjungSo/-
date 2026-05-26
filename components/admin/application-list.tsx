@@ -298,13 +298,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
 
   return (
     <div className="space-y-6">
-      {/* 타이틀 + 사업단(지구) 선택 영역 */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-foreground sm:text-3xl">신청 관리</h1>
-          </div>
-        </div>
+      {/* 사업단(지구) 선택 영역 */}
+      <div className="flex items-center justify-end">
         {/* 사업단(지구) 선택 - 최상위 전역 필터 */}
         <div className="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-lg border border-slate-200">
           <span className="text-sm font-medium text-slate-600">현재 사업지구:</span>
@@ -319,8 +314,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           </Select>
         </div>
       </div>
-      
-      <p className="text-muted-foreground -mt-4">잔여지 매수 신청 접수 및 심사를 관리합니다.</p>
 
       {/* 글로벌 필터 바 */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
