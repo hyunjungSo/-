@@ -820,7 +820,7 @@ export function BatchAnalysis({
                     <TableCell className="text-center">
                       {/* 편입 유형이 판독대기면 매수 가능성도 판독대기 */}
                       {parcel.residualStatus !== "잔여지 인정" && parcel.residualStatus !== "기준 미달" ? (
-                        <Badge className="bg-gray-200 text-gray-500 hover:bg-gray-200 border-0">
+                        <Badge className="bg-gray-100 text-gray-500 hover:bg-gray-100 border-0">
                           판독대기
                         </Badge>
                       ) : isPurchaseAnalyzing && selectedParcelIds.has(parcel.id) ? (
@@ -831,7 +831,7 @@ export function BatchAnalysis({
                       ) : parcel.aiResult ? (
                         <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
                       ) : (
-                        <Badge className="bg-gray-200 text-gray-500 hover:bg-gray-200 border-0">
+                        <Badge className="bg-gray-100 text-gray-500 hover:bg-gray-100 border-0">
                           판독대기
                         </Badge>
                       )}
