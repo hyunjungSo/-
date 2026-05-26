@@ -497,7 +497,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(20, 113, 97, 0.15)'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e8f2f0'}
               >
-                <span className="text-sm font-medium" style={{ order: 1, color: 'rgb(20, 113, 97)' }}>심사완���</span>
+                <span className="text-sm font-medium" style={{ order: 1, color: 'rgb(20, 113, 97)' }}>심���완���</span>
                 <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
                   <span className="font-bold" style={{ fontSize: '42px', lineHeight: '1em', color: 'rgb(20, 113, 97)' }}>{stats.심사완료}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
@@ -566,15 +566,40 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               <div className="space-y-1.5">
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>담당자 최종 심사</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
-                  {stats.심사완료 > 0 ? (
+                  {stats.aiAnalyzed > 0 ? (
                     <>
                       {stats.finalPurchase > 0 && (
                         <div 
                           className="flex items-center justify-center bg-emerald-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.finalPurchase / stats.심사완료) * 100}%` }}
+                          style={{ width: `${(stats.finalPurchase / stats.aiAnalyzed) * 100}%` }}
                         >
                           {stats.finalPurchase}건
                         </div>
+                      )}
+                      {stats.finalReject > 0 && (
+                        <div 
+                          className="flex items-center justify-center bg-rose-500 text-xs font-semibold text-white"
+                          style={{ width: `${(stats.finalReject / stats.aiAnalyzed) * 100}%` }}
+                        >
+                          {stats.finalReject}건
+                        </div>
+                      )}
+                      {stats.finalTransfer > 0 && (
+                        <div
+                          className="flex items-center justify-center bg-amber-500 text-xs font-semibold text-white"
+                          style={{ width: `${(stats.finalTransfer / stats.aiAnalyzed) * 100}%` }}
+                        >
+                          {stats.finalTransfer}건
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-muted text-xs text-muted-foreground">
+                      데이터 없음
+                    </div>
+                  )}
+                </div>
+              </div>
                       )}
                       {stats.finalReject > 0 && (
                         <div 
