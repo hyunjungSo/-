@@ -497,7 +497,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(20, 113, 97, 0.15)'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e8f2f0'}
               >
-                <span className="text-sm font-medium" style={{ order: 1, color: 'rgb(20, 113, 97)' }}>심사완료</span>
+                <span className="text-sm font-medium" style={{ order: 1, color: 'rgb(20, 113, 97)' }}>심사완���</span>
                 <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
                   <span className="font-bold" style={{ fontSize: '42px', lineHeight: '1em', color: 'rgb(20, 113, 97)' }}>{stats.심사완료}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
@@ -523,7 +523,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             
             {/* 스택 바 비교 */}
             <div className="space-y-3" style={{ marginTop: '4px' }}>
-              {/* AI 초기 판정 막대 (매수가능/추가검토필요/매수불가 3가지) */}
+              {/* AI 초기 판정 막대 (매수가능/매수불가/추가검토필요 3가지) */}
               <div className="space-y-1.5">
                 <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 초기 판정</span>
                 <div className="flex h-8 w-full overflow-hidden rounded-md">
@@ -537,20 +537,20 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                           {stats.aiPurchasable}건
                         </div>
                       )}
-                      {stats.aiAdditionalReview > 0 && (
-                        <div 
-                          className="flex items-center justify-center bg-amber-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.aiAdditionalReview / stats.aiAnalyzed) * 100}%` }}
-                        >
-                          {stats.aiAdditionalReview}건
-                        </div>
-                      )}
                       {stats.aiNotPurchasable > 0 && (
                         <div 
                           className="flex items-center justify-center bg-rose-500 text-xs font-semibold text-white"
                           style={{ width: `${(stats.aiNotPurchasable / stats.aiAnalyzed) * 100}%` }}
                         >
                           {stats.aiNotPurchasable}건
+                        </div>
+                      )}
+                      {stats.aiAdditionalReview > 0 && (
+                        <div 
+                          className="flex items-center justify-center bg-amber-500 text-xs font-semibold text-white"
+                          style={{ width: `${(stats.aiAdditionalReview / stats.aiAnalyzed) * 100}%` }}
+                        >
+                          {stats.aiAdditionalReview}건
                         </div>
                       )}
                     </>
