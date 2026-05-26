@@ -376,7 +376,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 기존 호환용 (일부 로직에서 사용)
   const checkedLandIds = aiResultViewMode === "admin" ? adminCheckedLandIds : citizenSelectedLandIds;
   
-  // 담당자 탭 필지 토글 핸들러
+  // 담당자 탭 필�� 토글 핸들러
   const handleLandCheckToggle = (landId: string) => {
     setAdminCheckedLandIds(prev => 
       prev.includes(landId) 
@@ -553,7 +553,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     let judgment: "수용가능" | "수용불가" = "수용불가";
     let reasons: string[] = [];
     
-    // 1. 면적 기�� 미달 여부
+    // 1. 면적 기��� 미달 여부
     const effectiveLimit = criteria.relaxed;
     const areaCheckMet = land.remainingArea <= effectiveLimit;
     criteriaChecks.push({
@@ -930,7 +930,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
 
   return (
     <div className="space-y-10">
-      {/* 신청관리 타이틀 */}
+      {/* 신청 상세 타이틀 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Button 
@@ -941,21 +941,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-3xl font-bold">신청관리</h1>
+          <h1 className="text-3xl font-bold">신청 상세</h1>
         </div>
         <div className="flex items-center gap-3">
-          {/* 사업단(지구) 선택 - 최상위 전역 필터 */}
-          <div className="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-lg border border-slate-200">
-            <span className="text-sm font-medium text-slate-600">현재 사업지구:</span>
-            <Select value={application.businessUnit || ""} disabled>
-              <SelectTrigger className="w-[220px] h-[38px] bg-white border-slate-300 font-medium">
-                <SelectValue placeholder="사업단 선택" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={application.businessUnit}>{application.businessUnit}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
           <Button variant="secondary" asChild>
             <Link href={`/admin/review/${application.id}`}>
               <FileText className="mr-2 h-4 w-4" />
@@ -1510,7 +1498,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const adjacentParcels = [
                           {
                             id: "adjacent-001",
-                            address: "경���도 용인시 처인구 포곡읍 마성리 101",
+                            address: "경�����도 용인시 처인구 포곡읍 마성리 101",
                             isIncluded: false,
                             isOwned: false,
                             isAdjacent: true,
@@ -1766,7 +1754,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                   </div>
                                   <div className="flex items-center gap-3 p-2">
                                     <span className={landOptions.accessRoadLost ? "text-primary font-medium" : "text-muted-foreground"}>
-                                      {landOptions.accessRoadLost ? "✓" : "−"} 접면��로 상실
+                                      {landOptions.accessRoadLost ? "✓" : "−"} ��면��로 상실
                                     </span>
                                   </div>
                                   <div className="flex items-center gap-3 p-2">
@@ -2161,7 +2149,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   
                   {/* 검토 의견 */}
                   <div className="space-y-3">
-                    <Label className="text-sm font-medium">검토 의견</Label>
+                    <Label className="text-sm font-medium">검토 ��견</Label>
                     <Textarea
                       placeholder="해당 필지에 대한 검토 의견을 입력하세요..."
                       value={landReview.landComment}
