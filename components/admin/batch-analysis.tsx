@@ -818,7 +818,12 @@ export function BatchAnalysis({
                     </TableCell>
                     {/* 매수 가능성 컬럼 */}
                     <TableCell className="text-center">
-                      {isPurchaseAnalyzing && selectedParcelIds.has(parcel.id) ? (
+                      {/* 편입 유형이 판독대기면 매수 가능성도 판독대기 */}
+                      {parcel.residualStatus !== "잔여지 인정" && parcel.residualStatus !== "기준 미달" ? (
+                        <Badge className="bg-gray-200 text-gray-500 hover:bg-gray-200 border-0">
+                          판독대기
+                        </Badge>
+                      ) : isPurchaseAnalyzing && selectedParcelIds.has(parcel.id) ? (
                         <div className="flex items-center justify-center gap-1">
                           <Loader2 className="h-4 w-4 animate-spin text-[#2E8B57]" />
                           <span className="text-xs text-[#2E8B57]">분석중</span>
@@ -826,7 +831,7 @@ export function BatchAnalysis({
                       ) : parcel.aiResult ? (
                         <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
                       ) : (
-                        <Badge className="bg-gray-100 text-gray-600 hover:bg-gray-100 border-0">
+                        <Badge className="bg-gray-200 text-gray-500 hover:bg-gray-200 border-0">
                           판독대기
                         </Badge>
                       )}
