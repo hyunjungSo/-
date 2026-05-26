@@ -154,8 +154,12 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
   const isApplicationSubmitted = parcel.citizenActivity?.applicationSubmitted;
   const isInCart = parcel.citizenActivity?.inCart;
   const isLockedByCitizen = isApplicationSubmitted || isInCart;
+  
+  // 가시성 변경 확인 모달 상태
+  const [showVisibilityConfirmModal, setShowVisibilityConfirmModal] = useState(false);
+  const [pendingVisibilityChange, setPendingVisibilityChange] = useState<boolean | null>(null);
 
-  // 관리(노출/미노출) 변경 핸들러
+  // 관리(공개/비공개) 변경 핸들러 - 모달 표시
   const handleVisibilityChange = (checked: boolean) => {
     if (isApplicationSubmitted) {
       alert("이미 신청이 완료된 건이라 수정이 불가합니다.");
@@ -165,10 +169,20 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
       alert("이미 민원인이 신청을 진행중인 건이라 수정이 불가합니다.");
       return;
     }
-    onUpdate({
-      ...parcel,
-      isVisible: checked,
-    });
+    setPendingVisibilityChange(checked);
+    setShowVisibilityConfirmModal(true);
+  };
+  
+  // 모달 확인 시 가시성 변경 적용
+  const handleConfirmVisibilityChange = () => {
+    if (pendingVisibilityChange !== null) {
+      onUpdate({
+        ...parcel,
+        isVisible: pendingVisibilityChange,
+      });
+    }
+    setShowVisibilityConfirmModal(false);
+    setPendingVisibilityChange(null);
   };
 
   return (
