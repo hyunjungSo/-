@@ -218,46 +218,51 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
         </div>
       </div>
 
-      {/* 필지 기본 정보 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            필지 정보
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <Label className="text-muted-foreground">소재지</Label>
-              <p className="font-medium">{parcel.landInfo.address}</p>
-            </div>
-            <div>
-              <Label className="text-muted-foreground">사업명</Label>
-              <p className="font-medium">{parcel.projectName}</p>
-            </div>
-            <div>
-              <Label className="text-muted-foreground">잔여 면적</Label>
-              <p className="font-medium">{parcel.landInfo.remainingArea.toLocaleString()} ㎡</p>
-            </div>
-            <div>
-              <Label className="text-muted-foreground">잔여 비율</Label>
-              <p className="font-medium">{parcel.landInfo.remainingRatio}%</p>
-            </div>
-            <div>
-              <Label className="text-muted-foreground">소유자</Label>
-              <p className="font-medium">{parcel.landInfo.ownerName}</p>
-            </div>
-            <div className="col-span-2 md:col-span-1 flex flex-col gap-2">
-              <Label className="text-muted-foreground">현재 상태</Label>
-              <Badge variant="outline" className="w-fit">
-                {parcel.publishStatus}
+      {/* 필지 기본 정보 - 통합 헤더 레이아웃 */}
+      <Card className="border-2 border-slate-200">
+        <CardContent className="p-5">
+          {/* 상단: 소재지 + 민원 신청 상태 */}
+          <div className="flex items-center justify-between pb-4 border-b border-slate-200">
+            <span className="text-lg font-semibold text-foreground">{parcel.landInfo.address}</span>
+            {parcel.citizenActivity?.applicationSubmitted && (
+              <Badge className="bg-amber-100 text-amber-800 border border-amber-300 hover:bg-amber-100 cursor-pointer">
+                <Lock className="h-3.5 w-3.5 mr-1.5" />
+                민원 신청 완료건 - 신청상세 보기
+                <ChevronRight className="h-3.5 w-3.5 ml-1" />
               </Badge>
+            )}
+          </div>
+          
+          {/* 하단: 정보 그리드 2행 3열 */}
+          <div className="grid grid-cols-3 gap-x-8 gap-y-3 pt-4">
+            {/* 1행 */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">사업명:</span>
+              <span className="text-sm font-medium">{parcel.projectName}</span>
             </div>
-            <div className="flex flex-col gap-2">
-              <Label className="text-muted-foreground">현재 AI 판정</Label>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">잔여 면적 (비율):</span>
+              <span className="text-sm font-medium">{parcel.landInfo.remainingArea.toLocaleString()} ㎡ ({parcel.landInfo.remainingRatio}%)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">현재 상태:</span>
+              <Badge variant="outline" className="text-xs">{parcel.publishStatus}</Badge>
+            </div>
+            
+            {/* 2행 */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">소유자:</span>
+              <span className="text-sm font-medium">{parcel.landInfo.ownerName}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">분석 횟수:</span>
+              <span className="text-sm font-medium">{parcel.analysisHistory?.length || 0}회</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">현재 AI 판정:</span>
               {parcel.aiResult ? (
                 <Badge 
-                  className={`w-fit ${
+                  className={`text-xs ${
                     parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
                     parcel.aiResult.provisionalJudgment === "수용가능" 
                       ? "bg-emerald-500 text-white" 
@@ -269,14 +274,8 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
                    parcel.aiResult.provisionalJudgment}
                 </Badge>
               ) : (
-                <Badge variant="outline" className="w-fit">
-                  분석 대기
-                </Badge>
+                <Badge variant="outline" className="text-xs">분석 대기</Badge>
               )}
-            </div>
-            <div>
-              <Label className="text-muted-foreground">분석 횟수</Label>
-              <p className="font-medium">{parcel.analysisHistory?.length || 0}회</p>
             </div>
           </div>
         </CardContent>
