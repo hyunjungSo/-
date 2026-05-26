@@ -298,6 +298,28 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
 
   return (
     <div className="space-y-6">
+      {/* 타이틀 + 사업단(지구) 선택 영역 */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <h1 className="text-2xl font-bold text-foreground sm:text-3xl">신청 관리</h1>
+        </div>
+        {/* 사업단(지구) 선택 - 최상위 전역 필터 */}
+        <div className="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-lg border border-slate-200">
+          <span className="text-sm font-medium text-slate-600">현재 사업지구:</span>
+          <Select value={projectUnitFilter} onValueChange={(value) => setProjectUnitFilter(value as "all" | "gangjin-gwangju")}>
+            <SelectTrigger className="w-[220px] h-[38px] bg-white border-slate-300 font-medium">
+              <SelectValue placeholder="사업단 선택" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">전체 사업단</SelectItem>
+              <SelectItem value="gangjin-gwangju">강진광주건설사업단</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      
+      <p className="text-muted-foreground -mt-4">잔여지 매수 신청 접수 및 심사를 관리합니다.</p>
+
       {/* 글로벌 필터 바 */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* 좌측: 업데이트 정보 */}
@@ -649,17 +671,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               />
               <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             </div>
-            
-            {/* 사업단 필터 */}
-            <Select value={projectUnitFilter} onValueChange={(value) => setProjectUnitFilter(value as "all" | "gangjin-gwangju")}>
-              <SelectTrigger className="w-[180px] h-[40px]">
-                <SelectValue placeholder="사업단 선택" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">전체 사업���</SelectItem>
-                <SelectItem value="gangjin-gwangju">강진광주건설 사업단</SelectItem>
-              </SelectContent>
-            </Select>
             
             {/* 처리상태 필터 */}
             <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as AdminStatus | "all")}>
