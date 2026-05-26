@@ -497,7 +497,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(20, 113, 97, 0.15)'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e8f2f0'}
               >
-                <span className="text-sm font-medium" style={{ order: 1, color: 'rgb(20, 113, 97)' }}>심���완���</span>
+                <span className="text-sm font-medium" style={{ order: 1, color: 'rgb(20, 113, 97)' }}>심�����완���</span>
                 <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
                   <span className="font-bold" style={{ fontSize: '42px', lineHeight: '1em', color: 'rgb(20, 113, 97)' }}>{stats.심사완료}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
@@ -693,7 +693,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <TableHead className="w-[100px]">신청인</TableHead>
                   <TableHead className="w-[140px]">신청일시</TableHead>
                   <TableHead className="w-[280px]">대상 지번</TableHead>
-                  <TableHead className="w-[80px]">담당자</TableHead>
                   <TableHead className="w-[120px]">진행상황</TableHead>
                   <TableHead className="w-[120px]">심사결과</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
@@ -738,11 +737,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                           </span>
                         )}
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <span className={app.adminName ? "text-foreground" : "text-muted-foreground"}>
-                        {app.adminName || "미정"}
-                      </span>
                     </TableCell>
                     <TableCell>
                       <AdminStatusBadge status={app.adminStatus} />
