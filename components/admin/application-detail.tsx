@@ -278,7 +278,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
   // 필지별 분석 단계 상세 (0: 대기, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
   const [landAnalysisStep, setLandAnalysisStep] = useState<Record<string, number>>({});
   
-  // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
+  // 관리자용 AI 판독 추가 옵션 (현장 상��) - 필지별 관리
   const [adminAIOptionsPerLand, setAdminAIOptionsPerLand] = useState<Record<string, {
     accessRoadLost: boolean;      // 접면도로 상실
     waterChannelLost: boolean;    // 관개수로 상실
@@ -2500,7 +2500,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
 
       {/* 하단 저장 버튼 - 심사완료 시 숨김 */}
       {!isViewOnly && (
-        <div className="fixed bottom-0 left-0 right-0 w-screen bg-background border-t py-4 px-6 mt-6 z-[9999]">
+        <div className="fixed bottom-0 left-0 right-0 w-screen bg-background border-t py-4 px-6 mt-6 mb-0 z-[9999]">
           <div className="flex justify-end gap-3">
             <Button variant="outline" className="w-[80px] text-foreground border-foreground hover:bg-foreground/5" onClick={onBack}>
               취소
