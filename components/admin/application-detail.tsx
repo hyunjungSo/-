@@ -278,9 +278,9 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
   // 필지별 분석 단계 상세 (0: 대기, 1: 형상지수 계산, 2: 면적 비율 분석, 3: 법적 기준 검토, 4: 종합 판정, 5: 완료)
   const [landAnalysisStep, setLandAnalysisStep] = useState<Record<string, number>>({});
   
-  // 관리자용 AI 판독 추가 옵션 (현장 상��) - 필지별 관리
+  // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
   const [adminAIOptionsPerLand, setAdminAIOptionsPerLand] = useState<Record<string, {
-    accessRoadLost: boolean;      // 접면도로 상실
+    accessRoadLost: boolean;      // ��면도로 상실
     waterChannelLost: boolean;    // 관개수로 상실
     farmMachineDifficulty: boolean; // 농기계 회전 곤란
   }>>({});
@@ -714,7 +714,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
     setLandAnalysisStatus(initialStatus);
     setLandAnalysisStep(initialStep);
     
-    // 분석 실행 (최대 5초 이내 완료 보장)
+    // 분석 ���행 (최대 5초 이내 완료 보장)
     const runAnalysis = async () => {
       const totalLands = adminCheckedLandIds.length;
       const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수에 따라 동적 조절
@@ -2167,7 +2167,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </CardContent>
       </Card>
 
-      {/* Section 03. 진행상황 선택 - 복수필지 전체에 대한 한 건 처리 */}
+      {/* Section 03. 진행상황 선택 - 복수필지 전체에 대한 한 건 처�� */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg" style={{ fontSize: '20px' }}>진행상황 선택</CardTitle>
@@ -2500,7 +2500,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
 
       {/* 하단 저장 버튼 - 심사완료 시 숨김 */}
       {!isViewOnly && (
-        <div className="fixed bottom-0 left-0 right-0 w-screen bg-background border-t py-4 px-6 mt-6 mb-0 z-[9999]">
+        <div className="fixed bottom-0 left-0 right-0 w-screen bg-background border-t py-4 px-6 mt-6 z-[9999]">
           <div className="flex justify-end gap-3">
             <Button variant="outline" className="w-[80px] text-foreground border-foreground hover:bg-foreground/5" onClick={onBack}>
               취소
@@ -2583,19 +2583,6 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
           </div>
         </DialogContent>
       </Dialog>
-
-      {/* 하단 푸터 - 목록으로 돌아가기 버튼 */}
-      <div className="fixed bottom-0 left-0 right-0 flex justify-center bg-white border-t border-gray-200 py-4">
-        <Button
-          variant="outline"
-          size="lg"
-          onClick={onNavigateToList}
-          className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 text-base"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          전체 신청 목록보기
-        </Button>
-      </div>
     </div>
   );
 }

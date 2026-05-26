@@ -24,13 +24,28 @@ export default function AdminPage() {
   const [selectedParcel, setSelectedParcel] = useState<ProcessedParcel | null>(null);
   const [activeTab, setActiveTab] = useState<ActiveTab>("applications");
   const [projectUnitFilter, setProjectUnitFilter] = useState<"all" | "gangjin-gwangju">("gangjin-gwangju");
+  
+  // 신청상세 진입 전 화면 추적 (뒤로가기 시 사용)
+  const [previousScreen, setPreviousScreen] = useState<{
+    tab: ActiveTab;
+    parcel: ProcessedParcel | null;
+  } | null>(null);
 
   const handleApplicationSelect = (application: Application) => {
     setSelectedApplication(application);
   };
 
   const handleBack = () => {
-    setSelectedApplication(null);
+    // 이전 화면 정보가 있으면 해당 화면으로 복귀
+    if (previousScreen) {
+      setActiveTab(previousScreen.tab);
+      setSelectedParcel(previousScreen.parcel);
+      setSelectedApplication(null);
+      setPreviousScreen(null);
+    } else {
+      // 이전 화면 정보가 없으면 신청 목록으로
+      setSelectedApplication(null);
+    }
   };
 
   const handleSave = (updatedApplication: Application) => {
@@ -72,6 +87,11 @@ export default function AdminPage() {
   const handleNavigateToApplication = (applicationId: string) => {
     const application = applications.find(app => app.id === applicationId);
     if (application) {
+      // 이전 화면 정보 저장 (필지상세에서 진입한 경우)
+      setPreviousScreen({
+        tab: activeTab,
+        parcel: selectedParcel,
+      });
       setSelectedApplication(application);
       setSelectedParcel(null);
       setActiveTab("applications");
@@ -162,7 +182,7 @@ export default function AdminPage() {
                   onSave={handleSave}
                   onNavigateToList={handleNavigateToApplicationList}
                 />
-                {/* 콘텐츠 하단 - 목록 버튼 (고정 아님) */}
+                {/* 콘텐츠 하단 - 목록으로 돌아가기 버튼 (고정 아님) */}
                 <div className="flex justify-center py-8 mt-24">
                   <Button
                     variant="outline"
@@ -171,7 +191,7 @@ export default function AdminPage() {
                     className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 text-base"
                   >
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    목록
+                    전체 신청 목록보기
                   </Button>
                 </div>
               </div>
