@@ -59,7 +59,6 @@ interface ApplicationDetailProps {
   application: Application;
   onBack: () => void;
   onSave: (application: Application) => void;
-  onNavigateToList?: () => void;
 }
 
 // 담당자 판정 (매수 가능성 높음/매수 가능성 낮음/추가 검토 필요) - JUDGMENT_COLORS 기반
@@ -117,7 +116,7 @@ interface LandReviewData {
   landComment: string; // 필지별 검토의견
 }
 
-export function ApplicationDetail({ application, onBack, onSave, onNavigateToList }: ApplicationDetailProps) {
+export function ApplicationDetail({ application, onBack, onSave }: ApplicationDetailProps) {
 // 복수 필지 여부 확인
   const isMultipleLands = application.additionalLands && application.additionalLands.length > 0;
   
@@ -171,7 +170,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
       let savedComment = "";
       
       if (application.adminStatus === "심사완료") {
-        // 1. landJudgmentsForReview에서 필지별 판정 ��기
+        // 1. landJudgmentsForReview에서 필지별 판정 찾기
         const landJudgmentForReview = application.landJudgmentsForReview?.find(
           lj => lj.landId === land.id
         );
@@ -377,7 +376,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
   // 기존 호환용 (일부 로직에서 사용)
   const checkedLandIds = aiResultViewMode === "admin" ? adminCheckedLandIds : citizenSelectedLandIds;
   
-  // 담당자 탭 ���� 토글 핸들러
+  // 담당자 탭 필�� 토글 핸들러
   const handleLandCheckToggle = (landId: string) => {
     setAdminCheckedLandIds(prev => 
       prev.includes(landId) 
@@ -554,7 +553,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
     let judgment: "수용가능" | "수용불가" = "수용불가";
     let reasons: string[] = [];
     
-    // 1. ���적 기��� 미달 여부
+    // 1. 면적 기��� 미달 여부
     const effectiveLimit = criteria.relaxed;
     const areaCheckMet = land.remainingArea <= effectiveLimit;
     criteriaChecks.push({
@@ -931,17 +930,27 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
 
   return (
     <div className="space-y-10">
-      {/* 신청 상세 타이틀 - 미니멀 헤더 */}
-      <div className="flex items-center gap-3">
-        <Button 
-          variant="ghost" 
-          size="icon"
-          onClick={onBack}
-          className="h-9 w-9"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <h1 className="text-3xl font-bold">신청 상세</h1>
+      {/* 신청 상세 타이틀 */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={onBack}
+            className="h-9 w-9"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-3xl font-bold">신청 상세</h1>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button variant="secondary" asChild>
+            <Link href={`/admin/review/${application.id}`}>
+              <FileText className="mr-2 h-4 w-4" />
+              심의서 작성
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {/* Section 01. 신청인 정보 */}
@@ -964,20 +973,8 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
               <p className="font-medium">{application.applicantAddress || "-"}</p>
             </div>
             <div>
-              <span className="text-sm text-muted-foreground">신청일시</span>
-              <p className="font-medium">
-                {application.appliedAt
-                  ? new Date(application.appliedAt).toLocaleString('sv-SE', { 
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      second: undefined,
-                      hour12: false
-                    })
-                  : "2026-05-01 00:00"}
-              </p>
+              <span className="text-sm text-muted-foreground">신청일</span>
+              <p className="font-medium">{application.appliedAt || "2026-05-01"}</p>
             </div>
           </div>
         </CardContent>
@@ -2076,7 +2073,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                 <div className="flex items-start gap-2 pt-2 border-t">
                                   <Info className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                                   <p className="text-xs text-muted-foreground">
-                                    AI 판독 결과는 참고용이며, 최종 판��은 담당자 검토에 따라 결정됩니다.
+                                    AI 판독 결과는 참고용이며, 최종 판정은 담당자 검토에 따라 결정됩니다.
                                   </p>
                                 </div>
                               </div>
@@ -2587,7 +2584,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       </Dialog>
 
       {/* 하단 푸터 - 목록으로 돌아가기 버튼 */}
-      <div className="flex justify-center pt-8 pb-4">
+      <div className="fixed bottom-0 left-0 right-0 flex justify-center bg-white border-t border-gray-200 py-4">
         <Button
           variant="outline"
           size="lg"

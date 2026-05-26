@@ -67,10 +67,14 @@ export default function AdminPage() {
     setActiveTab("parcel-management");
   };
 
-  // 신청 목록으로 이동 (진입 경로와 무관하게 신청 목록으로)
-  const handleNavigateToApplicationList = () => {
-    setSelectedApplication(null);
-    setActiveTab("applications");
+  // 필지상세에서 신청상세로 이동
+  const handleNavigateToApplication = (applicationId: string) => {
+    const application = applications.find(app => app.id === applicationId);
+    if (application) {
+      setSelectedApplication(application);
+      setSelectedParcel(null);
+      setActiveTab("applications");
+    }
   };
 
   return (
@@ -148,7 +152,6 @@ export default function AdminPage() {
                 application={selectedApplication}
                 onBack={handleBack}
                 onSave={handleSave}
-                onNavigateToList={handleNavigateToApplicationList}
               />
             ) : (
               <ApplicationList
