@@ -823,7 +823,7 @@ export function BatchAnalysis({
                       ) : parcel.aiResult ? (
                         <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
                       ) : (
-                        <Badge className="bg-amber-100 text-amber-600 hover:bg-amber-100 border-0">
+                        <Badge className="bg-gray-100 text-gray-600 hover:bg-gray-100 border-0">
                           매수 판독 대기
                         </Badge>
                       )}
