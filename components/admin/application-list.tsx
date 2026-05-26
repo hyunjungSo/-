@@ -258,7 +258,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const aiReliability = completedCount > 0 ? Math.round((aiMatchCount / completedCount) * 100) : 0;
     
     // 담당자 최종 심사 통계: 매수/기각/이관 (3가지)
-    // 전체 건수 = completedCount로 동일해야 함
+    // 전체 건수 = aiAnalyzed와 동일해야 함
     // 이관 건수 = 판단 보류 건수
     const finalTransfer = mismatchDeferred;
     // 매수 건수 = AI 매수가능 - 반대결정(기각으로 변경) - 일부 이관
@@ -266,8 +266,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const deferredFromNotPurchasable = mismatchDeferred - deferredFromPurchasable; // 매수불가에서 이관된 건
     const finalPurchase = aiPurchasable - mismatchOpposite - deferredFromPurchasable;
     // 기각 건수 = AI 매수불가 - 이관 + 반대결정(매수가능->기각)
-    const finalReject = aiNotPurchasable - deferredFromNotPurchasable + mismatchOpposite;
-    // 검증: finalPurchase + finalReject + finalTransfer = completedCount
+    const finalRejectBase = aiNotPurchasable - deferredFromNotPurchasable + mismatchOpposite;
+    // 검증: finalPurchase + finalReject + finalTransfer = aiAnalyzed
+    // 합이 맞지 않으면 기각 건수를 조정하여 총합이 aiAnalyzed가 되도록 함
+    const finalReject = aiAnalyzed - finalPurchase - finalTransfer;
     
     // 처리 완료율
     const completionRate = total > 0 ? Math.round((심사완료 / total) * 100) : 0;
