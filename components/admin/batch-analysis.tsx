@@ -556,12 +556,12 @@ export function BatchAnalysis({
           </div>
         </div>
 
-        {/* 카드 2: 편입 판독 대기 (Light Gray) - 1차 편입 유형 판독 전 */}
+        {/* 카드 2: 판독대기 (Light Gray) - 1차 편입 유형 판독 전 */}
         <div 
           className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-100 p-4 transition-all hover:bg-gray-200 border border-gray-300"
           onClick={() => setInclusionTypeFilter("pending")}
         >
-          <span className="text-sm font-medium text-gray-600">편입 판독 대기</span>
+          <span className="text-sm font-medium text-gray-600">판독대기</span>
           <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
             <span className="font-bold text-gray-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.pendingInclusion}</span>
             <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
@@ -592,12 +592,12 @@ export function BatchAnalysis({
           </div>
         </div>
         
-        {/* 카드 5: 매수 판독 대기 (Light Gray) - 편입 유형 완료, AI 매수 분석 전 */}
+        {/* 카드 5: 판독대기 (Light Gray) - 편입 유형 완료, AI 매수 분석 전 */}
         <div 
           className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-100 p-4 transition-all hover:bg-gray-200 border border-gray-300"
           onClick={() => setAiJudgmentFilter("pending")}
         >
-          <span className="text-sm font-medium text-gray-600">매수 판독 대기</span>
+          <span className="text-sm font-medium text-gray-600">판독대기</span>
           <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
             <span className="font-bold text-gray-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.pendingReview}</span>
             <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
@@ -649,7 +649,7 @@ export function BatchAnalysis({
             
             {/* 2행: 편입 유형 + 매수 가능성 + 관리 필터 */}
             <div className="flex flex-wrap items-center gap-6">
-              {/* 편입 유형 필터 */}
+              {/* ���입 유형 필터 */}
               <RadioFilterGroup
                 label="편입 유형"
                 name="inclusion-type"
@@ -657,7 +657,7 @@ export function BatchAnalysis({
                 onChange={(v) => setInclusionTypeFilter(v as "all" | "full" | "partial" | "pending")}
                 options={[
                   { value: "all", label: "전체" },
-                  { value: "pending", label: "편입 판독 대기" },
+                  { value: "pending", label: "판독대기" },
                   { value: "full", label: "전체 편입" },
                   { value: "partial", label: "부분 편입" }
                 ]}
@@ -671,7 +671,7 @@ export function BatchAnalysis({
                 onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low" | "pending")}
                 options={[
                   { value: "all", label: "전체" },
-                  { value: "pending", label: "매수 판독 대기" },
+                  { value: "pending", label: "판독대기" },
                   { value: "high", label: "높음" },
                   { value: "low", label: "낮음" }
                 ]}
@@ -809,7 +809,7 @@ export function BatchAnalysis({
                         </Badge>
                       ) : (
                         <Badge className="bg-gray-100 text-gray-500 hover:bg-gray-100 border-0">
-                          편입 판독 대기
+                          판독대기
                         </Badge>
                       )}
                     </TableCell>
@@ -824,7 +824,7 @@ export function BatchAnalysis({
                         <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
                       ) : (
                         <Badge className="bg-gray-100 text-gray-600 hover:bg-gray-100 border-0">
-                          매수 판독 대기
+                          판독대기
                         </Badge>
                       )}
                     </TableCell>
