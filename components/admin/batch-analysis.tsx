@@ -568,15 +568,15 @@ export function BatchAnalysis({
           </div>
         </div>
 
-        {/* 카드 3: 전체 편입 (Gray) - 잔여지 미발생, 신청 대상 아님 */}
+        {/* 카드 3: 전체 편입 (Charcoal) - 잔여지 미발생, 신청 대상 아님 */}
         <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-100 p-4 transition-all hover:bg-gray-200 border border-gray-300"
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-700 p-4 transition-all hover:bg-gray-600 border border-gray-600"
           onClick={() => setInclusionTypeFilter("full")}
         >
-          <span className="text-sm font-medium text-gray-500">전체 편입</span>
+          <span className="text-sm font-medium text-gray-300">전체 편입</span>
           <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-gray-600" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.fullInclusion}</span>
-            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+            <span className="font-bold text-gray-200" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.fullInclusion}</span>
+            <span className="text-xs font-medium ml-0.5 text-gray-400">건</span>
           </div>
         </div>
         
@@ -804,11 +804,11 @@ export function BatchAnalysis({
                           부분 편입
                         </Badge>
                       ) : parcel.residualStatus === "기준 미달" ? (
-                        <Badge className="bg-gray-100 text-gray-500 hover:bg-gray-100 border-0">
+                        <Badge className="bg-gray-700 text-gray-300 hover:bg-gray-700 border-0">
                           전체 편입
                         </Badge>
                       ) : (
-                        <Badge className="bg-gray-100 text-gray-500 hover:bg-gray-100 border-0">
+                        <Badge className="bg-gray-200 text-gray-500 hover:bg-gray-200 border-0">
                           판독대기
                         </Badge>
                       )}
@@ -823,7 +823,7 @@ export function BatchAnalysis({
                       ) : parcel.aiResult ? (
                         <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
                       ) : (
-                        <Badge className="bg-gray-100 text-gray-600 hover:bg-gray-100 border-0">
+                        <Badge className="bg-gray-200 text-gray-500 hover:bg-gray-200 border-0">
                           판독대기
                         </Badge>
                       )}
