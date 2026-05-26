@@ -30,7 +30,8 @@ import {
   Loader2,
   Sparkles,
   RefreshCw,
-  ArrowLeft
+  ArrowLeft,
+  Lock
 } from "lucide-react";
 import type { 
   ProcessedParcel, 
