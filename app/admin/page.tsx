@@ -7,9 +7,10 @@ import { BatchAnalysis } from "@/components/admin/batch-analysis";
 import { ParcelDetailReview } from "@/components/admin/parcel-detail-review";
 import type { Application, ProcessedParcel } from "@/lib/types";
 import { dummyApplications, dummyProcessedParcels } from "@/lib/dummy-data";
-import { FileText, MapPin } from "lucide-react";
+import { FileText, MapPin, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 type ActiveTab = 
   | "applications" 
@@ -154,12 +155,26 @@ export default function AdminPage() {
               </div>
             )}
             {selectedApplication ? (
-              <ApplicationDetail
-                application={selectedApplication}
-                onBack={handleBack}
-                onSave={handleSave}
-                onNavigateToList={handleNavigateToApplicationList}
-              />
+              <div>
+                <ApplicationDetail
+                  application={selectedApplication}
+                  onBack={handleBack}
+                  onSave={handleSave}
+                  onNavigateToList={handleNavigateToApplicationList}
+                />
+                {/* 하단 푸터 - 목록으로 돌아가기 버튼 */}
+                <div className="fixed bottom-0 left-0 right-0 flex justify-center bg-white border-t border-gray-200 py-4">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={handleNavigateToApplicationList}
+                    className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 text-base"
+                  >
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    전체 신청 목록보기
+                  </Button>
+                </div>
+              </div>
             ) : (
               <ApplicationList
                 applications={applications}
