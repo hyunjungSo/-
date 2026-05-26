@@ -201,21 +201,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
           </Button>
           <h1 className="text-3xl font-bold">필지상세</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <Switch 
-            checked={parcel.isVisible !== false}
-            disabled={isLockedByCitizen}
-            onCheckedChange={handleVisibilityChange}
-          />
-          <span className={`text-sm font-medium ${parcel.isVisible !== false ? "text-emerald-600" : "text-muted-foreground"}`}>
-            {parcel.isVisible !== false ? "공개" : "비공개"}
-          </span>
-          {isLockedByCitizen && (
-            <span className="text-xs text-orange-500 ml-2">
-              (민원인 활동으로 수정 불가)
-            </span>
-          )}
-        </div>
       </div>
 
       {/* 필지 기본 정보 - 통합 헤더 레이아웃 */}
@@ -245,8 +230,23 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
               <span className="text-sm font-medium">{parcel.landInfo.remainingArea.toLocaleString()} ㎡ ({parcel.landInfo.remainingRatio}%)</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">현재 상태:</span>
-              <Badge variant="outline" className="text-xs">{parcel.publishStatus}</Badge>
+              <span className="text-sm text-muted-foreground">공개 여부:</span>
+              <div className="flex items-center gap-2">
+                <Switch 
+                  checked={parcel.isVisible !== false}
+                  disabled={isLockedByCitizen}
+                  onCheckedChange={handleVisibilityChange}
+                  className="scale-90"
+                />
+                <span className={`text-sm font-medium ${parcel.isVisible !== false ? "text-emerald-600" : "text-muted-foreground"}`}>
+                  {parcel.isVisible !== false ? "공개" : "비공개"}
+                </span>
+                {isLockedByCitizen && (
+                  <span className="text-xs text-orange-500">
+                    (수정 불가)
+                  </span>
+                )}
+              </div>
             </div>
             
             {/* 2행 */}
