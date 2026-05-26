@@ -168,6 +168,17 @@ export function JudgmentBadge({
   useShortLabel?: boolean;
 }) {
   const config = judgmentConfig[type];
+  
+  // config가 undefined인 경우 기본값 사용
+  if (!config) {
+    return (
+      <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-600">
+        {prefix && <span className="font-medium mr-1">{prefix}</span>}
+        {showLabel ? type : ""}{count !== undefined ? ` ${count}` : ""}
+      </span>
+    );
+  }
+  
   const displayText = useShortLabel && config.displayLabel ? config.displayLabel : type;
   
   return (
