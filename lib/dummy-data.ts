@@ -1414,7 +1414,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   
   // 잔여 면적이 0인 경우: 잔여지 자체가 없으므로 신청 불가
   if (landInfo.remainingArea === 0) {
-    provisionalJudgment = "수용불�������";
+    provisionalJudgment = "수용불�����";
   } else {
     // 면적 기준 충족 여부
     const coreCriteriaMet = areaMet;
@@ -1770,7 +1770,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       waterChannelLost: false,
       farmMachineDifficulty: true,
       judgmentRationale: {
-        summary: "농지 잔여지 - 형��� 변��� 및 농기계 진입불가로 「매수 가능성 높음」 판정",
+        summary: "농지 잔여지 - 형�� 변��� 및 농기계 진입불가로 「매수 가능성 높음」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: ["토지유형: 농지", "형상지수 변화: 1.5 (기준 충족)", "농기계 진입불가: 해당"],
         detailedExplanation: "도로확장사업으로 잔여지가 사다리형으로 변형되어 농기계 회전이 곤란합니다.",
@@ -2207,7 +2207,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "면적 기준", criteriaDescription: "택지(주거) 기준 90㎡ 이하 (완화: 135㎡)", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (자루형)", isMet: true, autoDetected: true },
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
-        { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상�� 변���으로 건축��가 불��", isMet: false, autoDetected: false },
+        { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변���으로 건축��가 불��", isMet: false, autoDetected: false },
       ],
       provisionalJudgment: "적용가능",
       originalShapeIndex: 4.0,
@@ -2567,7 +2567,7 @@ export const dummyApplications: Application[] = [
           "농지 물리조건: 관개수로 상실, 농기계 회전 곤란",
           "형상 변화: 3필지 모두 비정형으로 변경",
         ],
-        detailedExplanation: "3필지 농지\n\n[필지 1] 501-1: 800㎡ → 250㎡ (삼각형)\n[필지 2] 501-2: 650㎡ → 170㎡ (역삼각형)\n[필지 3] 501-3: 550㎡ → 150㎡ (부정형)\n\n도로 편입 후 관개수로가 단절되고 형상이 불규칙하게 변경되어 농업 활동이 불가능한 상태��니다.",
+        detailedExplanation: "3필지 농지\n\n[필지 1] 501-1: 800㎡ → 250㎡ (삼각형)\n[필지 2] 501-2: 650㎡ → 170㎡ (역삼각형)\n[필지 3] 501-3: 550㎡ → 150㎡ (부정형)\n\n도로 편입 후 관개수로가 단절되고 형상이 불규칙하게 변경되어 농업 활동이 불가능한 상태입니다.",
         manualCheckItems: [],
       },
     },
@@ -3377,7 +3377,7 @@ export const dummyApplications: Application[] = [
     appliedAt: TWO_DAYS_AGO,
     aiResult: generateAIResult(dummyLandInfoList[5]),
     finalJudgment: "기각",
-    reviewerComment: "면적 기준 충족으로 기각",
+    reviewerComment: "면적 기준 충족으로 기���",
     adminName: "김서은",
     statusUpdatedAt: TWO_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
@@ -3686,7 +3686,7 @@ export const dummyAnalysisHistory: AnalysisHistory[] = [
   },
 ];
 
-// ===== 프로세스 적용된 필지 ��이터 (ProcessedParcel) =====
+// ===== 프로세스 적용된 필지 데이터 (ProcessedParcel) =====
 export const dummyProcessedParcels: ProcessedParcel[] = [
   // 1. 1차 분석만 완료된 필지 (담당자 확인 대기) - 민원인이 장바구니에 담음
   {
@@ -3712,7 +3712,6 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     lastAnalyzedAt: TWO_WEEKS_AGO,
     ownerIdentifier: "1234",
     reportCompleted: true,
-    isVisible: true, // 부분 편입 + 매수 가능성 높음 = 공개
     citizenActivity: {
       inCart: true,
       cartAddedAt: ONE_WEEK_AGO,
@@ -3743,7 +3742,6 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     analysisHistory: dummyAnalysisHistory.filter(h => h.parcelId === "processed-002"),
     firstAnalyzedAt: TWO_WEEKS_AGO,
     lastAnalyzedAt: ONE_WEEK_AGO,
-    confirmedBy: "최담당",
     ownerIdentifier: "5678",
     reportCompleted: true,
     isVisible: true, // 부분 편입 + 매수 가능성 높음 = 공개
@@ -3752,7 +3750,6 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
       applicationId: "app-007",
       applicationSubmittedAt: THREE_DAYS_AGO,
     },
-  },
   },
   // 3. 담당자 확인 완료 (공개 대기) - 민원인 활동 없음
   {
