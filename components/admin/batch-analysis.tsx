@@ -592,14 +592,14 @@ export function BatchAnalysis({
           </div>
         </div>
         
-        {/* 카드 5: 매수 판독 대기 (Light Yellow/Amber) - 편입 유형 완료, AI 매수 분석 전 */}
+        {/* 카드 5: 매수 판독 대기 (Light Gray) - 편입 유형 완료, AI 매수 분석 전 */}
         <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-amber-50 p-4 transition-all hover:bg-amber-100 border border-amber-200"
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-100 p-4 transition-all hover:bg-gray-200 border border-gray-300"
           onClick={() => setAiJudgmentFilter("pending")}
         >
-          <span className="text-sm font-medium text-amber-600">매수 판독 대기</span>
+          <span className="text-sm font-medium text-gray-600">매수 판독 대기</span>
           <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-amber-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.pendingReview}</span>
+            <span className="font-bold text-gray-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.pendingReview}</span>
             <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
           </div>
         </div>
