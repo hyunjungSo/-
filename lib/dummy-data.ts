@@ -1414,7 +1414,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   
   // 잔여 면적이 0인 경우: 잔여지 자체가 없으므로 신청 불가
   if (landInfo.remainingArea === 0) {
-    provisionalJudgment = "수용불�������";
+    provisionalJudgment = "수용불���������";
   } else {
     // 면적 기준 충족 여부
     const coreCriteriaMet = areaMet;
@@ -2507,7 +2507,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니��. 편입 �� 각 필지가 불규칙한 ���태로 남아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니���. 편입 �� 각 필지가 불규칙한 ���태로 남아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -3501,7 +3501,7 @@ export const dummyApplications: Application[] = [
     id: "app-10days-001",
     applicationNumber: "2026-0503-001",
     applicationType: "single",
-    applicantName: "배준서",
+    applicantName: "��준서",
     applicantContact: "010-3344-0000",
     applicantAddress: "경기도 가평군 가평��� 읍내리 900",
     landInfo: dummyLandInfoList[11],
@@ -3686,7 +3686,7 @@ export const dummyAnalysisHistory: AnalysisHistory[] = [
   },
 ];
 
-// ===== 프로세스 적용된 필지 ��이터 (ProcessedParcel) =====
+// ===== 프로세�� 적용된 필지 ��이터 (ProcessedParcel) =====
 export const dummyProcessedParcels: ProcessedParcel[] = [
   // 1. 1차 분석만 완료된 필지 (담당자 확인 대기) - 민원인이 장바구니에 담음
   {
@@ -3968,10 +3968,16 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     registeredBy: "관리자",
     publishStatus: "1차분석완료",
     residualStatus: "잔여지 인정",
+    isVisible: true, // 부분 편입 + 매수 가능성 높음 = 공개
     analysisHistory: [],
     firstAnalyzedAt: TWO_WEEKS_AGO,
     lastAnalyzedAt: TWO_WEEKS_AGO,
     ownerIdentifier: "2222",
+    citizenActivity: {
+      applicationSubmitted: true,
+      applicationId: "app-008",
+      applicationSubmittedAt: FIVE_DAYS_AGO,
+    },
   },
   // 8. 2차 분석 완료 필지 - 강진광주건설사업단
   {
@@ -4076,12 +4082,18 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     registeredBy: "관리자",
     publishStatus: "담당자확인완료",
     residualStatus: "잔여지 인정",
+    isVisible: true, // 부분 편입 + 매수 가능성 높음 = 공개
     analysisHistory: [],
     firstAnalyzedAt: SIX_WEEKS_AGO,
     lastAnalyzedAt: FIVE_DAYS_AGO,
     confirmedAt: THREE_DAYS_AGO,
     confirmedBy: "김담당",
     ownerIdentifier: "4444",
+    citizenActivity: {
+      applicationSubmitted: true,
+      applicationId: "app-009",
+      applicationSubmittedAt: TWO_DAYS_AGO,
+    },
   },
   // 10. 공개된 필지 - 강진광주건설사업단
   {
@@ -4139,6 +4151,11 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     confirmedBy: "박승인",
     ownerIdentifier: "5555",
     isVisible: true,
+    citizenActivity: {
+      applicationSubmitted: true,
+      applicationId: "app-010",
+      applicationSubmittedAt: THREE_DAYS_AGO,
+    },
   },
   // 11. 신청 완료 필지 - 강진광주건설사업단
   {
@@ -4267,7 +4284,7 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
       ownerName: "오지주",
       ownerContact: "010-2345-6789",
       hasIncludedLand: true,
-      businessUnit: "강진광주건설사업단",
+      businessUnit: "강진광주건설사업���",
       projectName: "광주-강진 고속도로",
       coordinates: [
         { lat: 34.5620, lng: 126.8580 },
