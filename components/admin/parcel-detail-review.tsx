@@ -270,25 +270,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
               <span className="text-sm text-muted-foreground">분석 횟수:</span>
               <span className="text-sm font-medium">{parcel.analysisHistory?.length || 0}회</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">현재 AI 판정:</span>
-              {parcel.aiResult ? (
-                <Badge 
-                  className={`text-xs ${
-                    parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
-                    parcel.aiResult.provisionalJudgment === "수용가능" 
-                      ? "bg-emerald-500 text-white" 
-                      : "bg-rose-500 text-white"
-                  }`}
-                >
-                  {parcel.aiResult.provisionalJudgment === "수용가능" ? "매수 가능성 높음" : 
-                   parcel.aiResult.provisionalJudgment === "수용불가" ? "매수 가능성 낮음" :
-                   parcel.aiResult.provisionalJudgment}
-                </Badge>
-              ) : (
-                <Badge variant="outline" className="text-xs">분석 대기</Badge>
-              )}
-            </div>
           </div>
         </CardContent>
       </Card>
