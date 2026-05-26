@@ -568,14 +568,14 @@ export function BatchAnalysis({
           </div>
         </div>
 
-        {/* 카드 3: 전체 편입 (Blue) - 잔여지 미발생 */}
+        {/* 카드 3: 전체 편입 (Gray) - 잔여지 미발생, 신청 대상 아님 */}
         <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-blue-50 p-4 transition-all hover:bg-blue-100 border border-blue-200"
+          className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-100 p-4 transition-all hover:bg-gray-200 border border-gray-300"
           onClick={() => setInclusionTypeFilter("full")}
         >
-          <span className="text-sm font-medium text-blue-600">전체 편입</span>
+          <span className="text-sm font-medium text-gray-500">전체 편입</span>
           <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-blue-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.fullInclusion}</span>
+            <span className="font-bold text-gray-600" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.fullInclusion}</span>
             <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
           </div>
         </div>
@@ -804,7 +804,7 @@ export function BatchAnalysis({
                           부분 편입
                         </Badge>
                       ) : parcel.residualStatus === "기준 미달" ? (
-                        <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-0">
+                        <Badge className="bg-gray-100 text-gray-500 hover:bg-gray-100 border-0">
                           전체 편입
                         </Badge>
                       ) : (
