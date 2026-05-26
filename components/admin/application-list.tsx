@@ -298,23 +298,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
 
   return (
     <div className="space-y-6">
-      {/* 사업단(지구) 선택 영역 */}
-      <div className="flex items-center justify-end">
-        {/* 사업단(지구) 선택 - 최상위 전역 필터 */}
-        <div className="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-lg border border-slate-200">
-          <span className="text-sm font-medium text-slate-600">현재 사업지구:</span>
-          <Select value={projectUnitFilter} onValueChange={(value) => setProjectUnitFilter(value as "all" | "gangjin-gwangju")}>
-            <SelectTrigger className="w-[220px] h-[38px] bg-white border-slate-300 font-medium">
-              <SelectValue placeholder="사업단 선택" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">전체 사업단</SelectItem>
-              <SelectItem value="gangjin-gwangju">강진광주건설사업단</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
       {/* 글로벌 필터 바 */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* 좌측: 업데이트 정보 */}
