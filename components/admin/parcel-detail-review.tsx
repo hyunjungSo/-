@@ -59,6 +59,7 @@ interface ParcelDetailReviewProps {
 }
 
 export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToApplication }: ParcelDetailReviewProps) {
+  
   // 신청상세 화면으로 이동
   const handleNavigateToApplication = () => {
     if (parcel.citizenActivity?.applicationId && onNavigateToApplication) {
