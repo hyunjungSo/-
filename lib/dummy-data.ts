@@ -1414,7 +1414,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   
   // 잔여 면적이 0인 경우: 잔여지 자체가 없으므로 신청 불가
   if (landInfo.remainingArea === 0) {
-    provisionalJudgment = "수용불���";
+    provisionalJudgment = "수용불�����";
   } else {
     // 면적 기준 충족 여부
     const coreCriteriaMet = areaMet;
@@ -1770,7 +1770,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       waterChannelLost: false,
       farmMachineDifficulty: true,
       judgmentRationale: {
-        summary: "농지 잔여지 - 형상 변화 및 농기계 진입불가로 「매수 가능성 높음」 판정",
+        summary: "농지 잔여지 - 형상 변��� 및 농기계 진입불가로 「매수 가능성 높음」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: ["토지유형: 농지", "형상지수 변화: 1.5 (기준 충족)", "농기계 진입불가: 해당"],
         detailedExplanation: "도로확장사업으로 잔여지가 사다리형으로 변형되어 농기계 회전이 곤란합니다.",
@@ -1856,7 +1856,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       ownerContact: "010-1111-2222",
       hasIncludedLand: true,
       businessUnit: "수도권",
-      projectName: "용인-양��� 도로확장사���",
+      projectName: "용��-양��� 도로확장사���",
     },
     checkItems: {
       farmMachineDifficulty: false,
@@ -2139,7 +2139,7 @@ export const dummyApplications: Application[] = [
     aiResult: generateAIResult(dummyLandInfoList[6]),
     adminName: "홍길동",
     statusUpdatedAt: TWO_DAYS_AGO,
-    businessUnit: "강진광주건설 사업단",
+    businessUnit: "강진광주건설 ��업단",
   },
   // AI 판정 ���계 사례 (심의위원회 이관 필요)
   {
@@ -2207,7 +2207,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "면적 기준", criteriaDescription: "택지(주거) 기준 90㎡ 이하 (완화: 135㎡)", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (자루형)", isMet: true, autoDetected: true },
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
-        { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축허가 불��", isMet: false, autoDetected: false },
+        { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상태 변경으로 건축��가 불��", isMet: false, autoDetected: false },
       ],
       provisionalJudgment: "적용가능",
       originalShapeIndex: 4.0,
@@ -2507,7 +2507,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 ���태로 남아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -2955,7 +2955,7 @@ export const dummyApplications: Application[] = [
         conditions: {
           sameOwner: true,
           continuous: false, // 전체는 인접 아님
-          sameUsage: false, // 전체는 용도 불일��� (답/전)
+          sameUsage: false, // 전��는 용도 불일��� (답/전)
         },
         combinedArea: 1480,
         explanation: "4필지 개별 분석 결과: 내기리 200-1, 200-2는 면적 기준 충족 및 형상 불량으로 매수 판정. 만호리 55-1, 55-2는 면적 기준 미충족, 형상 양호로 미해당 판정.",
@@ -3930,7 +3930,7 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
       landType: "농지",
       landCategory: "답",
       originalShape: "가로장방형",
-      remainingShape: "삼각형",
+      remainingShape: "삼각���",
       originalShapeIndex: 2.9,
       remainingShapeIndex: 5.2,
       ownerName: "김농부",
@@ -4182,7 +4182,7 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     },
     preRegistrationStatus: "등록완료",
     registeredAt: TWO_MONTHS_AGO,
-    registeredBy: "관리자",
+    registeredBy: "관리��",
     publishStatus: "공개",
     residualStatus: "잔여지 인정",
     analysisHistory: [],
@@ -4297,7 +4297,7 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     confirmedAt: FIVE_DAYS_AGO,
     confirmedBy: "최담당",
     ownerIdentifier: "8888",
-    isVisible: true,
+    isVisible: false, // 전체 편입(기준 미달)은 공개 불가
     citizenActivity: {
       inCart: true,
       cartAddedAt: THREE_DAYS_AGO,
