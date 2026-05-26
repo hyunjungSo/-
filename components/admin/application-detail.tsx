@@ -281,7 +281,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   const [adminAIOptionsPerLand, setAdminAIOptionsPerLand] = useState<Record<string, {
     accessRoadLost: boolean;      // 접면도로 상실
     waterChannelLost: boolean;    // 관개수로 상실
-    farmMachineDifficulty: boolean; // ��기계 회전 곤란
+    farmMachineDifficulty: boolean; // 농기계 회전 곤란
   }>>({});
   
   // 필지별 옵션 업데이트 헬퍼
@@ -973,20 +973,8 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
               <p className="font-medium">{application.applicantAddress || "-"}</p>
             </div>
             <div>
-              <span className="text-sm text-muted-foreground">신청일시</span>
-              <p className="font-medium">
-                {application.appliedAt
-                  ? new Date(application.appliedAt).toLocaleString('sv-SE', { 
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      second: undefined,
-                      hour12: false
-                    })
-                  : "2026-05-01 00:00"}
-              </p>
+              <span className="text-sm text-muted-foreground">신청일</span>
+              <p className="font-medium">{application.appliedAt || "2026-05-01"}</p>
             </div>
           </div>
         </CardContent>
