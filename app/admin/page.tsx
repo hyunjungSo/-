@@ -7,7 +7,7 @@ import { BatchAnalysis } from "@/components/admin/batch-analysis";
 import { ParcelDetailReview } from "@/components/admin/parcel-detail-review";
 import type { Application, ProcessedParcel } from "@/lib/types";
 import { dummyApplications, dummyProcessedParcels } from "@/lib/dummy-data";
-import { FileText, MapPin, ArrowLeft } from "lucide-react";
+import { FileText, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -190,8 +190,7 @@ export default function AdminPage() {
                     onClick={handleNavigateToApplicationList}
                     className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 text-base"
                   >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    전체 신청 목록보기
+                    목록보기
                   </Button>
                 </div>
               </div>
