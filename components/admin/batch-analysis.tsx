@@ -633,34 +633,34 @@ export function BatchAnalysis({
             
             {/* 상태별 현황 그리드 - 3개 카드 */}
             <div className="grid grid-cols-3 gap-3 pt-2">
-              {/* 판독대기: Amber */}
+              {/* 이관: Amber */}
               <div 
                 onClick={() => setAiJudgmentFilter("pending")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-amber-50 p-4 transition-all hover:bg-amber-100"
               >
-                <span className="text-sm font-medium text-amber-600" style={{ order: 1 }}>판독대기</span>
+                <span className="text-sm font-medium text-amber-600" style={{ order: 1 }}>이관</span>
                 <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
                   <span className="font-bold text-amber-700" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.pendingReview}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
-              {/* 매수 가능성 높음: Emerald */}
+              {/* 매수: Emerald */}
               <div 
                 onClick={() => setAiJudgmentFilter("high")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-emerald-50 p-4 transition-all hover:bg-emerald-100"
               >
-                <span className="text-sm font-medium text-emerald-600" style={{ order: 1 }}>높음</span>
+                <span className="text-sm font-medium text-emerald-600" style={{ order: 1 }}>매수</span>
                 <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
                   <span className="font-bold text-emerald-700" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.highPossibility}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
-              {/* 매수 가능성 낮음: Rose */}
+              {/* 기각: Rose */}
               <div 
                 onClick={() => setAiJudgmentFilter("low")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-rose-50 p-4 transition-all hover:bg-rose-100"
               >
-                <span className="text-sm font-medium text-rose-500" style={{ order: 1 }}>낮음</span>
+                <span className="text-sm font-medium text-rose-500" style={{ order: 1 }}>기각</span>
                 <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
                   <span className="font-bold text-rose-600" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.lowPossibility}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
