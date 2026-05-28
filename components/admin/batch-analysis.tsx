@@ -618,7 +618,7 @@ export function BatchAnalysis({
             {/* 진행률 바 - 좌측과 동일한 포맷 */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">AI 매수 가능성 심사 완료율</span>
+                <span className="text-muted-foreground">AI 매수 가능성 판독 완료율</span>
                 <span style={{ fontSize: '30px', fontWeight: '800', color: 'rgb(20, 113, 97)' }}>
                   {stats.partialInclusion > 0 ? Math.min(100, Math.round(((stats.highPossibility + stats.lowPossibility) / stats.partialInclusion) * 100)) : 0}%
                 </span>
