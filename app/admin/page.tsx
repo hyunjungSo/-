@@ -284,7 +284,7 @@ export default function AdminPage() {
                   onNavigateToList={handleNavigateToApplicationList}
                 />
                 {/* 콘텐츠 하단 - 목록으로 돌아가기 버튼 (고정 아님) */}
-                <div className="flex items-center justify-end mt-6">
+                <div className="flex items-center justify-end mt-6 pb-24">
                   <Button
                     variant="outline"
                     onClick={handleNavigateToApplicationList}
