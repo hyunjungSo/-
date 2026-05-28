@@ -333,31 +333,31 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           {/* 우측: 기간 필터 */}
           <div className="flex items-center gap-4">
             {/* 조회 기준 선택 */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-muted-foreground">조회 기준:</span>
-              <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="dateCriteria"
-                    value="appliedAt"
-                    checked={dateCriteriaType === "appliedAt"}
-                    onChange={(e) => setDateCriteriaType("appliedAt")}
-                    className="h-4 w-4"
-                  />
-                  <span className="text-sm font-medium">민원 신청일</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="dateCriteria"
-                    value="statusUpdatedAt"
-                    checked={dateCriteriaType === "statusUpdatedAt"}
-                    onChange={(e) => setDateCriteriaType("statusUpdatedAt")}
-                    className="h-4 w-4"
-                  />
-                  <span className="text-sm font-medium">상태 변경일</span>
-                </label>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setDateCriteriaType("appliedAt")}
+                  className={cn(
+                    "rounded-md border px-3 py-1.5 text-xs font-medium transition-all",
+                    dateCriteriaType === "appliedAt"
+                      ? "border-primary bg-primary/5 text-primary"
+                      : "border-muted-foreground/30 text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground"
+                  )}
+                >
+                  민원 신청일
+                </button>
+                <button
+                  onClick={() => setDateCriteriaType("statusUpdatedAt")}
+                  className={cn(
+                    "rounded-md border px-3 py-1.5 text-xs font-medium transition-all",
+                    dateCriteriaType === "statusUpdatedAt"
+                      ? "border-primary bg-primary/5 text-primary"
+                      : "border-muted-foreground/30 text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground"
+                  )}
+                >
+                  상태 변경일
+                </button>
               </div>
             </div>
 
