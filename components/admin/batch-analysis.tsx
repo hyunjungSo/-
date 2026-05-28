@@ -827,52 +827,8 @@ export function BatchAnalysis({
           <CardTitle className="text-lg">검색 및 필터</CardTitle>
         </CardHeader>
         <CardContent className="pt-2">
-          {/* 필터 레이아웃 - 3행 구조 */}
+          {/* 필터 레이아웃 - 2행 구조 */}
           <div className="space-y-4">
-            {/* 0행: 조회기간 필터 (민원인 신청일 기준) */}
-            <div className="flex items-center gap-4">
-              <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">조회기간 (민원인 신청일 기준)</span>
-              <div className="flex items-center gap-2">
-                {/* 연도 선택 버튼들 */}
-                {[2024, 2025, 2026].map((year) => (
-                  <Button
-                    key={year}
-                    variant={periodFilter === "year" && selectedYear === year ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handlePeriodChange("year", year)}
-                    className={
-                      periodFilter === "year" && selectedYear === year
-                        ? "bg-[#2E8B57] hover:bg-[#256b45] text-white"
-                        : ""
-                    }
-                  >
-                    {year}년
-                  </Button>
-                ))}
-                {/* 기간 옵션 버튼들 */}
-                {[
-                  { value: "today", label: "오늘" },
-                  { value: "week", label: "최근 1주" },
-                  { value: "month", label: "이번 달" },
-                ].map((option) => (
-                  <Button
-                    key={option.value}
-                    variant={periodFilter === option.value ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handlePeriodChange(option.value as PeriodFilterType)}
-                    className={
-                      periodFilter === option.value
-                        ? "bg-[#2E8B57] hover:bg-[#256b45] text-white"
-                        : ""
-                    }
-                  >
-                    {option.label}
-                  </Button>
-                ))}
-              </div>
-              <span className="text-sm font-medium text-primary ml-2">현재 조회 기준: {dateRangeText}</span>
-            </div>
-
             {/* 1행: 검색바 */}
             <div className="flex items-center">
               <SearchInput
