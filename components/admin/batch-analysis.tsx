@@ -573,17 +573,6 @@ export function BatchAnalysis({
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
-              {/* 전체 편입: Rose (기각 색상과 동일) */}
-              <div 
-                onClick={() => setInclusionTypeFilter("full")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-rose-50 p-4 transition-all hover:bg-rose-100"
-              >
-                <span className="text-sm font-medium text-rose-500" style={{ order: 1 }}>전체 편입</span>
-                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
-                  <span className="font-bold text-rose-600" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.fullInclusion}</span>
-                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
-                </div>
-              </div>
               {/* 부분 편입: Emerald (매수 색상과 동일) */}
               <div 
                 onClick={() => setInclusionTypeFilter("partial")}
@@ -592,6 +581,17 @@ export function BatchAnalysis({
                 <span className="text-sm font-medium text-emerald-600" style={{ order: 1 }}>부분 편입</span>
                 <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
                   <span className="font-bold text-emerald-700" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.partialInclusion}</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+                </div>
+              </div>
+              {/* 전체 편입: Rose (기각 색상과 동일) */}
+              <div 
+                onClick={() => setInclusionTypeFilter("full")}
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-rose-50 p-4 transition-all hover:bg-rose-100"
+              >
+                <span className="text-sm font-medium text-rose-500" style={{ order: 1 }}>전체 편입</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold text-rose-600" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.fullInclusion}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
