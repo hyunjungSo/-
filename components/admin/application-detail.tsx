@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -60,7 +60,6 @@ interface ApplicationDetailProps {
   onBack: () => void;
   onSave: (application: Application) => void;
   onNavigateToList?: () => void;
-  saveRef?: React.MutableRefObject<(() => void) | null>;
 }
 
 // 담당자 판정 (매수/기각/이관) - JUDGMENT_COLORS 기반
@@ -118,7 +117,7 @@ interface LandReviewData {
   landComment: string; // 필지별 검토의견
 }
 
-export function ApplicationDetail({ application, onBack, onSave, onNavigateToList, saveRef }: ApplicationDetailProps) {
+export function ApplicationDetail({ application, onBack, onSave, onNavigateToList }: ApplicationDetailProps) {
 // 복수 필지 여부 확인
   const isMultipleLands = application.additionalLands && application.additionalLands.length > 0;
   
@@ -930,17 +929,21 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
     }, 1000);
   };
 
-  // saveRef를 통해 외부에서 handleSave 호출 가능하게 함
+  // handleSave를 ref에 저장하여 이벤트 리스너가 항상 최신 함수 참조
+  const handleSaveRef = useRef(handleSave);
+  handleSaveRef.current = handleSave;
+
+  // 외부에서 저장 이벤트 수신
   useEffect(() => {
-    if (saveRef) {
-      saveRef.current = handleSave;
-    }
-    return () => {
-      if (saveRef) {
-        saveRef.current = null;
-      }
+    const handleExternalSave = () => {
+      handleSaveRef.current();
     };
-  });
+    
+    window.addEventListener('application-detail-save', handleExternalSave);
+    return () => {
+      window.removeEventListener('application-detail-save', handleExternalSave);
+    };
+  }, []);
 
   return (
     <div className="space-y-5">
