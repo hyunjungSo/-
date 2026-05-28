@@ -322,16 +322,21 @@ export interface AnalysisHistory {
   aiResult: AIAnalysisResult;                 // 전체 AI 분석 결과
 }
 
+// 잔여지 판정 상태
+export type ResidualStatus = "판정대기" | "잔여지 인정" | "기준 미달";
+
 // 확장된 사전등록 필지 (분석 프로세스용)
 export interface ProcessedParcel extends PreRegisteredParcel {
   publishStatus: ParcelPublishStatus;         // 공개 상태
   analysisHistory: AnalysisHistory[];         // 분석 히스토리
+  residualStatus?: ResidualStatus;            // 잔여지 판정 상태
   firstAnalyzedAt?: string;                   // 1차 분석 완료일
   lastAnalyzedAt?: string;                    // 최종 분석일
   confirmedAt?: string;                       // 담당자 확인 완료일
   confirmedBy?: string;                       // 확인 담당자
   ownerIdentifier?: string;                   // 소유자 식별자 (주민번호 뒷자리 등)
   isVisible?: boolean;                        // 노출 여부 (true: 노출, false: 미노출)
+  reportCompleted?: boolean;                  // 보고서 완료 여부
   // 민원인 활동 상태
   citizenActivity?: {
     inCart?: boolean;                         // 장바구니에 담김

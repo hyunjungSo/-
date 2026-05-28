@@ -9,6 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { LandMap } from "@/components/land-map";
 import {
   Select,
@@ -28,7 +29,9 @@ import {
   ChevronRight,
   Loader2,
   Sparkles,
-  RefreshCw
+  RefreshCw,
+  ArrowLeft,
+  Lock
 } from "lucide-react";
 import type { 
   ProcessedParcel, 
@@ -52,9 +55,17 @@ interface ParcelDetailReviewProps {
   parcel: ProcessedParcel;
   onUpdate: (updatedParcel: ProcessedParcel) => void;
   onBack: () => void;
+  onNavigateToApplication?: (applicationId: string) => void;
 }
 
-export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailReviewProps) {
+export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToApplication }: ParcelDetailReviewProps) {
+  // 신청상세 화면으로 이동
+  const handleNavigateToApplication = () => {
+    if (parcel.citizenActivity?.applicationId && onNavigateToApplication) {
+      onNavigateToApplication(parcel.citizenActivity.applicationId);
+    }
+  };
+  
   // 분석 옵션 상태
   const [currentUsage, setCurrentUsage] = useState<LandCategory>(parcel.currentUsage);
   const [landShape, setLandShape] = useState<LandShape>(parcel.landShape);
@@ -152,8 +163,12 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
   const isApplicationSubmitted = parcel.citizenActivity?.applicationSubmitted;
   const isInCart = parcel.citizenActivity?.inCart;
   const isLockedByCitizen = isApplicationSubmitted || isInCart;
+  
+  // 가시성 변경 확인 모달 상태
+  const [showVisibilityConfirmModal, setShowVisibilityConfirmModal] = useState(false);
+  const [pendingVisibilityChange, setPendingVisibilityChange] = useState<boolean | null>(null);
 
-  // 관리(노출/미노출) 변경 핸들러
+  // 관리(공개/비공개) 변경 핸들러 - 모달 표시
   const handleVisibilityChange = (checked: boolean) => {
     if (isApplicationSubmitted) {
       alert("이미 신청이 완료된 건이라 수정이 불가합니다.");
@@ -163,94 +178,96 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
       alert("이미 민원인이 신청을 진행중인 건이라 수정이 불가합니다.");
       return;
     }
-    onUpdate({
-      ...parcel,
-      isVisible: checked,
-    });
+    setPendingVisibilityChange(checked);
+    setShowVisibilityConfirmModal(true);
+  };
+  
+  // 모달 확인 시 가시성 변경 적용
+  const handleConfirmVisibilityChange = () => {
+    if (pendingVisibilityChange !== null) {
+      onUpdate({
+        ...parcel,
+        isVisible: pendingVisibilityChange,
+      });
+    }
+    setShowVisibilityConfirmModal(false);
+    setPendingVisibilityChange(null);
   };
 
   return (
     <div className="space-y-6">
       {/* 필지상세 타이틀 */}
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">필지상세</h1>
-        <div className="flex items-center gap-2">
-          <Switch 
-            checked={parcel.isVisible !== false}
-            disabled={isLockedByCitizen}
-            onCheckedChange={handleVisibilityChange}
-          />
-          <span className={`text-sm font-medium ${parcel.isVisible !== false ? "text-emerald-600" : "text-muted-foreground"}`}>
-            {parcel.isVisible !== false ? "노출" : "미노출"}
-          </span>
-          {isLockedByCitizen && (
-            <span className="text-xs text-orange-500 ml-2">
-              (민원인 활동으로 수정 불가)
-            </span>
-          )}
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={onBack}
+            className="h-9 w-9"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-3xl font-bold">필지상세</h1>
         </div>
       </div>
 
-      {/* 필지 기본 정보 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MapPin className="h-5 w-5" />
-            필지 정보
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <Label className="text-muted-foreground">소재지</Label>
-              <p className="font-medium">{parcel.landInfo.address}</p>
-            </div>
-            <div>
-              <Label className="text-muted-foreground">사업명</Label>
-              <p className="font-medium">{parcel.projectName}</p>
-            </div>
-            <div>
-              <Label className="text-muted-foreground">잔여 면적</Label>
-              <p className="font-medium">{parcel.landInfo.remainingArea.toLocaleString()} ㎡</p>
-            </div>
-            <div>
-              <Label className="text-muted-foreground">잔여 비율</Label>
-              <p className="font-medium">{parcel.landInfo.remainingRatio}%</p>
-            </div>
-            <div>
-              <Label className="text-muted-foreground">소유자</Label>
-              <p className="font-medium">{parcel.landInfo.ownerName}</p>
-            </div>
-            <div className="col-span-2 md:col-span-1 flex flex-col gap-2">
-              <Label className="text-muted-foreground">현재 상태</Label>
-              <Badge variant="outline" className="w-fit">
-                {parcel.publishStatus}
+      {/* 필지 기본 정보 - 통합 헤더 레이아웃 */}
+        <Card className="border-0 shadow-none px-6">
+          <CardContent className="p-0">
+          {/* 상단: 소재지 + 민원 신청 상태 */}
+          <div className="flex items-center justify-between pb-4 border-b border-slate-200">
+            <span className="text-lg font-semibold text-foreground">{parcel.landInfo.address}</span>
+            {/* 편입 유형이 확정된 경우(부분 편입)에만 신청상세 보기 버튼 노출 */}
+            {parcel.residualStatus === "잔여지 인정" && parcel.citizenActivity?.applicationSubmitted && (
+              <Badge 
+                className="bg-transparent text-emerald-700 hover:bg-transparent cursor-pointer"
+                onClick={handleNavigateToApplication}
+              >
+                신청상세 보기
+                <ChevronRight className="h-3.5 w-3.5 ml-1" />
               </Badge>
+            )}
+          </div>
+          
+          {/* 하단: 정보 그리드 2행 3열 */}
+          <div className="grid grid-cols-3 gap-x-8 gap-y-3 pt-4">
+            {/* 1행 */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">사업명:</span>
+              <span className="text-sm font-medium">{parcel.projectName}</span>
             </div>
-            <div className="flex flex-col gap-2">
-              <Label className="text-muted-foreground">현재 AI 판정</Label>
-              {parcel.aiResult ? (
-                <Badge 
-                  className={`w-fit ${
-                    parcel.aiResult.provisionalJudgment === "매수 가능성 높음" || 
-                    parcel.aiResult.provisionalJudgment === "수용가능" 
-                      ? "bg-emerald-500 text-white" 
-                      : "bg-rose-500 text-white"
-                  }`}
-                >
-                  {parcel.aiResult.provisionalJudgment === "수용가능" ? "매수 가능성 높음" : 
-                   parcel.aiResult.provisionalJudgment === "수용불가" ? "매수 가능성 낮음" :
-                   parcel.aiResult.provisionalJudgment}
-                </Badge>
-              ) : (
-                <Badge variant="outline" className="w-fit">
-                  분석 대기
-                </Badge>
-              )}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">잔여 면적 (비율):</span>
+              <span className="text-sm font-medium">{parcel.landInfo.remainingArea.toLocaleString()} ㎡ ({parcel.landInfo.remainingRatio}%)</span>
             </div>
-            <div>
-              <Label className="text-muted-foreground">분석 횟수</Label>
-              <p className="font-medium">{parcel.analysisHistory?.length || 0}회</p>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">공개 여부:</span>
+              <div className="flex items-center gap-2">
+                <Switch 
+                  checked={parcel.isVisible !== false}
+                  disabled={isLockedByCitizen}
+                  onCheckedChange={handleVisibilityChange}
+                  className="h-[22px] w-[40px] [&>span]:size-[18px] [&>span]:data-[state=checked]:translate-x-[18px] [&>span]:data-[state=unchecked]:translate-x-[2px]"
+                />
+                <span className={`text-sm font-medium ${parcel.isVisible !== false ? "text-emerald-600" : "text-muted-foreground"}`}>
+                  {parcel.isVisible !== false ? "공개" : "비공개"}
+                </span>
+                {isLockedByCitizen && (
+                  <span className="text-xs text-orange-500">
+                    (민원인 활동으로 수정 불가)
+                  </span>
+                )}
+              </div>
+            </div>
+            
+            {/* 2행 */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">소유자:</span>
+              <span className="text-sm font-medium">{parcel.landInfo.ownerName}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">분석 횟수:</span>
+              <span className="text-sm font-medium">{parcel.analysisHistory?.length || 0}회</span>
             </div>
           </div>
         </CardContent>
@@ -259,7 +276,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
       {/* AI 분석 영역 - 2컬럼 레이아웃 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 왼쪽: AI 분석 */}
-        <Card>
+        <Card className="border-0 shadow-none">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>AI 분석</CardTitle>
@@ -282,7 +299,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* 지적도 */}
+            {/* 지��도 */}
             <div className="space-y-2">
               <Label className="font-medium">지적도</Label>
               <div className="h-[400px] rounded-lg overflow-hidden border bg-muted">
@@ -388,7 +405,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
         </Card>
 
         {/* 오른쪽: AI 분석결과 */}
-        <Card>
+        <Card className="border-0 shadow-none">
           <CardHeader>
             <CardTitle>AI 분석결과</CardTitle>
             <CardDescription>
@@ -549,7 +566,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
 
       {/* 하단 액션 버튼 */}
       <div className="flex items-center justify-end pt-4">
-        <Button variant="outline" onClick={onBack}>
+        <Button variant="outline" className="w-[80px] text-foreground border-foreground hover:bg-foreground/5" onClick={onBack}>
           목록
         </Button>
       </div>
@@ -561,6 +578,54 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack }: ParcelDetailRev
         aiResult={selectedAnalysisResult}
         landInfo={parcel.landInfo}
       />
+
+      {/* 필지 정보 공개/비공개 확인 모달 */}
+      <Dialog open={showVisibilityConfirmModal} onOpenChange={setShowVisibilityConfirmModal}>
+        <DialogContent className="max-w-md p-8 relative">
+          <DialogHeader className="pr-8">
+            <DialogTitle className="text-xl">
+              {pendingVisibilityChange ? "필지 정보 공개 확인" : "필지 정보 비공개 확인"}
+            </DialogTitle>
+            <DialogDescription className="pt-4 space-y-4 leading-7 text-base" asChild>
+              <div>
+                {pendingVisibilityChange ? (
+                  <>
+                    <span className="block">해당 필지를 민원인에게 공개하시겠습니까?</span>
+                    <span className="block">공개 시 민원인이 직접 정보를 조회하고 매수 신청을 진행할 수 있습니다.</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="block">해당 필지의 상세 정보와 AI 분석 결과를 민원인에게 비공개 처리하시겠습니까?</span>
+                    <span className="block">비공개 시 민원인이 해당 필지 정보를 조회할 수 ���습니다.</span>
+                  </>
+                )}
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+          
+          <DialogFooter className="gap-4 sm:gap-4 mt-6">
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setShowVisibilityConfirmModal(false);
+                setPendingVisibilityChange(null);
+              }}
+              className="border-gray-200 text-gray-600 bg-gray-50 hover:bg-gray-100 hover:text-gray-700"
+            >
+              취소
+            </Button>
+            <Button 
+              onClick={handleConfirmVisibilityChange}
+              className={pendingVisibilityChange 
+                ? "bg-emerald-700 hover:bg-emerald-800 text-white"
+                : "bg-gray-700 hover:bg-gray-800 text-white"
+              }
+            >
+              {pendingVisibilityChange ? "공개하기" : "비공개하기"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

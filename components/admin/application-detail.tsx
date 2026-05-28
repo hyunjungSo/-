@@ -59,9 +59,10 @@ interface ApplicationDetailProps {
   application: Application;
   onBack: () => void;
   onSave: (application: Application) => void;
+  onNavigateToList?: () => void;
 }
 
-// 담당자 판정 (매수/기각/심의위원회 이관) - JUDGMENT_COLORS 기반
+// 담당자 판정 (매수/기각/이관) - JUDGMENT_COLORS 기반
 const judgmentConfig = {
   매수: { 
     label: "매수", 
@@ -78,7 +79,7 @@ const judgmentConfig = {
     color: JUDGMENT_COLORS.기각.text 
   },
   "심의위원회 이관": { 
-    label: "심의위원회 이관", 
+    label: "이관", 
     icon: AlertTriangle, 
     borderColor: JUDGMENT_COLORS.이관.border, 
     textColor: JUDGMENT_COLORS.이관.text, 
@@ -116,7 +117,7 @@ interface LandReviewData {
   landComment: string; // 필지별 검토의견
 }
 
-export function ApplicationDetail({ application, onBack, onSave }: ApplicationDetailProps) {
+export function ApplicationDetail({ application, onBack, onSave, onNavigateToList }: ApplicationDetailProps) {
 // 복수 필지 여부 확인
   const isMultipleLands = application.additionalLands && application.additionalLands.length > 0;
   
@@ -170,7 +171,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
       let savedComment = "";
       
       if (application.adminStatus === "심사완료") {
-        // 1. landJudgmentsForReview에서 필지별 판정 찾기
+        // 1. landJudgmentsForReview에서 필지별 판정 ��기
         const landJudgmentForReview = application.landJudgmentsForReview?.find(
           lj => lj.landId === land.id
         );
@@ -279,7 +280,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   
   // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
   const [adminAIOptionsPerLand, setAdminAIOptionsPerLand] = useState<Record<string, {
-    accessRoadLost: boolean;      // 접면도로 상실
+    accessRoadLost: boolean;      // ��면도로 상실
     waterChannelLost: boolean;    // 관개수로 상실
     farmMachineDifficulty: boolean; // 농기계 회전 곤란
   }>>({});
@@ -376,7 +377,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
   // 기존 호환용 (일부 로직에서 사용)
   const checkedLandIds = aiResultViewMode === "admin" ? adminCheckedLandIds : citizenSelectedLandIds;
   
-  // 담당자 탭 필지 토글 핸들러
+  // 담당자 탭 필�� 토글 핸들러
   const handleLandCheckToggle = (landId: string) => {
     setAdminCheckedLandIds(prev => 
       prev.includes(landId) 
@@ -553,7 +554,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     let judgment: "수용가능" | "수용불가" = "수용불가";
     let reasons: string[] = [];
     
-    // 1. 면적 기준 미달 여부
+    // 1. 면적 기��� 미달 여부
     const effectiveLimit = criteria.relaxed;
     const areaCheckMet = land.remainingArea <= effectiveLimit;
     criteriaChecks.push({
@@ -713,7 +714,7 @@ export function ApplicationDetail({ application, onBack, onSave }: ApplicationDe
     setLandAnalysisStatus(initialStatus);
     setLandAnalysisStep(initialStep);
     
-    // 분석 실행 (최대 5초 이내 완료 보장)
+    // 분�� ���행 (최대 5초 이내 완료 보장)
     const runAnalysis = async () => {
       const totalLands = adminCheckedLandIds.length;
       const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수에 따라 동적 조절
@@ -930,21 +931,31 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
 
   return (
     <div className="space-y-10">
-      <div className="flex items-center justify-end gap-2">
-        <Button variant="ghost" onClick={onBack} className="h-auto px-0 text-muted-foreground hover:bg-transparent hover:text-foreground mr-auto">
-          <ArrowLeft className="mr-1.5 h-4 w-4" />
-          목록으로 돌아가기
-        </Button>
-        <Button variant="secondary" asChild>
-          <Link href={`/admin/review/${application.id}`}>
-            <FileText className="mr-2 h-4 w-4" />
-            심의서 작성
-          </Link>
-        </Button>
+      {/* 신청 상세 타이틀 */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={onBack}
+            className="h-9 w-9"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-3xl font-bold">신청 상세</h1>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button variant="secondary" asChild>
+            <Link href={`/admin/review/${application.id}`}>
+              <FileText className="mr-2 h-4 w-4" />
+              심의서 작성
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {/* Section 01. 신청인 정보 */}
-      <Card>
+      <Card className="border-0 shadow-none">
         <CardHeader>
           <CardTitle className="text-lg" style={{ fontSize: '20px' }}>신청인 정보</CardTitle>
         </CardHeader>
@@ -982,7 +993,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       )}
 
       {/* Section 02. 필지선택 */}
-      <Card className="border border-gray-200">
+      <Card className="border-0 shadow-none">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg" style={{ fontSize: '20px' }}>대상 필지 분석 및 검토</CardTitle>
@@ -1488,7 +1499,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const adjacentParcels = [
                           {
                             id: "adjacent-001",
-                            address: "경기도 용인시 처인구 포곡읍 마성리 101",
+                            address: "경�����도 용인시 처인구 포곡읍 마성리 101",
                             isIncluded: false,
                             isOwned: false,
                             isAdjacent: true,
@@ -1591,7 +1602,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             {/* 지목 참고 정보 - 인접 필지 선택 시 민원인 선택 제외 */}
                             {(() => {
                               const isAdjacentParcel = !!selectedAdjacentParcel;
-                              // 인접 필지인 경우 해당 인접 필지 데이터 사용, 아니면 신청 필지 데이터 사용
+                              // 인접 필지인 경우 ���당 인접 필지 데이터 사용, 아니면 신청 필지 데이터 사용
                               const landData = isAdjacentParcel 
                                 ? selectedAdjacentParcel 
                                 : application.landDataList?.[selectedLandIndex];
@@ -1744,7 +1755,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                   </div>
                                   <div className="flex items-center gap-3 p-2">
                                     <span className={landOptions.accessRoadLost ? "text-primary font-medium" : "text-muted-foreground"}>
-                                      {landOptions.accessRoadLost ? "✓" : "−"} 접면도로 상실
+                                      {landOptions.accessRoadLost ? "✓" : "−"} ��면��로 상실
                                     </span>
                                   </div>
                                   <div className="flex items-center gap-3 p-2">
@@ -1838,7 +1849,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         </div>
                         <p className="text-lg font-medium text-muted-foreground mb-2">결과없음</p>
                         <p className="text-sm text-muted-foreground max-w-xs">
-                          좌측에서 검토 항목을 설정하고 AI 분석을 실행해 주세요.
+                          좌측에서 검�� 항목을 설정하고 AI 분석을 실행해 주세요.
                         </p>
                       </div>
                     ) : (
@@ -2098,12 +2109,13 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
               
               return (
                 <div className="space-y-6">
-                  {/* 담당자 판정 (매수/기각/심의위원회 이관) */}
+                  {/* 담당자 판정 (매수 가능성 높음/매수 가능성 낮음/추가 검토 필요) */}
                   <div className="space-y-3">
                     <Label className="text-sm font-medium">담당자 판정</Label>
                     <div className="flex flex-wrap gap-2">
                       {(["매수", "기각", "심의위원회 이관"] as FinalJudgmentResult[]).map((judgment) => {
                         const config = judgmentConfig[judgment];
+                        if (!config) return null;
                         const Icon = config.icon;
                         const isSelected = landReview.landJudgment === judgment;
                         return (
@@ -2138,7 +2150,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   
                   {/* 검토 의견 */}
                   <div className="space-y-3">
-                    <Label className="text-sm font-medium">검토 의견</Label>
+                    <Label className="text-sm font-medium">검토 ��견</Label>
                     <Textarea
                       placeholder="해당 필지에 대한 검토 의견을 입력하세요..."
                       value={landReview.landComment}
@@ -2155,18 +2167,19 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </CardContent>
       </Card>
 
-      {/* Section 03. 진행상황 선택 - 복수필지 전체에 대한 한 건 처리 */}
-      <Card>
+      {/* Section 03. 진행상황 선택 - 복수필지 전체에 대한 ��� 건 처�� */}
+      <Card className="border-0 shadow-none">
         <CardHeader>
           <CardTitle className="text-lg" style={{ fontSize: '20px' }}>진행상황 선택</CardTitle>
           <CardDescription>
-            민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다
+            민원인이 신청 현황 조�� 시 이 진행상황이 표시됩니다
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
             {(["접수완료", "진행중", "심사완료"] as AdminStatus[]).map((status) => {
               const config = adminStatusConfig[status];
+              if (!config) return null;
               const Icon = config.icon;
               const isSelected = reviewData.adminStatus === status;
               return (
@@ -2188,7 +2201,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       </Card>
 
       {/* Section 04. 최종 검토 의견 */}
-      <Card className="border-2 border-primary/20 bg-primary/5">
+      <Card className="border-0 shadow-none">
         <CardHeader>
           <CardTitle className="text-lg" style={{ fontSize: '20px' }}>최종 검토 의견</CardTitle>
           <CardDescription>
@@ -2207,9 +2220,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 
                 // 판정 결과에 따른 JudgmentBadge 타입 매핑
                 const getJudgmentType = (j: string | null | undefined) => {
-                  if (j === "매수") return "매수";
-                  if (j === "기각") return "기각";
-                  if (j === "심의위원회 이관") return "이관";
+                  if (j === "매수") return "매수 가능성 높음";
+                  if (j === "기각") return "매수 가능성 낮음";
+                  if (j === "심의위원회 이관") return "추가 검토 필요";
                   return null;
                 };
                 
@@ -2228,7 +2241,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     className="inline-flex items-center gap-1.5 rounded-md border border-dashed border-border px-2 py-1 text-xs text-muted-foreground"
                   >
                     <span className="font-medium">{String.fromCharCode(65 + idx)}</span>
-                    <span>미검토</span>
+                    <span>미�����토</span>
                   </span>
                 );
               })}
@@ -2275,7 +2288,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
           />
           
           {/* 확장 패널 */}
-          <div className="relative flex w-full max-w-6xl bg-background shadow-2xl animate-in slide-in-from-left duration-300">
+          <div className="relative flex w-full max-w-6xl bg-background animate-in slide-in-from-left duration-300">
             {/* 닫기 버튼 */}
             <Button
               variant="ghost"

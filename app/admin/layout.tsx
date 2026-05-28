@@ -2,8 +2,6 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import { useAuth } from "@/lib/auth-context";
 import { Loader2 } from "lucide-react";
 
@@ -35,15 +33,9 @@ export default function AdminLayout({
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <div className="print:hidden">
-        <Header />
-      </div>
       <main className="w-full flex-1 print:max-w-none print:p-0">
         {children}
       </main>
-      <div className="print:hidden">
-        <Footer />
-      </div>
     </div>
   );
 }

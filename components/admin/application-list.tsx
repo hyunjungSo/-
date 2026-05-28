@@ -24,16 +24,24 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Calendar } from "@/components/ui/calendar";
 import type { Application, AdminStatus } from "@/lib/types";
-import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers, RefreshCw, CalendarIcon, Loader2, XCircle } from "lucide-react";
+import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, AlertCircle, FileCheck, Layers, RefreshCw, CalendarIcon, Loader2, XCircle, ArrowUpDown } from "lucide-react";
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { Progress } from "@/components/ui/progress";
 import { JudgmentSummaryBadge, PARCEL_COUNT_COLORS } from "@/components/ui/judgment-badge";
 import { PeriodFilter, type PeriodFilterType, type DateRange } from "@/components/ui/period-filter";
 import { StatCard, StatCardGroup } from "@/components/ui/stat-card";
+import { PaginationButton, PaginationNavButton } from "@/components/ui/pagination-button";
 import { formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { AIIcon } from "@/components/ui/ai-icon";
 
 interface ApplicationListProps {
   applications: Application[];
@@ -236,9 +244,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const finalCompleted = periodFilteredApplications.filter((a) => a.adminStatus === "심사완료");
     const completedCount = finalCompleted.length;
     
-    // AI 초기 판정: 매수가능/매수불가 (2가지만 존재, 이관 없음)
-    const aiPurchasable = Math.round(completedCount * 0.65);    // 매수가능 65%
-    const aiNotPurchasable = completedCount - aiPurchasable;     // 매수불가 35%
+    // AI 초기 판정: 매수가능/매수불가/추가검토필요 (3가지)
+    const aiPurchasable = Math.round(completedCount * 0.60);    // 매수가능 60%
+    const aiAdditionalReview = Math.max(1, Math.floor(completedCount * 0.08)); // 추가 검토 필요 8%
+    const aiNotPurchasable = completedCount - aiPurchasable - aiAdditionalReview; // 매수불가 32%
     const aiAnalyzed = completedCount;
     
     // AI 신뢰도 계산 로직:
@@ -256,7 +265,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const aiReliability = completedCount > 0 ? Math.round((aiMatchCount / completedCount) * 100) : 0;
     
     // 담당자 최종 심사 통계: 매수/기각/이관 (3가지)
-    // 전체 건수 = completedCount로 동일해야 함
+    // 전체 건수 = aiAnalyzed와 동일해야 함
     // 이관 건수 = 판단 보류 건수
     const finalTransfer = mismatchDeferred;
     // 매수 건수 = AI 매수가능 - 반대결정(기각으로 변경) - 일부 이관
@@ -264,8 +273,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     const deferredFromNotPurchasable = mismatchDeferred - deferredFromPurchasable; // 매수불가에서 이관된 건
     const finalPurchase = aiPurchasable - mismatchOpposite - deferredFromPurchasable;
     // 기각 건수 = AI 매수불가 - 이관 + 반대결정(매수가능->기각)
-    const finalReject = aiNotPurchasable - deferredFromNotPurchasable + mismatchOpposite;
-    // 검증: finalPurchase + finalReject + finalTransfer = completedCount
+    const finalRejectBase = aiNotPurchasable - deferredFromNotPurchasable + mismatchOpposite;
+    // 검증: finalPurchase + finalReject + finalTransfer = aiAnalyzed
+    // 합이 맞지 않으면 기각 건수를 조정하여 총합이 aiAnalyzed가 되도록 함
+    const finalReject = aiAnalyzed - finalPurchase - finalTransfer;
     
     // 처리 완료율
     const completionRate = total > 0 ? Math.round((심사완료 / total) * 100) : 0;
@@ -280,9 +291,10 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       진행중,
       심사완료,
       aiAnalyzed,
-      aiPurchasable,    // AI 초기 판정: 매수가능
-      aiNotPurchasable, // AI 초기 판정: 매수불가
-      finalPurchase,    // 담당자 최종: 매수
+      aiPurchasable,        // AI 초기 판정: 매수가능
+      aiAdditionalReview,   // AI 초기 판정: 추가 검토 필요
+      aiNotPurchasable,     // AI 초기 판정: 매수불가
+      finalPurchase,        // 담당자 최종: 매수
       finalReject,      // 담당자 최종: 기각
       finalTransfer,    // 담당자 최종: 이관
       aiReliability,
@@ -317,7 +329,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           
           {/* 우측: 기간 필터 */}
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-muted-foreground">조회 기간:</span>
+            <span className="text-sm font-medium text-muted-foreground">신청 조회 기간:</span>
             <div className="flex items-center gap-1">
               {/* 연도 피커 */}
               <Popover>
@@ -442,8 +454,8 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
               <Progress 
                 value={stats.completionRate} 
-                className="h-[18px]" 
-                indicatorClassName="bg-teal-600"
+                className="h-[9px]" 
+                indicatorClassName="bg-[#2E8B57]"
                 style={{ backgroundColor: '#e8f2f0' }}
               />
             </div>
@@ -486,7 +498,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
-              {/* 심사완료: Teal 계열 (완료 상태 강조) */}
+              {/* �����사완료: Teal 계열 (완료 상태 강조) */}
               <div 
                 onClick={() => setStatusFilter("심사완료")}
                 className="flex cursor-pointer flex-col items-center rounded-lg p-4 transition-all"
@@ -508,121 +520,74 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           </CardContent>
         </Card>
 
-        {/* AI 판독 신뢰도 카드 */}
-        <Card className="lg:col-span-5">
+        {/* 최근 작업내역 카드 */}
+        <Card className="lg:col-span-5 border-0 shadow-none">
           <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium flex items-center justify-between">
-              <span style={{ fontSize: '18px', fontWeight: '600' }}>AI 판독 신뢰도</span>
-              <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
+              <span style={{ fontSize: '18px', fontWeight: '600' }}>최근 작업내역</span>
+              <span className="text-sm text-muted-foreground">최근 7일</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
+          <CardContent className="space-y-1" style={{ paddingTop: '0' }}>
+            {/* 액티비티 로그 리스트 */}
+            <TooltipProvider delayDuration={200}>
+              <div className="space-y-2 max-h-[280px] overflow-y-auto pr-1">
+                {[
+                  { action: "심사완료 처리", target: "김철수 외 2건", actor: "홍길동", relativeTime: "10분 전", absoluteTime: "2026-05-28 10:47:21", type: "status" },
+                  { action: "AI 재분석 실행", target: "전남 강진군 작천면 309-2", actor: "홍길동", relativeTime: "25분 전", absoluteTime: "2026-05-28 10:32:15", type: "ai" },
+                  { action: "심사 의견 등록", target: "박영희 (민원번호: 2026-0523)", actor: "김담당", relativeTime: "1시간 전", absoluteTime: "2026-05-28 09:57:33", type: "comment" },
+                  { action: "진행중 상태 전환", target: "이민수 (민원번호: 2026-0521)", actor: "홍길동", relativeTime: "2시간 전", absoluteTime: "2026-05-28 08:45:12", type: "status" },
+                  { action: "공개 여부 변경", target: "강진군 작천면 310-1", actor: "김담당", relativeTime: "3시간 전", absoluteTime: "2026-05-28 07:52:08", type: "toggle" },
+                  { action: "심사완료 처리", target: "정미영 외 1건", actor: "홍길동", relativeTime: "어제", absoluteTime: "2026-05-27 17:23:45", type: "status" },
+                  { action: "보완 요청 메모", target: "최동훈 (민원번호: 2026-0518)", actor: "김담당", relativeTime: "어제", absoluteTime: "2026-05-27 14:11:29", type: "comment" },
+                  { action: "AI 재분석 실행", target: "전남 강진군 작천면 308-5", actor: "홍길동", relativeTime: "어제", absoluteTime: "2026-05-27 11:05:17", type: "ai" },
+                ].map((activity, index) => (
+                  <Tooltip key={index}>
+                    <TooltipTrigger asChild>
+                      <div 
+                        className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-muted/50 transition-colors cursor-default"
+                      >
+                        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                          activity.type === "status" ? "bg-emerald-50" :
+                          activity.type === "ai" ? "bg-blue-50" :
+                          activity.type === "comment" ? "bg-purple-50" :
+                          activity.type === "toggle" ? "bg-amber-50" :
+                          "bg-gray-50"
+                        }`}>
+                          {activity.type === "status" ? (
+                            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                          ) : activity.type === "ai" ? (
+                            <AIIcon className="h-4 w-4 text-blue-600" />
+                          ) : activity.type === "comment" ? (
+                            <Layers className="h-4 w-4 text-purple-600" />
+                          ) : activity.type === "toggle" ? (
+                            <FileCheck className="h-4 w-4 text-amber-600" />
+                          ) : (
+                            <Search className="h-4 w-4 text-gray-600" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-foreground truncate">{activity.action}</p>
+                          <p className="text-xs text-muted-foreground truncate">{activity.target}</p>
+                        </div>
+                        <div className="flex-shrink-0 flex items-center gap-1 text-xs text-muted-foreground">
+                          <Clock className="h-3 w-3" />
+                          <span>{activity.relativeTime}</span>
+                        </div>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="text-xs">
+                      <p className="font-medium">{activity.absoluteTime}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                ))}
+              </div>
+            </TooltipProvider>
             
-            {/* 스택 바 비교 */}
-            <div className="space-y-3" style={{ marginTop: '4px' }}>
-              {/* AI 초기 판정 막대 (매수가능/매수불가 2가지만) */}
-              <div className="space-y-1.5">
-                <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 초기 판정</span>
-                <div className="flex h-8 w-full overflow-hidden rounded-md">
-                  {stats.aiAnalyzed > 0 ? (
-                    <>
-                      {stats.aiPurchasable > 0 && (
-                        <div 
-                          className="flex items-center justify-center bg-emerald-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.aiPurchasable / stats.aiAnalyzed) * 100}%` }}
-                        >
-                          {stats.aiPurchasable}건
-                        </div>
-                      )}
-                      {stats.aiNotPurchasable > 0 && (
-                        <div 
-                          className="flex items-center justify-center bg-rose-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.aiNotPurchasable / stats.aiAnalyzed) * 100}%` }}
-                        >
-                          {stats.aiNotPurchasable}건
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-muted text-xs text-muted-foreground">
-                      데이터 없음
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              {/* 담당자 최종 심사 막대 */}
-              <div className="space-y-1.5">
-                <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>담당자 최종 심사</span>
-                <div className="flex h-8 w-full overflow-hidden rounded-md">
-                  {stats.심사완료 > 0 ? (
-                    <>
-                      {stats.finalPurchase > 0 && (
-                        <div 
-                          className="flex items-center justify-center bg-emerald-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.finalPurchase / stats.심사완료) * 100}%` }}
-                        >
-                          {stats.finalPurchase}건
-                        </div>
-                      )}
-                      {stats.finalReject > 0 && (
-                        <div 
-                          className="flex items-center justify-center bg-rose-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.finalReject / stats.심사완료) * 100}%` }}
-                        >
-                          {stats.finalReject}건
-                        </div>
-                      )}
-                      {stats.finalTransfer > 0 && (
-                        <div
-                          className="flex items-center justify-center bg-amber-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.finalTransfer / stats.심사완료) * 100}%` }}
-                        >
-                          {stats.finalTransfer}건
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-muted text-xs text-muted-foreground">
-                      데이터 없음
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              {/* 범례 */}
-              <div className="flex items-center justify-center gap-4 pt-2">
-                <div className="flex items-center gap-1.5">
-                  <div className="h-2.5 w-2.5 rounded-sm bg-emerald-500" />
-                  <span className="text-xs text-muted-foreground">매수</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="h-2.5 w-2.5 rounded-sm bg-rose-500" />
-                  <span className="text-xs text-muted-foreground">기각</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="h-2.5 w-2.5 rounded-sm bg-amber-500" />
-                  <span className="text-xs text-muted-foreground">이관</span>
-                </div>
-              </div>
-            </div>
-            
-            {/* 상세 지표 */}
-            <div className="space-y-2 border-t pt-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                  <span className="text-sm text-muted-foreground">판정 일치:</span>
-                  <span className="font-bold" style={{ fontSize: '18px' }}>{stats.aiMatchCount}건</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <XCircle className="h-4 w-4 text-rose-600" />
-                  <span className="text-sm text-rose-600">판정 불일치:</span>
-                  <span className="font-bold text-rose-600" style={{ fontSize: '18px' }}>{stats.aiMismatchCount}건</span>
-                </div>
-              </div>
-
-            </div>
+            {/* 하단 안내 문구 */}
+            <p className="pt-3 text-xs text-muted-foreground/70 text-center border-t mt-2">
+              ※ 상태 변경, 의견 등록, AI 재분석, 공개 여부 변경 내역만 표시됩니다.
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -649,17 +614,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             </div>
             
-            {/* 사업단 필터 */}
-            <Select value={projectUnitFilter} onValueChange={(value) => setProjectUnitFilter(value as "all" | "gangjin-gwangju")}>
-              <SelectTrigger className="w-[180px] h-[40px]">
-                <SelectValue placeholder="사업단 선택" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">전체 사업단</SelectItem>
-                <SelectItem value="gangjin-gwangju">강진광주건설 사업단</SelectItem>
-              </SelectContent>
-            </Select>
-            
             {/* 처리상태 필터 */}
             <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as AdminStatus | "all")}>
               <SelectTrigger className="w-[150px] h-[40px]">
@@ -676,26 +630,25 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             {/* 정렬 버튼 */}
             <Button
               variant="outline"
-              className="border-foreground bg-foreground px-4 text-background hover:bg-foreground/90 hover:text-background h-[40px]"
+              className="border-foreground bg-foreground px-4 text-background hover:bg-foreground/90 hover:text-background h-[40px] gap-2"
               onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
             >
+              <ArrowUpDown className="h-4 w-4" />
               {sortOrder === "desc" ? "최신순" : "오래된순"}
             </Button>
           </div>
 
           {/* 테이블 (데스크톱) */}
           <div className="hidden rounded-lg border border-border md:block">
-            <Table>
+            <Table className="table-fixed">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-center">접수번호</TableHead>
-                  <TableHead>신청인</TableHead>
-                  <TableHead>신청일시</TableHead>
-                  <TableHead>대상 지번</TableHead>
-                  <TableHead>사업단</TableHead>
-                  <TableHead>담당자</TableHead>
-                  <TableHead>진행상황</TableHead>
-                  <TableHead>심사결과</TableHead>
+                  <TableHead className="text-center w-[100px]">접수번호</TableHead>
+                  <TableHead className="w-[100px]">신청인</TableHead>
+                  <TableHead className="w-[140px]">신청일시</TableHead>
+                  <TableHead className="w-[280px]">대상 지번</TableHead>
+                  <TableHead className="w-[120px]">진행상황</TableHead>
+                  <TableHead className="w-[120px]">심사결과</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -738,16 +691,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                           </span>
                         )}
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <span className={app.businessUnit ? "text-foreground" : "text-muted-foreground"}>
-                        {app.businessUnit || "-"}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <span className={app.adminName ? "text-foreground" : "text-muted-foreground"}>
-                        {app.adminName || "미정"}
-                      </span>
                     </TableCell>
                     <TableCell>
                       <AdminStatusBadge status={app.adminStatus} />
@@ -827,20 +770,18 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           {/* 페이지네이션 */}
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 pt-4 mt-4">
-              <button
+              <PaginationNavButton
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
-                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 처음
-              </button>
-              <button
+              </PaginationNavButton>
+              <PaginationNavButton
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 이전
-              </button>
+              </PaginationNavButton>
               
               {/* 페이지 번호 */}
               <div className="flex items-center gap-1">
@@ -856,35 +797,29 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     pageNum = currentPage - 2 + i;
                   }
                   return (
-                    <button
+                    <PaginationButton
                       key={pageNum}
                       onClick={() => setCurrentPage(pageNum)}
-                      className={`w-9 h-9 flex items-center justify-center text-sm rounded ${
-                        currentPage === pageNum 
-                          ? "bg-teal-600 text-white" 
-                          : "text-gray-600 hover:bg-gray-50"
-                      }`}
+                      isActive={currentPage === pageNum}
                     >
                       {pageNum}
-                    </button>
+                    </PaginationButton>
                   );
                 })}
               </div>
               
-              <button
+              <PaginationNavButton
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 다음
-              </button>
-              <button
+              </PaginationNavButton>
+              <PaginationNavButton
                 onClick={() => setCurrentPage(totalPages)}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 마지막
-              </button>
+              </PaginationNavButton>
               
               <span className="text-sm text-muted-foreground ml-2">
                 ({filteredApplications.length}건 중 {(currentPage - 1) * itemsPerPage + 1}-{Math.min(currentPage * itemsPerPage, filteredApplications.length)}건)

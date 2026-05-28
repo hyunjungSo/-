@@ -72,7 +72,7 @@ export default function LoginPage() {
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">로그인</CardTitle>
             <CardDescription>
-              잔여지 매수 판독 서비스를 이용하려면 로그인하세요.
+              잔여지 매수 판정 서비스를 이용하려면 로그인하세요.
             </CardDescription>
           </CardHeader>
           <CardContent>
