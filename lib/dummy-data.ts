@@ -1855,7 +1855,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       ownerName: "이순신",
       ownerContact: "010-1111-2222",
       hasIncludedLand: true,
-      businessUnit: "수도권",
+      businessUnit: "수도���",
       projectName: "용��-양��� 도로확장사���",
     },
     checkItems: {
@@ -2507,7 +2507,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니���. 편입 �� 각 필지가 불규칙한 ���태로 남아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입��었습니���. 편입 �� 각 필지가 불규칙한 ���태로 남아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -2567,7 +2567,7 @@ export const dummyApplications: Application[] = [
           "농지 물리조건: 관개수로 상실, 농기계 회전 곤란",
           "형상 변화: 3필지 모두 비정형으로 변경",
         ],
-        detailedExplanation: "3필지 농지\n\n[필지 1] 501-1: 800㎡ → 250㎡ (삼각형)\n[필지 2] 501-2: 650㎡ → 170㎡ (역삼각형)\n[필지 3] 501-3: 550㎡ → 150㎡ (부정형)\n\n도로 편입 후 관개수로가 단절되고 형상이 불규칙하게 변경되어 농업 활동이 불가능한 상태��니다.",
+        detailedExplanation: "3필지 농지\n\n[필지 1] 501-1: 800㎡ → 250㎡ (삼각형)\n[필지 2] 501-2: 650㎡ → 170㎡ (역삼각형)\n[필지 3] 501-3: 550㎡ → 150㎡ (부정형)\n\n도로 편입 후 관개수로가 단절되고 형상이 불규칙하게 변경되어 농�� 활동이 불가능한 상태��니다.",
         manualCheckItems: [],
       },
     },
@@ -2722,7 +2722,7 @@ export const dummyApplications: Application[] = [
       criteriaChecks: [
         { criteriaName: "면적 기준", criteriaDescription: "잔여면적 140㎡로 건축 곤란", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 자루형)", isMet: true, autoDetected: true },
-        { criteriaName: "맹지 판정", criteriaDescription: "접면도로 상실로 양 필지 모두 맹지화", isMet: true, autoDetected: true },
+        { criteriaName: "맹지 판정", criteriaDescription: "접면도로 상실로 양 필지 모두 맹지��", isMet: true, autoDetected: true },
       ],
       provisionalJudgment: "수용���능",
       originalShapeIndex: 4.1,
@@ -3457,7 +3457,7 @@ export const dummyApplications: Application[] = [
     applicationType: "single",
     applicantName: "임수빈",
     applicantContact: "010-7890-0000",
-    applicantAddress: "경기도 양평군 양평읍 양근리 700",
+    applicantAddress: "경기도 양평�� 양평읍 양근리 700",
     landInfo: dummyLandInfoList[9],
     actualUsage: "전",
     reportedShape: "자���형",
@@ -3848,6 +3848,7 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     registeredAt: TWO_MONTHS_AGO,
     registeredBy: "관리자",
     publishStatus: "공개",
+    isVisible: false, // 매수 가능성 낮음 = 비공개
     analysisHistory: [
       {
         id: "history-005-1",
@@ -4028,6 +4029,7 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     registeredBy: "관리자",
     publishStatus: "2차분석완료",
     residualStatus: "기준 미달",
+    isVisible: false, // 전체 편입 = 비공개
     analysisHistory: [],
     firstAnalyzedAt: ONE_MONTH_AGO,
     lastAnalyzedAt: ONE_WEEK_AGO,
@@ -4430,6 +4432,7 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     registeredBy: "관리자",
     publishStatus: "2차분석중",
     residualStatus: "기준 미달",
+    isVisible: false, // 전체 편입 = 비공개
     analysisHistory: [],
     firstAnalyzedAt: SIX_WEEKS_AGO,
     lastAnalyzedAt: THREE_WEEKS_AGO,
@@ -4476,7 +4479,7 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     registeredAt: YESTERDAY,
     registeredBy: "관리자",
     publishStatus: "분석전",
-    // residualStatus 없음 = 판독대기 상태
+    // residualStatus 없�� = 판독대기 상태
     isVisible: false, // 판독대기 상태는 비공개
     analysisHistory: [],
     ownerIdentifier: "1111",
