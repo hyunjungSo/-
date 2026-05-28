@@ -565,7 +565,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
       </div>
 
       {/* 하단 액션 버튼 */}
-      <div className="flex items-center justify-end pt-4">
+      <div className="flex items-center justify-start mt-6 pb-6">
         <Button variant="outline" className="w-[80px] text-foreground border-foreground hover:bg-foreground/5" onClick={onBack}>
           목록
         </Button>
