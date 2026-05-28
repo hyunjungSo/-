@@ -107,8 +107,8 @@ export default function AdminPage() {
 
   return (
     <div className="flex min-h-screen">
-      {/* 왼쪽 SNB (Side Navigation Bar) - 어두운 배경 */}
-      <aside className="w-60 shrink-0 bg-[#1a2332] flex flex-col">
+      {/* 왼쪽 SNB (Side Navigation Bar) - 고정, 100vh */}
+      <aside className="w-60 shrink-0 bg-[#1a2332] flex flex-col fixed left-0 top-0 h-screen z-50">
         {/* 1단 - 시스템 로고 */}
         <div className="p-4 border-b border-gray-700">
           <Image
@@ -194,8 +194,8 @@ export default function AdminPage() {
         </div>
       </aside>
 
-      {/* 오른쪽 콘텐츠 영역 - 와이드하게 확장 */}
-      <main className="flex-1 p-6 overflow-auto" style={{ backgroundColor: '#f3f6f9' }}>
+      {/* 오른쪽 콘텐츠 영역 - 와이드하게 확장, 사이드바 너비만큼 margin-left */}
+      <main className="flex-1 p-6 overflow-auto ml-60 min-h-screen" style={{ backgroundColor: '#f3f6f9' }}>
         {/* 신청관리 콘텐츠 */}
         {activeTab === "applications" && (
           <>
