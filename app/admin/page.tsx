@@ -107,36 +107,36 @@ export default function AdminPage() {
 
   return (
     <div className="flex min-h-screen">
-      {/* 왼쪽 SNB (Side Navigation Bar) - 고정, 100vh */}
-      <aside className="w-60 shrink-0 bg-[#1a2332] flex flex-col fixed left-0 top-0 h-screen z-50">
+      {/* 왼쪽 SNB (Side Navigation Bar) - 고정, 100vh, 화이트 배경 */}
+      <aside className="w-60 shrink-0 bg-white flex flex-col fixed left-0 top-0 h-screen z-50 border-r border-gray-200">
         {/* 1단 - 시스템 로고 */}
-        <div className="p-4 border-b border-gray-700">
+        <div className="p-4 border-b border-gray-200">
           <Image
             src="/images/logo-lc.png"
             alt="한국도로공사 토지정보"
             width={180}
             height={40}
-            className="h-auto brightness-0 invert"
+            className="h-auto"
           />
         </div>
 
         {/* 2단 - 전역 사업지구 셀렉트 */}
-        <div className="p-4 border-b border-gray-700">
-          <label className="block text-xs font-medium text-gray-400 mb-2">사업지구</label>
+        <div className="p-4 border-b border-gray-200">
+          <label className="block text-xs font-medium text-gray-500 mb-2">사업지구</label>
           <Select value={projectUnitFilter} onValueChange={(value) => setProjectUnitFilter(value as "all" | "gangjin-gwangju")}>
-            <SelectTrigger className="w-full h-[42px] bg-[#2a3648] border-gray-600 text-white font-medium hover:bg-[#344056] focus:ring-[#00875a]">
+            <SelectTrigger className="w-full h-[42px] bg-gray-50 border-gray-300 text-gray-900 font-medium hover:bg-gray-100 focus:ring-[#00875a]">
               <SelectValue placeholder="사업단 선택" />
             </SelectTrigger>
-            <SelectContent className="bg-[#2a3648] border-gray-600">
-              <SelectItem value="all" className="text-white hover:bg-[#344056] focus:bg-[#344056]">전체 사업단</SelectItem>
-              <SelectItem value="gangjin-gwangju" className="text-white hover:bg-[#344056] focus:bg-[#344056]">강진광주건설사업단</SelectItem>
+            <SelectContent className="bg-white border-gray-200">
+              <SelectItem value="all" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100">전체 사업단</SelectItem>
+              <SelectItem value="gangjin-gwangju" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100">강진광주건설사업단</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         {/* 3단 - 메인 메뉴 */}
         <div className="flex-1 py-4">
-          <h2 className="mb-3 px-4 text-xs font-semibold uppercase tracking-wider text-gray-500">
+          <h2 className="mb-3 px-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
             메뉴
           </h2>
           <nav className="space-y-1">
@@ -150,7 +150,7 @@ export default function AdminPage() {
                 "flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors",
                 activeTab === "applications"
                   ? "bg-[#00875a] text-white"
-                  : "text-gray-300 hover:bg-[#2a3648] hover:text-white"
+                  : "text-gray-700 hover:bg-gray-100"
               )}
             >
               <FileText className="h-5 w-5" />
@@ -167,7 +167,7 @@ export default function AdminPage() {
                 "flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors",
                 (activeTab === "parcel-management" || activeTab === "parcel-review")
                   ? "bg-[#00875a] text-white"
-                  : "text-gray-300 hover:bg-[#2a3648] hover:text-white"
+                  : "text-gray-700 hover:bg-gray-100"
               )}
             >
               <MapPin className="h-5 w-5" />
@@ -177,17 +177,17 @@ export default function AdminPage() {
         </div>
 
         {/* 4단 - 계정 정보 및 로그아웃 (하단 고정) */}
-        <div className="mt-auto p-4 border-t border-gray-700">
+        <div className="mt-auto p-4 border-t border-gray-200">
           <div className="flex items-center gap-3 mb-3">
-            <div className="flex items-center justify-center w-9 h-9 bg-[#2a3648] rounded-full">
-              <User className="h-5 w-5 text-gray-400" />
+            <div className="flex items-center justify-center w-9 h-9 bg-gray-100 rounded-full">
+              <User className="h-5 w-5 text-gray-500" />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-medium text-white">홍길동</span>
-              <span className="text-xs text-gray-400">관리자</span>
+              <span className="text-sm font-medium text-gray-900">홍길동</span>
+              <span className="text-xs text-gray-500">관리자</span>
             </div>
           </div>
-          <button className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-400 hover:bg-[#2a3648] hover:text-white transition-colors">
+          <button className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors">
             <LogOut className="h-4 w-4" />
             <span>로그아웃</span>
           </button>
