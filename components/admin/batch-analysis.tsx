@@ -752,7 +752,7 @@ export function BatchAnalysis({
             <div>
               <CardTitle className="text-lg">필지 관리 목록</CardTitle>
               <CardDescription>
-                편입 유형 판독 및 매수 가능성 심사 결과를 확인하세����. 소��지를 클릭하면 필지 상세 화면으로 이동합니다.
+                편입 유형 판독 및 매수 가능성 심사 결과를 확인하세요. 소재지를 클릭하면 필지 상세 화면으로 이동합니다.
               </CardDescription>
             </div>
             {/* 분석 버튼 */}
