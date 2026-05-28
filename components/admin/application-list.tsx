@@ -455,6 +455,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             </div>
           </div>
         </div>
+      </div>
 
       {/* 현재 조회 기준 표시 */}
       <div className="flex items-center gap-2 rounded-lg bg-primary/5 px-4 py-2">
