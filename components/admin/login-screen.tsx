@@ -139,8 +139,8 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
             {/* 로그인 버튼 */}
             <Button
               type="submit"
-              disabled={isLoading}
-              className="h-12 w-full bg-[#2E8B57] text-base font-semibold text-white hover:bg-[#256b45] disabled:opacity-70"
+              disabled={isLoading || !employeeId.trim() || !password.trim()}
+              className="h-12 w-full bg-[#2E8B57] text-base font-semibold text-white hover:bg-[#256b45] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
