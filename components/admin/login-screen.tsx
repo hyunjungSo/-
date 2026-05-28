@@ -160,16 +160,6 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
               )}
             </Button>
           </form>
-
-          {/* 하단 안내 */}
-          <div className="text-center">
-            <p className="text-sm text-gray-500">
-              로그인에 문제가 있으신가요?{" "}
-              <span className="cursor-pointer font-medium text-[#2E8B57] hover:underline">
-                관리자에게 문의
-              </span>
-            </p>
-          </div>
         </div>
 
         {/* 모바일에서만 보이는 푸터 */}
