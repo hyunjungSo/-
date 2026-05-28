@@ -714,7 +714,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
     setLandAnalysisStatus(initialStatus);
     setLandAnalysisStep(initialStep);
     
-    // 분석 ���행 (최대 5초 이내 완료 보장)
+    // 분�� ���행 (최대 5초 이내 완료 보장)
     const runAnalysis = async () => {
       const totalLands = adminCheckedLandIds.length;
       const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수에 따라 동적 조절
@@ -2288,7 +2288,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
           />
           
           {/* 확장 패널 */}
-          <div className="relative flex w-full max-w-6xl bg-background shadow-2xl animate-in slide-in-from-left duration-300">
+          <div className="relative flex w-full max-w-6xl bg-background animate-in slide-in-from-left duration-300">
             {/* 닫기 버튼 */}
             <Button
               variant="ghost"
