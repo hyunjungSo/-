@@ -720,7 +720,7 @@ export function BatchAnalysis({
       </div>
 
       {/* 검색 및 필터 */}
-      <Card className="border-0 shadow-sm">
+      <Card className="border-0 shadow-none">
         <CardHeader className="pb-4">
           <CardTitle className="text-lg">검색 및 필터</CardTitle>
         </CardHeader>
@@ -748,7 +748,7 @@ export function BatchAnalysis({
                 options={[
                   { value: "all", label: "전체" },
                   { value: "pending", label: "판독대기" },
-                  { value: "full", label: "전체 편입" },
+                  { value: "full", label: "���체 편입" },
                   { value: "partial", label: "부분 편입" }
                 ]}
               />
