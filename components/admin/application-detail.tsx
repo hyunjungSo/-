@@ -955,7 +955,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       </div>
 
       {/* Section 01. 신청인 정보 */}
-      <Card>
+      <Card className="border-0 shadow-none">
         <CardHeader>
           <CardTitle className="text-lg" style={{ fontSize: '20px' }}>신청인 정보</CardTitle>
         </CardHeader>
@@ -993,7 +993,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       )}
 
       {/* Section 02. 필지선택 */}
-      <Card className="border border-gray-200">
+      <Card className="border-0 shadow-none">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg" style={{ fontSize: '20px' }}>대상 필지 분석 및 검토</CardTitle>
@@ -1602,7 +1602,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             {/* 지목 참고 정보 - 인접 필지 선택 시 민원인 선택 제외 */}
                             {(() => {
                               const isAdjacentParcel = !!selectedAdjacentParcel;
-                              // 인접 필지인 경우 해당 인접 필지 데이터 사용, 아니면 신청 필지 데이터 사용
+                              // 인접 필지인 경우 ���당 인접 필지 데이터 사용, 아니면 신청 필지 데이터 사용
                               const landData = isAdjacentParcel 
                                 ? selectedAdjacentParcel 
                                 : application.landDataList?.[selectedLandIndex];
@@ -2168,7 +2168,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       </Card>
 
       {/* Section 03. 진행상황 선택 - 복수필지 전체에 대한 ��� 건 처�� */}
-      <Card>
+      <Card className="border-0 shadow-none">
         <CardHeader>
           <CardTitle className="text-lg" style={{ fontSize: '20px' }}>진행상황 선택</CardTitle>
           <CardDescription>
@@ -2201,7 +2201,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       </Card>
 
       {/* Section 04. 최종 검토 의견 */}
-      <Card className="border-2 border-primary/20 bg-primary/5">
+      <Card className="border-0 shadow-none">
         <CardHeader>
           <CardTitle className="text-lg" style={{ fontSize: '20px' }}>최종 검토 의견</CardTitle>
           <CardDescription>

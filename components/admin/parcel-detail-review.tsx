@@ -212,8 +212,8 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
       </div>
 
       {/* 필지 기본 정보 - 통합 헤더 레이아웃 */}
-      <Card className="border-2 border-slate-200 px-6">
-        <CardContent className="p-0">
+        <Card className="border-0 shadow-none px-6">
+          <CardContent className="p-0">
           {/* 상단: 소재지 + 민원 신청 상태 */}
           <div className="flex items-center justify-between pb-4 border-b border-slate-200">
             <span className="text-lg font-semibold text-foreground">{parcel.landInfo.address}</span>
@@ -276,7 +276,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
       {/* AI 분석 영역 - 2컬럼 레이아웃 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 왼쪽: AI 분석 */}
-        <Card>
+        <Card className="border-0 shadow-none">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>AI 분석</CardTitle>
@@ -405,7 +405,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
         </Card>
 
         {/* 오른쪽: AI 분석결과 */}
-        <Card>
+        <Card className="border-0 shadow-none">
           <CardHeader>
             <CardTitle>AI 분석결과</CardTitle>
             <CardDescription>
