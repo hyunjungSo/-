@@ -596,47 +596,6 @@ export function BatchAnalysis({
                 </div>
               </div>
             </div>
-              </div>
-              {/* 판독대기: Indigo */}
-              <div 
-                onClick={() => setInclusionTypeFilter("pending")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-indigo-50 p-4 transition-all hover:bg-indigo-100"
-              >
-                <span className="text-sm font-medium text-indigo-500" style={{ order: 1 }}>판독대기</span>
-                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
-                  <span className="font-bold text-indigo-500" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.pendingInclusion}</span>
-                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
-                </div>
-              </div>
-              {/* 전체 편입: Gray */}
-              <div 
-                onClick={() => setInclusionTypeFilter("full")}
-                className="flex cursor-pointer flex-col items-center rounded-lg p-4 transition-all"
-                style={{ backgroundColor: '#f1f5f9' }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e2e8f0'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
-              >
-                <span className="text-sm font-medium" style={{ order: 1, color: '#64748b' }}>전체 편입</span>
-                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
-                  <span className="font-bold" style={{ fontSize: '42px', lineHeight: '1em', color: '#475569' }}>{stats.fullInclusion}</span>
-                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
-                </div>
-              </div>
-              {/* 부분 편입: Teal 계열 */}
-              <div 
-                onClick={() => setInclusionTypeFilter("partial")}
-                className="flex cursor-pointer flex-col items-center rounded-lg p-4 transition-all"
-                style={{ backgroundColor: '#e8f2f0' }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(20, 113, 97, 0.15)'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e8f2f0'}
-              >
-                <span className="text-sm font-medium" style={{ order: 1, color: 'rgb(20, 113, 97)' }}>부분 편입</span>
-                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
-                  <span className="font-bold" style={{ fontSize: '42px', lineHeight: '1em', color: 'rgb(20, 113, 97)' }}>{stats.partialInclusion}</span>
-                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
-                </div>
-              </div>
-            </div>
             {/* 기준 안내 문구 */}
             <p className="pt-2 text-xs text-muted-foreground/70">
               ※ 부분 편입 필지만 잔여지 발생으로 AI 매수 가능성 분석 대상입니다.
