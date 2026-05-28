@@ -439,7 +439,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
       )}
 
       {/* 대시보드 요약 */}
-      <div className="grid gap-4 lg:grid-cols-11">
+      <div className="grid gap-5 lg:grid-cols-11">
         {/* 민원 진행 현황 카드 */}
         <Card className="lg:col-span-6">
           <CardHeader style={{ paddingBottom: '6px' }}>
@@ -461,7 +461,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             </div>
             
             {/* 상태별 현황 그리드 - 카드별 포인트 컬러 적용 */}
-            <div className="grid grid-cols-4 gap-3 pt-2">
+            <div className="grid grid-cols-4 gap-5 pt-2">
               {/* 전체: Slate 계열 */}
               <div 
                 onClick={() => setStatusFilter("all")}
@@ -535,7 +535,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                 {[
                   { action: "심사완료 처리", target: "김철수 외 2건", actor: "홍길동", relativeTime: "10분 전", absoluteTime: "2026-05-28 10:47:21", type: "status" },
                   { action: "AI 재분석 실행", target: "전남 강진군 작천면 309-2", actor: "홍길동", relativeTime: "25분 전", absoluteTime: "2026-05-28 10:32:15", type: "ai" },
-                  { action: "심사 의견 등록", target: "박영희 (민원번호: 2026-0523)", actor: "김담당", relativeTime: "1시간 전", absoluteTime: "2026-05-28 09:57:33", type: "comment" },
+                  { action: "��사 의견 등록", target: "박영희 (민원번호: 2026-0523)", actor: "김담당", relativeTime: "1시간 전", absoluteTime: "2026-05-28 09:57:33", type: "comment" },
                   { action: "진행중 상태 전환", target: "이민수 (민원번호: 2026-0521)", actor: "홍길동", relativeTime: "2시간 전", absoluteTime: "2026-05-28 08:45:12", type: "status" },
                   { action: "공개 여부 변경", target: "강진군 작천면 310-1", actor: "김담당", relativeTime: "3시간 전", absoluteTime: "2026-05-28 07:52:08", type: "toggle" },
                   { action: "심사완료 처리", target: "정미영 외 1건", actor: "홍길동", relativeTime: "어제", absoluteTime: "2026-05-27 17:23:45", type: "status" },

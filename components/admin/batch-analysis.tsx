@@ -667,7 +667,7 @@ export function BatchAnalysis({
       <p className="text-muted-foreground -mt-4">편입 유형 분석 및 매수 가능성 심사를 관리합니다.</p>
 
       {/* 대시보드 요약 - 신청관리와 동일한 UI */}
-      <div className="grid gap-4 lg:grid-cols-11">
+      <div className="grid gap-5 lg:grid-cols-11">
         {/* 편입 유형 현황 카드 */}
         <Card className="lg:col-span-6">
           <CardHeader style={{ paddingBottom: '6px' }}>
@@ -691,7 +691,7 @@ export function BatchAnalysis({
             </div>
             
             {/* 상태별 현황 그리드 - 4개 카드 */}
-            <div className="grid grid-cols-4 gap-3 pt-2">
+            <div className="grid grid-cols-4 gap-5 pt-2">
               {/* 전체: Black */}
               <div 
                 onClick={() => handleInclusionTypeClick("all")}
@@ -767,7 +767,7 @@ export function BatchAnalysis({
             </div>
             
             {/* 상태별 현황 그리드 - 4개 카드 */}
-            <div className="grid grid-cols-4 gap-3 pt-2">
+            <div className="grid grid-cols-4 gap-5 pt-2">
               {/* 전체: Black */}
               <div 
                 onClick={() => handleAiJudgmentClick("all")}

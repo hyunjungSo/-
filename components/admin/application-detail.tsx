@@ -960,7 +960,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
           <CardTitle className="text-lg" style={{ fontSize: '20px' }}>신청인 정보</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
             <div>
               <span className="text-sm text-muted-foreground">접수번호</span>
               <p className="font-medium">2026-05-001</p>
@@ -1156,7 +1156,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             
             {/* 민원인 결과 탭 */}
             <TabsContent value="citizen">
-              <div className="grid gap-6 lg:grid-cols-[1fr_35%]">
+              <div className="grid gap-5 lg:grid-cols-[1fr_35%]">
                 {/* 좌측: 지적도 - 선택된 필지만 표시 (65%) */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -1264,7 +1264,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         {/* 편입 정보 */}
                         <div className="rounded-lg bg-white/60 p-3 border mb-4">
                           <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
-                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 text-sm">
                             <div>
                               <span className="text-muted-foreground">편입 전 면적:</span>
                               <span className="ml-1 font-medium">{land.originalArea.toLocaleString()}㎡</span>
@@ -1876,7 +1876,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                               {/* 편입 정보 */}
                               <div className="rounded-lg bg-white/60 p-3 border mb-4">
                                 <p className="text-xs font-medium text-muted-foreground mb-2">편입 정보</p>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 text-sm">
                                   <div>
                                     <span className="text-muted-foreground">편입 전 면적:</span>
                                     <span className="ml-1 font-medium">{land.originalArea?.toLocaleString() || "-"}㎡</span>
@@ -2356,7 +2356,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const criteria = result?.judgmentRationale?.appliedCriteria || [
                           "잔여지 면적 기준 미달 여부",
                           "잔여지 형상 변화 (정형 → 부정형)",
-                          "접면도�� 상태 변경 여부"
+                          "접면도��� 상태 변경 여부"
                         ];
                         return criteria.map((c: string, i: number) => (
                           <li key={i} className="flex items-start gap-2 text-[15px] text-muted-foreground">
@@ -2450,7 +2450,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   </div>
 
                   {/* 분석 시각화 */}
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-5">
                     <div className="rounded-lg border bg-background p-4">
                       <p className="text-xs text-muted-foreground mb-2">잔여 면적</p>
                       <p className="text-2xl font-bold text-foreground">
