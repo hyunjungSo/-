@@ -65,7 +65,8 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
           <div className="space-y-6">
             <div className="space-y-2">
               <h1 className="text-4xl font-bold tracking-tight text-white">
-                AI 잔여지 매수 판독
+                AI 잔여지 매수 판독<br />
+                관리자
               </h1>
             </div>
             <div className="h-1 w-24 rounded-full bg-[#2E8B57]" />
