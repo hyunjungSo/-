@@ -346,7 +346,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
       </div>
 
       {/* 실시간 자동 적재 현황 요약 카드 */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-5">
         {/* 신규 적재: Blue */}
         <div 
           className="flex cursor-pointer flex-col items-center rounded-lg bg-blue-50 p-4 transition-all hover:bg-blue-100"

@@ -48,24 +48,21 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
         <div className="relative z-10 flex h-full flex-col justify-between p-12">
           {/* 상단 로고 영역 */}
           <div>
-            <div className="flex items-center gap-3">
-              <svg className="h-12 w-12 text-white" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="10" y="10" width="80" height="80" rx="8" fill="none" stroke="currentColor" strokeWidth="2"/>
-                <path d="M30 35 L50 55 L70 35" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <path d="M30 65 L50 45 L70 65" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-              </svg>
-              <div className="flex flex-col">
-                <span className="text-lg font-semibold text-white">한국도로공사</span>
-                <span className="text-sm text-white/70">Korea Expressway Corporation</span>
-              </div>
-            </div>
+            <Image
+              src="/images/logo-lc.png"
+              alt="Korea Expressway Corporation"
+              width={90}
+              height={20}
+              className="h-5 w-auto brightness-0 invert opacity-80"
+            />
           </div>
           
           {/* 중앙 타이틀 */}
           <div className="space-y-6">
             <div className="space-y-2">
-              <h1 className="text-4xl font-bold tracking-tight text-white">
-                AI 잔여지 매수 판독
+              <h1 className="text-4xl font-bold tracking-tight text-white leading-[1.2]">
+                AI 잔여지 매수 판독<br />
+                관리자
               </h1>
             </div>
             <div className="h-1 w-24 rounded-full bg-[#2E8B57]" />
@@ -81,13 +78,8 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
       {/* 우측 영역 - 로그인 폼 섹션 */}
       <div className="flex w-full flex-col items-center justify-center bg-white px-8 lg:w-1/2">
         <div className="w-full max-w-md space-y-8">
-          {/* 상단 로고 및 타이틀 */}
-          <div className="space-y-4 text-center">
-            <div className="flex justify-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-[#1a365d] to-[#2E8B57]">
-                <span className="text-2xl font-bold text-white">EX</span>
-              </div>
-            </div>
+          {/* 로그인 제목 */}
+          <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900">
               로그인
             </h1>
@@ -147,8 +139,8 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
             {/* 로그인 버튼 */}
             <Button
               type="submit"
-              disabled={isLoading}
-              className="h-12 w-full bg-[#2E8B57] text-base font-semibold text-white hover:bg-[#256b45] disabled:opacity-70"
+              disabled={isLoading || !employeeId.trim() || !password.trim()}
+              className="h-12 w-full bg-[#2E8B57] text-base font-semibold text-white hover:bg-[#256b45] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">

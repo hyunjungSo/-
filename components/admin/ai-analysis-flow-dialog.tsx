@@ -155,7 +155,7 @@ export function AIAnalysisFlowDialog({
               </h3>
             </div>
             {/* 4개 경로 컬럼 */}
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-5">
             {/* 택지 경로 */}
             <PathColumn
               type="택지"
@@ -346,7 +346,7 @@ export function AIAnalysisFlowDialog({
               <div className="mb-3">
                 <h4 className="text-sm font-bold text-gray-700">담당자 검토</h4>
               </div>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-5">
                 <div className={cn(
                   "border rounded p-3 text-center transition-all",
                   finalJudgment === "수용가능" ? `${JUDGMENT_COLORS.수용가능.border} ${JUDGMENT_COLORS.수용가능.bgLight}` : "border-gray-200 bg-gray-50"
@@ -373,7 +373,7 @@ export function AIAnalysisFlowDialog({
               <div className="mb-3">
                 <h4 className="text-sm font-bold text-gray-700">최종 결정</h4>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-5">
                 <motion.div 
                   animate={{ scale: finalJudgment === "수용가능" && animationStep >= 7 ? 1.02 : 1 }}
                   className={cn(
@@ -614,7 +614,7 @@ function PathColumn({
                       {item.subLabel && (
                         <p className="text-sm text-gray-400 mt-0.5">{item.subLabel}</p>
                       )}
-                      {/* 충족/미충족 상세 설명 */}
+                      {/* 충��/미충족 상세 설명 */}
                       {isActive && item.isSelected && item.isMet && item.explanationMet && (
                         <p className={`text-sm ${JUDGMENT_COLORS.충족.text} mt-1 font-medium`}>
                           → {item.explanationMet}

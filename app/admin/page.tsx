@@ -93,7 +93,18 @@ export default function AdminPage() {
     // localStorage에 업데이트된 application 저장 (심의서 페이지와 연동)
     try {
       const savedApplications = JSON.parse(localStorage.getItem('updatedApplications') || '{}');
-      savedApplications[updatedApplication.id] = updatedApplication;
+      // 순환 참조 방지를 위해 필요한 필드만 추출하여 저장
+      const safeApplication = {
+        id: updatedApplication.id,
+        applicantName: updatedApplication.applicantName,
+        projectName: updatedApplication.projectName,
+        adminStatus: updatedApplication.adminStatus,
+        applicationDate: updatedApplication.applicationDate,
+        parcels: updatedApplication.parcels,
+        residentialLandParcels: updatedApplication.residentialLandParcels,
+        adjacentLandParcels: updatedApplication.adjacentLandParcels,
+      };
+      savedApplications[updatedApplication.id] = safeApplication;
       localStorage.setItem('updatedApplications', JSON.stringify(savedApplications));
     } catch (e) {
       console.error('Failed to save to localStorage:', e);
@@ -162,13 +173,22 @@ export default function AdminPage() {
       <aside className="w-60 shrink-0 bg-white flex flex-col fixed left-0 top-0 h-screen z-50 border-r border-gray-200">
         {/* 1단 - 시스템 로고 */}
         <div className="p-4 border-b border-gray-200">
-          <Image
-            src="/images/logo-lc.png"
-            alt="한국도로공사 토지정보"
-            width={180}
-            height={40}
-            className="h-auto"
-          />
+          <button
+            onClick={() => {
+              setActiveTab("applications");
+              setSelectedApplication(null);
+              setSelectedParcel(null);
+            }}
+            className="focus:outline-none"
+          >
+            <Image
+              src="/images/logo-lc.png"
+              alt="한국도로공사 토지정보"
+              width={180}
+              height={40}
+              className="h-auto cursor-pointer"
+            />
+          </button>
         </div>
 
         {/* 2단 - 전역 사업지구 셀렉트 */}
@@ -274,16 +294,35 @@ export default function AdminPage() {
                   onSave={handleSave}
                   onNavigateToList={handleNavigateToApplicationList}
                 />
-                {/* 콘텐츠 하단 - 목록으로 돌아가기 버튼 (고정 아님) */}
-                <div className="flex justify-center py-8 mt-24">
+                {/* 콘텐츠 하단 - 버튼 영역 (목록, 취소, 저장) */}
+                <div className="flex items-center justify-between mt-6 pb-6">
+                  {/* 좌측 - 목록보기 버튼 */}
                   <Button
                     variant="outline"
-                    size="lg"
                     onClick={handleNavigateToApplicationList}
-                    className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 text-base"
+                    className="w-[80px] text-foreground border-foreground hover:bg-foreground/5"
                   >
                     목록보기
                   </Button>
+                  
+                  {/* 중앙 - 취소/저장 버튼 (심사완료가 아닐 때만 표시) */}
+                  {selectedApplication?.adminStatus !== "심사완료" && (
+                    <div className="flex gap-3">
+                      <Button 
+                        variant="outline" 
+                        className="w-[80px] text-foreground border-foreground hover:bg-foreground/5" 
+                        onClick={handleBack}
+                      >
+                        취소
+                      </Button>
+                      <Button className="w-[80px]" onClick={() => window.dispatchEvent(new CustomEvent('application-detail-save'))}>
+                        저장
+                      </Button>
+                    </div>
+                  )}
+                  
+                  {/* 우측 공��� (레이아웃 균형용) */}
+                  <div className="w-[80px]" />
                 </div>
               </div>
             ) : (

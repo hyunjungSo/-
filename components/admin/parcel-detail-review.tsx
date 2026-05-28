@@ -274,7 +274,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
       </Card>
 
       {/* AI 분석 영역 - 2컬럼 레이아웃 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* 왼쪽: AI 분석 */}
         <Card className="border-0 shadow-none">
           <CardHeader>
@@ -308,7 +308,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
             </div>
 
             {/* 현재 활용지목 및 토지 형상 */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-5">
               <div className="space-y-2">
                 <Label className="text-sm">현재 활용지목</Label>
                 <Select value={currentUsage} onValueChange={(v) => setCurrentUsage(v as LandCategory)}>
@@ -345,7 +345,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
             {/* 담당자 확인항목 */}
             <div className="space-y-2">
               <Label className="text-sm">담당자 확인항목</Label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-5">
                 {adminCheckItemOptions.map((option) => (
                   <div 
                     key={option.value}
@@ -463,7 +463,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
                                   <Shapes className="h-4 w-4 text-muted-foreground" />
                                   잔여지 형상지수 기반 판정
                                 </h5>
-                                <div className="grid grid-cols-3 gap-3">
+                                <div className="grid grid-cols-3 gap-5">
                                   <div className="p-2 rounded" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
                                     <p className="text-xs text-muted-foreground">잔여지 형상지수</p>
                                     <p className="text-lg font-semibold">{aiResult.remainingShapeIndex?.toFixed(3) || "-"}</p>
@@ -485,7 +485,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
                                   <AlertTriangle className="h-4 w-4 text-amber-500" />
                                   수동 확인 항목
                                 </h5>
-                                <div className="grid grid-cols-2 gap-2">
+                                <div className="grid grid-cols-2 gap-5">
                                   <div className="p-2 rounded flex items-center justify-between" style={{ backgroundColor: "rgb(251, 251, 251)" }}>
                                     <span className="text-sm">농기계 진입 불가</span>
                                     <Badge variant={aiResult.farmMachineDifficulty ? "destructive" : "outline"}>
@@ -565,7 +565,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
       </div>
 
       {/* 하단 액션 버튼 */}
-      <div className="flex items-center justify-end pt-4">
+      <div className="flex items-center justify-start mt-6 pb-6">
         <Button variant="outline" className="w-[80px] text-foreground border-foreground hover:bg-foreground/5" onClick={onBack}>
           목록
         </Button>
