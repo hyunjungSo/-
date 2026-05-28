@@ -564,18 +564,18 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-1" style={{ paddingTop: '0' }}>
-            {/* 액티비티 로그 리스트 */}
+            {/* 액티비티 로그 리스트 - 신청관리 화면에서 발생한 활동만 표시 */}
             <TooltipProvider delayDuration={200}>
               <div className="space-y-2 max-h-[280px] overflow-y-auto pr-1">
                 {[
                   { action: "심사완료 처리", target: "김철수 외 2건", actor: "홍길동", relativeTime: "10분 전", absoluteTime: "2026-05-28 10:47:21", type: "status" },
-                  { action: "AI 재분석 실행", target: "전남 강진군 작천면 309-2", actor: "홍길동", relativeTime: "25분 전", absoluteTime: "2026-05-28 10:32:15", type: "ai" },
-                  { action: "��사 의견 등록", target: "박영희 (민원번호: 2026-0523)", actor: "김담당", relativeTime: "1시간 전", absoluteTime: "2026-05-28 09:57:33", type: "comment" },
+                  { action: "AI 재분석 실행", target: "김철수 (민원번호: 2026-0525)", actor: "홍길동", relativeTime: "25분 전", absoluteTime: "2026-05-28 10:32:15", type: "ai" },
+                  { action: "검토 의견 등록", target: "박영희 (민원번호: 2026-0523)", actor: "김담당", relativeTime: "1시간 전", absoluteTime: "2026-05-28 09:57:33", type: "comment" },
                   { action: "진행중 상태 전환", target: "이민수 (민원번호: 2026-0521)", actor: "홍길동", relativeTime: "2시간 전", absoluteTime: "2026-05-28 08:45:12", type: "status" },
-                  { action: "공개 여부 변경", target: "강진군 작천면 310-1", actor: "김담당", relativeTime: "3시간 전", absoluteTime: "2026-05-28 07:52:08", type: "toggle" },
                   { action: "심사완료 처리", target: "정미영 외 1건", actor: "홍길동", relativeTime: "어제", absoluteTime: "2026-05-27 17:23:45", type: "status" },
                   { action: "보완 요청 메모", target: "최동훈 (민원번호: 2026-0518)", actor: "김담당", relativeTime: "어제", absoluteTime: "2026-05-27 14:11:29", type: "comment" },
-                  { action: "AI 재분석 실행", target: "전남 강진군 작천면 308-5", actor: "홍길동", relativeTime: "어제", absoluteTime: "2026-05-27 11:05:17", type: "ai" },
+                  { action: "AI 재분석 실행", target: "강민호 (민원번호: 2026-0517)", actor: "홍길동", relativeTime: "어제", absoluteTime: "2026-05-27 11:05:17", type: "ai" },
+                  { action: "신청 접수 확인", target: "윤지현 (민원번호: 2026-0516)", actor: "김담당", relativeTime: "2일 전", absoluteTime: "2026-05-26 15:32:41", type: "status" },
                 ].map((activity, index) => (
                   <Tooltip key={index}>
                     <TooltipTrigger asChild>
@@ -621,7 +621,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             
             {/* 하단 안내 문구 */}
             <p className="pt-3 text-xs text-muted-foreground/70 text-center border-t mt-2">
-              ※ 상태 변경, 의견 등록, AI 재분석, 공개 여부 변경 내역만 표시됩니다.
+              ※ 신청관리 화면에서의 상태 변경, 의견 등록, AI 재분석 내역만 표시됩니다.
             </p>
           </CardContent>
         </Card>
