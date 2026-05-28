@@ -64,6 +64,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   const [projectUnitFilter, setProjectUnitFilter] = useState<"all" | "gangjin-gwangju">("all");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [periodFilter, setPeriodFilter] = useState<PeriodFilter>("year");
+  const [dateCriteriaType, setDateCriteriaType] = useState<"appliedAt" | "statusUpdatedAt">("appliedAt");
   const [selectedYear, setSelectedYear] = useState<number | null>(currentYear);
   const [aiMismatchFilter, setAiMismatchFilter] = useState(false);
   const [customDateRange, setCustomDateRange] = useState<DateRange>({ from: undefined, to: undefined });
@@ -160,7 +161,9 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
     tomorrow.setDate(tomorrow.getDate() + 1);
     
     return applications.filter((app) => {
-      const appDate = new Date(app.appliedAt);
+      // 선택된 기준에 따라 날짜 결정 (민원 신청일 또는 관리자 상태 변경일)
+      const dateSource = dateCriteriaType === "appliedAt" ? app.appliedAt : (app.statusUpdatedAt || app.appliedAt);
+      const appDate = new Date(dateSource);
       
       switch (periodFilter) {
         case "year": {
@@ -195,7 +198,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           return true;
       }
     });
-  }, [applications, periodFilter, customDateRange, selectedYear]);
+  }, [applications, periodFilter, customDateRange, selectedYear, dateCriteriaType]);
 
   const handleRefresh = () => {
     setLastUpdated(new Date());
@@ -231,7 +234,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
   // 필터 변경 시 페이지 리셋
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, statusFilter, projectUnitFilter, aiMismatchFilter, periodFilter, selectedYear]);
+  }, [searchQuery, statusFilter, projectUnitFilter, aiMismatchFilter, periodFilter, selectedYear, dateCriteriaType]);
 
   // 상태별 통계 (기간 필터 적용)
   const stats = useMemo(() => {
@@ -328,11 +331,52 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           </div>
           
           {/* 우측: 기간 필터 */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-muted-foreground">신청 조회 기간:</span>
-            <div className="flex items-center gap-1">
-              {/* 연도 피커 */}
+          <div className="flex items-center gap-4">
+            {/* 조회 기준 선택 */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-muted-foreground">조회 기준:</span>
               <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    className="flex items-center gap-1 rounded-md border border-muted-foreground/30 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground transition-all"
+                  >
+                    {dateCriteriaType === "appliedAt" ? "민원 신청일" : "상태 변경일"}
+                    <ChevronRight className="h-3 w-3 rotate-90" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-36 p-1" align="start">
+                  <button
+                    onClick={() => setDateCriteriaType("appliedAt")}
+                    className={cn(
+                      "w-full rounded-md px-3 py-1.5 text-left text-sm transition-colors",
+                      dateCriteriaType === "appliedAt"
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted"
+                    )}
+                  >
+                    민원 신청일
+                  </button>
+                  <button
+                    onClick={() => setDateCriteriaType("statusUpdatedAt")}
+                    className={cn(
+                      "w-full rounded-md px-3 py-1.5 text-left text-sm transition-colors",
+                      dateCriteriaType === "statusUpdatedAt"
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted"
+                    )}
+                  >
+                    상태 변경일
+                  </button>
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            {/* 조회 기간 */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-muted-foreground">조회 기간:</span>
+              <div className="flex items-center gap-1">
+                {/* 연도 피커 */}
+                <Popover>
                 <PopoverTrigger asChild>
                   <button
                     className={cn(
@@ -421,6 +465,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             </div>
           </div>
         </div>
+      </div>
 
       {/* 현재 조회 기준 표시 */}
       <div className="flex items-center gap-2 rounded-lg bg-primary/5 px-4 py-2">
