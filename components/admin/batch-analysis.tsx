@@ -785,7 +785,7 @@ export function BatchAnalysis({
       </Card>
 
       {/* 필지 목록 테이블 */}
-      <Card className="border-0 shadow-sm">
+      <Card className="border-0 shadow-none">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
