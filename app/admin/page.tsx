@@ -96,7 +96,18 @@ export default function AdminPage() {
     // localStorage에 업데이트된 application 저장 (심의서 페이지와 연동)
     try {
       const savedApplications = JSON.parse(localStorage.getItem('updatedApplications') || '{}');
-      savedApplications[updatedApplication.id] = updatedApplication;
+      // 순환 참조 방지를 위해 필요한 필드만 추출하여 저장
+      const safeApplication = {
+        id: updatedApplication.id,
+        applicantName: updatedApplication.applicantName,
+        projectName: updatedApplication.projectName,
+        adminStatus: updatedApplication.adminStatus,
+        applicationDate: updatedApplication.applicationDate,
+        parcels: updatedApplication.parcels,
+        residentialLandParcels: updatedApplication.residentialLandParcels,
+        adjacentLandParcels: updatedApplication.adjacentLandParcels,
+      };
+      savedApplications[updatedApplication.id] = safeApplication;
       localStorage.setItem('updatedApplications', JSON.stringify(savedApplications));
     } catch (e) {
       console.error('Failed to save to localStorage:', e);
@@ -314,7 +325,7 @@ export default function AdminPage() {
                     </div>
                   )}
                   
-                  {/* 우측 공간 (레이아웃 균형용) */}
+                  {/* 우측 공��� (레이아웃 균형용) */}
                   <div className="w-[80px]" />
                 </div>
               </div>

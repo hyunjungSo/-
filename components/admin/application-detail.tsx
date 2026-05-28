@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -715,7 +715,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
     setLandAnalysisStatus(initialStatus);
     setLandAnalysisStep(initialStep);
     
-    // 분�� ���행 (최대 5초 이내 완료 보장)
+    // 분�� ���행 (최대 5�� 이내 완료 보장)
     const runAnalysis = async () => {
       const totalLands = adminCheckedLandIds.length;
       const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수에 따라 동적 조절
@@ -931,7 +931,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
   };
 
   // saveRef를 통해 외부에서 handleSave 호출 가능하게 함
-  React.useEffect(() => {
+  useEffect(() => {
     if (saveRef) {
       saveRef.current = handleSave;
     }
@@ -1349,7 +1349,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                               <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
                               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                                 {aiResult?.judgmentRationale?.legalBasis || 
-                                  "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조"}
+                                  "「공익사업을 위한 토지 등��� 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조"}
                               </p>
                             </div>
                           </div>
