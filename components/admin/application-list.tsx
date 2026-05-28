@@ -333,42 +333,32 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           {/* 우측: 기간 필터 */}
           <div className="flex items-center gap-4">
             {/* 조회 기준 선택 */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <span className="text-sm font-medium text-muted-foreground">조회 기준:</span>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button
-                    className="flex items-center gap-1 rounded-md border border-muted-foreground/30 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground transition-all"
-                  >
-                    {dateCriteriaType === "appliedAt" ? "민원 신청일" : "상태 변경일"}
-                    <ChevronRight className="h-3 w-3 rotate-90" />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-36 p-1" align="start">
-                  <button
-                    onClick={() => setDateCriteriaType("appliedAt")}
-                    className={cn(
-                      "w-full rounded-md px-3 py-1.5 text-left text-sm transition-colors",
-                      dateCriteriaType === "appliedAt"
-                        ? "bg-primary text-primary-foreground"
-                        : "hover:bg-muted"
-                    )}
-                  >
-                    민원 신청일
-                  </button>
-                  <button
-                    onClick={() => setDateCriteriaType("statusUpdatedAt")}
-                    className={cn(
-                      "w-full rounded-md px-3 py-1.5 text-left text-sm transition-colors",
-                      dateCriteriaType === "statusUpdatedAt"
-                        ? "bg-primary text-primary-foreground"
-                        : "hover:bg-muted"
-                    )}
-                  >
-                    상태 변경일
-                  </button>
-                </PopoverContent>
-              </Popover>
+              <div className="flex items-center gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="dateCriteria"
+                    value="appliedAt"
+                    checked={dateCriteriaType === "appliedAt"}
+                    onChange={(e) => setDateCriteriaType("appliedAt")}
+                    className="h-4 w-4"
+                  />
+                  <span className="text-sm font-medium">민원 신청일</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="dateCriteria"
+                    value="statusUpdatedAt"
+                    checked={dateCriteriaType === "statusUpdatedAt"}
+                    onChange={(e) => setDateCriteriaType("statusUpdatedAt")}
+                    className="h-4 w-4"
+                  />
+                  <span className="text-sm font-medium">상태 변경일</span>
+                </label>
+              </div>
             </div>
 
             {/* 조회 기간 */}
@@ -465,7 +455,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             </div>
           </div>
         </div>
-      </div>
 
       {/* 현재 조회 기준 표시 */}
       <div className="flex items-center gap-2 rounded-lg bg-primary/5 px-4 py-2">
