@@ -620,11 +620,11 @@ export function BatchAnalysis({
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">AI 매수 가능성 심사 완료율</span>
                 <span style={{ fontSize: '30px', fontWeight: '800', color: 'rgb(20, 113, 97)' }}>
-                  {stats.partialInclusion > 0 ? Math.round(((stats.highPossibility + stats.lowPossibility) / stats.partialInclusion) * 100) : 0}%
+                  {stats.partialInclusion > 0 ? Math.min(100, Math.round(((stats.highPossibility + stats.lowPossibility) / stats.partialInclusion) * 100)) : 0}%
                 </span>
               </div>
               <Progress 
-                value={stats.partialInclusion > 0 ? ((stats.highPossibility + stats.lowPossibility) / stats.partialInclusion) * 100 : 0} 
+                value={stats.partialInclusion > 0 ? Math.min(100, ((stats.highPossibility + stats.lowPossibility) / stats.partialInclusion) * 100) : 0} 
                 className="h-[18px]" 
                 indicatorClassName="bg-[#2E8B57]"
                 style={{ backgroundColor: '#e8f2f0' }}
