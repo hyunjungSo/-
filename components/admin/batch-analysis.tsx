@@ -80,6 +80,14 @@ export function BatchAnalysis({
   // 필지 목록
   const [parcels, setParcels] = useState<ProcessedParcel[]>(externalParcels || dummyProcessedParcels);
   
+  // 외부 필지 데이터가 변경되면 내부 상태 동기화
+  useEffect(() => {
+    if (externalParcels) {
+      setParcels(externalParcels);
+      setCurrentPage(1); // 페이지 초기화
+    }
+  }, [externalParcels]);
+  
   // 검색어
   const [searchQuery, setSearchQuery] = useState("");
   
@@ -752,7 +760,7 @@ export function BatchAnalysis({
             <div>
               <CardTitle className="text-lg">필지 관리 목록</CardTitle>
               <CardDescription>
-                편입 유형 판독 및 매수 가능성 심사 결과를 확인하세요. 소재지를 클릭하면 필지 상세 화면으로 이동합니다.
+                편입 유형 판독 및 매수 가능성 심사 결과�� 확인하세요. 소재지를 클릭하면 필지 상세 화면으로 이동합니다.
               </CardDescription>
             </div>
             {/* 분석 버튼 */}

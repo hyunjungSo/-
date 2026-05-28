@@ -18,19 +18,49 @@ type ActiveTab =
   | "parcel-management"   // 필지 관리 (통합)
   | "parcel-review";      // 필지상세
 
+// 사업지구 타입 정의
+type ProjectUnit = "all" | "gangjin-gwangju" | "sudogwon" | "cheonan-anseong" | "yangpyeong-icheon" | "pyeongtaek-hwaseong";
+
+// 사업지구 옵션 목록
+const PROJECT_UNIT_OPTIONS: { value: ProjectUnit; label: string; dataFilter: string }[] = [
+  { value: "all", label: "전체 사업단", dataFilter: "" },
+  { value: "gangjin-gwangju", label: "강진광주건설사업단", dataFilter: "강진광주" },
+  { value: "sudogwon", label: "수도권건설사업단", dataFilter: "수도권" },
+  { value: "cheonan-anseong", label: "천안안성건설사업단", dataFilter: "천안안성" },
+  { value: "yangpyeong-icheon", label: "양평이천건설사업단", dataFilter: "양평이천" },
+  { value: "pyeongtaek-hwaseong", label: "평택화성건설사업단", dataFilter: "평택화성" },
+];
+
 export default function AdminPage() {
   const [applications, setApplications] = useState<Application[]>(dummyApplications);
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
   const [processedParcels, setProcessedParcels] = useState<ProcessedParcel[]>(dummyProcessedParcels);
   const [selectedParcel, setSelectedParcel] = useState<ProcessedParcel | null>(null);
   const [activeTab, setActiveTab] = useState<ActiveTab>("applications");
-  const [projectUnitFilter, setProjectUnitFilter] = useState<"all" | "gangjin-gwangju">("gangjin-gwangju");
+  const [projectUnitFilter, setProjectUnitFilter] = useState<ProjectUnit>("gangjin-gwangju");
   
   // 신청상세 진입 전 화면 추적 (뒤로가기 시 사용)
   const [previousScreen, setPreviousScreen] = useState<{
     tab: ActiveTab;
     parcel: ProcessedParcel | null;
   } | null>(null);
+
+  // 선택된 사업지구에 따라 데이터 필터링
+  const currentProjectUnit = PROJECT_UNIT_OPTIONS.find(opt => opt.value === projectUnitFilter);
+  const dataFilter = currentProjectUnit?.dataFilter || "";
+
+  // 필터링된 신청 데이터
+  const filteredApplications = dataFilter 
+    ? applications.filter(app => 
+        app.businessUnit?.includes(dataFilter) || 
+        app.lands?.some(land => land.businessUnit?.includes(dataFilter))
+      )
+    : applications;
+
+  // 필터링된 필지 데이터
+  const filteredParcels = dataFilter
+    ? processedParcels.filter(parcel => parcel.businessUnit?.includes(dataFilter))
+    : processedParcels;
 
   const handleApplicationSelect = (application: Application) => {
     setSelectedApplication(application);
@@ -123,13 +153,20 @@ export default function AdminPage() {
         {/* 2단 - 전역 사업지구 셀렉트 */}
         <div className="p-4 border-b border-gray-200">
           <label className="block text-xs font-medium text-gray-500 mb-2">사업지구</label>
-          <Select value={projectUnitFilter} onValueChange={(value) => setProjectUnitFilter(value as "all" | "gangjin-gwangju")}>
+          <Select value={projectUnitFilter} onValueChange={(value) => setProjectUnitFilter(value as ProjectUnit)}>
             <SelectTrigger className="w-full h-[42px] bg-gray-50 border-gray-300 text-gray-900 font-medium hover:bg-gray-100 focus:ring-[#00875a]">
               <SelectValue placeholder="사업단 선택" />
             </SelectTrigger>
             <SelectContent className="bg-white border-gray-200">
-              <SelectItem value="all" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100">전체 사업단</SelectItem>
-              <SelectItem value="gangjin-gwangju" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100">강진광주건설사업단</SelectItem>
+              {PROJECT_UNIT_OPTIONS.map((option) => (
+                <SelectItem 
+                  key={option.value} 
+                  value={option.value} 
+                  className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100"
+                >
+                  {option.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -227,7 +264,7 @@ export default function AdminPage() {
               </div>
             ) : (
               <ApplicationList
-                applications={applications}
+                applications={filteredApplications}
                 onSelect={handleApplicationSelect}
               />
             )}
@@ -237,7 +274,7 @@ export default function AdminPage() {
         {/* 필지관리 콘텐츠 */}
         {activeTab === "parcel-management" && (
           <BatchAnalysis 
-            parcels={processedParcels}
+            parcels={filteredParcels}
             onParcelsUpdate={setProcessedParcels}
             onParcelSelect={handleParcelSelect}
           />
