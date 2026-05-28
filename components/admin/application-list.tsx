@@ -24,6 +24,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Calendar } from "@/components/ui/calendar";
 import type { Application, AdminStatus } from "@/lib/types";
 import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, AlertCircle, FileCheck, Layers, RefreshCw, CalendarIcon, Loader2, XCircle, ArrowUpDown } from "lucide-react";
@@ -524,55 +530,60 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           </CardHeader>
           <CardContent className="space-y-1" style={{ paddingTop: '0' }}>
             {/* 액티비티 로그 리스트 */}
-            <div className="space-y-2 max-h-[280px] overflow-y-auto pr-1">
-              {[
-                { action: "심사완료 처리", target: "김철수 외 2건", actor: "홍길동", relativeTime: "10분 전", absoluteTime: "2026-05-28 10:47:21", type: "status" },
-                { action: "AI 재분석 실행", target: "전남 강진군 작천면 309-2", actor: "홍길동", relativeTime: "25분 전", absoluteTime: "2026-05-28 10:32:15", type: "ai" },
-                { action: "심사 의견 등록", target: "박영희 (민원번호: 2026-0523)", actor: "김담당", relativeTime: "1시간 전", absoluteTime: "2026-05-28 09:57:33", type: "comment" },
-                { action: "진행중 상태 전환", target: "이민수 (민원번호: 2026-0521)", actor: "홍길동", relativeTime: "2시간 전", absoluteTime: "2026-05-28 08:45:12", type: "status" },
-                { action: "공개 여부 변경", target: "강진군 작천면 310-1", actor: "김담당", relativeTime: "3시간 전", absoluteTime: "2026-05-28 07:52:08", type: "toggle" },
-                { action: "심사완료 처리", target: "정미영 외 1건", actor: "홍길동", relativeTime: "어제", absoluteTime: "2026-05-27 17:23:45", type: "status" },
-                { action: "보완 요청 메모", target: "최동훈 (민원번호: 2026-0518)", actor: "김담당", relativeTime: "어제", absoluteTime: "2026-05-27 14:11:29", type: "comment" },
-                { action: "AI 재분석 실행", target: "전남 강진군 작천면 308-5", actor: "홍길동", relativeTime: "어제", absoluteTime: "2026-05-27 11:05:17", type: "ai" },
-              ].map((activity, index) => (
-                <div 
-                  key={index} 
-                  className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-muted/50 transition-colors group"
-                  title={`${activity.absoluteTime} | ${activity.actor}`}
-                >
-                  <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                    activity.type === "status" ? "bg-emerald-50" :
-                    activity.type === "ai" ? "bg-blue-50" :
-                    activity.type === "comment" ? "bg-purple-50" :
-                    activity.type === "toggle" ? "bg-amber-50" :
-                    "bg-gray-50"
-                  }`}>
-                    {activity.type === "status" ? (
-                      <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                    ) : activity.type === "ai" ? (
-                      <AIIcon className="h-4 w-4 text-blue-600" />
-                    ) : activity.type === "comment" ? (
-                      <Layers className="h-4 w-4 text-purple-600" />
-                    ) : activity.type === "toggle" ? (
-                      <FileCheck className="h-4 w-4 text-amber-600" />
-                    ) : (
-                      <Search className="h-4 w-4 text-gray-600" />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-medium text-foreground truncate">{activity.action}</p>
-                      <span className="text-xs text-muted-foreground/60 hidden group-hover:inline">({activity.actor})</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground truncate">{activity.target}</p>
-                  </div>
-                  <div className="flex-shrink-0 flex items-center gap-1 text-xs text-muted-foreground">
-                    <Clock className="h-3 w-3" />
-                    <span>{activity.relativeTime}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <TooltipProvider delayDuration={200}>
+              <div className="space-y-2 max-h-[280px] overflow-y-auto pr-1">
+                {[
+                  { action: "심사완료 처리", target: "김철수 외 2건", actor: "홍길동", relativeTime: "10분 전", absoluteTime: "2026-05-28 10:47:21", type: "status" },
+                  { action: "AI 재분석 실행", target: "전남 강진군 작천면 309-2", actor: "홍길동", relativeTime: "25분 전", absoluteTime: "2026-05-28 10:32:15", type: "ai" },
+                  { action: "심사 의견 등록", target: "박영희 (민원번호: 2026-0523)", actor: "김담당", relativeTime: "1시간 전", absoluteTime: "2026-05-28 09:57:33", type: "comment" },
+                  { action: "진행중 상태 전환", target: "이민수 (민원번호: 2026-0521)", actor: "홍길동", relativeTime: "2시간 전", absoluteTime: "2026-05-28 08:45:12", type: "status" },
+                  { action: "공개 여부 변경", target: "강진군 작천면 310-1", actor: "김담당", relativeTime: "3시간 전", absoluteTime: "2026-05-28 07:52:08", type: "toggle" },
+                  { action: "심사완료 처리", target: "정미영 외 1건", actor: "홍길동", relativeTime: "어제", absoluteTime: "2026-05-27 17:23:45", type: "status" },
+                  { action: "보완 요청 메모", target: "최동훈 (민원번호: 2026-0518)", actor: "김담당", relativeTime: "어제", absoluteTime: "2026-05-27 14:11:29", type: "comment" },
+                  { action: "AI 재분석 실행", target: "전남 강진군 작천면 308-5", actor: "홍길동", relativeTime: "어제", absoluteTime: "2026-05-27 11:05:17", type: "ai" },
+                ].map((activity, index) => (
+                  <Tooltip key={index}>
+                    <TooltipTrigger asChild>
+                      <div 
+                        className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-muted/50 transition-colors cursor-default"
+                      >
+                        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                          activity.type === "status" ? "bg-emerald-50" :
+                          activity.type === "ai" ? "bg-blue-50" :
+                          activity.type === "comment" ? "bg-purple-50" :
+                          activity.type === "toggle" ? "bg-amber-50" :
+                          "bg-gray-50"
+                        }`}>
+                          {activity.type === "status" ? (
+                            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                          ) : activity.type === "ai" ? (
+                            <AIIcon className="h-4 w-4 text-blue-600" />
+                          ) : activity.type === "comment" ? (
+                            <Layers className="h-4 w-4 text-purple-600" />
+                          ) : activity.type === "toggle" ? (
+                            <FileCheck className="h-4 w-4 text-amber-600" />
+                          ) : (
+                            <Search className="h-4 w-4 text-gray-600" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-foreground truncate">{activity.action}</p>
+                          <p className="text-xs text-muted-foreground truncate">{activity.target}</p>
+                        </div>
+                        <div className="flex-shrink-0 flex items-center gap-1 text-xs text-muted-foreground">
+                          <Clock className="h-3 w-3" />
+                          <span>{activity.relativeTime}</span>
+                        </div>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="text-xs">
+                      <p className="font-medium">{activity.absoluteTime}</p>
+                      <p className="text-muted-foreground">수행자: {activity.actor}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                ))}
+              </div>
+            </TooltipProvider>
             
             {/* 하단 안내 문구 */}
             <p className="pt-3 text-xs text-muted-foreground/70 text-center border-t mt-2">
