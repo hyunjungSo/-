@@ -42,11 +42,11 @@ const badgeVariants = cva(
         
         // === 진행상황 Outline 스타일 (새 컬러 시스템) ===
         // 접수완료: Indigo #6366F1 (신규 접수 강조)
-        'outline-indigo': 'border border-indigo-400 bg-indigo-50 text-indigo-500',
+        'outline-indigo': 'border-0 bg-indigo-50 text-indigo-500',
         // 진행중: #0091fd (활동 상태 강조)
-        'outline-blue': 'border bg-[#e6f4ff] text-[#0091fd] border-[#0091fd]/40',
+        'outline-blue': 'border-0 bg-[#e6f4ff] text-[#0091fd]',
         // 심사완료: Green (완료 상태 강조)
-        'outline-green': 'border border-green-400 bg-green-50 text-green-600',
+        'outline-green': 'border-0 bg-green-50 text-green-600',
         
         // === 진행상황 Outline 스타일 (레거시 - 호환성 유지) ===
         // 접수완료: Slate Gray (#64748b)
