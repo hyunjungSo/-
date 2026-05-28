@@ -610,111 +610,67 @@ export function BatchAnalysis({
         </Card>
 
         {/* 매수 가능성 현황 카드 */}
-        <Card className="lg:col-span-5">
+        <Card className="lg:col-span-5 border-0 shadow-none">
           <CardHeader style={{ paddingBottom: '6px' }}>
-            <CardTitle className="text-base font-medium flex items-center justify-between">
-              <span style={{ fontSize: '18px', fontWeight: '600' }}>매수 가능성 현황</span>
-              <span className="text-2xl font-bold text-primary">
-                {stats.partialInclusion > 0 ? Math.round((stats.highPossibility / stats.partialInclusion) * 100) : 0}%
-              </span>
-            </CardTitle>
+            <CardTitle className="text-base font-medium" style={{ fontSize: '18px', fontWeight: '600' }}>매수 가능성 현황</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
-            
-            {/* 스택 바 비교 */}
-            <div className="space-y-3" style={{ marginTop: '4px' }}>
-              {/* AI 분석 결과 막대 */}
-              <div className="space-y-1.5">
-                <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 분석 결과</span>
-                <div className="flex h-8 w-full overflow-hidden rounded-md">
-                  {(stats.highPossibility + stats.lowPossibility + stats.pendingReview) > 0 ? (
-                    <>
-                      {stats.highPossibility > 0 && (
-                        <div 
-                          className="flex items-center justify-center bg-emerald-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.highPossibility / (stats.highPossibility + stats.lowPossibility + stats.pendingReview)) * 100}%` }}
-                        >
-                          {stats.highPossibility}건
-                        </div>
-                      )}
-                      {stats.lowPossibility > 0 && (
-                        <div 
-                          className="flex items-center justify-center bg-rose-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.lowPossibility / (stats.highPossibility + stats.lowPossibility + stats.pendingReview)) * 100}%` }}
-                        >
-                          {stats.lowPossibility}건
-                        </div>
-                      )}
-                      {stats.pendingReview > 0 && (
-                        <div 
-                          className="flex items-center justify-center bg-amber-400 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.pendingReview / (stats.highPossibility + stats.lowPossibility + stats.pendingReview)) * 100}%` }}
-                        >
-                          {stats.pendingReview}건
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-gray-100 text-xs text-gray-400">
-                      분석 대기 중
-                    </div>
-                  )}
-                </div>
+            {/* 진행률 바 - 좌측과 동일한 포맷 */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">AI 매수 가능성 심사 완료율</span>
+                <span style={{ fontSize: '30px', fontWeight: '800', color: 'rgb(20, 113, 97)' }}>
+                  {stats.partialInclusion > 0 ? Math.round(((stats.highPossibility + stats.lowPossibility) / stats.partialInclusion) * 100) : 0}%
+                </span>
               </div>
+              <Progress 
+                value={stats.partialInclusion > 0 ? ((stats.highPossibility + stats.lowPossibility) / stats.partialInclusion) * 100 : 0} 
+                className="h-[18px]" 
+                indicatorClassName="bg-[#2E8B57]"
+                style={{ backgroundColor: '#e8f2f0' }}
+              />
             </div>
             
             {/* 상태별 현황 그리드 - 3개 카드 */}
-            <div className="grid grid-cols-3 gap-3 pt-3">
-              {/* 판독대기 */}
+            <div className="grid grid-cols-3 gap-3 pt-2">
+              {/* 판독대기: Amber */}
               <div 
                 onClick={() => setAiJudgmentFilter("pending")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-amber-50 p-3 transition-all hover:bg-amber-100"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-amber-50 p-4 transition-all hover:bg-amber-100"
               >
-                <span className="text-sm font-medium text-amber-600">판독대기</span>
-                <div className="flex items-baseline gap-0.5 mt-2">
-                  <span className="font-bold text-amber-700" style={{ fontSize: '28px', lineHeight: '1em' }}>{stats.pendingReview}</span>
+                <span className="text-sm font-medium text-amber-600" style={{ order: 1 }}>판독대기</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold text-amber-700" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.pendingReview}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
-              {/* 매수 가능성 높음 */}
+              {/* 매수 가능성 높음: Emerald */}
               <div 
                 onClick={() => setAiJudgmentFilter("high")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-emerald-50 p-3 transition-all hover:bg-emerald-100"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-emerald-50 p-4 transition-all hover:bg-emerald-100"
               >
-                <span className="text-sm font-medium text-emerald-600">높음</span>
-                <div className="flex items-baseline gap-0.5 mt-2">
-                  <span className="font-bold text-emerald-700" style={{ fontSize: '28px', lineHeight: '1em' }}>{stats.highPossibility}</span>
+                <span className="text-sm font-medium text-emerald-600" style={{ order: 1 }}>높음</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold text-emerald-700" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.highPossibility}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
-              {/* 매수 가능성 낮음 */}
+              {/* 매수 가능성 낮음: Rose */}
               <div 
                 onClick={() => setAiJudgmentFilter("low")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-rose-50 p-3 transition-all hover:bg-rose-100"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-rose-50 p-4 transition-all hover:bg-rose-100"
               >
-                <span className="text-sm font-medium text-rose-500">낮음</span>
-                <div className="flex items-baseline gap-0.5 mt-2">
-                  <span className="font-bold text-rose-600" style={{ fontSize: '28px', lineHeight: '1em' }}>{stats.lowPossibility}</span>
+                <span className="text-sm font-medium text-rose-500" style={{ order: 1 }}>낮음</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold text-rose-600" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.lowPossibility}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
             </div>
-            
-            {/* 범례 */}
-            <div className="flex items-center justify-center gap-4 pt-2 text-xs">
-              <div className="flex items-center gap-1.5">
-                <span className="h-3 w-3 rounded-sm bg-emerald-500"></span>
-                <span className="text-muted-foreground">매수 가능성 높음</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="h-3 w-3 rounded-sm bg-rose-500"></span>
-                <span className="text-muted-foreground">매수 가능성 낮음</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="h-3 w-3 rounded-sm bg-amber-400"></span>
-                <span className="text-muted-foreground">판독대기</span>
-              </div>
-            </div>
+            {/* 기준 안내 문구 */}
+            <p className="pt-2 text-xs text-muted-foreground/70">
+              ※ AI 매수 가능성 심사가 완료된 현황입니다.
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -1093,7 +1049,7 @@ export function BatchAnalysis({
                     <div className="text-right">
                       {history.previousResult && (
                         <div className="flex items-center gap-2 text-sm">
-                          <span className={history.previousResult.includes("높음") || history.previousResult === "수용가능" ? "text-emerald-600" : "text-rose-600"}>
+                          <span className={history.previousResult.includes("높음") || history.previousResult === "수용��능" ? "text-emerald-600" : "text-rose-600"}>
                             {history.previousResult}
                           </span>
                           <span>→</span>
