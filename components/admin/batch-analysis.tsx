@@ -603,10 +603,10 @@ export function BatchAnalysis({
           </CardContent>
         </Card>
 
-        {/* 매수 가능성 현황 카드 */}
+        {/* AI 매수 가능성 현황 카드 */}
         <Card className="lg:col-span-5 border-0 shadow-none">
           <CardHeader style={{ paddingBottom: '6px' }}>
-            <CardTitle className="text-base font-medium" style={{ fontSize: '18px', fontWeight: '600' }}>매수 가능성 현황</CardTitle>
+            <CardTitle className="text-base font-medium" style={{ fontSize: '18px', fontWeight: '600' }}>AI 매수 가능성 현황</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
             {/* 진행률 바 - 좌측과 동일한 포맷 */}
