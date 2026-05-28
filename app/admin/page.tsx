@@ -6,6 +6,7 @@ import { ApplicationList } from "@/components/admin/application-list";
 import { ApplicationDetail } from "@/components/admin/application-detail";
 import { BatchAnalysis } from "@/components/admin/batch-analysis";
 import { ParcelDetailReview } from "@/components/admin/parcel-detail-review";
+import { LoginScreen } from "@/components/admin/login-screen";
 import type { Application, ProcessedParcel } from "@/lib/types";
 import { dummyApplications, dummyProcessedParcels } from "@/lib/dummy-data";
 import { FileText, MapPin, LogOut, User } from "lucide-react";
@@ -31,6 +32,9 @@ const PROJECT_UNIT_OPTIONS: { value: ProjectUnit; label: string; dataFilter: str
 ];
 
 export default function AdminPage() {
+  // 로그인 상태 관리
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
   const [applications, setApplications] = useState<Application[]>(dummyApplications);
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
   const [processedParcels, setProcessedParcels] = useState<ProcessedParcel[]>(dummyProcessedParcels);
@@ -112,6 +116,24 @@ export default function AdminPage() {
     setSelectedParcel(null);
     setActiveTab("parcel-management");
   };
+
+  // 로그인/로그아웃 핸들러
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    // 로그아웃 시 상태 초기화
+    setSelectedApplication(null);
+    setSelectedParcel(null);
+    setActiveTab("applications");
+  };
+
+  // 로그인 화면 표시
+  if (!isLoggedIn) {
+    return <LoginScreen onLogin={handleLogin} />;
+  }
 
   // 필지상세에서 신청상세로 이동
   const handleNavigateToApplication = (applicationId: string) => {
@@ -223,7 +245,10 @@ export default function AdminPage() {
               <span className="text-xs text-gray-500">관리자</span>
             </div>
           </div>
-          <button className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors">
+          <button 
+            onClick={handleLogout}
+            className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+          >
             <LogOut className="h-4 w-4" />
             <span>로그아웃</span>
           </button>
