@@ -329,7 +329,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           
           {/* 우측: 기간 필터 */}
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-muted-foreground">조회 기간:</span>
+            <span className="text-sm font-medium text-muted-foreground">신청 조회 기간:</span>
             <div className="flex items-center gap-1">
               {/* 연도 피커 */}
               <Popover>
