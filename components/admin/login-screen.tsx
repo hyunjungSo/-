@@ -52,9 +52,9 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
               <Image
                 src="/images/logo-lc.png"
                 alt="Korea Expressway Corporation"
-                width={48}
-                height={48}
-                className="h-12 w-12"
+                width={90}
+                height={20}
+                className="h-5 w-auto"
               />
               <div className="flex flex-col">
                 <span className="text-lg font-semibold text-white">한국도로공사</span>
