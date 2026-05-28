@@ -721,10 +721,10 @@ export function BatchAnalysis({
 
       {/* 검색 및 필터 */}
       <Card className="border-0 shadow-none">
-        <CardHeader className="pb-4">
+        <CardHeader className="pb-2">
           <CardTitle className="text-lg">검색 및 필터</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-2">
           {/* 필터 레이아웃 - 2행 구조 */}
           <div className="space-y-4">
             {/* 1행: 검색바 */}
