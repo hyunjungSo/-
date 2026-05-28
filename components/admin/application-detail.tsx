@@ -62,24 +62,24 @@ interface ApplicationDetailProps {
   onNavigateToList?: () => void;
 }
 
-// 담당자 판정 (매수 가능성 높음/매수 가능성 낮음/추가 검토 필요) - JUDGMENT_COLORS 기반
+// 담당자 판정 (매수/기각/이관) - JUDGMENT_COLORS 기반
 const judgmentConfig = {
   매수: { 
-    label: "매수 가능성 높음", 
+    label: "매수", 
     icon: CheckCircle2, 
     borderColor: JUDGMENT_COLORS.매수.border, 
     textColor: JUDGMENT_COLORS.매수.text, 
     color: JUDGMENT_COLORS.매수.text 
   },
   기각: { 
-    label: "매수 가능성 낮음", 
+    label: "기각", 
     icon: XCircle, 
     borderColor: JUDGMENT_COLORS.기각.border, 
     textColor: JUDGMENT_COLORS.기각.text, 
     color: JUDGMENT_COLORS.기각.text 
   },
   "심의위원회 이관": { 
-    label: "추가 검토 필요", 
+    label: "이관", 
     icon: AlertTriangle, 
     borderColor: JUDGMENT_COLORS.이관.border, 
     textColor: JUDGMENT_COLORS.이관.text, 
@@ -2167,7 +2167,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </CardContent>
       </Card>
 
-      {/* Section 03. 진행상황 선택 - 복수필지 전체에 대한 한 건 처�� */}
+      {/* Section 03. 진행상황 선택 - 복수필지 전체에 대한 ��� 건 처�� */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg" style={{ fontSize: '20px' }}>진행상황 선택</CardTitle>
