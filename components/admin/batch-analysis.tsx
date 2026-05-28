@@ -529,7 +529,7 @@ export function BatchAnalysis({
           <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium" style={{ fontSize: '18px', fontWeight: '600' }}>편입 유형 현황</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
+          <CardContent className="space-y-2" style={{ paddingTop: '0' }}>
             {/* 진행률 바 */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
@@ -608,7 +608,7 @@ export function BatchAnalysis({
           <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium" style={{ fontSize: '18px', fontWeight: '600' }}>AI 매수 가능성 현황</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
+          <CardContent className="space-y-2" style={{ paddingTop: '0' }}>
             {/* 진행률 바 - 좌측과 동일한 포맷 */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
