@@ -49,11 +49,13 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
           {/* 상단 로고 영역 */}
           <div>
             <div className="flex items-center gap-3">
-              <svg className="h-12 w-12 text-white" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="10" y="10" width="80" height="80" rx="8" fill="none" stroke="currentColor" strokeWidth="2"/>
-                <path d="M30 35 L50 55 L70 35" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <path d="M30 65 L50 45 L70 65" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-              </svg>
+              <Image
+                src="/images/logo-lc.png"
+                alt="Korea Expressway Corporation"
+                width={48}
+                height={48}
+                className="h-12 w-12"
+              />
               <div className="flex flex-col">
                 <span className="text-lg font-semibold text-white">한국도로공사</span>
                 <span className="text-sm text-white/70">Korea Expressway Corporation</span>
