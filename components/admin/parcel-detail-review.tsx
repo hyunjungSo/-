@@ -243,46 +243,19 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">공개 여부:</span>
               <div className="flex items-center gap-2">
-                {parcel.residualStatus === "잔여지 인정" ? (
-                  // 부분 편입(잔여지 인정)만 공개 가능
-                  <>
-                    <Switch 
-                      checked={parcel.isVisible !== false}
-                      disabled={isLockedByCitizen}
-                      onCheckedChange={handleVisibilityChange}
-                      className="h-[22px] w-[40px] [&>span]:size-[18px] [&>span]:data-[state=checked]:translate-x-[18px] [&>span]:data-[state=unchecked]:translate-x-[2px]"
-                    />
-                    <span className={`text-sm font-medium ${parcel.isVisible !== false ? "text-emerald-600" : "text-muted-foreground"}`}>
-                      {parcel.isVisible !== false ? "공개" : "비공개"}
-                    </span>
-                    {isLockedByCitizen && (
-                      <span className="text-xs text-orange-500">
-                        (수정 불가)
-                      </span>
-                    )}
-                  </>
-                ) : parcel.residualStatus === "기준 미달" ? (
-                  // 전체 편입(기준 미달)은 공개 불가 - 스위치 비활성화
-                  <>
-                    <Switch 
-                      checked={false}
-                      disabled={true}
-                      className="h-[22px] w-[40px] [&>span]:size-[18px] [&>span]:data-[state=checked]:translate-x-[18px] [&>span]:data-[state=unchecked]:translate-x-[2px]"
-                    />
-                    <span className="text-sm font-medium text-muted-foreground">비공개</span>
-                    <span className="text-xs text-gray-400">(전체 편입은 공개 불가)</span>
-                  </>
-                ) : (
-                  // 판독대기 상태 - 공개 불가
-                  <>
-                    <Switch 
-                      checked={false}
-                      disabled={true}
-                      className="h-[22px] w-[40px] [&>span]:size-[18px] [&>span]:data-[state=checked]:translate-x-[18px] [&>span]:data-[state=unchecked]:translate-x-[2px]"
-                    />
-                    <span className="text-sm font-medium text-muted-foreground">비공개</span>
-                    <span className="text-xs text-gray-400">(판독대기)</span>
-                  </>
+                <Switch 
+                  checked={parcel.isVisible !== false}
+                  disabled={isLockedByCitizen}
+                  onCheckedChange={handleVisibilityChange}
+                  className="h-[22px] w-[40px] [&>span]:size-[18px] [&>span]:data-[state=checked]:translate-x-[18px] [&>span]:data-[state=unchecked]:translate-x-[2px]"
+                />
+                <span className={`text-sm font-medium ${parcel.isVisible !== false ? "text-emerald-600" : "text-muted-foreground"}`}>
+                  {parcel.isVisible !== false ? "공개" : "비공개"}
+                </span>
+                {isLockedByCitizen && (
+                  <span className="text-xs text-orange-500">
+                    (민원인 활동으로 수정 불가)
+                  </span>
                 )}
               </div>
             </div>

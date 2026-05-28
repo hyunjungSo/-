@@ -836,16 +836,22 @@ export function BatchAnalysis({
                         </Badge>
                       )}
                     </TableCell>
-                    {/* 공개 여부 컬럼 - 토글 스위치 (항상 활성화) */}
+                    {/* 공개 여부 컬럼 - 토글 스위치 (민원인 활동 시 비활성화) */}
                     <TableCell className="text-center">
-                      <div className="flex items-center justify-center gap-1.5">
-                        <Switch
-                          checked={parcel.isVisible !== false}
-                          onCheckedChange={(checked) => handleToggleVisibilityRequest(parcel.id, checked)}
-                          className="data-[state=checked]:bg-[#2E8B57]"
-                        />
-                        <span className="text-sm text-muted-foreground w-[42px] text-left">{parcel.isVisible !== false ? "공개" : "비공개"}</span>
-                      </div>
+                      {(() => {
+                        const hasCitizenActivity = parcel.citizenActivity?.inCart || parcel.citizenActivity?.applicationSubmitted;
+                        return (
+                          <div className="flex items-center justify-center gap-1.5">
+                            <Switch
+                              checked={parcel.isVisible !== false}
+                              onCheckedChange={(checked) => handleToggleVisibilityRequest(parcel.id, checked)}
+                              disabled={hasCitizenActivity}
+                              className="data-[state=checked]:bg-[#2E8B57]"
+                            />
+                            <span className="text-sm text-muted-foreground w-[42px] text-left">{parcel.isVisible !== false ? "공개" : "비공개"}</span>
+                          </div>
+                        );
+                      })()}
                     </TableCell>
                   </TableRow>
                 ))}
