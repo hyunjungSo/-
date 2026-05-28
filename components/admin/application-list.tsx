@@ -513,129 +513,66 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           </CardContent>
         </Card>
 
-        {/* AI 판정 신뢰도 카드 */}
-        <Card className="lg:col-span-5">
+        {/* 담당자 액티비티 (최근 작업) 카드 */}
+        <Card className="lg:col-span-5 border-0 shadow-none">
           <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium flex items-center justify-between">
-              <span style={{ fontSize: '18px', fontWeight: '600' }}>AI 판정 신뢰도</span>
-              <span className="text-2xl font-bold text-primary">{stats.aiReliability}%</span>
+              <span style={{ fontSize: '18px', fontWeight: '600' }}>담당자 액티비티</span>
+              <span className="text-sm text-muted-foreground">최근 7일</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
-            
-            {/* 스택 바 비교 */}
-            <div className="space-y-3" style={{ marginTop: '4px' }}>
-              {/* AI 초기 판정 막대 (매수가능/매수불가/추가검토필요 3가지) */}
-              <div className="space-y-1.5">
-                <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 초기 판정</span>
-                <div className="flex h-8 w-full overflow-hidden rounded-md">
-                  {stats.aiAnalyzed > 0 ? (
-                    <>
-                      {stats.aiPurchasable > 0 && (
-                        <div 
-                          className="flex items-center justify-center bg-emerald-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.aiPurchasable / stats.aiAnalyzed) * 100}%` }}
-                        >
-                          {stats.aiPurchasable}건
-                        </div>
-                      )}
-                      {stats.aiNotPurchasable > 0 && (
-                        <div 
-                          className="flex items-center justify-center bg-rose-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.aiNotPurchasable / stats.aiAnalyzed) * 100}%` }}
-                        >
-                          {stats.aiNotPurchasable}건
-                        </div>
-                      )}
-                      {stats.aiAdditionalReview > 0 && (
-                        <div 
-                          className="flex items-center justify-center bg-amber-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.aiAdditionalReview / stats.aiAnalyzed) * 100}%` }}
-                        >
-                          {stats.aiAdditionalReview}건
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-muted text-xs text-muted-foreground">
-                      데이터 없음
-                    </div>
-                  )}
+          <CardContent className="space-y-1" style={{ paddingTop: '0' }}>
+            {/* 액티비티 로그 리스트 */}
+            <div className="space-y-2 max-h-[280px] overflow-y-auto pr-1">
+              {[
+                { action: "민원 심사완료", target: "김철수 외 2건", time: "10분 전", type: "complete" },
+                { action: "AI 분석 요청", target: "전남 강진군 작천면", time: "25분 전", type: "ai" },
+                { action: "민원 접수 확인", target: "박영희", time: "1시간 전", type: "review" },
+                { action: "심사 의견 작성", target: "이민수", time: "2시간 전", type: "comment" },
+                { action: "민원 심사완료", target: "정미영 외 1건", time: "3시간 전", type: "complete" },
+                { action: "필지 정보 조회", target: "강진군 작천면 309-2", time: "어제", type: "view" },
+                { action: "AI 분석 요청", target: "전남 강진군 작천면", time: "어제", type: "ai" },
+                { action: "민원 심사완료", target: "최동훈", time: "어제", type: "complete" },
+              ].map((activity, index) => (
+                <div 
+                  key={index} 
+                  className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-muted/50 transition-colors"
+                >
+                  <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                    activity.type === "complete" ? "bg-emerald-50" :
+                    activity.type === "ai" ? "bg-blue-50" :
+                    activity.type === "review" ? "bg-amber-50" :
+                    activity.type === "comment" ? "bg-purple-50" :
+                    "bg-gray-50"
+                  }`}>
+                    {activity.type === "complete" ? (
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                    ) : activity.type === "ai" ? (
+                      <TrendingUp className="h-4 w-4 text-blue-600" />
+                    ) : activity.type === "review" ? (
+                      <FileCheck className="h-4 w-4 text-amber-600" />
+                    ) : activity.type === "comment" ? (
+                      <Layers className="h-4 w-4 text-purple-600" />
+                    ) : (
+                      <Search className="h-4 w-4 text-gray-600" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate">{activity.action}</p>
+                    <p className="text-xs text-muted-foreground truncate">{activity.target}</p>
+                  </div>
+                  <div className="flex-shrink-0 flex items-center gap-1 text-xs text-muted-foreground">
+                    <Clock className="h-3 w-3" />
+                    <span>{activity.time}</span>
+                  </div>
                 </div>
-              </div>
-              
-              {/* 담당자 최종 심사 막대 */}
-              <div className="space-y-1.5">
-                <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>담당자 최종 심사</span>
-                <div className="flex h-8 w-full overflow-hidden rounded-md">
-                  {stats.aiAnalyzed > 0 ? (
-                    <>
-                      {stats.finalPurchase > 0 && (
-                        <div 
-                          className="flex items-center justify-center bg-emerald-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.finalPurchase / stats.aiAnalyzed) * 100}%` }}
-                        >
-                          {stats.finalPurchase}건
-                        </div>
-                      )}
-                      {stats.finalReject > 0 && (
-                        <div 
-                          className="flex items-center justify-center bg-rose-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.finalReject / stats.aiAnalyzed) * 100}%` }}
-                        >
-                          {stats.finalReject}건
-                        </div>
-                      )}
-                      {stats.finalTransfer > 0 && (
-                        <div
-                          className="flex items-center justify-center bg-amber-500 text-xs font-semibold text-white"
-                          style={{ width: `${(stats.finalTransfer / stats.aiAnalyzed) * 100}%` }}
-                        >
-                          {stats.finalTransfer}건
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-muted text-xs text-muted-foreground">
-                      데이터 없음
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              {/* 범례 */}
-              <div className="flex items-center justify-center gap-4 pt-2">
-                <div className="flex items-center gap-1.5">
-                  <div className="h-2.5 w-2.5 rounded-sm bg-emerald-500" />
-                  <span className="text-xs text-muted-foreground">매수 가능성 높음</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="h-2.5 w-2.5 rounded-sm bg-rose-500" />
-                  <span className="text-xs text-muted-foreground">매수 가능성 낮음</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="h-2.5 w-2.5 rounded-sm bg-amber-500" />
-                  <span className="text-xs text-muted-foreground">추가 검토 필요</span>
-                </div>
-              </div>
+              ))}
             </div>
             
-            {/* 상세 지표 */}
-            <div className="space-y-2 border-t pt-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                  <span className="text-sm text-muted-foreground">판정 일치:</span>
-                  <span className="font-bold" style={{ fontSize: '18px' }}>{stats.aiMatchCount}건</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <XCircle className="h-4 w-4 text-rose-600" />
-                  <span className="text-sm text-rose-600">판정 불일치:</span>
-                  <span className="font-bold text-rose-600" style={{ fontSize: '18px' }}>{stats.aiMismatchCount}건</span>
-                </div>
-              </div>
-
-            </div>
+            {/* 하단 안내 문구 */}
+            <p className="pt-3 text-xs text-muted-foreground/70 text-center border-t mt-2">
+              ※ 담당자의 최근 작업 내역입니다.
+            </p>
           </CardContent>
         </Card>
       </div>
