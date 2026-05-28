@@ -1056,24 +1056,26 @@ export function BatchAnalysis({
           </div>
           
           {/* 페이지네이션 */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 pt-4 mt-4">
-              <PaginationNavButton
-                onClick={() => setCurrentPage(1)}
-                disabled={currentPage === 1}
-              >
-                처음
-              </PaginationNavButton>
-              <PaginationNavButton
-                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                disabled={currentPage === 1}
-              >
-                이전
-              </PaginationNavButton>
-              
-              {/* 페이지 번호 */}
-              <div className="flex items-center gap-1">
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+          <div className="flex items-center justify-center gap-2 pt-4 mt-4">
+            <PaginationNavButton
+              onClick={() => setCurrentPage(1)}
+              disabled={currentPage === 1 || totalPages === 0}
+            >
+              처음
+            </PaginationNavButton>
+            <PaginationNavButton
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1 || totalPages === 0}
+            >
+              이전
+            </PaginationNavButton>
+            
+            {/* 페이지 번호 */}
+            <div className="flex items-center gap-1">
+              {totalPages === 0 ? (
+                <PaginationButton isActive={true}>1</PaginationButton>
+              ) : (
+                Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                   let pageNum;
                   if (totalPages <= 5) {
                     pageNum = i + 1;
@@ -1093,27 +1095,30 @@ export function BatchAnalysis({
                       {pageNum}
                     </PaginationButton>
                   );
-                })}
-              </div>
-              
-              <PaginationNavButton
-                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                disabled={currentPage === totalPages}
-              >
-                다음
-              </PaginationNavButton>
-              <PaginationNavButton
-                onClick={() => setCurrentPage(totalPages)}
-                disabled={currentPage === totalPages}
-              >
-                마지막
-              </PaginationNavButton>
-              
-              <span className="text-sm text-muted-foreground ml-2">
-                ({filteredParcels.length}건 중 {(currentPage - 1) * itemsPerPage + 1}-{Math.min(currentPage * itemsPerPage, filteredParcels.length)}건)
-              </span>
+                })
+              )}
             </div>
-          )}
+            
+            <PaginationNavButton
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages || totalPages === 0}
+            >
+              다음
+            </PaginationNavButton>
+            <PaginationNavButton
+              onClick={() => setCurrentPage(totalPages)}
+              disabled={currentPage === totalPages || totalPages === 0}
+            >
+              마지막
+            </PaginationNavButton>
+            
+            <span className="text-sm text-muted-foreground ml-2">
+              {filteredParcels.length === 0 
+                ? "(0건)" 
+                : `(${filteredParcels.length}건 중 ${(currentPage - 1) * itemsPerPage + 1}-${Math.min(currentPage * itemsPerPage, filteredParcels.length)}건)`
+              }
+            </span>
+          </div>
         </CardContent>
       </Card>
 
