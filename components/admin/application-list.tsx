@@ -578,7 +578,6 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     </TooltipTrigger>
                     <TooltipContent side="top" className="text-xs">
                       <p className="font-medium">{activity.absoluteTime}</p>
-                      <p className="text-muted-foreground">수행자: {activity.actor}</p>
                     </TooltipContent>
                   </Tooltip>
                 ))}
