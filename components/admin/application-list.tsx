@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import type { Application, AdminStatus } from "@/lib/types";
-import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, TrendingUp, AlertCircle, FileCheck, Layers, RefreshCw, CalendarIcon, Loader2, XCircle, ArrowUpDown } from "lucide-react";
+import { Search, ChevronRight, Users, Clock, PlayCircle, CheckCircle2, AlertCircle, FileCheck, Layers, RefreshCw, CalendarIcon, Loader2, XCircle, ArrowUpDown } from "lucide-react";
 import { AdminStatusBadge, ProcessStatusBadge, adminStatusConfig } from "@/components/ui/status-badge";
 import { Progress } from "@/components/ui/progress";
 import { JudgmentSummaryBadge, PARCEL_COUNT_COLORS } from "@/components/ui/judgment-badge";
@@ -35,6 +35,7 @@ import { StatCard, StatCardGroup } from "@/components/ui/stat-card";
 import { PaginationButton, PaginationNavButton } from "@/components/ui/pagination-button";
 import { formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { AIIcon } from "@/components/ui/ai-icon";
 
 interface ApplicationListProps {
   applications: Application[];
@@ -548,7 +549,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                     {activity.type === "complete" ? (
                       <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                     ) : activity.type === "ai" ? (
-                      <TrendingUp className="h-4 w-4 text-blue-600" />
+                      <AIIcon className="h-4 w-4 text-blue-600" />
                     ) : activity.type === "review" ? (
                       <FileCheck className="h-4 w-4 text-amber-600" />
                     ) : activity.type === "comment" ? (
