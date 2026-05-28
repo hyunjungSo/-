@@ -162,13 +162,22 @@ export default function AdminPage() {
       <aside className="w-60 shrink-0 bg-white flex flex-col fixed left-0 top-0 h-screen z-50 border-r border-gray-200">
         {/* 1단 - 시스템 로고 */}
         <div className="p-4 border-b border-gray-200">
-          <Image
-            src="/images/logo-lc.png"
-            alt="한국도로공사 토지정보"
-            width={180}
-            height={40}
-            className="h-auto"
-          />
+          <button
+            onClick={() => {
+              setActiveTab("applications");
+              setSelectedApplication(null);
+              setSelectedParcel(null);
+            }}
+            className="focus:outline-none"
+          >
+            <Image
+              src="/images/logo-lc.png"
+              alt="한국도로공사 토지정보"
+              width={180}
+              height={40}
+              className="h-auto cursor-pointer"
+            />
+          </button>
         </div>
 
         {/* 2단 - 전역 사업지구 셀렉트 */}
