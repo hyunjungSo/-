@@ -97,6 +97,122 @@ export function BatchAnalysis({
     return Array.from(units).sort();
   }, [parcels]);
   
+  // 조회기간 필터 (민원인 신청일 기준)
+  type PeriodFilterType = "all" | "year" | "today" | "week" | "month" | "custom";
+  const [periodFilter, setPeriodFilter] = useState<PeriodFilterType>("year");
+  const [selectedYear, setSelectedYear] = useState<number | null>(new Date().getFullYear());
+  const [customDateRange, setCustomDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
+    from: undefined,
+    to: undefined,
+  });
+
+  // 현재 조회 기간 계산
+  const currentDateRange = useMemo(() => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    switch (periodFilter) {
+      case "year": {
+        if (selectedYear === null) return { from: undefined, to: undefined };
+        const yearStart = new Date(selectedYear, 0, 1);
+        const yearEnd = new Date(selectedYear, 11, 31);
+        return { from: yearStart, to: yearEnd };
+      }
+      case "today":
+        return { from: today, to: today };
+      case "week": {
+        const weekAgo = new Date(today);
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        return { from: weekAgo, to: today };
+      }
+      case "month": {
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        return { from: monthStart, to: today };
+      }
+      case "custom":
+        return customDateRange;
+      default:
+        return { from: undefined, to: undefined };
+    }
+  }, [periodFilter, customDateRange, selectedYear]);
+
+  // 조회 기간 텍스트
+  const dateRangeText = useMemo(() => {
+    if (!currentDateRange.from) return "전체 기간";
+    
+    const formatDate = (date: Date) => {
+      return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+    };
+    
+    if (periodFilter === "year" && selectedYear !== null) {
+      return `${selectedYear}년 (${selectedYear}.01.01 ~ ${selectedYear}.12.31)`;
+    }
+    
+    if (periodFilter === "today") {
+      return formatDate(currentDateRange.from);
+    }
+    
+    if (currentDateRange.to && currentDateRange.from.getTime() !== currentDateRange.to.getTime()) {
+      return `${formatDate(currentDateRange.from)} ~ ${formatDate(currentDateRange.to)}`;
+    }
+    
+    return formatDate(currentDateRange.from);
+  }, [periodFilter, currentDateRange, selectedYear]);
+
+  // 기간 필터링 함수 (민원인 신청일 기준)
+  const filterByPeriod = (parcel: ProcessedParcel) => {
+    if (periodFilter === "all") return true;
+    
+    // 민원인 신청일 사용
+    const applicationDate = parcel.citizenActivity?.applicationSubmittedAt;
+    if (!applicationDate) return false; // 신청일이 없으면 제외
+    
+    const parcelDate = new Date(applicationDate);
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    switch (periodFilter) {
+      case "year": {
+        if (selectedYear === null) return true;
+        const yearStart = new Date(selectedYear, 0, 1);
+        const yearEnd = new Date(selectedYear, 11, 31, 23, 59, 59, 999);
+        return parcelDate >= yearStart && parcelDate <= yearEnd;
+      }
+      case "today":
+        return parcelDate >= today && parcelDate < tomorrow;
+      case "week": {
+        const weekAgo = new Date(today);
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        return parcelDate >= weekAgo && parcelDate < tomorrow;
+      }
+      case "month": {
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        return parcelDate >= monthStart && parcelDate < tomorrow;
+      }
+      case "custom": {
+        if (!customDateRange.from) return true;
+        const start = customDateRange.from;
+        const end = customDateRange.to || start;
+        const endOfDay = new Date(end);
+        endOfDay.setHours(23, 59, 59, 999);
+        return parcelDate >= start && parcelDate <= endOfDay;
+      }
+      default:
+        return true;
+    }
+  };
+
+  // 조회기간 변경 핸들러
+  const handlePeriodChange = (newPeriod: PeriodFilterType, year?: number) => {
+    if (newPeriod === "year" && year !== undefined) {
+      setSelectedYear(year);
+    }
+    setPeriodFilter(newPeriod);
+    setCurrentPage(1);
+  };
+
   // 필터 (라디오 버튼)
   const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low" | "pending">("all");
   const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("");
@@ -394,6 +510,9 @@ export function BatchAnalysis({
       // 면적이 0인 필지 제외
       if (parcel.landInfo.remainingArea === 0) return false;
       
+      // 조회기간 필터 (민원인 신청일 기준)
+      if (!filterByPeriod(parcel)) return false;
+      
       // 사업단 필터 (props로 전달된 것 또는 Select로 선택된 것)
       if (businessUnit && parcel.businessUnit !== businessUnit) return false;
       if (businessUnitFilter && parcel.businessUnit !== businessUnitFilter) return false;
@@ -441,7 +560,7 @@ export function BatchAnalysis({
       
       return true;
     });
-  }, [parcels, businessUnit, businessUnitFilter, searchQuery, aiJudgmentFilter, visibilityFilter, inclusionTypeFilter]);
+  }, [parcels, businessUnit, businessUnitFilter, searchQuery, aiJudgmentFilter, visibilityFilter, inclusionTypeFilter, periodFilter, selectedYear, customDateRange]);
 
   // 페이지네이션 계산
   const totalPages = Math.ceil(filteredParcels.length / itemsPerPage);
@@ -453,14 +572,15 @@ export function BatchAnalysis({
   // 필터 변경 시 페이지 리셋
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, aiJudgmentFilter, businessUnitFilter, visibilityFilter, inclusionTypeFilter]);
+  }, [searchQuery, aiJudgmentFilter, businessUnitFilter, visibilityFilter, inclusionTypeFilter, periodFilter, selectedYear]);
 
-  // 통계 (검색값에 영향 받지 않음 - 전체 데이터 기준)
+  // 통계 (검색값에 영향 받지 않음 - 조회기간과 사업단 필터만 적용)
   const stats = useMemo(() => {
-    // businessUnit 필터만 적용, 검색어/AI판정/관리 필터는 제외
+    // businessUnit 필터와 조회기간 필터만 적용, 검색어/AI판정/관리 필터는 제외
     const relevantParcels = parcels.filter(parcel => {
       if (businessUnit && parcel.businessUnit !== businessUnit) return false;
       if (businessUnitFilter && parcel.businessUnit !== businessUnitFilter) return false;
+      if (!filterByPeriod(parcel)) return false;
       return true;
     });
     
@@ -481,7 +601,7 @@ export function BatchAnalysis({
     ).length;
     
     return { total, pendingInclusion, fullInclusion, partialInclusion, pendingReview, highPossibility, lowPossibility };
-  }, [parcels, businessUnit, businessUnitFilter]);
+  }, [parcels, businessUnit, businessUnitFilter, periodFilter, selectedYear, customDateRange]);
 
   // 히스토리 보기
   const handleViewHistory = (parcel: ProcessedParcel) => {
@@ -707,8 +827,52 @@ export function BatchAnalysis({
           <CardTitle className="text-lg">검색 및 필터</CardTitle>
         </CardHeader>
         <CardContent className="pt-2">
-          {/* 필터 레이아웃 - 2행 구조 */}
+          {/* 필터 레이아웃 - 3행 구조 */}
           <div className="space-y-4">
+            {/* 0행: 조회기간 필터 (민원인 신청일 기준) */}
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">조회기간 (민원인 신청일 기준)</span>
+              <div className="flex items-center gap-2">
+                {/* 연도 선택 버튼들 */}
+                {[2024, 2025, 2026].map((year) => (
+                  <Button
+                    key={year}
+                    variant={periodFilter === "year" && selectedYear === year ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handlePeriodChange("year", year)}
+                    className={
+                      periodFilter === "year" && selectedYear === year
+                        ? "bg-[#2E8B57] hover:bg-[#256b45] text-white"
+                        : ""
+                    }
+                  >
+                    {year}년
+                  </Button>
+                ))}
+                {/* 기간 옵션 버튼들 */}
+                {[
+                  { value: "today", label: "오늘" },
+                  { value: "week", label: "최근 1주" },
+                  { value: "month", label: "이번 달" },
+                ].map((option) => (
+                  <Button
+                    key={option.value}
+                    variant={periodFilter === option.value ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handlePeriodChange(option.value as PeriodFilterType)}
+                    className={
+                      periodFilter === option.value
+                        ? "bg-[#2E8B57] hover:bg-[#256b45] text-white"
+                        : ""
+                    }
+                  >
+                    {option.label}
+                  </Button>
+                ))}
+              </div>
+              <span className="text-sm font-medium text-primary ml-2">현재 조회 기준: {dateRangeText}</span>
+            </div>
+
             {/* 1행: 검색바 */}
             <div className="flex items-center">
               <SearchInput
