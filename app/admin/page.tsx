@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import { ApplicationList } from "@/components/admin/application-list";
 import { ApplicationDetail } from "@/components/admin/application-detail";
@@ -47,6 +47,9 @@ export default function AdminPage() {
     tab: ActiveTab;
     parcel: ProcessedParcel | null;
   } | null>(null);
+
+  // 저장 함수 ref (ApplicationDetail에서 등록)
+  const saveRef = useRef<(() => void) | null>(null);
 
   // 선택된 사업지구에 따라 데이터 필터링
   const currentProjectUnit = PROJECT_UNIT_OPTIONS.find(opt => opt.value === projectUnitFilter);
@@ -282,6 +285,7 @@ export default function AdminPage() {
                   onBack={handleBack}
                   onSave={handleSave}
                   onNavigateToList={handleNavigateToApplicationList}
+                  saveRef={saveRef}
                 />
                 {/* 콘텐츠 하단 - 버튼 영역 (목록, 취소, 저장) */}
                 <div className="flex items-center justify-between mt-6 pb-6">
@@ -304,7 +308,7 @@ export default function AdminPage() {
                       >
                         취소
                       </Button>
-                      <Button className="w-[80px]" onClick={handleSave}>
+                      <Button className="w-[80px]" onClick={() => saveRef.current?.()}>
                         저장
                       </Button>
                     </div>

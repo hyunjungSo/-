@@ -60,6 +60,7 @@ interface ApplicationDetailProps {
   onBack: () => void;
   onSave: (application: Application) => void;
   onNavigateToList?: () => void;
+  saveRef?: React.MutableRefObject<(() => void) | null>;
 }
 
 // 담당자 판정 (매수/기각/이관) - JUDGMENT_COLORS 기반
@@ -117,7 +118,7 @@ interface LandReviewData {
   landComment: string; // 필지별 검토의견
 }
 
-export function ApplicationDetail({ application, onBack, onSave, onNavigateToList }: ApplicationDetailProps) {
+export function ApplicationDetail({ application, onBack, onSave, onNavigateToList, saveRef }: ApplicationDetailProps) {
 // 복수 필지 여부 확인
   const isMultipleLands = application.additionalLands && application.additionalLands.length > 0;
   
@@ -919,7 +920,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
     // 저장 완료 토스트 메시지 즉시 노출 (3초 후 사라짐)
     toast({
       title: "저장 완료",
-      description: "검토 내용이 저장되었습니다.",
+      description: "저장이 완료되었습니다.",
       duration: 3000,
     });
 
@@ -928,6 +929,18 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       onSave(updatedApplication);
     }, 1000);
   };
+
+  // saveRef를 통해 외부에서 handleSave 호출 가능하게 함
+  React.useEffect(() => {
+    if (saveRef) {
+      saveRef.current = handleSave;
+    }
+    return () => {
+      if (saveRef) {
+        saveRef.current = null;
+      }
+    };
+  });
 
   return (
     <div className="space-y-5">
@@ -2356,7 +2369,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const criteria = result?.judgmentRationale?.appliedCriteria || [
                           "잔여지 면적 기준 미달 여부",
                           "잔여지 형상 변화 (정형 → 부정형)",
-                          "접면도���� 상태 변경 여부"
+                          "접면도������ 상태 변경 여부"
                         ];
                         return criteria.map((c: string, i: number) => (
                           <li key={i} className="flex items-start gap-2 text-[15px] text-muted-foreground">
