@@ -104,6 +104,22 @@ export function BatchAnalysis({
   // 편입 유형 필터 (기존 잔여지 판정)
   const [inclusionTypeFilter, setInclusionTypeFilter] = useState<"all" | "full" | "partial" | "pending">("all");
   
+  // 편입 유형 카드 클릭 핸들러 (필터 리셋 포함)
+  const handleInclusionTypeClick = (value: "all" | "full" | "partial" | "pending") => {
+    setInclusionTypeFilter(value);
+    setAiJudgmentFilter("all");
+    setVisibilityFilter("all");
+    setCurrentPage(1);
+  };
+  
+  // AI 매수 가능성 카드 클릭 핸들러 (필터 리셋 포함)
+  const handleAiJudgmentClick = (value: "all" | "high" | "low" | "pending") => {
+    setAiJudgmentFilter(value);
+    setInclusionTypeFilter("all");
+    setVisibilityFilter("all");
+    setCurrentPage(1);
+  };
+  
   // 사업단 필터 기본값 설정 (첫 번째 사업단)
   useEffect(() => {
     if (businessUnits.length > 0 && !businessUnitFilter) {
@@ -449,7 +465,7 @@ export function BatchAnalysis({
     });
     
     const total = relevantParcels.length;
-    // 판독 대기 = 편입 ��형 분석을 아직 실행하지 않은 필지
+    // 판독 대기 = 편입 ���형 분석을 아직 실행하지 않은 필지
     const pendingInclusion = relevantParcels.filter(p => !p.residualStatus).length;
     // 전체 편입 = 기준 미달 (잔여지 미발생)
     const fullInclusion = relevantParcels.filter(p => p.residualStatus === "기준 미달").length;
@@ -558,10 +574,7 @@ export function BatchAnalysis({
             <div className="grid grid-cols-4 gap-3 pt-2">
               {/* 전체: Black */}
               <div 
-                onClick={() => {
-                  setInclusionTypeFilter("all");
-                  setAiJudgmentFilter("all");
-                }}
+                onClick={() => handleInclusionTypeClick("all")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-4 transition-all hover:bg-slate-100"
               >
                 <span className="text-sm font-medium text-black" style={{ order: 1 }}>전체</span>
@@ -572,7 +585,7 @@ export function BatchAnalysis({
               </div>
               {/* 판독대기: Indigo */}
               <div 
-                onClick={() => setInclusionTypeFilter("pending")}
+                onClick={() => handleInclusionTypeClick("pending")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-indigo-50 p-4 transition-all hover:bg-indigo-100"
               >
                 <span className="text-sm font-medium text-indigo-500" style={{ order: 1 }}>판독대기</span>
@@ -583,7 +596,7 @@ export function BatchAnalysis({
               </div>
               {/* 부분 편입: Emerald (매수 색상과 동일) */}
               <div 
-                onClick={() => setInclusionTypeFilter("partial")}
+                onClick={() => handleInclusionTypeClick("partial")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-emerald-50 p-4 transition-all hover:bg-emerald-100"
               >
                 <span className="text-sm font-medium text-emerald-600" style={{ order: 1 }}>부분 편입</span>
@@ -594,7 +607,7 @@ export function BatchAnalysis({
               </div>
               {/* 전체 편입: Rose (기각 색상과 동일) */}
               <div 
-                onClick={() => setInclusionTypeFilter("full")}
+                onClick={() => handleInclusionTypeClick("full")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-rose-50 p-4 transition-all hover:bg-rose-100"
               >
                 <span className="text-sm font-medium text-rose-500" style={{ order: 1 }}>전체 편입</span>
@@ -637,7 +650,7 @@ export function BatchAnalysis({
             <div className="grid grid-cols-4 gap-3 pt-2">
               {/* 전체: Black */}
               <div 
-                onClick={() => setAiJudgmentFilter("all")}
+                onClick={() => handleAiJudgmentClick("all")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-4 transition-all hover:bg-slate-100"
               >
                 <span className="text-sm font-medium text-black" style={{ order: 1 }}>전체</span>
@@ -648,7 +661,7 @@ export function BatchAnalysis({
               </div>
               {/* 판독대기: Indigo */}
               <div 
-                onClick={() => setAiJudgmentFilter("pending")}
+                onClick={() => handleAiJudgmentClick("pending")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-indigo-50 p-4 transition-all hover:bg-indigo-100"
               >
                 <span className="text-sm font-medium text-indigo-500" style={{ order: 1 }}>판독대기</span>
@@ -659,7 +672,7 @@ export function BatchAnalysis({
               </div>
               {/* 높음: Emerald */}
               <div 
-                onClick={() => setAiJudgmentFilter("high")}
+                onClick={() => handleAiJudgmentClick("high")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-emerald-50 p-4 transition-all hover:bg-emerald-100"
               >
                 <span className="text-sm font-medium text-emerald-600" style={{ order: 1 }}>높음</span>
@@ -670,7 +683,7 @@ export function BatchAnalysis({
               </div>
               {/* 낮음: Rose */}
               <div 
-                onClick={() => setAiJudgmentFilter("low")}
+                onClick={() => handleAiJudgmentClick("low")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-rose-50 p-4 transition-all hover:bg-rose-100"
               >
                 <span className="text-sm font-medium text-rose-500" style={{ order: 1 }}>낮음</span>
