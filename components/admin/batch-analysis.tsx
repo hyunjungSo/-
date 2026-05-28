@@ -562,14 +562,14 @@ export function BatchAnalysis({
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
-              {/* 판독대기: Gray */}
+              {/* 판독대기: Indigo */}
               <div 
                 onClick={() => setInclusionTypeFilter("pending")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-50 p-4 transition-all hover:bg-gray-100"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-indigo-50 p-4 transition-all hover:bg-indigo-100"
               >
-                <span className="text-sm font-medium text-gray-500" style={{ order: 1 }}>판독대기</span>
+                <span className="text-sm font-medium text-indigo-500" style={{ order: 1 }}>판독대기</span>
                 <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
-                  <span className="font-bold text-gray-600" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.pendingInclusion}</span>
+                  <span className="font-bold text-indigo-600" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.pendingInclusion}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
@@ -638,14 +638,14 @@ export function BatchAnalysis({
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
-              {/* 판독대기: Gray */}
+              {/* 판독대기: Indigo */}
               <div 
                 onClick={() => setAiJudgmentFilter("pending")}
-                className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-50 p-4 transition-all hover:bg-gray-100"
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-indigo-50 p-4 transition-all hover:bg-indigo-100"
               >
-                <span className="text-sm font-medium text-gray-500" style={{ order: 1 }}>판독대기</span>
+                <span className="text-sm font-medium text-indigo-500" style={{ order: 1 }}>판독대기</span>
                 <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
-                  <span className="font-bold text-gray-600" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.pendingReview}</span>
+                  <span className="font-bold text-indigo-600" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.pendingReview}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
@@ -752,7 +752,7 @@ export function BatchAnalysis({
             <div>
               <CardTitle className="text-lg">필지 관리 목록</CardTitle>
               <CardDescription>
-                편입 유형 판독 및 매수 가능성 심사 결과를 확인하세��. 소��지를 클릭하면 필지 상세 화면으로 이동합니다.
+                편입 유형 판독 및 매수 가능성 심사 결과를 확인하세����. 소��지를 클릭하면 필지 상세 화면으로 이동합니다.
               </CardDescription>
             </div>
             {/* 분석 버튼 */}
@@ -859,7 +859,7 @@ export function BatchAnalysis({
                           전체 편입
                         </Badge>
                       ) : (
-                        <Badge className="bg-gray-100 text-gray-500 hover:bg-gray-100 border-0">
+                        <Badge className="bg-indigo-50 text-indigo-500 hover:bg-indigo-100 border-0">
                           판독대기
                         </Badge>
                       )}
@@ -868,7 +868,7 @@ export function BatchAnalysis({
                     <TableCell className="text-center">
                       {/* 편입 유형이 판독대기면 매수 가능성도 판독대기 */}
                       {parcel.residualStatus !== "잔여지 인정" && parcel.residualStatus !== "기준 미달" ? (
-                        <Badge className="bg-gray-100 text-gray-500 hover:bg-gray-100 border-0">
+                        <Badge className="bg-indigo-50 text-indigo-500 hover:bg-indigo-100 border-0">
                           판독대기
                         </Badge>
                       ) : isPurchaseAnalyzing && selectedParcelIds.has(parcel.id) ? (
@@ -879,7 +879,7 @@ export function BatchAnalysis({
                       ) : parcel.aiResult ? (
                         <AIJudgmentBadge judgment={parcel.aiResult.provisionalJudgment} />
                       ) : (
-                        <Badge className="bg-gray-100 text-gray-500 hover:bg-gray-100 border-0">
+                        <Badge className="bg-indigo-50 text-indigo-500 hover:bg-indigo-100 border-0">
                           판독대기
                         </Badge>
                       )}
