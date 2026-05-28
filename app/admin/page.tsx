@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { ApplicationList } from "@/components/admin/application-list";
 import { ApplicationDetail } from "@/components/admin/application-detail";
 import { BatchAnalysis } from "@/components/admin/batch-analysis";
@@ -110,15 +111,13 @@ export default function AdminPage() {
       <aside className="w-60 shrink-0 bg-[#1a2332] flex flex-col">
         {/* 1단 - 시스템 로고 */}
         <div className="p-4 border-b border-gray-700">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-10 h-10 bg-[#00875a] rounded-lg">
-              <span className="text-white font-bold text-lg">EX</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-white font-semibold text-sm">한국도로공사</span>
-              <span className="text-gray-400 text-xs">토지보상시스템</span>
-            </div>
-          </div>
+          <Image
+            src="/images/logo-lc.png"
+            alt="한국도로공사 토지정보"
+            width={180}
+            height={40}
+            className="h-auto"
+          />
         </div>
 
         {/* 2단 - 전역 사업지구 셀렉트 */}
