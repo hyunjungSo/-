@@ -540,7 +540,7 @@ export function BatchAnalysis({
               </div>
               <Progress 
                 value={stats.total > 0 ? ((stats.fullInclusion + stats.partialInclusion) / stats.total) * 100 : 0} 
-                className="h-[18px]" 
+                className="h-[9px]" 
                 indicatorClassName="bg-[#2E8B57]"
                 style={{ backgroundColor: '#e8f2f0' }}
               />
@@ -619,7 +619,7 @@ export function BatchAnalysis({
               </div>
               <Progress 
                 value={stats.partialInclusion > 0 ? Math.min(100, ((stats.highPossibility + stats.lowPossibility) / stats.partialInclusion) * 100) : 0} 
-                className="h-[18px]" 
+                className="h-[9px]" 
                 indicatorClassName="bg-[#2E8B57]"
                 style={{ backgroundColor: '#e8f2f0' }}
               />
@@ -752,7 +752,7 @@ export function BatchAnalysis({
             <div>
               <CardTitle className="text-lg">필지 관리 목록</CardTitle>
               <CardDescription>
-                편입 유형 판독 및 매수 가능성 심사 결과를 확인하세요. 소��지를 클릭하면 필지 상세 화면으로 이동합니다.
+                편입 유형 판독 및 매수 가능성 심사 결과를 확인하세��. 소��지를 클릭하면 필지 상세 화면으로 이동합니다.
               </CardDescription>
             </div>
             {/* 분석 버튼 */}

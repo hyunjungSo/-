@@ -447,7 +447,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
               </div>
               <Progress 
                 value={stats.completionRate} 
-                className="h-[18px]" 
+                className="h-[9px]" 
                 indicatorClassName="bg-[#2E8B57]"
                 style={{ backgroundColor: '#e8f2f0' }}
               />
