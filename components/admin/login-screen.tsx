@@ -98,7 +98,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
             {/* 아이디 입력 필드 */}
             <div className="space-y-2">
               <Label htmlFor="employeeId" className="text-sm font-medium text-gray-700">
-                사번 / 아이디
+                아이디
               </Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
@@ -107,7 +107,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
                   type="text"
                   value={employeeId}
                   onChange={(e) => setEmployeeId(e.target.value)}
-                  placeholder="사번 또는 아이디를 입력하세요"
+                  placeholder="아이디를 입력하세요"
                   className="h-12 pl-10 text-base"
                   required
                 />
