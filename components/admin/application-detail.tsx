@@ -930,7 +930,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
   };
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-5">
       {/* 신청 상세 타이틀 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -1060,9 +1060,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             <span className="text-xs text-muted-foreground">아래정보는 선택한 필지에 대한 내용입니다.</span>
           </div>
         </CardHeader>
-        <CardContent className="space-y-12">
+        <CardContent className="space-y-5">
           {/* 2-1. 토지정보 */}
-          <div className="space-y-4">
+          <div className="space-y-5">
             <h3 className="text-lg font-semibold">토지정보</h3>
             {applicationLands[selectedLandIndex] && (
               <div className="rounded-lg border overflow-hidden">
@@ -1139,7 +1139,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
           </div>
 
           {/* 2-2. AI 분석 */}
-          <div className="space-y-4">
+          <div className="space-y-5">
             <div className="space-y-1">
               <h3 className="text-base font-semibold" style={{ fontSize: '18px' }}>AI 분석</h3>
               <p className="text-sm text-muted-foreground">민원인 신청 결과와 담당자 분석 결과를 확인합니다.</p>
@@ -1158,7 +1158,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             <TabsContent value="citizen">
               <div className="grid gap-5 lg:grid-cols-[1fr_35%]">
                 {/* 좌측: 지적도 - 선택된 필지만 표시 (65%) */}
-                <div className="space-y-3">
+                <div className="space-y-5">
                   <div className="flex items-center justify-between">
                     <h4 className="font-semibold" style={{ fontSize: '16px' }}>지적도</h4>
                   </div>
@@ -1214,7 +1214,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   </div>
                   
                   {/* 지도 범례 */}
-                  <div className="flex flex-wrap gap-4 text-xs px-1">
+                  <div className="flex flex-wrap gap-5 text-xs px-1">
                     <div className="flex items-center gap-1.5">
                       <div className="h-2.5 w-2.5 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
                       <span className="text-muted-foreground">신청필지</span>
@@ -1227,7 +1227,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 </div>
                 
                 {/* 우측: 분석결과 - 선택된 필지만 표시 (35%) */}
-                <div className="space-y-3">
+                <div className="space-y-5">
                   <div className="flex items-center justify-between">
                     <h4 className="font-semibold" style={{ fontSize: '16px' }}>분석결과</h4>
                     {(() => {
@@ -1289,7 +1289,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         </div>
                         
                         {/* 상세 분석 내용 */}
-                        <div className="space-y-4">
+                        <div className="space-y-5">
                           {/* 판단 요약 */}
                           <div className="flex items-start gap-2">
                             <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -1462,9 +1462,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             
             {/* 담당자 결과 탭 */}
             <TabsContent value="admin">
-              <div className="space-y-6">
+              <div className="space-y-5">
                 {/* 섹션 1: 지적도 */}
-                <div className="space-y-3">
+                <div className="space-y-5">
                   <div className="flex items-center justify-between">
                     <h4 className="font-semibold" style={{ fontSize: '16px' }}>지적도</h4>
                   </div>
@@ -1559,7 +1559,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   </div>
                   
                   {/* 지도 범례 */}
-                  <div className="flex flex-wrap gap-4 text-xs px-1">
+                  <div className="flex flex-wrap gap-5 text-xs px-1">
                     <div className="flex items-center gap-1.5">
                       <div className="h-2.5 w-2.5 rounded-sm border-2 border-[#2563eb] bg-[#dbeafe]" />
                       <span className="text-muted-foreground">신청필지</span>
@@ -1572,12 +1572,12 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                 </div>
                 
                 {/* 섹션 2: 분석 설정 및 결과 - 좌우 레이아웃 */}
-                <div className="space-y-3">
+                <div className="space-y-5">
                   <div className="flex items-center justify-between">
                     <h4 className="font-semibold" style={{ fontSize: '16px' }}>분석 설정 및 검토</h4>
                   </div>
                   
-                  <div className="flex gap-4">
+                  <div className="flex gap-5">
                     {/* 좌측: 검토 옵션 */}
                     <div className="w-1/2 rounded-lg border bg-white">
                     {/* 헤더 - 필지 선택과 연동 */}
@@ -1589,7 +1589,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     </div>
                     
                     {/* 선택된 필지 옵션 설정 */}
-                    <div className="p-4 space-y-4">
+                    <div className="p-4 space-y-5">
                       {(() => {
                         // 선택된 필지에 따라 데이터 결정
                         const currentParcelId = selectedAdjacentParcel?.id || applicationLands[selectedLandIndex]?.id;
@@ -1614,7 +1614,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                 : (landData?.actualUsage || currentParcelLandType);
                               
                               return (
-                                <div className={`grid gap-2 ${isAdjacentParcel ? "grid-cols-2" : "grid-cols-3"}`}>
+                                <div className={`grid gap-5 ${isAdjacentParcel ? "grid-cols-2" : "grid-cols-3"}`}>
                                   {!isAdjacentParcel && (
                                     <div className="text-center p-2 rounded-md bg-blue-50 border border-blue-100">
                                       <p className="text-xs text-muted-foreground mb-0.5">민원인 선택</p>
@@ -1744,7 +1744,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             </div>
                             
                             {/* 현장확인 옵션 */}
-                            <div className="space-y-3 pt-2 border-t">
+                            <div className="space-y-5 pt-2 border-t">
                               <label className="text-sm font-medium text-foreground">현장 확인 항목</label>
                               {isViewOnly ? (
                                 <div className="space-y-2 text-sm">
@@ -1841,7 +1841,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   </div>
 
                     {/* 우측: 분석결과 확인 */}
-                    <div className="w-1/2 space-y-3">
+                    <div className="w-1/2 space-y-5">
                     {Object.keys(adminLandAIResults).length === 0 ? (
                       <div className="flex flex-col items-center justify-center py-12 text-center rounded-lg border bg-muted/20">
                         <div className="rounded-full bg-muted/50 p-4 mb-4">
@@ -1901,7 +1901,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                               </div>
 
                               {/* 상세 분석 내용 */}
-                              <div className="space-y-4">
+                              <div className="space-y-5">
                                 {/* 판단 요약 */}
                                 <div className="flex items-start gap-2">
                                   <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -2092,7 +2092,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
           </div>
 
           {/* 2-3. 담당자 검토 */}
-          <div className="space-y-4">
+          <div className="space-y-5">
             <div className="space-y-1">
               <h3 className="text-base font-semibold" style={{ fontSize: '18px' }}>담당자 검토</h3>
               <p className="text-sm text-muted-foreground">선택된 필지의 판정과 검토 의견을 입력하세요</p>
@@ -2108,9 +2108,9 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
               const aiResult = adminResult || citizenResult;
               
               return (
-                <div className="space-y-6">
+                <div className="space-y-5">
                   {/* 담당자 판정 (매수 가능성 높음/매수 가능성 낮음/추가 검토 필요) */}
-                  <div className="space-y-3">
+                  <div className="space-y-5">
                     <Label className="text-sm font-medium">담당자 판정</Label>
                     <div className="flex flex-wrap gap-2">
                       {(["매수", "기각", "심의위원회 이관"] as FinalJudgmentResult[]).map((judgment) => {
@@ -2149,7 +2149,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   )}
                   
                   {/* 검토 의견 */}
-                  <div className="space-y-3">
+                  <div className="space-y-5">
                     <Label className="text-sm font-medium">검토 ��견</Label>
                     <Textarea
                       placeholder="해당 필지에 대한 검토 의견을 입력하세요..."
@@ -2208,7 +2208,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             모든 필지에 대한 종합적인 검토 의견을 작성해주세요. 이 내용은 심의서에 자동 입력됩니다.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-5">
           {/* 필지별 검토 현황 요약 */}
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-muted-foreground shrink-0">필지별 검토 현황</span>
@@ -2302,7 +2302,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             <div className="flex flex-1 overflow-hidden">
               {/* 왼쪽: 텍스트 정보 (판단 요약, 법적 근거) */}
               <div className="w-3/4 border-r overflow-y-auto p-6">
-                <div className="space-y-6">
+                <div className="space-y-5">
                   {/* 헤더 */}
                   <div>
                     <h2 className="text-xl font-bold text-foreground">상세 판독 결과</h2>
@@ -2356,7 +2356,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const criteria = result?.judgmentRationale?.appliedCriteria || [
                           "잔여지 면적 기준 미달 여부",
                           "잔여지 형상 변화 (정형 → 부정형)",
-                          "접면도��� 상태 변경 여부"
+                          "접면도���� 상태 변경 여부"
                         ];
                         return criteria.map((c: string, i: number) => (
                           <li key={i} className="flex items-start gap-2 text-[15px] text-muted-foreground">
@@ -2411,7 +2411,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
 
               {/* 오른쪽: AI 판독 분석 이미지 */}
               <div className="w-1/4 bg-muted/20 p-6 overflow-y-auto">
-                <div className="space-y-4">
+                <div className="space-y-5">
                   <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
                     <ImageIcon className="h-5 w-5" />
                     AI 판독 분석 이미지
