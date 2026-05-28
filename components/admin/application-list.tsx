@@ -517,7 +517,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
         <Card className="lg:col-span-5 border-0 shadow-none">
           <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium flex items-center justify-between">
-              <span style={{ fontSize: '18px', fontWeight: '600' }}>담당자 액티비티</span>
+              <span style={{ fontSize: '18px', fontWeight: '600' }}>최근 작업내역</span>
               <span className="text-sm text-muted-foreground">최근 7일</span>
             </CardTitle>
           </CardHeader>
