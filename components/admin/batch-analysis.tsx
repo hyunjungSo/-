@@ -548,7 +548,7 @@ export function BatchAnalysis({
             
             {/* 상태별 현황 그리드 - 4개 카드 */}
             <div className="grid grid-cols-4 gap-3 pt-2">
-              {/* 전체: Slate 계열 */}
+              {/* 전체: Black */}
               <div 
                 onClick={() => {
                   setInclusionTypeFilter("all");
@@ -556,11 +556,46 @@ export function BatchAnalysis({
                 }}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-4 transition-all hover:bg-slate-100"
               >
-                <span className="text-sm font-medium text-slate-600" style={{ order: 1 }}>전체</span>
+                <span className="text-sm font-medium text-black" style={{ order: 1 }}>전체</span>
                 <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
-                  <span className="font-bold text-slate-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.total}</span>
+                  <span className="font-bold text-black" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.total}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
+              </div>
+              {/* 판독대기: Gray */}
+              <div 
+                onClick={() => setInclusionTypeFilter("pending")}
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-50 p-4 transition-all hover:bg-gray-100"
+              >
+                <span className="text-sm font-medium text-gray-500" style={{ order: 1 }}>판독대기</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold text-gray-600" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.pendingInclusion}</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+                </div>
+              </div>
+              {/* 전체 편입: Rose (기각 색상과 동일) */}
+              <div 
+                onClick={() => setInclusionTypeFilter("full")}
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-rose-50 p-4 transition-all hover:bg-rose-100"
+              >
+                <span className="text-sm font-medium text-rose-500" style={{ order: 1 }}>전체 편입</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold text-rose-600" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.fullInclusion}</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+                </div>
+              </div>
+              {/* 부분 편입: Emerald (매수 색상과 동일) */}
+              <div 
+                onClick={() => setInclusionTypeFilter("partial")}
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-emerald-50 p-4 transition-all hover:bg-emerald-100"
+              >
+                <span className="text-sm font-medium text-emerald-600" style={{ order: 1 }}>부분 편입</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold text-emerald-700" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.partialInclusion}</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+                </div>
+              </div>
+            </div>
               </div>
               {/* 판독대기: Indigo */}
               <div 
