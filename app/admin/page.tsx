@@ -36,7 +36,7 @@ export default function AdminPage() {
   const [processedParcels, setProcessedParcels] = useState<ProcessedParcel[]>(dummyProcessedParcels);
   const [selectedParcel, setSelectedParcel] = useState<ProcessedParcel | null>(null);
   const [activeTab, setActiveTab] = useState<ActiveTab>("applications");
-  const [projectUnitFilter, setProjectUnitFilter] = useState<ProjectUnit>("gangjin-gwangju");
+  const [projectUnitFilter, setProjectUnitFilter] = useState<ProjectUnit>(PROJECT_UNIT_OPTIONS[0].value);
   
   // 신청상세 진입 전 화면 추적 (뒤로가기 시 사용)
   const [previousScreen, setPreviousScreen] = useState<{
