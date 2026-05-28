@@ -116,7 +116,7 @@ export default function AdminPage() {
             alt="한국도로공사 토지정보"
             width={180}
             height={40}
-            className="h-auto"
+            className="h-auto brightness-0 invert"
           />
         </div>
 
