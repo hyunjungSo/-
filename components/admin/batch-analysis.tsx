@@ -16,6 +16,12 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -449,7 +455,7 @@ export function BatchAnalysis({
     });
     
     const total = relevantParcels.length;
-    // 판독 대기 = 편입 유형 분석을 아직 실행하지 않은 필지
+    // 판독 대기 = 편입 ��형 분석을 아직 실행하지 않은 필지
     const pendingInclusion = relevantParcels.filter(p => !p.residualStatus).length;
     // 전체 편입 = 기준 미달 (잔여지 미발생)
     const fullInclusion = relevantParcels.filter(p => p.residualStatus === "기준 미달").length;
@@ -896,7 +902,7 @@ export function BatchAnalysis({
                     <TableCell className="text-center">
                       {(() => {
                         const hasCitizenActivity = parcel.citizenActivity?.inCart || parcel.citizenActivity?.applicationSubmitted;
-                        return (
+                        const switchElement = (
                           <div className="flex items-center justify-center gap-1.5">
                             <Switch
                               checked={parcel.isVisible !== false}
@@ -907,6 +913,19 @@ export function BatchAnalysis({
                             <span className="text-sm text-muted-foreground w-[42px] text-left">{parcel.isVisible !== false ? "공개" : "비공개"}</span>
                           </div>
                         );
+                        
+                        return hasCitizenActivity ? (
+                          <TooltipProvider delayDuration={0}>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                {switchElement}
+                              </TooltipTrigger>
+                              <TooltipContent side="top" className="text-xs max-w-[200px]">
+                                <p>민원인이 해당 필지를 장바구니에 담았거나 신청서를 제출하여 수정할 수 없습니다.</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        ) : switchElement;
                       })()}
                     </TableCell>
                   </TableRow>
