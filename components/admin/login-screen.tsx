@@ -49,9 +49,11 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
           {/* 상단 로고 영역 */}
           <div>
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm">
-                <span className="text-2xl font-bold text-white">EX</span>
-              </div>
+              <svg className="h-12 w-12 text-white" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="10" width="80" height="80" rx="8" fill="none" stroke="currentColor" strokeWidth="2"/>
+                <path d="M30 35 L50 55 L70 35" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M30 65 L50 45 L70 65" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              </svg>
               <div className="flex flex-col">
                 <span className="text-lg font-semibold text-white">한국도로공사</span>
                 <span className="text-sm text-white/70">Korea Expressway Corporation</span>
@@ -79,17 +81,11 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
       {/* 우측 영역 - 로그인 폼 섹션 */}
       <div className="flex w-full flex-col items-center justify-center bg-white px-8 lg:w-1/2">
         <div className="w-full max-w-md space-y-8">
-          {/* 상단 로고 및 타이틀 */}
-          <div className="space-y-2 text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-[#1a365d] to-[#2E8B57]">
+          {/* 상단 로고 */}
+          <div className="flex justify-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-[#1a365d] to-[#2E8B57]">
               <span className="text-2xl font-bold text-white">EX</span>
             </div>
-            <h1 className="mt-4 text-2xl font-bold text-gray-900">
-              로그인
-            </h1>
-            <p className="text-sm text-gray-500">
-              사번과 비밀번호를 입력하여 로그인하세요
-            </p>
           </div>
 
           {/* 로그인 폼 */}
