@@ -2356,7 +2356,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const criteria = result?.judgmentRationale?.appliedCriteria || [
                           "잔여지 면적 기준 미달 여부",
                           "잔여지 형상 변화 (정형 → 부정형)",
-                          "접면도로 상태 변경 여부"
+                          "접면도�� 상태 변경 여부"
                         ];
                         return criteria.map((c: string, i: number) => (
                           <li key={i} className="flex items-start gap-2 text-[15px] text-muted-foreground">
@@ -2498,19 +2498,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </div>
       )}
 
-      {/* 하단 저장 버튼 - 심사완료 시 숨김 */}
-      {!isViewOnly && (
-        <div className="fixed bottom-0 left-0 right-0 w-screen bg-background border-t py-4 px-6 mt-6 z-[9999]">
-          <div className="flex justify-end gap-3">
-            <Button variant="outline" className="w-[80px] text-foreground border-foreground hover:bg-foreground/5" onClick={onBack}>
-              취소
-            </Button>
-            <Button className="w-[80px]" onClick={handleSave}>
-              저장
-            </Button>
-          </div>
-        </div>
-      )}
+      {/* 하단 저장 버튼은 page.tsx에서 목록 버튼과 함께 렌더링됨 */}
 
       {/* 파일 미리보기 Dialog - 풀페이지 */}
       <Dialog open={showPdfPreview} onOpenChange={setShowPdfPreview}>

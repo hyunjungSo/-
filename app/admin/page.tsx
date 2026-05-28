@@ -283,8 +283,9 @@ export default function AdminPage() {
                   onSave={handleSave}
                   onNavigateToList={handleNavigateToApplicationList}
                 />
-                {/* 콘텐츠 하단 - 목록으로 돌아가기 버튼 (고정 아님) */}
-                <div className="flex items-center justify-end mt-6 pb-24">
+                {/* 콘텐츠 하단 - 버튼 영역 (목록, 취소, 저장) */}
+                <div className="flex items-center justify-between mt-6 pb-6">
+                  {/* 좌측 - 목록보기 버튼 */}
                   <Button
                     variant="outline"
                     onClick={handleNavigateToApplicationList}
@@ -292,6 +293,25 @@ export default function AdminPage() {
                   >
                     목록보기
                   </Button>
+                  
+                  {/* 중앙 - 취소/저장 버튼 (심사완료가 아닐 때만 표시) */}
+                  {selectedApplication?.adminStatus !== "심사완료" && (
+                    <div className="flex gap-3">
+                      <Button 
+                        variant="outline" 
+                        className="w-[80px] text-foreground border-foreground hover:bg-foreground/5" 
+                        onClick={handleBack}
+                      >
+                        취소
+                      </Button>
+                      <Button className="w-[80px]" onClick={handleSave}>
+                        저장
+                      </Button>
+                    </div>
+                  )}
+                  
+                  {/* 우측 공간 (레이아웃 균형용) */}
+                  <div className="w-[80px]" />
                 </div>
               </div>
             ) : (
