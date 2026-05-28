@@ -48,19 +48,13 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
         <div className="relative z-10 flex h-full flex-col justify-between p-12">
           {/* 상단 로고 영역 */}
           <div>
-            <div className="flex items-center gap-3">
-              <Image
-                src="/images/logo-lc.png"
-                alt="Korea Expressway Corporation"
-                width={90}
-                height={20}
-                className="h-5 w-auto"
-              />
-              <div className="flex flex-col">
-                <span className="text-lg font-semibold text-white">한국도로공사</span>
-                <span className="text-sm text-white/70">Korea Expressway Corporation</span>
-              </div>
-            </div>
+            <Image
+              src="/images/logo-lc.png"
+              alt="Korea Expressway Corporation"
+              width={90}
+              height={20}
+              className="h-5 w-auto brightness-0 invert opacity-80"
+            />
           </div>
           
           {/* 중앙 타이틀 */}
