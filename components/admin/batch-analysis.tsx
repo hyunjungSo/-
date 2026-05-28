@@ -515,27 +515,9 @@ export function BatchAnalysis({
 
   return (
     <div className="space-y-6">
-      {/* 타이틀 + 사업단(지구) 선택 영역 */}
+      {/* 타이틀 영역 */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-foreground sm:text-3xl">필지 관리</h1>
-          </div>
-        </div>
-        {/* 사업단(지구) 선택 - 최상위 전역 필터 */}
-        <div className="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-lg border border-slate-200">
-          <span className="text-sm font-medium text-slate-600">현재 사업지구:</span>
-          <Select value={businessUnitFilter} onValueChange={setBusinessUnitFilter}>
-            <SelectTrigger className="w-[220px] h-[38px] bg-white border-slate-300 font-medium">
-              <SelectValue placeholder="사업단 선택" />
-            </SelectTrigger>
-            <SelectContent>
-              {businessUnits.map((unit) => (
-                <SelectItem key={unit} value={unit}>{unit}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">필지 관리</h1>
       </div>
       
       <p className="text-muted-foreground -mt-4">편입 유형 분석 및 매수 가능성 심사를 관리합니다.</p>
