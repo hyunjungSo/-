@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -539,97 +540,201 @@ export function BatchAnalysis({
       
       <p className="text-muted-foreground -mt-4">편입 유형 분석 및 매수 가능성 심사를 관리합니다.</p>
 
-      {/* 통계 카드 - 7개 (업무 흐름 순서) */}
-      <div className="grid grid-cols-7 gap-3">
-        {/* 카드 1: 전체 필지 (Dark Gray) */}
-        <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-700 p-4 transition-all hover:bg-slate-800 border border-slate-600"
-          onClick={() => {
-            setInclusionTypeFilter("all");
-            setAiJudgmentFilter("all");
-          }}
-        >
-          <span className="text-sm font-medium text-slate-200">전체 필지</span>
-          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-white" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.total}</span>
-            <span className="text-xs font-medium ml-0.5 text-slate-400">건</span>
-          </div>
-        </div>
+      {/* 대시보드 요약 - 신청관리와 동일한 UI */}
+      <div className="grid gap-4 lg:grid-cols-11">
+        {/* 편입 유형 현황 카드 */}
+        <Card className="lg:col-span-6">
+          <CardHeader style={{ paddingBottom: '6px' }}>
+            <CardTitle className="text-base font-medium" style={{ fontSize: '18px', fontWeight: '600' }}>편입 유형 현황</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
+            {/* 진행률 바 */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">편입 유형 판독 완료율</span>
+                <span style={{ fontSize: '30px', fontWeight: '800', color: 'rgb(20, 113, 97)' }}>
+                  {stats.total > 0 ? Math.round(((stats.fullInclusion + stats.partialInclusion) / stats.total) * 100) : 0}%
+                </span>
+              </div>
+              <Progress 
+                value={stats.total > 0 ? ((stats.fullInclusion + stats.partialInclusion) / stats.total) * 100 : 0} 
+                className="h-[18px]" 
+                indicatorClassName="bg-[#2E8B57]"
+                style={{ backgroundColor: '#e8f2f0' }}
+              />
+            </div>
+            
+            {/* 상태별 현황 그리드 - 4개 카드 */}
+            <div className="grid grid-cols-4 gap-3 pt-2">
+              {/* 전체: Slate 계열 */}
+              <div 
+                onClick={() => {
+                  setInclusionTypeFilter("all");
+                  setAiJudgmentFilter("all");
+                }}
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-slate-50 p-4 transition-all hover:bg-slate-100"
+              >
+                <span className="text-sm font-medium text-slate-600" style={{ order: 1 }}>전체</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold text-slate-900" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.total}</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+                </div>
+              </div>
+              {/* 판독대기: Indigo */}
+              <div 
+                onClick={() => setInclusionTypeFilter("pending")}
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-indigo-50 p-4 transition-all hover:bg-indigo-100"
+              >
+                <span className="text-sm font-medium text-indigo-500" style={{ order: 1 }}>판독대기</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold text-indigo-500" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.pendingInclusion}</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+                </div>
+              </div>
+              {/* 전체 편입: Gray */}
+              <div 
+                onClick={() => setInclusionTypeFilter("full")}
+                className="flex cursor-pointer flex-col items-center rounded-lg p-4 transition-all"
+                style={{ backgroundColor: '#f1f5f9' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e2e8f0'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
+              >
+                <span className="text-sm font-medium" style={{ order: 1, color: '#64748b' }}>전체 편입</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold" style={{ fontSize: '42px', lineHeight: '1em', color: '#475569' }}>{stats.fullInclusion}</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+                </div>
+              </div>
+              {/* 부분 편입: Teal 계열 */}
+              <div 
+                onClick={() => setInclusionTypeFilter("partial")}
+                className="flex cursor-pointer flex-col items-center rounded-lg p-4 transition-all"
+                style={{ backgroundColor: '#e8f2f0' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(20, 113, 97, 0.15)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e8f2f0'}
+              >
+                <span className="text-sm font-medium" style={{ order: 1, color: 'rgb(20, 113, 97)' }}>부분 편입</span>
+                <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
+                  <span className="font-bold" style={{ fontSize: '42px', lineHeight: '1em', color: 'rgb(20, 113, 97)' }}>{stats.partialInclusion}</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+                </div>
+              </div>
+            </div>
+            {/* 기준 안내 문구 */}
+            <p className="pt-2 text-xs text-muted-foreground/70">
+              ※ 부분 편입 필지만 잔여지 발생으로 AI 매수 가능성 분석 대상입니다.
+            </p>
+          </CardContent>
+        </Card>
 
-        {/* 카드 2: 판독대기 (Light Gray) - 1차 편입 유형 판독 전 */}
-        <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-100 p-4 transition-all hover:bg-gray-200 border border-gray-300"
-          onClick={() => setInclusionTypeFilter("pending")}
-        >
-          <span className="text-sm font-medium text-gray-600">판독대기</span>
-          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-gray-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.pendingInclusion}</span>
-            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
-          </div>
-        </div>
-
-        {/* 카드 3: 전체 편입 - 잔여지 미발생, 신청 대상 아님 */}
-        <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg p-4 transition-all border"
-          style={{ backgroundColor: '#96979b', borderColor: '#96979b' }}
-          onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
-          onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-          onClick={() => setInclusionTypeFilter("full")}
-        >
-          <span className="text-sm font-medium" style={{ color: '#ffffff' }}>전체 편입</span>
-          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold" style={{ fontSize: '36px', lineHeight: '1em', color: '#ffffff' }}>{stats.fullInclusion}</span>
-            <span className="text-xs font-medium ml-0.5" style={{ color: '#ffffff' }}>건</span>
-          </div>
-        </div>
-        
-        {/* 카드 4: 부분 편입 (Teal/Green) - 잔여지 발생, AI 분석 대상 */}
-        <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-teal-50 p-4 transition-all hover:bg-teal-100 border border-teal-200"
-          onClick={() => setInclusionTypeFilter("partial")}
-        >
-          <span className="text-sm font-medium text-teal-600">부분 편입</span>
-          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-teal-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.partialInclusion}</span>
-            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
-          </div>
-        </div>
-        
-        {/* 카드 5: 판독대기 (Light Gray) - 편입 유형 완료, AI 매수 분석 전 */}
-        <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-gray-100 p-4 transition-all hover:bg-gray-200 border border-gray-300"
-          onClick={() => setAiJudgmentFilter("pending")}
-        >
-          <span className="text-sm font-medium text-gray-600">판독대기</span>
-          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-gray-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.pendingReview}</span>
-            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
-          </div>
-        </div>
-
-        {/* 카드 6: 매수 가능성 높음 (Strong Green) */}
-        <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-green-100 p-4 transition-all hover:bg-green-200 border border-green-300"
-          onClick={() => setAiJudgmentFilter("high")}
-        >
-          <span className="text-sm font-medium text-green-700">매수 가능성 높음</span>
-          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-green-900" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.highPossibility}</span>
-            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
-          </div>
-        </div>
-        
-        {/* 카드 7: 매수 가능성 낮음 (Soft Red/Orange) */}
-        <div 
-          className="flex cursor-pointer flex-col items-center rounded-lg bg-red-50 p-4 transition-all hover:bg-red-100 border border-red-200"
-          onClick={() => setAiJudgmentFilter("low")}
-        >
-          <span className="text-sm font-medium text-red-500">매수 가능성 낮음</span>
-          <div className="flex items-baseline gap-0.5" style={{ marginTop: '8px' }}>
-            <span className="font-bold text-red-800" style={{ fontSize: '36px', lineHeight: '1em' }}>{stats.lowPossibility}</span>
-            <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
-          </div>
-        </div>
+        {/* 매수 가능성 현황 카드 */}
+        <Card className="lg:col-span-5">
+          <CardHeader style={{ paddingBottom: '6px' }}>
+            <CardTitle className="text-base font-medium flex items-center justify-between">
+              <span style={{ fontSize: '18px', fontWeight: '600' }}>매수 가능성 현황</span>
+              <span className="text-2xl font-bold text-primary">
+                {stats.partialInclusion > 0 ? Math.round((stats.highPossibility / stats.partialInclusion) * 100) : 0}%
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4" style={{ paddingTop: '0' }}>
+            
+            {/* 스택 바 비교 */}
+            <div className="space-y-3" style={{ marginTop: '4px' }}>
+              {/* AI 분석 결과 막대 */}
+              <div className="space-y-1.5">
+                <span className="text-sm font-medium text-muted-foreground" style={{ fontSize: '14px' }}>AI 분석 결과</span>
+                <div className="flex h-8 w-full overflow-hidden rounded-md">
+                  {(stats.highPossibility + stats.lowPossibility + stats.pendingReview) > 0 ? (
+                    <>
+                      {stats.highPossibility > 0 && (
+                        <div 
+                          className="flex items-center justify-center bg-emerald-500 text-xs font-semibold text-white"
+                          style={{ width: `${(stats.highPossibility / (stats.highPossibility + stats.lowPossibility + stats.pendingReview)) * 100}%` }}
+                        >
+                          {stats.highPossibility}건
+                        </div>
+                      )}
+                      {stats.lowPossibility > 0 && (
+                        <div 
+                          className="flex items-center justify-center bg-rose-500 text-xs font-semibold text-white"
+                          style={{ width: `${(stats.lowPossibility / (stats.highPossibility + stats.lowPossibility + stats.pendingReview)) * 100}%` }}
+                        >
+                          {stats.lowPossibility}건
+                        </div>
+                      )}
+                      {stats.pendingReview > 0 && (
+                        <div 
+                          className="flex items-center justify-center bg-amber-400 text-xs font-semibold text-white"
+                          style={{ width: `${(stats.pendingReview / (stats.highPossibility + stats.lowPossibility + stats.pendingReview)) * 100}%` }}
+                        >
+                          {stats.pendingReview}건
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-gray-100 text-xs text-gray-400">
+                      분석 대기 중
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            {/* 상태별 현황 그리드 - 3개 카드 */}
+            <div className="grid grid-cols-3 gap-3 pt-3">
+              {/* 판독대기 */}
+              <div 
+                onClick={() => setAiJudgmentFilter("pending")}
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-amber-50 p-3 transition-all hover:bg-amber-100"
+              >
+                <span className="text-sm font-medium text-amber-600">판독대기</span>
+                <div className="flex items-baseline gap-0.5 mt-2">
+                  <span className="font-bold text-amber-700" style={{ fontSize: '28px', lineHeight: '1em' }}>{stats.pendingReview}</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+                </div>
+              </div>
+              {/* 매수 가능성 높음 */}
+              <div 
+                onClick={() => setAiJudgmentFilter("high")}
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-emerald-50 p-3 transition-all hover:bg-emerald-100"
+              >
+                <span className="text-sm font-medium text-emerald-600">높음</span>
+                <div className="flex items-baseline gap-0.5 mt-2">
+                  <span className="font-bold text-emerald-700" style={{ fontSize: '28px', lineHeight: '1em' }}>{stats.highPossibility}</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+                </div>
+              </div>
+              {/* 매수 가능성 낮음 */}
+              <div 
+                onClick={() => setAiJudgmentFilter("low")}
+                className="flex cursor-pointer flex-col items-center rounded-lg bg-rose-50 p-3 transition-all hover:bg-rose-100"
+              >
+                <span className="text-sm font-medium text-rose-500">낮음</span>
+                <div className="flex items-baseline gap-0.5 mt-2">
+                  <span className="font-bold text-rose-600" style={{ fontSize: '28px', lineHeight: '1em' }}>{stats.lowPossibility}</span>
+                  <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* 범례 */}
+            <div className="flex items-center justify-center gap-4 pt-2 text-xs">
+              <div className="flex items-center gap-1.5">
+                <span className="h-3 w-3 rounded-sm bg-emerald-500"></span>
+                <span className="text-muted-foreground">매수 가능성 높음</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="h-3 w-3 rounded-sm bg-rose-500"></span>
+                <span className="text-muted-foreground">매수 가능성 낮음</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="h-3 w-3 rounded-sm bg-amber-400"></span>
+                <span className="text-muted-foreground">판독대기</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* 검색 및 필터 */}
