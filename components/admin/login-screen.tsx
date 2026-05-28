@@ -65,15 +65,8 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
               <h1 className="text-4xl font-bold tracking-tight text-white">
                 AI 잔여지 매수 판독
               </h1>
-              <h2 className="text-3xl font-semibold text-white/90">
-                어드민 시스템
-              </h2>
             </div>
             <div className="h-1 w-24 rounded-full bg-[#2E8B57]" />
-            <p className="max-w-md text-lg leading-relaxed text-white/80">
-              신뢰와 안전을 바탕으로<br />
-              토지보상 업무를 디지털로 혁신합니다.
-            </p>
           </div>
           
           {/* 하단 푸터 */}
@@ -92,7 +85,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
               <span className="text-2xl font-bold text-white">EX</span>
             </div>
             <h1 className="mt-4 text-2xl font-bold text-gray-900">
-              소속 직원 로그인
+              로그인
             </h1>
             <p className="text-sm text-gray-500">
               사번과 비밀번호를 입력하여 로그인하세요
