@@ -280,7 +280,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
   
   // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
   const [adminAIOptionsPerLand, setAdminAIOptionsPerLand] = useState<Record<string, {
-    accessRoadLost: boolean;      // ��면도로 상실
+    accessRoadLost: boolean;      // ��면도��� 상실
     waterChannelLost: boolean;    // 관개수로 상실
     farmMachineDifficulty: boolean; // 농기계 회전 곤란
   }>>({});
@@ -864,17 +864,6 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
   const aiResult = application.aiResult;
 
   const handleSave = () => {
-    // 토지 모양 필수 입력값 검증
-    const hasAllLandShapes = allLands.every(land => adminLandShapePerLand[land.id]);
-    if (!hasAllLandShapes) {
-      toast({
-        title: "필수 입력값 누락",
-        description: "모든 필지의 토지 모양을 선택해주세요.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     setIsSaving(true);
     
     const selectedAssignee = assigneeList.find(a => a.id === reviewData.assigneeId);
