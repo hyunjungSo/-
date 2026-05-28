@@ -135,8 +135,8 @@ export default function AdminPage() {
         </div>
 
         {/* 3단 - 메인 메뉴 */}
-        <div className="flex-1 p-4">
-          <h2 className="mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+        <div className="flex-1 py-4">
+          <h2 className="mb-3 px-4 text-xs font-semibold uppercase tracking-wider text-gray-500">
             메뉴
           </h2>
           <nav className="space-y-1">
@@ -147,7 +147,7 @@ export default function AdminPage() {
                 setSelectedApplication(null);
               }}
               className={cn(
-                "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors",
                 activeTab === "applications"
                   ? "bg-[#00875a] text-white"
                   : "text-gray-300 hover:bg-[#2a3648] hover:text-white"
@@ -164,7 +164,7 @@ export default function AdminPage() {
                 setSelectedParcel(null);
               }}
               className={cn(
-                "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors",
                 (activeTab === "parcel-management" || activeTab === "parcel-review")
                   ? "bg-[#00875a] text-white"
                   : "text-gray-300 hover:bg-[#2a3648] hover:text-white"
