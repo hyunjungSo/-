@@ -514,7 +514,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           </CardContent>
         </Card>
 
-        {/* 담당자 액티비티 (최근 작업) 카드 */}
+        {/* 최근 작업내역 카드 */}
         <Card className="lg:col-span-5 border-0 shadow-none">
           <CardHeader style={{ paddingBottom: '6px' }}>
             <CardTitle className="text-base font-medium flex items-center justify-between">
@@ -526,45 +526,49 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             {/* 액티비티 로그 리스트 */}
             <div className="space-y-2 max-h-[280px] overflow-y-auto pr-1">
               {[
-                { action: "민원 심사완료", target: "김철수 외 2건", time: "10분 전", type: "complete" },
-                { action: "AI 분석 요청", target: "전남 강진군 작천면", time: "25분 전", type: "ai" },
-                { action: "민원 접수 확인", target: "박영희", time: "1시간 전", type: "review" },
-                { action: "심사 의견 작성", target: "이민수", time: "2시간 전", type: "comment" },
-                { action: "민원 심사완료", target: "정미영 외 1건", time: "3시간 전", type: "complete" },
-                { action: "필지 정보 조회", target: "강진군 작천면 309-2", time: "어제", type: "view" },
-                { action: "AI 분석 요청", target: "전남 강진군 작천면", time: "어제", type: "ai" },
-                { action: "민원 심사완료", target: "최동훈", time: "어제", type: "complete" },
+                { action: "심사완료 처리", target: "김철수 외 2건", actor: "홍길동", relativeTime: "10분 전", absoluteTime: "2026-05-28 10:47:21", type: "status" },
+                { action: "AI 재분석 실행", target: "전남 강진군 작천면 309-2", actor: "홍길동", relativeTime: "25분 전", absoluteTime: "2026-05-28 10:32:15", type: "ai" },
+                { action: "심사 의견 등록", target: "박영희 (민원번호: 2026-0523)", actor: "김담당", relativeTime: "1시간 전", absoluteTime: "2026-05-28 09:57:33", type: "comment" },
+                { action: "진행중 상태 전환", target: "이민수 (민원번호: 2026-0521)", actor: "홍길동", relativeTime: "2시간 전", absoluteTime: "2026-05-28 08:45:12", type: "status" },
+                { action: "공개 여부 변경", target: "강진군 작천면 310-1", actor: "김담당", relativeTime: "3시간 전", absoluteTime: "2026-05-28 07:52:08", type: "toggle" },
+                { action: "심사완료 처리", target: "정미영 외 1건", actor: "홍길동", relativeTime: "어제", absoluteTime: "2026-05-27 17:23:45", type: "status" },
+                { action: "보완 요청 메모", target: "최동훈 (민원번호: 2026-0518)", actor: "김담당", relativeTime: "어제", absoluteTime: "2026-05-27 14:11:29", type: "comment" },
+                { action: "AI 재분석 실행", target: "전남 강진군 작천면 308-5", actor: "홍길동", relativeTime: "어제", absoluteTime: "2026-05-27 11:05:17", type: "ai" },
               ].map((activity, index) => (
                 <div 
                   key={index} 
-                  className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-muted/50 transition-colors"
+                  className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-muted/50 transition-colors group"
+                  title={`${activity.absoluteTime} | ${activity.actor}`}
                 >
                   <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                    activity.type === "complete" ? "bg-emerald-50" :
+                    activity.type === "status" ? "bg-emerald-50" :
                     activity.type === "ai" ? "bg-blue-50" :
-                    activity.type === "review" ? "bg-amber-50" :
                     activity.type === "comment" ? "bg-purple-50" :
+                    activity.type === "toggle" ? "bg-amber-50" :
                     "bg-gray-50"
                   }`}>
-                    {activity.type === "complete" ? (
+                    {activity.type === "status" ? (
                       <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                     ) : activity.type === "ai" ? (
                       <AIIcon className="h-4 w-4 text-blue-600" />
-                    ) : activity.type === "review" ? (
-                      <FileCheck className="h-4 w-4 text-amber-600" />
                     ) : activity.type === "comment" ? (
                       <Layers className="h-4 w-4 text-purple-600" />
+                    ) : activity.type === "toggle" ? (
+                      <FileCheck className="h-4 w-4 text-amber-600" />
                     ) : (
                       <Search className="h-4 w-4 text-gray-600" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{activity.action}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium text-foreground truncate">{activity.action}</p>
+                      <span className="text-xs text-muted-foreground/60 hidden group-hover:inline">({activity.actor})</span>
+                    </div>
                     <p className="text-xs text-muted-foreground truncate">{activity.target}</p>
                   </div>
                   <div className="flex-shrink-0 flex items-center gap-1 text-xs text-muted-foreground">
                     <Clock className="h-3 w-3" />
-                    <span>{activity.time}</span>
+                    <span>{activity.relativeTime}</span>
                   </div>
                 </div>
               ))}
@@ -572,7 +576,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             
             {/* 하단 안내 문구 */}
             <p className="pt-3 text-xs text-muted-foreground/70 text-center border-t mt-2">
-              ※ 담당자의 최근 작업 내역입니다.
+              ※ 상태 변경, 의견 등록, AI 재분석, 공개 여부 변경 내역만 표시됩니다.
             </p>
           </CardContent>
         </Card>
