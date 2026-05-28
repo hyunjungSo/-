@@ -81,11 +81,16 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
       {/* 우측 영역 - 로그인 폼 섹션 */}
       <div className="flex w-full flex-col items-center justify-center bg-white px-8 lg:w-1/2">
         <div className="w-full max-w-md space-y-8">
-          {/* 상단 로고 */}
-          <div className="flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-[#1a365d] to-[#2E8B57]">
-              <span className="text-2xl font-bold text-white">EX</span>
+          {/* 상단 로고 및 타이틀 */}
+          <div className="space-y-4 text-center">
+            <div className="flex justify-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-[#1a365d] to-[#2E8B57]">
+                <span className="text-2xl font-bold text-white">EX</span>
+              </div>
             </div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              로그인
+            </h1>
           </div>
 
           {/* 로그인 폼 */}
