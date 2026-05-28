@@ -63,7 +63,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
           <div className="space-y-6">
             <div className="space-y-2">
               <h1 className="text-4xl font-bold tracking-tight text-white">
-                토지정보 토지보상
+                AI 잔여지 매수 판독
               </h1>
               <h2 className="text-3xl font-semibold text-white/90">
                 어드민 시스템
