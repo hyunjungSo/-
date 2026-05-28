@@ -714,7 +714,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
     setLandAnalysisStatus(initialStatus);
     setLandAnalysisStep(initialStep);
     
-    // 분�� ���행 (최대 5�� 이내 완�� 보���)
+    // 분�� ���행 (최대 5�� 이내 완��� 보���)
     const runAnalysis = async () => {
       const totalLands = adminCheckedLandIds.length;
       const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수에 따라 동적 조절
@@ -1000,7 +1000,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       {/* Section 02. 필지선택 */}
       <Card className="border-0 shadow-none">
         {/* 필지 선택 컨트롤러 - Sticky 고정 */}
-        <CardHeader className="pb-2 sticky top-0 z-40 bg-white">
+        <CardHeader className="pb-2 sticky top-0 z-40 bg-white shadow-sm border-b border-gray-100">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg" style={{ fontSize: '20px' }}>대상 필지 분석 및 검토</CardTitle>
             {/* 필지 선택 - 강조된 UI */}
