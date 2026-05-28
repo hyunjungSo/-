@@ -220,7 +220,7 @@ export function BatchAnalysis({
   // 편입 유형 필터 (기존 잔여지 판정)
   const [inclusionTypeFilter, setInclusionTypeFilter] = useState<"all" | "full" | "partial" | "pending">("all");
   
-  // 편입 유형 카드 클릭 핸들러 (필터 리셋 포함)
+  // 편입 유형 카드 클릭 핸들러 (필터 리셋 ���함)
   const handleInclusionTypeClick = (value: "all" | "full" | "partial" | "pending") => {
     setInclusionTypeFilter(value);
     setAiJudgmentFilter("all");
@@ -719,7 +719,7 @@ export function BatchAnalysis({
                 onClick={() => handleInclusionTypeClick("partial")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-emerald-50 p-4 transition-all hover:bg-emerald-100"
               >
-                <span className="text-sm font-medium text-emerald-600" style={{ order: 1 }}>부분 편입</span>
+                <span className="text-sm font-medium text-emerald-600" style={{ order: 1 }}>잔여지 발생</span>
                 <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
                   <span className="font-bold text-emerald-700" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.partialInclusion}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
@@ -739,7 +739,7 @@ export function BatchAnalysis({
             </div>
             {/* 기준 안내 문구 */}
             <p className="pt-2 text-xs text-muted-foreground/70">
-              ※ 부분 편입 필지만 잔여지 발생으로 AI 매수 가능성 분석 대상입니다.
+              ※ 잔여지 발생 필지만 잔여지 발생으로 AI 매수 가능성 분석 대상입니다.
             </p>
           </CardContent>
         </Card>
@@ -851,7 +851,7 @@ export function BatchAnalysis({
                   { value: "all", label: "전체" },
                   { value: "pending", label: "판독대기" },
                   { value: "full", label: "전체 편입" },
-                  { value: "partial", label: "부분 편입" }
+                  { value: "partial", label: "잔여지 발생" }
                 ]}
               />
               
@@ -993,7 +993,7 @@ export function BatchAnalysis({
                         </div>
                       ) : parcel.residualStatus === "잔여지 인정" ? (
                         <Badge className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-0">
-                          부분 편입
+                          잔여지 발생
                         </Badge>
                       ) : parcel.residualStatus === "기준 미달" ? (
                         <Badge className="bg-rose-50 text-rose-600 hover:bg-rose-100 border-0">
