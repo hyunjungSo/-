@@ -2195,6 +2195,45 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             })()}
           </div>
 
+          {/* 섹션 하단 페이지네이션 */}
+          <div className="flex items-center justify-center gap-3 pt-6 border-t mt-6">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 border-blue-300 hover:bg-blue-100"
+              onClick={() => {
+                setSelectedLandIndex(Math.max(0, selectedLandIndex - 1));
+                setTimeout(() => {
+                  const landInfoSection = document.getElementById('land-info-section');
+                  if (landInfoSection) {
+                    landInfoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }, 100);
+              }}
+              disabled={selectedLandIndex === 0}
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-sm font-medium text-blue-700 whitespace-nowrap px-2">{selectedLandIndex + 1} / {applicationLands.length}</span>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 border-blue-300 hover:bg-blue-100"
+              onClick={() => {
+                setSelectedLandIndex(Math.min(applicationLands.length - 1, selectedLandIndex + 1));
+                setTimeout(() => {
+                  const landInfoSection = document.getElementById('land-info-section');
+                  if (landInfoSection) {
+                    landInfoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }, 100);
+              }}
+              disabled={selectedLandIndex === applicationLands.length - 1}
+            >
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+
         </CardContent>
       </Card>
 
