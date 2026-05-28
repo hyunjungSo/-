@@ -748,7 +748,7 @@ export function BatchAnalysis({
                 options={[
                   { value: "all", label: "전체" },
                   { value: "pending", label: "판독대기" },
-                  { value: "full", label: "���체 편입" },
+                  { value: "full", label: "전체 편입" },
                   { value: "partial", label: "부분 편입" }
                 ]}
               />
