@@ -217,7 +217,7 @@ export function BatchAnalysis({
   const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low" | "pending">("all");
   const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("");
   const [visibilityFilter, setVisibilityFilter] = useState<"all" | "visible" | "hidden">("all");
-  // 편입 유형 필터 (기존 잔여지 판정)
+  // 편�� 유형 필터 (기존 잔여지 판정)
   const [inclusionTypeFilter, setInclusionTypeFilter] = useState<"all" | "full" | "partial" | "pending">("all");
   
   // 편입 유형 카드 클릭 핸들러 (필터 리셋 ���함)
@@ -834,7 +834,7 @@ export function BatchAnalysis({
               value={searchQuery}
               onChange={setSearchQuery}
               placeholder="소재지, 소유자명을 입력하세요"
-              className="w-[320px] shrink-0"
+              className="flex-1 min-w-0"
             />
 
             {/* 우측: 편입 유형 + 매수 가능성 + 공개 여부 필터 (수평 정렬) */}
