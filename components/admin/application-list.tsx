@@ -496,7 +496,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
             </div>
             
             {/* 상태별 현황 그리드 - 카드별 포인트 컬러 적용 */}
-            <div className="grid grid-cols-4 gap-5 pt-2">
+            <div className="grid grid-cols-4 gap-2 pt-2">
               {/* 전체: Slate 계열 */}
               <div 
                 onClick={() => setStatusFilter("all")}
