@@ -1145,7 +1145,7 @@ export function BatchAnalysis({
             </DialogDescription>
           </DialogHeader>
           
-          <DialogFooter className="gap-4 sm:gap-4 mt-6">
+          <DialogFooter className="gap-2 sm:gap-2 mt-6">
             <Button 
               variant="outline" 
               onClick={() => {
