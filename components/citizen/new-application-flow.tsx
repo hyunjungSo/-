@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { FormLabel } from "@/components/ui/form-label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Check, ChevronLeft, ChevronDown, MapPin, Ruler, Search, FileText, Sparkles, ClipboardCheck, CheckCircle, XCircle, Loader2, X, Trash2, ClipboardList } from "lucide-react";
@@ -1123,7 +1124,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       <div className="flex items-start gap-3">
                         <Sparkles className="w-5 h-5 mt-0.5 flex-shrink-0 text-rose-600" />
                         <div>
-                          <p className="text-sm font-medium text-gray-700 mb-1">AI 종합 의����</p>
+                          <p className="text-sm font-medium text-gray-700 mb-1">AI 종합 의견</p>
                           <p className="text-gray-600 text-sm leading-relaxed">
                             {aiResult.reasoning}
                           </p>
@@ -1254,7 +1255,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
             <h3 className="font-semibold text-gray-900 mb-4">신청자 정보</h3>
             <div className="space-y-4">
               <div>
-                <Label className="text-sm text-gray-600 mb-1.5 block">신청자명</Label>
+                <FormLabel className="text-gray-600 mb-1.5 block">신청자명</FormLabel>
                 <Input
                   value={user?.name || selectedParcel?.ownerName || cartItems[0]?.parcel.ownerName || ""}
                   disabled
@@ -1262,7 +1263,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 />
               </div>
               <div>
-                <Label className="text-sm text-gray-600 mb-1.5 block">연락처 *</Label>
+                <FormLabel className="text-gray-600 mb-1.5 block">연락처 *</FormLabel>
                 <Input
                   placeholder="010-0000-0000"
                   value={applicationForm.contact}
@@ -1270,7 +1271,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 />
               </div>
               <div>
-                <Label className="text-sm text-gray-600 mb-1.5 block">주소 <span className="text-orange-500">*</span></Label>
+                <FormLabel className="text-gray-600 mb-1.5 block">주소 <span className="text-orange-500">*</span></FormLabel>
                 <div className="space-y-2">
                   <div className="flex gap-2">
                     <Input
@@ -1306,7 +1307,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           {/* 토지 정보 */}
           <Card className="p-5 border border-gray-200">
             <h3 className="font-semibold text-gray-900 mb-4">
-              ��지 정�� 
+              필지 정보 
               {selectedCartItems.size > 0 && (
                 <span className="ml-2 text-[#2E8B57] font-normal">({selectedCartItems.size}건)</span>
               )}
@@ -1367,7 +1368,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                               {/* 활용 지목 + 공부상 지목 */}
                               <div className="flex gap-4">
                                 <div className="flex-1">
-                                  <Label className="text-sm text-gray-600 mb-1.5 block">활용 지목 <span className="text-orange-500">*</span></Label>
+                                  <FormLabel className="text-gray-600 mb-1.5 block">활용 지목 <span className="text-orange-500">*</span></FormLabel>
                                   <select
                                     value={landType}
                                     onChange={(e) => {
@@ -1387,7 +1388,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                                   <p className="text-xs text-gray-500 mt-1">AI 판단: {item.parcel.landCategory}({landType})</p>
                                 </div>
                                 <div className="flex-1">
-                                  <Label className="text-sm text-gray-600 mb-1.5 block">공부상 지목</Label>
+                                  <FormLabel className="text-gray-600 mb-1.5 block">공부상 지목</FormLabel>
                                   <Input
                                     value={`${item.parcel.landCategory}(택지)`}
                                     disabled
@@ -1451,7 +1452,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                               
                               {/* 필지별 신청 사유 */}
                               <div>
-                                <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유</Label>
+                                <FormLabel className="text-gray-600 mb-1.5 block">신청 사유</FormLabel>
                                 <Textarea
                                   placeholder="이 필지의 매수 신청 사유를 작성해 주세요."
                                   value={item.reason || ""}
@@ -1468,7 +1469,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                               
                               {/* 필지별 첨부서류 */}
                               <div>
-                                <Label className="text-sm text-gray-600 mb-1.5 block">첨부서류</Label>
+                                <FormLabel className="text-gray-600 mb-1.5 block">첨부서류</FormLabel>
                                 <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center hover:border-gray-300 transition-colors">
                                   <input
                                     type="file"
@@ -1524,7 +1525,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 /* 단일 분석에서 신청하는 경우 */
                 <>
                   <div>
-                    <Label className="text-sm text-gray-600 mb-1.5 block">대상 토지</Label>
+                    <FormLabel className="text-gray-600 mb-1.5 block">대상 토지</FormLabel>
                     <Input
                       value={selectedParcel?.address || ""}
                       disabled
@@ -1545,7 +1546,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   {/* 활용 지목 + 공부상 지목 */}
                   <div className="flex gap-4">
                     <div className="flex-1">
-                      <Label className="text-sm text-gray-600 mb-1.5 block">활용 지목 <span className="text-orange-500">*</span></Label>
+                      <FormLabel className="text-gray-600 mb-1.5 block">활용 지목 <span className="text-orange-500">*</span></FormLabel>
                       <select
                         value={answers.landType || "택지"}
                         onChange={(e) => setAnswers(prev => ({ ...prev, landType: e.target.value }))}
@@ -1559,7 +1560,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       <p className="text-xs text-gray-500 mt-1">AI 판단: {selectedParcel?.landCategory}({answers.landType || "택지"})</p>
                     </div>
                     <div className="flex-1">
-                      <Label className="text-sm text-gray-600 mb-1.5 block">공부상 지목</Label>
+                      <FormLabel className="text-gray-600 mb-1.5 block">공부상 지목</FormLabel>
                       <Input
                         value={`${selectedParcel?.landCategory}(택지)`}
                         disabled
@@ -1605,7 +1606,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   
                   {/* 신청 사유 */}
                   <div>
-                    <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유</Label>
+                    <FormLabel className="text-gray-600 mb-1.5 block">신청 사유</FormLabel>
                     <Textarea
                       placeholder="잔여지 매수를 신청하시는 사유를 상세히 작성해 주세요."
                       value={applicationForm.reason}
@@ -1616,7 +1617,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   
                   {/* 단일 필지 첨부서류 */}
                   <div>
-                    <Label className="text-sm text-gray-600 mb-1.5 block">첨부서류</Label>
+                    <FormLabel className="text-gray-600 mb-1.5 block">첨부서류</FormLabel>
                     <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center hover:border-gray-300 transition-colors">
                       <input
                         type="file"
@@ -1773,7 +1774,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                     return acc;
                   }, {} as Record<string, CartItem[]>);
 
-                  // ��재 선택�� 사업단 (선택된 항목이 있으면 해당 사업단)
+                  // 현재 선택된 사업단 (선택된 항목이 있으면 해당 사업단)
                   const selectedProject = selectedCartItems.size > 0
                     ? cartItems.find(item => selectedCartItems.has(item.id))?.parcel.projectName
                     : null;

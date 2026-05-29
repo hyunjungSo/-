@@ -299,7 +299,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* 지��도 */}
+            {/* 지적도 */}
             <div className="space-y-2">
               <Label className="font-medium">지적도</Label>
               <div className="h-[400px] rounded-lg overflow-hidden border bg-muted">
@@ -596,7 +596,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
                 ) : (
                   <>
                     <span className="block">해당 필지의 상세 정보와 AI 분석 결과를 민원인에게 비공개 처리하시겠습니까?</span>
-                    <span className="block">비공개 시 민원인이 해당 필지 정보를 조회할 수 ���습니다.</span>
+                    <span className="block">비공개 시 민원인이 해당 필지 정보를 조회할 수 없습니다.</span>
                   </>
                 )}
               </div>

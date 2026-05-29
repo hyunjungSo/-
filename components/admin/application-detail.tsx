@@ -171,7 +171,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
       let savedComment = "";
       
       if (application.adminStatus === "심사완료") {
-        // 1. landJudgmentsForReview에서 필지별 판정 ��기
+        // 1. landJudgmentsForReview에서 필지별 판정 가져오기
         const landJudgmentForReview = application.landJudgmentsForReview?.find(
           lj => lj.landId === land.id
         );
@@ -280,7 +280,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
   
   // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
   const [adminAIOptionsPerLand, setAdminAIOptionsPerLand] = useState<Record<string, {
-    accessRoadLost: boolean;      // ��면������ 상���
+    accessRoadLost: boolean;      // 접면도로 상실
     waterChannelLost: boolean;    // 관개수로 상실
     farmMachineDifficulty: boolean; // 농기계 회전 곤란
   }>>({});
@@ -377,7 +377,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
   // 기존 호환용 (일부 로직에서 사용)
   const checkedLandIds = aiResultViewMode === "admin" ? adminCheckedLandIds : citizenSelectedLandIds;
   
-  // 담당자 탭 필�� 토글 핸들러
+  // 담당자 탭 필터 토글 핸들러
   const handleLandCheckToggle = (landId: string) => {
     setAdminCheckedLandIds(prev => 
       prev.includes(landId) 
@@ -521,7 +521,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
   const checkShapeCriteria = (land: typeof allLands[0]) => {
     const shape = land.remainingShape;
     // 사각형 폭: 5m 이하, 삼각형 한 변: 11m 이하
-    // 형상지수 변화로 간접 판단 (실제 현장 데이터 ���음)
+    // 형상지수 변화로 간접 판단 (실제 현장 데이터 없음)
     const shapeIndexChange = land.remainingShapeIndex - land.originalShapeIndex;
     
     if (shape === "삼각형" || shape === "역삼각형") {
@@ -554,7 +554,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
     let judgment: "수용가능" | "수용불가" = "수용불가";
     let reasons: string[] = [];
     
-    // 1. 면적 기��� 미달 여부
+    // 1. 면적 기준 미달 여부
     const effectiveLimit = criteria.relaxed;
     const areaCheckMet = land.remainingArea <= effectiveLimit;
     criteriaChecks.push({
@@ -714,7 +714,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
     setLandAnalysisStatus(initialStatus);
     setLandAnalysisStep(initialStep);
     
-    // 분�� ���행 (최대 5�� 이내 완���� 보���)
+    // 분석 진행 (최대 5초 이내 완료 보장)
     const runAnalysis = async () => {
       const totalLands = adminCheckedLandIds.length;
       const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수에 따라 동적 조절
@@ -1367,7 +1367,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                               <h4 className="text-sm font-semibold text-foreground">법적 근거</h4>
                               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                                 {aiResult?.judgmentRationale?.legalBasis || 
-                                  "「공익사업을 위한 토지 등��� 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조"}
+                                  "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조 및 동법 시행규칙 제34조"}
                               </p>
                             </div>
                           </div>
@@ -1530,7 +1530,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const adjacentParcels = [
                           {
                             id: "adjacent-001",
-                            address: "경�����도 용인시 처인구 포곡읍 마성리 101",
+                            address: "경기도 용인시 처인구 포곡읍 마성리 101",
                             isIncluded: false,
                             isOwned: false,
                             isAdjacent: true,
@@ -1630,10 +1630,10 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         
                         return (
                           <>
-                            {/* 지목 참고 정보 - 인접 필�� 선택 시 민원인 선택 제외 */}
+                            {/* 지목 참고 정보 - 인접 필지 선택 시 민원인 선택 제외 */}
                             {(() => {
                               const isAdjacentParcel = !!selectedAdjacentParcel;
-                              // 인접 필지인 경우 ���당 인접 필지 데이터 사용, 아니면 신청 필지 데이터 사용
+                              // 인접 필지인 경우 해당 인접 필지 데이터 사용, 아니면 신청 필지 데이터 사용
                               const landData = isAdjacentParcel 
                                 ? selectedAdjacentParcel 
                                 : application.landDataList?.[selectedLandIndex];
@@ -1786,7 +1786,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                   </div>
                                   <div className="flex items-center gap-3 p-2">
                                     <span className={landOptions.accessRoadLost ? "text-primary font-medium" : "text-muted-foreground"}>
-                                      {landOptions.accessRoadLost ? "✓" : "−"} ��면��로 상실
+                                      {landOptions.accessRoadLost ? "✓" : "−"} 접면도로 상실
                                     </span>
                                   </div>
                                   <div className="flex items-center gap-3 p-2">
@@ -1880,7 +1880,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         </div>
                         <p className="text-lg font-medium text-muted-foreground mb-2">결과없음</p>
                         <p className="text-sm text-muted-foreground max-w-xs">
-                          좌측에서 검�� 항목을 설정하고 AI 분석을 실행해 주세요.
+                          좌측에서 검토 항목을 설정하고 AI 분석을 실행해 주세요.
                         </p>
                       </div>
                     ) : (
@@ -2181,7 +2181,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   
                   {/* 검토 의견 */}
                   <div className="space-y-5">
-                    <Label className="text-sm font-medium">검토 ��견</Label>
+                    <Label className="text-sm font-medium">검토 의견</Label>
                     <Textarea
                       placeholder="해당 필지에 대한 검토 의견을 입력하세요..."
                       value={landReview.landComment}
@@ -2237,12 +2237,12 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </CardContent>
       </Card>
 
-      {/* Section 03. 진행상황 선택 - 복수필지 전체에 대한 ��� 건 처�� */}
+      {/* Section 03. 진행상황 선택 - 복수필지 전체에 대한 한 건 처리 */}
       <Card className="border-0 shadow-none">
         <CardHeader>
           <CardTitle className="text-lg" style={{ fontSize: '20px' }}>진행상황 선택</CardTitle>
           <CardDescription>
-            민원인이 신청 현황 조�� 시 이 진행상황이 표시됩니다
+            민원인이 신청 현황 조회 시 이 진행상황이 표시됩니다
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -2281,7 +2281,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         <CardContent className="space-y-5">
           {/* 필지별 검토 현황 요약 */}
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-muted-foreground shrink-0">필���별 검토 현황</span>
+            <span className="text-sm font-medium text-muted-foreground shrink-0">필지별 검토 현황</span>
             <div className="flex flex-wrap gap-2">
               {applicationLands.map((land, idx) => {
                 const review = landReviewDataList[idx];
@@ -2311,7 +2311,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                     className="inline-flex items-center gap-1.5 rounded-md border border-dashed border-border px-2 py-1 text-xs text-muted-foreground"
                   >
                     <span className="font-medium">{String.fromCharCode(65 + idx)}</span>
-                    <span>미�����토</span>
+                    <span>미검토</span>
                   </span>
                 );
               })}
@@ -2426,7 +2426,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         const criteria = result?.judgmentRationale?.appliedCriteria || [
                           "잔여지 면적 기준 미달 여부",
                           "잔여지 형상 변화 (정형 → 부정형)",
-                          "접면도������ 상태 변경 여부"
+                          "접면도로 상태 변경 여부"
                         ];
                         return criteria.map((c: string, i: number) => (
                           <li key={i} className="flex items-start gap-2 text-[15px] text-muted-foreground">

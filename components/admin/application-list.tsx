@@ -533,7 +533,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
-              {/* �����사완료: Teal 계열 (완료 상태 강조) */}
+              {/* 심사완료: Teal 계열 (완료 상태 강조) */}
               <div 
                 onClick={() => setStatusFilter("심사완료")}
                 className="flex cursor-pointer flex-col items-center rounded-lg p-4 transition-all"

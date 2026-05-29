@@ -217,10 +217,10 @@ export function BatchAnalysis({
   const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low" | "pending">("all");
   const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("");
   const [visibilityFilter, setVisibilityFilter] = useState<"all" | "visible" | "hidden">("all");
-  // 편�� 유형 필터 (기존 잔여지 판정)
+  // 편입 유형 필터 (기존 잔여지 판정)
   const [inclusionTypeFilter, setInclusionTypeFilter] = useState<"all" | "full" | "partial" | "pending">("all");
   
-  // 편입 유형 카드 클릭 핸들러 (필터 리�� ���함)
+  // 편입 유형 카드 클릭 핸들러 (필터 리셋 포함)
   const handleInclusionTypeClick = (value: "all" | "full" | "partial" | "pending") => {
     setInclusionTypeFilter(value);
     setAiJudgmentFilter("all");
@@ -442,7 +442,7 @@ export function BatchAnalysis({
     setShowVisibilityModal(true);
   };
 
-  // ���제 노출 상태 변경
+  // 실제 노출 상태 변경
   const handleToggleVisibility = (parcelId: string, isVisible: boolean) => {
     setParcels(prev => prev.map(p => 
       p.id === parcelId ? { ...p, isVisible } : p
@@ -457,7 +457,7 @@ export function BatchAnalysis({
     if (pendingVisibilityChange) {
       handleToggleVisibility(pendingVisibilityChange.parcelId, pendingVisibilityChange.isVisible);
       toast({
-        title: pendingVisibilityChange.isVisible ? "공개 설정 완료" : "비공개 설정 완���",
+        title: pendingVisibilityChange.isVisible ? "공개 설정 완료" : "비공개 설정 완료",
         description: pendingVisibilityChange.isVisible 
           ? "해당 필지가 민원인에게 공개되었습니다." 
           : "해당 필지가 민원인에게 비공개 처리되었습니다.",
@@ -585,7 +585,7 @@ export function BatchAnalysis({
     });
     
     const total = relevantParcels.length;
-    // 판독 대기 = 편입 ���형 분석을 아직 실행하지 않은 필지
+    // 판독 대기 = 편입 유형 분석을 아직 실행하지 않은 필지
     const pendingInclusion = relevantParcels.filter(p => !p.residualStatus).length;
     // 전체 편입 = 기준 미달 (잔여지 미발생)
     const fullInclusion = relevantParcels.filter(p => p.residualStatus === "기준 미달").length;
@@ -1201,7 +1201,7 @@ export function BatchAnalysis({
                     <div className="text-right">
                       {history.previousResult && (
                         <div className="flex items-center gap-2 text-sm">
-                          <span className={history.previousResult.includes("높음") || history.previousResult === "수용��능" ? "text-emerald-600" : "text-rose-600"}>
+                          <span className={history.previousResult.includes("높음") || history.previousResult === "수용가능" ? "text-emerald-600" : "text-rose-600"}>
                             {history.previousResult}
                           </span>
                           <span>→</span>

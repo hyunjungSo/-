@@ -233,7 +233,7 @@ export function IncomingParcelList({ onConfirmParcels }: IncomingParcelListProps
   // 선택 필지 잔여지 대상으로 확정
   const handleConfirmSelected = () => {
     if (selectedIds.size === 0) {
-      alert("확정할 필지를 선택해주�������요.");
+      alert("확정할 필지를 선택해주세요.");
       return;
     }
 

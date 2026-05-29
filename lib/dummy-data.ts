@@ -1414,7 +1414,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   
   // 잔여 면적이 0인 경우: 잔여지 자체가 없으므로 신청 불가
   if (landInfo.remainingArea === 0) {
-    provisionalJudgment = "수용불�������������";
+    provisionalJudgment = "수용불가";
   } else {
     // 면적 기준 충족 여부
     const coreCriteriaMet = areaMet;
@@ -1428,7 +1428,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
       provisionalJudgment = "수용불가";
     }
   } else if (landInfo.landType === "택지" || landInfo.landType === "농지") {
-    // 택��/농지: 면적 기준 + 형상 조건 적용
+    // 택지/농지: 면적 기준 + 형상 조건 적용
     if (coreCriteriaMet || isIrregularShape || shapeIndexMet) {
       provisionalJudgment = "수용가능";
     } else {
@@ -1770,7 +1770,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       waterChannelLost: false,
       farmMachineDifficulty: true,
       judgmentRationale: {
-        summary: "농지 잔��지 - 형��� 변��� 및 농기계 진입불가로 「매수 가능성 높음」 판정",
+        summary: "농지 잔여지 - 형상 변형 및 농기계 진입불가로 「매수 가능성 높음」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: ["토지유형: 농지", "형상지수 변화: 1.5 (기준 충족)", "농기계 진입불가: 해당"],
         detailedExplanation: "도로확장사업으로 잔여지가 사다리형으로 변형되어 농기계 회전이 곤란합니다.",
@@ -1855,8 +1855,8 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       ownerName: "이순신",
       ownerContact: "010-1111-2222",
       hasIncludedLand: true,
-      businessUnit: "수도���������",
-      projectName: "용��-양��� 도로확장사���",
+      businessUnit: "수도권",
+      projectName: "용인-양지 도로확장사업",
     },
     checkItems: {
       farmMachineDifficulty: false,
@@ -2030,7 +2030,7 @@ export const dummyApplications: Application[] = [
     id: "app-002",
     applicationNumber: "2026-0402-001",
     applicationType: "single",
-    applicantName: "��영희",
+    applicantName: "이영희",
     applicantContact: "010-9876-5432",
     applicantAddress: "경기도 화성시 동탄면 신리 400",
     landInfo: dummyLandInfoList[1],
@@ -2139,9 +2139,9 @@ export const dummyApplications: Application[] = [
     aiResult: generateAIResult(dummyLandInfoList[6]),
     adminName: "홍길동",
     statusUpdatedAt: TWO_DAYS_AGO,
-    businessUnit: "강진광주건설 ��업단",
+    businessUnit: "강진광주건설 사업단",
   },
-  // AI 판정 ���계 사례 (심의위원회 이관 필요)
+  // AI 판정 경계 사례 (심의위원회 이관 필요)
   {
     id: "app-006",
     applicationNumber: "2026-0406-001",
@@ -2207,7 +2207,7 @@ export const dummyApplications: Application[] = [
         { criteriaName: "면적 기준", criteriaDescription: "택지(주거) 기준 90㎡ 이하 (완화: 135㎡)", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (자루형)", isMet: true, autoDetected: true },
         { criteriaName: "형상지수 변화", criteriaDescription: "형상지수 1.0 이상 상승", isMet: true, autoDetected: true },
-        { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상�� 변���으로 건축��가 불��", isMet: false, autoDetected: false },
+        { criteriaName: "접면도로 상실", criteriaDescription: "접면도로 상실 변경으로 건축허가 불가", isMet: false, autoDetected: false },
       ],
       provisionalJudgment: "적용가능",
       originalShapeIndex: 4.0,
@@ -2331,7 +2331,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "동탄2 도시개발사업으로 ��해 소유한 8개 필지가 모두 도로에 편입되어 잔여지가 불규칙한 형태로 남았습니다. 각 필지별로 건축 및 농업 활동이 불가능하여 일괄 매수를 신청합니다.",
+    reason: "동탄2 도시개발사업으로 인해 소유한 8개 필지가 모두 도로에 편입되어 잔여지가 불규칙한 형태로 남았습니다. 각 필지별로 건축 및 농업 활동이 불가능하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "대" as const,
@@ -2443,7 +2443,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "접수완료",
     appliedAt: THREE_WEEKS_AGO,
     aiResult: generateAIResult(dummyLandInfoList[0]),
-    adminName: "이정���",
+    adminName: "이정훈",
     businessUnit: "강진광주건설 사업단",
   },
   {
@@ -2507,7 +2507,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모��� 도로에 ��입��었습니���. 편입 �� 각 필지가 불규칙한 ���태로 남아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -2567,7 +2567,7 @@ export const dummyApplications: Application[] = [
           "농지 물리조건: 관개수로 상실, 농기계 회전 곤란",
           "형상 변화: 3필지 모두 비정형으로 변경",
         ],
-        detailedExplanation: "3필지 농지\n\n[필지 1] 501-1: 800㎡ → 250㎡ (삼각형)\n[필지 2] 501-2: 650㎡ → 170㎡ (역삼각형)\n[필지 3] 501-3: 550㎡ → 150㎡ (부정형)\n\n도로 편입 후 관개수로가 단절되고 형상이 불규���하게 변경되어 농�� 활동이 불가능한 상태��니다.",
+        detailedExplanation: "3필지 농지\n\n[필지 1] 501-1: 800㎡ → 250㎡ (삼각형)\n[필지 2] 501-2: 650㎡ → 170㎡ (역삼각형)\n[필지 3] 501-3: 550㎡ → 150㎡ (부정형)\n\n도로 편입 후 관개수로가 단절되고 형상이 불규칙하게 변경되어 농업 활동이 불가능한 상태입니다.",
         manualCheckItems: [],
       },
     },
@@ -2722,9 +2722,9 @@ export const dummyApplications: Application[] = [
       criteriaChecks: [
         { criteriaName: "면적 기준", criteriaDescription: "잔여면적 140㎡로 건축 곤란", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 자루형)", isMet: true, autoDetected: true },
-        { criteriaName: "맹지 판정", criteriaDescription: "접면도로 상실로 양 필지 모두 맹지��", isMet: true, autoDetected: true },
+        { criteriaName: "맹지 판정", criteriaDescription: "접면도로 상실로 양 필지 모두 맹지화", isMet: true, autoDetected: true },
       ],
-      provisionalJudgment: "수용���능",
+      provisionalJudgment: "수용가능",
       originalShapeIndex: 4.1,
       remainingShapeIndex: 5.95,
       shapeIndexChange: 1.85,
@@ -2824,7 +2824,7 @@ export const dummyApplications: Application[] = [
     aiResult: {
       landTypePath: "산지",
       criteriaChecks: [
-        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100㎡로 조림지 ��단", isMet: true, autoDetected: true },
+        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100㎡로 조림지 판단", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },
       ],
@@ -2954,8 +2954,8 @@ export const dummyApplications: Application[] = [
         adjacentParcels: 2, // 내기리 200-1, 200-2만 연접
         conditions: {
           sameOwner: true,
-          continuous: false, // 전��는 인접 아님
-          sameUsage: false, // 전��는 용도 불일��� (답/전)
+          continuous: false, // 전답은 인접 아님
+          sameUsage: false, // 전답은 용도 불일치 (답/전)
         },
         combinedArea: 1480,
         explanation: "4필지 개별 분석 결과: 내기리 200-1, 200-2는 면적 기준 충족 및 형상 불량으로 매수 판정. 만호리 55-1, 55-2는 면적 기준 미충족, 형상 양호로 미해당 판정.",
@@ -3118,7 +3118,7 @@ export const dummyApplications: Application[] = [
     statusUpdatedAt: TEN_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
-  // 접수완료 상태의 3필지 ��청 건
+  // 접수완료 상태의 3필지 신청 건
   {
     id: "app-3parcel-001",
     applicationNumber: "2026-0510-001",
@@ -3187,8 +3187,8 @@ export const dummyApplications: Application[] = [
           "매탄동 101: 잔여면적 230㎡ > 기준 90㎡ - 추가 검토 필요",
           "매탄동 102: 잔여면적 300㎡ > 기준 90㎡ - 추가 검토 필요",
         ],
-        detailedExplanation: "영통지구 도시개발사업으로 3필지가 동시에 편입되었습니다. 각 필지의 잔여 면적이 주거용 택지 기준(90㎡)을 초과하나, 형상 변화 및 접도 조건을 종합적으로 검토하여 매수 가능 여부�� 판단해야 합니다.",
-        manualCheckItems: ["현장 형상 확인", "��도 조건 확인", "건축 가능 여부 확인"],
+        detailedExplanation: "영통지구 도시개발사업으로 3필지가 동시에 편입되었습니다. 각 필지의 잔여 면적이 주거용 택지 기준(90㎡)을 초과하나, 형상 변화 및 접도 조건을 종합적으로 검토하여 매수 가능 여부를 판단해야 합니다.",
+        manualCheckItems: ["현장 형상 확인", "접도 조건 확인", "건축 가능 여부 확인"],
       },
       landJudgments: [
         { landId: "land-3parcel-001", judgment: "매수 불가", reason: "택지: 잔여면적 270㎡, 형상 양호하나 면적 기준 초과로 재분할 필요" },
@@ -3250,7 +3250,7 @@ export const dummyApplications: Application[] = [
     applicationType: "single",
     applicantName: "정현우",
     applicantContact: "010-1111-2222",
-    applicantAddress: "경��도 수원��� 영통구 망포동 123",
+    applicantAddress: "경기도 수원시 영통구 망포동 123",
     landInfo: dummyLandInfoList[0],
     actualUsage: "대",
     reportedShape: "삼각형",
@@ -3457,10 +3457,10 @@ export const dummyApplications: Application[] = [
     applicationType: "single",
     applicantName: "임수빈",
     applicantContact: "010-7890-0000",
-    applicantAddress: "��기도 양평�� 양평읍 양근리 700",
+    applicantAddress: "경기도 양평군 양평읍 양근리 700",
     landInfo: dummyLandInfoList[9],
     actualUsage: "전",
-    reportedShape: "자���형",
+    reportedShape: "자루형",
     farmMachineDifficulty: true,
     reason: "농지가 자루형으로 변형되었습니다.",
     attachments: ["토지대장.pdf", "농지원부.pdf"],
@@ -3501,9 +3501,9 @@ export const dummyApplications: Application[] = [
     id: "app-10days-001",
     applicationNumber: "2026-0503-001",
     applicationType: "single",
-    applicantName: "��준서",
+    applicantName: "박준서",
     applicantContact: "010-3344-0000",
-    applicantAddress: "경기도 가평군 가평��� 읍내리 900",
+    applicantAddress: "경기도 가평군 가평읍 읍내리 900",
     landInfo: dummyLandInfoList[11],
     actualUsage: "임",
     reportedShape: "사다리형",
@@ -4050,7 +4050,7 @@ const rawProcessedParcels: ProcessedParcel[] = [
       landType: "농지",
       landCategory: "답",
       originalShape: "가로장방형",
-      remainingShape: "삼각���",
+      remainingShape: "삼각형",
       originalShapeIndex: 2.9,
       remainingShapeIndex: 5.2,
       ownerName: "김농부",
@@ -4320,7 +4320,7 @@ const rawProcessedParcels: ProcessedParcel[] = [
     },
     preRegistrationStatus: "등록완료",
     registeredAt: TWO_MONTHS_AGO,
-    registeredBy: "관리��",
+    registeredBy: "관리자",
     publishStatus: "공개",
     residualStatus: "잔여지 인정",
     analysisHistory: [],
@@ -4401,7 +4401,7 @@ const rawProcessedParcels: ProcessedParcel[] = [
       ownerName: "오지주",
       ownerContact: "010-2345-6789",
       hasIncludedLand: true,
-      businessUnit: "강진광주건설사업���",
+      businessUnit: "강진광주건설사업단",
       projectName: "광주-강진 고속도로",
       coordinates: [
         { lat: 34.5620, lng: 126.8580 },
@@ -4589,12 +4589,12 @@ const rawProcessedParcels: ProcessedParcel[] = [
       waterChannelLost: false,
     },
     currentUsage: "답",
-    landShape: "��방형",
+    landShape: "정방형",
     preRegistrationStatus: "등록완료",
     registeredAt: YESTERDAY,
     registeredBy: "관리자",
     publishStatus: "분석전",
-    // residualStatus 없�� = 판독대기 상태
+    // residualStatus 없음 = 판독대기 상태
     isVisible: false, // 판독대기 상태는 비공개
     analysisHistory: [],
     ownerIdentifier: "1111",
@@ -4715,7 +4715,7 @@ const rawProcessedParcels: ProcessedParcel[] = [
               analysisDate: dateAt(7),
             },
           }),
-          preRegistrationStatus: "등록��료" as const,
+          preRegistrationStatus: "등록완료" as const,
           registeredAt: dateAt(0),
           registeredBy: "관리자",
           publishStatus,
