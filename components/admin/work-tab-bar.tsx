@@ -225,7 +225,7 @@ export function WorkTabBar({ tabs, activeTabId, onTabSelect, onTabClose, onTabRe
               "group relative flex h-9 min-w-[140px] max-w-[240px] select-none items-center gap-2 whitespace-nowrap rounded-t-[10px] px-4 text-sm",
               isDragging ? "cursor-grabbing" : "cursor-default transition-colors",
               isActive
-                ? "z-10 bg-white font-semibold text-[#00875a] shadow-[0_-1px_4px_rgba(0,0,0,0.08)]"
+                ? "z-10 bg-[rgb(243,246,249)] font-semibold text-[#00875a] shadow-[0_-1px_4px_rgba(0,0,0,0.08)]"
                 : "bg-transparent font-medium text-gray-600 hover:bg-white/50 hover:text-gray-900",
               isDragging && "scale-[1.02] bg-white shadow-lg"
             )}
