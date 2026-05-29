@@ -366,7 +366,7 @@ export function ApplicationFormSection({
                 
                 {/* 신청 구분 */}
                 <div className="space-y-2 max-w-[500px]">
-                  <label className="text-sm font-medium">신청 구분 <span className="text-destructive">*</span></label>
+                  <label className="text-sm font-medium">신청 구분 <span className="text-orange-500">*</span></label>
                   <div className="flex items-center gap-6">
                     <label className="flex cursor-pointer items-center gap-2">
                       <input
@@ -402,7 +402,7 @@ export function ApplicationFormSection({
                 {/* 소유자 정보 */}
                 <div className="grid gap-4 sm:grid-cols-2 max-w-[500px]">
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium">소유자 성명 <span className="text-destructive">*</span></label>
+                    <label className="text-sm font-medium">소유자 성명 <span className="text-orange-500">*</span></label>
                     <Input
                       id="applicantName"
                       value={formData.applicantName}
@@ -413,7 +413,7 @@ export function ApplicationFormSection({
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium">소유자 연락처 <span className="text-destructive">*</span></label>
+                    <label className="text-sm font-medium">소유자 연락처 <span className="text-orange-500">*</span></label>
                     <Input
                       id="applicantContact"
                       type="tel"
@@ -435,7 +435,7 @@ export function ApplicationFormSection({
                 {formData.applicantRelation === "agent" && (
                   <div className="grid gap-4 sm:grid-cols-2 max-w-[500px]">
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium">대리인 성명 <span className="text-destructive">*</span></label>
+                      <label className="text-sm font-medium">대리인 성명 <span className="text-orange-500">*</span></label>
                       <Input
                         id="agentName"
                         value={formData.agentName}
@@ -446,7 +446,7 @@ export function ApplicationFormSection({
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium">대리인 연락처 <span className="text-destructive">*</span></label>
+                      <label className="text-sm font-medium">대리인 연락처 <span className="text-orange-500">*</span></label>
                       <Input
                         id="agentContact"
                         type="tel"
@@ -467,7 +467,7 @@ export function ApplicationFormSection({
 
                 {/* 주소 */}
                 <div className="space-y-1.5 max-w-[500px]">
-                  <label className="text-sm font-medium">주소 <span className="text-destructive">*</span></label>
+                  <label className="text-sm font-medium">주소 <span className="text-orange-500">*</span></label>
                   <div className="flex gap-2">
                     <Input
                       id="postalCode"
@@ -547,7 +547,7 @@ export function ApplicationFormSection({
                       {/* 활용 지목 / 공부상 지목 / 토지 모양 - 한 열 정렬 */}
                       <div className="grid gap-4 sm:grid-cols-3">
                         <div className="space-y-1.5">
-                          <label className="text-sm font-medium">활용 지목 <span className="text-destructive">*</span></label>
+                          <label className="text-sm font-medium">활용 지목 <span className="text-orange-500">*</span></label>
                           <LandUsageSelect
                             value={landData.currentUsage}
                             onValueChange={(value) => updateLandData(index, "currentUsage", value as LandCategory)}
@@ -665,7 +665,7 @@ export function ApplicationFormSection({
 
               {/* 신청 사유 */}
               <div className="space-y-1.5">
-                <label className="text-sm font-medium">신청 사유 <span className="text-destructive">*</span></label>
+                <label className="text-sm font-medium">신청 사유 <span className="text-orange-500">*</span></label>
                 <Textarea
                   id="reason"
                   placeholder="잔여지 매수를 신청하는 사유를 상세히 작성해주세요."

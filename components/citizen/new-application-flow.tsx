@@ -1281,7 +1281,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                 />
               </div>
               <div>
-                <Label className="text-sm text-gray-600 mb-1.5 block">주소 <span className="text-red-500">*</span></Label>
+                <Label className="text-sm text-gray-600 mb-1.5 block">주소 <span className="text-orange-500">*</span></Label>
                 <div className="space-y-2">
                   <div className="flex gap-2">
                     <Input
@@ -1317,7 +1317,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           {/* 토지 정보 */}
           <Card className="p-5 border border-gray-200">
             <h3 className="font-semibold text-gray-900 mb-4">
-              토지 정보 
+              ��지 정보 
               {selectedCartItems.size > 0 && (
                 <span className="ml-2 text-[#2E8B57] font-normal">({selectedCartItems.size}건)</span>
               )}
@@ -1378,7 +1378,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                               {/* 활용 지목 + 공부상 지목 */}
                               <div className="flex gap-4">
                                 <div className="flex-1">
-                                  <Label className="text-sm text-gray-600 mb-1.5 block">활용 지목 <span className="text-red-500">*</span></Label>
+                                  <Label className="text-sm text-gray-600 mb-1.5 block">활용 지목 <span className="text-orange-500">*</span></Label>
                                   <select
                                     value={landType}
                                     onChange={(e) => {
@@ -1563,7 +1563,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   {/* 활용 지목 + 공부상 지목 */}
                   <div className="flex gap-4">
                     <div className="flex-1">
-                      <Label className="text-sm text-gray-600 mb-1.5 block">활용 지목 <span className="text-red-500">*</span></Label>
+                      <Label className="text-sm text-gray-600 mb-1.5 block">활용 지목 <span className="text-orange-500">*</span></Label>
                       <select
                         value={answers.landType || "택지"}
                         onChange={(e) => setAnswers(prev => ({ ...prev, landType: e.target.value }))}
@@ -1798,7 +1798,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                     return acc;
                   }, {} as Record<string, CartItem[]>);
 
-                  // 현재 선택된 사업단 (선택된 항목이 있으면 해당 사업단)
+                  // 현재 선택�� 사업단 (선택된 항목이 있으면 해당 사업단)
                   const selectedProject = selectedCartItems.size > 0
                     ? cartItems.find(item => selectedCartItems.has(item.id))?.parcel.projectName
                     : null;

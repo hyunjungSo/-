@@ -280,7 +280,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
   
   // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
   const [adminAIOptionsPerLand, setAdminAIOptionsPerLand] = useState<Record<string, {
-    accessRoadLost: boolean;      // ��면������ 상실
+    accessRoadLost: boolean;      // ��면������ 상���
     waterChannelLost: boolean;    // 관개수로 상실
     farmMachineDifficulty: boolean; // 농기계 회전 곤란
   }>>({});
@@ -1672,7 +1672,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             {/* 현재 활용 지목 */}
                             <div className="space-y-2">
                               <label className="text-sm font-medium text-foreground">
-                                현재 활용 지목 <span className="text-destructive">*</span>
+                                현재 활용 지목 <span className="text-orange-500">*</span>
                               </label>
                               {isViewOnly ? (
                                 <div className="h-10 px-3 py-2 border rounded-md bg-muted/30 flex items-center text-sm">
@@ -1706,7 +1706,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             {adminCurrentUsagePerLand[currentParcelId] === "대" && (
                               <div className="space-y-2">
                                 <label className="text-sm font-medium text-foreground">
-                                  건축물 용도 선택 <span className="text-destructive">*</span>
+                                  건축물 용도 선택 <span className="text-orange-500">*</span>
                                 </label>
                                 {isViewOnly ? (
                                   <div className="h-10 px-3 py-2 border rounded-md bg-muted/30 flex items-center text-sm">
@@ -1740,7 +1740,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                             {/* 토지 모양 */}
                             <div className="space-y-2">
                               <label className="text-sm font-medium text-foreground">
-                                토지 모양 <span className="text-destructive">*</span>
+                                토지 모양 <span className="text-orange-500">*</span>
                               </label>
                               {isViewOnly ? (
                                 <div className="h-10 px-3 py-2 border rounded-md bg-muted/30 flex items-center text-sm">
