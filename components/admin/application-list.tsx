@@ -639,7 +639,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           {/* 필터 및 검색 */}
           <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
             {/* 검색 입력 */}
-            <div className="relative flex-1 h-[40px]">
+            <div className="relative flex-1 h-[40px] w-full max-w-[600px]">
               <Input
                 placeholder="접수번호, 신청인명 또는 지번을 입력하세요"
                 value={searchQuery}
