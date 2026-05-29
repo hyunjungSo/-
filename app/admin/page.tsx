@@ -190,7 +190,7 @@ export default function AdminPage() {
     return <LoginScreen onLogin={handleLogin} />;
   }
 
-  // 필지상세에서 신청상세로 이동
+  // 필지상세에서 신��상세로 이동
   const handleNavigateToApplication = (applicationId: string) => {
     const application = applications.find(app => app.id === applicationId);
     if (application) {
@@ -305,7 +305,7 @@ export default function AdminPage() {
       <main className="flex-1 p-6 overflow-auto ml-60 min-h-screen" style={{ backgroundColor: '#f3f6f9' }}>
         {/* 동적 상세 탭 바 (열린 상세�� 있을 때만 노출, 고정 대시보드 탭 없음) */}
         {detailTabs.length > 0 && (
-          <div className="-mx-6 -mt-6 mb-6 bg-[#dee1e6]">
+          <div className="sticky -top-6 z-20 -mx-6 -mt-6 mb-6 bg-[#dee1e6]">
             <WorkTabBar
               tabs={detailTabs}
               activeTabId={activeDetailId ?? ""}
