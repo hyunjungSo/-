@@ -1855,7 +1855,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       ownerName: "이순신",
       ownerContact: "010-1111-2222",
       hasIncludedLand: true,
-      businessUnit: "수도���",
+      businessUnit: "수도�����",
       projectName: "용��-양��� 도로확장사���",
     },
     checkItems: {
@@ -2507,7 +2507,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입��었습니���. 편입 �� 각 필지가 불규칙한 ���태로 남아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 ��입��었습니���. 편입 �� 각 필지가 불규칙한 ���태로 남아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -3457,7 +3457,7 @@ export const dummyApplications: Application[] = [
     applicationType: "single",
     applicantName: "임수빈",
     applicantContact: "010-7890-0000",
-    applicantAddress: "경기도 양평�� 양평읍 양근리 700",
+    applicantAddress: "��기도 양평�� 양평읍 양근리 700",
     landInfo: dummyLandInfoList[9],
     actualUsage: "전",
     reportedShape: "자���형",
@@ -4474,7 +4474,7 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
       waterChannelLost: false,
     },
     currentUsage: "답",
-    landShape: "정방형",
+    landShape: "��방형",
     preRegistrationStatus: "등록완료",
     registeredAt: YESTERDAY,
     registeredBy: "관리자",
@@ -4484,4 +4484,126 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     analysisHistory: [],
     ownerIdentifier: "1111",
   },
+  // 17-60: 추가 더미 데이터 (6페이지 분량)
+  ...Array.from({ length: 44 }, (_, i) => {
+    const idx = i + 17;
+    const businessUnits = ["수도권건설사업단", "천안안성건설사업단", "강진광주건설사업단"];
+    const projectNames: Record<string, string> = {
+      "수도권건설사업단": "평택-오송 고속도로 2공구",
+      "천안안성건설사업단": "안성-천안 국도확장",
+      "강진광주건설사업단": "광주-강진 고속도로",
+    };
+    const addresses: Record<string, string[]> = {
+      "수도권건설사업단": [
+        "경기도 평택시 서탄면 금암리", "경기도 평택시 고덕면 율포리", "경기도 평택시 청북읍 옥길리",
+        "경기도 평택시 현덕면 덕목리", "경기도 평택시 팽성읍 본정리"
+      ],
+      "천안안성건설사업단": [
+        "충청남도 천안시 서북구 입장면", "충청남도 천안시 동남구 풍세면", "경기도 안성시 공도읍",
+        "경기도 안성시 미양면", "경기도 안성시 대덕면"
+      ],
+      "강진광주건설사업단": [
+        "전라남도 강진군 강진읍 동성리", "전라남도 강진군 군동면 파산리", "전라남도 강진군 칠량면 봉황리",
+        "전라남도 강진군 마량면 마량리", "전라남도 강진군 병영면 삼인리"
+      ],
+    };
+    const landCategories = ["전", "답", "대", "임"];
+    const landShapes = ["가로장방형", "세로장방형", "정방형", "삼각형", "역삼각형", "사다리형", "부정형"];
+    const publishStatuses = ["분석전", "1차분석완료", "2차분석중", "2차분석완료", "담당자확인완료", "공개"];
+    const residualStatuses = ["잔여지 인정", "기준 미달", "판정 대기"];
+    const ownerNames = ["김철수", "이영희", "박민수", "최지원", "정수연", "강민호", "윤서윤", "조현우", "임재현", "한소희"];
+
+    const businessUnit = businessUnits[idx % 3];
+    const projectName = projectNames[businessUnit];
+    const addressList = addresses[businessUnit];
+    const baseAddress = addressList[idx % 5];
+    const lotNumber = `${100 + (idx * 7) % 300}-${(idx * 3) % 10 + 1}`;
+    
+    const originalArea = 600 + (idx * 47) % 1200;
+    const includedArea = Math.floor(originalArea * (0.2 + (idx % 5) * 0.1));
+    const remainingArea = originalArea - includedArea;
+    const remainingRatio = Math.round((remainingArea / originalArea) * 1000) / 10;
+    
+    const publishStatus = publishStatuses[idx % 6];
+    const residualStatus = residualStatuses[idx % 3];
+    const landCategory = landCategories[idx % 4];
+    const landShape = landShapes[idx % 7];
+    
+    const daysAgo = (idx * 3) % 90;
+    const registeredDate = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
+    
+    const hasAiResult = publishStatus !== "분석전";
+    const isVisible = hasAiResult && residualStatus === "잔여지 인정";
+
+    return {
+      id: `processed-${String(idx).padStart(3, '0')}`,
+      businessUnit,
+      projectName,
+      landInfo: {
+        id: `land-${String(idx).padStart(3, '0')}`,
+        address: `${baseAddress} ${lotNumber}`,
+        originalArea,
+        includedArea,
+        remainingArea,
+        remainingRatio,
+        landType: landCategory === "대" ? "대지" : "농지",
+        landCategory,
+        originalShape: landShapes[(idx + 2) % 7],
+        remainingShape: landShape,
+        originalShapeIndex: 1.5 + (idx % 5) * 0.8,
+        remainingShapeIndex: 2.0 + (idx % 6) * 1.0,
+        ownerName: ownerNames[idx % 10],
+        ownerContact: `010-${1000 + idx}-${2000 + idx * 2}`,
+        hasIncludedLand: true,
+        businessUnit,
+        projectName,
+        coordinates: [
+          { lat: 34.5 + (idx % 10) * 0.02, lng: 126.7 + (idx % 10) * 0.02 },
+          { lat: 34.5 + (idx % 10) * 0.02 + 0.008, lng: 126.7 + (idx % 10) * 0.02 + 0.015 },
+          { lat: 34.5 + (idx % 10) * 0.02 - 0.002, lng: 126.7 + (idx % 10) * 0.02 + 0.022 },
+          { lat: 34.5 + (idx % 10) * 0.02 - 0.01, lng: 126.7 + (idx % 10) * 0.02 + 0.007 },
+        ],
+      },
+      adminCheckItems: {
+        farmMachineDifficulty: idx % 3 === 0,
+        accessRoadLost: idx % 4 === 0,
+        waterChannelLost: idx % 5 === 0,
+      },
+      currentUsage: landCategory,
+      landShape,
+      ...(hasAiResult && {
+        aiResult: {
+          provisionalJudgment: idx % 2 === 0 ? "매수 가능성 높음" : "매수 가능성 낮음",
+          shapeIndex: 2.0 + (idx % 6) * 1.0,
+          utilityIndex: 0.3 + (idx % 5) * 0.15,
+          accessibilityIndex: 0.4 + (idx % 4) * 0.15,
+          analysisDate: new Date(Date.now() - (daysAgo - 7) * 24 * 60 * 60 * 1000),
+        },
+      }),
+      preRegistrationStatus: "등록완료" as const,
+      registeredAt: registeredDate,
+      registeredBy: "관리자",
+      publishStatus,
+      ...(hasAiResult && { residualStatus }),
+      isVisible,
+      analysisHistory: [],
+      ...(hasAiResult && { firstAnalyzedAt: new Date(Date.now() - (daysAgo - 5) * 24 * 60 * 60 * 1000) }),
+      ...(hasAiResult && { lastAnalyzedAt: new Date(Date.now() - (daysAgo - 10) * 24 * 60 * 60 * 1000) }),
+      ...(publishStatus === "담당자확인완료" || publishStatus === "공개" ? { confirmedAt: new Date(Date.now() - (daysAgo - 15) * 24 * 60 * 60 * 1000), confirmedBy: ownerNames[(idx + 3) % 10] } : {}),
+      ownerIdentifier: String(1000 + idx),
+      ...(idx % 4 === 0 && {
+        citizenActivity: {
+          inCart: true,
+          cartAddedAt: new Date(Date.now() - (daysAgo - 2) * 24 * 60 * 60 * 1000),
+        },
+      }),
+      ...(idx % 5 === 0 && publishStatus === "공개" && {
+        citizenActivity: {
+          applicationSubmitted: true,
+          applicationId: `app-${String(idx).padStart(3, '0')}`,
+          applicationSubmittedAt: new Date(Date.now() - (daysAgo - 3) * 24 * 60 * 60 * 1000),
+        },
+      }),
+    };
+  }),
 ];

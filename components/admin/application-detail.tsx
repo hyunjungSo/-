@@ -280,7 +280,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
   
   // 관리자용 AI 판독 추가 옵션 (현장 상황) - 필지별 관리
   const [adminAIOptionsPerLand, setAdminAIOptionsPerLand] = useState<Record<string, {
-    accessRoadLost: boolean;      // ��면도로 상실
+    accessRoadLost: boolean;      // ��면������ 상실
     waterChannelLost: boolean;    // 관개수로 상실
     farmMachineDifficulty: boolean; // 농기계 회전 곤란
   }>>({});
@@ -521,7 +521,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
   const checkShapeCriteria = (land: typeof allLands[0]) => {
     const shape = land.remainingShape;
     // 사각형 폭: 5m 이하, 삼각형 한 변: 11m 이하
-    // 형상지수 변화로 간접 판단 (실제 현장 데이터 없음)
+    // 형상지수 변화로 간접 판단 (실제 현장 데이터 ���음)
     const shapeIndexChange = land.remainingShapeIndex - land.originalShapeIndex;
     
     if (shape === "삼각형" || shape === "역삼각형") {
@@ -714,7 +714,7 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
     setLandAnalysisStatus(initialStatus);
     setLandAnalysisStep(initialStep);
     
-    // 분�� ���행 (최대 5�� 이내 완료 보장)
+    // 분�� ���행 (최대 5�� 이내 완���� 보���)
     const runAnalysis = async () => {
       const totalLands = adminCheckedLandIds.length;
       const stepDelay = Math.min(80, Math.floor(800 / totalLands)); // 필지 수에 따라 동적 조절
@@ -864,17 +864,6 @@ export function ApplicationDetail({ application, onBack, onSave, onNavigateToLis
   const aiResult = application.aiResult;
 
   const handleSave = () => {
-    // 토지 모양 필수 입력값 검증
-    const hasAllLandShapes = allLands.every(land => adminLandShapePerLand[land.id]);
-    if (!hasAllLandShapes) {
-      toast({
-        title: "필수 입력값 누락",
-        description: "모든 필지의 토지 모양을 선택해주세요.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     setIsSaving(true);
     
     const selectedAssignee = assigneeList.find(a => a.id === reviewData.assigneeId);
@@ -1010,7 +999,8 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
 
       {/* Section 02. 필지선택 */}
       <Card className="border-0 shadow-none">
-        <CardHeader className="pb-2">
+        {/* 필지 선택 컨트롤러 - Sticky 고정 */}
+        <CardHeader className="pb-2 sticky top-0 z-40 bg-white">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg" style={{ fontSize: '20px' }}>대상 필지 분석 및 검토</CardTitle>
             {/* 필지 선택 - 강조된 UI */}
@@ -1023,7 +1013,16 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
               </div>
               <Select
                 value={selectedLandIndex.toString()}
-                onValueChange={(value) => setSelectedLandIndex(parseInt(value))}
+                onValueChange={(value) => {
+                  setSelectedLandIndex(parseInt(value));
+                  // 필지 전환 시 스크롤 위치 리셋
+                  setTimeout(() => {
+                    const landInfoSection = document.getElementById('land-info-section');
+                    if (landInfoSection) {
+                      landInfoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }, 100);
+                }}
               >
                 <SelectTrigger className="w-[320px] h-10 bg-white border-blue-300 focus:ring-blue-500 font-medium">
                   <SelectValue placeholder="필지를 선택하세요" />
@@ -1045,7 +1044,15 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   variant="outline"
                   size="icon"
                   className="h-8 w-8 border-blue-300 hover:bg-blue-100"
-                  onClick={() => setSelectedLandIndex(Math.max(0, selectedLandIndex - 1))}
+                  onClick={() => {
+                    setSelectedLandIndex(Math.max(0, selectedLandIndex - 1));
+                    setTimeout(() => {
+                      const landInfoSection = document.getElementById('land-info-section');
+                      if (landInfoSection) {
+                        landInfoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }, 100);
+                  }}
                   disabled={selectedLandIndex === 0}
                 >
                   <ArrowLeft className="h-4 w-4" />
@@ -1055,7 +1062,15 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                   variant="outline"
                   size="icon"
                   className="h-8 w-8 border-blue-300 hover:bg-blue-100"
-                  onClick={() => setSelectedLandIndex(Math.min(applicationLands.length - 1, selectedLandIndex + 1))}
+                  onClick={() => {
+                    setSelectedLandIndex(Math.min(applicationLands.length - 1, selectedLandIndex + 1));
+                    setTimeout(() => {
+                      const landInfoSection = document.getElementById('land-info-section');
+                      if (landInfoSection) {
+                        landInfoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }, 100);
+                  }}
                   disabled={selectedLandIndex === applicationLands.length - 1}
                 >
                   <ArrowRight className="h-4 w-4" />
@@ -1078,7 +1093,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         </CardHeader>
         <CardContent className="space-y-5">
           {/* 2-1. 토지정보 */}
-          <div className="space-y-5">
+          <div id="land-info-section" className="space-y-5 scroll-mt-40">
             <h3 className="text-lg font-semibold">토지정보</h3>
             {applicationLands[selectedLandIndex] && (
               <div className="rounded-lg border overflow-hidden">
@@ -1615,7 +1630,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                         
                         return (
                           <>
-                            {/* 지목 참고 정보 - 인접 필지 선택 시 민원인 선택 제외 */}
+                            {/* 지목 참고 정보 - 인접 필�� 선택 시 민원인 선택 제외 */}
                             {(() => {
                               const isAdjacentParcel = !!selectedAdjacentParcel;
                               // 인접 필지인 경우 ���당 인접 필지 데이터 사용, 아니면 신청 필지 데이터 사용
@@ -2180,6 +2195,45 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
             })()}
           </div>
 
+          {/* 섹션 하단 페이지네이션 */}
+          <div className="flex items-center justify-center gap-3 pt-6 border-t mt-6">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 border-blue-300 hover:bg-blue-100"
+              onClick={() => {
+                setSelectedLandIndex(Math.max(0, selectedLandIndex - 1));
+                setTimeout(() => {
+                  const landInfoSection = document.getElementById('land-info-section');
+                  if (landInfoSection) {
+                    landInfoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }, 100);
+              }}
+              disabled={selectedLandIndex === 0}
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-sm font-medium text-blue-700 whitespace-nowrap px-2">{selectedLandIndex + 1} / {applicationLands.length}</span>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 border-blue-300 hover:bg-blue-100"
+              onClick={() => {
+                setSelectedLandIndex(Math.min(applicationLands.length - 1, selectedLandIndex + 1));
+                setTimeout(() => {
+                  const landInfoSection = document.getElementById('land-info-section');
+                  if (landInfoSection) {
+                    landInfoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }, 100);
+              }}
+              disabled={selectedLandIndex === applicationLands.length - 1}
+            >
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+
         </CardContent>
       </Card>
 
@@ -2227,7 +2281,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
         <CardContent className="space-y-5">
           {/* 필지별 검토 현황 요약 */}
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-muted-foreground shrink-0">필지별 검토 현황</span>
+            <span className="text-sm font-medium text-muted-foreground shrink-0">필���별 검토 현황</span>
             <div className="flex flex-wrap gap-2">
               {applicationLands.map((land, idx) => {
                 const review = landReviewDataList[idx];

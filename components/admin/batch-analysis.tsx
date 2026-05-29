@@ -217,10 +217,10 @@ export function BatchAnalysis({
   const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low" | "pending">("all");
   const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("");
   const [visibilityFilter, setVisibilityFilter] = useState<"all" | "visible" | "hidden">("all");
-  // 편입 유형 필터 (기존 잔여지 판정)
+  // 편�� 유형 필터 (기존 잔여지 판정)
   const [inclusionTypeFilter, setInclusionTypeFilter] = useState<"all" | "full" | "partial" | "pending">("all");
   
-  // 편입 유형 카드 클릭 핸들러 (필터 리셋 포함)
+  // 편입 유형 카드 클릭 핸들러 (필터 리셋 ���함)
   const handleInclusionTypeClick = (value: "all" | "full" | "partial" | "pending") => {
     setInclusionTypeFilter(value);
     setAiJudgmentFilter("all");
@@ -457,7 +457,7 @@ export function BatchAnalysis({
     if (pendingVisibilityChange) {
       handleToggleVisibility(pendingVisibilityChange.parcelId, pendingVisibilityChange.isVisible);
       toast({
-        title: pendingVisibilityChange.isVisible ? "공개 설정 완료" : "비공개 설정 완료",
+        title: pendingVisibilityChange.isVisible ? "공개 설정 완료" : "비공개 설정 완���",
         description: pendingVisibilityChange.isVisible 
           ? "해당 필지가 민원인에게 공개되었습니다." 
           : "해당 필지가 민원인에게 비공개 처리되었습니다.",
@@ -719,7 +719,7 @@ export function BatchAnalysis({
                 onClick={() => handleInclusionTypeClick("partial")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-emerald-50 p-4 transition-all hover:bg-emerald-100"
               >
-                <span className="text-sm font-medium text-emerald-600" style={{ order: 1 }}>부분 편입</span>
+                <span className="text-sm font-medium text-emerald-600" style={{ order: 1 }}>잔여지 발생</span>
                 <div className="flex items-baseline gap-0.5" style={{ order: 2, marginTop: '8px' }}>
                   <span className="font-bold text-emerald-700" style={{ fontSize: '42px', lineHeight: '1em' }}>{stats.partialInclusion}</span>
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
@@ -739,7 +739,7 @@ export function BatchAnalysis({
             </div>
             {/* 기준 안내 문구 */}
             <p className="pt-2 text-xs text-muted-foreground/70">
-              ※ 부분 편입 필지만 잔여지 발생으로 AI 매수 가능성 분석 대상입니다.
+              ※ 잔여지 발생 필지만 잔여지 발생으로 AI 매수 가능성 분석 대상입니다.
             </p>
           </CardContent>
         </Card>
@@ -823,25 +823,23 @@ export function BatchAnalysis({
 
       {/* 검색 및 필터 */}
       <Card className="border-0 shadow-none">
-        <CardHeader className="pb-2">
+        <CardHeader className="pb-0">
           <CardTitle className="text-lg">검색 및 필터</CardTitle>
         </CardHeader>
-        <CardContent className="pt-2">
-          {/* 필터 레이아웃 - 2행 구조 */}
-          <div className="space-y-4">
-            {/* 1행: 검색바 */}
-            <div className="flex items-center">
-              <SearchInput
-                value={searchQuery}
-                onChange={setSearchQuery}
-                placeholder="소재지, 소유자명을 입력하세요"
-                className="w-[700px]"
-              />
-            </div>
-            
-            {/* 2행: 편입 유형 + 매수 가능성 + 관리 필터 */}
-            <div className="flex flex-wrap items-center gap-6">
-              {/* ���입 유형 필터 */}
+        <CardContent className="pt-0">
+          {/* 필터 레이아웃 - 단일 행(1줄) 구조 */}
+          <div className="flex flex-row items-center justify-between gap-6">
+            {/* 좌측: 검색바 */}
+            <SearchInput
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="소재지, 소유자명을 입력하세요"
+              className="flex-1 min-w-0"
+            />
+
+            {/* 우측: 편입 유형 + 매수 가능성 + 공개 여부 필터 (수평 정렬) */}
+            <div className="flex flex-wrap items-center justify-end gap-6">
+              {/* 편입 유형 필터 */}
               <RadioFilterGroup
                 label="편입 유형"
                 name="inclusion-type"
@@ -851,10 +849,10 @@ export function BatchAnalysis({
                   { value: "all", label: "전체" },
                   { value: "pending", label: "판독대기" },
                   { value: "full", label: "전체 편입" },
-                  { value: "partial", label: "부분 편입" }
+                  { value: "partial", label: "잔여지 발생" }
                 ]}
               />
-              
+
               {/* 매수 가능성 필터 */}
               <RadioFilterGroup
                 label="매수 가능성"
@@ -868,7 +866,7 @@ export function BatchAnalysis({
                   { value: "low", label: "낮음" }
                 ]}
               />
-              
+
               {/* 공개 여부 필터 */}
               <RadioFilterGroup
                 label="공개 여부"
@@ -877,8 +875,8 @@ export function BatchAnalysis({
                 onChange={(v) => setVisibilityFilter(v as "all" | "visible" | "hidden")}
                 options={[
                   { value: "all", label: "전체" },
-                { value: "visible", label: "공개" },
-                { value: "hidden", label: "비공개" }
+                  { value: "visible", label: "공개" },
+                  { value: "hidden", label: "비공개" }
                 ]}
               />
             </div>
@@ -993,7 +991,7 @@ export function BatchAnalysis({
                         </div>
                       ) : parcel.residualStatus === "잔여지 인정" ? (
                         <Badge className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-0">
-                          부분 편입
+                          잔여지 발생
                         </Badge>
                       ) : parcel.residualStatus === "기준 미달" ? (
                         <Badge className="bg-rose-50 text-rose-600 hover:bg-rose-100 border-0">
