@@ -1399,7 +1399,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                               
                               {/* 확인 항목 - 체크박스 가로 배치 */}
                               <div>
-                                <Label className="text-sm text-gray-900 font-semibold mb-1 block">확인 항목</Label>
+                                <FormLabel className="text-gray-900 mb-1 block">확인 항목</FormLabel>
                                 <p className="text-xs text-gray-500 mb-3">AI가 자동 판독할 수 없는 사항입니다. 해당되는 경우 체크해 주세요.</p>
                                 <div className="flex flex-wrap gap-6">
                                   <label className="flex items-center gap-2 cursor-pointer">
@@ -1571,7 +1571,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   
                   {/* 확인 항목 - 체크박스 가로 배치 */}
                   <div>
-                    <Label className="text-sm text-gray-900 font-semibold mb-1 block">확인 항목</Label>
+                    <FormLabel className="text-gray-900 mb-1 block">확인 항목</FormLabel>
                     <p className="text-xs text-gray-500 mb-3">AI가 자동 판독할 수 없는 사항입니다. 해당되는 경우 체크해 주세요.</p>
                     <div className="flex flex-wrap gap-6">
                       <label className="flex items-center gap-2 cursor-pointer">
