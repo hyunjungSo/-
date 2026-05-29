@@ -595,10 +595,9 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
           <div className="space-y-5">
 
             {/* 1. 토지이용계획 */}
-            <div className="overflow-hidden rounded-lg border border-slate-200">
-              <div className="bg-[#6b7a2f] px-4 py-2">
-                <span className="text-sm font-semibold text-white">토지이용계획 (7개 항목)</span>
-              </div>
+            <div>
+              <h4 className="mb-2 text-sm font-semibold">토지이용계획 (7개 항목)</h4>
+              <div className="overflow-hidden rounded-lg border border-slate-200">
               <table className="w-full text-sm">
                 <tbody className="divide-y divide-slate-100">
                   <tr>
@@ -619,13 +618,13 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
                   </tr>
                 </tbody>
               </table>
+              </div>
             </div>
 
             {/* 2. 소유 정보 */}
-            <div className="overflow-hidden rounded-lg border border-slate-200">
-              <div className="bg-[#2e7d32] px-4 py-2">
-                <span className="text-sm font-semibold text-white">소유 정보</span>
-              </div>
+            <div>
+              <h4 className="mb-2 text-sm font-semibold">소유 정보</h4>
+              <div className="overflow-hidden rounded-lg border border-slate-200">
               <table className="w-full text-sm">
                 <tbody className="divide-y divide-slate-100">
                   <tr>
@@ -662,13 +661,13 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
                   </tr>
                 </tbody>
               </table>
+              </div>
             </div>
 
             {/* 3. 토지이동 이력 */}
-            <div className="overflow-hidden rounded-lg border border-slate-200">
-              <div className="bg-[#5e35b1] px-4 py-2">
-                <span className="text-sm font-semibold text-white">{"토지이동 이력 (5건)"}</span>
-              </div>
+            <div>
+              <h4 className="mb-2 text-sm font-semibold">{"토지이동 이력 (5건)"}</h4>
+              <div className="overflow-hidden rounded-lg border border-slate-200">
               <table className="w-full text-sm">
                 <tbody className="divide-y divide-slate-100">
                   <tr>
@@ -693,13 +692,13 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
                   </tr>
                 </tbody>
               </table>
+              </div>
             </div>
 
             {/* 4. 연도별 공시지가 이력 */}
-            <div className="overflow-hidden rounded-lg border border-slate-200">
-              <div className="bg-[#e65100] px-4 py-2">
-                <span className="text-sm font-semibold text-white">{"연도별 공시지가 이력 (10건)"}</span>
-              </div>
+            <div>
+              <h4 className="mb-2 text-sm font-semibold">{"연도별 공시지가 이력 (10건)"}</h4>
+              <div className="overflow-hidden rounded-lg border border-slate-200">
               <table className="w-full text-sm">
                 <tbody className="divide-y divide-slate-100">
                   <tr>
@@ -724,6 +723,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
                   </tr>
                 </tbody>
               </table>
+              </div>
             </div>
 
           </div>
