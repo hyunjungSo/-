@@ -1123,7 +1123,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       <div className="flex items-start gap-3">
                         <Sparkles className="w-5 h-5 mt-0.5 flex-shrink-0 text-rose-600" />
                         <div>
-                          <p className="text-sm font-medium text-gray-700 mb-1">AI 종합 의��</p>
+                          <p className="text-sm font-medium text-gray-700 mb-1">AI 종합 의���</p>
                           <p className="text-gray-600 text-sm leading-relaxed">
                             {aiResult.reasoning}
                           </p>
@@ -1386,7 +1386,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                                   </select>
                                   <p className="text-xs text-gray-500 mt-1">AI 판단: {item.parcel.landCategory}({landType})</p>
                                 </div>
-                                <div className="w-32">
+                                <div className="flex-1">
                                   <Label className="text-sm text-gray-600 mb-1.5 block">공부상 지목</Label>
                                   <Input
                                     value={`${item.parcel.landCategory}(택지)`}
@@ -1558,7 +1558,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       </select>
                       <p className="text-xs text-gray-500 mt-1">AI 판단: {selectedParcel?.landCategory}({answers.landType || "택지"})</p>
                     </div>
-                    <div className="w-32">
+                    <div className="flex-1">
                       <Label className="text-sm text-gray-600 mb-1.5 block">공부상 지목</Label>
                       <Input
                         value={`${selectedParcel?.landCategory}(택지)`}
