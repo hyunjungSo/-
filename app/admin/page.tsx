@@ -345,7 +345,7 @@ export default function AdminPage() {
       <main className="flex-1 p-6 overflow-auto ml-60 h-screen" style={{ backgroundColor: '#f3f6f9' }}>
         {/* 동적 상세 탭 바 (열린 상세�� 있을 때만 노출, 고정 대시보드 탭 없음) */}
         {detailTabs.length > 0 && (
-          <div className="sticky -top-6 z-20 -mx-6 -mt-6 mb-6 bg-[rgb(243,246,249)]">
+          <div className="sticky -top-6 z-[9999] -mx-6 -mt-6 mb-6 bg-[rgb(243,246,249)]">
             <WorkTabBar
               tabs={detailTabs}
               activeTabId={activeDetailId ?? ""}
