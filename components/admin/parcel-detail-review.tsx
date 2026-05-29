@@ -78,6 +78,8 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
   
   // AI 분석 상세 다이얼로그
   const [showAIAnalysisDialog, setShowAIAnalysisDialog] = useState(false);
+  // 토지정보 상세보기 모달
+  const [showLandInfoModal, setShowLandInfoModal] = useState(false);
   const [selectedAnalysisResult, setSelectedAnalysisResult] = useState<AIAnalysisResult | null>(null);
 
   // 2차 분석 (재분석) 실행
@@ -260,6 +262,18 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
               <span className="text-sm text-muted-foreground">분석 횟수:</span>
               <span className="text-sm font-medium">{parcel.analysisHistory?.length || 0}회</span>
             </div>
+          </div>
+
+          {/* 토지정보 상세보기 버튼 */}
+          <div className="pt-4 border-t border-slate-200 mt-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowLandInfoModal(true)}
+            >
+              <FileText className="h-4 w-4 mr-1.5" />
+              토지정보 상세보기
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -569,6 +583,75 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
         aiResult={selectedAnalysisResult}
         landInfo={parcel.landInfo}
       />
+
+      {/* 토지정보 상세보기 모달 */}
+      <Dialog open={showLandInfoModal} onOpenChange={setShowLandInfoModal}>
+        <DialogContent className="z-[10000] bg-white sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-gray-900">토지정보 상세보기</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              {parcel.landInfo.address}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <table className="w-full text-sm">
+              <tbody className="divide-y divide-slate-100">
+                <tr>
+                  <td className="py-2.5 pr-4 text-muted-foreground w-[120px]">소재지</td>
+                  <td className="py-2.5 font-medium">{parcel.landInfo.address}</td>
+                </tr>
+                <tr>
+                  <td className="py-2.5 pr-4 text-muted-foreground">토지 유형</td>
+                  <td className="py-2.5 font-medium">{parcel.landInfo.landType}</td>
+                </tr>
+                <tr>
+                  <td className="py-2.5 pr-4 text-muted-foreground">지목</td>
+                  <td className="py-2.5 font-medium">{parcel.landInfo.landCategory}</td>
+                </tr>
+                <tr>
+                  <td className="py-2.5 pr-4 text-muted-foreground">편입 전 면적</td>
+                  <td className="py-2.5 font-medium">{parcel.landInfo.originalArea.toLocaleString()} m&sup2;</td>
+                </tr>
+                <tr>
+                  <td className="py-2.5 pr-4 text-muted-foreground">편입 면적</td>
+                  <td className="py-2.5 font-medium">{parcel.landInfo.includedArea.toLocaleString()} m&sup2;</td>
+                </tr>
+                <tr>
+                  <td className="py-2.5 pr-4 text-muted-foreground">잔여 면적</td>
+                  <td className="py-2.5 font-medium">{parcel.landInfo.remainingArea.toLocaleString()} m&sup2; ({parcel.landInfo.remainingRatio}%)</td>
+                </tr>
+                <tr>
+                  <td className="py-2.5 pr-4 text-muted-foreground">편입 전 형상</td>
+                  <td className="py-2.5 font-medium">{parcel.landInfo.originalShape} (지수: {parcel.landInfo.originalShapeIndex})</td>
+                </tr>
+                <tr>
+                  <td className="py-2.5 pr-4 text-muted-foreground">잔여지 형상</td>
+                  <td className="py-2.5 font-medium">{parcel.landInfo.remainingShape} (지수: {parcel.landInfo.remainingShapeIndex})</td>
+                </tr>
+                <tr>
+                  <td className="py-2.5 pr-4 text-muted-foreground">소유자</td>
+                  <td className="py-2.5 font-medium">{parcel.landInfo.ownerName}</td>
+                </tr>
+                {parcel.landInfo.ownerContact && (
+                  <tr>
+                    <td className="py-2.5 pr-4 text-muted-foreground">연락처</td>
+                    <td className="py-2.5 font-medium">{parcel.landInfo.ownerContact}</td>
+                  </tr>
+                )}
+                <tr>
+                  <td className="py-2.5 pr-4 text-muted-foreground">편입토지 여부</td>
+                  <td className="py-2.5 font-medium">{parcel.landInfo.hasIncludedLand ? "있음" : "없음"}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowLandInfoModal(false)}>
+              닫기
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* 필지 정보 공개/비공개 확인 모달 */}
       <Dialog open={showVisibilityConfirmModal} onOpenChange={setShowVisibilityConfirmModal}>
