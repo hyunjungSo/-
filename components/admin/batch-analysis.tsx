@@ -159,15 +159,15 @@ export function BatchAnalysis({
     return formatDate(currentDateRange.from);
   }, [periodFilter, currentDateRange, selectedYear]);
 
-  // 기간 필터링 함수 (민원인 신청일 기준)
+  // 기간 필터링 함수 (민원인 신청일 기준, 신청일이 없으면 등록일 기준)
   const filterByPeriod = (parcel: ProcessedParcel) => {
     if (periodFilter === "all") return true;
     
-    // 민원인 신청일 사용
-    const applicationDate = parcel.citizenActivity?.applicationSubmittedAt;
-    if (!applicationDate) return false; // 신청일이 없으면 제외
+    // 민원인 신청일 우선 사용, 없으면 등록일로 폴백 (민원인 활동이 없는 관리 대상 필지도 노출되도록)
+    const referenceDate = parcel.citizenActivity?.applicationSubmittedAt ?? parcel.registeredAt;
+    if (!referenceDate) return false; // 기준 날짜가 전혀 없으면 제외
     
-    const parcelDate = new Date(applicationDate);
+    const parcelDate = new Date(referenceDate);
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const tomorrow = new Date(today);
@@ -217,10 +217,10 @@ export function BatchAnalysis({
   const [aiJudgmentFilter, setAiJudgmentFilter] = useState<"all" | "high" | "low" | "pending">("all");
   const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("");
   const [visibilityFilter, setVisibilityFilter] = useState<"all" | "visible" | "hidden">("all");
-  // 편�� 유형 필터 (기존 잔여지 판정)
+  // 편입 유형 필터 (기존 잔여지 판정)
   const [inclusionTypeFilter, setInclusionTypeFilter] = useState<"all" | "full" | "partial" | "pending">("all");
   
-  // 편입 유형 카드 클릭 핸들러 (필터 리셋 ���함)
+  // 편입 유형 카드 클릭 핸들러 (필터 리셋 포함)
   const handleInclusionTypeClick = (value: "all" | "full" | "partial" | "pending") => {
     setInclusionTypeFilter(value);
     setAiJudgmentFilter("all");
@@ -457,7 +457,7 @@ export function BatchAnalysis({
     if (pendingVisibilityChange) {
       handleToggleVisibility(pendingVisibilityChange.parcelId, pendingVisibilityChange.isVisible);
       toast({
-        title: pendingVisibilityChange.isVisible ? "공개 설정 완료" : "비공개 설정 완���",
+        title: pendingVisibilityChange.isVisible ? "공개 설정 완료" : "비공개 설정 완료",
         description: pendingVisibilityChange.isVisible 
           ? "해당 필지가 민원인에게 공개되었습니다." 
           : "해당 필지가 민원인에게 비공개 처리되었습니다.",
@@ -585,7 +585,7 @@ export function BatchAnalysis({
     });
     
     const total = relevantParcels.length;
-    // 판독 대기 = 편입 ���형 분석을 아직 실행하지 않은 필지
+    // 판독 대기 = 편입 유형 분석을 아직 실행하지 않은 필지
     const pendingInclusion = relevantParcels.filter(p => !p.residualStatus).length;
     // 전체 편입 = 기준 미달 (잔여지 미발생)
     const fullInclusion = relevantParcels.filter(p => p.residualStatus === "기준 미달").length;
@@ -891,7 +891,7 @@ export function BatchAnalysis({
             <div>
               <CardTitle className="text-lg">필지 관리 목록</CardTitle>
               <CardDescription>
-                편입 유형 판독 및 매수 가능성 심사 결과�� 확인하세요. 소재지를 클릭하면 필지 상세 화면으로 이동합니다.
+                편입 유형 과 매수 가능성 판록 결과를 확인하세요. 소재지를 클릭하면 필지 상세 화면으로 이동합니다.
               </CardDescription>
             </div>
             {/* 분석 버튼 */}
@@ -945,7 +945,7 @@ export function BatchAnalysis({
                   </TableHead>
                   <TableHead className="w-12 text-center">No.</TableHead>
                   <TableHead>소재지</TableHead>
-                  <TableHead className="text-center">면적(㎡)</TableHead>
+                  <TableHead className="text-center">잔여면적(m²)</TableHead>
                   <TableHead className="text-center">편입 유형</TableHead>
                   <TableHead className="text-center">매수 가능성</TableHead>
                   <TableHead className="text-center">공개 여부</TableHead>
@@ -1023,16 +1023,19 @@ export function BatchAnalysis({
                         </Badge>
                       )}
                     </TableCell>
-                    {/* 공개 여부 컬럼 - 토글 스위치 (민원인 활동 시 비활성화) */}
+                    {/* 공개 여부 컬럼 - 토글 스위치 (공개 상태에서 민원인 활동이 있을 때만 비활성화) */}
                     <TableCell className="text-center">
                       {(() => {
+                        const isVisible = parcel.isVisible !== false;
                         const hasCitizenActivity = parcel.citizenActivity?.inCart || parcel.citizenActivity?.applicationSubmitted;
+                        // 비공개 필지는 이미 민원인에게 미노출되므로 항상 수정 가능. 공개 상태에서 민원인 활동이 있을 때만 수정 불가.
+                        const isLocked = isVisible && !!hasCitizenActivity;
                         return (
                           <div className="flex items-center justify-center gap-1.5">
                             <Switch
                               checked={parcel.isVisible !== false}
                               onCheckedChange={(checked) => handleToggleVisibilityRequest(parcel.id, checked)}
-                              disabled={hasCitizenActivity}
+                              disabled={isLocked}
                               className="data-[state=checked]:bg-[#2E8B57]"
                             />
                             <span className="text-sm text-muted-foreground w-[42px] text-left">{parcel.isVisible !== false ? "공개" : "비공개"}</span>
@@ -1145,7 +1148,7 @@ export function BatchAnalysis({
             </DialogDescription>
           </DialogHeader>
           
-          <DialogFooter className="gap-4 sm:gap-4 mt-6">
+          <DialogFooter className="gap-2 sm:gap-2 mt-6">
             <Button 
               variant="outline" 
               onClick={() => {
@@ -1198,7 +1201,7 @@ export function BatchAnalysis({
                     <div className="text-right">
                       {history.previousResult && (
                         <div className="flex items-center gap-2 text-sm">
-                          <span className={history.previousResult.includes("높음") || history.previousResult === "수용��능" ? "text-emerald-600" : "text-rose-600"}>
+                          <span className={history.previousResult.includes("높음") || history.previousResult === "수용가능" ? "text-emerald-600" : "text-rose-600"}>
                             {history.previousResult}
                           </span>
                           <span>→</span>

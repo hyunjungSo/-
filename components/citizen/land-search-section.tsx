@@ -1500,7 +1500,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                       <div className="border-t border-border pt-3">
                         <div className="mb-2 flex items-center justify-between">
                           <Label htmlFor="currentUsage" className="text-sm font-medium">
-                            현재 활용 지목 <span className="text-destructive">*</span>
+                            현재 활용 지목 <span className="text-orange-500">*</span>
                           </Label>
                           <span className="text-xs text-muted-foreground">
                             공부상 지목: <span className="font-medium text-foreground">{getLandUsageLabel(selectedLand.landCategory)}</span>
@@ -1535,7 +1535,7 @@ export function LandSearchSection({ onLandSelect, cartItems = [], onAddToCart, o
                 {!noIncludedLand && !aiResult && currentUsage === "대" && (
                   <div className="rounded border border-border bg-muted/30 p-3">
                     <Label htmlFor="landSubType" className="mb-2 block text-sm font-medium">
-                      건축물 용도 선택 <span className="text-destructive">*</span>
+                      건축물 용도 선택 <span className="text-orange-500">*</span>
                     </Label>
                     <Select value={landSubType} onValueChange={(value) => setLandSubType(value as typeof landSubType)}>
                       <SelectTrigger id="landSubType" className="h-10 w-full bg-background">

@@ -533,7 +533,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
-              {/* �����사완료: Teal 계열 (완료 상태 강조) */}
+              {/* 심사완료: Teal 계열 (완료 상태 강조) */}
               <div 
                 onClick={() => setStatusFilter("심사완료")}
                 className="flex cursor-pointer flex-col items-center rounded-lg p-4 transition-all"
@@ -639,7 +639,7 @@ export function ApplicationList({ applications, onSelect }: ApplicationListProps
           {/* 필터 및 검색 */}
           <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
             {/* 검색 입력 */}
-            <div className="relative flex-1 h-[40px]">
+            <div className="relative flex-1 h-[40px] w-full max-w-[600px]">
               <Input
                 placeholder="접수번호, 신청인명 또는 지번을 입력하세요"
                 value={searchQuery}

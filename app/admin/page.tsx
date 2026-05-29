@@ -321,7 +321,7 @@ export default function AdminPage() {
                     </div>
                   )}
                   
-                  {/* 우측 공��� (레이아웃 균형용) */}
+                  {/* 우측 공백 (레이아웃 균형용) */}
                   <div className="w-[80px]" />
                 </div>
               </div>
