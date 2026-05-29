@@ -14,6 +14,16 @@ import { FileText, MapPin, LogOut, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // 사이드바 기본 메뉴 (베이스 목록/대시보드)
 type BaseTab = "applications" | "parcel-management";
@@ -37,6 +47,8 @@ export default function AdminPage() {
   const [applications, setApplications] = useState<Application[]>(dummyApplications);
   const [processedParcels, setProcessedParcels] = useState<ProcessedParcel[]>(dummyProcessedParcels);
   const [projectUnitFilter, setProjectUnitFilter] = useState<ProjectUnit>(PROJECT_UNIT_OPTIONS[0].value);
+  // 사업지구 변경 확인 대기 값 (모달 확인 시 적용)
+  const [pendingProjectUnit, setPendingProjectUnit] = useState<ProjectUnit | null>(null);
 
   // 사이드바 기본 메뉴 (베이스 화면)
   const [baseTab, setBaseTab] = useState<BaseTab>("applications");
@@ -139,6 +151,34 @@ export default function AdminPage() {
     setActiveDetailId(null);
   };
 
+  // 사업지구 변경 요청 - 동일 값이면 무시, 다르면 확인 모달 표시
+  const requestProjectUnitChange = (value: ProjectUnit) => {
+    if (value === projectUnitFilter) return;
+    setPendingProjectUnit(value);
+  };
+
+  // 사업지구 변경 확정: 기존 탭 배열 초기화 → 새 사업지구 적용(데이터 전환) → 신청관리 홈 활성화
+  const confirmProjectUnitChange = () => {
+    if (!pendingProjectUnit) return;
+    // 1. 기존 가변 상세 탭 전체 초기화
+    setDetailTabs([]);
+    setActiveDetailId(null);
+    // 2. 새 사업지구 데이터로 전환
+    setProjectUnitFilter(pendingProjectUnit);
+    // 3. 신청관리 홈(기본 화면) 활성화
+    setBaseTab("applications");
+    // 모달 닫기
+    setPendingProjectUnit(null);
+  };
+
+  // 사업지구 변경 취소
+  const cancelProjectUnitChange = () => {
+    setPendingProjectUnit(null);
+  };
+
+  // 모달에 표시할 대상 사업지구 라벨
+  const pendingProjectUnitLabel = PROJECT_UNIT_OPTIONS.find((o) => o.value === pendingProjectUnit)?.label ?? "";
+
   const handleSave = (updatedApplication: Application) => {
     setApplications((prev) =>
       prev.map((app) =>
@@ -226,7 +266,7 @@ export default function AdminPage() {
         {/* 2단 - 전역 사업지구 셀렉트 */}
         <div className="p-4 border-b border-gray-200">
           <label className="block text-xs font-medium text-gray-500 mb-2">사업지구</label>
-          <Select value={projectUnitFilter} onValueChange={(value) => setProjectUnitFilter(value as ProjectUnit)}>
+          <Select value={projectUnitFilter} onValueChange={(value) => requestProjectUnitChange(value as ProjectUnit)}>
             <SelectTrigger className="w-full h-[42px] bg-gray-50 border-gray-300 text-gray-900 font-medium hover:bg-gray-100 focus:ring-[#00875a]">
               <SelectValue placeholder="사업단 선택" />
             </SelectTrigger>
@@ -390,6 +430,38 @@ export default function AdminPage() {
           />
         )}
       </main>
+
+      {/* 사업지구 변경 확인 모달 - 확인 시 탭 전체 리셋 후 신청관리 홈으로 전환 */}
+      <AlertDialog
+        open={pendingProjectUnit !== null}
+        onOpenChange={(open) => {
+          if (!open) cancelProjectUnitChange();
+        }}
+      >
+        <AlertDialogContent className="bg-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-gray-900">사업지구를 변경하시겠습니까?</AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-500">
+              <span className="font-semibold text-[#00875a]">{pendingProjectUnitLabel}</span>(으)로 전환하면 현재 열려 있는 모든
+              상세 검토 탭이 닫히고, 해당 사업지구의 신청관리 홈 화면으로 이동합니다. 저장하지 않은 작업 내용은 사라질 수 있습니다.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={cancelProjectUnitChange}
+              className="border-gray-300 text-gray-700 hover:bg-gray-100"
+            >
+              취소
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmProjectUnitChange}
+              className="bg-[#00875a] text-white hover:bg-[#00734d]"
+            >
+              확인
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
