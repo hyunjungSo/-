@@ -827,20 +827,18 @@ export function BatchAnalysis({
           <CardTitle className="text-lg">검색 및 필터</CardTitle>
         </CardHeader>
         <CardContent className="pt-2">
-          {/* 필터 레이아웃 - 2행 구조 */}
-          <div className="space-y-4">
-            {/* 1행: 검색바 */}
-            <div className="flex items-center">
-              <SearchInput
-                value={searchQuery}
-                onChange={setSearchQuery}
-                placeholder="소재지, 소유자명을 입력하세요"
-                className="w-[700px]"
-              />
-            </div>
+          {/* 필터 레이아웃 - 단일 행(1줄) 구조 */}
+          <div className="flex flex-row items-center justify-between gap-6">
+            {/* 좌측: 검색바 */}
+            <SearchInput
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="소재지, 소유자명을 입력하세요"
+              className="w-[320px] shrink-0"
+            />
 
-            {/* 2행: 편입 유형 + 매수 가능성 + 관리 필터 */}
-            <div className="flex flex-wrap items-center gap-6">
+            {/* 우측: 편입 유형 + 매수 가능성 + 공개 여부 필터 (수평 정렬) */}
+            <div className="flex flex-wrap items-center justify-end gap-6">
               {/* 편입 유형 필터 */}
               <RadioFilterGroup
                 label="편입 유형"
