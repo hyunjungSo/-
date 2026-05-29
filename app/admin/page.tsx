@@ -120,6 +120,19 @@ export default function AdminPage() {
     setActiveDetailId((curr) => (curr === id ? null : curr));
   };
 
+  // 탭 순서 변경 (드래그 앤 드롭) - fromId를 toId 위치로 이동
+  const handleTabReorder = (fromId: string, toId: string) => {
+    setDetailTabs((prev) => {
+      const fromIndex = prev.findIndex((t) => t.id === fromId);
+      const toIndex = prev.findIndex((t) => t.id === toId);
+      if (fromIndex === -1 || toIndex === -1 || fromIndex === toIndex) return prev;
+      const next = [...prev];
+      const [moved] = next.splice(fromIndex, 1);
+      next.splice(toIndex, 0, moved);
+      return next;
+    });
+  };
+
   // 사이드바 메뉴 클릭 시 베이스 화면으로 전환 (상세 탭은 유지)
   const goToBase = (tab: BaseTab) => {
     setBaseTab(tab);
@@ -298,6 +311,7 @@ export default function AdminPage() {
               activeTabId={activeDetailId ?? ""}
               onTabSelect={setActiveDetailId}
               onTabClose={handleTabClose}
+              onTabReorder={handleTabReorder}
             />
           </div>
         )}
