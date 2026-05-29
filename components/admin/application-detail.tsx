@@ -939,14 +939,6 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       {/* 신청 상세 타이틀 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={onBack}
-            className="h-9 w-9"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
           <h1 className="text-3xl font-bold">신청 상세</h1>
         </div>
         <div className="flex items-center gap-3">

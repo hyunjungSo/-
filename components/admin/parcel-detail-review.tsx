@@ -30,7 +30,6 @@ import {
   Loader2,
   Sparkles,
   RefreshCw,
-  ArrowLeft,
   Lock
 } from "lucide-react";
 import type { 
@@ -199,14 +198,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
       {/* 필지상세 타이틀 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={onBack}
-            className="h-9 w-9"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
           <h1 className="text-3xl font-bold">필지상세</h1>
         </div>
       </div>
