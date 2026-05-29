@@ -802,7 +802,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
 
                       {/* 토지 정보 */}
                       <div className="flex-1 min-w-0">
-                        {/* 상단: 프로젝트명(좌), 신청완료/목록담김(우) */}
+                        {/* 상단: 프로젝트���(좌), 신청완료/목록담김(우) */}
                         <div className="flex items-center justify-between gap-2 mb-2">
                           <span className="text-xs text-gray-600 truncate max-w-[180px]">
                             {parcel.projectName}
@@ -1251,7 +1251,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           </div>
 
           {/* 신청자 정보 */}
-          <Card className="p-5 border border-gray-200">
+          <Card className="p-5 border border-gray-200 mb-[18px]">
             <h3 className="font-semibold text-gray-900 mb-4">신청자 정보</h3>
             <div className="space-y-4">
               <div>
@@ -1313,7 +1313,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               )}
             </h3>
             <div className="space-y-4">
-              {/* 장바구니에서 신청하는 경우 - 각 필지별로 토지��보 작성 */}
+              {/* 장바구니에서 신청하는 경우 - 각 필��별로 토지��보 작성 */}
               {selectedCartItems.size > 0 ? (
                 <div className="space-y-3">
                   {cartItems
@@ -1660,7 +1660,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
             </div>
           </Card>
 
-          <div className="flex justify-center pt-4">
+          <div className="flex justify-center">
             <Button
               onClick={handleNext}
               disabled={
