@@ -585,88 +585,144 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
 
       {/* 토지정보 상세보기 모달 */}
       <Dialog open={showLandInfoModal} onOpenChange={setShowLandInfoModal}>
-        <DialogContent className="z-[10000] bg-white sm:max-w-lg">
+        <DialogContent className="z-[10000] bg-white sm:max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-gray-900">토지정보 상세보기</DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              {parcel.landInfo.address}
-            </DialogDescription>
           </DialogHeader>
-          <div className="space-y-3">
-            <table className="w-full text-sm">
-              <tbody className="divide-y divide-slate-100">
-                <tr>
-                  <td className="py-2.5 pr-4 text-muted-foreground w-[120px]">소재지</td>
-                  <td className="py-2.5 font-medium">{parcel.landInfo.address}</td>
-                </tr>
-                <tr>
-                  <td className="py-2.5 pr-4 text-muted-foreground">토지 유형</td>
-                  <td className="py-2.5 font-medium">{parcel.landInfo.landType}</td>
-                </tr>
-                <tr>
-                  <td className="py-2.5 pr-4 text-muted-foreground">지목</td>
-                  <td className="py-2.5 font-medium">{parcel.landInfo.landCategory}</td>
-                </tr>
-                <tr>
-                  <td className="py-2.5 pr-4 text-muted-foreground">편입 전 면적</td>
-                  <td className="py-2.5 font-medium">{parcel.landInfo.originalArea.toLocaleString()} m&sup2;</td>
-                </tr>
-                <tr>
-                  <td className="py-2.5 pr-4 text-muted-foreground">편입 면적</td>
-                  <td className="py-2.5 font-medium">{parcel.landInfo.includedArea.toLocaleString()} m&sup2;</td>
-                </tr>
-                <tr>
-                  <td className="py-2.5 pr-4 text-muted-foreground">잔여 면적</td>
-                  <td className="py-2.5 font-medium">{parcel.landInfo.remainingArea.toLocaleString()} m&sup2; ({parcel.landInfo.remainingRatio}%)</td>
-                </tr>
-                <tr>
-                  <td className="py-2.5 pr-4 text-muted-foreground">편입 전 형상</td>
-                  <td className="py-2.5 font-medium">{parcel.landInfo.originalShape} (지수: {parcel.landInfo.originalShapeIndex})</td>
-                </tr>
-                <tr>
-                  <td className="py-2.5 pr-4 text-muted-foreground">잔여지 형상</td>
-                  <td className="py-2.5 font-medium">{parcel.landInfo.remainingShape} (지수: {parcel.landInfo.remainingShapeIndex})</td>
-                </tr>
-                <tr>
-                  <td className="py-2.5 pr-4 text-muted-foreground">소유자</td>
-                  <td className="py-2.5 font-medium">{parcel.landInfo.ownerName}</td>
-                </tr>
-                {parcel.landInfo.ownerContact && (
+          <div className="space-y-5">
+
+            {/* 1. 토지이용계획 */}
+            <div>
+              <h4 className="mb-2 text-sm font-semibold">토지이용계획 (7개 항목)</h4>
+              <div className="overflow-hidden rounded-lg border border-slate-200">
+              <table className="w-full text-sm">
+                <tbody className="divide-y divide-slate-100">
                   <tr>
-                    <td className="py-2.5 pr-4 text-muted-foreground">연락처</td>
-                    <td className="py-2.5 font-medium">{parcel.landInfo.ownerContact}</td>
+                    <td className="w-[160px] bg-slate-50 px-4 py-2.5 font-medium text-slate-600">용도구역 명칭</td>
+                    <td className="px-4 py-2.5 text-slate-800">토지구획정리사업지구 / 도로구역 / 전통상업보존구역 / 상대보호구역 / 중로1류 (폭 20~25m) / 교통광장 / 제2종일반주거지역</td>
                   </tr>
-                )}
-                <tr>
-                  <td className="py-2.5 pr-4 text-muted-foreground">편입토지 여부</td>
-                  <td className="py-2.5 font-medium">{parcel.landInfo.hasIncludedLand ? "있음" : "없음"}</td>
-                </tr>
-                <tr>
-                  <td className="py-2.5 pr-4 text-muted-foreground">개별공시지가</td>
-                  <td className="py-2.5 font-medium">
-                    {parcel.landInfo.officialLandPrice
-                      ? `${parcel.landInfo.officialLandPrice.toLocaleString()} 원/m\u00B2`
-                      : "-"}
-                    {parcel.landInfo.officialLandPriceYear && (
-                      <span className="ml-1.5 text-xs text-muted-foreground">
-                        ({parcel.landInfo.officialLandPriceYear}년 기준)
-                      </span>
-                    )}
-                  </td>
-                </tr>
-                {parcel.landInfo.officialLandPrice && parcel.landInfo.includedArea > 0 && (
                   <tr>
-                    <td className="py-2.5 pr-4 text-muted-foreground">공시지가 총액</td>
-                    <td className="py-2.5 font-medium">
-                      {(parcel.landInfo.officialLandPrice * parcel.landInfo.includedArea).toLocaleString()} 원
-                      <span className="ml-1.5 text-xs text-muted-foreground">
-                        (편입면적 기준)
-                      </span>
-                    </td>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">저촉 여부</td>
+                    <td className="px-4 py-2.5 text-slate-800">포함 (구역 안에 있음) / 접함 (경계에 닿음)</td>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">등록일</td>
+                    <td className="px-4 py-2.5 text-slate-800">2024-08-23</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">최종 수정일</td>
+                    <td className="px-4 py-2.5 text-slate-800">2026-05-06</td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+            </div>
+
+            {/* 2. 소유 정보 */}
+            <div>
+              <h4 className="mb-2 text-sm font-semibold">소유 정보</h4>
+              <div className="overflow-hidden rounded-lg border border-slate-200">
+              <table className="w-full text-sm">
+                <tbody className="divide-y divide-slate-100">
+                  <tr>
+                    <td className="w-[160px] bg-slate-50 px-4 py-2.5 font-medium text-slate-600">소유 구분</td>
+                    <td className="px-4 py-2.5 text-slate-800">개인</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">소유자 거주지</td>
+                    <td className="px-4 py-2.5 text-slate-800">관외 — 부산</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">공유자 수</td>
+                    <td className="px-4 py-2.5 text-slate-800">5명</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">이 소유자 지분 면적</td>
+                    <td className="px-4 py-2.5 text-slate-800">24.33 m&sup2;</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">소유권 변동 원인</td>
+                    <td className="px-4 py-2.5 text-slate-800">{"소유권이전 (매매\u00B7증여\u00B7상속 등)"}</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">소유권 취득일</td>
+                    <td className="px-4 py-2.5 text-slate-800">2019-06-04</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">공시지가 (소유자 기준)</td>
+                    <td className="px-4 py-2.5 text-slate-800">{parcel.landInfo.officialLandPrice ? `${parcel.landInfo.officialLandPrice.toLocaleString()} 원/m\u00B2` : "601,300 원/m\u00B2"}</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">정보 기준 연월</td>
+                    <td className="px-4 py-2.5 text-slate-800">{parcel.landInfo.officialLandPriceYear ? `${parcel.landInfo.officialLandPriceYear}년 12월` : "2024년 12월"}</td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+            </div>
+
+            {/* 3. 토지이동 이력 */}
+            <div>
+              <h4 className="mb-2 text-sm font-semibold">{"토지이동 이력 (5건)"}</h4>
+              <div className="overflow-hidden rounded-lg border border-slate-200">
+              <table className="w-full text-sm">
+                <tbody className="divide-y divide-slate-100">
+                  <tr>
+                    <td className="w-[160px] bg-slate-50 px-4 py-2.5 font-medium text-slate-600">이력 순번</td>
+                    <td className="px-4 py-2.5 text-slate-800">{"01 \u2192 05"}</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">이동 발생일 / 소멸일</td>
+                    <td className="px-4 py-2.5 text-slate-800">{"1995-11-28 ~ (현재 유효: 9999-12-31)"}</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">이동 사유</td>
+                    <td className="px-4 py-2.5 text-slate-800">구획정리 시행 / 분할 / 구획정리 시행신고 폐지</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">이동 당시 면적</td>
+                    <td className="px-4 py-2.5 text-slate-800">{"944 m\u00B2 \u2192 828 m\u00B2 \u2192 146 m\u00B2"}</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">이동 당시 지목</td>
+                    <td className="px-4 py-2.5 text-slate-800">{"답 (논)"}</td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+            </div>
+
+            {/* 4. 연도별 공시지가 이력 */}
+            <div>
+              <h4 className="mb-2 text-sm font-semibold">{"연도별 공시지가 이력 (10건)"}</h4>
+              <div className="overflow-hidden rounded-lg border border-slate-200">
+              <table className="w-full text-sm">
+                <tbody className="divide-y divide-slate-100">
+                  <tr>
+                    <td className="w-[160px] bg-slate-50 px-4 py-2.5 font-medium text-slate-600">공시 기준 연도</td>
+                    <td className="px-4 py-2.5 text-slate-800">1999 ~ 2008</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">공시 일자</td>
+                    <td className="px-4 py-2.5 text-slate-800">1999-06-30 / 2008-05-31 등</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">개별공시지가</td>
+                    <td className="px-4 py-2.5 text-slate-800">{"223,000원 (1999) \u2192 254,000원 (2008) 원/m\u00B2"}</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">표준지 여부</td>
+                    <td className="px-4 py-2.5 text-slate-800">{"N \u2014 개별지 (표준지 아님)"}</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-slate-50 px-4 py-2.5 font-medium text-slate-600">기준 월</td>
+                    <td className="px-4 py-2.5 text-slate-800">{"1월 (매년 1월 1일 기준 산정)"}</td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+            </div>
+
           </div>
         </DialogContent>
       </Dialog>
