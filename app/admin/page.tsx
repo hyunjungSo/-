@@ -160,7 +160,7 @@ export default function AdminPage() {
   // 사업지구 변경 확정: 기존 탭 배열 초기화 → 새 사업지구 적용(데이터 전환) → 신청관리 홈 활성화
   const confirmProjectUnitChange = () => {
     if (!pendingProjectUnit) return;
-    // 1. 기존 가변 상세 탭 ���체 초기화
+    // 1. 기존 가�� 상세 탭 ���체 초기화
     setDetailTabs([]);
     setActiveDetailId(null);
     // 2. 새 사업지구 데이터로 전환
@@ -345,7 +345,7 @@ export default function AdminPage() {
       <main className="flex-1 p-6 overflow-auto ml-60 h-screen" style={{ backgroundColor: '#f3f6f9' }}>
         {/* 동적 상세 탭 바 (열린 상세�� 있을 때만 노출, 고정 대시보드 탭 없음) */}
         {detailTabs.length > 0 && (
-          <div className="sticky -top-6 z-20 -mx-6 -mt-6 mb-6 bg-[#dee1e6]">
+          <div className="sticky -top-6 z-20 -mx-6 -mt-6 mb-6 bg-[rgb(243,246,249)]">
             <WorkTabBar
               tabs={detailTabs}
               activeTabId={activeDetailId ?? ""}

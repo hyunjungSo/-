@@ -181,7 +181,7 @@ export function WorkTabBar({ tabs, activeTabId, onTabSelect, onTabClose, onTabRe
   };
 
   return (
-    <div ref={containerRef} className="flex items-end gap-1 overflow-x-auto bg-[#dee1e6] px-2 pt-2.5">
+    <div ref={containerRef} className="flex items-end gap-1 overflow-x-auto bg-white px-2 pt-2.5">
       {tabs.map((tab, index) => {
         const isActive = tab.id === activeTabId;
         const isDragging = tab.id === draggingId;
