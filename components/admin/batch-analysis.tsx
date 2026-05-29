@@ -159,15 +159,15 @@ export function BatchAnalysis({
     return formatDate(currentDateRange.from);
   }, [periodFilter, currentDateRange, selectedYear]);
 
-  // 기간 필터링 함수 (민원인 신청일 기준)
+  // 기간 필터링 함수 (민원인 신청일 기준, 신청일이 없으면 등록일 기준)
   const filterByPeriod = (parcel: ProcessedParcel) => {
     if (periodFilter === "all") return true;
     
-    // 민원인 신청일 사용
-    const applicationDate = parcel.citizenActivity?.applicationSubmittedAt;
-    if (!applicationDate) return false; // 신청일이 없으면 제외
+    // 민원인 신청일 우선 사용, 없으면 등록일로 폴백 (민원인 활동이 없는 관리 대상 필지도 노출되도록)
+    const referenceDate = parcel.citizenActivity?.applicationSubmittedAt ?? parcel.registeredAt;
+    if (!referenceDate) return false; // 기준 날짜가 전혀 없으면 제외
     
-    const parcelDate = new Date(applicationDate);
+    const parcelDate = new Date(referenceDate);
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const tomorrow = new Date(today);
@@ -220,7 +220,7 @@ export function BatchAnalysis({
   // 편�� 유형 필터 (기존 잔여지 판정)
   const [inclusionTypeFilter, setInclusionTypeFilter] = useState<"all" | "full" | "partial" | "pending">("all");
   
-  // 편입 유형 카드 클릭 핸들러 (필터 리셋 ���함)
+  // 편입 유형 카드 클릭 핸들러 (필터 리�� ���함)
   const handleInclusionTypeClick = (value: "all" | "full" | "partial" | "pending") => {
     setInclusionTypeFilter(value);
     setAiJudgmentFilter("all");
