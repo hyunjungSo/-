@@ -264,12 +264,14 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">토지정보:</span>
-              <span
-                className="text-sm font-medium text-[#00875a] cursor-default hover:underline"
+              <button
+                type="button"
                 onClick={() => setShowLandInfoModal(true)}
+                className="inline-flex items-center gap-1 rounded-md border border-[#00875a]/30 bg-[#00875a]/5 px-2.5 py-0.5 text-sm font-medium text-[#00875a] underline-offset-2 transition-all hover:border-[#00875a]/60 hover:bg-[#00875a]/10 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00875a]/40 focus-visible:ring-offset-1"
               >
+                <FileText className="h-3.5 w-3.5" />
                 상세보기
-              </span>
+              </button>
             </div>
           </div>
         </CardContent>
