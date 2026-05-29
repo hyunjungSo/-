@@ -262,18 +262,15 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
               <span className="text-sm text-muted-foreground">분석 횟수:</span>
               <span className="text-sm font-medium">{parcel.analysisHistory?.length || 0}회</span>
             </div>
-          </div>
-
-          {/* 토지정보 상세보기 버튼 */}
-          <div className="pt-4 border-t border-slate-200 mt-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowLandInfoModal(true)}
-            >
-              <FileText className="h-4 w-4 mr-1.5" />
-              토지정보 상세보기
-            </Button>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">토지정보:</span>
+              <span
+                className="text-sm font-medium text-[#00875a] cursor-default hover:underline"
+                onClick={() => setShowLandInfoModal(true)}
+              >
+                상세보기
+              </span>
+            </div>
           </div>
         </CardContent>
       </Card>
