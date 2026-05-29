@@ -39,7 +39,6 @@ import {
 } from "lucide-react";
 import { 
   SearchInput, 
-  RadioFilterGroup, 
   PublishRadioCell, 
   AIJudgmentBadge, 
   isHighPossibility 
@@ -61,6 +60,7 @@ import {
   landShapes, 
 } from "@/lib/dummy-data";
 import { formatDateTime } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
 interface BatchAnalysisProps {
   businessUnit?: string;
@@ -821,66 +821,84 @@ export function BatchAnalysis({
         </Card>
       </div>
 
-      {/* 검색 및 필터 */}
+      {/* 검색 및 필터 - 인라인 단일 행 레이아웃 */}
       <Card className="border-0 shadow-none">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg">검색 및 필터</CardTitle>
-        </CardHeader>
-        <CardContent className="pt-2">
-          {/* 필터 레이아웃 - 2행 구조 */}
-          <div className="space-y-4">
-            {/* 1행: 검색바 */}
-            <div className="flex items-center">
-              <SearchInput
-                value={searchQuery}
-                onChange={setSearchQuery}
-                placeholder="소재지, 소유자명을 입력하세요"
-                className="w-[700px]"
-              />
-            </div>
-            
-            {/* 2행: 편입 유형 + 매수 가능성 + 관리 필터 */}
-            <div className="flex flex-wrap items-center gap-6">
-              {/* ���입 유형 필터 */}
-              <RadioFilterGroup
-                label="편입 유형"
-                name="inclusion-type"
+        <CardContent className="py-4">
+          <div className="flex items-center justify-between gap-4">
+            {/* 좌측: 와이드 검색창 */}
+            <SearchInput
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="소재지, 소유자명을 입력하세요"
+              className="flex-1 max-w-xl"
+            />
+
+            {/* 우측: 카테고리별 드롭다운 통합 */}
+            <div className="flex items-center gap-2">
+              {/* 편입 유형 */}
+              <Select
                 value={inclusionTypeFilter}
-                onChange={(v) => setInclusionTypeFilter(v as "all" | "full" | "partial" | "pending")}
-                options={[
-                  { value: "all", label: "전체" },
-                  { value: "pending", label: "판독대기" },
-                  { value: "full", label: "전체 편입" },
-                  { value: "partial", label: "잔여지 발생" }
-                ]}
-              />
-              
-              {/* 매수 가능성 필터 */}
-              <RadioFilterGroup
-                label="매수 가능성"
-                name="ai-judgment"
+                onValueChange={(v) => setInclusionTypeFilter(v as "all" | "full" | "partial" | "pending")}
+              >
+                <SelectTrigger
+                  className={cn(
+                    "w-[160px] h-9 text-sm",
+                    inclusionTypeFilter !== "all" && "border-foreground text-foreground font-medium"
+                  )}
+                >
+                  <span className="text-muted-foreground mr-1">편입 유형:</span>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">전체</SelectItem>
+                  <SelectItem value="pending">판독대기</SelectItem>
+                  <SelectItem value="full">전체 편입</SelectItem>
+                  <SelectItem value="partial">잔여지 발생</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* 매수 가능성 */}
+              <Select
                 value={aiJudgmentFilter}
-                onChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low" | "pending")}
-                options={[
-                  { value: "all", label: "전체" },
-                  { value: "pending", label: "판독대기" },
-                  { value: "high", label: "높음" },
-                  { value: "low", label: "낮음" }
-                ]}
-              />
-              
-              {/* 공개 여부 필터 */}
-              <RadioFilterGroup
-                label="공개 여부"
-                name="visibility"
+                onValueChange={(v) => setAiJudgmentFilter(v as "all" | "high" | "low" | "pending")}
+              >
+                <SelectTrigger
+                  className={cn(
+                    "w-[165px] h-9 text-sm",
+                    aiJudgmentFilter !== "all" && "border-foreground text-foreground font-medium"
+                  )}
+                >
+                  <span className="text-muted-foreground mr-1">매수 가능성:</span>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">전체</SelectItem>
+                  <SelectItem value="pending">판독대기</SelectItem>
+                  <SelectItem value="high">높음</SelectItem>
+                  <SelectItem value="low">낮음</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* 공개 여부 */}
+              <Select
                 value={visibilityFilter}
-                onChange={(v) => setVisibilityFilter(v as "all" | "visible" | "hidden")}
-                options={[
-                  { value: "all", label: "전체" },
-                { value: "visible", label: "공개" },
-                { value: "hidden", label: "비공개" }
-                ]}
-              />
+                onValueChange={(v) => setVisibilityFilter(v as "all" | "visible" | "hidden")}
+              >
+                <SelectTrigger
+                  className={cn(
+                    "w-[150px] h-9 text-sm",
+                    visibilityFilter !== "all" && "border-foreground text-foreground font-medium"
+                  )}
+                >
+                  <span className="text-muted-foreground mr-1">공개 여부:</span>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">전체</SelectItem>
+                  <SelectItem value="visible">공개</SelectItem>
+                  <SelectItem value="hidden">비공개</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardContent>
