@@ -160,7 +160,7 @@ export default function AdminPage() {
   // 사업지구 변경 확정: 기존 탭 배열 초기화 → 새 사업지구 적용(데이터 전환) → 신청관리 홈 활성화
   const confirmProjectUnitChange = () => {
     if (!pendingProjectUnit) return;
-    // 1. 기존 가변 상세 탭 전체 초기화
+    // 1. 기존 가변 상세 탭 ���체 초기화
     setDetailTabs([]);
     setActiveDetailId(null);
     // 2. 새 사업지구 데이터로 전환
@@ -186,7 +186,7 @@ export default function AdminPage() {
       )
     );
 
-    // localStorage에 업데이트된 application 저장 (심의서 페이지와 연동)
+    // localStorage에 업데이트된 application 저장 (심의서 페이지와 ��동)
     try {
       const savedApplications = JSON.parse(localStorage.getItem('updatedApplications') || '{}');
       const safeApplication = {
@@ -342,7 +342,7 @@ export default function AdminPage() {
       </aside>
 
       {/* 오른쪽 콘텐츠 영역 - 와이드하게 확장, 사이드바 너비만큼 margin-left */}
-      <main className="flex-1 p-6 overflow-auto ml-60 min-h-screen" style={{ backgroundColor: '#f3f6f9' }}>
+      <main className="flex-1 p-6 overflow-auto ml-60 h-screen" style={{ backgroundColor: '#f3f6f9' }}>
         {/* 동적 상세 탭 바 (열린 상세�� 있을 때만 노출, 고정 대시보드 탭 없음) */}
         {detailTabs.length > 0 && (
           <div className="sticky -top-6 z-20 -mx-6 -mt-6 mb-6 bg-[#dee1e6]">
