@@ -1123,7 +1123,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                       <div className="flex items-start gap-3">
                         <Sparkles className="w-5 h-5 mt-0.5 flex-shrink-0 text-rose-600" />
                         <div>
-                          <p className="text-sm font-medium text-gray-700 mb-1">AI 종합 의���</p>
+                          <p className="text-sm font-medium text-gray-700 mb-1">AI 종합 의����</p>
                           <p className="text-gray-600 text-sm leading-relaxed">
                             {aiResult.reasoning}
                           </p>
@@ -1451,7 +1451,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                               
                               {/* 필지별 신청 사유 */}
                               <div>
-                                <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유 <span className="text-gray-400">(선택)</span></Label>
+                                <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유</Label>
                                 <Textarea
                                   placeholder="이 필지의 매수 신청 사유를 작성해 주세요."
                                   value={item.reason || ""}
@@ -1605,7 +1605,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   
                   {/* 신청 사유 */}
                   <div>
-                    <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유 <span className="text-gray-400">(선택)</span></Label>
+                    <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유</Label>
                     <Textarea
                       placeholder="잔여지 매수를 신청하시는 사유를 상세히 작성해 주세요."
                       value={applicationForm.reason}
