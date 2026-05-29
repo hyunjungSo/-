@@ -226,7 +226,7 @@ export function WorkTabBar({ tabs, activeTabId, onTabSelect, onTabClose, onTabRe
               isDragging ? "cursor-grabbing" : "cursor-default transition-colors",
               isActive
                 ? "z-10 bg-[rgb(243,246,249)] font-semibold text-[#00875a] shadow-[0_-1px_4px_rgba(0,0,0,0.08)]"
-                : "bg-transparent font-medium text-gray-600 hover:bg-white/50 hover:text-gray-900",
+                : "bg-[rgb(243,246,249)] font-medium text-muted-foreground hover:bg-white/50 hover:text-gray-900",
               isDragging && "scale-[1.02] bg-white shadow-lg"
             )}
           >
