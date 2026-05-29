@@ -1414,7 +1414,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   
   // 잔여 면적이 0인 경우: 잔여지 자체가 없으므로 신청 불가
   if (landInfo.remainingArea === 0) {
-    provisionalJudgment = "수용불���������";
+    provisionalJudgment = "수용불�����������";
   } else {
     // 면적 기준 충족 여부
     const coreCriteriaMet = areaMet;
@@ -1770,7 +1770,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       waterChannelLost: false,
       farmMachineDifficulty: true,
       judgmentRationale: {
-        summary: "농지 잔여지 - 형��� 변��� 및 농기계 진입불가로 「매수 가능성 높음」 판정",
+        summary: "농지 잔��지 - 형��� 변��� 및 농기계 진입불가로 「매수 가능성 높음」 판정",
         legalBasis: "「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」 제74조",
         appliedCriteria: ["토지유형: 농지", "형상지수 변화: 1.5 (기준 충족)", "농기계 진입불가: 해당"],
         detailedExplanation: "도로확장사업으로 잔여지가 사다리형으로 변형되어 농기계 회전이 곤란합니다.",
@@ -1855,7 +1855,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       ownerName: "이순신",
       ownerContact: "010-1111-2222",
       hasIncludedLand: true,
-      businessUnit: "수도�������",
+      businessUnit: "수도���������",
       projectName: "용��-양��� 도로확장사���",
     },
     checkItems: {
@@ -2443,7 +2443,7 @@ export const dummyApplications: Application[] = [
     adminStatus: "접수완료",
     appliedAt: THREE_WEEKS_AGO,
     aiResult: generateAIResult(dummyLandInfoList[0]),
-    adminName: "이정은",
+    adminName: "이정���",
     businessUnit: "강진광주건설 사업단",
   },
   {
@@ -2507,7 +2507,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 ��입��었습니���. 편입 �� 각 필지가 불규칙한 ���태로 남아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모��� 도로에 ��입��었습니���. 편입 �� 각 필지가 불규칙한 ���태로 남아 농기계 회전이 불가���하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -2567,7 +2567,7 @@ export const dummyApplications: Application[] = [
           "농지 물리조건: 관개수로 상실, 농기계 회전 곤란",
           "형상 변화: 3필지 모두 비정형으로 변경",
         ],
-        detailedExplanation: "3필지 농지\n\n[필지 1] 501-1: 800㎡ → 250㎡ (삼각형)\n[필지 2] 501-2: 650㎡ → 170㎡ (역삼각형)\n[필지 3] 501-3: 550㎡ → 150㎡ (부정형)\n\n도로 편입 후 관개수로가 단절되고 형상이 불규칙하게 변경되어 농�� 활동이 불가능한 상태��니다.",
+        detailedExplanation: "3필지 농지\n\n[필지 1] 501-1: 800㎡ → 250㎡ (삼각형)\n[필지 2] 501-2: 650㎡ → 170㎡ (역삼각형)\n[필지 3] 501-3: 550㎡ → 150㎡ (부정형)\n\n도로 편입 후 관개수로가 단절되고 형상이 불규���하게 변경되어 농�� 활동이 불가능한 상태��니다.",
         manualCheckItems: [],
       },
     },
@@ -3118,7 +3118,7 @@ export const dummyApplications: Application[] = [
     statusUpdatedAt: TEN_DAYS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
-  // 접수완료 상태의 3필지 신청 건
+  // 접수완료 상태의 3필지 ��청 건
   {
     id: "app-3parcel-001",
     applicationNumber: "2026-0510-001",
@@ -3686,8 +3686,8 @@ export const dummyAnalysisHistory: AnalysisHistory[] = [
   },
 ];
 
-// ===== 프로세�� 적용된 필지 ��이터 (ProcessedParcel) =====
-export const dummyProcessedParcels: ProcessedParcel[] = [
+// ===== 프로세스 적용된 필지 데이터 (ProcessedParcel) =====
+const rawProcessedParcels: ProcessedParcel[] = [
   // 1. 1차 분석만 완료된 필지 (담당자 확인 대기) - 민원인이 장바구니에 담음
   {
     id: "processed-001",
@@ -4600,7 +4600,7 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
               analysisDate: dateAt(7),
             },
           }),
-          preRegistrationStatus: "등록완료" as const,
+          preRegistrationStatus: "등록��료" as const,
           registeredAt: dateAt(0),
           registeredBy: "관리자",
           publishStatus,
@@ -4630,3 +4630,10 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     ) as unknown as ProcessedParcel[];
   })(),
 ];
+
+// 공개여부 정규화: 편입 유형과 매수 가능성이 모두 "판독대기"인 필지는 공개여부를 비공개로 강제
+// (판독대기 조건 = residualStatus가 "잔여지 인정"도 "기준 미달"도 아닌 경우 → 두 컬럼 모두 판독대기)
+export const dummyProcessedParcels: ProcessedParcel[] = rawProcessedParcels.map((parcel) => {
+  const isPending = parcel.residualStatus !== "잔여지 인정" && parcel.residualStatus !== "기준 미달";
+  return isPending ? { ...parcel, isVisible: false } : parcel;
+});
