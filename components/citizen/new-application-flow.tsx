@@ -1698,8 +1698,8 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
       )}
     </div>
 
-    {/* 매수신청 목록 플로팅 버튼 */}
-    {cartItems.length > 0 && !isCartOpen && (
+    {/* 매수신청 목록 플로팅 버튼 (신규 신청서 작성 단계에서는 미노출) */}
+    {cartItems.length > 0 && !isCartOpen && step !== "application" && (
       <button
         onClick={() => setIsCartOpen(true)}
         className="fixed bottom-6 right-6 z-50 flex h-14 items-center gap-2 rounded-full bg-[#2E8B57] px-5 text-white shadow-lg transition-all hover:bg-[#256b45] hover:shadow-xl animate-float"
