@@ -9,18 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Check, ChevronLeft, ChevronDown, MapPin, Ruler, Search, FileText, Sparkles, ClipboardCheck, CheckCircle, XCircle, Loader2, X, Trash2, ClipboardList } from "lucide-react";
-
-// 신청 사유 옵션
-const REASON_OPTIONS = [
-  "잔여지 형상 변형으로 활용 곤란",
-  "농기계 진입로 상실",
-  "용수로/배수로 상실",
-  "면적 과소로 영농 불가",
-  "맹지화로 출입 곤란",
-  "기타",
-];
 import type { LandInfo, AIAnalysisResult, Application } from "@/lib/types";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/hooks/use-toast";
@@ -1317,7 +1306,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
           {/* 토지 정보 */}
           <Card className="p-5 border border-gray-200">
             <h3 className="font-semibold text-gray-900 mb-4">
-              ��지 정보 
+              ��지 정�� 
               {selectedCartItems.size > 0 && (
                 <span className="ml-2 text-[#2E8B57] font-normal">({selectedCartItems.size}건)</span>
               )}
@@ -1463,25 +1452,18 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                               {/* 필지별 신청 사유 */}
                               <div>
                                 <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유 <span className="text-gray-400">(선택)</span></Label>
-                                <Select
+                                <Textarea
+                                  placeholder="이 필지의 매수 신청 사유를 작성해 주세요."
                                   value={item.reason || ""}
-                                  onValueChange={(value) => {
+                                  onChange={(e) => {
                                     setCartItems(prev => prev.map(ci => 
                                       ci.id === item.id 
-                                        ? { ...ci, reason: value }
+                                        ? { ...ci, reason: e.target.value }
                                         : ci
                                     ));
                                   }}
-                                >
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="신청 사유를 선택해 주세요." />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {REASON_OPTIONS.map((opt) => (
-                                      <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
+                                  className="min-h-[80px]"
+                                />
                               </div>
                               
                               {/* 필지별 첨부서류 */}
@@ -1624,19 +1606,12 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                   {/* 신청 사유 */}
                   <div>
                     <Label className="text-sm text-gray-600 mb-1.5 block">신청 사유 <span className="text-gray-400">(선택)</span></Label>
-                    <Select
+                    <Textarea
+                      placeholder="잔여지 매수를 신청하시는 사유를 상세히 작성해 주세요."
                       value={applicationForm.reason}
-                      onValueChange={(value) => setApplicationForm(prev => ({ ...prev, reason: value }))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="신청 사유를 선택해 주세요." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {REASON_OPTIONS.map((opt) => (
-                          <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      onChange={(e) => setApplicationForm(prev => ({ ...prev, reason: e.target.value }))}
+                      className="min-h-[120px]"
+                    />
                   </div>
                   
                   {/* 단일 필지 첨부서류 */}
@@ -1798,7 +1773,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
                     return acc;
                   }, {} as Record<string, CartItem[]>);
 
-                  // 현재 선택�� 사업단 (선택된 항목이 있으면 해당 사업단)
+                  // ��재 선택�� 사업단 (선택된 항목이 있으면 해당 사업단)
                   const selectedProject = selectedCartItems.size > 0
                     ? cartItems.find(item => selectedCartItems.has(item.id))?.parcel.projectName
                     : null;
