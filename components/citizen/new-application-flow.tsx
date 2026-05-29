@@ -1313,7 +1313,7 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
               )}
             </h3>
             <div className="space-y-4">
-              {/* 장바구니에서 신청하는 경우 - 각 필지별로 토지정보 작성 */}
+              {/* 장바구니에서 신청하는 경우 - 각 필지별로 토지��보 작성 */}
               {selectedCartItems.size > 0 ? (
                 <div className="space-y-3">
                   {cartItems
@@ -1660,14 +1660,14 @@ export function NewApplicationFlow({ onComplete, onCancel }: NewApplicationFlowP
             </div>
           </Card>
 
-          <div className="flex justify-end pt-4">
+          <div className="flex justify-center pt-4">
             <Button
               onClick={handleNext}
               disabled={
                 !applicationForm.contact || 
                 !applicationForm.address
               }
-              className="bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl"
+              className="w-full bg-[#2E8B57] hover:bg-[#256b45] text-white px-8 py-6 text-lg rounded-xl"
             >
               신청 완료
             </Button>
