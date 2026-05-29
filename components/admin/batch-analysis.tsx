@@ -691,7 +691,7 @@ export function BatchAnalysis({
             </div>
             
             {/* 상태별 현황 그리드 - 4개 카드 */}
-            <div className="grid grid-cols-4 gap-3 pt-2">
+            <div className="grid grid-cols-4 gap-2 pt-2">
               {/* 전체: Black */}
               <div 
                 onClick={() => handleInclusionTypeClick("all")}
@@ -767,7 +767,7 @@ export function BatchAnalysis({
             </div>
             
             {/* 상태별 현황 그리드 - 4개 카드 */}
-            <div className="grid grid-cols-4 gap-3 pt-2">
+            <div className="grid grid-cols-4 gap-2 pt-2">
               {/* 전체: Black */}
               <div 
                 onClick={() => handleAiJudgmentClick("all")}
@@ -779,7 +779,7 @@ export function BatchAnalysis({
                   <span className="text-xs font-medium ml-0.5" style={{ color: '#959595' }}>건</span>
                 </div>
               </div>
-              {/* 판독�����기: Indigo */}
+              {/* 판독�������기: Indigo */}
               <div 
                 onClick={() => handleAiJudgmentClick("pending")}
                 className="flex cursor-pointer flex-col items-center rounded-lg bg-indigo-50 p-4 transition-all hover:bg-indigo-100"
