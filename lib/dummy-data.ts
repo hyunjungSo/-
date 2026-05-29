@@ -1414,7 +1414,7 @@ function generateAIResult(landInfo: LandInfo, landSubType?: string): AIAnalysisR
   
   // 잔여 면적이 0인 경우: 잔여지 자체가 없으므로 신청 불가
   if (landInfo.remainingArea === 0) {
-    provisionalJudgment = "수용불�����������";
+    provisionalJudgment = "수용불�������������";
   } else {
     // 면적 기준 충족 여부
     const coreCriteriaMet = areaMet;
@@ -3187,7 +3187,7 @@ export const dummyApplications: Application[] = [
           "매탄동 101: 잔여면적 230㎡ > 기준 90㎡ - 추가 검토 필요",
           "매탄동 102: 잔여면적 300㎡ > 기준 90㎡ - 추가 검토 필요",
         ],
-        detailedExplanation: "영통지구 도시개발사업으로 3필지가 동시에 편입되었습니다. 각 필지의 잔여 면적이 주거용 택지 기준(90㎡)을 초과하나, 형상 변화 및 접도 조건을 종합적으로 검토하여 매수 가능 여부를 판단해야 합니다.",
+        detailedExplanation: "영통지구 도시개발사업으로 3필지가 동시에 편입되었습니다. 각 필지의 잔여 면적이 주거용 택지 기준(90㎡)을 초과하나, 형상 변화 및 접도 조건을 종합적으로 검토하여 매수 가능 여부�� 판단해야 합니다.",
         manualCheckItems: ["현장 형상 확인", "��도 조건 확인", "건축 가능 여부 확인"],
       },
       landJudgments: [
@@ -3566,6 +3566,121 @@ export const dummyApplications: Application[] = [
     statusUpdatedAt: THREE_WEEKS_AGO,
     businessUnit: "강진광주건설 사업단",
   },
+  // 추가 더미 민원 신청 — 각 사업단별 최소 30건 확보 (사업단당 32건 생성)
+  ...((): Application[] => {
+    const applicantNames = ["김철수", "이영희", "박민수", "최지원", "정수연", "강민호", "윤서윤", "조현우", "임재현", "한소희"];
+    const adminNames = ["김담당", "이담당", "박담당", "최담당", "홍길동"];
+    const landCategories: LandCategory[] = ["전", "답", "대", "임"];
+    const landShapes: LandShape[] = ["가로장방형", "세로장방형", "정방형", "삼각형", "역삼각형", "사다리형", "부정형"];
+    const statuses: { status: ProcessStatus; adminStatus: AdminStatus }[] = [
+      { status: "접수완료", adminStatus: "접수완료" },
+      { status: "AI분석완료", adminStatus: "진행중" },
+      { status: "검토중", adminStatus: "진행중" },
+      { status: "처리완료", adminStatus: "심사완료" },
+    ];
+
+    const unitConfigs = [
+      {
+        businessUnit: "수도권건설사업단" as BusinessUnit,
+        projectName: "평택-오송 고속도로 2공구",
+        addresses: [
+          "경기도 평택시 서탄면 금암리", "경기도 평택시 고덕면 율포리", "경기도 평택시 청북읍 옥길리",
+          "경기도 평택시 현덕면 덕목리", "경기도 평택시 팽성읍 본정리",
+        ],
+      },
+      {
+        businessUnit: "천안안성건설사업단" as BusinessUnit,
+        projectName: "안성-천안 국도확장",
+        addresses: [
+          "충청남도 천안시 서북구 입장면", "충청남도 천안시 동남구 풍세면", "경기도 안성시 공도읍 만정리",
+          "경기도 안성시 미양면 갈전리", "경기도 안성시 대덕면 모산리",
+        ],
+      },
+      {
+        businessUnit: "강진광주건설사업단" as BusinessUnit,
+        projectName: "광주-강진 고속도로",
+        addresses: [
+          "전라남도 강진군 강진읍 동성리", "전라남도 강진군 군동면 파산리", "전라남도 강진군 칠량면 봉황리",
+          "전라남도 강진군 마량면 마량리", "전라남도 강진군 병영면 삼인리",
+        ],
+      },
+    ];
+
+    const PER_UNIT = 32;
+    let seq = 1000;
+
+    return unitConfigs.flatMap((cfg) =>
+      Array.from({ length: PER_UNIT }, (_, i) => {
+        const n = seq++;
+        const baseAddress = cfg.addresses[i % cfg.addresses.length];
+        const lotNumber = `${100 + (i * 7) % 400}-${(i * 3) % 10 + 1}`;
+        const originalArea = 600 + (i * 47) % 1400;
+        const includedArea = Math.floor(originalArea * (0.2 + (i % 5) * 0.1));
+        const remainingArea = originalArea - includedArea;
+        const remainingRatio = Math.round((remainingArea / originalArea) * 1000) / 10;
+        const landCategory = landCategories[i % 4];
+        const landType: LandType = landCategory === "대" ? "대지" : landCategory === "임" ? "산지" : "농지";
+        const reportedShape = landShapes[i % 7];
+        const { status, adminStatus } = statuses[i % statuses.length];
+
+        // 기본 조회기간(올해) 내 노출되도록 신청일을 현재 연도 범위로 설정 (최대 약 150일 전)
+        const daysAgo = (i * 4) % 150;
+        const appliedDate = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
+        const appliedAt = appliedDate.toISOString();
+        const mm = String(appliedDate.getMonth() + 1).padStart(2, "0");
+        const dd = String(appliedDate.getDate()).padStart(2, "0");
+
+        const landInfo: LandInfo = {
+          id: `land-app-${String(n).padStart(4, "0")}`,
+          address: `${baseAddress} ${lotNumber}`,
+          originalArea,
+          includedArea,
+          remainingArea,
+          remainingRatio,
+          landType,
+          landCategory,
+          originalShape: landShapes[(i + 2) % 7],
+          remainingShape: reportedShape,
+          originalShapeIndex: 1.5 + (i % 5) * 0.8,
+          remainingShapeIndex: 2.0 + (i % 6) * 1.0,
+          ownerName: applicantNames[i % 10],
+          ownerContact: `010-${String(3000 + n).slice(0, 4)}-${String(5000 + n).slice(0, 4)}`,
+          hasIncludedLand: true,
+          businessUnit: cfg.businessUnit,
+          projectName: cfg.projectName,
+        };
+
+        const hasAiResult = status !== "접수완료";
+
+        return {
+          id: `app-gen-${String(n).padStart(4, "0")}`,
+          applicationNumber: `2026-${mm}${dd}-${String(n).padStart(4, "0")}`,
+          applicationType: "single",
+          applicantRelation: "owner",
+          applicantName: applicantNames[i % 10],
+          applicantContact: landInfo.ownerContact,
+          applicantAddress: `${baseAddress} ${lotNumber}`,
+          landInfo,
+          actualUsage: landCategory,
+          reportedShape,
+          farmMachineDifficulty: i % 3 === 0,
+          reason: "공익사업 편입으로 잔여지의 형상이 변형되어 활용이 곤란하여 매수를 신청합니다.",
+          attachments: ["토지대장.pdf", "현황사진.jpg"],
+          status,
+          adminStatus,
+          appliedAt,
+          ...(hasAiResult && { aiResult: generateAIResult(landInfo) }),
+          ...(adminStatus === "심사완료" && {
+            finalJudgment: i % 2 === 0 ? "매수" : "기각",
+            reviewerComment: "검토 완료",
+            statusUpdatedAt: appliedAt,
+          }),
+          adminName: adminNames[i % adminNames.length],
+          businessUnit: cfg.businessUnit,
+        };
+      })
+    ) as Application[];
+  })(),
 ];
 
 // 현재 활용 지목 목록
