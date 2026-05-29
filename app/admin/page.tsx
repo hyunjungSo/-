@@ -441,9 +441,12 @@ export default function AdminPage() {
         <AlertDialogContent className="bg-white">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-gray-900">사업지구를 변경하시겠습니까?</AlertDialogTitle>
-            <AlertDialogDescription className="text-gray-500">
-              <span className="font-semibold text-[#00875a]">{pendingProjectUnitLabel}</span>(으)로 전환하면 현재 열려 있는 모든
-              상세 검토 탭이 닫히고, 해당 사업지구의 신청관리 홈 화면으로 이동합니다. 저장하지 않은 작업 내용은 사라질 수 있습니다.
+            <AlertDialogDescription className="text-gray-500" asChild>
+              <div>
+                <span className="font-semibold text-[#00875a]">{pendingProjectUnitLabel}</span>(으)로 전환하면 현재 열려 있는 모든 상세 검토 탭이 닫히고, 해당 사업지구의 신청관리 홈 화면으로 이동합니다.
+                <br />
+                저장하지 않은 작업 내용은 사라질 수 있습니다.
+              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
