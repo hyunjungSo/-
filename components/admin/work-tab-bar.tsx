@@ -181,11 +181,17 @@ export function WorkTabBar({ tabs, activeTabId, onTabSelect, onTabClose, onTabRe
   };
 
   return (
-    <div ref={containerRef} className="flex items-end gap-1 overflow-x-auto bg-white px-2 pt-2.5">
+    <div ref={containerRef} className="flex items-end gap-0 overflow-x-auto bg-white px-2 pt-2.5">
       {tabs.map((tab, index) => {
         const isActive = tab.id === activeTabId;
         const isDragging = tab.id === draggingId;
         const shift = isDragging ? delta : getShift(index);
+
+        // 크롬식 구분선: 활성 탭 양옆에는 표시하지 않음
+        const prevTab = index > 0 ? tabs[index - 1] : null;
+        const isPrevActive = prevTab?.id === activeTabId;
+        const isPrevDragging = prevTab?.id === draggingId;
+        const showDivider = index > 0 && !isActive && !isPrevActive && !isDragging && !isPrevDragging;
 
         const style: React.CSSProperties = {
           transform: shift !== 0 ? `translateX(${shift}px)` : undefined,
@@ -201,51 +207,56 @@ export function WorkTabBar({ tabs, activeTabId, onTabSelect, onTabClose, onTabRe
         };
 
         return (
-          <div
-            key={tab.id}
-            role="tab"
-            aria-selected={isActive}
-            tabIndex={0}
-            style={style}
-            onPointerDown={(e) => handlePointerDown(e, tab, index)}
-            onClick={() => {
-              if (movedRef.current) {
-                movedRef.current = false;
-                return;
-              }
-              onTabSelect(tab.id);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
+          <div key={tab.id} className="flex items-end">
+            {/* 크롬식 세로 구분선 */}
+            {showDivider && (
+              <div className="my-auto h-4 w-px bg-gray-300" />
+            )}
+            <div
+              role="tab"
+              aria-selected={isActive}
+              tabIndex={0}
+              style={style}
+              onPointerDown={(e) => handlePointerDown(e, tab, index)}
+              onClick={() => {
+                if (movedRef.current) {
+                  movedRef.current = false;
+                  return;
+                }
                 onTabSelect(tab.id);
-              }
-            }}
-            className={cn(
-              "group relative flex h-9 min-w-[140px] max-w-[240px] select-none items-center gap-2 whitespace-nowrap rounded-t-[10px] px-4 text-sm",
-              isDragging ? "cursor-grabbing" : "cursor-default transition-colors",
-              isActive
-                ? "z-10 bg-[rgb(243,246,249)] font-semibold text-[#00875a] shadow-[0_-1px_4px_rgba(0,0,0,0.08)]"
-                : "border border-gray-200 bg-white font-medium text-[#666666] hover:bg-gray-50 hover:text-gray-900",
-              isDragging && "scale-[1.02] bg-white shadow-lg"
-            )}
-          >
-            <TabIcon type={tab.type} />
-            <span className="flex-1 truncate">{tab.label}</span>
-            {tab.closable && (
-              <button
-                type="button"
-                data-tab-close
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onTabClose(tab.id);
-                }}
-                className="flex items-center justify-center rounded-full p-0.5 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700"
-                aria-label={`${tab.label} 탭 닫기`}
-              >
-                <X className="h-3.5 w-3.5" />
-              </button>
-            )}
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onTabSelect(tab.id);
+                }
+              }}
+              className={cn(
+                "group relative flex h-9 min-w-[140px] max-w-[240px] select-none items-center gap-2 whitespace-nowrap rounded-t-[10px] px-4 text-sm",
+                isDragging ? "cursor-grabbing" : "cursor-default transition-colors",
+                isActive
+                  ? "z-10 bg-[rgb(243,246,249)] font-semibold text-[#00875a] shadow-[0_-1px_4px_rgba(0,0,0,0.08)]"
+                  : "bg-white font-medium text-[#666666] hover:bg-gray-50 hover:text-gray-900",
+                isDragging && "scale-[1.02] bg-white shadow-lg"
+              )}
+            >
+              <TabIcon type={tab.type} />
+              <span className="flex-1 truncate">{tab.label}</span>
+              {tab.closable && (
+                <button
+                  type="button"
+                  data-tab-close
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onTabClose(tab.id);
+                  }}
+                  className="flex items-center justify-center rounded-full p-0.5 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700"
+                  aria-label={`${tab.label} 탭 닫기`}
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
           </div>
         );
       })}
