@@ -236,7 +236,7 @@ export function WorkTabBar({ tabs, activeTabId, onTabSelect, onTabClose, onTabRe
                 isDragging ? "cursor-grabbing" : "cursor-default transition-colors",
                 isActive
                   ? "z-10 bg-[rgb(243,246,249)] font-semibold text-[#00875a] shadow-[0_-1px_4px_rgba(0,0,0,0.08)]"
-                  : "bg-white font-medium text-[#666666] hover:bg-gray-50 hover:text-gray-900",
+                  : "bg-white font-medium text-[#828080] hover:bg-gray-50 hover:text-gray-900",
                 isDragging && "scale-[1.02] bg-white shadow-lg"
               )}
             >
@@ -250,7 +250,7 @@ export function WorkTabBar({ tabs, activeTabId, onTabSelect, onTabClose, onTabRe
                     e.stopPropagation();
                     onTabClose(tab.id);
                   }}
-                  className="flex items-center justify-center rounded-full p-0.5 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700"
+                  className="flex items-center justify-center rounded-full p-0.5 text-[#828080] transition-colors hover:bg-gray-200 hover:text-gray-700"
                   aria-label={`${tab.label} 탭 닫기`}
                 >
                   <X className="h-3.5 w-3.5" />
