@@ -823,10 +823,10 @@ export function BatchAnalysis({
 
       {/* 검색 및 필터 */}
       <Card className="border-0 shadow-none">
-        <CardHeader className="pb-2">
+        <CardHeader className="pb-5">
           <CardTitle className="text-lg">검색 및 필터</CardTitle>
         </CardHeader>
-        <CardContent className="pt-2">
+        <CardContent className="pt-0">
           {/* 필터 레이아웃 - 단일 행(1줄) 구조 */}
           <div className="flex flex-row items-center justify-between gap-6">
             {/* 좌측: 검색바 */}
