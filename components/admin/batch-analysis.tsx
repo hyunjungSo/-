@@ -891,7 +891,7 @@ export function BatchAnalysis({
             <div>
               <CardTitle className="text-lg">필지 관리 목록</CardTitle>
               <CardDescription>
-                편입 유형과 매수 가능성 판독 결과를 확인하세요. 소재지를 클릭하면 필지 상세 화면으로 이동합니다.
+                편입 유형 과 매수 가능성 판록 결과를 확인하세요. 소재지를 클릭하면 필지 상세 화면으로 이동합니다.
               </CardDescription>
             </div>
             {/* 분석 버튼 */}
@@ -945,7 +945,7 @@ export function BatchAnalysis({
                   </TableHead>
                   <TableHead className="w-12 text-center">No.</TableHead>
                   <TableHead>소재지</TableHead>
-                  <TableHead className="text-center">�����(㎡)</TableHead>
+                  <TableHead className="text-center">잔여면적(m²)</TableHead>
                   <TableHead className="text-center">편입 유형</TableHead>
                   <TableHead className="text-center">매수 가능성</TableHead>
                   <TableHead className="text-center">공개 여부</TableHead>
