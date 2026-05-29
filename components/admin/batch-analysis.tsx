@@ -823,7 +823,7 @@ export function BatchAnalysis({
 
       {/* 검색 및 필터 */}
       <Card className="border-0 shadow-none">
-        <CardHeader className="pb-5">
+        <CardHeader className="pb-0">
           <CardTitle className="text-lg">검색 및 필터</CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
