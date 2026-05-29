@@ -303,9 +303,9 @@ export default function AdminPage() {
 
       {/* 오른쪽 콘텐츠 영역 - 와이드하게 확장, 사이드바 너비만큼 margin-left */}
       <main className="flex-1 p-6 overflow-auto ml-60 min-h-screen" style={{ backgroundColor: '#f3f6f9' }}>
-        {/* 동적 상세 탭 바 (열린 상세가 있을 때만 노출, 고정 대시보드 탭 없음) */}
+        {/* 동적 상세 탭 바 (열린 상세�� 있을 때만 노출, 고정 대시보드 탭 없음) */}
         {detailTabs.length > 0 && (
-          <div className="-mx-6 -mt-6 mb-6 bg-white">
+          <div className="-mx-6 -mt-6 mb-6 bg-[#dee1e6]">
             <WorkTabBar
               tabs={detailTabs}
               activeTabId={activeDetailId ?? ""}

@@ -181,7 +181,7 @@ export function WorkTabBar({ tabs, activeTabId, onTabSelect, onTabClose, onTabRe
   };
 
   return (
-    <div ref={containerRef} className="flex items-end gap-1 overflow-x-auto border-b border-gray-200">
+    <div ref={containerRef} className="flex items-end gap-1 overflow-x-auto bg-[#dee1e6] px-2 pt-2.5">
       {tabs.map((tab, index) => {
         const isActive = tab.id === activeTabId;
         const isDragging = tab.id === draggingId;
@@ -222,16 +222,16 @@ export function WorkTabBar({ tabs, activeTabId, onTabSelect, onTabClose, onTabRe
               }
             }}
             className={cn(
-              "group -mb-px flex select-none items-center gap-2 whitespace-nowrap rounded-t-lg border px-4 py-2.5 text-sm",
+              "group relative flex h-9 min-w-[140px] max-w-[240px] select-none items-center gap-2 whitespace-nowrap rounded-t-[10px] px-4 text-sm",
               isDragging ? "cursor-grabbing" : "cursor-pointer transition-colors",
               isActive
-                ? "border-gray-200 border-b-white border-t-2 border-t-[#00875a] bg-white font-semibold text-[#00875a]"
-                : "border-transparent bg-transparent font-medium text-gray-500 hover:bg-gray-100/70 hover:text-gray-800",
+                ? "z-10 bg-white font-semibold text-[#00875a] shadow-[0_-1px_4px_rgba(0,0,0,0.08)]"
+                : "bg-transparent font-medium text-gray-600 hover:bg-white/50 hover:text-gray-900",
               isDragging && "scale-[1.02] bg-white shadow-lg"
             )}
           >
             <TabIcon type={tab.type} />
-            <span>{tab.label}</span>
+            <span className="flex-1 truncate">{tab.label}</span>
             {tab.closable && (
               <button
                 type="button"
