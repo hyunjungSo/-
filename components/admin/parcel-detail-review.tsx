@@ -588,9 +588,6 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
         <DialogContent className="z-[10000] bg-white sm:max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-gray-900">토지정보 상세보기</DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              {parcel.landInfo.address}
-            </DialogDescription>
           </DialogHeader>
           <div className="space-y-5">
 
