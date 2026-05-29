@@ -1855,7 +1855,7 @@ export const preRegisteredParcels: PreRegisteredParcel[] = [
       ownerName: "이순신",
       ownerContact: "010-1111-2222",
       hasIncludedLand: true,
-      businessUnit: "수도�����",
+      businessUnit: "수도�������",
       projectName: "용��-양��� 도로확장사���",
     },
     checkItems: {
@@ -2331,7 +2331,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: false,
-    reason: "동탄2 도시개발사업으로 인해 소유한 8개 필지가 모두 도로에 편입되어 잔여지가 불규칙한 형태로 남았습니다. 각 필지별로 건축 및 농업 활동이 불가능하여 일괄 매수를 신청합니다.",
+    reason: "동탄2 도시개발사업으로 ��해 소유한 8개 필지가 모두 도로에 편입되어 잔여지가 불규칙한 형태로 남았습니다. 각 필지별로 건축 및 농업 활동이 불가능하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "대" as const,
@@ -4484,126 +4484,149 @@ export const dummyProcessedParcels: ProcessedParcel[] = [
     analysisHistory: [],
     ownerIdentifier: "1111",
   },
-  // 17-60: 추가 더미 데이터 (6페이지 분량)
-  ...Array.from({ length: 44 }, (_, i) => {
-    const idx = i + 17;
-    const businessUnits = ["수도권건설사업단", "천안안성건설사업단", "강진광주건설사업단"];
-    const projectNames: Record<string, string> = {
-      "수도권건설사업단": "평택-오송 고속도로 2공구",
-      "천안안성건설사업단": "안성-천안 국도확장",
-      "강진광주건설사업단": "광주-강진 고속도로",
-    };
-    const addresses: Record<string, string[]> = {
-      "수도권건설사업단": [
-        "경기도 평택시 서탄면 금암리", "경기도 평택시 고덕면 율포리", "경기도 평택시 청북읍 옥길리",
-        "경기도 평택시 현덕면 덕목리", "경기도 평택시 팽성읍 본정리"
-      ],
-      "천안안성건설사업단": [
-        "충청남도 천안시 서북구 입장면", "충청남도 천안시 동남구 풍세면", "경기도 안성시 공도읍",
-        "경기도 안성시 미양면", "경기도 안성시 대덕면"
-      ],
-      "강진광주건설사업단": [
-        "전라남도 강진군 강진읍 동성리", "전라남도 강진군 군동면 파산리", "전라남도 강진군 칠량면 봉황리",
-        "전라남도 강진군 마량면 마량리", "전라남도 강진군 병영면 삼인리"
-      ],
-    };
+  // 추가 더미 데이터 — 각 사업단별 6페이지 이상(목록 12건/페이지 기준 사업단당 72건) 생성
+  ...((): ProcessedParcel[] => {
+    const ownerNames = ["김철수", "이영희", "박민수", "최지원", "정수연", "강민호", "윤서윤", "조현우", "임재현", "한소희"];
     const landCategories = ["전", "답", "대", "임"];
     const landShapes = ["가로장방형", "세로장방형", "정방형", "삼각형", "역삼각형", "사다리형", "부정형"];
-    const publishStatuses = ["분석전", "1차분석완료", "2차분석중", "2차분석완료", "담당자확인완료", "공개"];
-    const residualStatuses = ["잔여지 인정", "기준 미달", "판정 대기"];
-    const ownerNames = ["김철수", "이영희", "박민수", "최지원", "정수연", "강민호", "윤서윤", "조현우", "임재현", "한소희"];
+    // ProcessedParcel.publishStatus 유효값. "대기중" = 분석 전(AI 결과 없음 → 판독대기)
+    const publishStatuses = ["대기중", "1차분석완료", "2차분석중", "담당자확인완료", "공개", "공개"];
+    const residualStatuses = ["잔여지 인정", "기준 미달", "판정대기"];
 
-    const businessUnit = businessUnits[idx % 3];
-    const projectName = projectNames[businessUnit];
-    const addressList = addresses[businessUnit];
-    const baseAddress = addressList[idx % 5];
-    const lotNumber = `${100 + (idx * 7) % 300}-${(idx * 3) % 10 + 1}`;
-    
-    const originalArea = 600 + (idx * 47) % 1200;
-    const includedArea = Math.floor(originalArea * (0.2 + (idx % 5) * 0.1));
-    const remainingArea = originalArea - includedArea;
-    const remainingRatio = Math.round((remainingArea / originalArea) * 1000) / 10;
-    
-    const publishStatus = publishStatuses[idx % 6];
-    const residualStatus = residualStatuses[idx % 3];
-    const landCategory = landCategories[idx % 4];
-    const landShape = landShapes[idx % 7];
-    
-    const daysAgo = (idx * 3) % 90;
-    const registeredDate = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
-    
-    const hasAiResult = publishStatus !== "분석전";
-    const isVisible = hasAiResult && residualStatus === "잔여지 인정";
-
-    return {
-      id: `processed-${String(idx).padStart(3, '0')}`,
-      businessUnit,
-      projectName,
-      landInfo: {
-        id: `land-${String(idx).padStart(3, '0')}`,
-        address: `${baseAddress} ${lotNumber}`,
-        originalArea,
-        includedArea,
-        remainingArea,
-        remainingRatio,
-        landType: landCategory === "대" ? "대지" : "농지",
-        landCategory,
-        originalShape: landShapes[(idx + 2) % 7],
-        remainingShape: landShape,
-        originalShapeIndex: 1.5 + (idx % 5) * 0.8,
-        remainingShapeIndex: 2.0 + (idx % 6) * 1.0,
-        ownerName: ownerNames[idx % 10],
-        ownerContact: `010-${1000 + idx}-${2000 + idx * 2}`,
-        hasIncludedLand: true,
-        businessUnit,
-        projectName,
-        coordinates: [
-          { lat: 34.5 + (idx % 10) * 0.02, lng: 126.7 + (idx % 10) * 0.02 },
-          { lat: 34.5 + (idx % 10) * 0.02 + 0.008, lng: 126.7 + (idx % 10) * 0.02 + 0.015 },
-          { lat: 34.5 + (idx % 10) * 0.02 - 0.002, lng: 126.7 + (idx % 10) * 0.02 + 0.022 },
-          { lat: 34.5 + (idx % 10) * 0.02 - 0.01, lng: 126.7 + (idx % 10) * 0.02 + 0.007 },
+    const unitConfigs = [
+      {
+        businessUnit: "수도권건설사업단",
+        projectName: "평택-오송 고속도로 2공구",
+        addresses: [
+          "경기도 평택시 서탄면 금암리", "경기도 평택시 고덕면 율포리", "경기도 평택시 청북읍 옥길리",
+          "경기도 평택시 현덕면 덕목리", "경기도 평택시 팽성읍 본정리",
         ],
+        baseLat: 37.0, baseLng: 127.05,
       },
-      adminCheckItems: {
-        farmMachineDifficulty: idx % 3 === 0,
-        accessRoadLost: idx % 4 === 0,
-        waterChannelLost: idx % 5 === 0,
+      {
+        businessUnit: "천안안성건설사업단",
+        projectName: "안성-천안 국도확장",
+        addresses: [
+          "충청남도 천안시 서북구 입장면", "충청남도 천안시 동남구 풍세면", "경기도 안성시 공도읍 만정리",
+          "경기도 안성시 미양면 갈전리", "경기도 안성시 대덕면 모산리",
+        ],
+        baseLat: 36.85, baseLng: 127.15,
       },
-      currentUsage: landCategory,
-      landShape,
-      ...(hasAiResult && {
-        aiResult: {
-          provisionalJudgment: idx % 2 === 0 ? "매수 가능성 높음" : "매수 가능성 낮음",
-          shapeIndex: 2.0 + (idx % 6) * 1.0,
-          utilityIndex: 0.3 + (idx % 5) * 0.15,
-          accessibilityIndex: 0.4 + (idx % 4) * 0.15,
-          analysisDate: new Date(Date.now() - (daysAgo - 7) * 24 * 60 * 60 * 1000),
-        },
-      }),
-      preRegistrationStatus: "등록완료" as const,
-      registeredAt: registeredDate,
-      registeredBy: "관리자",
-      publishStatus,
-      ...(hasAiResult && { residualStatus }),
-      isVisible,
-      analysisHistory: [],
-      ...(hasAiResult && { firstAnalyzedAt: new Date(Date.now() - (daysAgo - 5) * 24 * 60 * 60 * 1000) }),
-      ...(hasAiResult && { lastAnalyzedAt: new Date(Date.now() - (daysAgo - 10) * 24 * 60 * 60 * 1000) }),
-      ...(publishStatus === "담당자확인완료" || publishStatus === "공개" ? { confirmedAt: new Date(Date.now() - (daysAgo - 15) * 24 * 60 * 60 * 1000), confirmedBy: ownerNames[(idx + 3) % 10] } : {}),
-      ownerIdentifier: String(1000 + idx),
-      ...(idx % 4 === 0 && {
-        citizenActivity: {
-          inCart: true,
-          cartAddedAt: new Date(Date.now() - (daysAgo - 2) * 24 * 60 * 60 * 1000),
-        },
-      }),
-      ...(idx % 5 === 0 && publishStatus === "공개" && {
-        citizenActivity: {
-          applicationSubmitted: true,
-          applicationId: `app-${String(idx).padStart(3, '0')}`,
-          applicationSubmittedAt: new Date(Date.now() - (daysAgo - 3) * 24 * 60 * 60 * 1000),
-        },
-      }),
-    };
-  }),
+      {
+        businessUnit: "강진광주건설사업단",
+        projectName: "광주-강진 고속도로",
+        addresses: [
+          "전라남도 강진군 강진읍 동성리", "전라남도 강진군 군동면 파산리", "전라남도 강진군 칠량면 봉황리",
+          "전라남도 강진군 마량면 마량리", "전라남도 강진군 병영면 삼인리",
+        ],
+        baseLat: 34.6, baseLng: 126.75,
+      },
+    ];
+
+    const PER_UNIT = 72; // 6페이지 분량
+    let seq = 100; // 기존 processed id와 충돌 방지
+
+    return unitConfigs.flatMap((cfg) =>
+      Array.from({ length: PER_UNIT }, (_, i) => {
+        const n = seq++;
+        const baseAddress = cfg.addresses[i % cfg.addresses.length];
+        const lotNumber = `${100 + (i * 7) % 400}-${(i * 3) % 10 + 1}`;
+
+        const originalArea = 600 + (i * 47) % 1400;
+        const includedArea = Math.floor(originalArea * (0.2 + (i % 5) * 0.1));
+        const remainingArea = originalArea - includedArea; // 항상 > 0 → 목록 노출 조건 충족
+        const remainingRatio = Math.round((remainingArea / originalArea) * 1000) / 10;
+
+        const publishStatus = publishStatuses[i % publishStatuses.length];
+        const residualStatus = residualStatuses[i % 3];
+        const landCategory = landCategories[i % 4];
+        const landShape = landShapes[i % 7];
+
+        // 기본 조회기간(올해) 내에 노출되도록 등록일을 현재 연도 범위로 설정 (최대 약 140일 전)
+        const daysAgo = (i * 2) % 140;
+        const dateAt = (offset: number) =>
+          new Date(Date.now() - Math.max(daysAgo - offset, 0) * 24 * 60 * 60 * 1000);
+
+        const hasAiResult = publishStatus !== "대기중";
+        const isVisible = hasAiResult && residualStatus === "잔여지 인정";
+
+        // 공개여부 수정 가능/불가 케이스 혼합:
+        // - 민원인 활동(장바구니/신청)이 있으면 토글 수정 불가
+        // - 활동이 없으면 토글 수정 가능
+        const hasCitizenActivity = i % 3 === 0; // 약 1/3은 수정 불가, 나머지는 수정 가능
+
+        return {
+          id: `processed-gen-${String(n).padStart(3, "0")}`,
+          businessUnit: cfg.businessUnit,
+          projectName: cfg.projectName,
+          landInfo: {
+            id: `land-gen-${String(n).padStart(3, "0")}`,
+            address: `${baseAddress} ${lotNumber}`,
+            originalArea,
+            includedArea,
+            remainingArea,
+            remainingRatio,
+            landType: landCategory === "대" ? "대지" : "농지",
+            landCategory,
+            originalShape: landShapes[(i + 2) % 7],
+            remainingShape: landShape,
+            originalShapeIndex: 1.5 + (i % 5) * 0.8,
+            remainingShapeIndex: 2.0 + (i % 6) * 1.0,
+            ownerName: ownerNames[i % 10],
+            ownerContact: `010-${String(3000 + n).slice(0, 4)}-${String(5000 + n).slice(0, 4)}`,
+            hasIncludedLand: true,
+            businessUnit: cfg.businessUnit,
+            projectName: cfg.projectName,
+            coordinates: [
+              { lat: cfg.baseLat + (i % 10) * 0.02, lng: cfg.baseLng + (i % 10) * 0.02 },
+              { lat: cfg.baseLat + (i % 10) * 0.02 + 0.008, lng: cfg.baseLng + (i % 10) * 0.02 + 0.015 },
+              { lat: cfg.baseLat + (i % 10) * 0.02 - 0.002, lng: cfg.baseLng + (i % 10) * 0.02 + 0.022 },
+              { lat: cfg.baseLat + (i % 10) * 0.02 - 0.01, lng: cfg.baseLng + (i % 10) * 0.02 + 0.007 },
+            ],
+          },
+          adminCheckItems: {
+            farmMachineDifficulty: i % 3 === 0,
+            accessRoadLost: i % 4 === 0,
+            waterChannelLost: i % 5 === 0,
+          },
+          currentUsage: landCategory,
+          landShape,
+          ...(hasAiResult && {
+            aiResult: {
+              provisionalJudgment: i % 2 === 0 ? "매수 가능성 높음" : "매수 가능성 낮음",
+              shapeIndex: 2.0 + (i % 6) * 1.0,
+              utilityIndex: 0.3 + (i % 5) * 0.15,
+              accessibilityIndex: 0.4 + (i % 4) * 0.15,
+              analysisDate: dateAt(7),
+            },
+          }),
+          preRegistrationStatus: "등록완료" as const,
+          registeredAt: dateAt(0),
+          registeredBy: "관리자",
+          publishStatus,
+          ...(hasAiResult && { residualStatus }),
+          isVisible,
+          analysisHistory: [],
+          ...(hasAiResult && { firstAnalyzedAt: dateAt(5) }),
+          ...(hasAiResult && { lastAnalyzedAt: dateAt(10) }),
+          ...((publishStatus === "담당자확인완료" || publishStatus === "공개") && {
+            confirmedAt: dateAt(15),
+            confirmedBy: ownerNames[(i + 3) % 10],
+          }),
+          ownerIdentifier: String(1000 + n),
+          ...(hasCitizenActivity && {
+            citizenActivity: {
+              inCart: true,
+              cartAddedAt: dateAt(2),
+              ...(publishStatus === "공개" && i % 6 === 0 && {
+                applicationSubmitted: true,
+                applicationId: `app-gen-${String(n).padStart(3, "0")}`,
+                applicationSubmittedAt: dateAt(3),
+              }),
+            },
+          }),
+        };
+      })
+    ) as unknown as ProcessedParcel[];
+  })(),
 ];
