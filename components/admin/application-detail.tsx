@@ -939,14 +939,6 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
       {/* 신청 상세 타이틀 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={onBack}
-            className="h-9 w-9"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
           <h1 className="text-3xl font-bold">신청 상세</h1>
         </div>
         <div className="flex items-center gap-3">
@@ -999,8 +991,8 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
 
       {/* Section 02. 필지선택 */}
       <Card className="border-0 shadow-none">
-        {/* 필지 선택 컨트롤러 - Sticky 고정 */}
-        <CardHeader className="pb-2 sticky top-0 z-40 bg-white">
+        {/* 필지 선택 컨트롤러 */}
+        <CardHeader className="pb-2 bg-white">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg" style={{ fontSize: '20px' }}>대상 필지 분석 및 검토</CardTitle>
             {/* 필지 선택 - 강조된 UI */}
@@ -2052,7 +2044,7 @@ purchaseDecision: result?.provisionalJudgment === "수용가능" ? "O" as const 
                                       {(() => {
                                         const explanation = aiResult?.judgmentRationale?.detailedExplanation;
                                         if (!explanation) {
-                                          return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면적 ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
+                                          return `[필지 정보]\n주소: ${land.address}\n지목: ${land.landType} (${land.landCategory})\n편입 전 면적: ${land.originalArea.toLocaleString()}㎡\n잔여 면적: ${land.remainingArea.toLocaleString()}㎡ (${land.remainingRatio}%)\n\n[분석 결과]\n• 잔여면�� ${land.remainingArea.toLocaleString()}㎡\n• 잔여비율 ${land.remainingRatio}%`;
                                         }
                                         
                                         // If this is multi-parcel and explanation contains all parcels info,

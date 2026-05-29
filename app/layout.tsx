@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   },
 }
 
+// Root layout
 export default function RootLayout({
   children,
 }: Readonly<{

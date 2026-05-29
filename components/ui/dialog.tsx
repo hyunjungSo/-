@@ -38,7 +38,7 @@ function DialogOverlay({
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
       className={cn(
-        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-[9998] bg-black/50',
+        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-[10000] bg-black/50',
         className,
       )}
       {...props}
@@ -67,7 +67,7 @@ function DialogContent({
       <DialogOverlay />
       {/* 뷰포트 전체를 덮는 flex 컨테이너로 정중앙 배치 */}
       <div 
-        className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none"
+        className="fixed inset-0 z-[10000] flex items-center justify-center pointer-events-none"
         style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
       >
         <DialogPrimitive.Content

@@ -63,6 +63,8 @@ export const dummyLandInfoList: LandInfo[] = [
     ownerName: "김철수",
     ownerContact: "010-1234-5678",
     hasIncludedLand: true,
+    officialLandPrice: 385000,
+    officialLandPriceYear: 2025,
     businessUnit: "수도권",
     projectName: "용인-양지 도로확장사업",
     coordinates: [
@@ -718,7 +720,7 @@ export const dummyLandInfoList: LandInfo[] = [
   // 복수필지: 3필지 농지 (동일 소유자)
   {
     id: "land-unified-001",
-    address: "경기도 안성시 미양면 계륵리 501-1",
+    address: "경기도 ���성시 미양면 계륵리 501-1",
     originalArea: 800,
     includedArea: 550,
     remainingArea: 250,
@@ -2507,7 +2509,7 @@ export const dummyApplications: Application[] = [
     actualUsage: "답",
     reportedShape: "삼각형",
     farmMachineDifficulty: true,
-    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전이 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
+    reason: "안성-천안 국도확장사업으로 인해 소유한 3개 농지 필지가 모두 도로에 편입되었습니다. 편입 후 각 필지가 불규칙한 형태로 남아 농기계 회전��� 불가능하고 관개수로도 단절되어 농업이 불가능합니다. 3필지 모두 매수 기준을 충족하여 일괄 매수를 신청합니다.",
     landDataList: [
       {
         currentUsage: "답" as const,
@@ -2824,7 +2826,7 @@ export const dummyApplications: Application[] = [
     aiResult: {
       landTypePath: "산지",
       criteriaChecks: [
-        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100㎡로 조림지 판단", isMet: true, autoDetected: true },
+        { criteriaName: "면적 기준", criteriaDescription: "잔여면적 4,100㎡로 ��림지 판단", isMet: true, autoDetected: true },
         { criteriaName: "형상 기준", criteriaDescription: "비정형 형상 (삼각형, 역삼각형, 부정형, 자루형)", isMet: true, autoDetected: true },
         { criteriaName: "토지 양분", criteriaDescription: "고속도로 관통으로 조림지 양분", isMet: true, autoDetected: true },
       ],

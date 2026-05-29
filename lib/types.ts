@@ -111,6 +111,8 @@ export interface LandInfo {
   ownerName: string; // 소유자명
   ownerContact?: string; // 소유자 연락처
   hasIncludedLand: boolean; // 편입토지 존재 여부
+  officialLandPrice?: number; // 개별공시지가 (원/m²)
+  officialLandPriceYear?: number; // 공시기준연도
   coordinates?: Array<{ lat: number; lng: number }>; // 필지 경계 좌표
   businessUnit?: BusinessUnit; // 관할기관
   projectName?: string; // 사업명
