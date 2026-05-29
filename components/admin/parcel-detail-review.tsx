@@ -641,14 +641,33 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
                   <td className="py-2.5 pr-4 text-muted-foreground">편입토지 여부</td>
                   <td className="py-2.5 font-medium">{parcel.landInfo.hasIncludedLand ? "있음" : "없음"}</td>
                 </tr>
+                <tr>
+                  <td className="py-2.5 pr-4 text-muted-foreground">개별공시지가</td>
+                  <td className="py-2.5 font-medium">
+                    {parcel.landInfo.officialLandPrice
+                      ? `${parcel.landInfo.officialLandPrice.toLocaleString()} 원/m\u00B2`
+                      : "-"}
+                    {parcel.landInfo.officialLandPriceYear && (
+                      <span className="ml-1.5 text-xs text-muted-foreground">
+                        ({parcel.landInfo.officialLandPriceYear}년 기준)
+                      </span>
+                    )}
+                  </td>
+                </tr>
+                {parcel.landInfo.officialLandPrice && parcel.landInfo.includedArea > 0 && (
+                  <tr>
+                    <td className="py-2.5 pr-4 text-muted-foreground">공시지가 총액</td>
+                    <td className="py-2.5 font-medium">
+                      {(parcel.landInfo.officialLandPrice * parcel.landInfo.includedArea).toLocaleString()} 원
+                      <span className="ml-1.5 text-xs text-muted-foreground">
+                        (편입면적 기준)
+                      </span>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowLandInfoModal(false)}>
-              닫기
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
@@ -657,7 +676,7 @@ export function ParcelDetailReview({ parcel, onUpdate, onBack, onNavigateToAppli
         <DialogContent className="max-w-md p-8 relative">
           <DialogHeader className="pr-8">
             <DialogTitle className="text-xl">
-              {pendingVisibilityChange ? "필지 정보 공개 확인" : "필지 정보 비공개 확인"}
+              {pendingVisibilityChange ? "필지 정보 공개 ���인" : "필지 정보 비공개 확인"}
             </DialogTitle>
             <DialogDescription className="pt-4 space-y-4 leading-7 text-base" asChild>
               <div>
